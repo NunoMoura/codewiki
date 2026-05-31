@@ -3,7 +3,10 @@
 export { executeCodewikiAgencyTool } from "../agency/tool.ts";
 export { executeCodewikiAudit, formatAuditReport } from "../audit/tool.ts";
 export { executeCodewikiBuildTool } from "../build/tool.ts";
-export { executeCodewikiDiffTableTool } from "../change/tool.ts";
+export {
+	executeCodewikiDecisionTool,
+	executeCodewikiDiffTableTool,
+} from "../change/tool.ts";
 export { executeCodewikiGcTool } from "../gc/tool.ts";
 export { executeCodewikiBootstrapTool, executeCodewikiSetupTool } from "../project/tool.ts";
 export { executeCodewikiRoadmapTool } from "../roadmap/tool.ts";

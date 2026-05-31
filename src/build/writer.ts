@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { normalizeDiffTableUserAction } from "../change/types.ts";
 import type {
 	CodewikiBuildProducesInput,
 	CodewikiBuildRefsInput,
@@ -264,8 +265,7 @@ function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
 					row.agreed_change ||
 					"",
 			).trim();
-			const userAction =
-				String(row.user_action || "pending").trim() || "pending";
+			const userAction = normalizeDiffTableUserAction(row.user_action);
 			return {
 				id: String(
 					row.id || `DTR-${String(index + 1).padStart(3, "0")}`,
@@ -280,7 +280,7 @@ function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
 					row.expected_final_state || desiredState,
 				).trim(),
 				validated_final_state: String(row.validated_final_state || "").trim(),
-				status: String(row.status || userAction).trim() || userAction,
+				status: normalizeDiffTableUserAction(row.status, userAction),
 				proof_refs: trimList(row.proof_refs),
 				rationale: String(row.rationale || "").trim(),
 				affected_layers: trimList(row.affected_layers),

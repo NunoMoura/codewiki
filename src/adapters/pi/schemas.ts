@@ -665,6 +665,18 @@ export const codewikiValidationReportSchema = Type.Object({
 	})),
 	refresh: Type.Optional(Type.Boolean({ default: true })),
 });
+const codewikiDiffTableRowActionSchema = Type.Object({
+	row_id: Type.String({ minLength: 1 }),
+	action: Type.Union([
+		Type.Literal("accept"),
+		Type.Literal("reject"),
+		Type.Literal("defer"),
+		Type.Literal("alternative"),
+		Type.Literal("edit"),
+	]),
+	row: Type.Optional(codewikiDiffTableRowSchema),
+	alternative: Type.Optional(Type.String({ minLength: 1 })),
+});
 export const codewikiDiffTableToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	action: Type.Union([
@@ -679,6 +691,8 @@ export const codewikiDiffTableToolInputSchema = Type.Object({
 	]),
 	table_id: Type.Optional(Type.String({ minLength: 1 })),
 	row_id: Type.Optional(Type.String({ minLength: 1 })),
+	row_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	row_actions: Type.Optional(Type.Array(codewikiDiffTableRowActionSchema)),
 	summary: Type.Optional(Type.String({ minLength: 1 })),
 	source: Type.Optional(Type.String({ minLength: 1 })),
 	scope: Type.Optional(agencyScopeSchema),

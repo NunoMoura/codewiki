@@ -1,0 +1,677 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-31T09:01:44Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+  "task_id": "TASK-069",
+  "task": {
+    "id": "TASK-069",
+    "title": "Implement backend batch decision approval workflow",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "summary": "Replace the deferred TUI-first approval task with a backend decision workflow path that can apply multiple row approve/edit/reject/defer actions in one phase call, normalize gateway approval evidence, and keep low-level diff-table mutation as internal/debug plumbing.",
+    "spec_paths": [
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-graph-center.json",
+      ".codewiki/kb/system/graph.md"
+    ],
+    "code_paths": [
+      "src/change/tool.ts",
+      "src/change/diff-table.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/api/tools.ts",
+      "tests",
+      "src/state/types.ts",
+      "src/state/reader.ts",
+      "src/state/builders.ts",
+      "src/state/graph.ts",
+      "src/state/tool.ts",
+      "src/state/resume-tool.ts"
+    ],
+    "goal": {
+      "outcome": "Decision row actions can be applied in batches through a high-level wiki-named backend workflow path with gateway-compatible approval evidence.",
+      "acceptance": [
+        "One backend/API entrypoint can accept, reject, defer, or edit multiple decision rows in a single phase call.",
+        "Accepted row evidence is normalized to the gateway-required approved state and decision builds no longer fail because row action strings disagree across tools.",
+        "The existing wiki_diff_table primitive remains available only as compatibility/debug/internal plumbing until the new workflow is validated.",
+        "Partial failures return exact changed refs, failed row ids, recovery guidance, and no hidden success.",
+        "Tests cover multi-row accept and mixed approve/reject/defer behavior plus gateway decision mapping compatibility."
+      ],
+      "non_goals": [
+        "Do not build TUI/board approval UI in this task.",
+        "Do not merge decision and planning compilers.",
+        "Do not remove existing low-level primitives before compatibility is validated."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted tests for decision row batching and gateway mapping",
+        "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-07T09:01:44.000Z",
+    "purge_after": "2026-06-14T09:01:44.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-069 backend batch decision approval workflow.",
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-069"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-backend-autom.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-069/context.json",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/change/types.ts",
+      "src/change/diff-table.ts",
+      "src/change/tool.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/api/tools.ts",
+      "package.json"
+    ],
+    "tests": [
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-069"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+    "spec_paths": [
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-graph-center.json",
+      ".codewiki/kb/system/graph.md"
+    ],
+    "code_paths": [
+      "src/change/tool.ts",
+      "src/change/diff-table.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/api/tools.ts",
+      "tests",
+      "src/state/types.ts",
+      "src/state/reader.ts",
+      "src/state/builders.ts",
+      "src/state/graph.ts",
+      "src/state/tool.ts",
+      "src/state/resume-tool.ts"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+  ],
+  "code_files": [
+    "src/change/types.ts",
+    "src/change/diff-table.ts",
+    "src/change/tool.ts",
+    "src/build/writer.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/api/tools.ts",
+    "package.json"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+    "src/change/types.ts",
+    "src/change/diff-table.ts",
+    "src/change/tool.ts",
+    "src/build/writer.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/api/tools.ts",
+    "package.json"
+  ],
+  "checks_run": [
+    "lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only",
+    "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+    "npm run typecheck: pass",
+    "npm run test:smoke: pass",
+    "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+      "roadmap_task_id": "TASK-069",
+      "test_files": [
+        "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+      ],
+      "evidence": [
+        "Created tests/tasks/TASK-069/diff-table-batch.test.mjs before/focused with implementation to cover batch row actions, failure atomicity, and build approval normalization.",
+        "Added TASK-069 smoke test to package.json test:smoke so future smoke runs include decision batching coverage."
+      ],
+      "notes": [
+        "Targeted TASK-069 test, typecheck, full smoke suite, and required wiki audit profiles pass except generated graph change warning."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+      "roadmap_task_id": "TASK-069",
+      "code_files": [
+        "src/change/types.ts",
+        "src/change/diff-table.ts",
+        "src/change/tool.ts",
+        "src/build/writer.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/api/tools.ts",
+        "package.json"
+      ],
+      "evidence": [
+        "src/change/types.ts centralizes diff-table user_action normalization.",
+        "src/change/diff-table.ts adds row_actions/row_ids batch support, atomic validation, changed/failed row reporting, recovery guidance, and edit/alternative support.",
+        "src/change/tool.ts adds executeCodewikiDecisionTool workflow endpoint while retaining executeCodewikiDiffTableTool compatibility.",
+        "src/build/writer.ts normalizes decision build diff row user_action/status so approval aliases become approved.",
+        "src/adapters/pi/schemas.ts exposes row_ids and row_actions for batch-capable diff-table compatibility.",
+        "src/api/tools.ts exports executeCodewikiDecisionTool."
+      ],
+      "notes": [
+        "No TUI/board approval UI implemented.",
+        "Decision and planning compilers remain separate.",
+        "Existing wiki_diff_table tool remains available; removal/internal-only migration deferred until high-level workflow is validated and exposed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Created tests/tasks/TASK-069/diff-table-batch.test.mjs before/focused with implementation to cover batch row actions, failure atomicity, and build approval normalization.",
+    "Added TASK-069 smoke test to package.json test:smoke so future smoke runs include decision batching coverage."
+  ],
+  "code_change_evidence": [
+    "src/change/types.ts centralizes diff-table user_action normalization.",
+    "src/change/diff-table.ts adds row_actions/row_ids batch support, atomic validation, changed/failed row reporting, recovery guidance, and edit/alternative support.",
+    "src/change/tool.ts adds executeCodewikiDecisionTool workflow endpoint while retaining executeCodewikiDiffTableTool compatibility.",
+    "src/build/writer.ts normalizes decision build diff row user_action/status so approval aliases become approved.",
+    "src/adapters/pi/schemas.ts exposes row_ids and row_actions for batch-capable diff-table compatibility.",
+    "src/api/tools.ts exports executeCodewikiDecisionTool."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "One backend/API entrypoint can accept, reject, defer, or edit multiple decision rows in a single phase call.",
+      "evidence": "src/change/tool.ts adds executeCodewikiDecisionTool for rows workflow; src/change/diff-table.ts adds row_actions and row_ids batch paths; tests/tasks/TASK-069/diff-table-batch.test.mjs covers accept/reject/defer/edit in one call and row_ids accept in one call."
+    },
+    {
+      "criterion": "Accepted row evidence is normalized to the gateway-required approved state and decision builds no longer fail because row action strings disagree across tools.",
+      "evidence": "src/change/types.ts adds normalizeDiffTableUserAction mapping approve/accept/accepted to approved; src/change/diff-table.ts and src/build/writer.ts use it. TASK-069 test writes a decision build with user_action=approve and asserts output is user_action=approved."
+    },
+    {
+      "criterion": "The existing wiki_diff_table primitive remains available only as compatibility/debug/internal plumbing until the new workflow is validated.",
+      "evidence": "src/change/tool.ts keeps executeCodewikiDiffTableTool unchanged for compatibility while adding executeCodewikiDecisionTool as higher-level backend/API workflow; Pi schema extends existing primitive with batch fields for compatibility."
+    },
+    {
+      "criterion": "Partial failures return exact changed refs, failed row ids, recovery guidance, and no hidden success.",
+      "evidence": "src/change/diff-table.ts validates batch actions before writing and returns changed=false, changed_row_ids=[], failed_row_ids, failures, and recovery. TASK-069 test asserts failed batch leaves runtime store unchanged."
+    },
+    {
+      "criterion": "Tests cover multi-row accept and mixed approve/reject/defer behavior plus gateway decision mapping compatibility.",
+      "evidence": "tests/tasks/TASK-069/diff-table-batch.test.mjs covers mixed row_actions, row_ids batch accept, no-partial-write failure, and decision build approval normalization. Added to npm run test:smoke."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement backend batch decision approval workflow so agents can apply multiple decision row actions efficiently without TUI/board UX work.",
+    "implemented_changes": [
+      "Added batch row action support for accept/reject/defer/edit/alternative and row_ids same-action batches.",
+      "Added atomic preflight for batch row actions with failed row ids, recovery guidance, and no partial writes.",
+      "Added shared approval normalization so approve/accept aliases become gateway-compatible approved evidence in runtime tables and decision builds.",
+      "Added backend API workflow endpoint executeCodewikiDecisionTool for row decisions while keeping wiki_diff_table compatibility.",
+      "Added TASK-069 targeted smoke test and included it in npm run test:smoke."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/change/types.ts",
+        "src/change/diff-table.ts",
+        "src/change/tool.ts",
+        "src/build/writer.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/api/tools.ts",
+        "package.json"
+      ],
+      "tests": [
+        "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "TASK-069 targeted test pass",
+      "npm run typecheck pass",
+      "npm run test:smoke pass",
+      "wiki_audit source-contract/stale-reference/generated-parity/task pass"
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069"
+    ],
+    "non_goals_preserved": [
+      "No TUI/board approval UI.",
+      "No compiler merge.",
+      "No removal of existing low-level primitive before compatibility is validated."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation and task-close proof still required."
+    ]
+  },
+  "risks": [
+    "Fresh implementation validation required before close.",
+    "New executeCodewikiDecisionTool is API-exported but not registered as a Pi tool yet; this matches backend-first scope but future wiki_decide exposure remains a follow-up."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-069",
+      "task_id": "TASK-069",
+      "next_focus_task_id": "TASK-066",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-069",
+        "title": "Implement backend batch decision approval workflow",
+        "summary": "Implemented TASK-069 backend batch decision approval workflow.",
+        "spec_paths": [
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+          ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-graph-center.json",
+          ".codewiki/kb/system/graph.md"
+        ],
+        "code_paths": [
+          "src/change/tool.ts",
+          "src/change/diff-table.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/api/tools.ts",
+          "tests",
+          "src/state/types.ts",
+          "src/state/reader.ts",
+          "src/state/builders.ts",
+          "src/state/graph.ts",
+          "src/state/tool.ts",
+          "src/state/resume-tool.ts",
+          "src/change/types.ts",
+          "package.json"
+        ],
+        "acceptance": [
+          "One backend/API entrypoint can accept, reject, defer, or edit multiple decision rows in a single phase call.",
+          "Accepted row evidence is normalized to the gateway-required approved state and decision builds no longer fail because row action strings disagree across tools.",
+          "The existing wiki_diff_table primitive remains available only as compatibility/debug/internal plumbing until the new workflow is validated.",
+          "Partial failures return exact changed refs, failed row ids, recovery guidance, and no hidden success.",
+          "Tests cover multi-row accept and mixed approve/reject/defer behavior plus gateway decision mapping compatibility."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted tests for decision row batching and gateway mapping",
+          "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+        "checks_run": [
+          "lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only",
+          "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+          "npm run typecheck: pass",
+          "npm run test:smoke: pass",
+          "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph"
+        ],
+        "test_design_evidence": [
+          "Created tests/tasks/TASK-069/diff-table-batch.test.mjs before/focused with implementation to cover batch row actions, failure atomicity, and build approval normalization.",
+          "Added TASK-069 smoke test to package.json test:smoke so future smoke runs include decision batching coverage."
+        ],
+        "code_change_evidence": [
+          "src/change/types.ts centralizes diff-table user_action normalization.",
+          "src/change/diff-table.ts adds row_actions/row_ids batch support, atomic validation, changed/failed row reporting, recovery guidance, and edit/alternative support.",
+          "src/change/tool.ts adds executeCodewikiDecisionTool workflow endpoint while retaining executeCodewikiDiffTableTool compatibility.",
+          "src/build/writer.ts normalizes decision build diff row user_action/status so approval aliases become approved.",
+          "src/adapters/pi/schemas.ts exposes row_ids and row_actions for batch-capable diff-table compatibility.",
+          "src/api/tools.ts exports executeCodewikiDecisionTool."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-069",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-069",
+      "show_build": "git show refs/codewiki/archive/task/TASK-069:.codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+        ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-graph-center.json",
+        ".codewiki/kb/system/graph.md",
+        "src/change/tool.ts",
+        "src/change/diff-table.ts",
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/api/tools.ts",
+        "tests",
+        "src/state/types.ts",
+        "src/state/reader.ts",
+        "src/state/builders.ts",
+        "src/state/graph.ts",
+        "src/state/tool.ts",
+        "src/state/resume-tool.ts"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-069 Implement backend batch decision approval workflow implementation evidence",
+      "body": "Implemented TASK-069 backend batch decision approval workflow.\n\nChecks: lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, npm run typecheck: pass, npm run test:smoke: pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-069\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json\nCodeWiki-Checks: lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, npm run typecheck: pass, npm run test:smoke: pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-069\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-069\nCodeWiki-Digest: sha256:926017868bda7507315c35d5d5ebeaab9587f27ea8b590738db2d4d6ff86c0db\nCodeWiki-Restore: /wiki-restore TASK-069",
+      "trailers": [
+        "CodeWiki-Task: TASK-069",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+        "CodeWiki-Checks: lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, npm run typecheck: pass, npm run test:smoke: pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-069",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-069",
+        "CodeWiki-Digest: sha256:926017868bda7507315c35d5d5ebeaab9587f27ea8b590738db2d4d6ff86c0db",
+        "CodeWiki-Restore: /wiki-restore TASK-069"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-069 Implement backend batch decision approval workflow implementation evidence",
+      "body": "Implemented TASK-069 backend batch decision approval workflow.\n\nChecks: lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, npm run typecheck: pass, npm run test:smoke: pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-069\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json\nCodeWiki-Checks: lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, npm run typecheck: pass, npm run test:smoke: pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-069\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-069\nCodeWiki-Digest: sha256:926017868bda7507315c35d5d5ebeaab9587f27ea8b590738db2d4d6ff86c0db\nCodeWiki-Restore: /wiki-restore TASK-069"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-069",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-069"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-069",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-069",
+        "show_build": "git show refs/codewiki/archive/task/TASK-069:.codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+          ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-graph-center.json",
+          ".codewiki/kb/system/graph.md",
+          "src/change/tool.ts",
+          "src/change/diff-table.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/api/tools.ts",
+          "tests",
+          "src/state/types.ts",
+          "src/state/reader.ts",
+          "src/state/builders.ts",
+          "src/state/graph.ts",
+          "src/state/tool.ts",
+          "src/state/resume-tool.ts"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-069",
+      "build_path": ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-069",
+      "commit_sha": "",
+      "digest": "sha256:926017868bda7507315c35d5d5ebeaab9587f27ea8b590738db2d4d6ff86c0db",
+      "restore_command": "/wiki-restore TASK-069"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:1306f2ecd1247f606931d5d4fe7e200b31790a848cd192bb047a43e35259241a",
+          "bytes": 25251
+        },
+        {
+          "path": "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f300c70a01ec3710106ba1497793841f9880379d61611286ae68f5596c8a9322",
+          "bytes": 5474
+        },
+        {
+          "path": "src/change/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:d9c6f947c93e8b6081eee276f535ab9b0c77b958389ec1b105d4aee9436b4c24",
+          "bytes": 2338
+        },
+        {
+          "path": "src/change/diff-table.ts",
+          "role": "code_file",
+          "sha256": "sha256:e3a480a7f30007dde1bd2d238b814f8510539a73b7722d0ec192e30073c475e4",
+          "bytes": 11124
+        },
+        {
+          "path": "src/change/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:4c42088cd7fd3830a98251ad2b92c2145d0afec369a319248cf92f253b859502",
+          "bytes": 1010
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:f1dcd47787f672a00f6d05e2170701101bb2a7fcae88a0614efc7b20617b0d11",
+          "bytes": 32873
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:35492a836d32f59a07fc3c41ddd22e3671b9c22482dfa766833c7bbe364bdc5e",
+          "bytes": 34505
+        },
+        {
+          "path": "src/api/tools.ts",
+          "role": "code_file",
+          "sha256": "sha256:fa7f1171ebdfcf030f80b3aca558b8d9a3e3253fe6599c083d1e3c24e52c291b",
+          "bytes": 957
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:4579b2a0a0b28dcd7025402531c7194e1b3e980bd59996f86de0ddb5afa84d14",
+          "bytes": 3406
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-069",
+      "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/change/types.ts",
+          "src/change/diff-table.ts",
+          "src/change/tool.ts",
+          "src/build/writer.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/api/tools.ts",
+          "package.json",
+          "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-069",
+        "restore_command": "/wiki-restore TASK-069"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics src/change/types.ts src/change/diff-table.ts src/change/tool.ts src/build/writer.ts src/adapters/pi/schemas.ts src/api/tools.ts: no errors; existing deprecation hints only",
+        "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+        "npm run typecheck: pass",
+        "npm run test:smoke: pass",
+        "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-069: warning; source-contract/stale-reference/generated-parity/task pass; warning only changed generated graph"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

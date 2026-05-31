@@ -1,10 +1,34 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import type { CodewikiDiffTableRowInput } from "./types.ts";
+import {
+	normalizeDiffTableUserAction,
+	type CodewikiDiffTableRowInput,
+	type CodewikiDiffTableUserAction,
+} from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { nowIso } from "../shared/utils.ts";
 
-export type DiffTableRowAction = "pending" | "approved" | "rejected" | "deferred" | "edited";
+export type DiffTableRowAction = CodewikiDiffTableUserAction;
+
+export type DiffTableBatchRowAction =
+	| "accept"
+	| "reject"
+	| "defer"
+	| "alternative"
+	| "edit";
+
+export interface CodewikiDiffTableRowActionInput {
+	row_id: string;
+	action: DiffTableBatchRowAction;
+	row?: CodewikiDiffTableRowInput;
+	alternative?: string;
+}
+
+export interface CodewikiDiffTableRowActionFailure {
+	row_id: string;
+	action: string;
+	error: string;
+}
 
 export interface RuntimeDiffTableRow extends CodewikiDiffTableRowInput {
 	id: string;
@@ -34,6 +58,8 @@ export interface CodewikiDiffTableToolInput {
 	action: "propose" | "revise" | "accept" | "reject" | "defer" | "alternative" | "archive" | "list";
 	table_id?: string;
 	row_id?: string;
+	row_ids?: string[];
+	row_actions?: CodewikiDiffTableRowActionInput[];
 	summary?: string;
 	source?: string;
 	scope?: { kind: "roadmap" | "sprint" | "task"; id?: string };
@@ -49,7 +75,7 @@ export function normalizeDiffTableRows(rows: CodewikiDiffTableRowInput[] = []): 
 	return rows.map((row, index) => {
 		const currentState = String(row.current_state || row.current_project_state || "").trim();
 		const desiredState = String(row.desired_state || row.expected_final_state || row.agreed_change || "").trim();
-		const userAction = String(row.user_action || "pending").trim() || "pending";
+		const userAction = normalizeDiffTableUserAction(row.user_action);
 		return {
 			id: String(row.id || `DTR-${String(index + 1).padStart(3, "0")}`).trim(),
 			current_state: currentState,
@@ -58,7 +84,7 @@ export function normalizeDiffTableRows(rows: CodewikiDiffTableRowInput[] = []): 
 			agreed_change: String(row.agreed_change || desiredState).trim(),
 			expected_final_state: String(row.expected_final_state || desiredState).trim(),
 			validated_final_state: String(row.validated_final_state || "").trim(),
-			status: String(row.status || userAction).trim() || userAction,
+			status: normalizeDiffTableUserAction(row.status, userAction),
 			proof_refs: normalizeStringList(row.proof_refs),
 			rationale: String(row.rationale || "").trim(),
 			affected_layers: normalizeStringList(row.affected_layers),
@@ -111,28 +137,172 @@ export async function executeDiffTableAction(project: WikiProject, input: Codewi
 	}
 	const table = file.tables.find((item) => item.id === input.table_id);
 	if (!table) throw new Error(`Diff table not found: ${input.table_id || ""}`);
+	const batchActions = buildBatchActions(input);
+	if (batchActions.length) {
+		const failures = validateBatchActions(table, batchActions);
+		if (failures.length) {
+			return {
+				changed: false,
+				table,
+				changed_refs: [] as string[],
+				changed_row_ids: [] as string[],
+				failed_row_ids: failures.map((failure) => failure.row_id),
+				failures,
+				recovery:
+					"No batch row actions were applied. Fix failed row ids/actions and retry the same phase call.",
+			};
+		}
+		for (const action of batchActions) applyRowAction(table, action);
+		table.updated_at = now;
+		await writeRuntimeDiffTables(project, file);
+		return {
+			changed: true,
+			table,
+			changed_refs: [diffTableStorePath(project)],
+			changed_row_ids: Array.from(
+				new Set(batchActions.map((action) => action.row_id)),
+			),
+			failed_row_ids: [] as string[],
+			failures: [] as CodewikiDiffTableRowActionFailure[],
+		};
+	}
 	if (input.action === "revise") {
 		table.rows = normalizeDiffTableRows(input.rows || table.rows);
 	} else if (input.action === "archive") {
 		table.status = "archived";
 	} else {
-		const row = table.rows.find((item) => item.id === input.row_id);
-		if (!row) throw new Error(`Diff row not found: ${input.row_id || ""}`);
-		if (input.action === "accept") row.user_action = "approved";
-		if (input.action === "reject") row.user_action = "rejected";
-		if (input.action === "defer") row.user_action = "deferred";
-		if (["accept", "reject", "defer"].includes(input.action)) row.status = row.user_action;
-		if (input.action === "alternative") {
-			const alternative = String(input.alternative || "").trim();
-			if (!alternative) throw new Error("diff_table alternative requires alternative text.");
-			row.alternatives = [...(row.alternatives || []), alternative];
-			row.user_action = "edited";
-			row.status = "edited";
-		}
+		const action = singleRowAction(input);
+		const row = table.rows.find((item) => item.id === action.row_id);
+		if (!row) throw new Error(`Diff row not found: ${action.row_id}`);
+		const failure = validateRowAction(table, action);
+		if (failure) throw new Error(failure.error);
+		applyRowAction(table, action);
 	}
 	table.updated_at = now;
 	await writeRuntimeDiffTables(project, file);
 	return { changed: true, table };
+}
+
+function singleRowAction(
+	input: CodewikiDiffTableToolInput,
+): CodewikiDiffTableRowActionInput {
+	const rowId = String(input.row_id || "").trim();
+	if (!rowId) throw new Error("diff_table row action requires row_id.");
+	if (input.action === "accept") return { action: "accept", row_id: rowId };
+	if (input.action === "reject") return { action: "reject", row_id: rowId };
+	if (input.action === "defer") return { action: "defer", row_id: rowId };
+	if (input.action === "alternative") {
+		return { action: "alternative", row_id: rowId, alternative: input.alternative };
+	}
+	throw new Error(`Unsupported diff_table row action: ${input.action}`);
+}
+
+function buildBatchActions(
+	input: CodewikiDiffTableToolInput,
+): CodewikiDiffTableRowActionInput[] {
+	const explicit = Array.isArray(input.row_actions) ? input.row_actions : [];
+	if (explicit.length) {
+		return explicit.map((action) => ({
+			...action,
+			row_id: String(action.row_id || "").trim(),
+		}));
+	}
+	const rowIds = normalizeStringList(input.row_ids);
+	if (!rowIds.length) return [];
+	if (!["accept", "reject", "defer"].includes(input.action)) return [];
+	return rowIds.map((row_id) => ({
+		row_id,
+		action: input.action as "accept" | "reject" | "defer",
+	}));
+}
+
+function validateBatchActions(
+	table: RuntimeDiffTable,
+	actions: CodewikiDiffTableRowActionInput[],
+): CodewikiDiffTableRowActionFailure[] {
+	return actions
+		.map((action) => validateRowAction(table, action))
+		.filter((failure): failure is CodewikiDiffTableRowActionFailure =>
+			Boolean(failure),
+		);
+}
+
+function validateRowAction(
+	table: RuntimeDiffTable,
+	action: CodewikiDiffTableRowActionInput,
+): CodewikiDiffTableRowActionFailure | null {
+	const rowId = String(action.row_id || "").trim();
+	if (!rowId) {
+		return { row_id: "", action: String(action.action || ""), error: "row_id is required" };
+	}
+	const row = table.rows.find((item) => item.id === rowId);
+	if (!row) {
+		return {
+			row_id: rowId,
+			action: String(action.action || ""),
+			error: `Diff row not found: ${rowId}`,
+		};
+	}
+	if (!["accept", "reject", "defer", "alternative", "edit"].includes(action.action)) {
+		return {
+			row_id: rowId,
+			action: String(action.action || ""),
+			error: `Unsupported row action: ${String(action.action || "")}`,
+		};
+	}
+	if (action.action === "alternative" && !String(action.alternative || "").trim()) {
+		return {
+			row_id: rowId,
+			action: action.action,
+			error: "diff_table alternative requires alternative text.",
+		};
+	}
+	if (action.action === "edit") {
+		const edited = normalizeDiffTableRows([{ ...row, ...(action.row || {}), id: row.id }]);
+		if (!edited.length) {
+			return {
+				row_id: rowId,
+				action: action.action,
+				error: "diff_table edit produced an invalid row.",
+			};
+		}
+	}
+	return null;
+}
+
+function applyRowAction(
+	table: RuntimeDiffTable,
+	action: CodewikiDiffTableRowActionInput,
+): void {
+	const row = table.rows.find((item) => item.id === action.row_id);
+	if (!row) return;
+	if (action.action === "accept") {
+		row.user_action = "approved";
+		row.status = "approved";
+		return;
+	}
+	if (action.action === "reject") {
+		row.user_action = "rejected";
+		row.status = "rejected";
+		return;
+	}
+	if (action.action === "defer") {
+		row.user_action = "deferred";
+		row.status = "deferred";
+		return;
+	}
+	if (action.action === "alternative") {
+		const alternative = String(action.alternative || "").trim();
+		row.alternatives = normalizeStringList([...(row.alternatives || []), alternative]);
+		row.user_action = "edited";
+		row.status = "edited";
+		return;
+	}
+	const [edited] = normalizeDiffTableRows([
+		{ ...row, ...(action.row || {}), id: row.id },
+	]);
+	if (!edited) return;
+	Object.assign(row, edited);
 }
 
 function normalizeStringList(values: unknown): string[] {
