@@ -25,9 +25,10 @@ source_refs:
   - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/agency.md
 code_paths:
-  - src/runtime/**
-  - src/agency/**
-  - src/session/**
+  - src/runtime
+  - src/agency
+  - src/session
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Agency-authorized work becomes one bounded runtime step or daemon job attempt with explicit stop gates.
 ---
@@ -41,3 +42,10 @@ summary: Agency-authorized work becomes one bounded runtime step or daemon job a
 5. Runtime releases temporary claims and records platform limitations when harness capabilities are missing.
 
 Runtime never closes roadmap tasks by itself and never treats daemon state as canonical roadmap or proof truth.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

@@ -27,10 +27,11 @@ source_refs:
   - .codewiki/kb/system/validation-gateway.md
   - .codewiki/kb/system/roadmap.md
 code_paths:
-  - src/build/**
-  - src/gateway/**
-  - src/roadmap/**
-  - src/state/**
+  - src/build
+  - src/gateway
+  - src/roadmap
+  - src/state
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Implementation changes scoped files, emits a build, validates independently, and closes only with proof.
 ---
@@ -45,3 +46,10 @@ summary: Implementation changes scoped files, emits a build, validates independe
 6. Roadmap closure archives the task only after the close gate passes.
 
 Dirty implementation validation may use a working-tree digest. Task-close requires clean immutable commit/tree proof when source, tests, release state, or closure metadata changed.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

@@ -35,3 +35,9 @@ The state engine reads canonical CodeWiki sources and emits generated read model
 
 - [Resume context boundary](../flows/resume-context-boundary.md)
 - [Implementation, validation, and close](../flows/implementation-validation-close.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

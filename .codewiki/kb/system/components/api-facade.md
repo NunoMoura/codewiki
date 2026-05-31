@@ -37,3 +37,9 @@ The API facade is the stable boundary that exposes CodeWiki operations to adapte
 - [Decision to planning](../flows/decision-to-planning.md)
 - [Planning to implementation](../flows/planning-to-implementation.md)
 - [Resume context boundary](../flows/resume-context-boundary.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-31T22:11:07Z",
+  "updated": "2026-05-31T22:18:49Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -557,23 +557,22 @@
         ".codewiki/kb/system/adapters.md"
       ],
       "code_paths": [
-        "src/ui/web/**",
+        "src/ui/web",
         "src/adapters/pi/commands/ui.ts",
         "src/index.ts",
         "src/adapters/pi/index.ts",
-        "src/adapters/pi/commands/**",
-        "src/adapters/pi/ui/**",
+        "src/adapters/pi/commands",
+        "src/adapters/pi/ui",
         "tests/smoke/control-room.test.mjs",
         "package.json",
         "README.md",
         ".codewiki/kb/system/architecture.mmd",
-        "skills/codewiki/**",
-        "src/state/**",
+        "skills/codewiki",
+        "src/state",
         "src/knowledge/diagram-parser.ts",
         "tests",
         "src/adapters/pi",
-        "src/project",
-        "skills/codewiki"
+        "src/project"
       ],
       "research_ids": [],
       "labels": [
@@ -629,7 +628,7 @@
         "closure": "Task closes after web UI/browser source truth is removed or deprecated with proof and package/tests/audits pass.\nRefinement: Prompt contract implemented, tested, and validated as Pi-extension behavior."
       },
       "created": "2026-05-31",
-      "updated": "2026-05-31"
+      "updated": "2026-05-31T22:18:26Z"
     },
     "TASK-072": {
       "id": "TASK-072",
@@ -647,7 +646,8 @@
         "src/state/resume-context.ts",
         "src/state/builders.ts",
         "src/state/types.ts",
-        "tests/tasks/decision-planning-hardening/**"
+        "tests/smoke/drift-propagation.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs"
       ],
       "research_ids": [],
       "labels": [
@@ -683,7 +683,7 @@
         "closure": ""
       },
       "created": "2026-05-31",
-      "updated": "2026-05-31T11:22:44Z"
+      "updated": "2026-05-31T22:18:39Z"
     },
     "TASK-073": {
       "id": "TASK-073",
@@ -694,7 +694,7 @@
       "summary": "Introduce named gateway gate terminology and support conditional sprint-close and ship-ready gates while preserving compatibility for existing gateway profile inputs.",
       "spec_paths": [],
       "code_paths": [
-        "src/policy/**",
+        "src/policy",
         "src/gateway/types.ts",
         "src/adapters/pi/schemas.ts",
         "tests/smoke/policy-gate.test.mjs"
@@ -733,7 +733,7 @@
         "closure": ""
       },
       "created": "2026-05-31",
-      "updated": "2026-05-31T11:50:34Z"
+      "updated": "2026-05-31T22:18:49Z"
     }
   },
   "sprints": {

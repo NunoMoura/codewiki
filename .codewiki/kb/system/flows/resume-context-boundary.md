@@ -24,9 +24,10 @@ source_refs:
   - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/compilers.md
 code_paths:
-  - src/state/**
-  - src/runtime/**
-  - src/adapters/**
+  - src/state
+  - src/runtime
+  - src/adapters
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Context refresh, compaction, and replacement-session starts are seeded from CodeWiki source refs.
 ---
@@ -40,3 +41,10 @@ summary: Context refresh, compaction, and replacement-session starts are seeded 
 5. The next loop reads exact refs directly before semantic edits.
 
 Normal continuation uses CodeWiki refs, not VCC recall, generic chat summaries, or slash-command injection. Adapter limitations must be visible and must fail closed when the host cannot provide a required boundary.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

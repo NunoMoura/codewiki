@@ -40,3 +40,9 @@ Roadmap truth records executable work, queue order, task status, sprint grouping
 
 - [Planning to implementation](../flows/planning-to-implementation.md)
 - [Implementation, validation, and close](../flows/implementation-validation-close.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

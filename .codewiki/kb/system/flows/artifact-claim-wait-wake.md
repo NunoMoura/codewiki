@@ -23,7 +23,8 @@ source_refs:
   - .codewiki/kb/system/api.md
   - .codewiki/kb/system/worktree-isolation.md
 code_paths:
-  - src/session/**
+  - src/session
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Temporary artifact claims coordinate parallel sessions and wake waiters without replacing truth.
 ---
@@ -37,3 +38,10 @@ summary: Temporary artifact claims coordinate parallel sessions and wake waiters
 5. The woken agent must refresh CodeWiki state and re-check artifact status before writing.
 
 Artifact status is runtime coordination evidence only. Roadmap tasks, builds, validation reports, code, and Git refs remain canonical truth and proof.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

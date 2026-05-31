@@ -36,3 +36,9 @@ The knowledge base stores intended product and system truth. Parser code loads M
 ## Flow links
 
 - [Decision to planning](../flows/decision-to-planning.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

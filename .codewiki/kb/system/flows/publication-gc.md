@@ -24,8 +24,9 @@ source_refs:
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/api.md
 code_paths:
-  - src/gc/**
-  - src/gateway/**
+  - src/gc
+  - src/gateway
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Exact content proof gates publication and safe cleanup of hot CodeWiki artifacts.
 ---
@@ -39,3 +40,10 @@ summary: Exact content proof gates publication and safe cleanup of hot CodeWiki 
 5. Tracked artifact purge requires archive commit/tree proof and writes a restore ledger before deletion.
 
 GC is hygiene only. A restore ledger does not replace validation, task-close, publication, or content-proof evidence.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

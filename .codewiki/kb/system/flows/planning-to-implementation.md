@@ -24,9 +24,10 @@ source_refs:
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/graph.md
 code_paths:
-  - src/roadmap/**
-  - src/state/**
-  - src/build/**
+  - src/roadmap
+  - src/state
+  - src/build
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Planning turns accepted intent into executable roadmap tasks, sprint metadata, and implementation handoff evidence.
 ---
@@ -40,3 +41,10 @@ summary: Planning turns accepted intent into executable roadmap tasks, sprint me
 5. Implementation starts from the planning build, generated task context shard, and linked source refs.
 
 A roadmap task must be one independently executable unit. A sprint groups related work; it is not an umbrella task. Roadmap order, task status, blockers, dependencies, and sprint metadata encode sequencing.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)

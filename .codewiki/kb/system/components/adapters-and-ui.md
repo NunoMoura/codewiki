@@ -38,3 +38,9 @@ Adapters and UI surfaces translate host commands, panels, tools, and local views
 
 - [Resume context boundary](../flows/resume-context-boundary.md)
 - [Artifact claim wait/wake](../flows/artifact-claim-wait-wake.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

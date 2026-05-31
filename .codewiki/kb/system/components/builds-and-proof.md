@@ -39,3 +39,9 @@ Builds capture compact handoff evidence between compiler loops. Proof records ex
 
 - [Implementation, validation, and close](../flows/implementation-validation-close.md)
 - [Publication and GC](../flows/publication-gc.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

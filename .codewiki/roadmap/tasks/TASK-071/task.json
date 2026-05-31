@@ -21,23 +21,22 @@
     ".codewiki/kb/system/adapters.md"
   ],
   "code_paths": [
-    "src/ui/web/**",
+    "src/ui/web",
     "src/adapters/pi/commands/ui.ts",
     "src/index.ts",
     "src/adapters/pi/index.ts",
-    "src/adapters/pi/commands/**",
-    "src/adapters/pi/ui/**",
+    "src/adapters/pi/commands",
+    "src/adapters/pi/ui",
     "tests/smoke/control-room.test.mjs",
     "package.json",
     "README.md",
     ".codewiki/kb/system/architecture.mmd",
-    "skills/codewiki/**",
-    "src/state/**",
+    "skills/codewiki",
+    "src/state",
     "src/knowledge/diagram-parser.ts",
     "tests",
     "src/adapters/pi",
-    "src/project",
-    "skills/codewiki"
+    "src/project"
   ],
   "research_ids": [],
   "labels": [
@@ -93,5 +92,5 @@
     "closure": "Task closes after web UI/browser source truth is removed or deprecated with proof and package/tests/audits pass.\nRefinement: Prompt contract implemented, tested, and validated as Pi-extension behavior."
   },
   "created": "2026-05-31",
-  "updated": "2026-05-31"
+  "updated": "2026-05-31T22:18:26Z"
 }

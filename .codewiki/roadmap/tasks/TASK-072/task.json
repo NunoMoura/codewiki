@@ -14,7 +14,8 @@
     "src/state/resume-context.ts",
     "src/state/builders.ts",
     "src/state/types.ts",
-    "tests/tasks/decision-planning-hardening/**"
+    "tests/smoke/drift-propagation.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs"
   ],
   "research_ids": [],
   "labels": [
@@ -50,5 +51,5 @@
     "closure": ""
   },
   "created": "2026-05-31",
-  "updated": "2026-05-31T11:22:44Z"
+  "updated": "2026-05-31T22:18:39Z"
 }

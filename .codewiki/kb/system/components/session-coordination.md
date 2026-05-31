@@ -35,3 +35,9 @@ Session coordination prevents unsafe overlap between agents and records short-li
 
 - [Artifact claim wait/wake](../flows/artifact-claim-wait-wake.md)
 - [Runtime daemon dispatch](../flows/runtime-daemon-dispatch.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

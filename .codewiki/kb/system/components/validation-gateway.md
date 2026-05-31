@@ -39,3 +39,9 @@ The validation gateway reviews named evidence and records `pass`, `fail`, or `bl
 
 - [Implementation, validation, and close](../flows/implementation-validation-close.md)
 - [Publication and GC](../flows/publication-gc.md)
+
+## Related docs
+
+- [System overview](../overview.md)
+- [File structure](../file-structure.md)
+- [Component map](../diagrams/component-map.yaml)

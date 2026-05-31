@@ -26,10 +26,11 @@ source_refs:
   - .codewiki/kb/system/validation-gateway.md
   - .codewiki/kb/system/roadmap.md
 code_paths:
-  - src/change/**
-  - src/build/**
-  - src/gateway/**
-  - src/roadmap/**
+  - src/change
+  - src/build
+  - src/gateway
+  - src/roadmap
+code_paths_mode: explicit_override
 updated: "2026-06-01"
 summary: Approved semantic rows become KB evidence, decision builds, and validated planning input.
 ---
@@ -44,3 +45,10 @@ summary: Approved semantic rows become KB evidence, decision builds, and validat
 6. Planning consumes only passed decision evidence or a documented mechanical/runtime exemption.
 
 Planning must not guess at unapproved requirements. If a decision row is executable, the planning loop must map it to a roadmap task or sprint id. If it is knowledge-only, rejected, or non-executable, the durable KB or roadmap evidence must say so.
+
+## Related docs
+
+- [Compilers](../compilers.md)
+- [Runtime](../runtime.md)
+- [Validation Gateway](../validation-gateway.md)
+- [Key flow diagram](../diagrams/key-flow.yaml)
