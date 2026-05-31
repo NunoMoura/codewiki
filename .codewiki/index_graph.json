@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:05:05.631Z",
+  "generated_at": "2026-05-31T09:05:57.304Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -37765,120 +37765,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-259",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-259",
-      "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-      "agent_name": "Bison",
-      "mode": "write",
-      "status": "active",
-      "summary": "Implement backend batch decision approval workflow for TASK-069.",
-      "expires_at": "2026-05-31T11:51:50.568Z",
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-069"
-        },
-        {
-          "layer": "code",
-          "path": "src/change/tool.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/change/diff-table.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/build/writer.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/gateway/report.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/schemas.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/api/tools.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/**"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-069",
-      "kind": "change_claim_scope",
-      "path": "TASK-069",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/change/tool.ts",
-      "kind": "change_claim_scope",
-      "path": "src/change/tool.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/change/diff-table.ts",
-      "kind": "change_claim_scope",
-      "path": "src/change/diff-table.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/build/writer.ts",
-      "kind": "change_claim_scope",
-      "path": "src/build/writer.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/gateway/report.ts",
-      "kind": "change_claim_scope",
-      "path": "src/gateway/report.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/schemas.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/schemas.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/api/tools.ts",
-      "kind": "change_claim_scope",
-      "path": "src/api/tools.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/**",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -115017,61 +114903,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-259",
-      "to": "task:TASK-069"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:TASK-069"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/change/tool.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/change/diff-table.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/build/writer.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/gateway/report.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/adapters/pi/schemas.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:src/api/tools.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:tests/smoke/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-259",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -129263,7 +129094,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 35,
+            "item_count": 24,
             "badges": [
               {
                 "id": "open_tasks",
@@ -129293,7 +129124,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -129679,125 +129510,7 @@
             ]
           }
         ],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -147025,511 +146738,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "unspecified": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-259",
-          "role": "unspecified",
-          "mode": "write",
-          "task_id": "TASK-069"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-259",
-          "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-          "agent_name": "Bison",
-          "status": "active",
-          "mode": "write",
-          "summary": "Implement backend batch decision approval workflow for TASK-069.",
-          "task_id": "TASK-069",
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-069"
-            },
-            {
-              "layer": "code",
-              "path": "src/change/tool.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/change/diff-table.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/build/writer.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/api/tools.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/**"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            }
-          ],
-          "created_at": "2026-05-31T08:51:50Z",
-          "updated_at": "2026-05-31T08:51:50Z",
-          "expires_at": "2026-05-31T11:51:50.568Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/api/tools.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/writer.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/change/diff-table.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/change/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-069"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/api/tools.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/writer.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/change/diff-table.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/change/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-069"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-259",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "task_id": "TASK-069",
-              "summary": "Implement backend batch decision approval workflow for TASK-069.",
-              "expires_at": "2026-05-31T11:51:50.568Z",
-              "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -160417,125 +159644,7 @@
           ]
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 7,
       "gaps": [
@@ -161889,9 +160998,7 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
             ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
           ],
-          "claim_ids": [
-            "CLAIM-259"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -163527,7 +162634,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-31T09:05:05.484Z",
+      "generated_at": "2026-05-31T09:05:57.134Z",
       "counts": {
         "large-doc": 4
       },
@@ -163560,7 +162667,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-31T09:05:05Z",
+      "generated_at": "2026-05-31T09:05:57Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -165081,7 +164188,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-31T09:05:05Z",
+      "generated_at": "2026-05-31T09:05:57Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -165239,9 +164346,7 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
               ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
             ],
-            "claim_ids": [
-              "CLAIM-259"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -165561,7 +164666,7 @@
       },
       "direction": [
         "TASK-066 is open implementation delta below knowledge.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -168619,7 +167724,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-31T09:05:05Z",
+        "generated_at": "2026-05-31T09:05:57Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -168674,14 +167779,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T09:05:05Z",
+            "checked_at": "2026-05-31T09:05:57Z",
             "revision": {
               "git": {
-                "head": "fe10af524a9d7d33920e245841f437e26dfec514",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -168727,7 +167830,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "047abe5f7dbc3b13e018da876d81e0a36d095e7a",
+                  ".codewiki/roadmap/queue.json": "d523437d30fb65d8bffea5239875f8cad1ce79eb",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -168912,13 +168015,13 @@
               },
               "spec_digest": "ee24978fbd75a30bbe87e7faf1e46492084c8aec6cc499a2003dd0e16d840c35",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
-              "code_digest": "4c72ab0e754febec06037155ea2613442b6dd8cd0c2024065891a1ec8a4acf33",
-              "digest": "6b8c36c7a906c160056ade1804ddde5d58748770c821d412b45af36a3e53818a"
+              "code_digest": "44ea2bf9c07e6cda197adee5a591b9d76df1366d0d5fb5c31a6e0cb7d1e1a915",
+              "digest": "4937670cf0fb3f03b075fa613fa0b002b6ce232ac7e6a81aa27b466bbe03b711"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:05Z",
+              "checked_at": "2026-05-31T09:05:57Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -169366,14 +168469,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-31T09:05:05Z",
+            "checked_at": "2026-05-31T09:05:57Z",
             "revision": {
               "git": {
-                "head": "fe10af524a9d7d33920e245841f437e26dfec514",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -169403,7 +168504,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "047abe5f7dbc3b13e018da876d81e0a36d095e7a",
+                  ".codewiki/roadmap/queue.json": "d523437d30fb65d8bffea5239875f8cad1ce79eb",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -169581,13 +168682,13 @@
               },
               "spec_digest": "06d51f510d800b0818facc9013b57d82eb4662ebe8ea0d64edd9f63ceb57308b",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
-              "code_digest": "06d283c1fc2737e11edc4a8ad55eefa5aca003108aeae44eb3c001b84bd1ef7e",
-              "digest": "cdb6dfc5e3012923a675b8bfff8ec6c00d2311afc6e872c56a04ef4f5d2a48d7"
+              "code_digest": "1c80e1abf870056e6abf9c103b7ef07ce91cfc370f0fb339a8133e2923f0c81f",
+              "digest": "6652b376e55d05a510f889ccbffdb69f2e0fb245df1a43365b33554aff40d789"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:05Z",
+              "checked_at": "2026-05-31T09:05:57Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -170012,14 +169113,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T09:05:05Z",
+            "checked_at": "2026-05-31T09:05:57Z",
             "revision": {
               "git": {
-                "head": "fe10af524a9d7d33920e245841f437e26dfec514",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -170065,7 +169164,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "047abe5f7dbc3b13e018da876d81e0a36d095e7a",
+                  ".codewiki/roadmap/queue.json": "d523437d30fb65d8bffea5239875f8cad1ce79eb",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -170250,13 +169349,13 @@
               },
               "spec_digest": "ee24978fbd75a30bbe87e7faf1e46492084c8aec6cc499a2003dd0e16d840c35",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
-              "code_digest": "4c72ab0e754febec06037155ea2613442b6dd8cd0c2024065891a1ec8a4acf33",
-              "digest": "6b8c36c7a906c160056ade1804ddde5d58748770c821d412b45af36a3e53818a"
+              "code_digest": "44ea2bf9c07e6cda197adee5a591b9d76df1366d0d5fb5c31a6e0cb7d1e1a915",
+              "digest": "4937670cf0fb3f03b075fa613fa0b002b6ce232ac7e6a81aa27b466bbe03b711"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:05Z",
+              "checked_at": "2026-05-31T09:05:57Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -170705,289 +169804,23 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-31T09:05:05Z",
+        "generated_at": "2026-05-31T09:05:57Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-259",
-            "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-            "agent_name": "Bison",
-            "status": "active",
-            "mode": "write",
-            "summary": "Implement backend batch decision approval workflow for TASK-069.",
-            "task_id": "TASK-069",
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-069"
-              },
-              {
-                "layer": "code",
-                "path": "src/change/tool.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/change/diff-table.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/build/writer.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/gateway/report.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/schemas.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/api/tools.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/**"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              }
-            ],
-            "created_at": "2026-05-31T08:51:50Z",
-            "updated_at": "2026-05-31T08:51:50Z",
-            "expires_at": "2026-05-31T11:51:50.568Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/api/tools.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/build/writer.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/change/diff-table.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/change/tool.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-069"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-259",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "task_id": "TASK-069",
-                "summary": "Implement backend batch decision approval workflow for TASK-069.",
-                "expires_at": "2026-05-31T11:51:50.568Z",
-                "next_safe_action": "Wait for CLAIM-259 release or validated publisher/patch ref for CLAIM-259; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
