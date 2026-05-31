@@ -930,9 +930,11 @@
       ".codewiki/kb/system/validation-gateway.md"
     ],
     "roadmap": [
-      "No roadmap task created in decision mode. Planning required next.",
-      "planning-required:system-kb-architecture-reorg",
-      "planning-required:decision-loop-ux-reporting"
+      "SPRINT-017",
+      "TASK-066",
+      "TASK-068",
+      "TASK-069",
+      "TASK-067"
     ],
     "code": [],
     "tests": [],

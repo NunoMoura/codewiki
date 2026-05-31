@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T03:18:42Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-069/context.json",
+  "task": {
+    "id": "TASK-069",
+    "title": "Add interactive decision row approval and planning-impact preview",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "feature",
+    "change_type": "task",
+    "summary": "Improve the decision loop UX so users can approve/edit/reject/defer wiki_diff_table rows in a structured Pi TUI table and see a read-only planning-impact preview without merging decision and planning compilers.",
+    "labels": [
+      "decision-loop",
+      "tui",
+      "planning-preview",
+      "user-approval"
+    ],
+    "goal": {
+      "outcome": "Decision rows are presented as a user-actionable TUI table backed by wiki_diff_table, with a provisional planning-impact preview that does not mutate roadmap truth.",
+      "acceptance": [
+        "Pi TUI decision approval surface shows structured row fields, status, risk, alternatives, proof refs, and approve/edit/reject/defer controls or explicit fallback instructions.",
+        "Actions call the existing wiki_diff_table contract and persist row-level user action evidence.",
+        "Decision UI includes a read-only planning-impact preview that identifies likely knowledge-only, task, sprint, or deferred outcomes and invalidates when rows change.",
+        "Planning preview does not call wiki_roadmap or mutate roadmap truth.",
+        "Smoke tests or equivalent cover rendering/action model and fallback behavior."
+      ],
+      "non_goals": [
+        "Do not merge decision and planning compilers.",
+        "Do not create roadmap tasks from the decision UI.",
+        "Do not require a full terminal diagram renderer in this task."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted smoke tests for decision approval/planning preview",
+        "wiki_audit source-contract or changed profiles as applicable"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

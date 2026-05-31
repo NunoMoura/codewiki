@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "updated": "2026-05-31T01:04:07Z",
+  "updated": "2026-05-31T03:20:32Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036"
+    "TASK-036",
+    "TASK-066",
+    "TASK-067",
+    "TASK-068",
+    "TASK-069"
   ],
   "tasks": {
     "TASK-012": {
@@ -530,6 +534,239 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
+    },
+    "TASK-066": {
+      "id": "TASK-066",
+      "title": "Migrate system architecture diagram to canonical YAML",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "docs",
+      "summary": "Move the architecture diagram contract into `.codewiki/kb/system/diagrams/architecture.yaml`, define YAML-as-canonical rendering semantics, and mark `architecture.mmd` as compatibility/export only or remove it with validation evidence.",
+      "spec_paths": [
+        ".codewiki/kb/system/diagrams/README.md",
+        ".codewiki/kb/system/architecture.mmd",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "code_paths": [],
+      "research_ids": [],
+      "labels": [
+        "system-kb",
+        "diagrams",
+        "architecture",
+        "tui-rendering"
+      ],
+      "change_type": "product",
+      "goal": {
+        "outcome": "Architecture diagram truth lives under `system/diagrams` as agent-editable YAML with stable IDs and renderer hints for future Pi TUI ASCII rendering.",
+        "acceptance": [
+          "`.codewiki/kb/system/diagrams/architecture.yaml` exists with schema_version, id, title, kind, purpose, source_docs, renderer hints, nodes/groups/edges, and stable local IDs.",
+          "`.codewiki/kb/system/diagrams/README.md` states YAML is canonical, Mermaid is export/compatibility only, and HTML/SVG/generated ASCII are not source truth.",
+          "`architecture.mmd` is either removed after migration or explicitly marked compatibility/export only with no conflicting canonical status.",
+          "Diagram refs and stale-reference audits pass for changed docs."
+        ],
+        "non_goals": [
+          "Do not implement the TUI renderer in this task.",
+          "Do not rewrite all existing diagrams unless needed for the architecture migration.",
+          "Do not make Mermaid, HTML, SVG, or generated ASCII canonical."
+        ],
+        "verification": [
+          "wiki_audit profiles=alignment,stale-reference,generated-parity,changed",
+          "graph lint count for target diagram refs has no new errors",
+          "manual review that architecture.yaml preserves architecture.mmd nodes/edges"
+        ]
+      },
+      "delta": {
+        "desired": "Canonical architecture diagram source is YAML under `.codewiki/kb/system/diagrams` with compatibility/export status clear.",
+        "current": "Architecture diagram exists as `.codewiki/kb/system/architecture.mmd` outside `system/diagrams`; diagrams README names YAML as canonical but architecture migration is incomplete.",
+        "closure": ""
+      },
+      "created": "2026-05-31",
+      "updated": "2026-05-31T03:20:14Z"
+    },
+    "TASK-067": {
+      "id": "TASK-067",
+      "title": "Add semantic execution closure report for sprint/task validation",
+      "status": "in_progress",
+      "priority": "medium",
+      "kind": "feature",
+      "summary": "Create a closure report/view that compares approved decision rows to planning tasks, implementation builds, validation reports, and Git proof for task or sprint close review.",
+      "spec_paths": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "code_paths": [
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "src/roadmap/status.ts",
+        "src/state/builders.ts",
+        "src/state/graph.ts",
+        "src/ui/web/control-room.ts",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "closure-report",
+        "validation",
+        "sprint-close",
+        "semantic-trace"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Users and validators can review a compact closure comparison from approved semantic rows through tasks, builds, validation reports, and Git proof without creating a new canonical truth source.",
+        "acceptance": [
+          "A report/view maps approved decision rows to planning_build resolutions, roadmap task ids/sprint ids, implementation_build closure briefs, validation reports, and commit/tree proof when available.",
+          "The report highlights missing mappings, deviations, rejected/deferred rows, and remaining risks as validation evidence or follow-up questions.",
+          "The report is generated/build-backed and explicitly not a new source of truth.",
+          "Task/sprint close validation can cite the report or equivalent structured evidence.",
+          "Tests or deterministic fixtures cover row-to-execution mapping and missing-gap display."
+        ],
+        "non_goals": [
+          "Do not replace validation reports, implementation builds, roadmap evidence, or Git proof.",
+          "Do not require remote publication proof unless the close/publication profile needs it.",
+          "Do not build a full analytics dashboard.",
+          "Do not perform the system KB component/flow reorganization in this task."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted smoke/fixture tests for closure report mapping",
+          "wiki_audit changed/source-contract as applicable"
+        ]
+      },
+      "delta": {
+        "desired": "Closure review has a compact generated/report view that checks semantic execution against approved rows.",
+        "current": "Closure evidence is scattered across builds, validation reports, roadmap evidence, and commits.",
+        "closure": ""
+      },
+      "created": "2026-05-31",
+      "updated": "2026-05-31T03:18:53Z"
+    },
+    "TASK-068": {
+      "id": "TASK-068",
+      "title": "Scaffold system component docs from architecture and file-structure ownership",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "docs",
+      "summary": "Create `system/components` and `system/flows` docs from architecture/file-structure ownership, then shrink oversized system overview docs into linked index pages under the lint threshold.",
+      "spec_paths": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "src/api",
+        "src/agency",
+        "src/build",
+        "src/gateway",
+        "src/knowledge",
+        "src/roadmap",
+        "src/runtime",
+        "src/session",
+        "src/state",
+        "src/adapters",
+        "src/ui"
+      ],
+      "research_ids": [],
+      "labels": [
+        "system-kb",
+        "components",
+        "flows",
+        "large-doc",
+        "context-efficiency"
+      ],
+      "change_type": "product",
+      "goal": {
+        "outcome": "System KB details are reorganized into component and flow docs while oversized overview docs become compact index pages under the lint threshold.",
+        "acceptance": [
+          "`system/components/` exists with compact component docs for architecture nodes that map to current source folders or file-structure owner nodes.",
+          "Each component doc has frontmatter including component_id, diagram_refs, code_paths or source_roots, owners, and summary.",
+          "`system/flows/` exists with focused docs for decision-to-planning, planning-to-implementation, implementation-validation-close, runtime-daemon-dispatch, artifact-claim-wait-wake, resume-context-boundary, and publication-gc or justified first-slice equivalents.",
+          "Each flow doc has frontmatter with flow_id, participants/component_ids, diagram_refs, source_refs or code_paths, and summary.",
+          "`api.md`, `compilers.md`, `runtime.md`, and `validation-gateway.md` are below the word-count warning threshold and link to relevant component/flow docs.",
+          "No large-doc warnings remain for the four target docs; any remaining large-doc warning is explicitly unrelated.",
+          "Actors/artifacts without source ownership remain diagram nodes or flow participants, not component docs.",
+          "Stale-reference/generated-parity audits pass."
+        ],
+        "non_goals": [
+          "Do not implement code changes.",
+          "Do not create component docs for every graph node if it lacks source/file-structure ownership.",
+          "Do not duplicate all top-level doc prose inside component docs.",
+          "Do not change runtime, compiler, gateway, or API behavior.",
+          "Do not solve unrelated graph warnings outside the large-doc target."
+        ],
+        "verification": [
+          "wiki_state refresh shows no large-doc warnings for target docs",
+          "wiki_audit profiles=alignment,stale-reference,generated-parity,changed",
+          "word-count check confirms new component/flow docs remain below lint threshold",
+          "manual diff review confirms moved semantics have links from overview docs"
+        ]
+      },
+      "delta": {
+        "desired": "Additional outcome: Oversized system docs become compact overview/index pages, with retained behavior detail moved into focused flow docs linked to components and diagrams.",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-31",
+      "updated": "2026-05-31T03:20:32Z"
+    },
+    "TASK-069": {
+      "id": "TASK-069",
+      "title": "Add interactive decision row approval and planning-impact preview",
+      "status": "in_progress",
+      "priority": "medium",
+      "kind": "feature",
+      "summary": "Improve the decision loop UX so users can approve/edit/reject/defer wiki_diff_table rows in a structured Pi TUI table and see a read-only planning-impact preview without merging decision and planning compilers.",
+      "spec_paths": [],
+      "code_paths": [
+        "src/adapters/pi/ui/decision-approval.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/change/diff-table.ts",
+        "src/roadmap/selection.ts",
+        "src/roadmap/task-boundary.ts",
+        "tests/smoke/control-room.test.mjs",
+        "tests/smoke/efficiency-ui.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "decision-loop",
+        "tui",
+        "planning-preview",
+        "user-approval"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Decision rows are presented as a user-actionable TUI table backed by wiki_diff_table, with a provisional planning-impact preview that does not mutate roadmap truth.",
+        "acceptance": [
+          "Pi TUI decision approval surface shows structured row fields, status, risk, alternatives, proof refs, and approve/edit/reject/defer controls or explicit fallback instructions.",
+          "Actions call the existing wiki_diff_table contract and persist row-level user action evidence.",
+          "Decision UI includes a read-only planning-impact preview that identifies likely knowledge-only, task, sprint, or deferred outcomes and invalidates when rows change.",
+          "Planning preview does not call wiki_roadmap or mutate roadmap truth.",
+          "Smoke tests or equivalent cover rendering/action model and fallback behavior."
+        ],
+        "non_goals": [
+          "Do not merge decision and planning compilers.",
+          "Do not create roadmap tasks from the decision UI.",
+          "Do not require a full terminal diagram renderer in this task."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted smoke tests for decision approval/planning preview",
+          "wiki_audit source-contract or changed profiles as applicable"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-31",
+      "updated": "2026-05-31T03:18:42Z"
     }
   },
   "sprints": {
@@ -1153,6 +1390,58 @@
       ],
       "created": "2026-05-30T03:58:23Z",
       "updated": "2026-05-30T03:58:23Z"
+    },
+    "SPRINT-017": {
+      "id": "SPRINT-017",
+      "title": "System KB architecture and decision UX foundation",
+      "status": "active",
+      "outcome": "Reorganize system KB around canonical diagrams/components/flows, clear current large-doc warnings, and add user-facing decision-loop validation/reporting foundations while exercising bounded CodeWiki runtime/agency coordination.",
+      "task_ids": [
+        "TASK-066",
+        "TASK-068",
+        "TASK-069",
+        "TASK-067"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/diagrams/**",
+          ".codewiki/kb/system/components/**",
+          ".codewiki/kb/system/flows/**",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/validation-gateway.md"
+        ],
+        "code": [
+          "src/adapters/pi/ui/decision-approval.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/change/diff-table.ts",
+          "src/roadmap/selection.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "src/state/builders.ts",
+          "src/state/graph.ts",
+          "src/ui/web/control-room.ts"
+        ]
+      },
+      "budget": {
+        "maxCycles": 8,
+        "maxWallSeconds": 14400,
+        "maxTokens": 180000,
+        "maxWrites": 80,
+        "maxSessions": 4,
+        "maxSubagents": 3,
+        "risk": "medium"
+      },
+      "gates": [
+        "Planning validation must pass before implementation consumes tasks.",
+        "Run artifact-status claims for each task scope before writes.",
+        "Use bounded wiki_agency/runtime only; stop on platform_limited worker execution.",
+        "Implementation validation per task; task-close requires clean commit/tree proof.",
+        "Sprint closure report must compare approved rows to executed tasks/builds/validation proof."
+      ],
+      "created": "2026-05-31T03:19:30Z",
+      "updated": "2026-05-31T03:19:30Z"
     }
   }
 }
