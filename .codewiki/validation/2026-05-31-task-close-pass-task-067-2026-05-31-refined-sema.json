@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T19:00:04Z",
+  "profile": "task-close",
+  "task_id": "TASK-067",
+  "verdict": "pass",
+  "rationale": "TASK-067 task-close validation passes: implementation build and validation are committed, worktree was clean at checkpoint f7a4d4d, semantic closure scope has zero gaps/deviations and maps TASK-067 rows to current implementation build, validation report, and content proof. Remaining risks are limited to closure-proof review items resolved by this clean commit/tree evidence.",
+  "checks": [
+    "wiki_gateway task-close preflight_only=true — ready (1 medium semantic-closure-risks issue, 0 blockers)",
+    "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-067 — changed pass; task pass; generated-parity pass; alignment graph-health warnings",
+    "git status --short --untracked-files=all — clean before task-close report",
+    "git rev-parse HEAD — f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+    "git rev-parse HEAD^{tree} — 2f8e2591650134984df8b79f15cdd8f620b204c2"
+  ],
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Semantic closure remaining_risks are review evidence from implementation builds; clean commit/tree proof resolves the TASK-067 close-proof risk for this gate."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-067",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+      ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "src/state/graph.ts",
+      "src/gateway/report.ts",
+      "src/state/builders.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/ui/web/control-room.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-067",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+    "commit_title": "checkpoint(codewiki): TASK-067 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-067",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "CodeWiki-Checks: wiki_gateway task-close preflight_only=true — ready (1 medium semantic-closure-risks issue, 0 blockers); wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-067 — changed pass; task pass; generated-parity pass; alignment graph-health warnings; git status --short --untracked-files=all — clean before task-close report; git rev-parse HEAD — f7a4d4d861e603ca9ba02faf550add48bce0a7e1; git rev-parse HEAD^{tree} — 2f8e2591650134984df8b79f15cdd8f620b204c2"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/graph.ts",
+      "src/gateway/report.ts",
+      "src/state/builders.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/ui/web/control-room.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "2f8e2591650134984df8b79f15cdd8f620b204c2"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-067",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [
+        "semantic_closure:TASK-067:risk:Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
+        "semantic_closure:TASK-067:risk:Task-close still requires clean immutable commit/tree proof.",
+        "semantic_closure:TASK-067:risk:Fresh implementation validation required before checkpoint/task-close.",
+        "semantic_closure:TASK-067:risk:Task-close requires clean immutable commit/tree proof."
+      ],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "evidence": [
+          "semantic_closure:TASK-067:risk:Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
+          "semantic_closure:TASK-067:risk:Task-close still requires clean immutable commit/tree proof.",
+          "semantic_closure:TASK-067:risk:Fresh implementation validation required before checkpoint/task-close.",
+          "semantic_closure:TASK-067:risk:Task-close requires clean immutable commit/tree proof."
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+    "validated_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+    "tree_sha": "2f8e2591650134984df8b79f15cdd8f620b204c2",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean checkpoint commit after TASK-067 implementation validation, local graph rebuild, and claim release.",
+    "role": "validator"
+  }
+}

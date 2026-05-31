@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T18:59:21.507Z",
+  "generated_at": "2026-05-31T19:00:18.340Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -8577,16 +8577,6 @@
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
-    },
-    {
-      "id": "task:TASK-067",
-      "kind": "roadmap_task",
-      "title": "Add semantic execution closure report for sprint/task validation",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
     },
     {
       "id": "task:TASK-068",
@@ -38754,7 +38744,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-067",
       "superseded_by": [
@@ -38939,18 +38929,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "code:.codewiki/kb/system/roadmap.md",
-      "kind": "code_path",
-      "path": ".codewiki/kb/system/roadmap.md",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "closure:TASK-067",
-      "kind": "closure_brief",
-      "path": "TASK-067"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
@@ -39689,7 +39667,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-067",
       "superseded_by": [
@@ -53169,6 +53147,61 @@
       "id": "content_proof:f34b3e710cb17c65e72339f55d7284e71e31175e",
       "kind": "content_proof",
       "path": "f34b3e710cb17c65e72339f55d7284e71e31175e",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+        "validated_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+        "tree_sha": "2f8e2591650134984df8b79f15cdd8f620b204c2",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Clean checkpoint commit after TASK-067 implementation validation, local graph rebuild, and claim release.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity"
+        ],
+        "content_proof_refs": [
+          "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+          "2f8e2591650134984df8b79f15cdd8f620b204c2"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "content_proof:f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+      "kind": "content_proof",
+      "path": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:2f8e2591650134984df8b79f15cdd8f620b204c2",
+      "kind": "content_proof",
+      "path": "2f8e2591650134984df8b79f15cdd8f620b204c2",
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
@@ -72472,91 +72505,6 @@
     },
     {
       "kind": "task_spec",
-      "from": "task:TASK-067",
-      "to": "doc:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/build/writer.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-067"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/gateway/report.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-067"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/roadmap/status.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-067"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-067",
-      "to": "doc:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/roadmap.md",
-      "to": "code:src/build/writer.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-067"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/roadmap.md",
-      "to": "code:src/gateway/report.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-067"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/build/writer.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/gateway/report.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/roadmap/status.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/state/builders.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/state/graph.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:tests/smoke/gateway-preflight.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-067",
-      "to": "code:tests/smoke/graph-lenses.test.mjs"
-    },
-    {
-      "kind": "task_spec",
       "from": "task:TASK-068",
       "to": "doc:.codewiki/kb/system/file-structure.md"
     },
@@ -78445,6 +78393,13 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
+      "to": "code:src/build/writer.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/validation-gateway.md",
       "to": "code:src/build/tool.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
@@ -80203,6 +80158,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/roadmap.md",
       "to": "code:src/application/state.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/roadmap.md",
+      "to": "code:src/build/writer.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
     },
@@ -119958,81 +119920,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "build:.codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "task:TASK-067"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "build:.codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/state/graph.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/state/graph/lenses.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/state/builders.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/state/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/gateway/report.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "code:.codewiki/index_graph.json"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "test:tests/smoke/graph-lenses.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "test:tests/smoke/gateway-preflight.test.mjs"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-      "to": "closure:TASK-067"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
       "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
@@ -121027,126 +120914,6 @@
       "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-067",
       "default_hidden": true
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "build:.codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json"
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "build:.codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "task:TASK-067"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "build:.codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/build/writer.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/gateway/report.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/roadmap/status.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/state/builders.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/state/graph.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:tests/smoke/gateway-preflight.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "source:tests/smoke/graph-lenses.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/state/graph.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/state/graph/lenses.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/state/builders.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/state/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/gateway/report.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "code:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "test:tests/smoke/graph-lenses.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "test:tests/smoke/gateway-preflight.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "validation:.codewiki/index_graph.json"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-      "to": "closure:TASK-067"
     },
     {
       "kind": "validation_attests_source",
@@ -135593,6 +135360,53 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "content_proof:f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "content_proof:2f8e2591650134984df8b79f15cdd8f620b204c2",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+      "to": "task:TASK-067"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
       "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
       "default_hidden": true
@@ -135798,20 +135612,19 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 26,
+            "item_count": 25,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 5,
+                "count": 4,
                 "refs": [
-                  "TASK-067",
                   "TASK-068",
                   "TASK-071",
                   "TASK-072",
                   "TASK-073"
                 ],
-                "ref_count": 5
+                "ref_count": 4
               },
               {
                 "id": "done_tasks",
@@ -135852,12 +135665,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 458,
+            "item_count": 457,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 394
+                "count": 393
               },
               {
                 "id": "test_files",
@@ -135899,7 +135712,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 203
+                "count": 204
               },
               {
                 "id": "fail_or_block_validation",
@@ -135914,7 +135727,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1531
+                "count": 1533
               },
               {
                 "id": "traceability_gaps",
@@ -135945,11 +135758,11 @@
             "collapsed": 152
           },
           "validations": {
-            "total": 203,
-            "pass": 173,
+            "total": 204,
+            "pass": 174,
             "fail_or_block": 30,
             "hot": 9,
-            "collapsed": 203
+            "collapsed": 204
           }
         },
         "next_action": {
@@ -136025,7 +135838,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136124,7 +135938,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136223,7 +136038,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136322,7 +136138,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136421,7 +136238,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136520,7 +136338,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -136619,7 +136438,8 @@
               ".codewiki/index_graph.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
               ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+              ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -137624,6 +137444,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -137638,10 +137476,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -137794,6 +137636,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -137808,10 +137668,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -137968,6 +137832,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -137982,10 +137864,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -138087,6 +137973,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -138101,10 +138005,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -138725,46 +138633,6 @@
           ],
           "scopes": {
             "tasks": {
-              "TASK-067": {
-                "id": "TASK-067",
-                "row_count": 4,
-                "row_ids": [
-                  "SYS-ORG-007",
-                  "DECISION-UX-002",
-                  "DECISION-UX-004",
-                  "DECISION-UX-005"
-                ],
-                "status": "risk",
-                "gap_count": 0,
-                "gaps": [],
-                "deviations": [],
-                "remaining_risks": [
-                  "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
-                  "Task-close still requires clean immutable commit/tree proof.",
-                  "Fresh implementation validation required before checkpoint/task-close.",
-                  "Task-close requires clean immutable commit/tree proof."
-                ],
-                "implementation_builds": [
-                  ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
-                ],
-                "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
-                ],
-                "content_proof_refs": [
-                  ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
-                  "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
-                  "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
-                  "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
-                  "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
-                  "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
-                  "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
-                  "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
-                  "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
-                  "refs/codewiki/archive/task/TASK-067",
-                  "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
-                ]
-              },
               "TASK-068": {
                 "id": "TASK-068",
                 "row_count": 6,
@@ -138794,7 +138662,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -138808,7 +138677,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               },
               "TASK-071": {
@@ -138872,7 +138743,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -138886,7 +138758,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               },
               "TASK-069": {
@@ -138916,7 +138790,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -138930,7 +138805,52 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                ]
+              },
+              "TASK-067": {
+                "id": "TASK-067",
+                "row_count": 4,
+                "row_ids": [
+                  "SYS-ORG-007",
+                  "DECISION-UX-002",
+                  "DECISION-UX-004",
+                  "DECISION-UX-005"
+                ],
+                "status": "risk",
+                "gap_count": 0,
+                "gaps": [],
+                "deviations": [],
+                "remaining_risks": [
+                  "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
+                  "Task-close still requires clean immutable commit/tree proof.",
+                  "Fresh implementation validation required before checkpoint/task-close.",
+                  "Task-close requires clean immutable commit/tree proof."
+                ],
+                "implementation_builds": [
+                  ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                ],
+                "validation_reports": [
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
+                ],
+                "content_proof_refs": [
+                  ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
+                  "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
+                  "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
+                  "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
+                  "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
+                  "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
+                  "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
+                  "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
+                  "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
+                  "refs/codewiki/archive/task/TASK-067",
+                  "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               }
             },
@@ -138974,7 +138894,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -138988,7 +138909,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               }
             }
@@ -138999,10 +138922,136 @@
             ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
             ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
             ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-            ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+            ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ]
         },
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+              ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -149174,6 +149223,26 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-067",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:task",
+              "audit:generated-parity"
+            ],
+            "content_proof_refs": [
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
             "verdict": "pass",
             "profile": "task-close",
@@ -152339,6 +152408,25 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+            "task_id": "TASK-067",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "validated_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
+            ],
+            "publisher_result_refs": [
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
             "task_id": "TASK-069",
             "verdict": "pass",
@@ -153227,6 +153315,7 @@
           "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
           "2e05f19ffbd671c95b8a0c70e55994d80e88a961",
           "2e61f2b410074518a8c458f350364d63e3a4a73d",
+          "2f8e2591650134984df8b79f15cdd8f620b204c2",
           "301e7f5373522d6371bee8be22af818132f02937",
           "30bb7407237bfc0f06009ed391e69117bbfdd45e",
           "325e55f39c5124ea08c04f9cc3c531ca805dcd75",
@@ -153373,6 +153462,7 @@
           "f377114117f24f063d787bb82639f75543a9e801",
           "f5fa6eff83926532d89ad51ee5426ae0a70709f3",
           "f607024d4ee250a648b1651b801427fc60ad3b2c",
+          "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
           "f84eb90f9c6496f0a453acb5455fa7bb03c65f12",
           "f9bb1a58958ac5073a2ca72de1de1a4424f6362a",
           "fd387a6ae9936038f1a61abbc6ac2c69e7dd9126",
@@ -155805,6 +155895,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -155819,10 +155927,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -155975,6 +156087,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -155989,10 +156119,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -156149,6 +156283,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -156163,10 +156315,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -156268,6 +156424,24 @@
                   ],
                   "commit_tree_proof_refs": [],
                   "isolation_status": "isolated"
+                },
+                {
+                  "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+                  "profile": "task-close",
+                  "verdict": "pass",
+                  "task_id": "TASK-067",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                  ],
+                  "content_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                    "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                  ],
+                  "isolation_status": "isolated"
                 }
               ],
               "content_proof_refs": [
@@ -156282,10 +156456,14 @@
                 "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                 "refs/codewiki/archive/task/TASK-067",
                 "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "commit_tree_proof_refs": [
-                "refs/codewiki/archive/task/TASK-067"
+                "refs/codewiki/archive/task/TASK-067",
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
               ],
               "remaining_risks": [
                 "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -156906,46 +157084,6 @@
           ],
           "scopes": {
             "tasks": {
-              "TASK-067": {
-                "id": "TASK-067",
-                "row_count": 4,
-                "row_ids": [
-                  "SYS-ORG-007",
-                  "DECISION-UX-002",
-                  "DECISION-UX-004",
-                  "DECISION-UX-005"
-                ],
-                "status": "risk",
-                "gap_count": 0,
-                "gaps": [],
-                "deviations": [],
-                "remaining_risks": [
-                  "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
-                  "Task-close still requires clean immutable commit/tree proof.",
-                  "Fresh implementation validation required before checkpoint/task-close.",
-                  "Task-close requires clean immutable commit/tree proof."
-                ],
-                "implementation_builds": [
-                  ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
-                ],
-                "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
-                ],
-                "content_proof_refs": [
-                  ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
-                  "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
-                  "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
-                  "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
-                  "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
-                  "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
-                  "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
-                  "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
-                  "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
-                  "refs/codewiki/archive/task/TASK-067",
-                  "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
-                ]
-              },
               "TASK-068": {
                 "id": "TASK-068",
                 "row_count": 6,
@@ -156975,7 +157113,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -156989,7 +157128,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               },
               "TASK-071": {
@@ -157053,7 +157194,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -157067,7 +157209,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               },
               "TASK-069": {
@@ -157097,7 +157241,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -157111,7 +157256,52 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
+                ]
+              },
+              "TASK-067": {
+                "id": "TASK-067",
+                "row_count": 4,
+                "row_ids": [
+                  "SYS-ORG-007",
+                  "DECISION-UX-002",
+                  "DECISION-UX-004",
+                  "DECISION-UX-005"
+                ],
+                "status": "risk",
+                "gap_count": 0,
+                "gaps": [],
+                "deviations": [],
+                "remaining_risks": [
+                  "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
+                  "Task-close still requires clean immutable commit/tree proof.",
+                  "Fresh implementation validation required before checkpoint/task-close.",
+                  "Task-close requires clean immutable commit/tree proof."
+                ],
+                "implementation_builds": [
+                  ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+                ],
+                "validation_reports": [
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
+                ],
+                "content_proof_refs": [
+                  ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
+                  "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
+                  "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
+                  "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
+                  "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
+                  "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
+                  "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
+                  "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
+                  "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
+                  "refs/codewiki/archive/task/TASK-067",
+                  "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               }
             },
@@ -157155,7 +157345,8 @@
                   ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
                 ],
                 "validation_reports": [
-                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+                  ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+                  ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
                 ],
                 "content_proof_refs": [
                   ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -157169,7 +157360,9 @@
                   "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
                   "refs/codewiki/archive/task/TASK-067",
                   "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+                  "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+                  "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                  "2f8e2591650134984df8b79f15cdd8f620b204c2"
                 ]
               }
             }
@@ -157180,7 +157373,8 @@
             ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
             ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
             ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-            ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+            ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ]
         },
         "file_structure_drift": {
@@ -157376,21 +157570,18 @@
         "TASK-012",
         "TASK-023",
         "TASK-036",
-        "TASK-067",
         "TASK-068",
         "TASK-071",
         "TASK-072",
         "TASK-073"
       ],
       "open_task_ids": [
-        "TASK-067",
         "TASK-068",
         "TASK-071",
         "TASK-072",
         "TASK-073"
       ],
       "in_progress_task_ids": [
-        "TASK-067",
         "TASK-068",
         "TASK-071",
         "TASK-072",
@@ -157406,7 +157597,7 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "in_progress": 5
+        "in_progress": 4
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -158049,8 +158240,7 @@
             "TASK-067"
           ],
           "open_task_ids": [
-            "TASK-068",
-            "TASK-067"
+            "TASK-068"
           ],
           "budget": {
             "maxCycles": 8,
@@ -158568,6 +158758,24 @@
               ],
               "commit_tree_proof_refs": [],
               "isolation_status": "isolated"
+            },
+            {
+              "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+              "profile": "task-close",
+              "verdict": "pass",
+              "task_id": "TASK-067",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+              ],
+              "content_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "commit_tree_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "isolation_status": "isolated"
             }
           ],
           "content_proof_refs": [
@@ -158582,10 +158790,14 @@
             "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
             "refs/codewiki/archive/task/TASK-067",
             "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "commit_tree_proof_refs": [
-            "refs/codewiki/archive/task/TASK-067"
+            "refs/codewiki/archive/task/TASK-067",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "remaining_risks": [
             "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -158738,6 +158950,24 @@
               ],
               "commit_tree_proof_refs": [],
               "isolation_status": "isolated"
+            },
+            {
+              "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+              "profile": "task-close",
+              "verdict": "pass",
+              "task_id": "TASK-067",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+              ],
+              "content_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "commit_tree_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "isolation_status": "isolated"
             }
           ],
           "content_proof_refs": [
@@ -158752,10 +158982,14 @@
             "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
             "refs/codewiki/archive/task/TASK-067",
             "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "commit_tree_proof_refs": [
-            "refs/codewiki/archive/task/TASK-067"
+            "refs/codewiki/archive/task/TASK-067",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "remaining_risks": [
             "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -158912,6 +159146,24 @@
               ],
               "commit_tree_proof_refs": [],
               "isolation_status": "isolated"
+            },
+            {
+              "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+              "profile": "task-close",
+              "verdict": "pass",
+              "task_id": "TASK-067",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+              ],
+              "content_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "commit_tree_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "isolation_status": "isolated"
             }
           ],
           "content_proof_refs": [
@@ -158926,10 +159178,14 @@
             "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
             "refs/codewiki/archive/task/TASK-067",
             "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "commit_tree_proof_refs": [
-            "refs/codewiki/archive/task/TASK-067"
+            "refs/codewiki/archive/task/TASK-067",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "remaining_risks": [
             "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -159031,6 +159287,24 @@
               ],
               "commit_tree_proof_refs": [],
               "isolation_status": "isolated"
+            },
+            {
+              "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+              "profile": "task-close",
+              "verdict": "pass",
+              "task_id": "TASK-067",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+              ],
+              "content_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "commit_tree_proof_refs": [
+                "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "2f8e2591650134984df8b79f15cdd8f620b204c2"
+              ],
+              "isolation_status": "isolated"
             }
           ],
           "content_proof_refs": [
@@ -159045,10 +159319,14 @@
             "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
             "refs/codewiki/archive/task/TASK-067",
             "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+            "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "commit_tree_proof_refs": [
-            "refs/codewiki/archive/task/TASK-067"
+            "refs/codewiki/archive/task/TASK-067",
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
           ],
           "remaining_risks": [
             "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
@@ -159669,46 +159947,6 @@
       ],
       "scopes": {
         "tasks": {
-          "TASK-067": {
-            "id": "TASK-067",
-            "row_count": 4,
-            "row_ids": [
-              "SYS-ORG-007",
-              "DECISION-UX-002",
-              "DECISION-UX-004",
-              "DECISION-UX-005"
-            ],
-            "status": "risk",
-            "gap_count": 0,
-            "gaps": [],
-            "deviations": [],
-            "remaining_risks": [
-              "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
-              "Task-close still requires clean immutable commit/tree proof.",
-              "Fresh implementation validation required before checkpoint/task-close.",
-              "Task-close requires clean immutable commit/tree proof."
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
-            ],
-            "validation_reports": [
-              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
-            ],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
-              "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
-              "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
-              "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
-              "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
-              "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
-              "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
-              "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
-              "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
-              "refs/codewiki/archive/task/TASK-067",
-              "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
-            ]
-          },
           "TASK-068": {
             "id": "TASK-068",
             "row_count": 6,
@@ -159738,7 +159976,8 @@
               ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
             ],
             "validation_reports": [
-              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "content_proof_refs": [
               ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -159752,7 +159991,9 @@
               "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
               "refs/codewiki/archive/task/TASK-067",
               "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
             ]
           },
           "TASK-071": {
@@ -159816,7 +160057,8 @@
               ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
             ],
             "validation_reports": [
-              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "content_proof_refs": [
               ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -159830,7 +160072,9 @@
               "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
               "refs/codewiki/archive/task/TASK-067",
               "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
             ]
           },
           "TASK-069": {
@@ -159860,7 +160104,8 @@
               ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
             ],
             "validation_reports": [
-              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "content_proof_refs": [
               ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -159874,7 +160119,52 @@
               "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
               "refs/codewiki/archive/task/TASK-067",
               "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
+            ]
+          },
+          "TASK-067": {
+            "id": "TASK-067",
+            "row_count": 4,
+            "row_ids": [
+              "SYS-ORG-007",
+              "DECISION-UX-002",
+              "DECISION-UX-004",
+              "DECISION-UX-005"
+            ],
+            "status": "risk",
+            "gap_count": 0,
+            "gaps": [],
+            "deviations": [],
+            "remaining_risks": [
+              "Fresh implementation validation required for this refinement before checkpoint commit/task-close.",
+              "Task-close still requires clean immutable commit/tree proof.",
+              "Fresh implementation validation required before checkpoint/task-close.",
+              "Task-close requires clean immutable commit/tree proof."
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+            ],
+            "validation_reports": [
+              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
+            ],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
+              "tests/smoke/graph-lenses.test.mjs@sha256:28d8e84be39e89360a31d9fe2644e6e5ba44ce13f8fbeb3e717aca1a87390289",
+              "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
+              "src/state/graph.ts@sha256:e56bc6f8a7675704dcbdf95e034d59e049db26dbb5fcaf2282b637f5ba26059e",
+              "src/gateway/report.ts@sha256:1d91ddd3ffc04535e118547ccb863fc09aa24891848438c2be989cd82676a3c1",
+              "src/state/builders.ts@sha256:bf58d83dd6eea3344e4d3b1fd2c754aca8463656347f397d4676d233f3bf3e63",
+              "src/state/graph/lenses.ts@sha256:d2532e43c4e636d5ee54b0e25baaab98d7fdcbe570613096b4da09e2fa015665",
+              "src/state/types.ts@sha256:de31d13ea3df2cd971b0a984646081cd53514203d5659bc7bd3bc659f7363c21",
+              "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
+              "refs/codewiki/archive/task/TASK-067",
+              "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
+              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
             ]
           }
         },
@@ -159918,7 +160208,8 @@
               ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
             ],
             "validation_reports": [
-              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+              ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+              ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
             ],
             "content_proof_refs": [
               ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json@sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
@@ -159932,7 +160223,9 @@
               "src/ui/web/control-room.ts@sha256:e0da2a869e81a2182e8beb99fe7a577244f2d3afc77dca6d800d53301e9b39d6",
               "refs/codewiki/archive/task/TASK-067",
               "sha256:ad877a4e70cf6f70ff7ff065612207fda35b43784d85f0ba502c9201cf68848c",
-              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353"
+              "sha256:44e6093deeb4bb0f85445ff95b0d81866c91e3a141dce1935f55673de4993353",
+              "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+              "2f8e2591650134984df8b79f15cdd8f620b204c2"
             ]
           }
         }
@@ -159943,7 +160236,8 @@
         ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
         ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
         ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-        ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json"
+        ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
+        ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
       ]
     },
     "decision_propagation": {
@@ -164511,6 +164805,25 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+          "task_id": "TASK-067",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+          "validated_sha": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
+          ],
+          "publisher_result_refs": [
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
           "task_id": "TASK-069",
           "verdict": "pass",
@@ -166245,6 +166558,7 @@
         "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
         "2e05f19ffbd671c95b8a0c70e55994d80e88a961",
         "2e61f2b410074518a8c458f350364d63e3a4a73d",
+        "2f8e2591650134984df8b79f15cdd8f620b204c2",
         "301e7f5373522d6371bee8be22af818132f02937",
         "30bb7407237bfc0f06009ed391e69117bbfdd45e",
         "325e55f39c5124ea08c04f9cc3c531ca805dcd75",
@@ -166391,6 +166705,7 @@
         "f377114117f24f063d787bb82639f75543a9e801",
         "f5fa6eff83926532d89ad51ee5426ae0a70709f3",
         "f607024d4ee250a648b1651b801427fc60ad3b2c",
+        "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
         "f84eb90f9c6496f0a453acb5455fa7bb03c65f12",
         "f9bb1a58958ac5073a2ca72de1de1a4424f6362a",
         "fd387a6ae9936038f1a61abbc6ac2c69e7dd9126",
@@ -172341,6 +172656,26 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-067",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity"
+          ],
+          "content_proof_refs": [
+            "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+            "2f8e2591650134984df8b79f15cdd8f620b204c2"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
           "verdict": "pass",
           "profile": "task-close",
@@ -174558,7 +174893,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -174657,7 +174993,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -174756,7 +175093,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -174855,7 +175193,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -174954,7 +175293,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -175053,7 +175393,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -175152,7 +175493,8 @@
             ".codewiki/index_graph.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
             ".codewiki/validation/2026-05-31-implementation-pass-task-067-2026-05-31-refined-.json",
-            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json"
+            ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+            ".codewiki/validation/2026-05-31-task-close-pass-task-067-2026-05-31-refined-sema.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -175725,7 +176067,132 @@
           ]
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 12,
       "gaps": [
@@ -176266,14 +176733,12 @@
           "TASK-012",
           "TASK-023",
           "TASK-036",
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
           "TASK-073"
         ],
         "open_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
@@ -176935,8 +177400,7 @@
             "TASK-067"
           ],
           "open_task_ids": [
-            "TASK-068",
-            "TASK-067"
+            "TASK-068"
           ],
           "budget": {
             "maxCycles": 8,
@@ -177215,33 +177679,6 @@
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
           ]
         },
-        "TASK-067": {
-          "kind": "task",
-          "id": "TASK-067",
-          "task_ids": [
-            "TASK-067"
-          ],
-          "open_task_ids": [
-            "TASK-067"
-          ],
-          "sprint_ids": [
-            "SPRINT-017"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/validation-gateway.md",
-            ".codewiki/kb/system/roadmap.md"
-          ],
-          "code_paths": [
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "src/roadmap/status.ts",
-            "src/state/builders.ts",
-            "src/state/graph.ts",
-            "src/ui/web/control-room.ts",
-            "tests/smoke/gateway-preflight.test.mjs",
-            "tests/smoke/graph-lenses.test.mjs"
-          ]
-        },
         "TASK-068": {
           "kind": "task",
           "id": "TASK-068",
@@ -177401,7 +177838,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-067",
             "TASK-068",
             "TASK-071",
             "TASK-072",
@@ -177738,11 +178174,13 @@
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
             ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
             ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
             ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
             ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
             ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json"
           ]
         },
         "purgeable": {
@@ -178944,11 +179382,13 @@
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
           ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+          ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
           ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
           ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
           ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
           ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-          ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+          ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+          ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -179312,7 +179752,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-31T18:59:21.324Z",
+      "generated_at": "2026-05-31T19:00:18.148Z",
       "counts": {
         "unscoped-doc": 1,
         "large-doc": 5,
@@ -179401,7 +179841,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-31T18:59:21Z",
+      "generated_at": "2026-05-31T19:00:18Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -179412,16 +179852,16 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 8,
-        "open_count": 5,
+        "task_count": 7,
+        "open_count": 4,
         "sprint_count": 18,
         "active_sprint_count": 1,
         "status_counts": {
           "cancelled": 3,
-          "in_progress": 5
+          "in_progress": 4
         },
         "priority_counts": {
-          "medium": 3,
+          "medium": 2,
           "high": 5
         }
       },
@@ -179430,21 +179870,18 @@
           "TASK-012",
           "TASK-023",
           "TASK-036",
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
           "TASK-073"
         ],
         "open_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
           "TASK-073"
         ],
         "executable_open_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
@@ -180092,8 +180529,7 @@
               "TASK-067"
             ],
             "open_task_ids": [
-              "TASK-068",
-              "TASK-067"
+              "TASK-068"
             ],
             "budget": {
               "maxCycles": 8,
@@ -180179,14 +180615,12 @@
           }
         ],
         "in_progress_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
           "TASK-073"
         ],
         "executable_in_progress_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
@@ -180202,7 +180636,6 @@
           "TASK-036"
         ],
         "recent_task_ids": [
-          "TASK-067",
           "TASK-073",
           "TASK-072",
           "TASK-071",
@@ -180743,66 +181176,6 @@
             "updated_at": ""
           }
         },
-        "TASK-067": {
-          "id": "TASK-067",
-          "title": "Add semantic execution closure report for sprint/task validation",
-          "status": "in_progress",
-          "priority": "medium",
-          "kind": "feature",
-          "change_type": "system",
-          "summary": "Create a closure report/view that compares approved decision rows to planning tasks, implementation builds, validation reports, and Git proof for task or sprint close review.",
-          "labels": [
-            "closure-report",
-            "validation",
-            "sprint-close",
-            "semantic-trace"
-          ],
-          "goal": {
-            "outcome": "Users and validators can review a compact closure comparison from approved semantic rows through tasks, builds, validation reports, and Git proof without creating a new canonical truth source.",
-            "acceptance": [
-              "A report/view maps approved decision rows to planning_build resolutions, roadmap task ids/sprint ids, implementation_build closure briefs, validation reports, and commit/tree proof when available.",
-              "The report highlights missing mappings, deviations, rejected/deferred rows, and remaining risks as validation evidence or follow-up questions.",
-              "The report is generated/build-backed and explicitly not a new source of truth.",
-              "Task/sprint close validation can cite the report or equivalent structured evidence.",
-              "Tests or deterministic fixtures cover row-to-execution mapping and missing-gap display."
-            ],
-            "non_goals": [
-              "Do not replace validation reports, implementation builds, roadmap evidence, or Git proof.",
-              "Do not require remote publication proof unless the close/publication profile needs it.",
-              "Do not build a full analytics dashboard.",
-              "Do not perform the system KB component/flow reorganization in this task."
-            ],
-            "verification": [
-              "npm run typecheck",
-              "targeted smoke/fixture tests for closure report mapping",
-              "wiki_audit changed/source-contract as applicable"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/validation-gateway.md",
-            ".codewiki/kb/system/roadmap.md"
-          ],
-          "code_paths": [
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "src/roadmap/status.ts",
-            "src/state/builders.ts",
-            "src/state/graph.ts",
-            "src/ui/web/control-room.ts",
-            "tests/smoke/gateway-preflight.test.mjs",
-            "tests/smoke/graph-lenses.test.mjs"
-          ],
-          "updated": "2026-05-31T18:57:14Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-067/context.json",
-          "loop": {
-            "updated_at": ""
-          }
-        },
         "TASK-068": {
           "id": "TASK-068",
           "title": "Scaffold system component docs from architecture and file-structure ownership",
@@ -181071,7 +181444,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-31T18:59:21Z",
+      "generated_at": "2026-05-31T19:00:18Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -181086,13 +181459,13 @@
       "summary": {
         "total_specs": 22,
         "mapped_specs": 22,
-        "aligned_specs": 26,
-        "tracked_specs": 14,
+        "aligned_specs": 27,
+        "tracked_specs": 13,
         "untracked_specs": 1,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 8,
-        "open_task_count": 5,
+        "task_count": 7,
+        "open_task_count": 4,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 0
@@ -181100,14 +181473,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 14,
-          "total": 15,
+          "value": 13,
+          "total": 14,
           "percent": 93
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 8,
+          "total": 7,
           "percent": 0
         },
         "spec_mapping": {
@@ -181130,7 +181503,6 @@
           ".codewiki/kb/system/extension.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/roadmap.md",
           ".codewiki/kb/system/runtime.md",
           ".codewiki/kb/system/terminal-ui.md",
           ".codewiki/kb/system/validation-gateway.md"
@@ -181148,7 +181520,6 @@
           ".codewiki/kb/system/file-structure.md"
         ],
         "open_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
@@ -181224,7 +181595,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-067",
               "TASK-068",
               "TASK-071",
               "TASK-072",
@@ -181561,11 +181931,13 @@
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
               ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
               ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
               ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
               ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
               ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json"
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json"
             ]
           },
           "purgeable": {
@@ -181587,7 +181959,7 @@
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 22/22.",
-        "Tracked drift coverage: 14/15.",
+        "Tracked drift coverage: 13/14.",
         "File-structure drift: 0 actionable item(s), 0 approved migration delta(s)."
       ],
       "file_structure": {
@@ -182957,144 +183329,6 @@
           "note": "tracked by TASK-071"
         },
         {
-          "path": ".codewiki/kb/system/roadmap.md",
-          "title": "Roadmap",
-          "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/**",
-            "src/project/context.ts",
-            "src/project/root.ts",
-            "src/project/bootstrap.ts",
-            "src/project/tool.ts",
-            "src/project/templates.ts",
-            "src/project/types.ts",
-            "src/project/local/filesystem.ts",
-            "src/project/local/file-store.ts",
-            "src/project/local/git-cache.ts",
-            "src/knowledge/doc-parser.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/change/types.ts",
-            "src/change/traceability.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "src/gc/types.ts",
-            "src/gc/runtime.ts",
-            "src/gc/tool.ts",
-            "src/session/types.ts",
-            "src/session/links.ts",
-            "src/session/worktree-isolation.ts",
-            "src/session/runtime.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "src/roadmap/types.ts",
-            "src/roadmap/status.ts",
-            "src/roadmap/task-id.ts",
-            "src/roadmap/task-boundary.ts",
-            "src/roadmap/store.ts",
-            "src/roadmap/task.ts",
-            "src/roadmap/tool.ts",
-            "src/state/types.ts",
-            "src/state/reader.ts",
-            "src/state/artifacts.ts",
-            "src/state/builders.ts",
-            "src/state/rebuild.ts",
-            "src/state/graph.ts",
-            "src/state/graph/rebuilder.ts",
-            "src/state/lint.ts",
-            "src/state/resume-context.ts",
-            "src/state/prompt.ts",
-            "src/state/skill-assets.ts",
-            "src/state/local/rebuild-runner.ts",
-            "src/state/local/status-dock-prefs.ts",
-            "src/state/tool.ts",
-            "src/state/resume-tool.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "src/shared/ports.ts",
-            "src/shared/utils.ts",
-            "src/shared/lock.ts",
-            "src/index.ts",
-            "scripts/check-architecture.mjs",
-            "tests/tasks/TASK-076/restructure.test.mjs",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/adapters/pi/commands/config.ts",
-            "package.json",
-            ".pi-lens",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/audit/tool.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/gateway-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "src/roadmap/runtime.ts",
-            "src/adapters/pi/tools/ports.ts",
-            "src/adapters/pi/tools/task.ts",
-            "src/application/graph.ts",
-            "src/application/graph/rebuilder.ts",
-            "src/application/lint.ts",
-            "src/application/prompt.ts",
-            "src/application/resume-context.ts",
-            "src/application/state-artifacts.ts",
-            "src/application/state-builders.ts",
-            "src/application/state.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/state/types.ts"
-          ],
-          "code_area": ".codewiki, src +6 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-067"
-          ],
-          "primary_task": {
-            "id": "TASK-067",
-            "status": "in_progress",
-            "title": "Add semantic execution closure report for sprint/task validation"
-          },
-          "revision": {
-            "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-067"
-        },
-        {
           "path": ".codewiki/kb/system/runtime.md",
           "title": "CodeWiki Runtime",
           "summary": "Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, claims, compiler/gateway preparation, harness boundaries, and session spawning.",
@@ -183278,9 +183512,6 @@
             "tests/smoke/audit-drift.test.mjs",
             "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "src/roadmap/status.ts",
             "src/api",
             "src/agency",
             "src/build",
@@ -183323,6 +183554,7 @@
             "src/build/lifecycle.ts",
             "src/build/decision-propagation.ts",
             "src/build/shared.ts",
+            "src/build/writer.ts",
             "src/build/tool.ts",
             "src/build/index.ts",
             "src/validation/types.ts",
@@ -183348,19 +183580,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-067",
             "TASK-068"
           ],
           "primary_task": {
-            "id": "TASK-067",
+            "id": "TASK-068",
             "status": "in_progress",
-            "title": "Add semantic execution closure report for sprint/task validation"
+            "title": "Scaffold system component docs from architecture and file-structure ownership"
           },
           "revision": {
             "digest": "4c195cbfa265ef6ae8cc236a713c0fbdc5965ee704937bf24f04fee5792b7e18",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-067"
+          "note": "tracked by TASK-068"
         },
         {
           "path": ".codewiki/kb/lexicon.md",
@@ -184639,6 +184870,137 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/roadmap.md",
+          "title": "Roadmap",
+          "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/roadmap/queue.json",
+            ".codewiki/roadmap/tasks/**",
+            "src/project/context.ts",
+            "src/project/root.ts",
+            "src/project/bootstrap.ts",
+            "src/project/tool.ts",
+            "src/project/templates.ts",
+            "src/project/types.ts",
+            "src/project/local/filesystem.ts",
+            "src/project/local/file-store.ts",
+            "src/project/local/git-cache.ts",
+            "src/knowledge/doc-parser.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/change/types.ts",
+            "src/change/traceability.ts",
+            "src/change/diff-table.ts",
+            "src/change/tool.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts",
+            "src/session/types.ts",
+            "src/session/links.ts",
+            "src/session/worktree-isolation.ts",
+            "src/session/runtime.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "src/roadmap/types.ts",
+            "src/roadmap/status.ts",
+            "src/roadmap/task-id.ts",
+            "src/roadmap/task-boundary.ts",
+            "src/roadmap/store.ts",
+            "src/roadmap/task.ts",
+            "src/roadmap/tool.ts",
+            "src/state/types.ts",
+            "src/state/reader.ts",
+            "src/state/artifacts.ts",
+            "src/state/builders.ts",
+            "src/state/rebuild.ts",
+            "src/state/graph.ts",
+            "src/state/graph/rebuilder.ts",
+            "src/state/lint.ts",
+            "src/state/resume-context.ts",
+            "src/state/prompt.ts",
+            "src/state/skill-assets.ts",
+            "src/state/local/rebuild-runner.ts",
+            "src/state/local/status-dock-prefs.ts",
+            "src/state/tool.ts",
+            "src/state/resume-tool.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "src/shared/ports.ts",
+            "src/shared/utils.ts",
+            "src/shared/lock.ts",
+            "src/index.ts",
+            "scripts/check-architecture.mjs",
+            "tests/tasks/TASK-076/restructure.test.mjs",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/adapters/pi/commands/config.ts",
+            "package.json",
+            ".pi-lens",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/audit/tool.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            "src/roadmap/runtime.ts",
+            "src/adapters/pi/tools/ports.ts",
+            "src/adapters/pi/tools/task.ts",
+            "src/application/graph.ts",
+            "src/application/graph/rebuilder.ts",
+            "src/application/lint.ts",
+            "src/application/prompt.ts",
+            "src/application/resume-context.ts",
+            "src/application/state-artifacts.ts",
+            "src/application/state-builders.ts",
+            "src/application/state.ts",
+            "src/build/writer.ts",
+            "src/domain/shared/types.ts",
+            "src/domain/state/types.ts"
+          ],
+          "code_area": ".codewiki, src +6 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/system-truth-and-compilers.md",
           "title": "System Truth and Compilers",
           "summary": "CodeWiki truth boundaries, compiler-loop model, and validation/publication proof relationships.",
@@ -184853,7 +185215,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-31T18:59:21Z",
+        "generated_at": "2026-05-31T19:00:18Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -184908,12 +185270,14 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T18:59:21Z",
+            "checked_at": "2026-05-31T19:00:18Z",
             "revision": {
               "git": {
-                "head": "0caecbd219b09a502b479b8fd8f3ff248a229922",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -185036,7 +185400,6 @@
                   "src/change/types.ts": "285a504017aa99b7a0ded843fabfbe4bd11abf3a",
                   "src/gateway": "",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "e155c88437ec4bbcdf1d628190f904254e7415c6",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "191c568251ec6c06bfc4f90473ebbea7842646cb",
@@ -185147,16 +185510,16 @@
                 }
               },
               "spec_digest": "649057bd47e76795224abbe2b7dbebf03804686775186a128804041407d0d4e9",
-              "task_digest": "75d77a86755ead003d668ad359faae979e85dc51e79b6446f0318fa83a76e1af",
-              "code_digest": "bbb3d3f41000495644b4b40a84a20bd75a1cc81d53e078eca54cc2dd20e14ccd",
-              "digest": "36e31cb2a5ebd53198e2488f898afe860b20d0c60735ddd41c496c4d44ca9226"
+              "task_digest": "67e4b4e86aa1dc18b75400aecb5c6552bfc7140ff020077f1352f3781fdbba5a",
+              "code_digest": "4f51cea2b10c1639e8e60fc32edfb5790e96abe2074ac8794a118ce1dabc6ad5",
+              "digest": "3263667c289caef185d5a5563917841f62127513fa7c3ab96ae50f57ada2aa04"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T18:59:21Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-31T19:00:18Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/uis/terminal.md",
@@ -185184,7 +185547,6 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
@@ -185197,6 +185559,7 @@
               ".codewiki/kb/system/graph-transition-traceability.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
@@ -185549,7 +185912,6 @@
               ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
-              "src/gateway/report.ts",
               "src/runtime/",
               "src/adapters/pi",
               ".codewiki/kb/product/**",
@@ -185567,7 +185929,6 @@
             ],
             "code_area": "src, tests +14 more",
             "open_task_ids": [
-              "TASK-067",
               "TASK-068",
               "TASK-071",
               "TASK-072",
@@ -185585,15 +185946,14 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
               "total_specs": 40,
-              "aligned_specs": 25,
-              "tracked_specs": 14,
+              "aligned_specs": 26,
+              "tracked_specs": 13,
               "untracked_specs": 1,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -185618,12 +185978,14 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-31T18:59:21Z",
+            "checked_at": "2026-05-31T19:00:18Z",
             "revision": {
               "git": {
-                "head": "0caecbd219b09a502b479b8fd8f3ff248a229922",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -185723,7 +186085,6 @@
                   "src/change/types.ts": "285a504017aa99b7a0ded843fabfbe4bd11abf3a",
                   "src/gateway": "",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "e155c88437ec4bbcdf1d628190f904254e7415c6",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "191c568251ec6c06bfc4f90473ebbea7842646cb",
@@ -185833,16 +186194,16 @@
                 }
               },
               "spec_digest": "6a7693d573a43963277238ccd524a4bbb237ad74e7efe9ca0adcbe732b336aec",
-              "task_digest": "75d77a86755ead003d668ad359faae979e85dc51e79b6446f0318fa83a76e1af",
-              "code_digest": "7af70a138a475582c67b4d63ed4ae716c35562bde4dc4d2775aa350b2ec077de",
-              "digest": "710bb06e32aceb869f30e11c62a59730f980055e9f36ad484e7bd0c6b11b5464"
+              "task_digest": "67e4b4e86aa1dc18b75400aecb5c6552bfc7140ff020077f1352f3781fdbba5a",
+              "code_digest": "1b347d24058b9e00bd4fdacd84e4c0413a480312a7a225cc055c6ba9d10645b0",
+              "digest": "5ab256c22abe371b938d96548fbfe15b69402cbdf12ba10f76e3150cd7e35694"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T18:59:21Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-31T19:00:18Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/api-vnext-tools.md",
@@ -185854,7 +186215,6 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
@@ -185867,6 +186227,7 @@
               ".codewiki/kb/system/graph-transition-traceability.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
@@ -186211,7 +186572,6 @@
               ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
-              "src/gateway/report.ts",
               "src/runtime/",
               "src/adapters/pi",
               ".codewiki/kb/product/**",
@@ -186229,7 +186589,6 @@
             ],
             "code_area": "src, tests +14 more",
             "open_task_ids": [
-              "TASK-067",
               "TASK-068",
               "TASK-071",
               "TASK-072",
@@ -186245,15 +186604,14 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
               "total_specs": 24,
-              "aligned_specs": 11,
-              "tracked_specs": 13,
+              "aligned_specs": 12,
+              "tracked_specs": 12,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -186278,12 +186636,14 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T18:59:21Z",
+            "checked_at": "2026-05-31T19:00:18Z",
             "revision": {
               "git": {
-                "head": "0caecbd219b09a502b479b8fd8f3ff248a229922",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -186406,7 +186766,6 @@
                   "src/change/types.ts": "285a504017aa99b7a0ded843fabfbe4bd11abf3a",
                   "src/gateway": "",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "e155c88437ec4bbcdf1d628190f904254e7415c6",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "191c568251ec6c06bfc4f90473ebbea7842646cb",
@@ -186517,16 +186876,16 @@
                 }
               },
               "spec_digest": "649057bd47e76795224abbe2b7dbebf03804686775186a128804041407d0d4e9",
-              "task_digest": "75d77a86755ead003d668ad359faae979e85dc51e79b6446f0318fa83a76e1af",
-              "code_digest": "bbb3d3f41000495644b4b40a84a20bd75a1cc81d53e078eca54cc2dd20e14ccd",
-              "digest": "36e31cb2a5ebd53198e2488f898afe860b20d0c60735ddd41c496c4d44ca9226"
+              "task_digest": "67e4b4e86aa1dc18b75400aecb5c6552bfc7140ff020077f1352f3781fdbba5a",
+              "code_digest": "4f51cea2b10c1639e8e60fc32edfb5790e96abe2074ac8794a118ce1dabc6ad5",
+              "digest": "3263667c289caef185d5a5563917841f62127513fa7c3ab96ae50f57ada2aa04"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T18:59:21Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-31T19:00:18Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/uis/terminal.md",
@@ -186554,7 +186913,6 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
@@ -186567,6 +186925,7 @@
               ".codewiki/kb/system/graph-transition-traceability.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
@@ -186919,7 +187278,6 @@
               ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
-              "src/gateway/report.ts",
               "src/runtime/",
               "src/adapters/pi",
               ".codewiki/kb/product/**",
@@ -186937,7 +187295,6 @@
             ],
             "code_area": "src, tests +14 more",
             "open_task_ids": [
-              "TASK-067",
               "TASK-068",
               "TASK-071",
               "TASK-072",
@@ -186955,15 +187312,14 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
               "total_specs": 40,
-              "aligned_specs": 25,
-              "tracked_specs": 14,
+              "aligned_specs": 26,
+              "tracked_specs": 13,
               "untracked_specs": 1,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -186978,18 +187334,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-067",
+        "task_id": "TASK-068",
         "lane_id": "",
-        "heading": "TASK-067 — Add semantic execution closure report for sprint/task validation",
-        "command": "/wiki-resume TASK-067",
+        "heading": "TASK-068 — Scaffold system component docs from architecture and file-structure ownership",
+        "command": "/wiki-resume TASK-068",
         "reason": "Resume roadmap task (in_progress).",
         "status": "in_progress",
-        "verification": "npm run typecheck",
+        "verification": "wiki_state refresh shows no large-doc warnings for target docs",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-31T18:59:21Z",
+        "generated_at": "2026-05-31T19:00:18Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -188318,144 +188674,6 @@
             "note": "tracked by TASK-071"
           },
           {
-            "path": ".codewiki/kb/system/roadmap.md",
-            "title": "Roadmap",
-            "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/**",
-              "src/project/context.ts",
-              "src/project/root.ts",
-              "src/project/bootstrap.ts",
-              "src/project/tool.ts",
-              "src/project/templates.ts",
-              "src/project/types.ts",
-              "src/project/local/filesystem.ts",
-              "src/project/local/file-store.ts",
-              "src/project/local/git-cache.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/change/types.ts",
-              "src/change/traceability.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "src/gc/types.ts",
-              "src/gc/runtime.ts",
-              "src/gc/tool.ts",
-              "src/session/types.ts",
-              "src/session/links.ts",
-              "src/session/worktree-isolation.ts",
-              "src/session/runtime.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/roadmap/types.ts",
-              "src/roadmap/status.ts",
-              "src/roadmap/task-id.ts",
-              "src/roadmap/task-boundary.ts",
-              "src/roadmap/store.ts",
-              "src/roadmap/task.ts",
-              "src/roadmap/tool.ts",
-              "src/state/types.ts",
-              "src/state/reader.ts",
-              "src/state/artifacts.ts",
-              "src/state/builders.ts",
-              "src/state/rebuild.ts",
-              "src/state/graph.ts",
-              "src/state/graph/rebuilder.ts",
-              "src/state/lint.ts",
-              "src/state/resume-context.ts",
-              "src/state/prompt.ts",
-              "src/state/skill-assets.ts",
-              "src/state/local/rebuild-runner.ts",
-              "src/state/local/status-dock-prefs.ts",
-              "src/state/tool.ts",
-              "src/state/resume-tool.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "src/shared/ports.ts",
-              "src/shared/utils.ts",
-              "src/shared/lock.ts",
-              "src/index.ts",
-              "scripts/check-architecture.mjs",
-              "tests/tasks/TASK-076/restructure.test.mjs",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/adapters/pi/commands/config.ts",
-              "package.json",
-              ".pi-lens",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/audit/tool.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              "src/build/writer.ts",
-              "src/gateway/report.ts",
-              "src/roadmap/runtime.ts",
-              "src/adapters/pi/tools/ports.ts",
-              "src/adapters/pi/tools/task.ts",
-              "src/application/graph.ts",
-              "src/application/graph/rebuilder.ts",
-              "src/application/lint.ts",
-              "src/application/prompt.ts",
-              "src/application/resume-context.ts",
-              "src/application/state-artifacts.ts",
-              "src/application/state-builders.ts",
-              "src/application/state.ts",
-              "src/domain/shared/types.ts",
-              "src/domain/state/types.ts"
-            ],
-            "code_area": ".codewiki, src +6 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-067"
-            ],
-            "primary_task": {
-              "id": "TASK-067",
-              "status": "in_progress",
-              "title": "Add semantic execution closure report for sprint/task validation"
-            },
-            "revision": {
-              "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-067"
-          },
-          {
             "path": ".codewiki/kb/system/runtime.md",
             "title": "CodeWiki Runtime",
             "summary": "Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, claims, compiler/gateway preparation, harness boundaries, and session spawning.",
@@ -188639,9 +188857,6 @@
               "tests/smoke/audit-drift.test.mjs",
               "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              "src/build/writer.ts",
-              "src/gateway/report.ts",
-              "src/roadmap/status.ts",
               "src/api",
               "src/agency",
               "src/build",
@@ -188684,6 +188899,7 @@
               "src/build/lifecycle.ts",
               "src/build/decision-propagation.ts",
               "src/build/shared.ts",
+              "src/build/writer.ts",
               "src/build/tool.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
@@ -188709,19 +188925,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-067",
               "TASK-068"
             ],
             "primary_task": {
-              "id": "TASK-067",
+              "id": "TASK-068",
               "status": "in_progress",
-              "title": "Add semantic execution closure report for sprint/task validation"
+              "title": "Scaffold system component docs from architecture and file-structure ownership"
             },
             "revision": {
               "digest": "4c195cbfa265ef6ae8cc236a713c0fbdc5965ee704937bf24f04fee5792b7e18",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-067"
+            "note": "tracked by TASK-068"
           },
           {
             "path": ".codewiki/kb/lexicon.md",
@@ -189995,6 +190210,137 @@
             "primary_task": null,
             "revision": {
               "digest": "cf2f39207ce5b5f981ddb058a8e04c78ad212419212d6c7a507ce5fecdc56d94",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/roadmap.md",
+            "title": "Roadmap",
+            "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap/tasks/**",
+              "src/project/context.ts",
+              "src/project/root.ts",
+              "src/project/bootstrap.ts",
+              "src/project/tool.ts",
+              "src/project/templates.ts",
+              "src/project/types.ts",
+              "src/project/local/filesystem.ts",
+              "src/project/local/file-store.ts",
+              "src/project/local/git-cache.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/change/types.ts",
+              "src/change/traceability.ts",
+              "src/change/diff-table.ts",
+              "src/change/tool.ts",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts",
+              "src/session/types.ts",
+              "src/session/links.ts",
+              "src/session/worktree-isolation.ts",
+              "src/session/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/roadmap/types.ts",
+              "src/roadmap/status.ts",
+              "src/roadmap/task-id.ts",
+              "src/roadmap/task-boundary.ts",
+              "src/roadmap/store.ts",
+              "src/roadmap/task.ts",
+              "src/roadmap/tool.ts",
+              "src/state/types.ts",
+              "src/state/reader.ts",
+              "src/state/artifacts.ts",
+              "src/state/builders.ts",
+              "src/state/rebuild.ts",
+              "src/state/graph.ts",
+              "src/state/graph/rebuilder.ts",
+              "src/state/lint.ts",
+              "src/state/resume-context.ts",
+              "src/state/prompt.ts",
+              "src/state/skill-assets.ts",
+              "src/state/local/rebuild-runner.ts",
+              "src/state/local/status-dock-prefs.ts",
+              "src/state/tool.ts",
+              "src/state/resume-tool.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "src/shared/ports.ts",
+              "src/shared/utils.ts",
+              "src/shared/lock.ts",
+              "src/index.ts",
+              "scripts/check-architecture.mjs",
+              "tests/tasks/TASK-076/restructure.test.mjs",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/adapters/pi/commands/config.ts",
+              "package.json",
+              ".pi-lens",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/audit/tool.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              "src/roadmap/runtime.ts",
+              "src/adapters/pi/tools/ports.ts",
+              "src/adapters/pi/tools/task.ts",
+              "src/application/graph.ts",
+              "src/application/graph/rebuilder.ts",
+              "src/application/lint.ts",
+              "src/application/prompt.ts",
+              "src/application/resume-context.ts",
+              "src/application/state-artifacts.ts",
+              "src/application/state-builders.ts",
+              "src/application/state.ts",
+              "src/build/writer.ts",
+              "src/domain/shared/types.ts",
+              "src/domain/state/types.ts"
+            ],
+            "code_area": ".codewiki, src +6 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -192033,144 +192379,6 @@
                 "note": "tracked by TASK-071"
               },
               {
-                "path": ".codewiki/kb/system/roadmap.md",
-                "title": "Roadmap",
-                "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/**",
-                  "src/project/context.ts",
-                  "src/project/root.ts",
-                  "src/project/bootstrap.ts",
-                  "src/project/tool.ts",
-                  "src/project/templates.ts",
-                  "src/project/types.ts",
-                  "src/project/local/filesystem.ts",
-                  "src/project/local/file-store.ts",
-                  "src/project/local/git-cache.ts",
-                  "src/knowledge/doc-parser.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/change/types.ts",
-                  "src/change/traceability.ts",
-                  "src/change/diff-table.ts",
-                  "src/change/tool.ts",
-                  "src/gc/types.ts",
-                  "src/gc/runtime.ts",
-                  "src/gc/tool.ts",
-                  "src/session/types.ts",
-                  "src/session/links.ts",
-                  "src/session/worktree-isolation.ts",
-                  "src/session/runtime.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "src/roadmap/types.ts",
-                  "src/roadmap/status.ts",
-                  "src/roadmap/task-id.ts",
-                  "src/roadmap/task-boundary.ts",
-                  "src/roadmap/store.ts",
-                  "src/roadmap/task.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/types.ts",
-                  "src/state/reader.ts",
-                  "src/state/artifacts.ts",
-                  "src/state/builders.ts",
-                  "src/state/rebuild.ts",
-                  "src/state/graph.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "src/state/lint.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/prompt.ts",
-                  "src/state/skill-assets.ts",
-                  "src/state/local/rebuild-runner.ts",
-                  "src/state/local/status-dock-prefs.ts",
-                  "src/state/tool.ts",
-                  "src/state/resume-tool.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "src/shared/ports.ts",
-                  "src/shared/utils.ts",
-                  "src/shared/lock.ts",
-                  "src/index.ts",
-                  "scripts/check-architecture.mjs",
-                  "tests/tasks/TASK-076/restructure.test.mjs",
-                  "src/agency/types.ts",
-                  "src/agency/planning.ts",
-                  "src/adapters/pi/commands/config.ts",
-                  "package.json",
-                  ".pi-lens",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/audit/tool.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/gateway-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  "src/build/writer.ts",
-                  "src/gateway/report.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/adapters/pi/tools/ports.ts",
-                  "src/adapters/pi/tools/task.ts",
-                  "src/application/graph.ts",
-                  "src/application/graph/rebuilder.ts",
-                  "src/application/lint.ts",
-                  "src/application/prompt.ts",
-                  "src/application/resume-context.ts",
-                  "src/application/state-artifacts.ts",
-                  "src/application/state-builders.ts",
-                  "src/application/state.ts",
-                  "src/domain/shared/types.ts",
-                  "src/domain/state/types.ts"
-                ],
-                "code_area": ".codewiki, src +6 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-067"
-                ],
-                "primary_task": {
-                  "id": "TASK-067",
-                  "status": "in_progress",
-                  "title": "Add semantic execution closure report for sprint/task validation"
-                },
-                "revision": {
-                  "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-067"
-              },
-              {
                 "path": ".codewiki/kb/system/runtime.md",
                 "title": "CodeWiki Runtime",
                 "summary": "Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, claims, compiler/gateway preparation, harness boundaries, and session spawning.",
@@ -192354,9 +192562,6 @@
                   "tests/smoke/audit-drift.test.mjs",
                   "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  "src/build/writer.ts",
-                  "src/gateway/report.ts",
-                  "src/roadmap/status.ts",
                   "src/api",
                   "src/agency",
                   "src/build",
@@ -192399,6 +192604,7 @@
                   "src/build/lifecycle.ts",
                   "src/build/decision-propagation.ts",
                   "src/build/shared.ts",
+                  "src/build/writer.ts",
                   "src/build/tool.ts",
                   "src/build/index.ts",
                   "src/validation/types.ts",
@@ -192424,19 +192630,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-067",
                   "TASK-068"
                 ],
                 "primary_task": {
-                  "id": "TASK-067",
+                  "id": "TASK-068",
                   "status": "in_progress",
-                  "title": "Add semantic execution closure report for sprint/task validation"
+                  "title": "Scaffold system component docs from architecture and file-structure ownership"
                 },
                 "revision": {
                   "digest": "4c195cbfa265ef6ae8cc236a713c0fbdc5965ee704937bf24f04fee5792b7e18",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-067"
+                "note": "tracked by TASK-068"
               },
               {
                 "path": ".codewiki/kb/lexicon.md",
@@ -193235,6 +193440,137 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/roadmap.md",
+                "title": "Roadmap",
+                "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/**",
+                  "src/project/context.ts",
+                  "src/project/root.ts",
+                  "src/project/bootstrap.ts",
+                  "src/project/tool.ts",
+                  "src/project/templates.ts",
+                  "src/project/types.ts",
+                  "src/project/local/filesystem.ts",
+                  "src/project/local/file-store.ts",
+                  "src/project/local/git-cache.ts",
+                  "src/knowledge/doc-parser.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/change/types.ts",
+                  "src/change/traceability.ts",
+                  "src/change/diff-table.ts",
+                  "src/change/tool.ts",
+                  "src/gc/types.ts",
+                  "src/gc/runtime.ts",
+                  "src/gc/tool.ts",
+                  "src/session/types.ts",
+                  "src/session/links.ts",
+                  "src/session/worktree-isolation.ts",
+                  "src/session/runtime.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "src/roadmap/types.ts",
+                  "src/roadmap/status.ts",
+                  "src/roadmap/task-id.ts",
+                  "src/roadmap/task-boundary.ts",
+                  "src/roadmap/store.ts",
+                  "src/roadmap/task.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/types.ts",
+                  "src/state/reader.ts",
+                  "src/state/artifacts.ts",
+                  "src/state/builders.ts",
+                  "src/state/rebuild.ts",
+                  "src/state/graph.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "src/state/lint.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/prompt.ts",
+                  "src/state/skill-assets.ts",
+                  "src/state/local/rebuild-runner.ts",
+                  "src/state/local/status-dock-prefs.ts",
+                  "src/state/tool.ts",
+                  "src/state/resume-tool.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "src/shared/ports.ts",
+                  "src/shared/utils.ts",
+                  "src/shared/lock.ts",
+                  "src/index.ts",
+                  "scripts/check-architecture.mjs",
+                  "tests/tasks/TASK-076/restructure.test.mjs",
+                  "src/agency/types.ts",
+                  "src/agency/planning.ts",
+                  "src/adapters/pi/commands/config.ts",
+                  "package.json",
+                  ".pi-lens",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/audit/tool.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  "src/roadmap/runtime.ts",
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/adapters/pi/tools/task.ts",
+                  "src/application/graph.ts",
+                  "src/application/graph/rebuilder.ts",
+                  "src/application/lint.ts",
+                  "src/application/prompt.ts",
+                  "src/application/resume-context.ts",
+                  "src/application/state-artifacts.ts",
+                  "src/application/state-builders.ts",
+                  "src/application/state.ts",
+                  "src/build/writer.ts",
+                  "src/domain/shared/types.ts",
+                  "src/domain/state/types.ts"
+                ],
+                "code_area": ".codewiki, src +6 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "c4f2b486afc6c6022603431ea558bf7b79c76df6796dd43df186a3d28561cdcd",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/system-truth-and-compilers.md",
                 "title": "System Truth and Compilers",
                 "summary": "CodeWiki truth boundaries, compiler-loop model, and validation/publication proof relationships.",
@@ -193432,16 +193768,15 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-067",
+        "focused_task_id": "TASK-068",
         "blocked_task_ids": [],
         "in_progress_task_ids": [
-          "TASK-067",
           "TASK-068",
           "TASK-071",
           "TASK-072",
           "TASK-073"
         ],
-        "next_task_id": "TASK-067",
+        "next_task_id": "TASK-068",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -194083,8 +194418,7 @@
               "TASK-067"
             ],
             "open_task_ids": [
-              "TASK-068",
-              "TASK-067"
+              "TASK-068"
             ],
             "budget": {
               "maxCycles": 8,
@@ -194179,7 +194513,6 @@
             "id": "implement",
             "label": "Implement",
             "task_ids": [
-              "TASK-067",
               "TASK-068",
               "TASK-071",
               "TASK-072",
