@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T09:21:03Z",
+  "profile": "task-close",
+  "task_id": "TASK-066",
+  "verdict": "pass",
+  "rationale": "TASK-066 is ready to close. Clean checkpoint commit 20c15448d5072b47e82d8ca0c23d3fad7d9150a9 contains the canonical architecture YAML, README canonical/source-truth updates, architecture.mmd compatibility/export marker, implementation build, and implementation validation pass. Acceptance is satisfied: architecture.yaml has required fields, stable local IDs, renderer/future TUI hints, groups, 14 nodes, and 31 edges preserving architecture.mmd; README states YAML canonical and render outputs non-source; architecture.mmd is compatibility_export_only; diagram refs/stale refs/generated parity pass. Required task/changed/generated-parity audits pass; alignment has only existing graph-health warnings.",
+  "checks": [
+    "approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json",
+    "implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json",
+    "checkpoint commit 20c15448d5072b47e82d8ca0c23d3fad7d9150a9",
+    "tree f34b3e710cb17c65e72339f55d7284e71e31175e",
+    "wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-066: warning; task/changed/generated-parity pass",
+    "task-close preflight: ready"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health reports four existing warnings unrelated to TASK-066 closure."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:task",
+    "profile:alignment",
+    "profile:changed",
+    "profile:generated-parity",
+    ".codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "20c15448d5072b47e82d8ca0c23d3fad7d9150a9",
+    "f34b3e710cb17c65e72339f55d7284e71e31175e"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-066",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+      ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/architecture.mmd",
+      "tests/smoke/diagram-refs.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-066",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-066 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-066",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-task-close-pass-task-066-2026-05-31-implemented-.json",
+      "CodeWiki-Checks: approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json; implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-066-2026-05-31-implemen.json; checkpoint commit 20c15448d5072b47e82d8ca0c23d3fad7d9150a9; tree f34b3e710cb17c65e72339f55d7284e71e31175e; wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-066: warning; task/changed/generated-parity pass; task-close preflight: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "f34b3e710cb17c65e72339f55d7284e71e31175e"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-066",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "20c15448d5072b47e82d8ca0c23d3fad7d9150a9",
+    "validated_sha": "20c15448d5072b47e82d8ca0c23d3fad7d9150a9",
+    "tree_sha": "f34b3e710cb17c65e72339f55d7284e71e31175e",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean task-close validation from committed TASK-066 implementation and implementation validation proof.",
+    "role": "validator"
+  }
+}
