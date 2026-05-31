@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T08:47:27Z",
+  "profile": "task-close",
+  "task_id": "TASK-070",
+  "verdict": "pass",
+  "rationale": "TASK-070 is ready to close. The clean checkpoint commit 79ba2c0e71e29befca7fcce9c89aeb327a335032 contains the runtime scheduler foundation implementation, tests, implementation build, and implementation validation pass. Task acceptance is satisfied: Brain lease helpers, worker question/block/unblock records, worker/model policy metadata, bounded dispatcher metadata propagation, no worker spawning, no UX board work, and no roadmap mutation from runtime. Required task/changed/generated-parity audits pass; alignment has only existing graph-health warnings.",
+  "checks": [
+    "implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-070-2026-05-31-implemen.json",
+    "checkpoint commit 79ba2c0e71e29befca7fcce9c89aeb327a335032",
+    "tree 3890bd688590557a48b36315ded31e72ea1135ea",
+    "wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-070: warning; task/changed/generated-parity pass",
+    "task-close preflight: ready"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health reports four existing warnings unrelated to TASK-070 closure."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:task",
+    "profile:alignment",
+    "profile:changed",
+    "profile:generated-parity",
+    ".codewiki/validation/2026-05-31-implementation-pass-task-070-2026-05-31-implemen.json"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "79ba2c0e71e29befca7fcce9c89aeb327a335032",
+    "3890bd688590557a48b36315ded31e72ea1135ea"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-070",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-070-2026-05-31-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+      ".codewiki/validation/2026-05-31-task-close-pass-task-070-2026-05-31-implemented-.json",
+      "src/runtime/types.ts",
+      "src/runtime/runner.ts",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-070",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-070-2026-05-31-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-070 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-070",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-task-close-pass-task-070-2026-05-31-implemented-.json",
+      "CodeWiki-Checks: implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-070-2026-05-31-implemen.json; checkpoint commit 79ba2c0e71e29befca7fcce9c89aeb327a335032; tree 3890bd688590557a48b36315ded31e72ea1135ea; wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-070: warning; task/changed/generated-parity pass; task-close preflight: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/runtime/types.ts",
+      "src/runtime/runner.ts"
+    ],
+    "reasons": [
+      "CodeWiki runtime orchestration changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "3890bd688590557a48b36315ded31e72ea1135ea"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-070",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "79ba2c0e71e29befca7fcce9c89aeb327a335032",
+    "validated_sha": "79ba2c0e71e29befca7fcce9c89aeb327a335032",
+    "tree_sha": "3890bd688590557a48b36315ded31e72ea1135ea",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean task-close validation from committed TASK-070 implementation and implementation validation proof.",
+    "role": "validator"
+  }
+}
