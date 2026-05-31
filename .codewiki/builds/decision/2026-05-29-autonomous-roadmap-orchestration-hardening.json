@@ -411,10 +411,20 @@
   },
   "produces": {
     "knowledge": [],
-    "roadmap": [],
+    "roadmap": [
+      "TASK-050",
+      "TASK-051",
+      "TASK-052",
+      "TASK-053",
+      "TASK-054",
+      "TASK-055",
+      "TASK-056"
+    ],
     "code": [],
     "tests": [],
-    "validation": [],
+    "validation": [
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json"
+    ],
     "publication": [],
     "closure": []
   }

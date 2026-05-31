@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T00:29:13.418Z",
+  "generated_at": "2026-05-31T00:57:36.063Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -10315,14 +10315,23 @@
       "evidence_summary": {
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          "codewiki_build tool"
+          "codewiki_build tool",
+          "TASK-050",
+          "TASK-051",
+          "TASK-052",
+          "TASK-053",
+          "TASK-054",
+          "TASK-055",
+          "TASK-056"
         ],
         "audit_evidence_refs": [
           "profile:alignment",
           "profile:stale-reference"
         ],
         "content_proof_refs": [],
-        "validation_attestation_refs": []
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json"
+        ]
       },
       "lens_family": "decision",
       "default_collapsed": true,
@@ -10332,6 +10341,62 @@
       "id": "source:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
       "kind": "canonical_source_ref",
       "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-050",
+      "kind": "canonical_source_ref",
+      "path": "TASK-050",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-051",
+      "kind": "canonical_source_ref",
+      "path": "TASK-051",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-052",
+      "kind": "canonical_source_ref",
+      "path": "TASK-052",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-053",
+      "kind": "canonical_source_ref",
+      "path": "TASK-053",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-054",
+      "kind": "canonical_source_ref",
+      "path": "TASK-054",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-055",
+      "kind": "canonical_source_ref",
+      "path": "TASK-055",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-056",
+      "kind": "canonical_source_ref",
+      "path": "TASK-056",
       "layer": "source",
       "default_hidden": true,
       "lens_family": "proof"
@@ -10351,14 +10416,21 @@
       "evidence_summary": {
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-          "codewiki_build tool"
+          "codewiki_build tool",
+          "TASK-051",
+          "TASK-052",
+          "TASK-057",
+          "TASK-058",
+          "TASK-059"
         ],
         "audit_evidence_refs": [
           "profile:alignment",
           "profile:stale-reference"
         ],
         "content_proof_refs": [],
-        "validation_attestation_refs": []
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json"
+        ]
       },
       "lens_family": "decision",
       "default_collapsed": true,
@@ -10368,6 +10440,30 @@
       "id": "source:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
       "kind": "canonical_source_ref",
       "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-057",
+      "kind": "canonical_source_ref",
+      "path": "TASK-057",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-058",
+      "kind": "canonical_source_ref",
+      "path": "TASK-058",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-059",
+      "kind": "canonical_source_ref",
+      "path": "TASK-059",
       "layer": "source",
       "default_hidden": true,
       "lens_family": "proof"
@@ -10526,6 +10622,71 @@
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "kind": "decision_build",
+      "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "title": "DT-2026-05-31-23 approved by user",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": false,
+      "default_hidden": true,
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+          "DT-2026-05-31-23 approved by user",
+          "No roadmap task created; roadmap remains open 0."
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:stale-reference"
+        ],
+        "content_proof_refs": [],
+        "validation_attestation_refs": [
+          "build-v2-missing-produces count zero after wiki_state refresh"
+        ]
+      },
+      "lens_family": "decision",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:DT-2026-05-31-23 approved by user",
+      "kind": "canonical_source_ref",
+      "path": "DT-2026-05-31-23 approved by user",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:No roadmap task created; roadmap remains open 0.",
+      "kind": "canonical_source_ref",
+      "path": "No roadmap task created; roadmap remains open 0.",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "closure:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "kind": "closure_brief",
+      "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    },
+    {
+      "id": "closure:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "kind": "closure_brief",
+      "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
     },
     {
       "id": "build:.codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
@@ -14709,62 +14870,6 @@
       "lens_family": "proof"
     },
     {
-      "id": "source:TASK-050",
-      "kind": "canonical_source_ref",
-      "path": "TASK-050",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-051",
-      "kind": "canonical_source_ref",
-      "path": "TASK-051",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-052",
-      "kind": "canonical_source_ref",
-      "path": "TASK-052",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-053",
-      "kind": "canonical_source_ref",
-      "path": "TASK-053",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-054",
-      "kind": "canonical_source_ref",
-      "path": "TASK-054",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-055",
-      "kind": "canonical_source_ref",
-      "path": "TASK-055",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-056",
-      "kind": "canonical_source_ref",
-      "path": "TASK-056",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
       "id": "source:src/roadmap/tool.ts",
       "kind": "canonical_source_ref",
       "path": "src/roadmap/tool.ts",
@@ -14938,30 +15043,6 @@
       "id": "source:.codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
       "kind": "canonical_source_ref",
       "path": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-057",
-      "kind": "canonical_source_ref",
-      "path": "TASK-057",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-058",
-      "kind": "canonical_source_ref",
-      "path": "TASK-058",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-059",
-      "kind": "canonical_source_ref",
-      "path": "TASK-059",
       "layer": "source",
       "default_hidden": true,
       "lens_family": "proof"
@@ -49125,6 +49206,56 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh validation from source refs after approved rows, final metadata repair content, and generated graph refresh.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json"
+        ],
+        "audit_evidence_refs": [
+          "alignment",
+          "stale-reference",
+          "generated-parity",
+          "changed",
+          "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed"
+        ],
+        "content_proof_refs": [
+          "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
+      "kind": "audit_evidence",
+      "path": "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
+      "kind": "content_proof",
+      "path": "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
+      "proof_kind": "content_proof",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
@@ -49284,26 +49415,6 @@
       "severity": "warning",
       "issue_kind": "roadmap-missing-code-path",
       "message": "TASK-023 references missing code path: src/roadmap/runtime.ts",
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "build-v2-missing-produces",
-      "message": "Build v2 should expose produces edges.",
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "build-v2-missing-produces",
-      "message": "Build v2 should expose produces edges.",
       "lens_family": "proof"
     }
   ],
@@ -78023,6 +78134,48 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-050",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-051",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-052",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-053",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-054",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-055",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "source:TASK-056",
+      "default_hidden": true
+    },
+    {
       "kind": "build_audit_evidence",
       "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
       "to": "audit:profile:alignment",
@@ -78033,6 +78186,81 @@
       "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
       "to": "audit:profile:stale-reference",
       "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-050"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-051"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-052"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-053"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-054"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-055"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-056"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-050"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-051"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-052"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-053"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-054"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-055"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "task:TASK-056"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "to": "validation:.codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json"
     },
     {
       "kind": "build_references_canonical_source",
@@ -78047,6 +78275,36 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "source:TASK-051",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "source:TASK-052",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "source:TASK-057",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "source:TASK-058",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "source:TASK-059",
+      "default_hidden": true
+    },
+    {
       "kind": "build_audit_evidence",
       "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
       "to": "audit:profile:alignment",
@@ -78057,6 +78315,61 @@
       "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
       "to": "audit:profile:stale-reference",
       "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-051"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-052"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-057"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-058"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-059"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-051"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-052"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-057"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-058"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "task:TASK-059"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "to": "validation:.codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json"
     },
     {
       "kind": "build_references_canonical_source",
@@ -78206,6 +78519,51 @@
       "kind": "build_produces_knowledge",
       "from": "build:.codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
       "to": "doc:.codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md"
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "source:DT-2026-05-31-23 approved by user",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "source:No roadmap task created; roadmap remains open 0.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "validation:build-v2-missing-produces count zero after wiki_state refresh"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "closure:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "to": "closure:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
     },
     {
       "kind": "build_references_canonical_source",
@@ -123711,6 +124069,48 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "audit:wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+      "to": "content_proof:working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
       "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
       "default_hidden": true
@@ -123837,16 +124237,6 @@
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-      "to": "doc:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-      "to": "doc:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
     }
   ],
   "views": {
@@ -123866,7 +124256,7 @@
               {
                 "id": "decision_builds",
                 "label": "decision builds",
-                "count": 17
+                "count": 18
               },
               {
                 "id": "semantic_gaps",
@@ -124018,12 +124408,12 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 4,
+            "item_count": 2,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 181
+                "count": 182
               },
               {
                 "id": "fail_or_block_validation",
@@ -124033,12 +124423,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 598
+                "count": 599
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1473
+                "count": 1474
               },
               {
                 "id": "traceability_gaps",
@@ -124048,35 +124438,33 @@
             ],
             "hot_refs": [
               "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-              "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
             ],
             "collapsed": true
           }
         ],
         "badges": {
           "builds": {
-            "total": 133,
-            "decision": 17,
+            "total": 134,
+            "decision": 18,
             "planning": 31,
             "implementation": 85,
             "hot": 0,
-            "collapsed": 133
+            "collapsed": 134
           },
           "validations": {
-            "total": 181,
-            "pass": 154,
+            "total": 182,
+            "pass": 155,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 181
+            "collapsed": 182
           }
         },
         "next_action": {
-          "item_id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          "source_id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+          "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "loop": "decision",
-          "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work."
+          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -124110,6 +124498,7 @@
           ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
           ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
           ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
           ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
           ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -124339,6 +124728,7 @@
           "CHANGELOG.md",
           "DT-2026-05-24-9",
           "DT-2026-05-24-9; user approved MC-001..MC-004 in chat on 2026-05-24.",
+          "DT-2026-05-31-23 approved by user",
           "Decision build .codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
           "Documentation build .codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json",
           "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
@@ -124346,6 +124736,7 @@
           "High-priority planning sprint should be created from this decision before TASK-059/TASK-060 implementation.",
           "Implementation loop for TASK-047 after accepted runtime-root decision and planning build.",
           "Live reload showed the staged /wiki-session-handoff follow-up was delivered to the agent as chat instead of executing as a Pi command. Pi agent-session sendUserMessage disables prompt/command expansion, so CodeWiki must not auto-inject slash commands through follow-up chat.",
+          "No roadmap task created; roadmap remains open 0.",
           "Planned roadmap tasks and sprint metadata for booboo remediation",
           "Planning alignment for accepted runtime root decision during TASK-047.",
           "Planning compiled from decision build .codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json after user approved all rows.",
@@ -125112,20 +125503,46 @@
             "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
             "kind": "decision_build",
             "status": "accepted",
-            "task_ids": [],
+            "task_ids": [
+              "TASK-050",
+              "TASK-051",
+              "TASK-052",
+              "TASK-053",
+              "TASK-054",
+              "TASK-055",
+              "TASK-056"
+            ],
             "source_refs": [
               ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              "codewiki_build tool"
+              "codewiki_build tool",
+              "TASK-050",
+              "TASK-051",
+              "TASK-052",
+              "TASK-053",
+              "TASK-054",
+              "TASK-055",
+              "TASK-056"
             ]
           },
           {
             "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
             "kind": "decision_build",
             "status": "accepted",
-            "task_ids": [],
+            "task_ids": [
+              "TASK-051",
+              "TASK-052",
+              "TASK-057",
+              "TASK-058",
+              "TASK-059"
+            ],
             "source_refs": [
               ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              "codewiki_build tool"
+              "codewiki_build tool",
+              "TASK-051",
+              "TASK-052",
+              "TASK-057",
+              "TASK-058",
+              "TASK-059"
             ]
           },
           {
@@ -125155,6 +125572,17 @@
               ".codewiki/kb/system/diagrams/component-map.yaml",
               ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md",
               "High-priority planning sprint should be created from this decision before TASK-059/TASK-060 implementation."
+            ]
+          },
+          {
+            "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+            "kind": "decision_build",
+            "status": "accepted",
+            "task_ids": [],
+            "source_refs": [
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+              "DT-2026-05-31-23 approved by user",
+              "No roadmap task created; roadmap remains open 0."
             ]
           },
           {
@@ -133254,6 +133682,25 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+            "verdict": "pass",
+            "profile": "decision",
+            "source_refs": [
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json"
+            ],
+            "audit_evidence_refs": [
+              "alignment",
+              "stale-reference",
+              "generated-parity",
+              "changed",
+              "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed"
+            ],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -136165,6 +136612,19 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
             "task_id": "TASK-064",
             "verdict": "pass",
@@ -136782,6 +137242,7 @@
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
           "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
+          "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
           "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
@@ -138268,6 +138729,7 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+          "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
           "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
           "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
           "working_tree_digest:sha256:3ff83ce91cc4374d64b99c7d2134d1ea619387f891c361e7dce6ebd05b9c4117",
@@ -138311,32 +138773,6 @@
             "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
             "doc_paths": [
               ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            "source_id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            "source_id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
             ]
           }
         ],
@@ -142448,6 +142884,19 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
           "task_id": "TASK-064",
           "verdict": "pass",
@@ -142513,6 +142962,7 @@
         ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
         ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
         ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+        ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
         ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
         ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
         ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -142742,6 +143192,7 @@
         "CHANGELOG.md",
         "DT-2026-05-24-9",
         "DT-2026-05-24-9; user approved MC-001..MC-004 in chat on 2026-05-24.",
+        "DT-2026-05-31-23 approved by user",
         "Decision build .codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
         "Documentation build .codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json",
         "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
@@ -142749,6 +143200,7 @@
         "High-priority planning sprint should be created from this decision before TASK-059/TASK-060 implementation.",
         "Implementation loop for TASK-047 after accepted runtime-root decision and planning build.",
         "Live reload showed the staged /wiki-session-handoff follow-up was delivered to the agent as chat instead of executing as a Pi command. Pi agent-session sendUserMessage disables prompt/command expansion, so CodeWiki must not auto-inject slash commands through follow-up chat.",
+        "No roadmap task created; roadmap remains open 0.",
         "Planned roadmap tasks and sprint metadata for booboo remediation",
         "Planning alignment for accepted runtime root decision during TASK-047.",
         "Planning compiled from decision build .codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json after user approved all rows.",
@@ -143831,6 +144283,7 @@
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
         "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
+        "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
         "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
@@ -145317,6 +145770,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+        "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
         "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
         "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
         "working_tree_digest:sha256:3ff83ce91cc4374d64b99c7d2134d1ea619387f891c361e7dce6ebd05b9c4117",
@@ -149701,6 +150155,25 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-reconciliati.json",
+          "verdict": "pass",
+          "profile": "decision",
+          "source_refs": [
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json"
+          ],
+          "audit_evidence_refs": [
+            "alignment",
+            "stale-reference",
+            "generated-parity",
+            "changed",
+            "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed"
+          ],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -152623,10 +153096,10 @@
     },
     "workflow_cursor": {
       "active_loop": "decision",
-      "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+      "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
       "input_refs": [
-        "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-        ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/queue.json"
       ],
       "expected_output": "decision_build",
       "exit_gate": "validation pass or explicit user decision",
@@ -152645,8 +153118,8 @@
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-        ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/queue.json"
       ]
     },
     "gc": {
@@ -152693,6 +153166,7 @@
             ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
             ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
             ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
             ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
             ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -152853,6 +153327,7 @@
             ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
             ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
             ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
             ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
             ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
@@ -154134,42 +154609,16 @@
           "doc_paths": [
             ".codewiki/roadmap/queue.json"
           ]
-        },
-        {
-          "id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          "source_id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-          "source_id": "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
-          ]
         }
       ],
       "counts_by_loop": {
-        "decision": 5
+        "decision": 3
       },
       "next_action": {
         "loop": "decision",
         "command": "Run decision compiler",
-        "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -154183,8 +154632,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ]
       },
       "layer_states": {
@@ -154198,11 +154647,10 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-31T00:29:13.264Z",
+      "generated_at": "2026-05-31T00:57:35.918Z",
       "counts": {
         "large-doc": 4,
-        "roadmap-missing-code-path": 3,
-        "build-v2-missing-produces": 2
+        "roadmap-missing-code-path": 3
       },
       "issues": [
         {
@@ -154246,29 +154694,17 @@
           "kind": "roadmap-missing-code-path",
           "path": ".codewiki/roadmap/queue.json",
           "message": "TASK-036 references missing code path: tests/smoke/validation-preflight.test.mjs"
-        },
-        {
-          "severity": "warning",
-          "kind": "build-v2-missing-produces",
-          "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          "message": "Build v2 should expose produces edges."
-        },
-        {
-          "severity": "warning",
-          "kind": "build-v2-missing-produces",
-          "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-          "message": "Build v2 should expose produces edges."
         }
       ]
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-31T00:29:13Z",
+      "generated_at": "2026-05-31T00:57:36Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 9,
-        "total_issues": 9
+        "warnings": 7,
+        "total_issues": 7
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -155473,7 +155909,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-31T00:29:13Z",
+      "generated_at": "2026-05-31T00:57:36Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -155482,8 +155918,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 9,
-        "total_issues": 9
+        "warnings": 7,
+        "total_issues": 7
       },
       "summary": {
         "total_specs": 21,
@@ -155546,15 +155982,15 @@
       "next_step": {
         "kind": "reconciliation:decision",
         "command": "Run decision compiler",
-        "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
       },
       "workflow_cursor": {
         "active_loop": "decision",
-        "reason": "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
         "input_refs": [
-          "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ],
         "expected_output": "decision_build",
         "exit_gate": "validation pass or explicit user decision",
@@ -155573,8 +156009,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "lint:build-v2-missing-produces:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-          ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ]
       },
       "gc": {
@@ -155621,6 +156057,7 @@
               ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
               ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
               ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
               ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
               ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -155781,6 +156218,7 @@
               ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
               ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
               ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
               ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
               ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
@@ -155901,7 +156339,7 @@
         ]
       },
       "direction": [
-        "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
@@ -158862,7 +159300,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-31T00:29:13Z",
+        "generated_at": "2026-05-31T00:57:36Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -158917,10 +159355,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T00:29:13Z",
+            "checked_at": "2026-05-31T00:57:36Z",
             "revision": {
               "git": {
-                "head": "03dcb8cd0ffb79d37f3c84328855cf2d354ee3e4",
+                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -159147,13 +159585,13 @@
               },
               "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "fa9126b928f68ed0bceed091c9fefae2958ef406544621b9a0b0d8008864bd3b",
-              "digest": "703f6b385968a2b79a771ac06c3230c7d6224157c4a8f1a53e9569e6187dd1d7"
+              "code_digest": "dbfe85f5989ae61f4b389f9a899eff2bbf6b3094737b4bd36494abe7b8697ef8",
+              "digest": "66f6a89bd081a1cbc008380e6105c235bc208e6694c9b212a7badaf04f97c966"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:29:13Z",
+              "checked_at": "2026-05-31T00:57:36Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -159584,10 +160022,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-31T00:29:13Z",
+            "checked_at": "2026-05-31T00:57:36Z",
             "revision": {
               "git": {
-                "head": "03dcb8cd0ffb79d37f3c84328855cf2d354ee3e4",
+                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -159791,13 +160229,13 @@
               },
               "spec_digest": "0630e2106e8d34d48732b10a4f5520a16f11dad0c98d0392f4346ad4dc55e00b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "3ab6d82f81b581aac8a04c6fb27586cef00d6919895a132c59c4640dee559430",
-              "digest": "b46abf335a189075b2a0722786c1ec4adcb9726bfb346b634dc7e8007b790189"
+              "code_digest": "487a3d183ca85707cd7bdc224996b3bfd06a62df59e9213b106e5f6f49dfc45b",
+              "digest": "5fcf70a81547e80df0f6bd7728a4862ddedc7f1155cde3c3c596de169b75b93d"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:29:13Z",
+              "checked_at": "2026-05-31T00:57:36Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -160205,10 +160643,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T00:29:13Z",
+            "checked_at": "2026-05-31T00:57:36Z",
             "revision": {
               "git": {
-                "head": "03dcb8cd0ffb79d37f3c84328855cf2d354ee3e4",
+                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -160435,13 +160873,13 @@
               },
               "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "fa9126b928f68ed0bceed091c9fefae2958ef406544621b9a0b0d8008864bd3b",
-              "digest": "703f6b385968a2b79a771ac06c3230c7d6224157c4a8f1a53e9569e6187dd1d7"
+              "code_digest": "dbfe85f5989ae61f4b389f9a899eff2bbf6b3094737b4bd36494abe7b8697ef8",
+              "digest": "66f6a89bd081a1cbc008380e6105c235bc208e6694c9b212a7badaf04f97c966"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:29:13Z",
+              "checked_at": "2026-05-31T00:57:36Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -160873,7 +161311,7 @@
         "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-31T00:29:13Z",
+        "generated_at": "2026-05-31T00:57:36Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],

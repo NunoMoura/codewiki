@@ -421,10 +421,18 @@
   },
   "produces": {
     "knowledge": [],
-    "roadmap": [],
+    "roadmap": [
+      "TASK-051",
+      "TASK-052",
+      "TASK-057",
+      "TASK-058",
+      "TASK-059"
+    ],
     "code": [],
     "tests": [],
-    "validation": [],
+    "validation": [
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json"
+    ],
     "publication": [],
     "closure": []
   }
