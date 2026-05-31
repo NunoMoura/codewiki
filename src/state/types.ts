@@ -213,6 +213,7 @@ export interface GraphViews {
 	alignment?: JsonObject;
 	system_diagrams?: JsonObject;
 	traceability?: JsonObject;
+	semantic_execution_closure?: JsonObject;
 	artifact_status?: JsonObject;
 	validation?: JsonObject;
 	code?: {
@@ -395,6 +396,7 @@ export interface StatusStateFile {
 	file_structure?: unknown;
 	gc?: JsonObject;
 	decision_propagation?: JsonObject;
+	semantic_execution_closure?: JsonObject;
 	direction: string[];
 	specs: StatusStateSpecRow[];
 	agency: {

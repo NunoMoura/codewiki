@@ -22,13 +22,13 @@ Roadmap garbage collection is post-commit. Task or sprint closure first produces
 
 The planning loop owns roadmap alignment. It consumes a decision-gateway-passed `decision_build` and produces a `planning_build` that creates or refines executable roadmap tasks. If planning discovers unclear intent or a missing requirement, it routes a decision question back to the user instead of creating tasks from an assumption.
 
-A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly. Tasks are implementation-ready only after planning validation passes or a documented mechanical/runtime exemption applies.
+A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Approved executable decision rows must map to roadmap task ids or sprint ids in the same planning loop; roadmap order, task status, dependencies, blockers, and sprint metadata encode sequencing. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly. Tasks are implementation-ready only after planning validation passes or a documented mechanical/runtime exemption applies.
 
 ## Progressive refinement
 
 When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking. When an interactive adapter is available, candidate tasks and sprint changes should be shown as row-level approval items before canonical roadmap mutation.
 
-Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates. Backend worker daemon scheduling is a higher priority than board or other rich UX work; chat is sufficient until roadmap execution can be scheduled, blocked, retried, and parallelized safely.
+Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, unmapped accepted-decision gaps, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates. Backend worker daemon scheduling is a higher priority than board or other rich UX work; chat is sufficient until roadmap execution can be scheduled, blocked, retried, and parallelized safely.
 
 ## Sprints
 
@@ -97,7 +97,7 @@ Default context should hide cold roadmap and archive history unless the user exp
 
 Work closes only when linked intent/spec/evidence is traceable, required checks ran or were deferred by policy, validation passed or policy explains why it is not required, and an implementation build or equivalent evidence brief exists for implemented changes.
 
-Implementation closure should trace through a planning build unless the work is docs-only, validation-only, or covered by a migration exception.
+Implementation closure should trace through a planning build unless the work is docs-only, validation-only, or covered by a migration exception. Generated closure views may summarize approved decision rows through planning, tasks/sprints, implementation builds, validation reports, and Git/content proof for review, but roadmap state, builds, validation reports, and Git remain the canonical truth sources.
 
 ## Generated task views
 

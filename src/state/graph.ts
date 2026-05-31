@@ -737,6 +737,554 @@ function uniqueBuildsByPath(builds: BuildArtifact[]): BuildArtifact[] {
 	return out;
 }
 
+function currentBuildsBySupersession(builds: BuildArtifact[]): BuildArtifact[] {
+	const uniqueBuilds = uniqueBuildsByPath(builds);
+	const superseded = new Set(
+		uniqueBuilds.flatMap((build) =>
+			stringList(build.data?.cycle?.supersedes).map(normalizeCodewikiRef),
+		),
+	);
+	return uniqueBuilds.filter(
+		(build) => !superseded.has(normalizeCodewikiRef(build.path)),
+	);
+}
+
+function buildSemanticExecutionClosureView(input: {
+	decisionBuilds: BuildArtifact[];
+	planningByDecision: Map<string, BuildArtifact[]>;
+	implementationByPlanning: Map<string, BuildArtifact[]>;
+	validations: ValidationArtifact[];
+	roadmapEntries: RoadmapTaskRecord[];
+	sprints: Array<{ id: string; task_ids: string[] }>;
+	knownTaskIds: string[];
+	knownSprintIds: string[];
+	satisfiedDeferredTriggers: string[];
+}) {
+	const decisionRowId = (row: any, index: number) =>
+		typeof row === "string"
+			? row.trim() || `ROW-${index + 1}`
+			: String(row?.id || `ROW-${index + 1}`).trim();
+	const diffRows = (data: any): any[] =>
+		Array.isArray(data?.diff_table)
+			? data.diff_table
+			: Array.isArray(data?.approved_rows)
+				? data.approved_rows
+				: [];
+	const approvedRowIds = (data: any) =>
+		new Set([
+			...stringList(data?.approved_diff_rows),
+			...(Array.isArray(data?.approved_rows)
+				? data.approved_rows.map((row: any, index: number) =>
+						decisionRowId(row, index),
+					)
+				: []),
+		]);
+	const rowAction = (row: any, rowId: string, approvedIds: Set<string>) =>
+		String(
+			row?.user_action ||
+				row?.status ||
+				(approvedIds.has(rowId) ? "approved" : "pending"),
+		)
+			.trim()
+			.toLowerCase();
+	const rowMappings = (data: any, rowId: string) =>
+		(Array.isArray(data?.row_to_kb_mappings)
+			? data.row_to_kb_mappings
+			: []
+		).filter((mapping: any) => String(mapping?.row_id || "").trim() === rowId);
+	const validationSources = (validation: ValidationArtifact) =>
+		unique(
+			[
+				normalizeCodewikiRef(validation.data?.source),
+				...stringList(validation.data?.sources).map(normalizeCodewikiRef),
+			]
+				.map(normalizeEvidenceRef)
+				.filter(Boolean),
+		);
+	const gitProofRefs = (data: any) => {
+		const publication = data?.publication || {};
+		const git = publication.git || {};
+		const ledger = publication.archive_ledger || {};
+		const isolation = data?.isolation || {};
+		return unique(
+			[
+				publication.commit_sha,
+				publication.tree_sha,
+				publication.archive_ref,
+				publication.remote_ref,
+				publication.published_sha,
+				git.commit_sha,
+				git.tree_sha,
+				git.archive_ref,
+				git.remote_ref,
+				git.published_sha,
+				ledger.commit_sha,
+				ledger.archive_ref,
+				isolation.validated_sha,
+				isolation.head_sha,
+				isolation.published_sha,
+				isolation.tree_sha,
+				isolation.archive_ref,
+				isolation.remote_ref,
+			]
+				.map(normalizeEvidenceRef)
+				.filter(Boolean),
+		);
+	};
+	const validationMatchesImplementation = (
+		validation: ValidationArtifact,
+		implementation: BuildArtifact,
+	) => {
+		const implementationPath = normalizeCodewikiRef(implementation.path);
+		const validationPath = normalizeCodewikiRef(validation.path);
+		const taskIds = new Set(buildTaskIds(implementation));
+		const validationRefs = new Set(
+			[
+				...stringList(implementation.data?.validation_refs),
+				...producedRefs(implementation.data, "validation"),
+			]
+				.map(normalizeCodewikiRef)
+				.filter(Boolean),
+		);
+		if (validationSources(validation).includes(implementationPath)) return true;
+		if (validationRefs.has(validationPath)) return true;
+		const validationTaskId = String(
+			validation.taskId ||
+				validation.data?.task_id ||
+				validation.data?.taskId ||
+				"",
+		).trim();
+		const profile = String(validation.data?.profile || "").trim();
+		return Boolean(
+			validationTaskId &&
+				taskIds.has(validationTaskId) &&
+				["implementation", "task-close"].includes(profile),
+		);
+	};
+	const implementationSummary = (implementation: BuildArtifact) => {
+		const path = normalizeCodewikiRef(implementation.path);
+		const closure = implementation.data?.closure_brief || {};
+		return {
+			implementation_build: path,
+			task_ids: buildTaskIds(implementation),
+			source_planning_build: normalizeCodewikiRef(
+				implementation.data?.source_planning_build,
+			),
+			user_intent: String(closure.user_intent || "").trim(),
+			implemented_changes: stringList(closure.implemented_changes),
+			acceptance_evidence: stringList(closure.acceptance_evidence),
+			checks: stringList(closure.checks),
+			remaining_risks: unique([
+				...stringList(implementation.data?.risks),
+				...stringList(closure.remaining_risks),
+			]),
+		};
+	};
+	const validationSummary = (validation: ValidationArtifact) => {
+		const isolation = validationIsolationSummary(validation);
+		return {
+			path: normalizeCodewikiRef(validation.path),
+			profile: String(validation.data?.profile || "").trim(),
+			verdict: String(validation.verdict || "").trim(),
+			task_id: String(
+				validation.taskId ||
+					validation.data?.task_id ||
+					validation.data?.taskId ||
+					"",
+			).trim(),
+			source_refs: validationSources(validation),
+			content_proof_refs: contentProofRefs(validation.data),
+			commit_tree_proof_refs: gitProofRefs(validation.data),
+			isolation_status: isolation.status,
+		};
+	};
+	const sprintTaskIds = (sprintIds: string[]) =>
+		unique(
+			input.sprints
+				.filter((sprint) => sprintIds.includes(sprint.id))
+				.flatMap((sprint) => sprint.task_ids),
+		);
+	const scopeSummary = (
+		rows: any[],
+		id: string,
+		key: "roadmap_task_ids" | "sprint_ids",
+	) => {
+		const scopedRows = rows.filter(
+			(row) => Array.isArray(row[key]) && row[key].includes(id),
+		);
+		if (scopedRows.length === 0) return null;
+		const gaps = unique(
+			scopedRows.flatMap((row) =>
+				stringList(row.gaps).map((gap) => `${row.row_id}:${gap}`),
+			),
+		);
+		const deviations = unique(
+			scopedRows.flatMap((row) =>
+				stringList(row.deviations).map(
+					(deviation) => `${row.row_id}:${deviation}`,
+				),
+			),
+		);
+		return {
+			id,
+			row_count: scopedRows.length,
+			row_ids: scopedRows.map((row) => row.row_id),
+			status:
+				gaps.length > 0
+					? "gap"
+					: scopedRows.some((row) => stringList(row.remaining_risks).length > 0)
+						? "risk"
+						: "complete",
+			gap_count: gaps.length,
+			gaps,
+			deviations,
+			remaining_risks: unique(
+				scopedRows.flatMap((row) => stringList(row.remaining_risks)),
+			),
+			implementation_builds: unique(
+				scopedRows.flatMap((row) => stringList(row.implementation_builds)),
+			),
+			validation_reports: unique(
+				scopedRows.flatMap((row) =>
+					(Array.isArray(row.validation_reports) ? row.validation_reports : [])
+						.map((report: any) => String(report?.path || "").trim())
+						.filter(Boolean),
+				),
+			),
+			content_proof_refs: unique(
+				scopedRows.flatMap((row) => stringList(row.content_proof_refs)),
+			),
+		};
+	};
+
+	const rows: any[] = [];
+	const excludedRows: any[] = [];
+	for (const decision of input.decisionBuilds) {
+		const decisionPath = normalizeCodewikiRef(decision.path);
+		const planningBuilds = uniqueBuildsByPath(
+			input.planningByDecision.get(decisionPath) || [],
+		);
+		const assessment = assessDecisionPropagation(
+			decision.data,
+			planningBuilds,
+			{
+				knownTaskIds: input.knownTaskIds,
+				knownSprintIds: input.knownSprintIds,
+				satisfiedDeferredTriggers: input.satisfiedDeferredTriggers,
+			},
+		);
+		const assessmentRows = new Map(assessment.rows.map((row) => [row.id, row]));
+		const approvedIds = approvedRowIds(decision.data);
+		const sourceRows = diffRows(decision.data);
+		for (const [index, row] of sourceRows.entries()) {
+			const rowId = decisionRowId(row, index);
+			const action = rowAction(row, rowId, approvedIds);
+			const approved = action === "approved" || approvedIds.has(rowId);
+			if (!approved) {
+				excludedRows.push({
+					decision_build: decisionPath,
+					row_id: rowId,
+					row_action: action,
+					status: action || "not_approved",
+					text: String(row?.desired_state || row?.text || rowId).trim(),
+					reason: "not_approved_for_execution",
+				});
+				continue;
+			}
+			const propagation = assessmentRows.get(rowId);
+			const planningPaths = propagation?.planning_builds || [];
+			const candidateImplementationBuilds = currentBuildsBySupersession(
+				planningPaths.flatMap(
+					(path) =>
+						input.implementationByPlanning.get(normalizeCodewikiRef(path)) ||
+						[],
+				),
+			);
+			const mappingRows = rowMappings(decision.data, rowId);
+			const resolution = String(propagation?.resolution || "missing").trim();
+			const executableResolution = ["roadmap-task", "sprint"].includes(
+				resolution,
+			);
+			const directTaskIds = unique(propagation?.task_ids || []);
+			const directSprintIds = unique(propagation?.sprint_ids || []);
+			const expandedSprintTaskIds =
+				resolution === "sprint" && directTaskIds.length === 0
+					? sprintTaskIds(directSprintIds)
+					: [];
+			const implementationScopeTaskIds = unique([
+				...directTaskIds,
+				...expandedSprintTaskIds,
+			]);
+			const implementationArtifacts = executableResolution
+				? candidateImplementationBuilds.filter((implementation) => {
+						const implementationTaskIds = buildTaskIds(implementation);
+						return (
+							implementationScopeTaskIds.length === 0 ||
+							implementationTaskIds.length === 0 ||
+							implementationTaskIds.some((taskId) =>
+								implementationScopeTaskIds.includes(taskId),
+							)
+						);
+					})
+				: [];
+			const validationArtifactsByImplementation = implementationArtifacts.map(
+				(implementation) => ({
+					implementation,
+					validations: unique(
+						input.validations
+							.filter((validation) =>
+								validationMatchesImplementation(validation, implementation),
+							)
+							.map((validation) => normalizeCodewikiRef(validation.path)),
+					)
+						.map((path) =>
+							input.validations.find(
+								(validation) => normalizeCodewikiRef(validation.path) === path,
+							),
+						)
+						.filter(Boolean) as ValidationArtifact[],
+				}),
+			);
+			const validationArtifacts = unique(
+				validationArtifactsByImplementation.flatMap((group) =>
+					group.validations.map((validation) =>
+						normalizeCodewikiRef(validation.path),
+					),
+				),
+			)
+				.map((path) =>
+					input.validations.find(
+						(validation) => normalizeCodewikiRef(validation.path) === path,
+					),
+				)
+				.filter(Boolean) as ValidationArtifact[];
+			const implementationClosureBriefs = implementationArtifacts.map(
+				implementationSummary,
+			);
+			const validationReports = validationArtifacts.map(validationSummary);
+			const remainingRisks = unique(
+				implementationClosureBriefs.flatMap(
+					(closure) => closure.remaining_risks,
+				),
+			);
+			const gaps = unique([
+				...(propagation?.gaps || []),
+				...(mappingRows.length === 0 ? ["missing_decision_kb_mapping"] : []),
+				...(executableResolution && implementationArtifacts.length === 0
+					? ["missing_implementation_build"]
+					: []),
+				...(implementationArtifacts.length > 0 &&
+				implementationClosureBriefs.some(
+					(closure) =>
+						!closure.user_intent ||
+						closure.implemented_changes.length === 0 ||
+						closure.acceptance_evidence.length === 0 ||
+						closure.checks.length === 0,
+				)
+					? ["missing_implementation_closure_brief"]
+					: []),
+				...(implementationArtifacts.length > 0 &&
+				validationArtifactsByImplementation.some(
+					(group) => group.validations.length === 0,
+				)
+					? ["missing_validation_report"]
+					: []),
+				...(validationArtifactsByImplementation.some(
+					(group) =>
+						group.validations.length > 0 &&
+						!group.validations.some(
+							(validation) => validation.verdict === "pass",
+						),
+				)
+					? ["missing_passing_validation"]
+					: []),
+			]);
+			const implementationTaskIds = unique(
+				implementationArtifacts.flatMap((implementation) =>
+					buildTaskIds(implementation),
+				),
+			);
+			const deviations = unique([
+				...(implementationScopeTaskIds.length > 0 &&
+				implementationTaskIds.some(
+					(taskId) => !implementationScopeTaskIds.includes(taskId),
+				)
+					? ["implementation_task_scope_deviation"]
+					: []),
+				...(validationArtifactsByImplementation.some(
+					(group) =>
+						group.validations.length > 0 &&
+						!group.validations.some(
+							(validation) => validation.verdict === "pass",
+						) &&
+						group.validations.some(
+							(validation) =>
+								validation.verdict && validation.verdict !== "pass",
+						),
+				)
+					? ["non_passing_validation_report"]
+					: []),
+			]);
+			const deferred =
+				resolution === "deferred" ||
+				mappingRows.some((mapping: any) => mapping?.deferred === true);
+			rows.push({
+				decision_build: decisionPath,
+				row_id: rowId,
+				row_action: action,
+				status: deferred
+					? gaps.length
+						? "deferred-with-gaps"
+						: "deferred"
+					: gaps.length
+						? "gap"
+						: remainingRisks.length
+							? "risk"
+							: "complete",
+				current_state: String(
+					row?.current_state || row?.current_project_state || "",
+				).trim(),
+				desired_state: String(row?.desired_state || row?.text || rowId).trim(),
+				affected_layers: stringList(row?.affected_layers),
+				risk: String(row?.risk || "").trim(),
+				decision_mapping: {
+					knowledge_refs: unique(
+						mappingRows.flatMap((mapping: any) =>
+							stringList(mapping?.knowledge_refs),
+						),
+					),
+					diagram_refs: unique(
+						mappingRows.flatMap((mapping: any) =>
+							stringList(mapping?.diagram_refs),
+						),
+					),
+					deferred: mappingRows.some(
+						(mapping: any) => mapping?.deferred === true,
+					),
+					deferred_reason: unique(
+						mappingRows.flatMap((mapping: any) =>
+							stringList(mapping?.deferred_reason),
+						),
+					),
+				},
+				planning_resolution: {
+					resolution,
+					planning_builds: planningPaths,
+					evidence: String(propagation?.evidence || "").trim(),
+					source_refs: propagation?.source_refs || [],
+					gaps: propagation?.gaps || [],
+				},
+				roadmap_task_ids: directTaskIds,
+				sprint_ids: directSprintIds,
+				implementation_builds: implementationArtifacts.map((implementation) =>
+					normalizeCodewikiRef(implementation.path),
+				),
+				implementation_closure_briefs: implementationClosureBriefs,
+				validation_reports: validationReports,
+				content_proof_refs: unique([
+					...implementationArtifacts.flatMap((implementation) =>
+						contentProofRefs(implementation.data),
+					),
+					...validationReports.flatMap((report) => report.content_proof_refs),
+				]),
+				commit_tree_proof_refs: unique([
+					...implementationArtifacts.flatMap((implementation) =>
+						gitProofRefs(implementation.data),
+					),
+					...validationReports.flatMap(
+						(report) => report.commit_tree_proof_refs,
+					),
+				]),
+				remaining_risks: remainingRisks,
+				deviations,
+				gaps,
+			});
+		}
+	}
+
+	const taskIds = unique([
+		...input.roadmapEntries.map((task) => task.id),
+		...rows.flatMap((row) => stringList(row.roadmap_task_ids)),
+	]);
+	const sprintIds = unique([
+		...input.sprints.map((sprint) => sprint.id),
+		...rows.flatMap((row) => stringList(row.sprint_ids)),
+	]);
+	const taskScopes = Object.fromEntries(
+		taskIds
+			.map((taskId) => [taskId, scopeSummary(rows, taskId, "roadmap_task_ids")])
+			.filter(([, summary]) => Boolean(summary)),
+	);
+	const sprintScopes = Object.fromEntries(
+		sprintIds
+			.map((sprintId) => [sprintId, scopeSummary(rows, sprintId, "sprint_ids")])
+			.filter(([, summary]) => Boolean(summary)),
+	);
+	const rowGaps = unique(
+		rows.flatMap((row) =>
+			stringList(row.gaps).map(
+				(gap) => `${row.decision_build}:${row.row_id}:${gap}`,
+			),
+		),
+	);
+	const rowDeviations = unique(
+		rows.flatMap((row) =>
+			stringList(row.deviations).map(
+				(deviation) => `${row.decision_build}:${row.row_id}:${deviation}`,
+			),
+		),
+	);
+	const remainingRisks = unique(
+		rows.flatMap((row) =>
+			stringList(row.remaining_risks).map(
+				(risk) => `${row.decision_build}:${row.row_id}:${risk}`,
+			),
+		),
+	);
+	return {
+		version: 1,
+		source: "generated:semantic-execution-closure",
+		model:
+			"approved-decision-row-through-planning-work-implementation-validation-proof",
+		invariant:
+			"generated_view_not_canonical_truth; canonical truth remains accepted builds, roadmap, validation reports, and Git/content proof",
+		summary: {
+			decision_count: input.decisionBuilds.length,
+			approved_row_count: rows.length,
+			excluded_row_count: excludedRows.length,
+			complete_row_count: rows.filter((row) => row.status === "complete")
+				.length,
+			deferred_row_count:
+				rows.filter((row) => String(row.status).startsWith("deferred")).length +
+				excludedRows.filter((row) => row.status === "deferred").length,
+			gap_count: rowGaps.length,
+			deviation_count: rowDeviations.length,
+			remaining_risk_count: remainingRisks.length,
+		},
+		rows,
+		excluded_rows: excludedRows,
+		gaps: rowGaps,
+		deviations: rowDeviations,
+		remaining_risks: remainingRisks,
+		scopes: {
+			tasks: taskScopes,
+			sprints: sprintScopes,
+		},
+		source_refs: unique([
+			...input.decisionBuilds.map((build) => normalizeCodewikiRef(build.path)),
+			...rows.flatMap((row) =>
+				stringList(row.planning_resolution?.planning_builds),
+			),
+			...rows.flatMap((row) => stringList(row.implementation_builds)),
+			...rows.flatMap((row) =>
+				(Array.isArray(row.validation_reports) ? row.validation_reports : [])
+					.map((report: any) => String(report?.path || "").trim())
+					.filter(Boolean),
+			),
+		]),
+	};
+}
+
 export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const {
 		project,
@@ -1984,6 +2532,38 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		}
 	}
 
+	const semanticExecutionClosure = buildSemanticExecutionClosureView({
+		decisionBuilds: builds.filter((build) => {
+			if (build.kind !== "decision_build") return false;
+			if (!isAcceptedBuild(build)) return false;
+			const lifecycleState =
+				String(
+					build.data?.lifecycle?.state ||
+						build.data?.status ||
+						build.status ||
+						"",
+				).trim() || "unknown";
+			const buildPath = normalizeCodewikiRef(build.path);
+			return (
+				!isLifecycleComplete(lifecycleState) &&
+				!supersededByPath.has(buildPath) &&
+				!historicalColdBuild(build, lifecycleState)
+			);
+		}),
+		planningByDecision,
+		implementationByPlanning,
+		validations,
+		roadmapEntries,
+		sprints: normalizedSprints,
+		knownTaskIds: unique([
+			...roadmapEntries.map((task) => task.id),
+			...archivedTaskIds,
+		]),
+		knownSprintIds: normalizedSprints.map((sprint) => sprint.id),
+		satisfiedDeferredTriggers:
+			fileStructureDrift.satisfied_deferred_triggers || [],
+	});
+
 	// Process active change claims
 	const claimState = buildChangeClaimState(claims);
 	for (const claim of claimState.claims) {
@@ -2026,8 +2606,10 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			scopes: wake.scopes,
 		});
 		addEdge("claim_wake_waiter", wakeId, `claim_wait:${wake.waiter_id}`);
-		if (wake.task_id) addEdge("claim_wake_task", wakeId, `task:${wake.task_id}`);
-		if (wake.build_ref) addEdge("claim_wake_build", wakeId, `build:${wake.build_ref}`);
+		if (wake.task_id)
+			addEdge("claim_wake_task", wakeId, `task:${wake.task_id}`);
+		if (wake.build_ref)
+			addEdge("claim_wake_build", wakeId, `build:${wake.build_ref}`);
 		for (const label of claimScopeLabels(wake.scopes)) {
 			const scopeId = `claim_scope:${label}`;
 			addNode(scopeId, { kind: "change_claim_scope", path: label });
@@ -2599,6 +3181,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		diagramParseIssueCount: diagramInventory.parse_issues.length,
 		traceabilityRows,
 		semanticChangeRows,
+		semanticExecutionClosure,
 		validationAttestations,
 		validationIsolationRows,
 		canonicalSourceRefs: Array.from(canonicalSourceRefs).sort(),
@@ -2633,6 +3216,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			active_sprint_ids: activeSprintIds,
 			sprints: sprintViews,
 		},
+		semantic_execution_closure: semanticExecutionClosure,
 		decision_propagation: {
 			version: 1,
 			model: "accepted-decision-row-to-roadmap-resolution",

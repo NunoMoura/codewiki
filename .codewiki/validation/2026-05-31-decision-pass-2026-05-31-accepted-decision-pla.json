@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T11:22:12Z",
+  "profile": "decision",
+  "verdict": "pass",
+  "rationale": "User explicitly approved DECISION-PLAN rows; KB changes map approved rows to system docs; downstream executable enforcement is planned as TASK-072 rather than left in build-only deferral.",
+  "checks": [
+    "wiki_diff_table accepted DECISION-PLAN-001..004",
+    "wiki_audit alignment,stale-reference,changed,source-contract"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:changed",
+    "audit:source-contract"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+    "validation_report": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-decision-pla.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-decision-pla.json",
+      "Updated .codewiki/kb/system/compilers.md planning-loop propagation contract to reject build-only deferral for executable rows.",
+      "Updated .codewiki/kb/system/validation-gateway.md planning/close validation rules to block accepted executable rows without task/sprint mapping.",
+      "Updated .codewiki/kb/system/roadmap.md to make roadmap/sprint mapping the durable scheduling mechanism for approved executable rows.",
+      "Updated .codewiki/kb/system/graph.md to include unmapped accepted-decision gaps in Work lens responsibility.",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/graph.md"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+    "validation_report": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-decision-pla.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-decision-pla.json",
+      "CodeWiki-Checks: wiki_diff_table accepted DECISION-PLAN-001..004; wiki_audit alignment,stale-reference,changed,source-contract"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved_diff_row:DECISION-PLAN-001",
+        "approved_diff_row:DECISION-PLAN-002",
+        "approved_diff_row:DECISION-PLAN-003",
+        "approved_diff_row:DECISION-PLAN-004"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

@@ -68,6 +68,7 @@ export interface ControlRoomStateModel {
 	gates: {
 		blocked: number;
 		validation: number;
+		closure_gaps: number;
 	};
 	file_structure: ControlRoomFileStructureModel | null;
 	latest_signal: string | null;
@@ -344,6 +345,11 @@ export async function buildControlRoomStateModel(
 			graph?.views?.lenses?.audit?.file_structure_drift ??
 			null,
 	);
+	const semanticClosureSummary =
+		graph?.views?.semantic_execution_closure?.summary ??
+		status?.semantic_execution_closure?.summary ??
+		graph?.views?.lenses?.audit?.semantic_execution_closure?.summary ??
+		{};
 
 	return {
 		project: {
@@ -429,6 +435,7 @@ export async function buildControlRoomStateModel(
 		gates: {
 			blocked: blockedTasks.length,
 			validation: validationNodes.length,
+			closure_gaps: numberFrom(semanticClosureSummary.gap_count),
 		},
 		file_structure: fileStructure,
 		latest_signal: stringOrNull(

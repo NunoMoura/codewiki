@@ -64,7 +64,7 @@ Default vNext graph reads should show five families:
 Decision -> Knowledge -> Work -> Execution -> Proof
 ```
 
-Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse non-next-action build/validation internals into badges.
+Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning, roadmap, sprint membership, and unmapped accepted-decision gaps. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse non-next-action build/validation internals into badges.
 
 Generated graph projections live under `views.lenses`: `default` serves status/Control Room, `trace` expands requirement and source refs, `audit` expands validation, isolation, audit, proof, reconciliation, and traceability gaps, and `execution` exposes planning-owned dependency/order/conflict/model-policy metadata plus runtime job state for daemon scheduling. These lenses are generated read models only.
 

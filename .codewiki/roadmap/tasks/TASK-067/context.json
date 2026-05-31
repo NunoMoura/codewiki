@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T03:18:53Z",
+  "generated_at": "2026-05-31T18:57:14Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-067/context.json",
   "task": {
     "id": "TASK-067",
@@ -8,7 +8,7 @@
     "status": "in_progress",
     "priority": "medium",
     "kind": "feature",
-    "change_type": "task",
+    "change_type": "system",
     "summary": "Create a closure report/view that compares approved decision rows to planning tasks, implementation builds, validation reports, and Git proof for task or sprint close review.",
     "labels": [
       "closure-report",

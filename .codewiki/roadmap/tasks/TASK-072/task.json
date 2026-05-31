@@ -1,0 +1,54 @@
+{
+  "id": "TASK-072",
+  "title": "Enforce decision-to-roadmap propagation gaps",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "feature",
+  "summary": "Detect accepted executable decision rows without durable task/sprint mapping and route them as planning gaps in generated state, resume context, and validation preflight.",
+  "spec_paths": [
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/graph.md"
+  ],
+  "code_paths": [
+    "src/build/decision-propagation.ts",
+    "src/state/resume-context.ts",
+    "src/state/builders.ts",
+    "src/state/types.ts",
+    "tests/tasks/decision-planning-hardening/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "decision-propagation",
+    "planning-integrity",
+    "graph-routing"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "CodeWiki surfaces unplanned accepted executable decision rows as planning blockers instead of leaving them hidden in build history.",
+    "acceptance": [
+      "Decision propagation analysis classifies approved rows as executable task/sprint mapped, knowledge-only/non-executable with durable KB/roadmap disposition, rejected/not-applicable, or unplanned gap.",
+      "Generated graph/status and resume context expose unplanned accepted-decision gaps before unrelated implementation or close routing.",
+      "Validation preflight consumes the gap signal and blocks planning/implementation/close when accepted executable rows lack task/sprint mapping.",
+      "A fixture covers build-only deferred executable rows, including daemon execution graph / worker scheduling follow-up evidence after TASK-070, and reports them as visible planning gaps unless durable roadmap/sprint work exists.",
+      "Tests cover task/sprint mapping pass, build-only deferred executable row block, durable knowledge-only/non-executable pass, and resume/status gap display."
+    ],
+    "non_goals": [
+      "Do not implement full daemon worker spawning or automatic validator session launch in this task.",
+      "Do not require knowledge-only decisions to create roadmap tasks.",
+      "Do not replace roadmap tasks, planning builds, validation reports, or Git/content proof.",
+      "Do not build a project analytics dashboard."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted smoke/fixture tests for decision propagation and gateway blocking",
+      "wiki_audit changed/source-contract/alignment as applicable"
+    ]
+  },
+  "delta": {
+    "desired": "Accepted executable rows must be represented by task/sprint ids or block validation/routing as planning gaps.",
+    "current": "Accepted rows can be hidden in planning_build deferred evidence with triggers.",
+    "closure": ""
+  },
+  "created": "2026-05-31",
+  "updated": "2026-05-31T11:22:44Z"
+}

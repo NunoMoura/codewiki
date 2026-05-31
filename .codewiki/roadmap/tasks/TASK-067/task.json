@@ -26,7 +26,7 @@
     "sprint-close",
     "semantic-trace"
   ],
-  "change_type": "task",
+  "change_type": "system",
   "goal": {
     "outcome": "Users and validators can review a compact closure comparison from approved semantic rows through tasks, builds, validation reports, and Git proof without creating a new canonical truth source.",
     "acceptance": [
@@ -54,5 +54,5 @@
     "closure": ""
   },
   "created": "2026-05-31",
-  "updated": "2026-05-31T03:18:53Z"
+  "updated": "2026-05-31T18:57:14Z"
 }

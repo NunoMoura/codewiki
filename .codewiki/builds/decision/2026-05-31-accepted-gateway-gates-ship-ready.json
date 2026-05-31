@@ -1,0 +1,394 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-31T11:48:24Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-30T11:48:24.000Z",
+    "purge_after": "2026-07-30T11:48:24.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-GATE-NAME-001",
+      "text": "Gateway terminology should use named gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "source_refs": [
+        "GATE-NAME-001",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-GATE-NAME-002",
+      "text": "Sprint-close should be a conditional gate for sprint cohort closure readiness.",
+      "source_refs": [
+        "GATE-NAME-002",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-GATE-NAME-003",
+      "text": "Ship-ready should be the conditional gate for exact-content promotion readiness across commit, package, archive, remote, and release targets.",
+      "source_refs": [
+        "GATE-NAME-003",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "User selected ship-ready and agreed to both conditional gates.",
+      "evidence": "DT-2026-05-31-gateway-gates-ship-ready accepted rows GATE-NAME-001..003.",
+      "requirement_ids": [
+        "REQ-GATE-NAME-001",
+        "REQ-GATE-NAME-002",
+        "REQ-GATE-NAME-003"
+      ],
+      "source_refs": [
+        ".codewiki/runtime/diff-tables.json"
+      ]
+    },
+    {
+      "criterion": "System docs reflect selected terminology.",
+      "evidence": "validation-gateway and compilers docs updated to define gate list and ship-ready role.",
+      "requirement_ids": [
+        "REQ-GATE-NAME-001",
+        "REQ-GATE-NAME-002",
+        "REQ-GATE-NAME-003"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted gateway gate terminology with conditional sprint-close and ship-ready gates.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "GATE-NAME-001",
+      "current_state": "Gateway language uses profiles and publication/publication-like readiness terminology inconsistently.",
+      "current_project_state": "Gateway language uses profiles and publication/publication-like readiness terminology inconsistently.",
+      "desired_state": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "agreed_change": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "expected_final_state": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Gate terminology is clearer than profiles for users. The gate list makes mandatory and conditional checkpoints explicit.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "agents"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep profile terminology",
+        "Use release-readiness or artifact-promotion"
+      ]
+    },
+    {
+      "id": "GATE-NAME-002",
+      "current_state": "Sprint closure can rely on individual task-close evidence without an explicit cohort-level gate.",
+      "current_project_state": "Sprint closure can rely on individual task-close evidence without an explicit cohort-level gate.",
+      "desired_state": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "agreed_change": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "expected_final_state": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Sprints can have cohort invariants that no single task-close gate owns.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Skip sprint-close and rely only on task-close",
+        "Make sprint-close mandatory for all sprints"
+      ]
+    },
+    {
+      "id": "GATE-NAME-003",
+      "current_state": "Publication gate naming is package/remote biased and does not cover local commit, archive, package, push, release, and GC readiness uniformly.",
+      "current_project_state": "Publication gate naming is package/remote biased and does not cover local commit, archive, package, push, release, and GC readiness uniformly.",
+      "desired_state": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "agreed_change": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "expected_final_state": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Ship-ready is user-readable and broad enough for commit-ready plus package/release/remote/archive proof without being too narrow.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "publication"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "commit-ready",
+        "publication",
+        "artifact-promotion",
+        "release-readiness"
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "GATE-NAME-001",
+    "GATE-NAME-002",
+    "GATE-NAME-003"
+  ],
+  "approved_rows": [
+    {
+      "id": "GATE-NAME-001",
+      "current_state": "Gateway language uses profiles and publication/publication-like readiness terminology inconsistently.",
+      "current_project_state": "Gateway language uses profiles and publication/publication-like readiness terminology inconsistently.",
+      "desired_state": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "agreed_change": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "expected_final_state": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Gate terminology is clearer than profiles for users. The gate list makes mandatory and conditional checkpoints explicit.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "agents"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep profile terminology",
+        "Use release-readiness or artifact-promotion"
+      ]
+    },
+    {
+      "id": "GATE-NAME-002",
+      "current_state": "Sprint closure can rely on individual task-close evidence without an explicit cohort-level gate.",
+      "current_project_state": "Sprint closure can rely on individual task-close evidence without an explicit cohort-level gate.",
+      "desired_state": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "agreed_change": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "expected_final_state": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Sprints can have cohort invariants that no single task-close gate owns.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Skip sprint-close and rely only on task-close",
+        "Make sprint-close mandatory for all sprints"
+      ]
+    },
+    {
+      "id": "GATE-NAME-003",
+      "current_state": "Publication gate naming is package/remote biased and does not cover local commit, archive, package, push, release, and GC readiness uniformly.",
+      "current_project_state": "Publication gate naming is package/remote biased and does not cover local commit, archive, package, push, release, and GC readiness uniformly.",
+      "desired_state": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "agreed_change": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "expected_final_state": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Ship-ready is user-readable and broad enough for commit-ready plus package/release/remote/archive proof without being too narrow.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "publication"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "commit-ready",
+        "publication",
+        "artifact-promotion",
+        "release-readiness"
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "CodeWiki terminology uses gateway gates: decision, planning, implementation, task-close, sprint-close, and ship-ready."
+    },
+    {
+      "id": "D2",
+      "summary": "Add a conditional sprint-close gate for sprint outcome, cross-task accepted-row resolution, shared risks, generated state, and no hidden build-only follow-up before closing a sprint."
+    },
+    {
+      "id": "D3",
+      "summary": "Use a conditional ship-ready gate for exact-content promotion outside the current working state, with ship targets such as commit, package, remote, release, or archive."
+    }
+  ],
+  "knowledge_changes": [
+    "Updated .codewiki/kb/system/validation-gateway.md to use gateway gate terminology and include sprint-close and ship-ready gates.",
+    "Updated .codewiki/kb/system/compilers.md target flow to name decision/planning/implementation/task-close/sprint-close/ship-ready gates."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "GATE-NAME-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Docs now define one gateway system with named gates and use gate terminology in flow text.",
+      "deferred": false
+    },
+    {
+      "row_id": "GATE-NAME-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Docs now list sprint-close as conditional gate for sprint cohort closure.",
+      "deferred": false
+    },
+    {
+      "row_id": "GATE-NAME-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Docs now use ship-ready for exact-content promotion and replace publication-oriented readiness phrasing.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users and agents get clearer gateway language: gate names describe checkpoints directly, and ship-ready avoids package/remote-biased publication terminology."
+    ],
+    "system_impact": [
+      "Gateway policy/tool/schema implementation must support sprint-close and ship-ready gate names and preserve compatibility for existing profile calls where needed."
+    ],
+    "downstream_planning_questions": [
+      "Plan implementation of gateway gate naming, sprint-close gate policy, and ship-ready gate policy while preserving compatibility for current profile inputs."
+    ]
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+  ],
+  "downstream_planning_questions": [
+    "Implement gateway gate naming and support sprint-close/ship-ready gates in policy, schemas, and tests.",
+    "Plan implementation of gateway gate naming, sprint-close gate policy, and ship-ready gate policy while preserving compatibility for current profile inputs."
+  ],
+  "assumptions": [
+    "Existing tool/API fields named profile may need backward-compatible aliases during implementation."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement full worker spawning or automatic validator session launch in this decision.",
+    "Do not perform remote publication or package release."
+  ],
+  "risks": [
+    "Terminology migration can break existing tests/tools if profile compatibility is removed too abruptly."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      "Updated .codewiki/kb/system/validation-gateway.md to use gateway gate terminology and include sprint-close and ship-ready gates.",
+      "Updated .codewiki/kb/system/compilers.md target flow to name decision/planning/implementation/task-close/sprint-close/ship-ready gates.",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/compilers.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

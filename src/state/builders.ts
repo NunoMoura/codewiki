@@ -1528,6 +1528,27 @@ export function buildStatusState(
 			residuals,
 		};
 	}
+	let semanticExecutionClosureStatus: StateRecord | null = null;
+	if (isRecord(graphViews.semantic_execution_closure)) {
+		const closure = graphViews.semantic_execution_closure;
+		const summary = isRecord(closure.summary) ? closure.summary : {};
+		semanticExecutionClosureStatus = {
+			version: closure.version,
+			model: closure.model,
+			invariant: closure.invariant,
+			summary: {
+				approved_row_count: Number(summary.approved_row_count || 0),
+				complete_row_count: Number(summary.complete_row_count || 0),
+				gap_count: Number(summary.gap_count || 0),
+				deviation_count: Number(summary.deviation_count || 0),
+				remaining_risk_count: Number(summary.remaining_risk_count || 0),
+			},
+			gaps: Array.isArray(closure.gaps) ? closure.gaps.slice(0, 20) : [],
+			deviations: Array.isArray(closure.deviations)
+				? closure.deviations.slice(0, 20)
+				: [],
+		};
+	}
 	let activeLoop = "observe";
 	let expectedOutput = "observation";
 	if (String(nextStep.kind || "observe") === "code") {
@@ -1649,6 +1670,7 @@ export function buildStatusState(
 		direction,
 		file_structure: fileStructureStatus,
 		decision_propagation: decisionPropagationStatus,
+		semantic_execution_closure: semanticExecutionClosureStatus,
 		specs: specRows,
 		agency: {
 			generated_at: nowIso(),

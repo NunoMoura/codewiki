@@ -45,6 +45,12 @@ const project = {
 const implementationAuditRefs = ["audit:alignment", "audit:changed"];
 const decisionAuditRefs = ["audit:alignment", "audit:stale-reference"];
 const planningAuditRefs = ["audit:alignment"];
+const taskCloseAuditRefs = [
+	"audit:alignment",
+	"audit:changed",
+	"audit:task",
+	"audit:generated-parity",
+];
 const publicationAuditRefs = [
 	"audit:alignment",
 	"audit:package",
@@ -246,6 +252,64 @@ try {
 			entry.includes(planning.path),
 		),
 	);
+
+	await writeFile(
+		join(root, project.graphPath),
+		JSON.stringify(
+			{
+				views: {
+					semantic_execution_closure: {
+						version: 1,
+						invariant: "generated_view_not_canonical_truth",
+						scopes: {
+							tasks: {
+								"TASK-777": {
+									gaps: ["VAL-PREFLIGHT:missing_validation_report"],
+									deviations: ["VAL-PREFLIGHT:non_passing_validation_report"],
+									remaining_risks: ["close reviewer must confirm row evidence"],
+									implementation_builds: [semanticImplementation.path],
+									validation_reports: [],
+									content_proof_refs: [],
+								},
+							},
+						},
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+	const semanticClosureBlocked = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Task close must cite clean semantic closure evidence.",
+		source: semanticImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			published_sha: "def5678",
+			tree_sha: "tree5678",
+		},
+	});
+	assert.equal(semanticClosureBlocked.status, "blocked");
+	assert.ok(
+		semanticClosureBlocked.checks.includes("semantic execution closure report"),
+	);
+	assert.ok(
+		semanticClosureBlocked.missing.semantic_closure.some((entry) =>
+			entry.includes("missing_validation_report"),
+		),
+	);
+	assert.ok(
+		semanticClosureBlocked.missing.semantic_closure_risks.some((entry) =>
+			entry.includes("close reviewer"),
+		),
+	);
+	assert.equal(semanticClosureBlocked.routing.failure_class, "planning_gap");
 
 	const staleSource = buildGatewayPreflight(project, {
 		profile: "implementation",

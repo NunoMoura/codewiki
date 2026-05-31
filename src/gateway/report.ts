@@ -504,6 +504,49 @@ function graphDecisionPropagationResidualGaps(
 	}
 }
 
+function graphSemanticExecutionClosureForTask(
+	project: WikiProject,
+	input: CodewikiValidationReportInput,
+	profile: string,
+): { gaps: string[]; risks: string[]; refs: string[] } {
+	if (profile.trim().toLowerCase() !== "task-close") {
+		return { gaps: [], risks: [], refs: [] };
+	}
+	const taskId = String(input.task_id || "").trim();
+	if (!taskId) return { gaps: [], risks: [], refs: [] };
+	try {
+		const graph = JSON.parse(
+			readFileSync(resolve(project.root, project.graphPath), "utf8"),
+		);
+		const closure =
+			graph?.views?.semantic_execution_closure ||
+			graph?.views?.lenses?.audit?.semantic_execution_closure ||
+			graph?.views?.lenses?.trace?.semantic_execution_closure ||
+			null;
+		const taskScope = closure?.scopes?.tasks?.[taskId];
+		if (!taskScope) return { gaps: [], risks: [], refs: [] };
+		const gaps = unique([
+			...trimList(taskScope.gaps).map(
+				(gap) => `semantic_closure:${taskId}:${gap}`,
+			),
+			...trimList(taskScope.deviations).map(
+				(deviation) => `semantic_closure:${taskId}:deviation:${deviation}`,
+			),
+		]);
+		const risks = trimList(taskScope.remaining_risks).map(
+			(risk) => `semantic_closure:${taskId}:risk:${risk}`,
+		);
+		const refs = unique([
+			...trimList(taskScope.implementation_builds),
+			...trimList(taskScope.validation_reports),
+			...trimList(taskScope.content_proof_refs),
+		]);
+		return { gaps, risks, refs };
+	} catch {
+		return { gaps: [], risks: [], refs: [] };
+	}
+}
+
 function validationDecisionPropagationGaps(
 	project: WikiProject,
 	input: CodewikiValidationReportInput,
@@ -879,7 +922,9 @@ function inferValidationRouting(
 		.toLowerCase();
 	const failureClass =
 		explicitClass ||
-		(joined.includes("decision_propagation") || joined.includes("planning gap")
+		(joined.includes("decision_propagation") ||
+		joined.includes("semantic_closure") ||
+		joined.includes("planning gap")
 			? "planning_gap"
 			: undefined) ||
 		(joined.includes("risk_approval") ||
@@ -984,6 +1029,11 @@ export function buildGatewayPreflight(
 		source.build,
 		profile,
 	);
+	const semanticClosure = graphSemanticExecutionClosureForTask(
+		project,
+		input,
+		profile,
+	);
 	const staleRefs = validationStaleRefs(project, input, source);
 	const closePublicationBlockers = unique([
 		...publisherGaps.map((gap) => `publisher_result:${gap}`),
@@ -1028,6 +1078,7 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps,
 		...ambiguityGaps,
 		...decisionPropagationGaps,
+		...semanticClosure.gaps,
 		...auditGaps,
 		...taskIdGaps,
 		...isolationGaps,
@@ -1049,6 +1100,8 @@ export function buildGatewayPreflight(
 		decision_mappings: decisionMappingGaps,
 		ambiguity: ambiguityGaps,
 		decision_propagation: decisionPropagationGaps,
+		semantic_closure: semanticClosure.gaps,
+		semantic_closure_risks: semanticClosure.risks,
 		audit_evidence: auditGaps,
 		task_ids: taskIdGaps,
 		content_proof: isolationGaps,
@@ -1081,6 +1134,18 @@ export function buildGatewayPreflight(
 			"high",
 			decisionPropagationGaps,
 			"Accepted decision rows or downstream planning questions are not durably resolved.",
+		),
+		...validationPreflightIssue(
+			"semantic-closure",
+			"high",
+			semanticClosure.gaps,
+			"Semantic execution closure report has row-to-execution gaps or deviations.",
+		),
+		...validationPreflightIssue(
+			"semantic-closure-risks",
+			"medium",
+			semanticClosure.risks,
+			"Semantic execution closure report lists remaining risks for close review.",
 		),
 		...validationPreflightIssue(
 			"audit-evidence",
@@ -1130,6 +1195,8 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps.map((gap) => `decision_mapping:${gap}`),
 		...ambiguityGaps.map((gap) => `ambiguous_intent:${gap}`),
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...semanticClosure.gaps,
+		...semanticClosure.risks,
 		...auditGaps.map((gap) => `audit:${gap}`),
 		...taskIdGaps.map((gap) => `task_id:${gap}`),
 		...isolationGaps.map((gap) => `content_proof:${gap}`),
@@ -1154,6 +1221,7 @@ export function buildGatewayPreflight(
 			"decision row KB/defer mapping coverage",
 			"open semantic questions",
 			"decision-row propagation coverage",
+			"semantic execution closure report",
 			"required audit evidence",
 			"task id consistency",
 			"content proof strategy",

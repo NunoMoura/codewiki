@@ -269,6 +269,7 @@ export function buildGraphLensViews(input: {
 	diagramParseIssueCount: number;
 	traceabilityRows: ReadModelRecord[];
 	semanticChangeRows: ReadModelRecord[];
+	semanticExecutionClosure: ReadModelRecord;
 	validationAttestations: ReadModelRecord[];
 	validationIsolationRows: ReadModelRecord[];
 	canonicalSourceRefs: string[];
@@ -364,6 +365,15 @@ export function buildGraphLensViews(input: {
 	const traceabilityGaps = input.traceabilityRows.filter(
 		(row) => Array.isArray(row.gaps) && row.gaps.length > 0,
 	);
+	const semanticClosureSummary = recordOrEmpty(
+		input.semanticExecutionClosure.summary,
+	);
+	const semanticClosureGapCount = Number(
+		semanticClosureSummary.gap_count || 0,
+	);
+	const semanticClosureRiskCount = Number(
+		semanticClosureSummary.remaining_risk_count || 0,
+	);
 	const fileStructureAuditSummary = {
 		version: input.fileStructureDrift.version,
 		source: input.fileStructureDrift.source,
@@ -392,6 +402,11 @@ export function buildGraphLensViews(input: {
 				buildCounts.decision,
 			),
 			graphLensBadge("semantic_gaps", "semantic gaps", semanticGaps.length),
+			graphLensBadge(
+				"semantic_closure_gaps",
+				"closure gaps",
+				semanticClosureGapCount,
+			),
 		],
 		knowledge: [
 			graphLensBadge("docs", "docs", input.docPaths.length),
@@ -485,6 +500,11 @@ export function buildGraphLensViews(input: {
 				"trace gaps",
 				traceabilityGaps.length,
 			),
+			graphLensBadge(
+				"semantic_closure_risks",
+				"closure risks",
+				semanticClosureRiskCount,
+			),
 		],
 	};
 	const families = DEFAULT_GRAPH_LENS_FAMILIES.map((family) => {
@@ -533,6 +553,7 @@ export function buildGraphLensViews(input: {
 			source: "generated:graph-trace-lens",
 			exact_refs: true,
 			requirement_rows: input.traceabilityRows,
+			semantic_execution_closure: input.semanticExecutionClosure,
 			semantic_change_rows: input.semanticChangeRows,
 			semantic_change_gaps: semanticGaps,
 			canonical_source_refs: input.canonicalSourceRefs,
@@ -555,6 +576,7 @@ export function buildGraphLensViews(input: {
 			reconciliation_items: input.reconciliationItems,
 			traceability_gaps: traceabilityGaps,
 			semantic_change_gaps: semanticGaps,
+			semantic_execution_closure: input.semanticExecutionClosure,
 			file_structure_drift: fileStructureAuditSummary,
 		},
 	};
