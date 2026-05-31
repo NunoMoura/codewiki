@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T00:26:08Z",
+  "profile": "implementation",
+  "task_id": "TASK-064",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passed for TASK-064. Source refs show Pi Code is represented as the first-class runtime foundation through createPiCodeRuntimeFoundationContract() and piCodeRuntimeFoundation(), capability ownership is explicit for model loop, session/thread state, tools, context assembly, compaction, event streams, replacement sessions, and worker execution, and unsupported future runtimes fail closed with platform-limited evidence. Tests cover Pi foundation capability discovery, worker_execution platform limitation, unsupported capability checks, and runCodewikiRuntimeStep blocking/releasing claims when context_assembly is unsupported. Non-goals were preserved: no non-Pi backend, no model-provider config change, no daemon storage/session spawning.",
+  "checks": [
+    "read .codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+    "read TASK-064 roadmap refs",
+    "read src/runtime/ports.ts capability contracts",
+    "read src/runtime/runner.ts fail-closed capability gate",
+    "read src/adapters/pi/tools/ports.ts Pi foundation advertisement",
+    "read tests/smoke/runtime-runner.test.mjs capability tests",
+    "read .codewiki/kb/system/runtime.md and .codewiki/kb/system/adapters.md ownership docs",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+    "npm run typecheck",
+    "npm run test:smoke",
+    "npm run check:architecture",
+    "search/docs confirmation grep for Pi foundation/platform_limited/wiki_resume_context/no stale codewiki_* in touched refs",
+    "wiki_audit profiles=task,alignment,generated-parity,changed task_id=TASK-064"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit reports existing graph-health warnings; generated parity and task audits pass."
+    },
+    {
+      "severity": "warning",
+      "summary": "Changed audit reports generated-file-changed for refreshed generated state/task views after roadmap evidence update; acceptable for dirty pre-commit implementation validation."
+    },
+    {
+      "severity": "low",
+      "summary": "Runtime/API adapter files changed; Pi reload required after commit before relying on live behavior."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity"
+  ],
+  "audit_reports": [
+    "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists."
+  ],
+  "content_proof_refs": [
+    "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-064",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "tests/smoke/runtime-runner.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-064",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+    "commit_title": "checkpoint(codewiki): TASK-064 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-064",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "CodeWiki-Checks: read .codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json; read TASK-064 roadmap refs; read src/runtime/ports.ts capability contracts; read src/runtime/runner.ts fail-closed capability gate; read src/adapters/pi/tools/ports.ts Pi foundation advertisement; read tests/smoke/runtime-runner.test.mjs capability tests; read .codewiki/kb/system/runtime.md and .codewiki/kb/system/adapters.md ownership docs; node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs; npm run typecheck; npm run test:smoke; npm run check:architecture; search/docs confirmation grep for Pi foundation/platform_limited/wiki_resume_context/no stale codewiki_* in touched refs; wiki_audit profiles=task,alignment,generated-parity,changed task_id=TASK-064"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts"
+    ],
+    "reasons": [
+      "CodeWiki runtime orchestration changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-064",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation judged from source refs and checked dirty pre-commit content digest before writing this validation report.",
+    "role": "validator"
+  }
+}

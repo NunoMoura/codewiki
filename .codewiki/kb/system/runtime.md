@@ -58,11 +58,24 @@ Pi Code owns the primary process/session mechanics CodeWiki builds on: tool invo
 
 CodeWiki runtime must not become a generic model provider, chat gateway, or unsupported harness event loop. A runtime/model plug point must document who owns the model loop, canonical thread/session state, dynamic tools, native tools, context assembly, compaction, and event streams before it can operate CodeWiki jobs.
 
-Adapters expose harness capabilities through ports. Runtime requests capabilities through those ports and records platform-limited steps when a capability is missing.
+Adapters expose harness capabilities through ports. Runtime requests capabilities through those ports and records platform-limited steps when a capability is missing. The code contract lives in `src/runtime/ports.ts`: `createPiCodeRuntimeFoundationContract()` defines the first-class Pi Code foundation, and `requireRuntimeCapability()` fails closed with platform-limited evidence when a future runtime does not advertise a needed capability.
 
 ```text
 CodeWiki runtime request -> adapter port -> harness runtime capability
 ```
+
+Required capability ownership for the Pi Code foundation:
+
+| Capability | Pi Code foundation owner | CodeWiki responsibility | Unsupported behavior |
+| --- | --- | --- | --- |
+| Model loop | Pi Code owns provider calls, streaming, retry, abort, and model-turn lifecycle. | Select/store CodeWiki task intent and compiler/gateway boundaries before model work. | Stop as `platform_limited`; do not fabricate a model loop. |
+| Session/thread state | Pi Code owns session files, tree state, replacement lifecycle, and current thread state. | Store CodeWiki truth in roadmap/build/validation/Git refs, not chat state. | Stop as `platform_limited`; require compatible session state before running jobs. |
+| Tools | Pi Code owns built-in and extension tool execution, validation, rendering, and tool-event ordering. | Expose CodeWiki operations as package tools and enforce artifact/gateway policy. | Stop as `platform_limited`; do not bypass policy through ad hoc commands. |
+| Context assembly | Pi Code owns system prompt, skills, prompt templates, context files, tool snippets, and provider payload assembly. | Provide bounded source-backed resume packets and compaction context from CodeWiki refs. | Runtime fail-closes before kickoff when this capability is missing. |
+| Compaction | Pi Code owns compaction mechanics and lifecycle events. | Replace generic summaries with CodeWiki-owned source-backed resume context at safe boundaries. | Return visible fallback/manual continuation; do not hide tool results behind compaction. |
+| Event streams | Pi Code owns session, agent, turn, message, model, and tool event streams. | Record only CodeWiki evidence needed for claims, validation, daemon jobs, and workflow efficiency. | Record platform-limited evidence; do not assume events happened. |
+| Replacement session | Pi Code owns command-context `newSession`/`switchSession`/`fork` with `withSession`. | Request hard context boundaries only through adapter-safe paths and seed source-backed kickoff. | Return visible fallback; tools must not call command-only APIs directly. |
+| Worker execution | Not implemented yet; Pi Code is the intended first worker foundation. | Keep daemon jobs as attempts only until explicit spawning/gateway routing lands. | `platform_limited` by default for TASK-064; later tasks may enable it. |
 
 Examples:
 
@@ -71,7 +84,7 @@ Examples:
 | Same-session context hygiene | Pi CodeWiki-owned compaction or context refresh. |
 | Hard replacement context | Pi `new_session` or another harness replacement-session API. |
 | Separate worker execution | Runtime daemon job spawning through Pi Code first, then future supported worker adapters. |
-| User-visible kickoff | Protocol-safe custom/user-role-safe message seeded by `codewiki_resume_context`. |
+| User-visible kickoff | Protocol-safe custom/user-role-safe message seeded by `wiki_resume_context`. |
 
 Runtime must not inject slash commands as control flow, must not auto-continue from an assistant-leaf message, and must not treat unsupported harness features as normal user work. It should return a visible fallback and platform limitation.
 
@@ -86,7 +99,7 @@ src/runtime/
   types.ts    # runtime result, daemon job/run, budget usage, and workflow-efficiency evidence
 ```
 
-`src/agency/**` keeps agency planning and the `codewiki_agency` tool entrypoint. `src/session/**` owns claims and wait/wake state. `src/state/**` owns resume context and generated graph state. `src/validation/**` owns gateway checks. Runtime coordinates those concepts without absorbing their durable truth.
+`src/agency/**` keeps agency planning and the `wiki_agency` tool entrypoint. `src/session/**` owns claims and wait/wake state. `src/state/**` owns resume context and generated graph state. `src/validation/**` owns gateway checks. Runtime coordinates those concepts without absorbing their durable truth.
 
 ## Daemon job/run model
 

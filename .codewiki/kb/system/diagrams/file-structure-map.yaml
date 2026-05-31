@@ -318,8 +318,8 @@ nodes:
     kind: component
     source: .codewiki/kb/system/runtime.md
     requires_doc: true
-    status: implementation_in_progress_by_task_063
-    task_id: TASK-063
+    status: foundation_contracts_updated_by_task_064
+    task_id: TASK-064
     paths:
       - src/runtime/**
       - tests/smoke/runtime-runner.test.mjs

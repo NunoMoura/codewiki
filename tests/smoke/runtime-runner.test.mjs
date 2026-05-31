@@ -8,9 +8,15 @@ import {
 	runCodewikiRuntimeStep,
 } from "../../src/runtime/runner.ts";
 import {
+	createPiCodeRuntimeFoundationContract,
+	createUnsupportedRuntimeFoundationContract,
+	requireRuntimeCapability,
+} from "../../src/runtime/ports.ts";
+import {
 	CODEWIKI_DAEMON_JOB_STORE_VERSION,
 	createCodewikiDaemonJob,
 } from "../../src/runtime/types.ts";
+import { piCodeRuntimeFoundation } from "../../src/adapters/pi/tools/ports.ts";
 import {
 	mutateArtifactStatuses,
 	readChangeClaimsFile,
@@ -153,6 +159,42 @@ async function readQueue(project) {
 }
 
 {
+	const foundation = createPiCodeRuntimeFoundationContract();
+	for (const name of [
+		"model_loop",
+		"session_state",
+		"tool_execution",
+		"context_assembly",
+		"compaction",
+		"event_streams",
+	]) {
+		const check = requireRuntimeCapability(foundation, name);
+		assert.equal(check.ok, true, `${name} should be supported by Pi Code`);
+		assert.equal(check.capability.owner, "pi_code");
+	}
+	assert.equal(foundation.primary, true);
+	assert.equal(foundation.foundation, "pi_code");
+	assert.equal(
+		foundation.capabilities.worker_execution.support,
+		"platform_limited",
+		"daemon worker execution should remain contract-only until session spawning exists",
+	);
+	assert.equal(piCodeRuntimeFoundation().foundation, "pi_code");
+}
+
+{
+	const unsupported = createUnsupportedRuntimeFoundationContract(
+		"future-cli",
+		"Future CLI",
+	);
+	const check = requireRuntimeCapability(unsupported, "context_assembly");
+	assert.equal(check.ok, false);
+	assert.equal(check.status, "platform_limited");
+	assert.match(check.summary, /cannot satisfy context_assembly/);
+	assert.ok(check.evidence.some((item) => item.includes("unsupported")));
+}
+
+{
 	const { project, task } = await fixtureProject();
 	const boundaryRequests = [];
 	const result = await runCodewikiRuntimeStep(project, planFor(task.id), {
@@ -188,6 +230,34 @@ async function readQueue(project) {
 		"released",
 		"runtime claim should be released before returning",
 	);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(project, planFor(task.id), {
+		runtimeFoundation: createUnsupportedRuntimeFoundationContract(
+			"future-cli",
+			"Future CLI",
+		),
+		sessionStore: {
+			getCurrentSessionId: () => "unsupported-session",
+			getSessionBranch: () => [],
+		},
+		resumeContextBuilder: fakeResumeBuilder(task),
+	});
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.action, "runtime_capability");
+	assert.equal(result.stop_reason, "platform_limited");
+	assert.equal(result.context_boundary.capability.name, "context_assembly");
+	assert.ok(
+		result.workflow_efficiency.platform_limited_steps.some((item) =>
+			item.includes("context_assembly"),
+		),
+	);
+	const queue = await readQueue(project);
+	const claim = queue.claims.find((item) => item.id === result.claim_id);
+	assert.equal(claim.status, "released");
 }
 
 {

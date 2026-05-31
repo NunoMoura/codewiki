@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30",
+  "generated_at": "2026-05-31T00:26:25Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-064/context.json",
   "task": {
     "id": "TASK-064",
     "title": "Define Pi Code foundation runtime contracts",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "architecture",
     "change_type": "system",

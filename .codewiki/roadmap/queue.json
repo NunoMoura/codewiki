@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-30T23:58:17Z",
+  "updated": "2026-05-31T00:26:25Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -535,7 +535,7 @@
     "TASK-064": {
       "id": "TASK-064",
       "title": "Define Pi Code foundation runtime contracts",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "architecture",
       "summary": "Model Pi Code as CodeWiki's primary runtime foundation while defining explicit capability contracts for model/runtime plug points and future compatible execution backends.",
@@ -578,7 +578,7 @@
         "closure": "Close when contracts and tests are in place."
       },
       "created": "2026-05-30",
-      "updated": "2026-05-30"
+      "updated": "2026-05-31T00:26:25Z"
     }
   },
   "sprints": {

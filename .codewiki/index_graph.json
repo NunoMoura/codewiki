@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T23:58:58.232Z",
+  "generated_at": "2026-05-31T00:26:45.430Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5383,7 +5383,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5447,6 +5447,14 @@
       "lens_family": "execution"
     },
     {
+      "id": "code:src/adapters/pi/tools/ports.ts",
+      "kind": "code_path",
+      "path": "src/adapters/pi/tools/ports.ts",
+      "layer": "code",
+      "alignment_state": "drift",
+      "lens_family": "execution"
+    },
+    {
       "id": "code:src/ui/**",
       "kind": "code_path",
       "path": "src/ui/**",
@@ -5476,7 +5484,7 @@
       "kind": "code_path",
       "path": "src/runtime",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5492,7 +5500,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6184,7 +6192,7 @@
       "kind": "code_path",
       "path": "tests/smoke/runtime-runner.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6410,17 +6418,17 @@
       "lens_family": "execution"
     },
     {
-      "id": "code:src/agency/tool.ts",
+      "id": "code:src/runtime/ports.ts",
       "kind": "code_path",
-      "path": "src/agency/tool.ts",
+      "path": "src/runtime/ports.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
-      "id": "code:src/adapters/pi/tools/ports.ts",
+      "id": "code:src/agency/tool.ts",
       "kind": "code_path",
-      "path": "src/adapters/pi/tools/ports.ts",
+      "path": "src/agency/tool.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -6521,7 +6529,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/tools",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7148,7 +7156,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7608,18 +7616,10 @@
       "kind": "roadmap_task",
       "title": "Define Pi Code foundation runtime contracts",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "system",
       "alignment_state": "drift",
       "lens_family": "work"
-    },
-    {
-      "id": "code:src/runtime/ports.ts",
-      "kind": "code_path",
-      "path": "src/runtime/ports.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
     },
     {
       "id": "code:src/adapters/pi/commands/audit.ts",
@@ -8658,7 +8658,7 @@
       "kind": "code_path",
       "path": "src/runtime/runner.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -36476,6 +36476,285 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "title": "wiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-064",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+          ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+          "wiki_build tool",
+          "src/runtime/ports.ts",
+          "src/runtime/runner.ts",
+          "src/adapters/pi/tools/ports.ts",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "tests/smoke/runtime-runner.test.mjs",
+          "TASK-064"
+        ],
+        "audit_evidence_refs": [
+          "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json@sha256:94636271359eb6499585e230944c89b0596c243889a892deaae74795781fa40a",
+          "tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
+          "src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
+          "src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
+          "src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
+          ".codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
+          ".codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
+          "refs/codewiki/archive/task/TASK-064",
+          "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+      "kind": "audit_evidence",
+      "path": "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
+      "kind": "content_proof",
+      "path": "tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
+      "kind": "content_proof",
+      "path": "src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
+      "kind": "content_proof",
+      "path": "src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-064",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-064",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
+      "kind": "content_proof",
+      "path": "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-064",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-064",
+      "task_id": "TASK-064",
+      "digest": "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
+      "restore_command": "/wiki-restore TASK-064",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-249",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-249",
+      "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+      "agent_name": "Bison",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+      "expires_at": "2026-05-31T02:26:45.205Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+        "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+        "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-064"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/runtime.md"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/adapters.md"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/ports.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/runner.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/adapters/pi/tools/ports.ts"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/runtime-runner.test.mjs"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        },
+        {
+          "layer": "validation",
+          "path": ".codewiki/validation/**"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-064",
+      "kind": "change_claim_scope",
+      "path": "TASK-064",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/runtime.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/runtime.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/adapters.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/adapters.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/ports.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/ports.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/runner.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/runner.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/adapters/pi/tools/ports.ts",
+      "kind": "change_claim_scope",
+      "path": "src/adapters/pi/tools/ports.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/runtime-runner.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/runtime-runner.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/validation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/validation/**",
+      "lens_family": "work"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -48976,6 +49255,58 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Validation judged from source refs and checked dirty pre-commit content digest before writing this validation report.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity",
+          "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists."
+        ],
+        "content_proof_refs": [
+          "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
+      "kind": "audit_evidence",
+      "path": "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
+      "kind": "content_proof",
+      "path": "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
+      "proof_kind": "content_proof",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "kind": "lint_issue",
       "path": ".codewiki/roadmap/queue.json",
@@ -53571,6 +53902,12 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/adapters.md",
+      "to": "code:src/adapters/pi/tools/ports.ts",
+      "link_source": "source_fact"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/adapters.md",
       "to": "code:src/ui/**",
       "link_source": "source_fact"
     },
@@ -55834,6 +56171,12 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/runtime.md",
       "to": "code:src/runtime/",
+      "link_source": "source_fact"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/runtime.md",
+      "to": "code:src/runtime/ports.ts",
       "link_source": "source_fact"
     },
     {
@@ -67217,13 +67560,6 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/adapters/pi/tools/ports.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-064"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
       "to": "code:tests/smoke/runtime-runner.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-064"
@@ -67232,13 +67568,6 @@
       "kind": "task_spec",
       "from": "task:TASK-064",
       "to": "doc:.codewiki/kb/system/runtime.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/runtime.md",
-      "to": "code:src/runtime/ports.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-064"
     },
     {
       "kind": "task_code_path",
@@ -109837,6 +110166,216 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:.codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:wiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:src/runtime/ports.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:src/runtime/runner.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:src/adapters/pi/tools/ports.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:.codewiki/kb/system/runtime.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:.codewiki/kb/system/adapters.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:tests/smoke/runtime-runner.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "source:TASK-064",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "audit:wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json@sha256:94636271359eb6499585e230944c89b0596c243889a892deaae74795781fa40a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:.codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:.codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-064",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "content_proof:sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "task:TASK-064"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-064",
+      "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-249",
+      "to": "task:TASK-064"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:TASK-064"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:.codewiki/kb/system/runtime.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:.codewiki/kb/system/adapters.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:src/runtime/ports.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:src/runtime/runner.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:src/adapters/pi/tools/ports.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:tests/smoke/runtime-runner.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-249",
+      "to": "claim_scope:.codewiki/validation/**"
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -123295,6 +123834,53 @@
       "to": "task:TASK-065"
     },
     {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "audit:wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "content_proof:working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+      "to": "task:TASK-064"
+    },
+    {
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
@@ -123395,7 +123981,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 20,
+            "item_count": 31,
             "badges": [
               {
                 "id": "open_tasks",
@@ -123423,7 +124009,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -123444,7 +124030,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 442,
             "badges": [
               {
@@ -123460,12 +124046,19 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 84
+                "count": 85
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 4,
+                "refs": [
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/runtime/ports.ts",
+                  "src/runtime/runner.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
+                "ref_count": 4
               }
             ],
             "hot_refs": [
@@ -123492,7 +124085,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 179
+                "count": 180
               },
               {
                 "id": "fail_or_block_validation",
@@ -123502,12 +124095,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 591
+                "count": 593
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1461
+                "count": 1471
               },
               {
                 "id": "traceability_gaps",
@@ -123526,19 +124119,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 132,
+            "total": 133,
             "decision": 17,
             "planning": 31,
-            "implementation": 84,
+            "implementation": 85,
             "hot": 0,
-            "collapsed": 132
+            "collapsed": 133
           },
           "validations": {
-            "total": 179,
-            "pass": 152,
+            "total": 180,
+            "pass": 153,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 179
+            "collapsed": 180
           }
         },
         "next_action": {
@@ -123559,7 +124152,260 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/kb/system/adapters.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+              ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/kb/system/runtime.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+              ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/adapters/pi/tools/ports.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/runtime/ports.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/runtime/runner.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/runtime-runner.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -123665,6 +124511,7 @@
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
           ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -128315,6 +129162,27 @@
               "tests/smoke/source-contract.test.mjs",
               "TASK-063"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-064"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              "wiki_build tool",
+              "src/runtime/ports.ts",
+              "src/runtime/runner.ts",
+              "src/adapters/pi/tools/ports.ts",
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "tests/smoke/runtime-runner.test.mjs",
+              "TASK-064"
+            ]
           }
         ]
       },
@@ -132699,6 +133567,26 @@
               "f003cb480292ca4b2d1a46ba0d55d9b45a112bec"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-064",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:task",
+              "audit:generated-parity",
+              "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists."
+            ],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -135565,6 +136453,20 @@
             "publisher_result_refs": [
               "f003cb480292ca4b2d1a46ba0d55d9b45a112bec"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+            "task_id": "TASK-064",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+            ],
+            "publisher_result_refs": []
           }
         ],
         "audit_evidence_refs": [
@@ -136146,6 +137048,8 @@
           "validation:.codewiki/validation/2026-05-27-implementation-pass-task-029.json",
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
+          "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
+          "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
           "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
           "working_tree_digest:sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
           "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
@@ -136204,6 +137108,7 @@
           ".codewiki/kb/system/adapters.md@sha256:4b52457e0c86e98d96f6ab184c03f111c133c5a5cffc41f6105a356ee381317f",
           ".codewiki/kb/system/adapters.md@sha256:65b28ef5a6cdfaf38806522aa3139b22617deb6ab91fd4b39c5c7632ee387654",
           ".codewiki/kb/system/adapters.md@sha256:77a1a4ae5d9622f92197a05e7598027ff4dad498d647f646ed8e7b5d682ec7d8",
+          ".codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
           ".codewiki/kb/system/adapters.md@sha256:86b7717b67ae5311c74ebf71783fedc46d6b7dcac6cb8dc688808bf6f613b971",
           ".codewiki/kb/system/adapters.md@sha256:8b98e06814f4608c9f5ede03b4b2dd6ac08fb0b5db8445ff79993e0e049dcb6b",
           ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
@@ -136255,6 +137160,7 @@
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:654a89c53834ea31d9d7c079763ba98f39a1ce7c5570fdbe4fd9e534ff8a36fa",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:6ffe521d86795aea4c9190d99a5aba7a6bf3a36e40eaf209ad984321298b86ff",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b009b7369ac7db297b2906751f113317468cf5e416e6cd12c941acf35a0f27f2",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b2adf7455d830f1974c4985cea77d2796bb692b788d5c77460ffc273abaae377",
@@ -136291,6 +137197,7 @@
           ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
           ".codewiki/kb/system/roadmap.md@sha256:6a10121e49607cb9b12aefe8464c50f4b361608b4e8b69563c579aa2b478e05f",
           ".codewiki/kb/system/runtime.md@sha256:07e78d2b38a6dc3cc0b194536b83b8afeb9593f88380d8c01cd89c00db182e16",
+          ".codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
           ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
           ".codewiki/kb/system/runtime.md@sha256:95534121c5b54e1734d88ef6c0c23363b4b7892d3b6a205ae73cd699776c3bd9",
           ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
@@ -136602,6 +137509,7 @@
           "refs/codewiki/archive/task/TASK-059",
           "refs/codewiki/archive/task/TASK-062",
           "refs/codewiki/archive/task/TASK-063",
+          "refs/codewiki/archive/task/TASK-064",
           "refs/codewiki/archive/task/TASK-065",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -136717,6 +137625,7 @@
           "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
           "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
           "sha256:de8c7e7cf38416952867974ffb19b6c824ae6625d5b06c26952c7df3a625578f",
+          "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
           "sha256:e040d371480ad2d10508cecb219e98827880fd81f6c29b36b731c39b6d0c3dac",
           "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
           "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
@@ -136913,6 +137822,7 @@
           "src/adapters/pi/tools/ports.ts@sha256:430ce90404ce51f6fb186f8b979a3fd53fe2c580413230fd90c4c67a8117ce2e",
           "src/adapters/pi/tools/ports.ts@sha256:54611d5eeee9180a6b1c042f0b7fb1f02ac0b070d955206728e5715e2de1ce14",
           "src/adapters/pi/tools/ports.ts@sha256:58a50bce16f8b393eb1abd6886f5ab4b4bbb1d75faa7d38c049b33eb46ae2852",
+          "src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
           "src/adapters/pi/tools/ports.ts@sha256:f776d38adb398d112c110cf8c317591de81277e3fd690f54eb47bdc926bfe19a",
           "src/adapters/pi/tools/resume-context.ts@sha256:06e60301633ca97859b1918b9f4ec057f249871c5173566fdfa13185979e9cd0",
           "src/adapters/pi/tools/resume-context.ts@sha256:47da897fafcdeae0a6bbc0eaca4858776575efdd6a0b47a3c1028c76d9b8a10f",
@@ -137272,9 +138182,11 @@
           "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
           "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
           "src/runtime/ports.ts@sha256:13c8906ffbc20ebe8e364dda57ad1ae06fb763c251cd941e88255a0c0eb2053a",
+          "src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
           "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
           "src/runtime/runner.ts@sha256:5251efd16b6a9d959816a4f7dc8a1de9d53fd777da851ef7dfb18438505e36de",
           "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+          "src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
           "src/runtime/runner.ts@sha256:8d96d0605ab89bc6f283c271dbdd61a4a8b14425b430f86d96effc2986032512",
           "src/runtime/runner.ts@sha256:9e844e097c2338f61e3a210187ae42d4bda78015f5f8cdbfb5fadccb980de6bb",
           "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
@@ -137555,6 +138467,7 @@
           "tests/smoke/runtime-job-state.test.mjs@sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
           "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
           "tests/smoke/runtime-runner.test.mjs@sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
+          "tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
           "tests/smoke/runtime-runner.test.mjs@sha256:9bf02d7859521b915f2c6ff43b4319a2a3bff339c91b78427561ee386086eae7",
           "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
           "tests/smoke/session-handoff.test.mjs@sha256:77684308c227c56577ad6c96b19cebab0022c1ccb1b1e1b39a02942d37e4fd92",
@@ -137619,6 +138532,7 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+          "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
           "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
           "working_tree_digest:sha256:3ff83ce91cc4374d64b99c7d2134d1ea619387f891c361e7dce6ebd05b9c4117",
           "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
@@ -137895,10 +138809,10 @@
       "open_task_ids": [
         "TASK-064"
       ],
-      "in_progress_task_ids": [],
-      "todo_task_ids": [
+      "in_progress_task_ids": [
         "TASK-064"
       ],
+      "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [],
       "cancelled_task_ids": [
@@ -137908,7 +138822,7 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "todo": 1
+        "in_progress": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -138929,28 +139843,647 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "src/adapters/pi/tools/ports.ts",
+        "src/runtime/ports.ts",
+        "src/runtime/runner.ts",
+        "tests/smoke/runtime-runner.test.mjs"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-249",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-064",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+          "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-249",
+          "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+          "agent_name": "Bison",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+          "task_id": "TASK-064",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-064"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/runtime.md"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/adapters.md"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/ports.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/adapters/pi/tools/ports.ts"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/runtime-runner.test.mjs"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            }
+          ],
+          "created_at": "2026-05-31T00:26:45Z",
+          "updated_at": "2026-05-31T00:26:45Z",
+          "expires_at": "2026-05-31T02:26:45.205Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/adapters.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/runtime.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/tools/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-064"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/runtime-runner.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/adapters.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/runtime.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/tools/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-064"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/runtime-runner.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-249",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-064",
+              "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+              "expires_at": "2026-05-31T02:26:45.205Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -141817,6 +143350,20 @@
           "publisher_result_refs": [
             "f003cb480292ca4b2d1a46ba0d55d9b45a112bec"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+          "task_id": "TASK-064",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+          ],
+          "publisher_result_refs": []
         }
       ]
     },
@@ -141937,6 +143484,7 @@
         ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
         ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
         ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+        ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -143163,6 +144711,8 @@
         "validation:.codewiki/validation/2026-05-27-implementation-pass-task-029.json",
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
+        "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
+        "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
         "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
         "working_tree_digest:sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
         "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
@@ -143221,6 +144771,7 @@
         ".codewiki/kb/system/adapters.md@sha256:4b52457e0c86e98d96f6ab184c03f111c133c5a5cffc41f6105a356ee381317f",
         ".codewiki/kb/system/adapters.md@sha256:65b28ef5a6cdfaf38806522aa3139b22617deb6ab91fd4b39c5c7632ee387654",
         ".codewiki/kb/system/adapters.md@sha256:77a1a4ae5d9622f92197a05e7598027ff4dad498d647f646ed8e7b5d682ec7d8",
+        ".codewiki/kb/system/adapters.md@sha256:7ec19bda27b9ae4ae5c1d112935070c56f8cb1ab3a5a2ef504d1480883382ae8",
         ".codewiki/kb/system/adapters.md@sha256:86b7717b67ae5311c74ebf71783fedc46d6b7dcac6cb8dc688808bf6f613b971",
         ".codewiki/kb/system/adapters.md@sha256:8b98e06814f4608c9f5ede03b4b2dd6ac08fb0b5db8445ff79993e0e049dcb6b",
         ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
@@ -143272,6 +144823,7 @@
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:654a89c53834ea31d9d7c079763ba98f39a1ce7c5570fdbe4fd9e534ff8a36fa",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:6ffe521d86795aea4c9190d99a5aba7a6bf3a36e40eaf209ad984321298b86ff",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:773c8816133d15c2b04961fbeb0aab1aadcc668c9bcdbdcd0aebfc3649cf69aa",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b009b7369ac7db297b2906751f113317468cf5e416e6cd12c941acf35a0f27f2",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b2adf7455d830f1974c4985cea77d2796bb692b788d5c77460ffc273abaae377",
@@ -143308,6 +144860,7 @@
         ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
         ".codewiki/kb/system/roadmap.md@sha256:6a10121e49607cb9b12aefe8464c50f4b361608b4e8b69563c579aa2b478e05f",
         ".codewiki/kb/system/runtime.md@sha256:07e78d2b38a6dc3cc0b194536b83b8afeb9593f88380d8c01cd89c00db182e16",
+        ".codewiki/kb/system/runtime.md@sha256:191122592f9b23a9ea6718113b5cfc0f89bd419bbc1da211110bfda611fe232f",
         ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
         ".codewiki/kb/system/runtime.md@sha256:95534121c5b54e1734d88ef6c0c23363b4b7892d3b6a205ae73cd699776c3bd9",
         ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
@@ -143619,6 +145172,7 @@
         "refs/codewiki/archive/task/TASK-059",
         "refs/codewiki/archive/task/TASK-062",
         "refs/codewiki/archive/task/TASK-063",
+        "refs/codewiki/archive/task/TASK-064",
         "refs/codewiki/archive/task/TASK-065",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -143734,6 +145288,7 @@
         "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
         "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
         "sha256:de8c7e7cf38416952867974ffb19b6c824ae6625d5b06c26952c7df3a625578f",
+        "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
         "sha256:e040d371480ad2d10508cecb219e98827880fd81f6c29b36b731c39b6d0c3dac",
         "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
         "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
@@ -143930,6 +145485,7 @@
         "src/adapters/pi/tools/ports.ts@sha256:430ce90404ce51f6fb186f8b979a3fd53fe2c580413230fd90c4c67a8117ce2e",
         "src/adapters/pi/tools/ports.ts@sha256:54611d5eeee9180a6b1c042f0b7fb1f02ac0b070d955206728e5715e2de1ce14",
         "src/adapters/pi/tools/ports.ts@sha256:58a50bce16f8b393eb1abd6886f5ab4b4bbb1d75faa7d38c049b33eb46ae2852",
+        "src/adapters/pi/tools/ports.ts@sha256:d368e2833db7746abf713af09bc2200a189fd017c6998caf26dc7b8e9011b584",
         "src/adapters/pi/tools/ports.ts@sha256:f776d38adb398d112c110cf8c317591de81277e3fd690f54eb47bdc926bfe19a",
         "src/adapters/pi/tools/resume-context.ts@sha256:06e60301633ca97859b1918b9f4ec057f249871c5173566fdfa13185979e9cd0",
         "src/adapters/pi/tools/resume-context.ts@sha256:47da897fafcdeae0a6bbc0eaca4858776575efdd6a0b47a3c1028c76d9b8a10f",
@@ -144289,9 +145845,11 @@
         "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
         "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
         "src/runtime/ports.ts@sha256:13c8906ffbc20ebe8e364dda57ad1ae06fb763c251cd941e88255a0c0eb2053a",
+        "src/runtime/ports.ts@sha256:d60c16c62eb110df4988f4059786538972ef348524215e206200f1d290c0bc6b",
         "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
         "src/runtime/runner.ts@sha256:5251efd16b6a9d959816a4f7dc8a1de9d53fd777da851ef7dfb18438505e36de",
         "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+        "src/runtime/runner.ts@sha256:76fc6520f4d8680d586200ee646c0dde3f5c4611519ff5f507ad376ae30921ce",
         "src/runtime/runner.ts@sha256:8d96d0605ab89bc6f283c271dbdd61a4a8b14425b430f86d96effc2986032512",
         "src/runtime/runner.ts@sha256:9e844e097c2338f61e3a210187ae42d4bda78015f5f8cdbfb5fadccb980de6bb",
         "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
@@ -144572,6 +146130,7 @@
         "tests/smoke/runtime-job-state.test.mjs@sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
         "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
         "tests/smoke/runtime-runner.test.mjs@sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
+        "tests/smoke/runtime-runner.test.mjs@sha256:2c9924938d1027c704a7fce77e74fcb9ea0a2f9d3370837e443793027e1863ba",
         "tests/smoke/runtime-runner.test.mjs@sha256:9bf02d7859521b915f2c6ff43b4319a2a3bff339c91b78427561ee386086eae7",
         "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
         "tests/smoke/session-handoff.test.mjs@sha256:77684308c227c56577ad6c96b19cebab0022c1ccb1b1e1b39a02942d37e4fd92",
@@ -144636,6 +146195,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+        "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
         "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
         "working_tree_digest:sha256:3ff83ce91cc4374d64b99c7d2134d1ea619387f891c361e7dce6ebd05b9c4117",
         "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
@@ -149017,6 +150577,26 @@
             "f003cb480292ca4b2d1a46ba0d55d9b45a112bec"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-064",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity",
+            "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists."
+          ],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -150212,7 +151792,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150221,7 +151801,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150230,7 +151810,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150239,7 +151819,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150935,7 +152515,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150944,7 +152524,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150953,7 +152533,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -150962,7 +152542,7 @@
           "owner_id": "runtime_orchestration_boundary",
           "owner_label": "Runtime orchestration concept root",
           "group": "source_target",
-          "status": "implementation_in_progress_by_task_063",
+          "status": "foundation_contracts_updated_by_task_064",
           "role": "target",
           "approved_delta": false
         },
@@ -151043,7 +152623,260 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/runtime.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+            ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/tools/ports.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/runtime/ports.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -151976,7 +153809,9 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-249"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -152112,7 +153947,8 @@
             ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -152259,7 +154095,8 @@
             ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
           ]
         },
         "purgeable": {
@@ -153116,10 +154953,20 @@
           "digest": "sha256:6157cb90b114d2c77aae455d1313faf6d049a81ba7c9730d5496628e625b538c",
           "restore_command": "/wiki-restore TASK-063",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-064",
+          "build_path": ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-064",
+          "commit_sha": "",
+          "digest": "sha256:df13956693ec0d59c409a00adf1e49a7c3adbbe788f995c4a2ab42e827328fdc",
+          "restore_command": "/wiki-restore TASK-064",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 84,
+        "ledger_count": 85,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -153204,7 +155051,8 @@
           "refs/codewiki/archive/task/TASK-057",
           "refs/codewiki/archive/task/TASK-062",
           "refs/codewiki/archive/task/TASK-062",
-          "refs/codewiki/archive/task/TASK-063"
+          "refs/codewiki/archive/task/TASK-063",
+          "refs/codewiki/archive/task/TASK-064"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -153290,7 +155138,8 @@
           ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-          ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -153376,7 +155225,8 @@
           ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-          ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+          ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -153500,9 +155350,9 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-30T23:58:57.930Z",
+      "generated_at": "2026-05-31T00:26:45.268Z",
       "counts": {
-        "large-doc": 3,
+        "large-doc": 4,
         "roadmap-missing-code-path": 3,
         "build-v2-missing-produces": 2
       },
@@ -153518,6 +155368,12 @@
           "kind": "large-doc",
           "path": ".codewiki/kb/system/compilers.md",
           "message": "Live doc has 1626 words; consider split or cut."
+        },
+        {
+          "severity": "warning",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/system/runtime.md",
+          "message": "Live doc has 1786 words; consider split or cut."
         },
         {
           "severity": "warning",
@@ -153559,12 +155415,12 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-30T23:58:58Z",
+      "generated_at": "2026-05-31T00:26:45Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 8,
-        "total_issues": 8
+        "warnings": 9,
+        "total_issues": 9
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -153576,7 +155432,7 @@
         "active_sprint_count": 1,
         "status_counts": {
           "cancelled": 3,
-          "todo": 1
+          "in_progress": 1
         },
         "priority_counts": {
           "medium": 1,
@@ -154227,14 +156083,14 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
-        "todo_task_ids": [
+        "in_progress_task_ids": [
           "TASK-064"
         ],
-        "executable_todo_task_ids": [
+        "executable_in_progress_task_ids": [
           "TASK-064"
         ],
+        "todo_task_ids": [],
+        "executable_todo_task_ids": [],
         "blocked_task_ids": [],
         "done_task_ids": [],
         "cancelled_task_ids": [
@@ -154783,7 +156639,7 @@
         "TASK-064": {
           "id": "TASK-064",
           "title": "Define Pi Code foundation runtime contracts",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "architecture",
           "change_type": "system",
@@ -154819,7 +156675,7 @@
             "src/adapters/pi/tools/ports.ts",
             "tests/smoke/runtime-runner.test.mjs"
           ],
-          "updated": "2026-05-30",
+          "updated": "2026-05-31T00:26:25Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -154834,7 +156690,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-30T23:58:58Z",
+      "generated_at": "2026-05-31T00:26:45Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -154843,8 +156699,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 8,
-        "total_issues": 8
+        "warnings": 9,
+        "total_issues": 9
       },
       "summary": {
         "total_specs": 21,
@@ -154975,7 +156831,9 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-249"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -155111,7 +156969,8 @@
               ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -155258,7 +157117,8 @@
               ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json"
             ]
           },
           "purgeable": {
@@ -155276,7 +157136,7 @@
       },
       "direction": [
         "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -155322,9 +157182,9 @@
           "drift_status": "tracked",
           "code_paths": [
             "src/adapters/**",
+            "src/adapters/pi/tools/ports.ts",
             "src/ui/**",
             "src/runtime/ports.ts",
-            "src/adapters/pi/tools/ports.ts",
             "tests/smoke/runtime-runner.test.mjs",
             "src/application/tools/session-handoff.ts",
             "src/adapters/pi/tools/session-handoff.ts",
@@ -155345,11 +157205,11 @@
           ],
           "primary_task": {
             "id": "TASK-064",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Define Pi Code foundation runtime contracts"
           },
           "revision": {
-            "digest": "5970f5c30d81d2aaeb85555b38a79aa3f4fca8f046fa874112081a58df335de4",
+            "digest": "b000e3229767b7c0c5e123239c837536beac4c8e8e49ad026615c5df9c36752f",
             "basis": "source_content"
           },
           "note": "tracked by TASK-064"
@@ -155369,13 +157229,13 @@
             "src/agency/**",
             "src/roadmap/store.ts",
             "src/runtime/",
+            "src/runtime/ports.ts",
             "src/session/**",
             "src/state/**",
             "src/validation/**",
             "src/runtime",
             "src/agency/tool.ts",
             "src/adapters/pi/tools/ports.ts",
-            "src/runtime/ports.ts",
             "src/runtime/runner.ts",
             "src/runtime/types.ts",
             "src/adapters/pi/compaction.ts",
@@ -155410,11 +157270,11 @@
           ],
           "primary_task": {
             "id": "TASK-064",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Define Pi Code foundation runtime contracts"
           },
           "revision": {
-            "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
+            "digest": "d0194f0d356c64c9fe593a26381f08e2961e7a5859704c1ee1e8cd7115ba4ede",
             "basis": "source_content"
           },
           "note": "tracked by TASK-064"
@@ -158250,7 +160110,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-30T23:58:58Z",
+        "generated_at": "2026-05-31T00:26:45Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -158305,12 +160165,21 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T23:58:58Z",
+            "checked_at": "2026-05-31T00:26:45Z",
             "revision": {
               "git": {
-                "head": "98b6f0baf584f3c77739c6ec80abc23ddde528d1",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "c71a4c57e8b73311ea6483d6a2baa62db7d72b26",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/runtime/ports.ts",
+                  "src/runtime/runner.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -158533,15 +160402,15 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "1b6e0cadaaff9ed523a0260cd004d32bf62c7e9d524aae18fa2bdfce779bdaab",
-              "task_digest": "446d6052343e4ce841e1a82eff3f7755ac9995032bb315054a47e46d4b3260ff",
-              "code_digest": "7b2eb53eabac1419f03be0b8ac85993fd4e43ce9c82940a2baf4f265873a793b",
-              "digest": "8220236b995deb55994c8ac648f6d001d2eab1173f85b4f4b081407950da705b"
+              "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
+              "task_digest": "a0611d0bd95a89e203b95c9edc101446fb26d7c756b344ed17f562c28f7f9003",
+              "code_digest": "5d76bc59c6d088862d89cc86a4a9933dbd3bffb5fab84e31464c237aa081e5dc",
+              "digest": "5b79df06882c2bad7738804e7609c9ae1f53319069178344442bfd3a760544a1"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:58:58Z",
+              "checked_at": "2026-05-31T00:26:45Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -158676,9 +160545,9 @@
               "src",
               "package.json",
               "src/adapters/**",
+              "src/adapters/pi/tools/ports.ts",
               "src/ui/**",
               "src/runtime/ports.ts",
-              "src/adapters/pi/tools/ports.ts",
               "tests/smoke/runtime-runner.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
@@ -158977,12 +160846,21 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-30T23:58:58Z",
+            "checked_at": "2026-05-31T00:26:45Z",
             "revision": {
               "git": {
-                "head": "98b6f0baf584f3c77739c6ec80abc23ddde528d1",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "c71a4c57e8b73311ea6483d6a2baa62db7d72b26",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/runtime/ports.ts",
+                  "src/runtime/runner.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -159182,15 +161060,15 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "6f0bbc5e891c3f5e3891b83d36f2d9a365b707486e506bccee9881436726df35",
-              "task_digest": "446d6052343e4ce841e1a82eff3f7755ac9995032bb315054a47e46d4b3260ff",
-              "code_digest": "93e809fc1d025dab90a9c71190775da6983eb1849d1c01c8c677a315906a5bd5",
-              "digest": "beb05c07fb3f22ca33f3d1e46031b038b1fd3a614d39a5dc15af43a15a9c8f48"
+              "spec_digest": "0630e2106e8d34d48732b10a4f5520a16f11dad0c98d0392f4346ad4dc55e00b",
+              "task_digest": "a0611d0bd95a89e203b95c9edc101446fb26d7c756b344ed17f562c28f7f9003",
+              "code_digest": "557e39ca94168744aef560918a2b019f5d664386305cca664497376cbd0e505c",
+              "digest": "5c399eaa20968835f3acf0834a18a35d7abcc1a90ad32d76e11c3fd9b7dea1f2"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:58:58Z",
+              "checked_at": "2026-05-31T00:26:45Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -159221,9 +161099,9 @@
             ],
             "code_paths": [
               "src/adapters/**",
+              "src/adapters/pi/tools/ports.ts",
               "src/ui/**",
               "src/runtime/ports.ts",
-              "src/adapters/pi/tools/ports.ts",
               "tests/smoke/runtime-runner.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
@@ -159603,12 +161481,21 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T23:58:58Z",
+            "checked_at": "2026-05-31T00:26:45Z",
             "revision": {
               "git": {
-                "head": "98b6f0baf584f3c77739c6ec80abc23ddde528d1",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "c71a4c57e8b73311ea6483d6a2baa62db7d72b26",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/runtime/ports.ts",
+                  "src/runtime/runner.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -159831,15 +161718,15 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "1b6e0cadaaff9ed523a0260cd004d32bf62c7e9d524aae18fa2bdfce779bdaab",
-              "task_digest": "446d6052343e4ce841e1a82eff3f7755ac9995032bb315054a47e46d4b3260ff",
-              "code_digest": "7b2eb53eabac1419f03be0b8ac85993fd4e43ce9c82940a2baf4f265873a793b",
-              "digest": "8220236b995deb55994c8ac648f6d001d2eab1173f85b4f4b081407950da705b"
+              "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
+              "task_digest": "a0611d0bd95a89e203b95c9edc101446fb26d7c756b344ed17f562c28f7f9003",
+              "code_digest": "5d76bc59c6d088862d89cc86a4a9933dbd3bffb5fab84e31464c237aa081e5dc",
+              "digest": "5b79df06882c2bad7738804e7609c9ae1f53319069178344442bfd3a760544a1"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:58:58Z",
+              "checked_at": "2026-05-31T00:26:45Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -159974,9 +161861,9 @@
               "src",
               "package.json",
               "src/adapters/**",
+              "src/adapters/pi/tools/ports.ts",
               "src/ui/**",
               "src/runtime/ports.ts",
-              "src/adapters/pi/tools/ports.ts",
               "tests/smoke/runtime-runner.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
@@ -160269,30 +162156,362 @@
         "lane_id": "",
         "heading": "TASK-064 — Define Pi Code foundation runtime contracts",
         "command": "/wiki-resume TASK-064",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-30T23:58:58Z",
+        "generated_at": "2026-05-31T00:26:45Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-249",
+            "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "agent_name": "Bison",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+            "task_id": "TASK-064",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-064"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/runtime.md"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/adapters.md"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/ports.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/runner.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/adapters/pi/tools/ports.ts"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/runtime-runner.test.mjs"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              }
+            ],
+            "created_at": "2026-05-31T00:26:45Z",
+            "updated_at": "2026-05-31T00:26:45Z",
+            "expires_at": "2026-05-31T02:26:45.205Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/adapters.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/runtime.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/adapters/pi/tools/ports.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/ports.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-064"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/runtime-runner.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-249",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-064",
+                "summary": "Implemented Pi Code foundation runtime contracts, validation, and preparing commit/close.",
+                "expires_at": "2026-05-31T02:26:45.205Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-064; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-249 release or validated publisher/patch ref for codewiki/TASK-064/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -160308,9 +162527,9 @@
             "drift_status": "tracked",
             "code_paths": [
               "src/adapters/**",
+              "src/adapters/pi/tools/ports.ts",
               "src/ui/**",
               "src/runtime/ports.ts",
-              "src/adapters/pi/tools/ports.ts",
               "tests/smoke/runtime-runner.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
@@ -160331,11 +162550,11 @@
             ],
             "primary_task": {
               "id": "TASK-064",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Define Pi Code foundation runtime contracts"
             },
             "revision": {
-              "digest": "5970f5c30d81d2aaeb85555b38a79aa3f4fca8f046fa874112081a58df335de4",
+              "digest": "b000e3229767b7c0c5e123239c837536beac4c8e8e49ad026615c5df9c36752f",
               "basis": "source_content"
             },
             "note": "tracked by TASK-064"
@@ -160355,13 +162574,13 @@
               "src/agency/**",
               "src/roadmap/store.ts",
               "src/runtime/",
+              "src/runtime/ports.ts",
               "src/session/**",
               "src/state/**",
               "src/validation/**",
               "src/runtime",
               "src/agency/tool.ts",
               "src/adapters/pi/tools/ports.ts",
-              "src/runtime/ports.ts",
               "src/runtime/runner.ts",
               "src/runtime/types.ts",
               "src/adapters/pi/compaction.ts",
@@ -160396,11 +162615,11 @@
             ],
             "primary_task": {
               "id": "TASK-064",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Define Pi Code foundation runtime contracts"
             },
             "revision": {
-              "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
+              "digest": "d0194f0d356c64c9fe593a26381f08e2961e7a5859704c1ee1e8cd7115ba4ede",
               "basis": "source_content"
             },
             "note": "tracked by TASK-064"
@@ -163762,9 +165981,9 @@
                 "drift_status": "tracked",
                 "code_paths": [
                   "src/adapters/**",
+                  "src/adapters/pi/tools/ports.ts",
                   "src/ui/**",
                   "src/runtime/ports.ts",
-                  "src/adapters/pi/tools/ports.ts",
                   "tests/smoke/runtime-runner.test.mjs",
                   "src/application/tools/session-handoff.ts",
                   "src/adapters/pi/tools/session-handoff.ts",
@@ -163785,11 +166004,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-064",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Define Pi Code foundation runtime contracts"
                 },
                 "revision": {
-                  "digest": "5970f5c30d81d2aaeb85555b38a79aa3f4fca8f046fa874112081a58df335de4",
+                  "digest": "b000e3229767b7c0c5e123239c837536beac4c8e8e49ad026615c5df9c36752f",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-064"
@@ -163809,13 +166028,13 @@
                   "src/agency/**",
                   "src/roadmap/store.ts",
                   "src/runtime/",
+                  "src/runtime/ports.ts",
                   "src/session/**",
                   "src/state/**",
                   "src/validation/**",
                   "src/runtime",
                   "src/agency/tool.ts",
                   "src/adapters/pi/tools/ports.ts",
-                  "src/runtime/ports.ts",
                   "src/runtime/runner.ts",
                   "src/runtime/types.ts",
                   "src/adapters/pi/compaction.ts",
@@ -163850,11 +166069,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-064",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Define Pi Code foundation runtime contracts"
                 },
                 "revision": {
-                  "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
+                  "digest": "d0194f0d356c64c9fe593a26381f08e2961e7a5859704c1ee1e8cd7115ba4ede",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-064"
@@ -166189,9 +168408,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-064",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-064"
+        ],
         "next_task_id": "TASK-064",
         "sprint_ids": [
           "SPRINT-001",
@@ -166827,14 +169048,14 @@
           {
             "id": "todo",
             "label": "Todo",
-            "task_ids": [
-              "TASK-064"
-            ]
+            "task_ids": []
           },
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-064"
+            ]
           },
           {
             "id": "done",

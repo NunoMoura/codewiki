@@ -35,7 +35,10 @@ import { buildGatewayPreflight } from "../gateway/report.ts";
 import { formatError, nowIso } from "../shared/utils.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";
 import { planAgencyAutoPickup } from "../agency/auto-pickup.ts";
-import type { CodewikiRuntimePorts } from "./ports.ts";
+import {
+	requireRuntimeCapability,
+	type CodewikiRuntimePorts,
+} from "./ports.ts";
 import {
 	finishCodewikiDaemonRun,
 	heartbeatCodewikiDaemonRun,
@@ -476,6 +479,30 @@ async function runImplementationKickoff(
 	sessionId: string,
 	budget: AgencyBudget,
 ): Promise<CodewikiRuntimeResult> {
+	const contextCapability = requireRuntimeCapability(
+		ports.runtimeFoundation,
+		"context_assembly",
+	);
+	if (!contextCapability.ok) {
+		state.efficiency.platform_limited_steps.push(
+			...contextCapability.evidence,
+		);
+		state.efficiency.user_interruptions_required += 1;
+		return result(state, {
+			executed: false,
+			status: "blocked",
+			action: "runtime_capability",
+			summary: contextCapability.summary,
+			task_id: task.id,
+			stop_reason: "platform_limited",
+			scopes: claimScopeLabels(taskArtifactScopes(task)),
+			context_boundary: {
+				requested: false,
+				reason: contextCapability.summary,
+				capability: contextCapability.capability,
+			},
+		});
+	}
 	const followUpIntent = `CodeWiki runtime selected ${task.id} from an agency plan. Execute the implementation compiler from CodeWiki source refs; stop on hard gates.`;
 	const resume = await buildResumeContextWithFallback(project, ports, {
 		taskId: task.id,

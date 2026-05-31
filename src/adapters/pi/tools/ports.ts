@@ -5,6 +5,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
 import type { TaskMutationPorts } from "../../../roadmap/task.ts";
+import { createPiCodeRuntimeFoundationContract } from "../../../runtime/ports.ts";
 import { piSessionPorts, piSessionStore } from "../session.ts";
 import { requestCodewikiContextRefresh } from "../compaction.ts";
 
@@ -44,9 +45,17 @@ export function piStatePorts(ctx: ExtensionContext) {
 	};
 }
 
+export function piCodeRuntimeFoundation() {
+	return createPiCodeRuntimeFoundationContract({
+		id: "pi-code-extension",
+		label: "Pi Code extension runtime foundation",
+	});
+}
+
 export function piAgencyPorts(ctx: ExtensionContext) {
 	return {
 		...piStatePorts(ctx),
+		runtimeFoundation: piCodeRuntimeFoundation(),
 		sessionBoundary: {
 			requestContextRefresh: requestCodewikiContextRefresh,
 		},
