@@ -2,105 +2,59 @@
 id: spec.system.api
 title: CodeWiki API
 state: active
-summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
+summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, runtime, and publication support.
 owners:
   - architecture
-updated: "2026-05-31"
+updated: "2026-06-01"
 ---
 
 # CodeWiki API
 
 ## Responsibility
 
-The CodeWiki API is the stable semantic contract implemented as `src/api/**` facade modules over focused concept use cases and agent-facing tools. Adapters, scripts, the local CodeWiki UI, CLI/MCP wrappers, skill helper tools, and future harness integrations call this facade or named concept contracts. Pi tools are one adapter over this API; they must not be the only way to access CodeWiki semantics.
+The CodeWiki API is the stable semantic facade for CodeWiki operations. Adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations call the facade or explicit concept contracts instead of editing `.codewiki/` internals directly. Pi tools are one adapter over this API, not the only access path.
 
-The API should expose CodeWiki operations as typed capabilities instead of asking external access surfaces to edit `.codewiki/` internals directly. Public and agent-facing tool names use the `wiki_<name>` convention consistently; internal package capability identifiers may keep the `codewiki.*` namespace when they describe code-level modules rather than callable tools.
+Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki-*` commands, `wiki_*` tools, TUI panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, audit, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
 
-## Capability groups
+The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
 
-| Capability group | Responsibility |
+## Capability index
+
+| Capability | Owner detail |
 | --- | --- |
-| `codewiki.state` | Read compact project status, graph state, active work, focused session, and exact linked context. |
-| `codewiki.resume_context` | Build bounded continuation prompts from graph, roadmap, task context shards, source refs, and recent build evidence so agents can restart or compact without chat-history memory. |
-| `codewiki.decision` | User semantic approval, interactive diff/task approval surfaces, KB preflight, product/system propagation, KB updates, and decision builds. |
-| `codewiki.diff_table` | Runtime surface for pending, editable decision rows before accepted rows compile into decision builds. |
-| `codewiki.implementation` | Coordinate implementation work, evidence collection, and implementation builds. |
-| `codewiki.roadmap` | Manage work truth: queue, status, priority, blockers, progress, and closure. |
-| `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, wait/wake, context-boundary metadata, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
-| `codewiki.agency` | Plan and authorize bounded roadmap, sprint, or task automation through compiler selection, token, time, cost, write, session, risk, validation, policy, approval cadence, and configured agency level gates. |
-| `codewiki.runtime` | Execute or daemon-dispatch CodeWiki software-development loops from an authorized agency plan: claim scopes, invoke compiler/gateway preparation, enqueue pass-boundary continuations, spawn Pi Code-backed sessions, release claims, and return workflow-efficiency evidence, daemon run evidence, or stop-gate proof. |
-| `codewiki.session_boundary` | Request adapter-managed CodeWiki-owned compaction, new_session, context_refresh, external-orchestrator, or true transfer boundaries seeded by bounded CodeWiki resume context and, when allowed, a protocol-safe auto-pickup kickoff. Legacy session-handoff shims are not normal workflow tools. |
-| `codewiki.build` | Read and write accepted compiler build briefs. |
-| `codewiki.validation` | Run validation gateways and persist failed, blocked, or policy-kept reports. |
-| `codewiki.state_engine` | Rebuild and read generated state/graph representations. |
-| `codewiki.gc` | Classify, dry-run, ledger, and purge eligible CodeWiki builds, validation reports, roadmap archive detail, and runtime artifacts after archive commit proof exists. |
-| `codewiki.terminal_ui` | Serve terminal-first read models and route Pi TUI/command actions through existing CodeWiki capabilities. |
-| `codewiki.ui` | Deprecated browser UI compatibility capability pending web UI removal; do not add new product work here. |
-| `codewiki.bootstrap` | Adopt or initialize repo-local CodeWiki state from skill-owned bootstrap/templates assets through application tools. |
-| `codewiki.patch` | Apply validated CodeWiki patches or append-only source/research writes under policy. |
-| `codewiki.publication` | Prepare commit, PR, issue, changelog, release, and push-readiness outputs from implementation evidence. |
+| State and resume context | [State engine](components/state-engine.md), [Resume context boundary](flows/resume-context-boundary.md) |
+| Decision, planning, implementation | [Compiler loops](components/compilers.md), [Decision to planning](flows/decision-to-planning.md), [Planning to implementation](flows/planning-to-implementation.md) |
+| Roadmap and sprint work truth | [Roadmap work truth](components/roadmap-work-truth.md) |
+| Session queue and artifact status | [Session coordination](components/session-coordination.md), [Artifact claim wait/wake](flows/artifact-claim-wait-wake.md) |
+| Runtime and daemon dispatch | [Runtime and daemon](components/runtime-daemon.md), [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) |
+| Builds, validation, publication, GC | [Builds and proof](components/builds-and-proof.md), [Validation gateway](components/validation-gateway.md), [Publication and GC](flows/publication-gc.md) |
+| Adapters and user surfaces | [Adapters and UI](components/adapters-and-ui.md) |
+| Knowledge parsing and truth | [Knowledge base](components/knowledge-base.md) |
 
+The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). Public agent tools use the `wiki_<name>` convention. Low-level primitives remain internal, compatibility, audit, or expert/debug surfaces unless a workflow requires direct exposure.
 
-## vNext tool surface
+## Access surfaces
 
-The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). The preferred public/agent surface is a small set of `wiki_<name>` workflow capabilities for state, decide, plan, implement, gate, and runtime; low-level primitives are internal, compatibility, audit, or expert/debug surfaces. There is no generic maintenance tool because deterministic repair belongs to state/runtime postconditions and semantic repair routes through the correct compiler or gate. This overview keeps the stable API boundary, access surfaces, and write rules compact.
-
-## Access paths
-
-| Access surface | Path |
-| --- | --- |
-| Pi terminal UI | Chat, Pi TUI panels, command-triggered visual views, tools, skills, and session integration over the same API and generated state. |
-| Deprecated browser UI | Legacy local browser Control Room pending removal; must not own new semantics. |
-| Claude Code | CLI or MCP adapter over the same API. |
-| Codex | CLI or MCP adapter over the same API. |
-| Other agents | CLI, MCP, or package API. |
-| Humans | Pi TUI/chat, CLI/status output, generated docs, and host-native compact panels. |
-
-All access surfaces must preserve the same `.codewiki/` semantics.
+Pi TUI/chat with CodeWiki commands, tools, status panels, skills, and prompt contract is the intended first-class interactive terminal surface. The legacy browser Control Room, optional CLI/MCP wrappers, Claude Code, Codex, other agents, and humans all preserve the same `.codewiki/` semantics. Host adapters translate external inputs into API calls and must fail closed when a required host capability is missing.
 
 ## Write rules
 
-- Product/system changes flow through the decision capability after explicit user semantic approval. Interactive adapters should capture that approval as row-level approve, edit, reject, or defer actions instead of relying on prose-only blanket approval.
-- Code/test changes flow through implementation loops.
-- Roadmap changes record work truth, not full requirements briefs.
-- Roadmap task creation must check active work for related intent and refine matching tasks before creating duplicates.
-- Parallel sessions should mark affected artifacts in the session queue before non-trivial overlapping decision, roadmap, build, validation, or code edits.
-- Artifact status records are temporary coordination records; they do not replace roadmap tasks, builds, validation, git, or code review.
-- Daemon job records under `.codewiki/runtime/jobs.json` are durable execution-attempt records only. They store job/run state, heartbeats, retry/block metadata, and refs to canonical roadmap/build/validation/Git proof; they do not replace or close roadmap tasks.
-- Session queue callers may register wait entries when overlapping write artifact status blocks needed scopes. Waits have TTL/heartbeat, can be cancelled through release, and become ready when blockers release or expire. Adapter sessions that own waits should subscribe to queue changes and wake the agent; passive queue state is not enough for parallel work.
-- Ready waits are wake signals, not stale-context revival. Wake messages should name wait id, task/build refs, and scopes, then require current state and artifact-status re-check before writing.
-- Session queue callers may provide role/worktree metadata for builder, validator, publisher, or observer sessions so status and generated state views can explain isolation without making artifact status records the filesystem source of truth.
-- Parallel write roles should follow [Role Worktree Isolation](worktree-isolation.md): per-task role worktrees/refs by default, root worktree for coordination/publishing, and solo-mode only when safe.
-- Coordination/publication should expose worktree-factory, publisher-queue, and exact wait/wake blocker semantics; artifact status shows metadata but Git refs remain content proof.
-- Validation callers may provide isolation metadata such as fresh-context status, worktree path, branch, base/head/validated SHA, and clean worktree result when independence matters.
-- Validation callers must provide fresh-context, clean-worktree, and checked-SHA evidence for implementation, task-close, publication, publish, and release profiles; otherwise the API records a `block` verdict.
-- Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, approval cadence, and configured agency level gates. Supported levels are `task`, `sprint`, and `roadmap`; each grants continuation permission only up to its boundary and never bypasses hard stop gates. Runtime execution then performs at most one bounded step, or one daemon-dispatched job attempt after the daemon refactor, and must stop on unavailable claims, unsupported runtime capabilities, validation blocks, destructive/publication gates, or exhausted budgets.
-- CodeWiki builds on Pi Code as its primary runtime foundation dependency. Pi Code is not merely an external harness adapter. Optional model/runtime plug points may be added only through explicit capability/support contracts that preserve CodeWiki roadmap, build, validation, worktree, and proof semantics.
-- Session-boundary callers must provide reason, source refs, expected output, mode, agency level, and approval cadence when agency owns continuation. CodeWiki-owned compaction and `context_refresh` are same-agent soft context hygiene seeded by `wiki_resume_context`; `new_session` is hard replacement-session hygiene when policy needs it; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. The daemon refactor should make fresh loop continuation durable by queueing pass-boundary jobs and spawning Pi Code-backed sessions from build and validation refs instead of depending on same-chat auto-pickup.
-- Tool-context Pi boundaries must return visible results and must not call `ctx.compact()` before the agent sees them. Normal CodeWiki continuation uses `wiki_resume_context` directly or through CodeWiki-owned compaction, not VCC recall, generic Pi compaction, or injected slash-command chat. Pi `sendUserMessage` follow-ups do not execute registered slash commands, so adapter code must not inject legacy `/wiki-session-handoff` text as a recovery mechanism. Same-session auto-pickup after CodeWiki compaction must use a source-backed custom kickoff or equivalent user-role-safe boundary with `triggerTurn=true`; if the adapter cannot guarantee that boundary, it must block or show fallback instructions instead of calling continuation from an assistant leaf.
-- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth. Decision rows may carry optional lifecycle fields for current project state, agreed change, expected final state, validated final state, status, and proof refs; legacy `current_state`/`desired_state` rows remain valid and are normalized into the richer shape. The CodeWiki UI, Pi TUI, and compact status-panel diff affordances can show row/task cards and approve, edit, reject, defer, or attach alternatives to pending rows before builds are compiled. Workflow tools should batch common row decisions so accepting, rejecting, editing, or deferring multiple rows is one phase call rather than one tool call per row.
-- Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
-- Workflow tools should return compact envelopes with `summary`, `status` or `verdict`, `changed_refs`, `artifact_refs`, `next_actions`, `blocking_questions`, and optional `details_ref`. Large machine payloads should live in source refs instead of flooding chat.
-- Batch-capable workflow writes must support dry-run or preflight where meaningful, source-fingerprint checks, idempotency keys for daemon retries, exact changed refs, and explicit partial-failure recovery guidance.
-- During CodeWiki self-refactors, deprecated aliases and shim tools are removed when a direct replacement exists; if callers break, fix them at the replacement surface instead of keeping compatibility wrappers.
-- Config schema v4 defines quiet rebuild defaults, scoped agency budgets, agency level/approval cadence, context reset auto-pickup policy, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
-- Tracked CodeWiki garbage collection must run after an archive/close/publication commit exists. The GC capability requires archive commit/tree proof, supports dry-run, writes a restore ledger with removed paths and `git restore --source=<archive-sha> -- <path>` commands, and applies tracked deletions only in a separate GC commit.
-- Ignored runtime/session artifacts may be purged under runtime policy, but manual deletion of tracked `.codewiki` builds, validation reports, or roadmap truth is not an API-compliant GC path.
-- Generated state/graph index is never hand-edited.
-- Failed, blocked, policy-required, current-publication, release, or audit-mode validation reports persist under `.codewiki/validation/**`; pass reports should be evicted after safe Git archival/publication.
-- Deprecated `.codewiki/index/**` and default `.codewiki/evidence/**` paths must not be created by normal API flows.
-- Commit, push, release, and remote updates require implementation evidence plus validation/policy approval.
+- Product/system changes flow through decision approval.
+- Code/test/doc execution flows through implementation tasks.
+- Roadmap mutation uses CodeWiki roadmap tools; roadmap tasks track work truth rather than full requirements briefs.
+- Parallel sessions mark affected scopes through artifact status before overlapping writes.
+- Validation, task-close, ship-ready, publish, and release callers provide required fresh-context and content-proof evidence.
+- Runtime/daemon job records are execution attempts, not roadmap truth.
+- Generated graph and task views are never hand-edited.
+- Tracked CodeWiki GC runs only after archive/close/publication proof exists.
 
 ## API boundary
 
-The API facade lives under `src/api/**`. It re-exports stable package/tool use-case entrypoints from concept roots such as `src/roadmap/tool.ts`, `src/session/tool.ts`, `src/state/tool.ts`, `src/build/tool.ts`, and `src/gateway/tool.ts`. Concept roots call focused use cases for builds, validation, roadmap/session operations, state/graph work, and CodeWiki runtime behavior. Adapters, scripts, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into the API facade or explicit concept contracts. `src/runtime/**` owns CodeWiki bounded execution orchestration, the approved daemon/job dispatcher direction, Pi Code foundation use, and future runtime capability ports; local filesystem, Git, process, persistence, patch application, roadmap persistence, and state rebuild/query services remain in their existing concept roots until an external adapter needs its own boundary. Residual `src/application/**` and `src/domain/**` owner paths are retired.
-
-The API should stay stable while adapter protocols change.
+`src/api/**` re-exports stable package/tool entrypoints from concept roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/runtime/**`, and `src/gc/**`. The facade stays stable while adapter protocols and UI surfaces evolve.
 
 ## Related docs
 
-- [CodeWiki UI](control-room-ui.md)
+- [Components](components/api-facade.md)
+- [Flows](flows/decision-to-planning.md)
 - [Adapters](adapters.md)
-- [Agency Controller](agency.md)
-- [Role Worktree Isolation](worktree-isolation.md)
-- [Compilers](compilers.md)
+- [Terminal UI](terminal-ui.md)

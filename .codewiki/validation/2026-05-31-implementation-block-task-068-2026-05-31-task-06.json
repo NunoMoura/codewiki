@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T22:03:52Z",
+  "profile": "implementation",
+  "task_id": "TASK-068",
+  "verdict": "block",
+  "rationale": "TASK-068 implementation satisfies the docs-only gateway: source-owned component docs and required flow docs were added, target overview docs are compact under warning thresholds, stale-reference/generated-parity audits pass, and the user-approved Pi-distribution correction is reflected through accepted decision/planning evidence without code behavior changes. Policy blocks implementation validation until code_files are recorded.",
+  "checks": [
+    "wiki_gateway implementation preflight_only=true — ready (0 issues)",
+    "frontmatter check for component/flow docs — pass",
+    "word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under target warning threshold",
+    "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state",
+    "working_tree_digest sha256:7cc9092bad65346e4315a6896f705c01022ae3fc904125cc2ff4e00a15e29ca1"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Graph health still reports unrelated warnings; target large-doc warnings are resolved."
+    },
+    {
+      "severity": "low",
+      "summary": "TASK-071 was refined with future prompt-contract scope and should be validated separately when implemented."
+    },
+    {
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: code_files."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "stale-reference",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task",
+    "approval:user:approved docs-only publication flow and Pi-distribution correction"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:7cc9092bad65346e4315a6896f705c01022ae3fc904125cc2ff4e00a15e29ca1"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-068",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-block-task-068-2026-05-31-task-06.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+      ".codewiki/validation/2026-05-31-implementation-block-task-068-2026-05-31-task-06.json",
+      ".codewiki/kb/system/components/api-facade.md",
+      ".codewiki/kb/system/components/compilers.md",
+      ".codewiki/kb/system/components/validation-gateway.md",
+      ".codewiki/kb/system/components/runtime-daemon.md",
+      ".codewiki/kb/system/components/state-engine.md",
+      ".codewiki/kb/system/components/roadmap-work-truth.md",
+      ".codewiki/kb/system/components/session-coordination.md",
+      ".codewiki/kb/system/components/knowledge-base.md",
+      ".codewiki/kb/system/components/adapters-and-ui.md",
+      ".codewiki/kb/system/components/builds-and-proof.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/flows/planning-to-implementation.md",
+      ".codewiki/kb/system/flows/implementation-validation-close.md",
+      ".codewiki/kb/system/flows/runtime-daemon-dispatch.md",
+      ".codewiki/kb/system/flows/artifact-claim-wait-wake.md",
+      ".codewiki/kb/system/flows/resume-context-boundary.md",
+      ".codewiki/kb/system/flows/publication-gc.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-068",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-block-task-068-2026-05-31-task-06.json",
+    "commit_title": "checkpoint(codewiki): TASK-068 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-068",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-implementation-block-task-068-2026-05-31-task-06.json",
+      "CodeWiki-Checks: wiki_gateway implementation preflight_only=true — ready (0 issues); frontmatter check for component/flow docs — pass; word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under target warning threshold; wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state; working_tree_digest sha256:7cc9092bad65346e4315a6896f705c01022ae3fc904125cc2ff4e00a15e29ca1"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [
+    "commit_readiness"
+  ],
+  "blocking_questions": [
+    "Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "stale-reference",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-068",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:approved docs-only publication flow and Pi-distribution correction"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": [
+      "code_files"
+    ]
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:7cc9092bad65346e4315a6896f705c01022ae3fc904125cc2ff4e00a15e29ca1",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Dirty pre-commit docs-only implementation validation; source refs reviewed by gateway from current worktree.",
+    "role": "validator"
+  }
+}

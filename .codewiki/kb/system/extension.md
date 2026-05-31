@@ -6,16 +6,16 @@ summary: Packaged CodeWiki distribution, current Pi extension surface, and termi
 owners:
   - architecture
   - engineering
-updated: "2026-05-31"
+updated: "2026-06-01"
 ---
 
 # Extension
 
 ## Responsibility
 
-The extension package distributes CodeWiki for the current Pi host runtime. It registers Pi commands, tools, compact visual status UI, terminal-first CodeWiki UX integration, lifecycle hooks, packaged skills, and resource discovery, then delegates semantic work to application tools.
+The extension package distributes CodeWiki for the current Pi host runtime. It registers Pi commands, tools, compact visual status UI, terminal-first CodeWiki UX integration, lifecycle hooks, packaged skills, resource discovery, and a small CodeWiki system-prompt contract, then delegates semantic work to application tools.
 
-The extension is not the product boundary. CodeWiki is the repo-local contract, compiler workflow, state engine, API, and standalone local CodeWiki UI. Pi is the current adapter and distribution channel.
+The extension is the current product boundary for a Pi-based CodeWiki distribution. CodeWiki is the repo-local contract, compiler workflow, state engine, API, Pi-hosted terminal product, and workflow policy. Pi is the foundation harness; CodeWiki should configure Pi with CodeWiki defaults rather than fork Pi internals by default.
 
 ## Current Pi surface
 
@@ -27,6 +27,7 @@ The Pi adapter owns:
 - terminal-first `/wiki-*` command surfaces and Pi TUI panels; `/wiki-ui` is deprecated and should be removed or changed to a deprecation message during web UI cleanup,
 - `wiki_agency` as the current Pi-facing agency controller entrypoint until the vNext runtime workflow supersedes direct agency execution,
 - session lifecycle hooks,
+- CodeWiki system-prompt injection for repos with `.codewiki/config.json`,
 - packaged workflow skills,
 - bootstrap/adoption entrypoints that call API/concept tools,
 - package smoke and resource loading coverage.
@@ -48,7 +49,8 @@ The Pi adapter owns:
 - Pi-specific behavior must translate into API use cases, not own domain semantics.
 - VCC recall, generic native compaction, and session-reset hooks are adapter recovery points, not normal CodeWiki memory. Pi may use CodeWiki-owned compaction as the normal same-session soft refresh path because the injected summary is regenerated from `wiki_resume_context`, implementation builds, roadmap state, validation, and graph state.
 - Agency behavior must enforce gated agency budgets and stop conditions instead of running unbounded work.
-- The package should not become a general sandbox, hosted service, unbounded long-running runtime, or replacement for harness execution.
+- The Pi extension should not become a fork of Pi Code or a general sandbox, hosted service, unbounded long-running runtime, or replacement for harness execution.
+- Optional direct CLI support may cover bootstrap, CI, audit, or admin workflows, but interactive CodeWiki use should remain Pi-hosted unless a future decision changes the product boundary.
 - Runtime checks must validate actual package loading under supported Node versions.
 - Pi package imports use current `@earendil-works/*` names; deprecated `@mariozechner/*` imports must not reappear.
 

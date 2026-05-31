@@ -6,16 +6,14 @@ summary: Alignment loops that create source-backed builds for decision, planning
 owners:
   - architecture
   - product
-updated: "2026-05-31"
+updated: "2026-06-01"
 ---
 
 # Compilers
 
 ## Responsibility
 
-CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Build-writing code lives in source-root build modules such as `src/build/writer.ts` and `src/build/tool.ts`; compiler-loop instructions live in `skills/codewiki-*`; validation reports live under `src/validation/**` as gateway attestations, not compiler output.
-
-Target flow:
+CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Compilers produce handoffs; gateways validate them; durable truth remains in knowledge, roadmap, tests/code, validation reports, and Git proof.
 
 ```text
 decision -> decision_build -> decision gate
@@ -25,112 +23,34 @@ decision -> decision_build -> decision gate
         -> ship-ready gate when promoting exact content
 ```
 
-The arrows are gateway gates, not a one-way-only pipeline. The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Source modules under `src/policy/**` own gate requirements, required audit profiles, risk tiers, approval requirements, proof requirements, and ship-ready gate policy. Checks and audits produce evidence only. Gateway verdicts validate each handoff, and any loop can route backward to the smallest upstream loop that can resolve missing semantics, failed evidence, or policy ambiguity. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
+## Loop index
 
-## Alignment cycles
+| Loop | Detail |
+| --- | --- |
+| Decision | Captures user-approved semantic rows, KB mappings, risks, non-goals, and downstream planning questions. See [Decision to planning](flows/decision-to-planning.md). |
+| Planning | Maps accepted executable rows to roadmap task ids or sprint ids and records implementation handoff evidence. See [Planning to implementation](flows/planning-to-implementation.md). |
+| Implementation | Changes scoped docs/code/tests, runs checks, and writes an implementation build. See [Implementation, validation, and close](flows/implementation-validation-close.md). |
+| Runtime/agency continuation | May select bounded compiler steps only through policy gates. See [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md). |
 
-An alignment cycle is one build attempt in a loop. It starts from upstream source refs, policy, and project state, then ends with a build submitted to the gateway.
+## Build contract
 
-Each loop starts from CodeWiki source refs, not chat memory. Agents use `wiki_resume_context` or CodeWiki-owned compaction when context is noisy, stale, token-heavy, or at an approved boundary. Gateway-pass boundaries are the normal automatic compaction point: the passed build and validation report become the seed refs for the next loop. Build creation by itself is pre-gateway and must not trigger compaction. When agency level permits continued work, CodeWiki-owned compaction may auto-pick up with a protocol-safe source-backed kickoff instead of waiting for manual user input. Hard session replacement remains available when policy requires it. Validation, task-close, sprint-close, ship-ready, publish, and release still require explicit fresh/content proof.
+Cycle builds carry loop identity, source refs, consumes/produces edges, policy/isolation requirements, requirement ids, evidence mappings, assumptions, non-goals, risks, open questions, assessment, and produced refs. Build-writing code lives in `src/build/**`; loop instructions live in `skills/codewiki-*`.
 
-Cycle builds carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, assessment, and produced refs. Failed or blocked gateway verdicts do not mutate lower layers; they classify the failure and route to local retry, planning, decision, validation/proof, or runtime coordination.
-
-## Decision loop
-
-The decision loop captures user intent critically. It helps the agent and user find the best solution before canonical knowledge, roadmap, tests, or code change.
-
-It should surface tradeoffs, blind spots, pitfalls, simpler alternatives, conflicts with current truth, affected layers, focused questions, and blunt disagreement when the requested direction harms the project.
-
-The decision loop presents a Change row table before canonical edits. Each Change row shows current state, desired state, rationale, affected layers, risk, and a user action such as approve, edit, reject, or defer. In interactive adapters, this approval surface should be an inline UI with row-level actions rather than prose-only chat. Below the table, the agent should provide a first-principles assessment in the best interest of the project. Approved Change rows and accepted assessment compile into a `decision_build`.
-
-Pending, rejected, or deferred Change rows can remain in runtime/session UI state or be summarized as open questions, non-goals, or future candidates. They must not silently become downstream requirements.
-
-## Decision loop target contract
-
-The decision loop combines user interaction, knowledge preflight, approved semantic rows, and durable product/system knowledge updates. It produces a `decision_build`.
-
-Modes:
-
-- `proposal`: read-only context loading, tradeoffs, draft rows, product/system impact preflight, and diagram impact preflight.
-- `accepted`: applies user-approved rows to product/system knowledge, records row-to-KB evidence, and emits a `decision_build`.
-
-Product intent updates product knowledge first, then system impact. System intent updates system knowledge and diagrams first, then product impact. A decision build records requirement ids, approved rows, KB mappings, propagation direction, explicit no-impact evidence when applicable, risks, non-goals, and downstream planning questions.
-
-## Planning loop
-
-The planning loop consumes a decision-gateway-passed `decision_build` and aligns roadmap work with the updated knowledge. It produces a `planning_build` as the implementation-context handoff. If planning finds a requirement that is not unequivocally defined in the accepted decision build and knowledge base, it must route back to the decision loop instead of guessing.
-
-The planning loop identifies executable requirements, creates or refines roadmap tasks without duplicating full briefs, defines outcome/acceptance/non-goals/verification/blockers, proposes candidate code/test paths, outlines TDD or test-design strategy, maps acceptance to requirement ids and knowledge refs, and preserves active task ids when intent refines existing work. When runtime automation is in scope, planning also owns execution-graph metadata: dependencies, parallel waves, conflict scopes, validation gates, escalation targets, close/report order, worker profile, and model policy.
-
-Planning must resolve every accepted decision row and downstream planning question into durable propagation before implementation consumes the plan. Valid resolution states are: knowledge-only completion, executable roadmap task, sprint/cohort metadata, rejected/not-applicable, or explicit non-executable/blocking disposition recorded in durable roadmap or KB state. Open questions, chat memory, or build-only deferral are not durable propagation by themselves.
-
-Approved executable rows must map to roadmap task ids or sprint ids in the same planning loop. Roadmap order, task status, dependencies, blockers, and sprint metadata encode sequencing; trigger-only deferral is not a valid substitute for executable work. Planning builds should include a row-to-roadmap propagation map that names the accepted decision row or requirement, the resolution state, and the roadmap task or sprint id when executable. Planning builds that authorize daemon scheduling should include an `execution_graph` or equivalent produced ref that the generated graph can index as its execution lens. If the gateway finds an unmapped accepted executable row, the planning loop must create a superseding planning build and iterate until validation passes.
-
-Planning is the boundary between knowledge alignment and executable work. It is not an implementation step and should not change code.
-
-## Implementation loop
-
-The implementation loop consumes a planning-gateway-passed `planning_build`, linked knowledge, and roadmap work item state. It creates or updates tests and code, runs checks, collects evidence, and produces an `implementation_build` with a compact closure brief for user review and publication. If implementation finds missing or ambiguous intent not covered by the accepted decision/planning evidence, it must block the lower loop and route a decision question back to the user.
-
-The implementation loop is TDD-aligned where practical:
-
-- derive tests or test-design evidence from the planning build before code changes,
-- make or update code until the tests and acceptance criteria pass,
-- map tests, code, and checks to requirement ids,
-- explain any justified exception for docs-only, config-only, or non-testable work.
-
-For bias-sensitive or agent-created test work, implementation may split tester evidence from builder evidence. The split is optional, but the implementation build should identify both roles when used so validation can review the separation without requiring separate agents for every task.
-
-
-## Parallel preflight and serial promotion
-
-Compilers may run read-only preflight lanes in parallel after a proposal exists. Useful lanes include knowledge impact, diagram impact, planning impact, implementation/ref scans, validation gate preflight, and artifact conflict checks.
-
-Parallel lanes produce runtime-only drafts with proposal hashes, source snapshots, and invalidation metadata. They must not write product/system knowledge, roadmap truth, build artifacts, validation reports, tests, or code. Canonical truth promotion remains serial after approved decision rows and assumption-hash validation.
-
-## Self-refactor rule
-
-When CodeWiki uses CodeWiki to refactor itself:
-
-- keep current public tool behavior intentional and test-covered,
-- use current CodeWiki for decision capture, task planning, artifact status, validation, commits, and closure,
-- implement vNext concepts as direct replacements rather than wrappers or aliases,
-- do not switch live compiler semantics mid-task,
-- switch to vNext flows only after decision, tests, and validation pass.
-
-## Gated agency
-
-Gated agency may advance roadmap work automatically by invoking compiler cycles inside explicit token, time, cost, write, session, risk, validation, policy, configured agency level, and approval gates. The agency mechanism selects bounded steps, acquires coordination claims, runs the needed compiler, submits gateway validation, uses CodeWiki-owned compaction or session boundaries when useful, and may continue from task to sprint to roadmap scope only when the user-approved agency level allows that cadence. Task level stops after one task, sprint level may continue through the active sprint, and roadmap level may continue across active roadmap work until completion, budget exhaustion, or a hard gate.
-
-Compilers remain deterministic build producers. They do not own autonomous scheduling, budget policy, or publication approval.
-
-## Propagation
-
-All agent-led semantic changes start with decision classification unless a build records a mechanical/generated/runtime exemption. Propagation can originate in any layer: product intent, knowledge drift, planning drift, code changes, validation failures, audit findings, or missing intent.
-
-The graph exposes affected loops and refs; compilers produce the next cycle build. Failures route by class: evidence gaps retry locally, planning gaps route to planning, ambiguous or unapproved intent routes to decision, content-proof gaps route to validation/publication proof, and runtime conflicts route to wait/release coordination.
+A build by itself is pre-gateway. Gateway-pass boundaries are the normal safe context-refresh point because the passed build and validation report become seed refs for the next loop. Failed or blocked gateway verdicts do not mutate lower layers; they classify the failure and route to local retry, planning, decision, validation/proof, or runtime coordination.
 
 ## Rules
 
-- Builds carry compact loop-boundary truth; they do not replace durable knowledge, executable code, or content proof.
-- Roadmap items track work state; they do not duplicate full requirements briefs.
-- Tests live in code/test directories, not in knowledge or roadmap folders.
-- Any compiler may escalate to the decision loop when intent is unclear.
-- Validation handoffs require a gateway verdict on the submitted build.
-- Gateways may require audit evidence and checked content proof before passing.
-- Agents may run CodeWiki-owned compaction, `new_session`, or `context_refresh` at loop boundaries when context health needs it; this is agent-owned hygiene, not a handoff.
-- Normal loop continuation should use `wiki_resume_context` directly or through CodeWiki-owned compaction instead of VCC recall, generic Pi compaction, or chat-history summaries as source truth. When auto-pickup is enabled by agency policy, the adapter must continue from a protocol-safe source-backed kickoff, not from an assistant leaf. Use `/wiki-resume --new` only when hard replacement-session isolation is needed.
-- Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new`, legacy handoff commands, or equivalent manually. If the adapter cannot execute the boundary automatically, record an explicit platform limitation and next safe action rather than making command submission routine user work.
-- Workflow-efficiency evidence matters: compiler/task-close paths should minimize user interrupts and manual command count while preserving validation, content-proof, and publication gates.
-- Automated compiler execution must run through gated agency controls, not through unbounded loops.
-- Compiler-facing workflow tools use the `wiki_<name>` convention and should batch common phase operations, such as multiple decision row actions, multiple source-ref mappings, or multiple gate checks, while preserving explicit compiler boundaries.
+- Compilers do not validate their own outputs.
+- Planning is not implementation and should not change code.
+- Implementation is TDD-aligned where practical and records justified exceptions for docs-only, config-only, or non-testable work.
+- Any compiler may escalate to decision when intent is unclear.
+- Normal loop continuation uses CodeWiki source refs and `wiki_resume_context`, not VCC recall or generic chat summaries.
+- Automated compiler execution runs through gated agency controls and stops on hard gates.
 
 ## Related docs
 
+- [Compiler loop component](components/compilers.md)
 - [Builds](builds.md)
 - [Validation Gateway](validation-gateway.md)
-- [Alignment Model](alignment-model.md)
-- [Audits](audits.md)
 - [Roadmap](roadmap.md)
 - [Graph](graph.md)
-- [Agency Controller](agency.md)

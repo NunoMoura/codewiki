@@ -5,158 +5,55 @@ state: active
 summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, sprint close, or ship-ready promotion.
 owners:
   - architecture
-updated: "2026-05-30"
+updated: "2026-06-01"
 ---
 
 # Validation Gateway
 
 ## Responsibility
 
-The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. Gate requirement, required-audit, risk-tier, approval, content-proof, and production-readiness rules live under `src/policy/**`. Gateway-owned report, preflight, tool, type, and transaction modules live under `src/gateway/**` and consume policy instead of owning policy constants. The `src/validation/**` tree is compatibility-only re-export glue and must not own implementation behavior. The gateway stays separate from compiler-loop build production.
+The validation gateway validates submitted cycle evidence against policy, source refs, exit criteria, and proof. It returns `pass`, `fail`, or `block`. It does not define requirements, write canonical truth, create plans, compile handoffs, or prove content by itself.
 
-The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds; commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence and, for implementation builds, verifies readiness for the next gate.
+Policy lives under `src/policy/**`. Gateway report, preflight, transaction, and tool behavior lives under `src/gateway/**`. Compatibility glue lives under `src/validation/**`.
 
-## Build validation contract
+## Gate index
 
-A gateway run should receive the build path/kind, gate name, requirement ids, exit criteria, source refs, evidence mapping, graph/state routing context, required audits, content proof, check results, and required isolation data.
-
-When a gateway returns `fail` or `block`, it classifies the failure and recommends the smallest safe next loop. The gateway inspects only enough source truth to decide; the next compiler cycle owns any revised build. Lower-layer promotion is not allowed while an upstream build is missing, stale, failed, blocked, or not yet validated by its required gateway gate.
-
-## Gateway gates
-
-Validation uses one gateway system with named gates:
-
-- `decision` for accepted semantic decisions, KB mappings, risk approval, and no unapproved semantics,
-- `planning` for decision-to-roadmap propagation, task/sprint mappings, and implementation-ready planning handoff,
-- `implementation` for code/test/build evidence against one planned task,
-- `task-close` for full task closure chain from decision through proof,
-- `sprint-close` when closing a sprint cohort with shared outcome, cross-task rows, risks, and generated-state closure,
-- `ship-ready` when promoting exact content outside current working state as a commit, package, archive, remote update, or release.
-
-Graph/drift audits, gated agency cycle boundaries, and adapter/API boundary changes feed these gates as required evidence rather than becoming separate user-facing gate names.
-
-## Handoff policy
-
-Fresh context is for independence or context health. Decision may stay in-session; agents may run new_session/context_refresh when chat is noisy after intent is externalized. Implementation validation, task-close, sprint-close, and ship-ready require fresh/content proof when code, tests, release state, or promotion metadata changed. High-risk and semantic-system gates record a fresh-context recommendation, and policy-required isolation can make it a blocking requirement. Artifact wakes are not validation handoffs. Missing required boundaries block or record fallback.
-
-Passing validation reports include a `context_boundary` section that recommends a post-gateway CodeWiki-owned context refresh seeded by the source build, validation report, and CodeWiki source refs. Implementation-pass reports also include local-only `checkpoint_commit` metadata. That checkpoint can capture validated implementation content after the gateway pass, but task-close or ship-ready metadata belongs in a later close/ship-ready commit. Validation metadata may include `/reload` guidance when the source build touched Pi extension, skill, runtime, or API paths; the gateway never reloads or restarts Pi itself.
-
-## Gateway preflight and risk tiers
-
-Preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation.
-
-Risk tiers:
-
-- `mechanical-docs`: generated, runtime, mechanical, or docs cleanup with audits and content proof.
-- `code-local`: localized code/test work with accepted task context.
-- `semantic-system`: product, system, or task semantics; requires accepted decision/planning evidence.
-- `security-migration-ship-ready`: security, migration, ship-ready promotion, release, remote update, or breaking API work; requires explicit user approval.
-- `destructive`: irreversible work; requires explicit approval and cannot be promoted by gateway validation alone.
-
-Low-risk paths still validate. High-risk tiers escalate before lower-layer promotion.
-
-## Alignment checks
-
-Vertical alignment traces work across layers:
-
-```text
-user intent -> decision_build -> knowledge/diagrams -> planning_build -> roadmap task -> tests/code -> implementation_build
-```
-
-This trace is bidirectional for routing. When planning or implementation exposes ambiguous or missing intent, the gateway routes back to decision; when implementation exposes task-boundary or propagation gaps, it routes back to planning; when evidence or content proof is missing, it routes back to the local producer or validation proof step.
-
-Horizontal alignment checks coherence inside one layer: docs with docs, planning with roadmap, tasks with tasks, code with code, tests with intended behavior, and builds with their source layer/policy. The `horizontal-alignment` audit profile provides deterministic evidence for explicit KB claim conflicts/duplicates, KB-code refs, and relative source import contracts; validators can require it when these surfaces carry drift risk. The `source-contract` audit profile provides deterministic source/API evidence for registered tool names, command names, API facade exports, package entry roots, and documented expected surfaces; validators can require it for API, adapter, tool namespace, gateway, or package-surface changes. Requirement ids and evidence mappings should use explicit refs over prose similarity. Graph context helps routing and freshness; canonical sources and content proof remain authoritative.
-
-## Planning validation
-
-For planning builds, the gateway validates decision propagation before implementation can consume the plan. Every accepted decision row, requirement, and downstream planning question that has executable impact must map to roadmap task ids or sprint ids in the same planning loop. Knowledge-only, rejected/not-applicable, or genuinely non-executable/blocking rows must have durable roadmap or KB disposition evidence. A planning build that leaves accepted work only in open questions, assumptions, chat memory, or build-only deferral fails or blocks.
-
-Planning validation should require a row-to-roadmap propagation map for semantic decisions. If a first atomic task is valid but other accepted executable rows remain, the gateway may pass only when those other rows are represented by durable sprint metadata or follow-up tasks. Roadmap order, task status, dependencies, blockers, and sprint metadata encode sequencing; trigger-only deferral is not a valid substitute for executable work. Otherwise the producing planner must create a superseding planning build and iterate until the gateway passes. Roadmap tasks and resume contexts created before planning validation are not implementation-consumable until the planning gateway has passed or a documented mechanical/runtime exemption applies.
-
-Task-close and roadmap-empty contexts should also consider residual accepted-decision propagation. If closing a task leaves no open roadmap work while an accepted decision still has unmapped executable rows or downstream planning questions, the gateway routes back to planning instead of treating the roadmap as complete. The generated semantic execution closure view compares approved decision rows with planning resolutions, roadmap task/sprint ids, implementation closure briefs, validation reports, and available commit/tree/content proof so close validators can cite compact row-to-execution evidence without treating the view as canonical truth.
-
-## Decision and knowledge validation
-
-For vNext decision builds, the gateway validates that:
-
-- every semantic KB change maps to an approved decision row,
-- every approved row has an explicit approved, rejected, deferred, or edited user action and pending rows are not promoted,
-- every approved row is reflected in product/system knowledge or explicitly resolved as no-op, rejected/not-applicable, or non-executable/blocking with durable disposition evidence and diagram impact evidence,
-- product-first changes include system-impact or no-system-impact evidence,
-- system-first changes include product-impact or no-product-impact evidence,
-- system docs changed by the decision have valid diagram refs once the diagram-ref migration is enabled,
-- no KB clause introduces unapproved product or system semantics,
-- risk escalations that require user approval were explicitly approved.
-
-The gateway validates task creation, implementation, closure, diagram/doc alignment, and content proof. The user validates semantic decisions and risk escalations, not low-level task or code machinery.
-
-## Verdicts
-
-| Verdict | Meaning |
+| Gate | Purpose |
 | --- | --- |
-| `pass` | The build satisfies its policy and can be consumed by the next loop or ship-ready step. |
-| `fail` | A requirement, criterion, alignment assertion, or evidence mapping is proven wrong or incomplete. |
-| `block` | The gateway cannot safely decide because context, checks, policy, source refs, intent, or task boundary integrity is insufficient. |
+| `decision` | Approved semantic decisions, KB mappings, risk approval, and no unapproved semantics. |
+| `planning` | Decision-to-roadmap propagation, task/sprint mappings, and implementation-ready handoff. |
+| `implementation` | Code/doc/test evidence against one planned task. |
+| `task-close` | Full task closure chain from decision through implementation, validation, semantic closure evidence, and proof. |
+| `sprint-close` | Cohort closure with shared outcome, cross-task rows, risks, and generated-state closure. |
+| `ship-ready` | Exact content promotion as commit, package, archive, remote update, or release. |
 
-A failed or blocked verdict should name the failed criteria or missing context. The producing loop or the recommended upstream loop then creates a superseding cycle build after revision.
+See [Implementation, validation, and close](flows/implementation-validation-close.md) and [Publication and GC](flows/publication-gc.md) for proof-specific flow detail.
 
-## Failure routing vocabulary
+## Preflight and routing
 
-Verdict remains `pass`, `fail`, or `block`; routing metadata names the smallest safe next action.
+Preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation. Fail/block verdicts classify the failure and recommend the smallest safe next loop: same compiler loop, planning, decision, validation/proof, observe/wait, or user approval.
 
-| Failure class | Meaning | Typical route |
-| --- | --- | --- |
-| `evidence_missing` | Required mapping, checks, audits, or refs are missing. | Same compiler loop or gateway preflight. |
-| `compiler_incomplete` | Compiler output is inconsistent or incomplete. | Same compiler loop with superseding build. |
-| `planning_gap` | Accepted intent lacks durable task, sprint, knowledge-only, or deferral state. | Planning. |
-| `decision_ambiguity` | Intent or source truth is ambiguous, contradictory, or unapproved. | Decision. |
-| `risk_approval_missing` | Policy needs explicit semantic/high-risk approval. | Decision or user approval. |
-| `content_proof_missing` | Commit/tree/package/archive/remote proof is absent or stale. | Validation, task-close, ship-ready, or publisher proof. |
-| `runtime_conflict` | Lease, worktree, or role conflict blocks safe progress. | Wait/release coordination. |
+Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/ship-ready, and destructive. Low-risk paths still validate; high-risk tiers escalate before lower-layer promotion.
 
-## Persistence policy
+## Alignment and proof
 
-Passing validation does not need a durable report by default when the accepted build records the result and required content proof. A validation result is an attestation, not content proof.
+Vertical alignment traces intent through decision builds, knowledge/diagrams, planning builds, roadmap tasks, implementation builds, validation reports, and content proof. Horizontal alignment checks coherence inside one layer. Graph context helps routing but is not final authority.
 
-Persist reports for `fail`, `block`, policy-required storage, release/audit mode, ship-ready, or remote-update current records. Hot reports live under `.codewiki/validation/**`; pass reports stay hot only while active work, ship-ready, or audit policy needs them. Fail, block, and policy-kept reports remain hot until resolved or archived by policy.
-
-Tracked reports are safe to purge only after a reachable archive commit contains them and GC writes restore evidence for exact removed paths. The GC ledger restores files; it does not replace validation or content proof.
+Implementation validation requires fresh-context isolation, explicit clean-state value, checked content proof, and a commit-ready implementation build. Dirty implementation validation may use a working-tree digest. Task-close, ship-ready, publish, and release require clean immutable proof such as commit SHA, tree SHA, package digest, archive ref, or remote ref.
 
 ## Rules
 
 - The gateway validates builds; it does not mutate canonical truth.
-- The gateway uses graph context but does not treat graph state as final authority.
-- The gateway report is an attestation; commits, tree SHAs, package digests, and canonical files prove content.
-- The gateway does not replace mechanical checks or required audit profiles.
-- The gateway does not invent requirements or plan implementation work.
-- Planning, implementation, and task-close validation must block when a `TASK-###` item is actually an umbrella/container/epic, mainly groups other tasks, or has acceptance criteria that mostly close other tasks.
-- Shared files across tasks are allowed only when ownership and acceptance evidence remain independent; overlapping ownership without an explicit dependency/split rationale blocks validation.
-- Semantic validation should run in a fresh, bounded context when independence matters.
-- Implementation, task-close, ship-ready, publish, and release validation profiles require fresh-context isolation evidence before they can pass.
-- The gateway may recommend next routing: decision, planning, implementation, validation, observe, or block, and should include failure classification when a fail/block verdict needs selective back-propagation.
-- Gated agency must stop on fail/block verdicts or missing required approval.
-- Commit, push, release, or remote updates require gateway/policy approval when configured and immutable content proof when ship-ready policy requires it.
-- Risk-tiered gates may fast-path low-risk mechanical or docs-cleanup work only when deterministic audits, stale-ref scans, diagram/doc checks, and content proof satisfy policy.
-- Destructive changes, security policy changes, public API breaks, migrations, ship-ready, release, ambiguous tradeoffs, or high-cost work must escalate to the user for semantic approval before lower-layer promotion.
-
-## Isolation evidence
-
-Implementation, task-close, ship-ready, publish, and release validation must be independently reproducible when work changes code, tests, ship-ready metadata, or release state.
-
-Validation records the checked Git commit, tree, package digest, archive/remote ref, or working-tree digest required by policy; clean-state value; validator role; and any builder/publisher session, worktree, branch, or lease it intentionally did not reuse. Parallel write work follows [Role Worktree Isolation](worktree-isolation.md): prefer immutable refs over shared-root dirtiness. Dirty implementation validation may use a working-tree digest; task-close/ship-ready boundaries require `clean=true` plus immutable proof.
-
-SHA fields make proof exact: `base_sha` is session start, `head_sha` builder/publisher result, `validated_sha` checked commit, and `published_sha` pushed/released commit. New independent validation should include these fields.
-
-Implementation validation requires `fresh_context=true`, explicit clean-state value, checked content proof, and a commit-ready implementation build. Task-close/ship-ready/publish/release are stricter: working-tree digest alone cannot pass because close and ship-ready records must be recoverable from committed or published content. These proofs also gate tracked CodeWiki GC.
-
-When validation needs new context, the producing session supplies the build, task id, checks, and expected output. Another worker may validate as a handoff, or the adapter may start a fresh context and continue from CodeWiki refs.
+- Validation reports attest evidence; commits, tree SHAs, package digests, canonical files, archives, and remote refs prove content.
+- Planning, implementation, and task-close validation block on umbrella/container tasks or unsafe overlapping ownership.
+- Passing reports are hot only while active work, ship-ready, or audit policy needs them; fail/block/policy-kept reports persist until resolved or archived.
+- Tracked report GC is safe only after a reachable archive commit and restore ledger exist.
 
 ## Related docs
 
+- [Validation gateway component](components/validation-gateway.md)
 - [Alignment Model](alignment-model.md)
 - [Audits](audits.md)
 - [Builds](builds.md)
 - [Compilers](compilers.md)
 - [Roadmap](roadmap.md)
-- [Agency Controller](agency.md)
-- [Role Worktree Isolation](worktree-isolation.md)

@@ -5,7 +5,7 @@ state: active
 summary: Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.
 owners:
   - architecture
-updated: "2026-05-27"
+updated: "2026-06-01"
 ---
 
 # Adapters
@@ -40,7 +40,7 @@ The Pi adapter advertises its foundation capabilities through `piCodeRuntimeFoun
 
 ## Future adapters
 
-Future harnesses may not support Pi packages or extensions. They should use the same API through CLI, MCP, or a package-level programmatic interface.
+Future harnesses may not support Pi packages or extensions. They should use the same API through optional CLI automation, MCP, or a package-level programmatic interface. For interactive software development, CodeWiki is a Pi distribution: Pi provides the terminal harness and CodeWiki supplies API-backed commands, tools, TUI panels, skills, and prompt contract.
 
 Session boundary control is an adapter capability, not a Pi-only semantic. CodeWiki can request `codewiki-compaction`, `new-session`, `context-refresh`, `context-reset` compatibility, or `external-orchestrator` modes when agents need context hygiene or policy requires a boundary. Same-agent soft context hygiene is CodeWiki-owned compaction or `context_refresh`; hard replacement-session hygiene is `new_session`; true transfer is transfer to another session, agent, or role. In Pi, an LLM-callable tool cannot call command-only `ctx.newSession()`, so the internal `wiki_resume_context` tool builds the bounded prompt packet while `/wiki-resume --new` uses command-context `ctx.newSession({ withSession })` to create a fresh replacement session and seed it. Tool-context `context-refresh` and `context-reset` must return visible results instead of calling `ctx.compact()` during tool execution, because compaction can hide the visible tool response and interrupt the session before the agent sees the result. Pi may trigger CodeWiki-owned compaction only from safe adapter lifecycle points after the agent loop ends, and `session_before_compact` injects the regenerated resume packet instead of a chat-history summary. Gateway-passed validation reports can request the next CodeWiki-owned context boundary with the passed build and validation report refs; compiler build creation alone must not request pre-gateway compaction. After successful CodeWiki compaction, Pi should auto-pick up only after the agency runner approves the source-backed resume packet and then delivers a protocol-safe custom kickoff message generated from `wiki_resume_context` with `triggerTurn=true`; it must never call continuation from an assistant leaf. The runner blocks when intent is not stored in CodeWiki refs, budgets are exhausted, approval is required, or the adapter cannot deliver a safe kickoff; hard new-session pickup must use command-context `ctx.newSession()` or report a visible fallback. Pi `sendUserMessage` follow-ups disable prompt/command expansion and would deliver slash text as chat, not execute it; therefore the adapter must not auto-inject legacy session-handoff commands through follow-up chat. Pi `ctx.newSession()` creates a fresh replacement session in the current Pi process/terminal; the current extension API does not expose a portable way to open a new terminal tab. A CLI/MCP adapter may spawn a bounded worker process, clear conversation state, or emit a plan-only boundary when it cannot replace context itself.
 
@@ -67,6 +67,8 @@ Do not create empty adapter implementations before they are needed. Keep the str
 ## Skills
 
 Packaged CodeWiki skills are adapter-facing workflow assets for agents. They should remain progressive-disclosure prompts that route work into the same application tools and loop model.
+
+The main router skill remains named `codewiki` because it is product-specific and avoids a generic `wiki` collision. Public tools keep the `wiki_*` convention. Workflow skill renames are not the enforcement mechanism; if they happen, they should be compatibility-backed package migrations rather than hard breaks.
 
 Skill assets own agent prompt templates, bootstrap guidance, loop guidance, playbooks, and optional helper scripts/tools. Source code may execute these workflows through application tools, but skills must not import adapters or become hidden product logic.
 

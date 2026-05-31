@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-31T21:59:54Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-30T21:59:54.000Z",
+    "purge_after": "2026-07-30T21:59:54.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "attempt": "distribution-correction-resolved",
+    "supersedes": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json"
+    ],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [
+      "Pi-distribution-first direction supersedes CLI-first wording.",
+      "Approved row is mapped to KB docs and planning scope.",
+      "No unresolved open questions remain in the decision build."
+    ],
+    "required_audits": [
+      "alignment",
+      "stale-reference",
+      "generated-parity",
+      "changed"
+    ],
+    "audit_refs": [
+      "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted corrected Pi-distribution-first CodeWiki direction with resolved downstream planning scope.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "PI-DIST-001",
+      "current_state": "A prior accepted row/doc update said CodeWiki should be CLI-first with a future `codewiki` CLI as primary terminal distribution surface.",
+      "current_project_state": "A prior accepted row/doc update said CodeWiki should be CLI-first with a future `codewiki` CLI as primary terminal distribution surface.",
+      "desired_state": "CodeWiki is primarily a Pi-based software-development distribution: Pi remains the terminal harness/foundation, CodeWiki exposes its API through Pi commands/tools/TUI/skills/prompt contract, and any direct CLI is optional operational/admin/CI support rather than the primary product UX.",
+      "agreed_change": "Supersede the CLI-first direction. Keep API as internal semantic engine. Treat Pi-hosted commands/tools/TUI as the main user-facing surface. Keep direct CLI optional and non-primary.",
+      "expected_final_state": "Product/system docs describe CodeWiki as a Pi distribution/package for software-development workflow, not a fork or standalone CLI-first product. Future implementation planning focuses on Pi command/TUI/prompt-contract enforcement before optional CLI support.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "DT-2026-05-31-42"
+      ],
+      "rationale": "If CodeWiki is built on Pi and used inside Pi, primary UX should exploit Pi's terminal session, commands, tools, skills, and prompt hooks instead of introducing a separate CLI layer that would duplicate interaction semantics.",
+      "affected_layers": [
+        "product",
+        "system",
+        "package",
+        "runtime"
+      ],
+      "risk": "medium semantic-system correction; docs/planning impact, no code behavior change now.",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep CLI-first direction.",
+        "Fork Pi and hard-code CodeWiki.",
+        "Expose both Pi and CLI as equal primary surfaces immediately."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "PI-DIST-001"
+  ],
+  "approved_rows": [
+    {
+      "id": "PI-DIST-001",
+      "current_state": "A prior accepted row/doc update said CodeWiki should be CLI-first with a future `codewiki` CLI as primary terminal distribution surface.",
+      "current_project_state": "A prior accepted row/doc update said CodeWiki should be CLI-first with a future `codewiki` CLI as primary terminal distribution surface.",
+      "desired_state": "CodeWiki is primarily a Pi-based software-development distribution: Pi remains the terminal harness/foundation, CodeWiki exposes its API through Pi commands/tools/TUI/skills/prompt contract, and any direct CLI is optional operational/admin/CI support rather than the primary product UX.",
+      "agreed_change": "Supersede the CLI-first direction. Keep API as internal semantic engine. Treat Pi-hosted commands/tools/TUI as the main user-facing surface. Keep direct CLI optional and non-primary.",
+      "expected_final_state": "Product/system docs describe CodeWiki as a Pi distribution/package for software-development workflow, not a fork or standalone CLI-first product. Future implementation planning focuses on Pi command/TUI/prompt-contract enforcement before optional CLI support.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "DT-2026-05-31-42"
+      ],
+      "rationale": "If CodeWiki is built on Pi and used inside Pi, primary UX should exploit Pi's terminal session, commands, tools, skills, and prompt hooks instead of introducing a separate CLI layer that would duplicate interaction semantics.",
+      "affected_layers": [
+        "product",
+        "system",
+        "package",
+        "runtime"
+      ],
+      "risk": "medium semantic-system correction; docs/planning impact, no code behavior change now.",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep CLI-first direction.",
+        "Fork Pi and hard-code CodeWiki.",
+        "Expose both Pi and CLI as equal primary surfaces immediately."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "CodeWiki is a Pi-based software-development distribution, not CLI-first."
+    },
+    {
+      "id": "D2",
+      "summary": "Pi commands/tools/TUI/skills/prompt contract are the primary interactive surface."
+    },
+    {
+      "id": "D3",
+      "summary": "Core API remains internal semantic engine behind all surfaces."
+    },
+    {
+      "id": "D4",
+      "summary": "Do not fork Pi by default; fork only if Pi hooks/SDK cannot enforce required behavior."
+    },
+    {
+      "id": "D5",
+      "summary": "Optional direct CLI is allowed only for bootstrap, CI, audit, or admin automation."
+    }
+  ],
+  "knowledge_changes": [
+    "Updated product overview from CLI-first to Pi-distribution-first.",
+    "Updated API doc to state Pi-hosted surfaces are the primary interactive terminal surface.",
+    "Updated runtime doc to keep Pi foundation and optional CLI automation only.",
+    "Updated extension doc to describe current Pi-based product boundary and prompt contract.",
+    "Updated adapters doc to position optional CLI/MCP as non-primary automation/integration surfaces."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "PI-DIST-001",
+      "knowledge_refs": [
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Docs now describe CodeWiki as a Pi-based software-development distribution with Pi-hosted commands/tools/TUI/skills/prompt contract as the primary interactive surface; optional CLI is limited to automation/admin uses.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "mixed",
+    "product_impact": [
+      "Interactive CodeWiki UX is Pi-hosted, not standalone CLI-first."
+    ],
+    "system_impact": [
+      "API remains semantic engine behind Pi tools/commands/TUI.",
+      "Pi Code remains foundation; no fork by default.",
+      "Extension prompt-contract enforcement remains accepted.",
+      "Direct CLI is optional automation surface, not primary workflow."
+    ],
+    "downstream_planning_questions": [
+      "Prompt-contract implementation maps to TASK-071.",
+      "TASK-068 documentation alignment maps to current docs task.",
+      "Optional direct CLI remains deferred until Pi-hosted surfaces are stable."
+    ]
+  },
+  "diagram_refs": [
+    "component-map:api",
+    "component-map:runtime",
+    "component-map:adapters"
+  ],
+  "downstream_planning_questions": [
+    "Prompt-contract implementation maps to TASK-071.",
+    "TASK-068 documentation alignment maps to current docs task.",
+    "Optional direct CLI remains deferred until Pi-hosted surfaces are stable."
+  ],
+  "assumptions": [
+    "Pi package/extension hooks can inject the small CodeWiki system contract in configured repos.",
+    "Pi remains the intended terminal harness for interactive CodeWiki use."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement CLI-first distribution.",
+    "Do not fork Pi Code now.",
+    "Do not rename skills now."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-068",
+      "TASK-071"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/runtime/diff-tables.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "Updated product overview from CLI-first to Pi-distribution-first.",
+      "Updated API doc to state Pi-hosted surfaces are the primary interactive terminal surface.",
+      "Updated runtime doc to keep Pi foundation and optional CLI automation only.",
+      "Updated extension doc to describe current Pi-based product boundary and prompt contract.",
+      "Updated adapters doc to position optional CLI/MCP as non-primary automation/integration surfaces.",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "roadmap": [
+      "TASK-068",
+      "TASK-071"
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

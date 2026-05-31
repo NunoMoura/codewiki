@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T22:02:27Z",
+  "profile": "decision",
+  "verdict": "pass",
+  "rationale": "Corrected Pi-distribution direction is explicitly user-approved, supersedes the earlier CLI-first decision, maps to product/system KB docs, and has resolved downstream planning scope for TASK-068/TASK-071 with optional CLI deferred.",
+  "checks": [
+    "wiki_gateway decision preflight_only=true — ready (0 issues)",
+    "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "generated-parity",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task",
+    "approval:user:approved Pi-distribution correction"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:dc16591e6028331454427558b1cc6fecde34c5da0afb4cee241d493d37e31c46"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+    "validation_report": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-pi-distribut.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-pi-distribut.json",
+      "Updated product overview from CLI-first to Pi-distribution-first.",
+      "Updated API doc to state Pi-hosted surfaces are the primary interactive terminal surface.",
+      "Updated runtime doc to keep Pi foundation and optional CLI automation only.",
+      "Updated extension doc to describe current Pi-based product boundary and prompt contract.",
+      "Updated adapters doc to position optional CLI/MCP as non-primary automation/integration surfaces.",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md",
+      "TASK-068",
+      "TASK-071"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+    "validation_report": ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-pi-distribut.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-pi-distribut.json",
+      "CodeWiki-Checks: wiki_gateway decision preflight_only=true — ready (0 issues); wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "generated-parity",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user:approved Pi-distribution correction"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:dc16591e6028331454427558b1cc6fecde34c5da0afb4cee241d493d37e31c46",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Dirty pre-commit decision validation; source refs reviewed by gateway from current worktree.",
+    "role": "validator"
+  }
+}

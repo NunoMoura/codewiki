@@ -1,0 +1,632 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-31T22:01:18Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+  "task_id": "TASK-068",
+  "task": {
+    "id": "TASK-068",
+    "title": "Scaffold system component docs from architecture and file-structure ownership",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "docs",
+    "summary": "Create `system/components` and `system/flows` docs from architecture/file-structure ownership, then shrink oversized system overview docs into linked index pages under the lint threshold.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/api",
+      "src/agency",
+      "src/build",
+      "src/gateway",
+      "src/knowledge",
+      "src/roadmap",
+      "src/runtime",
+      "src/session",
+      "src/state",
+      "src/adapters",
+      "src/ui"
+    ],
+    "goal": {
+      "outcome": "System KB details are reorganized into component and flow docs while oversized overview docs become compact index pages under the lint threshold.",
+      "acceptance": [
+        "`system/components/` exists with compact component docs for architecture nodes that map to current source folders or file-structure owner nodes.",
+        "Each component doc has frontmatter including component_id, diagram_refs, code_paths or source_roots, owners, and summary.",
+        "`system/flows/` exists with focused docs for decision-to-planning, planning-to-implementation, implementation-validation-close, runtime-daemon-dispatch, artifact-claim-wait-wake, resume-context-boundary, and publication-gc or justified first-slice equivalents.",
+        "Each flow doc has frontmatter with flow_id, participants/component_ids, diagram_refs, source_refs or code_paths, and summary.",
+        "`api.md`, `compilers.md`, `runtime.md`, and `validation-gateway.md` are below the word-count warning threshold and link to relevant component/flow docs.",
+        "No large-doc warnings remain for the four target docs; any remaining large-doc warning is explicitly unrelated.",
+        "Actors/artifacts without source ownership remain diagram nodes or flow participants, not component docs.",
+        "Stale-reference/generated-parity audits pass."
+      ],
+      "non_goals": [
+        "Do not implement code changes.",
+        "Do not create component docs for every graph node if it lacks source/file-structure ownership.",
+        "Do not duplicate all top-level doc prose inside component docs.",
+        "Do not change runtime, compiler, gateway, or API behavior.",
+        "Do not solve unrelated graph warnings outside the large-doc target."
+      ],
+      "verification": [
+        "wiki_state refresh shows no large-doc warnings for target docs",
+        "wiki_audit profiles=alignment,stale-reference,generated-parity,changed",
+        "word-count check confirms new component/flow docs remain below lint threshold",
+        "manual diff review confirms moved semantics have links from overview docs"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-07T22:01:18.000Z",
+    "purge_after": "2026-06-14T22:01:18.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "builder-docs-first-slice-resolved",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json"
+    ],
+    "status": "implemented"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "Component docs exist for source-owned architecture/file-structure components.",
+      "Flow docs exist for required first-slice flows with source refs and component participants.",
+      "Target overview docs are below the large-doc warning threshold and link to component/flow details.",
+      "Pi-distribution correction is reflected in docs while optional CLI remains non-primary."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "stale-reference",
+      "generated-parity"
+    ],
+    "audit_refs": [
+      "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Implementation validation should review docs from source refs and content digest, not builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-068 system component/flow docs, compact target overview docs, and Pi-distribution-first documentation alignment.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+    ],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json"
+    ],
+    "roadmap": [
+      "TASK-068"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/components/api-facade.md",
+      ".codewiki/kb/system/components/compilers.md",
+      ".codewiki/kb/system/components/validation-gateway.md",
+      ".codewiki/kb/system/components/runtime-daemon.md",
+      ".codewiki/kb/system/components/state-engine.md",
+      ".codewiki/kb/system/components/roadmap-work-truth.md",
+      ".codewiki/kb/system/components/session-coordination.md",
+      ".codewiki/kb/system/components/knowledge-base.md",
+      ".codewiki/kb/system/components/adapters-and-ui.md",
+      ".codewiki/kb/system/components/builds-and-proof.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/flows/planning-to-implementation.md",
+      ".codewiki/kb/system/flows/implementation-validation-close.md",
+      ".codewiki/kb/system/flows/runtime-daemon-dispatch.md",
+      ".codewiki/kb/system/flows/artifact-claim-wait-wake.md",
+      ".codewiki/kb/system/flows/resume-context-boundary.md",
+      ".codewiki/kb/system/flows/publication-gc.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [
+      ".codewiki/index_graph.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-068"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/api",
+      "src/agency",
+      "src/build",
+      "src/gateway",
+      "src/knowledge",
+      "src/roadmap",
+      "src/runtime",
+      "src/session",
+      "src/state",
+      "src/adapters",
+      "src/ui"
+    ]
+  },
+  "test_files": [],
+  "code_files": [],
+  "files_changed": [],
+  "checks_run": [
+    "frontmatter check for component/flow docs — pass",
+    "word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold",
+    "wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed",
+    "wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+      "roadmap_task_id": "TASK-068",
+      "test_files": [],
+      "evidence": [
+        "Docs-only task; deterministic checks validate frontmatter keys, word counts, generated parity, stale references, and decision propagation alignment."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+      "roadmap_task_id": "TASK-068",
+      "code_files": [],
+      "evidence": [
+        "No package source code changed; docs-only KB reorganization and decision/planning evidence updates."
+      ],
+      "notes": [
+        "Preserved file-structure.md large-doc warning as explicitly unrelated to TASK-068 target docs.",
+        "Created first-slice flow docs named by required flow ids and kept overview docs as compact indexes.",
+        "Corrected earlier CLI-first direction to Pi-distribution-first per user approval before final implementation build.",
+        "TASK-071 was refined by roadmap reuse to carry future CodeWiki prompt-contract implementation scope; validate separately when implementing TASK-071."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Docs-only task; deterministic checks validate frontmatter keys, word counts, generated parity, stale references, and decision propagation alignment."
+  ],
+  "code_change_evidence": [
+    "No package source code changed; docs-only KB reorganization and decision/planning evidence updates."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "system/components exists with compact component docs for architecture nodes mapped to source folders or file-structure owner nodes.",
+      "evidence": "Created 10 docs under .codewiki/kb/system/components with component_id, diagram_refs, source_roots, owners, and summary frontmatter."
+    },
+    {
+      "criterion": "system/flows exists with focused docs for required flows or justified first-slice equivalents.",
+      "evidence": "Created 7 docs under .codewiki/kb/system/flows for decision-to-planning, planning-to-implementation, implementation-validation-close, runtime-daemon-dispatch, artifact-claim-wait-wake, resume-context-boundary, and publication-gc with flow_id, participants, component_ids, diagram_refs, refs, and summary."
+    },
+    {
+      "criterion": "api.md, compilers.md, runtime.md, validation-gateway.md are below word-count warning threshold and link to details.",
+      "evidence": "Word-count check reports api.md=513, compilers.md=386, runtime.md=444, validation-gateway.md=455; each target doc links to component/flow detail."
+    },
+    {
+      "criterion": "No large-doc warnings remain for target docs; unrelated remaining warnings are explicit.",
+      "evidence": "Generated graph large-doc warning remains only for .codewiki/kb/system/file-structure.md, outside the four target docs."
+    },
+    {
+      "criterion": "Actors/artifacts without source ownership remain diagram nodes or flow participants, not component docs.",
+      "evidence": "Component docs were limited to source-owned/API/runtime/state/roadmap/session/knowledge/adapter/build-proof boundaries; user, code_tests, runtime_jobs, and publication proof remain flow participants/diagram nodes."
+    },
+    {
+      "criterion": "Stale-reference/generated-parity audits pass.",
+      "evidence": "wiki_audit stale-reference pass; generated-parity pass."
+    },
+    {
+      "criterion": "Accepted Pi-distribution correction is registered and reflected without making CLI primary.",
+      "evidence": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json and .codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json; product/system docs describe Pi-hosted surfaces as primary and optional CLI as automation/admin only."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with TASK-068 and register the corrected Pi-distribution-first CodeWiki direction.",
+    "implemented_changes": [
+      "Added source-owned component docs under .codewiki/kb/system/components.",
+      "Added focused flow docs under .codewiki/kb/system/flows.",
+      "Replaced target overview docs with compact index pages linking to component/flow detail.",
+      "Updated product/system docs so CodeWiki is a Pi-based software-development distribution with optional non-primary CLI automation.",
+      "Regenerated CodeWiki graph state."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/components",
+        ".codewiki/kb/system/flows",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "roadmap": [
+        "TASK-071 refined for future prompt-contract implementation"
+      ],
+      "code": [],
+      "tests": [],
+      "validation": [
+        ".codewiki/index_graph.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "frontmatter check",
+      "word-count check",
+      "wiki_state refresh",
+      "wiki_audit alignment,stale-reference,generated-parity,changed",
+      "accepted decision/planning builds for Pi-distribution correction"
+    ],
+    "checks": [
+      "frontmatter check — pass",
+      "word-count check — pass",
+      "wiki_state TASK-068 — no target large-doc warnings",
+      "wiki_audit — stale-reference/generated-parity/task pass"
+    ],
+    "non_goals_preserved": [
+      "Did not implement code changes.",
+      "Did not create component docs for actors or proof artifacts without source ownership.",
+      "Did not change runtime, compiler, gateway, or API behavior.",
+      "Did not fork Pi or implement CLI-first distribution.",
+      "Did not attempt unrelated file-structure large-doc cleanup."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation required before close.",
+      "Manual semantic review should verify no important policy detail was over-compressed."
+    ]
+  },
+  "risks": [
+    "Manual semantic review should confirm compact overview docs retained all critical policy pointers after split.",
+    "Fresh implementation validation still required before task-close.",
+    "TASK-071 scope is broader after prompt-contract refinement and should be validated separately."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-068",
+      "task_id": "TASK-068",
+      "next_focus_task_id": "TASK-071",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-068",
+        "title": "Scaffold system component docs from architecture and file-structure ownership",
+        "summary": "Implemented TASK-068 system component/flow docs, compact target overview docs, and Pi-distribution-first documentation alignment.",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/diagrams/key-flow.yaml",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/validation-gateway.md"
+        ],
+        "code_paths": [
+          "src/api",
+          "src/agency",
+          "src/build",
+          "src/gateway",
+          "src/knowledge",
+          "src/roadmap",
+          "src/runtime",
+          "src/session",
+          "src/state",
+          "src/adapters",
+          "src/ui"
+        ],
+        "acceptance": [
+          "`system/components/` exists with compact component docs for architecture nodes that map to current source folders or file-structure owner nodes.",
+          "Each component doc has frontmatter including component_id, diagram_refs, code_paths or source_roots, owners, and summary.",
+          "`system/flows/` exists with focused docs for decision-to-planning, planning-to-implementation, implementation-validation-close, runtime-daemon-dispatch, artifact-claim-wait-wake, resume-context-boundary, and publication-gc or justified first-slice equivalents.",
+          "Each flow doc has frontmatter with flow_id, participants/component_ids, diagram_refs, source_refs or code_paths, and summary.",
+          "`api.md`, `compilers.md`, `runtime.md`, and `validation-gateway.md` are below the word-count warning threshold and link to relevant component/flow docs.",
+          "No large-doc warnings remain for the four target docs; any remaining large-doc warning is explicitly unrelated.",
+          "Actors/artifacts without source ownership remain diagram nodes or flow participants, not component docs.",
+          "Stale-reference/generated-parity audits pass."
+        ],
+        "verification": [
+          "wiki_state refresh shows no large-doc warnings for target docs",
+          "wiki_audit profiles=alignment,stale-reference,generated-parity,changed",
+          "word-count check confirms new component/flow docs remain below lint threshold",
+          "manual diff review confirms moved semantics have links from overview docs"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+        "checks_run": [
+          "frontmatter check for component/flow docs — pass",
+          "word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold",
+          "wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed",
+          "wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+        ],
+        "test_design_evidence": [
+          "Docs-only task; deterministic checks validate frontmatter keys, word counts, generated parity, stale references, and decision propagation alignment."
+        ],
+        "code_change_evidence": [
+          "No package source code changed; docs-only KB reorganization and decision/planning evidence updates."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-068",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-068",
+      "show_build": "git show refs/codewiki/archive/task/TASK-068:.codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        "src/api",
+        "src/agency",
+        "src/build",
+        "src/gateway",
+        "src/knowledge",
+        "src/roadmap",
+        "src/runtime",
+        "src/session",
+        "src/state",
+        "src/adapters",
+        "src/ui"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-068 Scaffold system component docs from architecture and file-structure ownership implementation evidence",
+      "body": "Implemented TASK-068 system component/flow docs, compact target overview docs, and Pi-distribution-first documentation alignment.\n\nChecks: frontmatter check for component/flow docs — pass, word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold, wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed, wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-068\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json\nCodeWiki-Checks: frontmatter check for component/flow docs — pass, word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold, wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed, wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-068\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-068\nCodeWiki-Digest: sha256:c80983138130e955a63e9a03c8d4c86c6a330bd743aa7659f9d81d4b3cfb4731\nCodeWiki-Restore: /wiki-restore TASK-068",
+      "trailers": [
+        "CodeWiki-Task: TASK-068",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+        "CodeWiki-Checks: frontmatter check for component/flow docs — pass, word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold, wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed, wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-068",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-068",
+        "CodeWiki-Digest: sha256:c80983138130e955a63e9a03c8d4c86c6a330bd743aa7659f9d81d4b3cfb4731",
+        "CodeWiki-Restore: /wiki-restore TASK-068"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-068 Scaffold system component docs from architecture and file-structure ownership implementation evidence",
+      "body": "Implemented TASK-068 system component/flow docs, compact target overview docs, and Pi-distribution-first documentation alignment.\n\nChecks: frontmatter check for component/flow docs — pass, word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold, wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed, wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-068\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json\nCodeWiki-Checks: frontmatter check for component/flow docs — pass, word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold, wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed, wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-068\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-068\nCodeWiki-Digest: sha256:c80983138130e955a63e9a03c8d4c86c6a330bd743aa7659f9d81d4b3cfb4731\nCodeWiki-Restore: /wiki-restore TASK-068"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-068",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-068"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-068",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-068",
+        "show_build": "git show refs/codewiki/archive/task/TASK-068:.codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/diagrams/key-flow.yaml",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          "src/api",
+          "src/agency",
+          "src/build",
+          "src/gateway",
+          "src/knowledge",
+          "src/roadmap",
+          "src/runtime",
+          "src/session",
+          "src/state",
+          "src/adapters",
+          "src/ui"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-068",
+      "build_path": ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-068",
+      "commit_sha": "",
+      "digest": "sha256:c80983138130e955a63e9a03c8d4c86c6a330bd743aa7659f9d81d4b3cfb4731",
+      "restore_command": "/wiki-restore TASK-068"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:81bb41a2e5eed629eaeadf69e6220ef6b4008e67a37a68330b2f340df4b4564a",
+          "bytes": 27826
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-068",
+      "source_build": ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-068",
+        "restore_command": "/wiki-restore TASK-068"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "frontmatter check for component/flow docs — pass",
+        "word-count check api.md=513 compilers.md=386 runtime.md=444 validation-gateway.md=455 — pass under warning threshold",
+        "wiki_state taskId=TASK-068 refresh=true — health yellow with target large-doc warnings removed",
+        "wiki_audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings only graph-health/generated state"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

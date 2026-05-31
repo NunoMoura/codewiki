@@ -5,7 +5,7 @@ state: active
 summary: Product intent and navigation for CodeWiki's users, stories, and visual UIs.
 owners:
 - product
-updated: '2026-05-31'
+updated: '2026-06-01'
 code_paths:
 - .codewiki/kb/product
 code_paths_mode: explicit_override
@@ -32,6 +32,8 @@ Product-oriented decisions should update product meaning first, then preflight s
 
 Tools, commands, skills, CLI access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe the outcome those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [Adapters](../system/adapters.md), and [Extension](../system/extension.md).
 
+CodeWiki is terminal-first from the user perspective and Pi-based at the product boundary. The primary user experience is a CodeWiki-enabled Pi distribution for software development: Pi provides the terminal harness, chat/TUI session, commands, tools, skills, and prompt hooks; CodeWiki provides the repo contract, workflow policy, and API-backed semantics. Direct CLI access may exist for bootstrap, CI, audit, or admin use, but it is not the primary interactive product UX.
+
 Visual UI docs should describe what users see and understand. System docs should describe how the product is delivered.
 
 ## Success signals
@@ -39,7 +41,7 @@ Visual UI docs should describe what users see and understand. System docs should
 - User intent is captured before implementation expands.
 - Product stories map to system components and roadmap work without duplicating technical design.
 - Visual UI expectations stay separate from adapter, API, and distribution mechanics.
-- Agents and humans can understand current state through trustworthy terminal-first product surfaces: chat, Pi TUI panels, compact host status, and focused `/wiki-*` command output.
+- Agents and humans can understand current state through trustworthy Pi-hosted terminal surfaces: chat, Pi TUI panels, compact host status, and focused `/wiki-*` command output.
 - Maintainers can review intended file structure, actual file structure, drift, and approved migration deltas before agents reshape source layout.
 - Historical recovery relies on git, harness session storage, compact semantic summaries, and generated graph context rather than product doc event logs.
 
