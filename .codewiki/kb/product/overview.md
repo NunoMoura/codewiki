@@ -5,7 +5,7 @@ state: active
 summary: Product intent and navigation for CodeWiki's users, stories, and visual UIs.
 owners:
 - product
-updated: '2026-05-22'
+updated: '2026-05-31'
 code_paths:
 - .codewiki/kb/product
 code_paths_mode: explicit_override
@@ -39,7 +39,7 @@ Visual UI docs should describe what users see and understand. System docs should
 - User intent is captured before implementation expands.
 - Product stories map to system components and roadmap work without duplicating technical design.
 - Visual UI expectations stay separate from adapter, API, and distribution mechanics.
-- Agents and humans can understand current state through trustworthy product surfaces, from compact host panels to the standalone CodeWiki UI.
+- Agents and humans can understand current state through trustworthy terminal-first product surfaces: chat, Pi TUI panels, compact host status, and focused `/wiki-*` command output.
 - Maintainers can review intended file structure, actual file structure, drift, and approved migration deltas before agents reshape source layout.
 - Historical recovery relies on git, harness session storage, compact semantic summaries, and generated graph context rather than product doc event logs.
 
@@ -52,7 +52,8 @@ Visual UI docs should describe what users see and understand. System docs should
 - [Maintain Fresh Intent](stories/intent.md)
 - [Use Gated Agency](stories/automation.md)
 - [Low-Token Navigation](stories/navigation.md)
-- [CodeWiki UI](uis/control-room.md)
+- [Terminal UI](uis/terminal.md)
+- [Deprecated Browser CodeWiki UI](uis/control-room.md)
 - [Status Panel UI](uis/status-panel.md)
 - [Board UI](uis/board.md)
 - [Graph Navigation UI](uis/graph-navigation.md)

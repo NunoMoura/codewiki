@@ -8,18 +8,18 @@ owners:
 - design
 updated: '2026-05-16'
 code_paths:
-- src/ui/web
 - src/adapters/pi/ui/manager.ts
+- src/adapters/pi/commands
 code_paths_mode: explicit_override
 ---
 
 # Board UI
 
-The Board UI should make roadmap work, inferred delta, approvals, gates, blockers, and next actions visible before users inspect raw machine state files. In the standalone CodeWiki UI it is the primary roadmap/work view; in host-native status panels it may remain a compact summary.
+The Board UI should make roadmap work, inferred delta, approvals, gates, blockers, and next actions visible before users inspect raw machine state files. In terminal-first CodeWiki it is a Pi TUI or command-triggered roadmap/work view; in compact status panels it may remain a summary.
 
 The standalone Board should feel like a Trello-like retro terminal Kanban board, not a backend task dump. The default workspace should group work into a small set of readable lanes such as `Now`, `Ready`, `Blocked`, and `Gate/Done recent`. Lane membership must be derived from roadmap truth, active focus, blockers, validation/content-proof gates, and recent closure evidence. The UI must not create hidden Kanban state.
 
-Board remains a top-level header navigation item alongside `Status`, `KB`, `Map`, and `Sessions`. Its visual style should align with the ASCII-like CodeWiki UI: clear monospace cards, terminal borders, compact cues, and inline details. It should not depend on a left rail, persistent right inspector/sidebar, or bottom status line.
+Board should be available as a focused terminal view, for example `/wiki board`, rather than as browser header navigation. Its visual style should use clear monospace cards, terminal borders, compact cues, and inline details.
 
 Roadmap work is work truth, not a requirements brief. Planning notes, drift findings, architecture candidates, validation failures, and implementation follow-ups should become structured work items or evidence instead of scattered prose buckets. Full intent and implementation specifications should live in accepted builds and linked KB docs.
 
@@ -39,7 +39,8 @@ Cards should surface the user's decision-relevant information first: outcome, cu
 ## Related docs
 
 - [Use Gated Agency](../stories/automation.md)
-- [CodeWiki UI](control-room.md)
+- [Terminal UI](terminal.md)
+- [Deprecated Browser CodeWiki UI](control-room.md)
 - [Status Panel UI](status-panel.md)
 - [Roadmap](../../system/roadmap.md)
 - [Builds](../../system/builds.md)

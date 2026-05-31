@@ -2,7 +2,7 @@
 id: spec.system.extension
 title: Extension
 state: active
-summary: Packaged CodeWiki distribution, current Pi extension surface, and CodeWiki UI launch integration.
+summary: Packaged CodeWiki distribution, current Pi extension surface, and terminal-first CodeWiki UX integration.
 owners:
   - architecture
   - engineering
@@ -13,7 +13,7 @@ updated: "2026-05-31"
 
 ## Responsibility
 
-The extension package distributes CodeWiki for the current Pi host runtime. It registers Pi commands, tools, compact visual status UI, CodeWiki UI launch integration, lifecycle hooks, packaged skills, and resource discovery, then delegates semantic work to application tools.
+The extension package distributes CodeWiki for the current Pi host runtime. It registers Pi commands, tools, compact visual status UI, terminal-first CodeWiki UX integration, lifecycle hooks, packaged skills, and resource discovery, then delegates semantic work to application tools.
 
 The extension is not the product boundary. CodeWiki is the repo-local contract, compiler workflow, state engine, API, and standalone local CodeWiki UI. Pi is the current adapter and distribution channel.
 
@@ -24,7 +24,7 @@ The Pi adapter owns:
 - `/wiki-*` commands,
 - `wiki_<name>` tools,
 - `Alt+W` compact visual status UI,
-- `/wiki-ui [repo-path] [port]` to start the local CodeWiki UI, attempt to open its browser URL, and print a plain local URL fallback,
+- terminal-first `/wiki-*` command surfaces and Pi TUI panels; `/wiki-ui` is deprecated and should be removed or changed to a deprecation message during web UI cleanup,
 - `wiki_agency` as the current Pi-facing agency controller entrypoint until the vNext runtime workflow supersedes direct agency execution,
 - session lifecycle hooks,
 - packaged workflow skills,
@@ -62,7 +62,8 @@ The Pi adapter owns:
 
 ## Related docs
 
-- [CodeWiki UI](control-room-ui.md)
+- [Terminal UI and Agent Visual Language](terminal-ui.md)
+- [Deprecated Browser UI](control-room-ui.md)
 - [Adapters](adapters.md)
 - [API](api.md)
 - [File Structure](file-structure.md)

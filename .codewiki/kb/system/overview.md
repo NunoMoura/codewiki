@@ -12,7 +12,7 @@ updated: "2026-05-22"
 
 ## Main boundaries
 
-CodeWiki maintains the repository-local `.codewiki/` contract and exposes it through agent-harness adapters and a standalone local CodeWiki UI. Pi is the only implemented harness adapter for now; the architecture keeps future Claude Code, Codex, CLI, MCP, or other harness adapters possible without making them immediate product commitments.
+CodeWiki maintains the repository-local `.codewiki/` contract and exposes it through agent-harness adapters, terminal-first Pi TUI panels, and focused `/wiki-*` command surfaces. Pi is the only implemented harness adapter for now; the architecture keeps future Claude Code, Codex, CLI, MCP, or other harness adapters possible without making them immediate product commitments.
 
 - **Knowledge base semantics** own product specs, visual UI specs, system access-surface specs, system specs, architecture rules, and workflow vocabulary under `.codewiki/kb/**`.
 - **Agency controller** owns bounded roadmap automation through agency cycles and explicit token, time, risk, validation, policy, and approval gates.
@@ -22,7 +22,7 @@ CodeWiki maintains the repository-local `.codewiki/` contract and exposes it thr
 - **State engine** owns generated reconciliation state in `.codewiki/index_graph.json`: drift detection, routing, derived queue order, loop selection, status, and freshness checks. Domain language calls this state; the graph is the generated representation. It is required validation context but never overrides canonical sources or immutable content proof.
 - **File-structure ownership map** owns human-readable intended source/tree ownership, current implementation shape, approved migration deltas, and drift categories through [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
 - **Audits** produce deterministic alignment, file-structure, stale-reference, package, security, and generated-parity evidence for users and gateways.
-- **CodeWiki UI** owns the standalone local browser command center for humans under `src/ui/**` while delegating all semantics to the CodeWiki API.
+- **Terminal UI** owns Pi TUI, chat-native visual explanations, and focused command-triggered views while delegating all semantics to the CodeWiki API. The browser Control Room is deprecated pending removal.
 - **API facade** owns stable package/tool use-case entrypoints under `src/api/**` so adapters, scripts, UI, CLI/MCP wrappers, and future harnesses do not depend on old layer-first internals.
 - **Concept roots** own pure CodeWiki concepts, rules, use cases, local runtime implementations, tool entrypoints, schemas, transitions, and invariants for agency, audits, builds, changes, project contracts, roadmap, session queue, validation, generated state, and GC.
 - **Adapters** own harness-specific or protocol-specific translation. The Pi adapter owns current commands, tools, status panel, session integration, packaged skills, and resource discovery. Browser web code is UI, not an agent adapter. Adapters do not own CodeWiki semantics.
@@ -35,10 +35,11 @@ Detailed truth-boundary and compiler-loop tables live in [System Truth and Compi
 ## Ownership seams
 
 - [Diagram Raw Data](diagrams/README.md) owns the canonical diagram families and agent-editable YAML sources for system visualizations.
-- [Architecture Map](architecture.mmd) is a compatibility component diagram until System UI rendering migrates to `diagrams/component-map.yaml`.
+- [Architecture Map](diagrams/architecture.yaml) is the canonical architecture diagram source; generated render/export files are non-canonical artifacts.
 - [File Structure](file-structure.md) owns the target repository and knowledge-base structure rules, including the concept-root source migration target and intended-vs-current drift categories.
 - [API](api.md) owns the harness-independent CodeWiki access contract.
-- [CodeWiki UI](control-room-ui.md) owns standalone local web UI hosting and launch semantics.
+- [Terminal UI](terminal-ui.md) owns terminal-first Pi TUI, command-triggered visual views, and agent visual language semantics.
+- [Deprecated Browser UI](control-room-ui.md) is retained only as migration evidence until web UI cleanup removes it.
 - [Extension](extension.md) owns packaged distribution and the current Pi extension surface.
 - [Adapters](adapters.md) owns harness translation boundaries for Pi today and CLI/MCP/future harnesses later.
 - [Agency Controller](agency.md) owns bounded roadmap automation through agency cycles and explicit gates.

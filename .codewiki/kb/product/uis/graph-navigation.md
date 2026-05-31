@@ -8,8 +8,8 @@ owners:
 - design
 updated: '2026-05-16'
 code_paths:
-- src/ui/web
 - src/adapters/pi/ui/manager.ts
+- src/adapters/pi/commands
 code_paths_mode: explicit_override
 ---
 
@@ -17,7 +17,7 @@ code_paths_mode: explicit_override
 
 The Map navigation UI is the user-facing view over generated graph relationships. It should help users understand how CodeWiki knowledge, roadmap work, builds, validation, tests, and code paths relate without exposing `Graph` as the primary product label or turning generated state into hidden truth.
 
-The standalone [CodeWiki UI](control-room.md) is the primary host for the rich Map view. Compact host panels may show smaller Map summaries or launch the browser UI.
+Terminal UI is the primary host for Map and trace views. Compact host panels may show smaller Map summaries or route to focused `/wiki trace` or `/wiki diagram` commands.
 
 Agent navigation belongs to the system graph/API contract; this document covers the visual experience.
 
@@ -47,6 +47,7 @@ The Map is an inspection surface, not an editor. Selecting a node or edge opens 
 ## Related docs
 
 - [Low-Token Navigation](../stories/navigation.md)
-- [CodeWiki UI](control-room.md)
+- [Terminal UI](terminal.md)
+- [Deprecated Browser CodeWiki UI](control-room.md)
 - [Status Panel UI](status-panel.md)
 - [Graph](../../system/graph.md)

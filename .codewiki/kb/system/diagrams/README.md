@@ -63,11 +63,12 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 - File-structure diagrams should show ownership and drift categories without duplicating full component docs.
 - Diagram files should not duplicate full component docs.
 - Generated state/graph output remains `.codewiki/index_graph.json`; diagram files are intended system knowledge.
-- Generated HTML, SVG, PNG, Cytoscape JSON, Mermaid output, or future TUI ASCII render output must be treated as render artifacts, not source truth.
+- Generated HTML, SVG, PNG, Cytoscape JSON, Mermaid output, Unicode terminal views, ASCII diagrams, or future TUI render output must be treated as render artifacts, not source truth.
 - `architecture.yaml` is the canonical architecture diagram. `../architecture.mmd` is retained only as a Mermaid compatibility/export artifact and must not be edited as canonical truth.
 
 ## Related docs
 
-- [CodeWiki UI](../control-room-ui.md)
+- [Terminal UI and Agent Visual Language](../terminal-ui.md)
+- [Deprecated Browser UI](../control-room-ui.md)
 - [File Structure](../file-structure.md)
 - [System Overview](../overview.md)

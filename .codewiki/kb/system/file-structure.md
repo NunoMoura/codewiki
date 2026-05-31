@@ -71,13 +71,14 @@ The default diagram families are:
 | `diagrams/state-lifecycle.yaml` | State/lifecycle map | Task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
 | `diagrams/file-structure-map.yaml` | File-structure map | Intended source/tree ownership, current implementation shape, approved migration deltas, and drift-lens categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
-Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer input unless a later task promotes it to canonical truth. `system/architecture.mmd` remains a compatibility source until rendering migrates to `system/diagrams/component-map.yaml`. New diagram work targets `system/diagrams/**`.
+Renderer-specific Mermaid, Cytoscape, SVG, HTML, Unicode, or ASCII output is generated or renderer input unless a later task promotes it to canonical truth. `system/diagrams/architecture.yaml` is the canonical architecture diagram source. `system/architecture.mmd` is deprecated compatibility/export state pending removal. New diagram work targets `system/diagrams/**`.
 
 ## Component-doc map
 
 | Architecture node | Owning doc | Primary paths |
 | --- | --- | --- |
-| CodeWiki UI | `control-room-ui.md` | `src/ui/web/**`, local UI launch commands |
+| Terminal UI | `terminal-ui.md` | `src/adapters/pi/ui/**`, `src/adapters/pi/commands/**`, terminal command views |
+| Deprecated browser UI | `control-room-ui.md` | `src/ui/web/**`, `/wiki-ui` launcher pending removal |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
@@ -103,7 +104,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 
 ## CodeWiki system docs
 
-CodeWiki keeps one flat system doc per major component, plus `overview.md`, temporary `architecture.mmd`, and canonical raw diagrams under `diagrams/**`. The component-doc map above owns expected docs and primary paths.
+CodeWiki keeps one flat system doc per major component, plus `overview.md`, terminal-first UI docs, deprecated browser UI migration docs, and canonical raw diagrams under `diagrams/**`. The component-doc map above owns expected docs and primary paths.
 
 Deprecated `.codewiki/` paths must not be recreated by templates or normal agent writes:
 
@@ -186,7 +187,7 @@ Runtime checks cover direct Node execution and package loading, not only TypeScr
 
 ## Related docs
 
-- [Architecture Diagram](architecture.mmd)
+- [Architecture Diagram](diagrams/architecture.yaml)
 - [Diagram Raw Data](diagrams/README.md)
 - [API](api.md)
 - [Adapters](adapters.md)

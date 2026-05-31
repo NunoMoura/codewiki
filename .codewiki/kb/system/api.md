@@ -34,7 +34,8 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | `codewiki.validation` | Run validation gateways and persist failed, blocked, or policy-kept reports. |
 | `codewiki.state_engine` | Rebuild and read generated state/graph representations. |
 | `codewiki.gc` | Classify, dry-run, ledger, and purge eligible CodeWiki builds, validation reports, roadmap archive detail, and runtime artifacts after archive commit proof exists. |
-| `codewiki.ui` | Serve local-first UI read models and route UI actions through existing CodeWiki capabilities. |
+| `codewiki.terminal_ui` | Serve terminal-first read models and route Pi TUI/command actions through existing CodeWiki capabilities. |
+| `codewiki.ui` | Deprecated browser UI compatibility capability pending web UI removal; do not add new product work here. |
 | `codewiki.bootstrap` | Adopt or initialize repo-local CodeWiki state from skill-owned bootstrap/templates assets through application tools. |
 | `codewiki.patch` | Apply validated CodeWiki patches or append-only source/research writes under policy. |
 | `codewiki.publication` | Prepare commit, PR, issue, changelog, release, and push-readiness outputs from implementation evidence. |
@@ -48,12 +49,12 @@ The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-v
 
 | Access surface | Path |
 | --- | --- |
-| CodeWiki UI | Local browser command center over the same API and generated state. |
-| Pi | Extension commands, tools, compact visual status UI, CodeWiki UI launcher, skills, and session integration. |
+| Pi terminal UI | Chat, Pi TUI panels, command-triggered visual views, tools, skills, and session integration over the same API and generated state. |
+| Deprecated browser UI | Legacy local browser Control Room pending removal; must not own new semantics. |
 | Claude Code | CLI or MCP adapter over the same API. |
 | Codex | CLI or MCP adapter over the same API. |
 | Other agents | CLI, MCP, or package API. |
-| Humans | Local CodeWiki UI, CLI/status output, generated docs, and host-native compact panels. |
+| Humans | Pi TUI/chat, CLI/status output, generated docs, and host-native compact panels. |
 
 All access surfaces must preserve the same `.codewiki/` semantics.
 

@@ -28,6 +28,9 @@ Preferred public/user-facing commands:
 | `/wiki implement` | Run one bounded implementation step for an executable roadmap item under gates. |
 | `/wiki gate` | Run deterministic audits, validation gateways, and proof preflights. |
 | `/wiki runtime` | Operate approved runtime/daemon scheduling, worker jobs, Brain leases, and block/unblock flows. |
+| `/wiki board` | Render roadmap lanes/cards from roadmap truth, gates, blockers, and closure evidence. |
+| `/wiki diagram <name>` | Render canonical YAML diagrams as focused terminal views. |
+| `/wiki trace <ref>` | Render decision, planning, implementation, validation, and Git proof chains. |
 
 There is no generic maintenance command or fix-all maintenance tool. Deterministic generated-state repair is part of state reads and write postconditions. Semantic drift routes to decision, planning, implementation, or validation gates. Runtime cleanup belongs to runtime. Archive and retention cleanup remain targeted lifecycle operations such as `wiki_gc` after archive proof exists.
 
@@ -49,5 +52,6 @@ Each workflow tool owns one user-level phase, supports batched common operations
 ## Related docs
 
 - [CodeWiki API](api.md)
+- [Terminal UI and Agent Visual Language](terminal-ui.md)
 - [Adapters](adapters.md)
 - [Agency Controller](agency.md)
