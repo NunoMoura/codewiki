@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T09:04:51Z",
+  "profile": "task-close",
+  "task_id": "TASK-069",
+  "verdict": "pass",
+  "rationale": "TASK-069 is ready to close. Clean checkpoint commit fe10af524a9d7d33920e245841f437e26dfec514 contains the backend batch decision approval implementation, targeted tests, implementation build, and implementation validation pass. Acceptance is satisfied: one backend/API rows workflow can apply multiple actions, accepted action aliases normalize to gateway-compatible approved evidence, wiki_diff_table remains compatible while batch fields are available, failed batch actions return exact failed row ids and recovery without partial writes, and tests cover mixed accept/reject/defer/edit plus gateway build normalization. Required task/changed/generated-parity audits pass; alignment has only existing graph-health warnings.",
+  "checks": [
+    "implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-069-2026-05-31-implemen.json",
+    "checkpoint commit fe10af524a9d7d33920e245841f437e26dfec514",
+    "tree 6a7f41f8f823e4781016fb83608d72f84e5f269d",
+    "wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-069: warning; task/changed/generated-parity pass",
+    "task-close preflight: ready"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health reports four existing warnings unrelated to TASK-069 closure."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:task",
+    "profile:alignment",
+    "profile:changed",
+    "profile:generated-parity",
+    ".codewiki/validation/2026-05-31-implementation-pass-task-069-2026-05-31-implemen.json"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "fe10af524a9d7d33920e245841f437e26dfec514",
+    "6a7f41f8f823e4781016fb83608d72f84e5f269d"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-069",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+      ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
+      "src/change/types.ts",
+      "src/change/diff-table.ts",
+      "src/change/tool.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/api/tools.ts",
+      "package.json",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-069",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+    "validation_report": ".codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-069 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-069",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-task-close-pass-task-069-2026-05-31-implemented-.json",
+      "CodeWiki-Checks: implementation validation pass .codewiki/validation/2026-05-31-implementation-pass-task-069-2026-05-31-implemen.json; checkpoint commit fe10af524a9d7d33920e245841f437e26dfec514; tree 6a7f41f8f823e4781016fb83608d72f84e5f269d; wiki_audit profiles=task,alignment,changed,generated-parity task_id=TASK-069: warning; task/changed/generated-parity pass; task-close preflight: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/change/types.ts",
+      "src/change/diff-table.ts",
+      "src/change/tool.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/api/tools.ts",
+      "package.json"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki API facade changed",
+      "Pi package extension or skill metadata changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "6a7f41f8f823e4781016fb83608d72f84e5f269d"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-069",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "fe10af524a9d7d33920e245841f437e26dfec514",
+    "validated_sha": "fe10af524a9d7d33920e245841f437e26dfec514",
+    "tree_sha": "6a7f41f8f823e4781016fb83608d72f84e5f269d",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean task-close validation from committed TASK-069 implementation and implementation validation proof.",
+    "role": "validator"
+  }
+}
