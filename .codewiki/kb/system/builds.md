@@ -5,7 +5,7 @@ state: active
 summary: High-signal build contracts for decisions, knowledge, planning, implementation evidence, and state reconciliation.
 owners:
   - architecture
-updated: "2026-05-26"
+updated: "2026-05-31"
 code_paths:
   - src/build
   - src/validation/report.ts
@@ -46,11 +46,11 @@ Loop-level builds should include:
 - audit refs, assumptions, open questions, non-goals, risks, and agent assessment;
 - content proof when required, such as working-tree digest, tree SHA, commit SHA, package digest, archive ledger, or remote ref.
 
-Build policy may recommend `codewiki_resume_context` plus CodeWiki-owned compaction, context_refresh, or hard new_session at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
+Build policy may recommend `wiki_resume_context` plus CodeWiki-owned compaction, context_refresh, or hard new_session at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
 
 ## Loop-specific contracts
 
-A decision build contains the user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. Rows should come from a machine-readable decision surface such as `codewiki_diff_table`; interactive adapters should expose row-level approve, edit, reject, and defer actions instead of relying on prose-only approval.
+A decision build contains the user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. Rows should come from a machine-readable decision surface such as `wiki_diff_table`; interactive adapters should expose row-level approve, edit, reject, and defer actions instead of relying on prose-only approval. Workflow decision tools should support batched row approvals so a single user approval can be applied in one phase call.
 
 A planning build contains source decision refs, decision-gateway proof, task ids or task changes, accepted decision row/question resolutions, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping. Row/question resolutions use `decision_row_resolutions` and `downstream_question_resolutions` with `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` states. If planning discovers an undecided requirement, the build should block or route back to decision rather than encoding a guess.
 

@@ -89,13 +89,30 @@ export const CODEWIKI_DAEMON_BLOCK_KIND_VALUES = [
 	"validation_fail",
 	"validation_block",
 	"runtime_conflict",
+	"artifact_conflict",
 	"content_proof_missing",
 	"risk_approval_missing",
 	"budget_exhausted",
 	"user_input_required",
+	"planning_required",
+	"decision_required",
+	"validation_required",
 	"retry_limit",
 	"platform_limited",
 	"unknown",
+] as const;
+
+export const CODEWIKI_DAEMON_QUESTION_STATUS_VALUES = [
+	"open",
+	"answered",
+	"resolved",
+	"cancelled",
+] as const;
+
+export const CODEWIKI_DAEMON_BRAIN_LEASE_STATUS_VALUES = [
+	"active",
+	"stale",
+	"released",
 ] as const;
 
 export type CodewikiDaemonLoop = (typeof CODEWIKI_DAEMON_LOOP_VALUES)[number];
@@ -107,6 +124,65 @@ export type CodewikiDaemonRunOutcome =
 	(typeof CODEWIKI_DAEMON_RUN_OUTCOME_VALUES)[number];
 export type CodewikiDaemonBlockKind =
 	(typeof CODEWIKI_DAEMON_BLOCK_KIND_VALUES)[number];
+export type CodewikiDaemonQuestionStatus =
+	(typeof CODEWIKI_DAEMON_QUESTION_STATUS_VALUES)[number];
+export type CodewikiDaemonBrainLeaseStatus =
+	(typeof CODEWIKI_DAEMON_BRAIN_LEASE_STATUS_VALUES)[number];
+
+export interface CodewikiDaemonModelPolicy {
+	provider?: string;
+	model?: string;
+	thinking_level?: string;
+	fallback_model?: string;
+	max_tokens?: number;
+	max_cost_usd?: number;
+	risk?: string;
+	approval_refs: string[];
+	notes: string[];
+}
+
+export interface CodewikiDaemonWorkerProfile {
+	role?: string;
+	mode?: string;
+	reason?: string;
+	capabilities: string[];
+	notes: string[];
+}
+
+export interface CodewikiDaemonBrainLease {
+	status: CodewikiDaemonBrainLeaseStatus;
+	session_id: string;
+	session_file?: string;
+	agent_name?: string;
+	claimed_at: string;
+	updated_at: string;
+	heartbeat_at: string;
+	expires_at: string;
+	active_task_id?: string;
+	active_sprint_id?: string;
+	active_refs: string[];
+	model_policy?: CodewikiDaemonModelPolicy;
+	takeover_policy?: string;
+	notes: string[];
+}
+
+export interface CodewikiDaemonQuestionRecord {
+	id: string;
+	job_id: string;
+	run_id?: string;
+	status: CodewikiDaemonQuestionStatus;
+	asked_at: string;
+	updated_at: string;
+	question: string;
+	refs: string[];
+	attempted_evidence: string[];
+	options: string[];
+	answer?: string;
+	answered_by?: string;
+	answered_at?: string;
+	resolution?: string;
+	resolution_refs: string[];
+}
 
 export interface CodewikiDaemonCanonicalRefs {
 	roadmap_task?: string;
@@ -161,6 +237,8 @@ export interface CodewikiDaemonRunRecord {
 	status: CodewikiDaemonRunStatus;
 	loop: CodewikiDaemonLoop;
 	worker?: CodewikiDaemonWorkerRef;
+	worker_profile?: CodewikiDaemonWorkerProfile;
+	model_policy?: CodewikiDaemonModelPolicy;
 	started_at: string;
 	updated_at: string;
 	last_heartbeat_at?: string;
@@ -183,6 +261,8 @@ export interface CodewikiDaemonJobRecord {
 	task_id: string;
 	sprint_id?: string;
 	loop: CodewikiDaemonLoop;
+	worker_profile?: CodewikiDaemonWorkerProfile;
+	model_policy?: CodewikiDaemonModelPolicy;
 	created_at: string;
 	updated_at: string;
 	priority: string;
@@ -190,12 +270,14 @@ export interface CodewikiDaemonJobRecord {
 	source_refs: string[];
 	canonical_refs: CodewikiDaemonCanonicalRefs;
 	block_reason?: CodewikiDaemonBlockReason;
+	questions: CodewikiDaemonQuestionRecord[];
 	runs: CodewikiDaemonRunRecord[];
 }
 
 export interface CodewikiDaemonJobStore {
 	version: typeof CODEWIKI_DAEMON_JOB_STORE_VERSION;
 	updated_at: string;
+	brain_lease?: CodewikiDaemonBrainLease;
 	jobs: Record<string, CodewikiDaemonJobRecord>;
 }
 
@@ -209,12 +291,16 @@ export interface CreateCodewikiDaemonJobInput {
 	max_attempts?: number;
 	source_refs?: string[];
 	canonical_refs?: CodewikiDaemonCanonicalRefs;
+	worker_profile?: CodewikiDaemonWorkerProfile;
+	model_policy?: CodewikiDaemonModelPolicy;
 }
 
 export interface StartCodewikiDaemonRunInput {
 	run_id: string;
 	started_at: string;
 	worker?: CodewikiDaemonWorkerRef;
+	worker_profile?: CodewikiDaemonWorkerProfile;
+	model_policy?: CodewikiDaemonModelPolicy;
 	lease_expires_at?: string;
 	build_refs?: string[];
 	validation_refs?: string[];
@@ -237,6 +323,59 @@ export interface FinishCodewikiDaemonRunInput {
 	block_reason?: CodewikiDaemonBlockReason;
 	error?: string;
 	handoff?: Partial<CodewikiDaemonHandoffMetadata>;
+}
+
+export interface ClaimCodewikiDaemonBrainLeaseInput {
+	session_id: string;
+	now: string;
+	expires_at: string;
+	session_file?: string;
+	agent_name?: string;
+	active_task_id?: string;
+	active_sprint_id?: string;
+	active_refs?: string[];
+	model_policy?: CodewikiDaemonModelPolicy;
+	takeover_policy?: string;
+	notes?: string[];
+	allow_stale_takeover?: boolean;
+}
+
+export interface HeartbeatCodewikiDaemonBrainLeaseInput {
+	session_id: string;
+	at: string;
+	expires_at: string;
+	active_task_id?: string;
+	active_sprint_id?: string;
+	active_refs?: string[];
+	notes?: string[];
+}
+
+export interface AskCodewikiDaemonWorkerQuestionInput {
+	id: string;
+	run_id?: string;
+	asked_at: string;
+	question: string;
+	refs?: string[];
+	attempted_evidence?: string[];
+	options?: string[];
+	block_kind?: CodewikiDaemonBlockKind;
+	recommended_next_loop?: CodewikiDaemonLoop;
+}
+
+export interface AnswerCodewikiDaemonWorkerQuestionInput {
+	question_id: string;
+	answered_at: string;
+	answer: string;
+	answered_by?: string;
+	resolution?: string;
+	resolution_refs?: string[];
+}
+
+export interface UnblockCodewikiDaemonJobInput {
+	unblocked_at: string;
+	question_id?: string;
+	resolution?: string;
+	resolution_refs?: string[];
 }
 
 function uniqueStrings(values: unknown): string[] {
@@ -328,6 +467,132 @@ function normalizeWorker(value: any): CodewikiDaemonWorkerRef | undefined {
 	return Object.keys(worker).length ? worker : undefined;
 }
 
+function normalizeModelPolicy(
+	value: any,
+): CodewikiDaemonModelPolicy | undefined {
+	if (!value || typeof value !== "object") return undefined;
+	const policy: CodewikiDaemonModelPolicy = {
+		approval_refs: uniqueStrings(value.approval_refs),
+		notes: uniqueStrings(value.notes),
+	};
+	for (const key of [
+		"provider",
+		"model",
+		"thinking_level",
+		"fallback_model",
+		"risk",
+	] as const) {
+		const text = String(value[key] || "").trim();
+		if (text) policy[key] = text;
+	}
+	for (const key of ["max_tokens", "max_cost_usd"] as const) {
+		const number = Number(value[key]);
+		if (Number.isFinite(number) && number >= 0) policy[key] = number;
+	}
+	return Object.keys(policy).some((key) => {
+		const valueForKey = policy[key as keyof CodewikiDaemonModelPolicy];
+		return Array.isArray(valueForKey) ? valueForKey.length > 0 : valueForKey;
+	})
+		? policy
+		: undefined;
+}
+
+function normalizeWorkerProfile(
+	value: any,
+): CodewikiDaemonWorkerProfile | undefined {
+	if (!value || typeof value !== "object") return undefined;
+	const profile: CodewikiDaemonWorkerProfile = {
+		capabilities: uniqueStrings(value.capabilities),
+		notes: uniqueStrings(value.notes),
+	};
+	for (const key of ["role", "mode", "reason"] as const) {
+		const text = String(value[key] || "").trim();
+		if (text) profile[key] = text;
+	}
+	return Object.keys(profile).some((key) => {
+		const valueForKey = profile[key as keyof CodewikiDaemonWorkerProfile];
+		return Array.isArray(valueForKey) ? valueForKey.length > 0 : valueForKey;
+	})
+		? profile
+		: undefined;
+}
+
+function normalizeQuestion(
+	jobId: string,
+	value: any,
+): CodewikiDaemonQuestionRecord | null {
+	if (!value || typeof value !== "object") return null;
+	const id = String(value.id || "").trim();
+	const question = String(value.question || "").trim();
+	const askedAt = String(value.asked_at || value.updated_at || "").trim();
+	if (!id || !question || !askedAt) return null;
+	const status = isOneOf(CODEWIKI_DAEMON_QUESTION_STATUS_VALUES, value.status)
+		? value.status
+		: "open";
+	const runId = String(value.run_id || "").trim();
+	const answer = String(value.answer || "").trim();
+	const answeredBy = String(value.answered_by || "").trim();
+	const answeredAt = String(value.answered_at || "").trim();
+	const resolution = String(value.resolution || "").trim();
+	return {
+		id,
+		job_id: String(value.job_id || jobId).trim() || jobId,
+		...(runId ? { run_id: runId } : {}),
+		status,
+		asked_at: askedAt,
+		updated_at: String(value.updated_at || askedAt).trim(),
+		question,
+		refs: uniqueStrings(value.refs),
+		attempted_evidence: uniqueStrings(value.attempted_evidence),
+		options: uniqueStrings(value.options),
+		...(answer ? { answer } : {}),
+		...(answeredBy ? { answered_by: answeredBy } : {}),
+		...(answeredAt ? { answered_at: answeredAt } : {}),
+		...(resolution ? { resolution } : {}),
+		resolution_refs: uniqueStrings(value.resolution_refs),
+	};
+}
+
+function normalizeBrainLease(
+	value: any,
+	now: string,
+): CodewikiDaemonBrainLease | undefined {
+	if (!value || typeof value !== "object") return undefined;
+	const sessionId = String(value.session_id || "").trim();
+	if (!sessionId) return undefined;
+	const claimedAt = String(value.claimed_at || value.updated_at || now).trim();
+	const heartbeatAt = String(
+		value.heartbeat_at || value.updated_at || claimedAt,
+	).trim();
+	const expiresAt = String(value.expires_at || "").trim();
+	if (!expiresAt) return undefined;
+	const sessionFile = String(value.session_file || "").trim();
+	const agentName = String(value.agent_name || "").trim();
+	const activeTaskId = String(value.active_task_id || "").trim();
+	const activeSprintId = String(value.active_sprint_id || "").trim();
+	const takeoverPolicy = String(value.takeover_policy || "").trim();
+	return {
+		status: isOneOf(CODEWIKI_DAEMON_BRAIN_LEASE_STATUS_VALUES, value.status)
+			? value.status
+			: "active",
+		session_id: sessionId,
+		...(sessionFile ? { session_file: sessionFile } : {}),
+		...(agentName ? { agent_name: agentName } : {}),
+		claimed_at: claimedAt,
+		updated_at: String(value.updated_at || heartbeatAt).trim(),
+		heartbeat_at: heartbeatAt,
+		expires_at: expiresAt,
+		...(activeTaskId ? { active_task_id: activeTaskId } : {}),
+		...(activeSprintId ? { active_sprint_id: activeSprintId } : {}),
+		active_refs: uniqueStrings(value.active_refs),
+		...(normalizeModelPolicy(value.model_policy)
+			? { model_policy: normalizeModelPolicy(value.model_policy) }
+			: {}),
+		...(takeoverPolicy ? { takeover_policy: takeoverPolicy } : {}),
+		notes: uniqueStrings(value.notes),
+	};
+}
+
 function normalizeHeartbeat(value: any): CodewikiDaemonHeartbeatRecord | null {
 	if (!value || typeof value !== "object") return null;
 	const at = String(value.at || "").trim();
@@ -372,6 +637,12 @@ export function createCodewikiDaemonJob(
 		task_id: taskId,
 		...(input.sprint_id?.trim() ? { sprint_id: input.sprint_id.trim() } : {}),
 		loop: input.loop,
+		...(normalizeWorkerProfile(input.worker_profile)
+			? { worker_profile: normalizeWorkerProfile(input.worker_profile) }
+			: {}),
+		...(normalizeModelPolicy(input.model_policy)
+			? { model_policy: normalizeModelPolicy(input.model_policy) }
+			: {}),
 		created_at: input.created_at,
 		updated_at: input.created_at,
 		priority: input.priority?.trim() || "normal",
@@ -381,6 +652,7 @@ export function createCodewikiDaemonJob(
 			...(input.canonical_refs ?? {}),
 			roadmap_task: taskId,
 		}),
+		questions: [],
 		runs: [],
 	};
 }
@@ -421,6 +693,12 @@ export function normalizeCodewikiDaemonJobStore(
 				? { sprint_id: String(raw.sprint_id).trim() }
 				: {}),
 			loop: normalizeLoop(raw.loop),
+			...(normalizeWorkerProfile(raw.worker_profile)
+				? { worker_profile: normalizeWorkerProfile(raw.worker_profile) }
+				: {}),
+			...(normalizeModelPolicy(raw.model_policy)
+				? { model_policy: normalizeModelPolicy(raw.model_policy) }
+				: {}),
 			created_at: created,
 			updated_at: String(raw.updated_at || created).trim(),
 			priority: String(raw.priority || "normal").trim(),
@@ -433,13 +711,146 @@ export function normalizeCodewikiDaemonJobStore(
 			...(normalizeBlockReason(raw.block_reason)
 				? { block_reason: normalizeBlockReason(raw.block_reason) }
 				: {}),
+			questions: Array.isArray(raw.questions)
+				? raw.questions
+						.map((item: unknown) => normalizeQuestion(id, item))
+						.filter(
+							(
+								item: CodewikiDaemonQuestionRecord | null,
+							): item is CodewikiDaemonQuestionRecord => Boolean(item),
+						)
+				: [],
 			runs,
 		};
 	}
 	return {
 		version: CODEWIKI_DAEMON_JOB_STORE_VERSION,
 		updated_at: String(input?.updated_at || now).trim(),
+		...(normalizeBrainLease(input?.brain_lease, now)
+			? { brain_lease: normalizeBrainLease(input?.brain_lease, now) }
+			: {}),
 		jobs,
+	};
+}
+
+function parseIsoMs(value: string | undefined): number | null {
+	const ms = Date.parse(String(value || ""));
+	return Number.isFinite(ms) ? ms : null;
+}
+
+function brainLeaseActiveAt(
+	lease: CodewikiDaemonBrainLease | undefined,
+	now: string,
+): boolean {
+	if (!lease || lease.status !== "active") return false;
+	const expiresMs = parseIsoMs(lease.expires_at);
+	const nowMs = parseIsoMs(now);
+	return expiresMs !== null && nowMs !== null && expiresMs > nowMs;
+}
+
+export function claimCodewikiDaemonBrainLease(
+	storeInput: CodewikiDaemonJobStore,
+	input: ClaimCodewikiDaemonBrainLeaseInput,
+): CodewikiDaemonJobStore {
+	const store = normalizeCodewikiDaemonJobStore(storeInput, input.now);
+	const sessionId = input.session_id.trim();
+	if (!sessionId) throw new Error("brain lease session_id is required");
+	const current = store.brain_lease;
+	const sameSession = current?.session_id === sessionId;
+	if (current && !sameSession && brainLeaseActiveAt(current, input.now)) {
+		throw new Error(`brain lease already active: ${current.session_id}`);
+	}
+	if (current && !sameSession && !input.allow_stale_takeover) {
+		throw new Error(
+			`brain lease takeover requires stale takeover policy: ${current.session_id}`,
+		);
+	}
+	const claimedAt = sameSession ? current.claimed_at : input.now;
+	const lease: CodewikiDaemonBrainLease = {
+		status: "active",
+		session_id: sessionId,
+		...(input.session_file?.trim()
+			? { session_file: input.session_file.trim() }
+			: {}),
+		...(input.agent_name?.trim()
+			? { agent_name: input.agent_name.trim() }
+			: {}),
+		claimed_at: claimedAt,
+		updated_at: input.now,
+		heartbeat_at: input.now,
+		expires_at: input.expires_at,
+		...(input.active_task_id?.trim()
+			? { active_task_id: input.active_task_id.trim() }
+			: {}),
+		...(input.active_sprint_id?.trim()
+			? { active_sprint_id: input.active_sprint_id.trim() }
+			: {}),
+		active_refs: uniqueStrings(input.active_refs),
+		...(normalizeModelPolicy(input.model_policy)
+			? { model_policy: normalizeModelPolicy(input.model_policy) }
+			: {}),
+		...(input.takeover_policy?.trim()
+			? { takeover_policy: input.takeover_policy.trim() }
+			: {}),
+		notes: uniqueStrings(input.notes),
+	};
+	return { ...store, updated_at: input.now, brain_lease: lease };
+}
+
+export function heartbeatCodewikiDaemonBrainLease(
+	storeInput: CodewikiDaemonJobStore,
+	input: HeartbeatCodewikiDaemonBrainLeaseInput,
+): CodewikiDaemonJobStore {
+	const store = normalizeCodewikiDaemonJobStore(storeInput, input.at);
+	const lease = store.brain_lease;
+	if (!lease || lease.status !== "active") {
+		throw new Error("brain lease is not active");
+	}
+	if (lease.session_id !== input.session_id.trim()) {
+		throw new Error(`brain lease owned by ${lease.session_id}`);
+	}
+	if (!brainLeaseActiveAt(lease, input.at)) {
+		throw new Error(`brain lease expired: ${lease.session_id}`);
+	}
+	const updated: CodewikiDaemonBrainLease = {
+		...lease,
+		updated_at: input.at,
+		heartbeat_at: input.at,
+		expires_at: input.expires_at,
+		...(input.active_task_id?.trim()
+			? { active_task_id: input.active_task_id.trim() }
+			: {}),
+		...(input.active_sprint_id?.trim()
+			? { active_sprint_id: input.active_sprint_id.trim() }
+			: {}),
+		active_refs: input.active_refs
+			? uniqueStrings(input.active_refs)
+			: lease.active_refs,
+		notes: input.notes ? uniqueStrings(input.notes) : lease.notes,
+	};
+	return { ...store, updated_at: input.at, brain_lease: updated };
+}
+
+export function releaseCodewikiDaemonBrainLease(
+	storeInput: CodewikiDaemonJobStore,
+	sessionId: string,
+	releasedAt: string,
+): CodewikiDaemonJobStore {
+	const store = normalizeCodewikiDaemonJobStore(storeInput, releasedAt);
+	const lease = store.brain_lease;
+	if (!lease) return store;
+	if (lease.session_id !== sessionId.trim()) {
+		throw new Error(`brain lease owned by ${lease.session_id}`);
+	}
+	return {
+		...store,
+		updated_at: releasedAt,
+		brain_lease: {
+			...lease,
+			status: "released",
+			updated_at: releasedAt,
+			heartbeat_at: releasedAt,
+		},
 	};
 }
 
@@ -472,6 +883,12 @@ function normalizeCodewikiDaemonRun(
 		loop: normalizeLoop(raw.loop || jobLoop),
 		...(normalizeWorker(raw.worker)
 			? { worker: normalizeWorker(raw.worker) }
+			: {}),
+		...(normalizeWorkerProfile(raw.worker_profile)
+			? { worker_profile: normalizeWorkerProfile(raw.worker_profile) }
+			: {}),
+		...(normalizeModelPolicy(raw.model_policy)
+			? { model_policy: normalizeModelPolicy(raw.model_policy) }
 			: {}),
 		started_at: started,
 		updated_at: String(raw.updated_at || started).trim(),
@@ -507,6 +924,138 @@ function normalizeCodewikiDaemonRun(
 	};
 }
 
+function assertQuestionIdAvailable(
+	job: CodewikiDaemonJobRecord,
+	questionId: string,
+): void {
+	if (job.questions.some((question) => question.id === questionId)) {
+		throw new Error(`daemon question already exists: ${questionId}`);
+	}
+}
+
+export function askCodewikiDaemonWorkerQuestion(
+	job: CodewikiDaemonJobRecord,
+	input: AskCodewikiDaemonWorkerQuestionInput,
+): CodewikiDaemonJobRecord {
+	const id = input.id.trim();
+	const questionText = input.question.trim();
+	if (!id) throw new Error("daemon question id is required");
+	if (!questionText) throw new Error("daemon question text is required");
+	assertQuestionIdAvailable(job, id);
+	const question: CodewikiDaemonQuestionRecord = {
+		id,
+		job_id: job.id,
+		...(input.run_id?.trim() ? { run_id: input.run_id.trim() } : {}),
+		status: "open",
+		asked_at: input.asked_at,
+		updated_at: input.asked_at,
+		question: questionText,
+		refs: uniqueStrings(input.refs),
+		attempted_evidence: uniqueStrings(input.attempted_evidence),
+		options: uniqueStrings(input.options),
+		resolution_refs: [],
+	};
+	const blockReason: CodewikiDaemonBlockReason = {
+		kind: input.block_kind ?? "user_input_required",
+		summary: questionText,
+		refs: uniqueStrings([id, ...question.refs]),
+		...(input.recommended_next_loop
+			? { recommended_next_loop: input.recommended_next_loop }
+			: {}),
+		retryable: false,
+	};
+	const runs = job.runs.map((run) => {
+		if (input.run_id?.trim() && run.id !== input.run_id.trim()) return run;
+		if (!input.run_id?.trim() && run.status !== "running") return run;
+		if (run.status !== "running") return run;
+		return {
+			...run,
+			status: "blocked" as const,
+			updated_at: input.asked_at,
+			ended_at: input.asked_at,
+			outcome: "block" as const,
+			block_reason: blockReason,
+		};
+	});
+	return {
+		...job,
+		status: "blocked",
+		updated_at: input.asked_at,
+		block_reason: blockReason,
+		questions: [...job.questions, question],
+		runs,
+	};
+}
+
+export function answerCodewikiDaemonWorkerQuestion(
+	job: CodewikiDaemonJobRecord,
+	input: AnswerCodewikiDaemonWorkerQuestionInput,
+): CodewikiDaemonJobRecord {
+	let found = false;
+	const questions = job.questions.map((question) => {
+		if (question.id !== input.question_id.trim()) return question;
+		found = true;
+		const answer = input.answer.trim();
+		if (!answer) throw new Error("daemon question answer is required");
+		return {
+			...question,
+			status: input.resolution?.trim()
+				? ("resolved" as const)
+				: ("answered" as const),
+			updated_at: input.answered_at,
+			answer,
+			...(input.answered_by?.trim()
+				? { answered_by: input.answered_by.trim() }
+				: {}),
+			answered_at: input.answered_at,
+			...(input.resolution?.trim()
+				? { resolution: input.resolution.trim() }
+				: {}),
+			resolution_refs: uniqueStrings(input.resolution_refs),
+		};
+	});
+	if (!found)
+		throw new Error(`daemon question not found: ${input.question_id}`);
+	return {
+		...job,
+		updated_at: input.answered_at,
+		questions,
+	};
+}
+
+export function unblockCodewikiDaemonJob(
+	job: CodewikiDaemonJobRecord,
+	input: UnblockCodewikiDaemonJobInput,
+): CodewikiDaemonJobRecord {
+	if (job.status !== "blocked") return job;
+	let questions = job.questions;
+	if (input.question_id?.trim()) {
+		let found = false;
+		questions = job.questions.map((question) => {
+			if (question.id !== input.question_id?.trim()) return question;
+			found = true;
+			return {
+				...question,
+				status: "resolved" as const,
+				updated_at: input.unblocked_at,
+				...(input.resolution?.trim()
+					? { resolution: input.resolution.trim() }
+					: {}),
+				resolution_refs: uniqueStrings(input.resolution_refs),
+			};
+		});
+		if (!found)
+			throw new Error(`daemon question not found: ${input.question_id}`);
+	}
+	return {
+		...job,
+		status: "queued",
+		updated_at: input.unblocked_at,
+		block_reason: undefined,
+		questions,
+	};
+}
+
 function assertCanStartRun(job: CodewikiDaemonJobRecord): void {
 	if (["completed", "cancelled"].includes(job.status)) {
 		throw new Error(`daemon job ${job.id} is terminal: ${job.status}`);
@@ -535,6 +1084,20 @@ export function startCodewikiDaemonRun(
 		status: "running",
 		loop: job.loop,
 		...(input.worker ? { worker: normalizeWorker(input.worker) } : {}),
+		...(normalizeWorkerProfile(input.worker_profile ?? job.worker_profile)
+			? {
+					worker_profile: normalizeWorkerProfile(
+						input.worker_profile ?? job.worker_profile,
+					),
+				}
+			: {}),
+		...(normalizeModelPolicy(input.model_policy ?? job.model_policy)
+			? {
+					model_policy: normalizeModelPolicy(
+						input.model_policy ?? job.model_policy,
+					),
+				}
+			: {}),
 		started_at: input.started_at,
 		updated_at: input.started_at,
 		last_heartbeat_at: input.started_at,

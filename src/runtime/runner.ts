@@ -49,7 +49,9 @@ import {
 	type CodewikiDaemonJobStore,
 	type CodewikiDaemonRunRecord,
 	type CodewikiDaemonRunOutcome,
+	type CodewikiDaemonWorkerProfile,
 	type CodewikiDaemonWorkerRef,
+	type CodewikiDaemonModelPolicy,
 	type CodewikiRuntimeBudgetUsage,
 	type CodewikiRuntimePlan,
 	type CodewikiRuntimeResult,
@@ -484,9 +486,7 @@ async function runImplementationKickoff(
 		"context_assembly",
 	);
 	if (!contextCapability.ok) {
-		state.efficiency.platform_limited_steps.push(
-			...contextCapability.evidence,
-		);
+		state.efficiency.platform_limited_steps.push(...contextCapability.evidence);
 		state.efficiency.user_interruptions_required += 1;
 		return result(state, {
 			executed: false,
@@ -572,6 +572,8 @@ export interface CodewikiDaemonDispatcherTickInput {
 	store: unknown;
 	now: string;
 	worker?: CodewikiDaemonWorkerRef;
+	workerProfile?: CodewikiDaemonWorkerProfile;
+	modelPolicy?: CodewikiDaemonModelPolicy;
 	leaseTtlMs?: number;
 	staleAfterMs?: number;
 	heartbeatNote?: string;
@@ -762,6 +764,8 @@ export async function runCodewikiDaemonDispatcherTick(
 		run_id: runId,
 		started_at: input.now,
 		worker: input.worker,
+		worker_profile: input.workerProfile,
+		model_policy: input.modelPolicy,
 		lease_expires_at: addMsIso(input.now, leaseTtlMs),
 	});
 	runningJob = heartbeatCodewikiDaemonRun(runningJob, runId, {

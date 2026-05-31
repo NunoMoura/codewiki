@@ -5,7 +5,7 @@ state: active
 summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
 owners:
   - architecture
-updated: "2026-05-27"
+updated: "2026-05-31"
 ---
 
 # CodeWiki API
@@ -14,7 +14,7 @@ updated: "2026-05-27"
 
 The CodeWiki API is the stable semantic contract implemented as `src/api/**` facade modules over focused concept use cases and agent-facing tools. Adapters, scripts, the local CodeWiki UI, CLI/MCP wrappers, skill helper tools, and future harness integrations call this facade or named concept contracts. Pi tools are one adapter over this API; they must not be the only way to access CodeWiki semantics.
 
-The API should expose CodeWiki operations as typed capabilities instead of asking external access surfaces to edit `.codewiki/` internals directly.
+The API should expose CodeWiki operations as typed capabilities instead of asking external access surfaces to edit `.codewiki/` internals directly. Public and agent-facing tool names use the `wiki_<name>` convention consistently; internal package capability identifiers may keep the `codewiki.*` namespace when they describe code-level modules rather than callable tools.
 
 ## Capability groups
 
@@ -42,7 +42,7 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 
 ## vNext tool surface
 
-The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). This overview keeps the stable API boundary, access surfaces, and write rules compact.
+The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). The preferred public/agent surface is a small set of `wiki_<name>` workflow capabilities for state, decide, plan, implement, gate, and runtime; low-level primitives are internal, compatibility, audit, or expert/debug surfaces. There is no generic maintenance tool because deterministic repair belongs to state/runtime postconditions and semantic repair routes through the correct compiler or gate. This overview keeps the stable API boundary, access surfaces, and write rules compact.
 
 ## Access paths
 
@@ -77,8 +77,10 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - CodeWiki builds on Pi Code as its primary runtime foundation dependency. Pi Code is not merely an external harness adapter. Optional model/runtime plug points may be added only through explicit capability/support contracts that preserve CodeWiki roadmap, build, validation, worktree, and proof semantics.
 - Session-boundary callers must provide reason, source refs, expected output, mode, agency level, and approval cadence when agency owns continuation. CodeWiki-owned compaction and `context_refresh` are same-agent soft context hygiene seeded by `wiki_resume_context`; `new_session` is hard replacement-session hygiene when policy needs it; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. The daemon refactor should make fresh loop continuation durable by queueing pass-boundary jobs and spawning Pi Code-backed sessions from build and validation refs instead of depending on same-chat auto-pickup.
 - Tool-context Pi boundaries must return visible results and must not call `ctx.compact()` before the agent sees them. Normal CodeWiki continuation uses `wiki_resume_context` directly or through CodeWiki-owned compaction, not VCC recall, generic Pi compaction, or injected slash-command chat. Pi `sendUserMessage` follow-ups do not execute registered slash commands, so adapter code must not inject legacy `/wiki-session-handoff` text as a recovery mechanism. Same-session auto-pickup after CodeWiki compaction must use a source-backed custom kickoff or equivalent user-role-safe boundary with `triggerTurn=true`; if the adapter cannot guarantee that boundary, it must block or show fallback instructions instead of calling continuation from an assistant leaf.
-- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth. Decision rows may carry optional lifecycle fields for current project state, agreed change, expected final state, validated final state, status, and proof refs; legacy `current_state`/`desired_state` rows remain valid and are normalized into the richer shape. The CodeWiki UI, Pi TUI, and compact status-panel diff affordances can show row/task cards and approve, edit, reject, defer, or attach alternatives to pending rows before builds are compiled.
+- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth. Decision rows may carry optional lifecycle fields for current project state, agreed change, expected final state, validated final state, status, and proof refs; legacy `current_state`/`desired_state` rows remain valid and are normalized into the richer shape. The CodeWiki UI, Pi TUI, and compact status-panel diff affordances can show row/task cards and approve, edit, reject, defer, or attach alternatives to pending rows before builds are compiled. Workflow tools should batch common row decisions so accepting, rejecting, editing, or deferring multiple rows is one phase call rather than one tool call per row.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
+- Workflow tools should return compact envelopes with `summary`, `status` or `verdict`, `changed_refs`, `artifact_refs`, `next_actions`, `blocking_questions`, and optional `details_ref`. Large machine payloads should live in source refs instead of flooding chat.
+- Batch-capable workflow writes must support dry-run or preflight where meaningful, source-fingerprint checks, idempotency keys for daemon retries, exact changed refs, and explicit partial-failure recovery guidance.
 - During CodeWiki self-refactors, deprecated aliases and shim tools are removed when a direct replacement exists; if callers break, fix them at the replacement surface instead of keeping compatibility wrappers.
 - Config schema v4 defines quiet rebuild defaults, scoped agency budgets, agency level/approval cadence, context reset auto-pickup policy, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
 - Tracked CodeWiki garbage collection must run after an archive/close/publication commit exists. The GC capability requires archive commit/tree proof, supports dry-run, writes a restore ledger with removed paths and `git restore --source=<archive-sha> -- <path>` commands, and applies tracked deletions only in a separate GC commit.

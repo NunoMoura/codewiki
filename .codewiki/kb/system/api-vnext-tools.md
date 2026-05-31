@@ -5,7 +5,7 @@ state: active
 summary: Preferred reduced public commands and agent workflow tools for the CodeWiki API.
 owners:
   - architecture
-updated: "2026-05-27"
+updated: "2026-05-31"
 diagram_refs:
   - component-map:api
 ---
@@ -24,25 +24,27 @@ Preferred public/user-facing commands:
 | --- | --- |
 | `/wiki status` | Read current project state, health, next action, and active blockers. |
 | `/wiki decide` | Capture or approve semantic decisions at the right abstraction layer. |
-| `/wiki work` | Run one bounded planning/implementation/closure step under gates. |
-| `/wiki audit` | Run deterministic audits or validation-ready checks. |
-| `/wiki maintain` | Refresh generated state, run safe GC planning, or repair non-semantic drift. |
+| `/wiki plan` | Align accepted decisions with roadmap tasks, sprint scope, execution graph metadata, and planning builds. |
+| `/wiki implement` | Run one bounded implementation step for an executable roadmap item under gates. |
+| `/wiki gate` | Run deterministic audits, validation gateways, and proof preflights. |
+| `/wiki runtime` | Operate approved runtime/daemon scheduling, worker jobs, Brain leases, and block/unblock flows. |
 
-Preferred agent workflow tools:
+There is no generic maintenance command or fix-all maintenance tool. Deterministic generated-state repair is part of state reads and write postconditions. Semantic drift routes to decision, planning, implementation, or validation gates. Runtime cleanup belongs to runtime. Archive and retention cleanup remain targeted lifecycle operations such as `wiki_gc` after archive proof exists.
 
-| Tool | Responsibility |
+Preferred agent workflow capabilities:
+
+| Capability | Responsibility |
 | --- | --- |
-| `codewiki_state` | Compact state/graph/task/session read. |
-| `codewiki_resume_context` | High-signal continuation packet for current sessions, CodeWiki-owned compaction, or fresh sessions. |
-| `codewiki_decision` | Decision proposal, approval, KB update, and decision-build orchestration. |
-| `codewiki_work` | Planning/implementation/closure orchestration for one bounded work item. |
-| `codewiki_gate` | Preflight, audit, validation, and policy checks. |
-| `codewiki_maintenance` | Generated-state refresh, GC, archive, and non-semantic repair. |
-| `codewiki_coordination` | Artifact status, waits/wakes, context boundaries, handoffs, and isolation coordination. |
+| State | Graph-indexed state, resume, trace, execution, audit, daemon-context, and source-ref lenses. |
+| Decide | Decision proposal, batch row approve/edit/reject/defer, KB mapping, and decision-build orchestration. |
+| Plan | Planning-build creation, roadmap refinement, sprint/task propagation, execution graph metadata, and model policy proposals. |
+| Implement | Bounded implementation evidence, checks, changed refs, and implementation-build preparation for one executable item. |
+| Gate | Audits, validation gateways, proof preflights, and pass/fail/block reports. |
+| Runtime | Brain lease, daemon jobs/runs, worker scheduling, artifact claims, durable questions/block/unblock, model allocation, retries, and worker lifecycle. |
 
-Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session-boundary staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them.
+These capabilities use `wiki_<name>` tool names when implemented and exposed. Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session-boundary staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them. Targeted lifecycle tools such as `wiki_gc` may remain available for explicit archive/retention work, but they are not a generic repair surface.
 
-Each workflow tool owns one user-level phase and exposes source refs, policy outcomes, and recovery steps; no opaque do-everything API.
+Each workflow tool owns one user-level phase, supports batched common operations, exposes source refs, policy outcomes, and recovery steps, and avoids becoming an opaque do-everything API.
 
 ## Related docs
 

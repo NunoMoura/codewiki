@@ -6,7 +6,7 @@ summary: Decision classification and propagation rules for semantic CodeWiki cha
 owners:
   - architecture
   - product
-updated: "2026-05-26"
+updated: "2026-05-31"
 ---
 
 # Change Lifecycle
@@ -17,7 +17,7 @@ The target of an intended change can be product behavior, system design, archite
 
 When the decision loop proposes a change, the user should see a diff table before canonical edits are applied. Each row shows current state, proposed state, rationale, affected docs or code, risk, and a user action such as approve, edit, reject, or defer. The table makes clear which components are targeted and how the change impacts adjacent layers.
 
-Accepted rows compile into a decision build. The state engine then routes the accepted change to the next needed loop: planning, implementation, validation, or observe. Chat history is continuity only; builds, KB, roadmap, code, checks, and validation artifacts are the source of truth. Agents should use `codewiki_resume_context` for fresh high-signal continuation and may run CodeWiki-owned compaction, new_session, or context_refresh when context becomes noisy, stale, token-heavy, or reaches a loop boundary, but they must restart from CodeWiki source refs rather than unstated chat memory. VCC recall and generic Pi compaction are recovery/overflow fallbacks, not normal CodeWiki memory. Handoff means transfer to another session, agent, or role.
+Accepted rows compile into a decision build. The state engine then routes the accepted change to the next needed loop: planning, implementation, validation, or observe. Chat history is continuity only; builds, KB, roadmap, code, checks, and validation artifacts are the source of truth. Agents should use `wiki_resume_context` for fresh high-signal continuation and may run CodeWiki-owned compaction, new_session, or context_refresh when context becomes noisy, stale, token-heavy, or reaches a loop boundary, but they must restart from CodeWiki source refs rather than unstated chat memory. VCC recall and generic Pi compaction are recovery/overflow fallbacks, not normal CodeWiki memory. Handoff means transfer to another session, agent, or role.
 
 Validation preflight classifies risk before lower-layer promotion. Mechanical/docs and code-local changes can continue on the low-risk fast path only when gateway audits and content proof are complete; semantic-system changes must trace to accepted decision/planning evidence; security, migration, publication, release, and destructive changes require explicit user approval evidence before promotion.
 

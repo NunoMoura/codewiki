@@ -2,11 +2,17 @@ import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import {
 	CODEWIKI_DAEMON_JOB_STORE_PATH,
+	answerCodewikiDaemonWorkerQuestion,
+	askCodewikiDaemonWorkerQuestion,
+	claimCodewikiDaemonBrainLease,
 	createCodewikiDaemonJob,
 	finishCodewikiDaemonRun,
+	heartbeatCodewikiDaemonBrainLease,
 	heartbeatCodewikiDaemonRun,
 	normalizeCodewikiDaemonJobStore,
+	releaseCodewikiDaemonBrainLease,
 	startCodewikiDaemonRun,
+	unblockCodewikiDaemonJob,
 } from "../../src/runtime/types.ts";
 
 const createdAt = "2026-05-30T00:00:00.000Z";
@@ -166,4 +172,149 @@ const createdAt = "2026-05-30T00:00:00.000Z";
 			}),
 		/max_attempts=2/,
 	);
+}
+
+{
+	let store = normalizeCodewikiDaemonJobStore(
+		{ version: 1, updated_at: createdAt, jobs: {} },
+		createdAt,
+	);
+	store = claimCodewikiDaemonBrainLease(store, {
+		session_id: "brain-session",
+		session_file: ".pi/sessions/brain.json",
+		agent_name: "Brain",
+		now: "2026-05-30T02:00:00.000Z",
+		expires_at: "2026-05-30T02:05:00.000Z",
+		active_task_id: "TASK-070",
+		active_sprint_id: "SPRINT-018",
+		active_refs: ["TASK-070", "SPRINT-018", "TASK-070"],
+		model_policy: {
+			provider: "pi",
+			model: "strong-model",
+			fallback_model: "fast-model",
+			approval_refs: ["decision:TOOLS-CORE-003"],
+			notes: ["high-risk runtime task"],
+		},
+		takeover_policy: "stale-only",
+	});
+	assert.equal(store.brain_lease?.status, "active");
+	assert.equal(store.brain_lease?.session_id, "brain-session");
+	assert.equal(store.brain_lease?.active_task_id, "TASK-070");
+	assert.deepEqual(store.brain_lease?.active_refs, ["TASK-070", "SPRINT-018"]);
+	assert.equal(store.brain_lease?.model_policy?.fallback_model, "fast-model");
+	assert.throws(
+		() =>
+			claimCodewikiDaemonBrainLease(store, {
+				session_id: "other-brain",
+				now: "2026-05-30T02:01:00.000Z",
+				expires_at: "2026-05-30T02:06:00.000Z",
+			}),
+		/already active/,
+	);
+	store = heartbeatCodewikiDaemonBrainLease(store, {
+		session_id: "brain-session",
+		at: "2026-05-30T02:02:00.000Z",
+		expires_at: "2026-05-30T02:07:00.000Z",
+		active_refs: ["TASK-070", "runtime-foundation"],
+	});
+	assert.equal(store.brain_lease?.heartbeat_at, "2026-05-30T02:02:00.000Z");
+	assert.deepEqual(store.brain_lease?.active_refs, [
+		"TASK-070",
+		"runtime-foundation",
+	]);
+	assert.throws(
+		() =>
+			claimCodewikiDaemonBrainLease(store, {
+				session_id: "replacement-brain",
+				now: "2026-05-30T02:08:00.000Z",
+				expires_at: "2026-05-30T02:13:00.000Z",
+			}),
+		/stale takeover policy/,
+	);
+	store = claimCodewikiDaemonBrainLease(store, {
+		session_id: "replacement-brain",
+		now: "2026-05-30T02:08:00.000Z",
+		expires_at: "2026-05-30T02:13:00.000Z",
+		allow_stale_takeover: true,
+		notes: ["previous heartbeat expired"],
+	});
+	assert.equal(store.brain_lease?.session_id, "replacement-brain");
+	store = releaseCodewikiDaemonBrainLease(
+		store,
+		"replacement-brain",
+		"2026-05-30T02:09:00.000Z",
+	);
+	assert.equal(store.brain_lease?.status, "released");
+}
+
+{
+	let job = createCodewikiDaemonJob({
+		id: "JOB-QUESTION",
+		task_id: "TASK-070",
+		loop: "implementation",
+		created_at: createdAt,
+		max_attempts: 2,
+		worker_profile: {
+			role: "builder",
+			mode: "implementation",
+			capabilities: ["runtime-scheduler"],
+			notes: ["run-scoped worker"],
+		},
+		model_policy: {
+			provider: "pi",
+			model: "strong-model",
+			fallback_model: "fast-model",
+			max_tokens: 12000,
+			max_cost_usd: 1.5,
+			risk: "high",
+			approval_refs: ["decision:BRAIN-WORKER-004"],
+			notes: ["runtime model policy"],
+		},
+	});
+	assert.equal(job.model_policy?.model, "strong-model");
+	job = startCodewikiDaemonRun(job, {
+		run_id: "RUN-QUESTION-1",
+		started_at: "2026-05-30T03:00:00.000Z",
+	});
+	assert.equal(job.runs[0].worker_profile?.role, "builder");
+	assert.equal(job.runs[0].model_policy?.fallback_model, "fast-model");
+	job = askCodewikiDaemonWorkerQuestion(job, {
+		id: "Q-001",
+		run_id: "RUN-QUESTION-1",
+		asked_at: "2026-05-30T03:01:00.000Z",
+		question: "Should worker reroute to planning or continue?",
+		refs: [".codewiki/kb/system/runtime.md"],
+		attempted_evidence: ["runtime tests read"],
+		options: ["continue", "route-to-planning"],
+		block_kind: "planning_required",
+		recommended_next_loop: "planning",
+	});
+	assert.equal(job.status, "blocked");
+	assert.equal(job.block_reason?.kind, "planning_required");
+	assert.equal(job.block_reason?.retryable, false);
+	assert.equal(job.questions[0].status, "open");
+	assert.equal(job.runs[0].status, "blocked");
+	job = answerCodewikiDaemonWorkerQuestion(job, {
+		question_id: "Q-001",
+		answered_at: "2026-05-30T03:02:00.000Z",
+		answer: "Continue inside TASK-070; execution graph schema is deferred.",
+		answered_by: "brain-session",
+	});
+	assert.equal(job.questions[0].status, "answered");
+	job = unblockCodewikiDaemonJob(job, {
+		question_id: "Q-001",
+		unblocked_at: "2026-05-30T03:03:00.000Z",
+		resolution: "Continue TASK-070 runtime foundation only.",
+		resolution_refs: ["SPRINT-018"],
+	});
+	assert.equal(job.status, "queued");
+	assert.equal(job.block_reason, undefined);
+	assert.equal(job.questions[0].status, "resolved");
+	assert.deepEqual(job.questions[0].resolution_refs, ["SPRINT-018"]);
+	job = startCodewikiDaemonRun(job, {
+		run_id: "RUN-QUESTION-2",
+		started_at: "2026-05-30T03:04:00.000Z",
+	});
+	assert.equal(job.status, "running");
+	assert.equal(job.runs[1].attempt, 2);
 }

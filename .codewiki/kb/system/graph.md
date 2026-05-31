@@ -5,7 +5,7 @@ state: active
 summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
 owners:
   - architecture
-updated: "2026-05-27"
+updated: "2026-05-31"
 ---
 
 # Graph
@@ -21,6 +21,8 @@ The graph does not decide intended behavior and does not replace source-of-truth
 The graph is the operational state machine for CodeWiki and the generated linker between docs, roadmap, builds, validation, code, tests, and proofs. Markov-chain or Markov Decision Process language is an analytical lens over graph-derived transitions, not a replacement for the graph, because the graph must retain source refs, traceability, evidence ownership, and proof relationships.
 
 Alignment is sourced from cycle builds, KB docs, planning builds, roadmap tasks, tests/code, implementation builds, validation attestations, audit evidence, commits, and publication content proofs. The graph reports alignment gaps; it does not own requirements or solve alignment by itself.
+
+Agent access is graph-centered for reads and routing. Agents ask graph/state first for current project map, next safe action, relevant refs, drift, blockers, daemon context, and context boundaries. Agents then read or edit canonical source refs directly through the proper decision, planning, implementation, gate, runtime, or lifecycle operation. The graph is the project's fresh index and state machine, not the owner of semantic truth.
 
 ## Inputs
 
@@ -64,7 +66,9 @@ Decision -> Knowledge -> Work -> Execution -> Proof
 
 Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse non-next-action build/validation internals into badges.
 
-Generated graph projections live under `views.lenses`: `default` serves status/Control Room, `trace` expands requirement and source refs, and `audit` expands validation, isolation, audit, proof, reconciliation, and traceability gaps. These lenses are generated read models only.
+Generated graph projections live under `views.lenses`: `default` serves status/Control Room, `trace` expands requirement and source refs, `audit` expands validation, isolation, audit, proof, reconciliation, and traceability gaps, and `execution` exposes planning-owned dependency/order/conflict/model-policy metadata plus runtime job state for daemon scheduling. These lenses are generated read models only.
+
+The execution graph is a lens over planning and runtime state, not a separate truth store. Planning owns sprint/task dependencies, parallel waves, conflict scopes, validation gates, and model-policy intent. Runtime owns jobs, runs, Brain leases, worker questions, heartbeats, retries, and block/unblock state. The generated graph indexes both so agents can schedule work without creating a second competing graph.
 
 ## System diagram nodes
 
@@ -110,6 +114,18 @@ Graph edges should explain why context is relevant. Useful edge kinds include:
 - `build_produces_*`,
 - `requirement_*` traceability edges.
 
+## Drift categories
+
+Graph reconciliation should classify drift in the same state machine used by status, resume, gates, and runtime scheduling:
+
+- `vertical_propagation_drift`: accepted intent has not propagated through the expected decision, knowledge, roadmap, implementation, validation, or proof layer.
+- `horizontal_contradiction`: product, system, diagrams, roadmap, code, tests, or validation disagree at the same abstraction level.
+- `generated_state_stale`: generated graph/view output does not match canonical input fingerprints.
+- `proof_mismatch`: validation, commit, tree, package, archive, or remote proof does not attest to the content it claims.
+- `runtime_coordination_conflict`: leases, jobs, waits, worktrees, or publisher state conflict with the selected action.
+
+Hard drift blocks lower-layer execution until the correct loop or runtime operation resolves it. Validators still decide pass, fail, or block; the graph supplies the shared routing and evidence map.
+
 ## Freshness
 
 Generated state is valid only when it matches source fingerprints. If generated state and canonical inputs disagree, canonical inputs win and the graph is stale or broken. If a validation report asserts content that the checked tree, commit, package digest, or canonical files do not contain, the content proof wins and the validation report is stale or invalid.
@@ -118,7 +134,7 @@ Freshness anchors must ignore generated graph/view artifacts such as `.codewiki/
 
 Freshness should use deterministic input fingerprints rather than volatile generated timestamps or a final commit SHA that cannot be known before publication. Spec/doc freshness must include source content or a reliable source digest; otherwise docs changes can avoid stale detection.
 
-Status, `codewiki_state`, and CodeWiki UI views must consume the generated-state reconciliation next action when it is non-observe. They may summarize lint or spec drift, but they must not report a separate unresolved drift action while generated-state reconciliation reports the system is aligned. Actionable deterministic lint drift should enter state reconciliation unless an open roadmap task already covers that spec path. Advisory lint signals, such as large-document token-budget warnings, may keep health yellow without forcing a compiler route.
+Status, `wiki_state`, and CodeWiki UI views must consume the generated-state reconciliation next action when it is non-observe. They may summarize lint or spec drift, but they must not report a separate unresolved drift action while generated-state reconciliation reports the system is aligned. Actionable deterministic lint drift should enter state reconciliation unless an open roadmap task already covers that spec path. Advisory lint signals, such as large-document token-budget warnings, may keep health yellow without forcing a compiler route.
 
 ## Invariants
 

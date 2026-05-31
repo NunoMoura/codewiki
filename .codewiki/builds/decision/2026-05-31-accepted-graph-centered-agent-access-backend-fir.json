@@ -1,0 +1,1278 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-31T06:27:47Z",
+  "source": "User approvals in DT-2026-05-31-29, DT-2026-05-31-30, DT-2026-05-31-31, DT-2026-05-31-32, and DT-2026-05-31-33.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-30T06:27:47.000Z",
+    "purge_after": "2026-07-30T06:27:47.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted graph-centered agent access, backend-first worker daemon scheduling, and efficient wiki_<name> tool surface.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "BRAIN-WORKER-001",
+      "current_state": "No durable worker-to-Brain escalation protocol.",
+      "current_project_state": "No durable worker-to-Brain escalation protocol.",
+      "desired_state": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "agreed_change": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "expected_final_state": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Preserve work without chat-memory coupling.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "roadmap",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-002",
+      "current_state": "Brain role could be inferred from first open session.",
+      "current_project_state": "Brain role could be inferred from first open session.",
+      "desired_state": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "agreed_change": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "expected_final_state": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid brittle implicit conductor election.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "adapters"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-003",
+      "current_state": "Planning did not produce scheduler-grade execution metadata.",
+      "current_project_state": "Planning did not produce scheduler-grade execution metadata.",
+      "desired_state": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "agreed_change": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "expected_final_state": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Parallel automation needs dependency and conflict reasoning.",
+      "affected_layers": [
+        "planning",
+        "roadmap",
+        "runtime",
+        "validation"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-004",
+      "current_state": "Workers inherited default models.",
+      "current_project_state": "Workers inherited default models.",
+      "desired_state": "Planning/runtime records model policy per job/task.",
+      "agreed_change": "Planning/runtime records model policy per job/task.",
+      "expected_final_state": "Planning/runtime records model policy per job/task.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Compute allocation becomes auditable.",
+      "affected_layers": [
+        "runtime",
+        "planning",
+        "policy",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-005",
+      "current_state": "Worker sessions could remain open after work.",
+      "current_project_state": "Worker sessions could remain open after work.",
+      "desired_state": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "agreed_change": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "expected_final_state": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Keep state in CodeWiki refs, not idle chats.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-006",
+      "current_state": "Worker clarifications/model upgrades could blur boundaries.",
+      "current_project_state": "Worker clarifications/model upgrades could blur boundaries.",
+      "desired_state": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "agreed_change": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "expected_final_state": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Preserve compiler/gateway policy.",
+      "affected_layers": [
+        "policy",
+        "runtime",
+        "validation",
+        "decision"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-007",
+      "current_state": "Full parallel worker spawning could be first slice.",
+      "current_project_state": "Full parallel worker spawning could be first slice.",
+      "desired_state": "Implement safe precursor semantics before full parallel execution.",
+      "agreed_change": "Implement safe precursor semantics before full parallel execution.",
+      "expected_final_state": "Implement safe precursor semantics before full parallel execution.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "De-risk automation.",
+      "affected_layers": [
+        "runtime",
+        "roadmap",
+        "validation",
+        "tests"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-ACCESS-001",
+      "current_state": "Agent access was partly scattered across tools/files.",
+      "current_project_state": "Agent access was partly scattered across tools/files.",
+      "desired_state": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "agreed_change": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "expected_final_state": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Simplify agent startup while keeping source refs canonical.",
+      "affected_layers": [
+        "system",
+        "graph",
+        "api",
+        "agents",
+        "runtime"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-LENSES-002",
+      "current_state": "Traceability and execution graph concepts could become separate stores.",
+      "current_project_state": "Traceability and execution graph concepts could become separate stores.",
+      "desired_state": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "agreed_change": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "expected_final_state": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid competing graph truth.",
+      "affected_layers": [
+        "graph",
+        "planning",
+        "runtime",
+        "validation"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-QUERY-004",
+      "current_state": "Graph query shapes were not unified.",
+      "current_project_state": "Graph query shapes were not unified.",
+      "desired_state": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "agreed_change": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "expected_final_state": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Reduce repeated scans and context waste.",
+      "affected_layers": [
+        "api",
+        "graph",
+        "state",
+        "agents"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "DRIFT-STATE-005",
+      "current_state": "Drift categories were implicit.",
+      "current_project_state": "Drift categories were implicit.",
+      "desired_state": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "agreed_change": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "expected_final_state": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Shared routing gate for agents/UI/audits.",
+      "affected_layers": [
+        "graph",
+        "alignment",
+        "validation",
+        "runtime"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "DAEMON-PRIORITY-001",
+      "current_state": "Board/UX could precede backend scheduling.",
+      "current_project_state": "Board/UX could precede backend scheduling.",
+      "desired_state": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "agreed_change": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "expected_final_state": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Scheduling unlocks efficient roadmap execution.",
+      "affected_layers": [
+        "runtime",
+        "planning",
+        "roadmap",
+        "graph",
+        "session",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-001",
+      "current_state": "Common workflows require repeated low-level calls.",
+      "current_project_state": "Common workflows require repeated low-level calls.",
+      "desired_state": "Workflow tools batch common phase operations.",
+      "agreed_change": "Workflow tools batch common phase operations.",
+      "expected_final_state": "Workflow tools batch common phase operations.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Reduce tool-call overhead.",
+      "affected_layers": [
+        "api",
+        "decision",
+        "session",
+        "runtime",
+        "agents"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-002",
+      "current_state": "Agents may call many tools/read many files for state.",
+      "current_project_state": "Agents may call many tools/read many files for state.",
+      "desired_state": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "agreed_change": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "expected_final_state": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Cheaper safer kickoff/resume.",
+      "affected_layers": [
+        "graph",
+        "state",
+        "api",
+        "runtime"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-003",
+      "current_state": "Many low-level primitives are public/agent-visible.",
+      "current_project_state": "Many low-level primitives are public/agent-visible.",
+      "desired_state": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "agreed_change": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "expected_final_state": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Small phase tools are easier than many primitives or one mega-tool.",
+      "affected_layers": [
+        "api",
+        "runtime",
+        "adapters",
+        "skills"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-004",
+      "current_state": "Tool outputs can dump verbose payloads into chat.",
+      "current_project_state": "Tool outputs can dump verbose payloads into chat.",
+      "desired_state": "Workflow tools return compact envelopes and write details to refs.",
+      "agreed_change": "Workflow tools return compact envelopes and write details to refs.",
+      "expected_final_state": "Workflow tools return compact envelopes and write details to refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Keep transcripts small and recoverable.",
+      "affected_layers": [
+        "api",
+        "adapters",
+        "runtime",
+        "state"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-005",
+      "current_state": "Low-level sequences are not retry-safe.",
+      "current_project_state": "Low-level sequences are not retry-safe.",
+      "desired_state": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "agreed_change": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "expected_final_state": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Daemon automation needs retries.",
+      "affected_layers": [
+        "api",
+        "runtime",
+        "session",
+        "validation",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-NAME-001",
+      "current_state": "Some vNext proposals used codewiki_* names for tools.",
+      "current_project_state": "Some vNext proposals used codewiki_* names for tools.",
+      "desired_state": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "agreed_change": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "expected_final_state": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Improves tool selection.",
+      "affected_layers": [
+        "api",
+        "adapters",
+        "skills",
+        "runtime"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-MAINTAIN-002",
+      "current_state": "Generic maintenance/fix-all tool was proposed.",
+      "current_project_state": "Generic maintenance/fix-all tool was proposed.",
+      "desired_state": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "agreed_change": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "expected_final_state": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid vague hidden side effects.",
+      "affected_layers": [
+        "api",
+        "graph",
+        "runtime",
+        "validation",
+        "gc"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-CORE-003",
+      "current_state": "Future tool surface lacked final scope.",
+      "current_project_state": "Future tool surface lacked final scope.",
+      "desired_state": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "agreed_change": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "expected_final_state": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Efficient specialized phase-aligned tool surface.",
+      "affected_layers": [
+        "api",
+        "compilers",
+        "runtime",
+        "skills",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "BRAIN-WORKER-001",
+    "BRAIN-WORKER-002",
+    "BRAIN-WORKER-003",
+    "BRAIN-WORKER-004",
+    "BRAIN-WORKER-005",
+    "BRAIN-WORKER-006",
+    "BRAIN-WORKER-007",
+    "GRAPH-ACCESS-001",
+    "GRAPH-LENSES-002",
+    "GRAPH-QUERY-004",
+    "DRIFT-STATE-005",
+    "DAEMON-PRIORITY-001",
+    "TOOLS-EFF-001",
+    "TOOLS-EFF-002",
+    "TOOLS-EFF-003",
+    "TOOLS-EFF-004",
+    "TOOLS-EFF-005",
+    "TOOLS-NAME-001",
+    "TOOLS-MAINTAIN-002",
+    "TOOLS-CORE-003"
+  ],
+  "approved_rows": [
+    {
+      "id": "BRAIN-WORKER-001",
+      "current_state": "No durable worker-to-Brain escalation protocol.",
+      "current_project_state": "No durable worker-to-Brain escalation protocol.",
+      "desired_state": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "agreed_change": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "expected_final_state": "Workers ask through job/run question/block records; Brain answers durably and unblocks or reroutes.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Preserve work without chat-memory coupling.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "roadmap",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-002",
+      "current_state": "Brain role could be inferred from first open session.",
+      "current_project_state": "Brain role could be inferred from first open session.",
+      "desired_state": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "agreed_change": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "expected_final_state": "Brain role is durable lease with heartbeat, session refs, active sprint refs, and takeover policy.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid brittle implicit conductor election.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "adapters"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-003",
+      "current_state": "Planning did not produce scheduler-grade execution metadata.",
+      "current_project_state": "Planning did not produce scheduler-grade execution metadata.",
+      "desired_state": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "agreed_change": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "expected_final_state": "Planning owns execution graph metadata consumed as graph lens by daemon/runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Parallel automation needs dependency and conflict reasoning.",
+      "affected_layers": [
+        "planning",
+        "roadmap",
+        "runtime",
+        "validation"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-004",
+      "current_state": "Workers inherited default models.",
+      "current_project_state": "Workers inherited default models.",
+      "desired_state": "Planning/runtime records model policy per job/task.",
+      "agreed_change": "Planning/runtime records model policy per job/task.",
+      "expected_final_state": "Planning/runtime records model policy per job/task.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Compute allocation becomes auditable.",
+      "affected_layers": [
+        "runtime",
+        "planning",
+        "policy",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-005",
+      "current_state": "Worker sessions could remain open after work.",
+      "current_project_state": "Worker sessions could remain open after work.",
+      "desired_state": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "agreed_change": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "expected_final_state": "Worker sessions are run-scoped and auto-end with durable handoff refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Keep state in CodeWiki refs, not idle chats.",
+      "affected_layers": [
+        "runtime",
+        "session",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-006",
+      "current_state": "Worker clarifications/model upgrades could blur boundaries.",
+      "current_project_state": "Worker clarifications/model upgrades could blur boundaries.",
+      "desired_state": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "agreed_change": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "expected_final_state": "Classify worker questions and route semantics/scope/proof/budget to correct owner.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Preserve compiler/gateway policy.",
+      "affected_layers": [
+        "policy",
+        "runtime",
+        "validation",
+        "decision"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "BRAIN-WORKER-007",
+      "current_state": "Full parallel worker spawning could be first slice.",
+      "current_project_state": "Full parallel worker spawning could be first slice.",
+      "desired_state": "Implement safe precursor semantics before full parallel execution.",
+      "agreed_change": "Implement safe precursor semantics before full parallel execution.",
+      "expected_final_state": "Implement safe precursor semantics before full parallel execution.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "De-risk automation.",
+      "affected_layers": [
+        "runtime",
+        "roadmap",
+        "validation",
+        "tests"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-ACCESS-001",
+      "current_state": "Agent access was partly scattered across tools/files.",
+      "current_project_state": "Agent access was partly scattered across tools/files.",
+      "desired_state": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "agreed_change": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "expected_final_state": "Graph/state becomes primary discovery, routing, resume, drift, blocker, and context-boundary index.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Simplify agent startup while keeping source refs canonical.",
+      "affected_layers": [
+        "system",
+        "graph",
+        "api",
+        "agents",
+        "runtime"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-LENSES-002",
+      "current_state": "Traceability and execution graph concepts could become separate stores.",
+      "current_project_state": "Traceability and execution graph concepts could become separate stores.",
+      "desired_state": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "agreed_change": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "expected_final_state": "One generated graph exposes lenses; execution graph is planning/runtime lens.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid competing graph truth.",
+      "affected_layers": [
+        "graph",
+        "planning",
+        "runtime",
+        "validation"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "GRAPH-QUERY-004",
+      "current_state": "Graph query shapes were not unified.",
+      "current_project_state": "Graph query shapes were not unified.",
+      "desired_state": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "agreed_change": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "expected_final_state": "Graph-indexed read APIs/lenses serve state, resume, execution, trace, audit, stale refs, and daemon context.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Reduce repeated scans and context waste.",
+      "affected_layers": [
+        "api",
+        "graph",
+        "state",
+        "agents"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "DRIFT-STATE-005",
+      "current_state": "Drift categories were implicit.",
+      "current_project_state": "Drift categories were implicit.",
+      "desired_state": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "agreed_change": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "expected_final_state": "Graph classifies vertical, horizontal, stale generated, proof mismatch, and runtime coordination drift.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Shared routing gate for agents/UI/audits.",
+      "affected_layers": [
+        "graph",
+        "alignment",
+        "validation",
+        "runtime"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "DAEMON-PRIORITY-001",
+      "current_state": "Board/UX could precede backend scheduling.",
+      "current_project_state": "Board/UX could precede backend scheduling.",
+      "desired_state": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "agreed_change": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "expected_final_state": "Backend worker daemon scheduling takes priority; chat is sufficient UI until runtime scheduling is solid.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Scheduling unlocks efficient roadmap execution.",
+      "affected_layers": [
+        "runtime",
+        "planning",
+        "roadmap",
+        "graph",
+        "session",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-001",
+      "current_state": "Common workflows require repeated low-level calls.",
+      "current_project_state": "Common workflows require repeated low-level calls.",
+      "desired_state": "Workflow tools batch common phase operations.",
+      "agreed_change": "Workflow tools batch common phase operations.",
+      "expected_final_state": "Workflow tools batch common phase operations.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Reduce tool-call overhead.",
+      "affected_layers": [
+        "api",
+        "decision",
+        "session",
+        "runtime",
+        "agents"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-002",
+      "current_state": "Agents may call many tools/read many files for state.",
+      "current_project_state": "Agents may call many tools/read many files for state.",
+      "desired_state": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "agreed_change": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "expected_final_state": "One graph-indexed state tool returns compact lenses plus exact refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Cheaper safer kickoff/resume.",
+      "affected_layers": [
+        "graph",
+        "state",
+        "api",
+        "runtime"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-003",
+      "current_state": "Many low-level primitives are public/agent-visible.",
+      "current_project_state": "Many low-level primitives are public/agent-visible.",
+      "desired_state": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "agreed_change": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "expected_final_state": "Six specialized workflow tools cover state, decide, plan, implement, gate, and runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Small phase tools are easier than many primitives or one mega-tool.",
+      "affected_layers": [
+        "api",
+        "runtime",
+        "adapters",
+        "skills"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-004",
+      "current_state": "Tool outputs can dump verbose payloads into chat.",
+      "current_project_state": "Tool outputs can dump verbose payloads into chat.",
+      "desired_state": "Workflow tools return compact envelopes and write details to refs.",
+      "agreed_change": "Workflow tools return compact envelopes and write details to refs.",
+      "expected_final_state": "Workflow tools return compact envelopes and write details to refs.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Keep transcripts small and recoverable.",
+      "affected_layers": [
+        "api",
+        "adapters",
+        "runtime",
+        "state"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-EFF-005",
+      "current_state": "Low-level sequences are not retry-safe.",
+      "current_project_state": "Low-level sequences are not retry-safe.",
+      "desired_state": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "agreed_change": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "expected_final_state": "Workflow writes support preflight/dry-run, idempotency, source fingerprints, and recovery reports.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Daemon automation needs retries.",
+      "affected_layers": [
+        "api",
+        "runtime",
+        "session",
+        "validation",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-NAME-001",
+      "current_state": "Some vNext proposals used codewiki_* names for tools.",
+      "current_project_state": "Some vNext proposals used codewiki_* names for tools.",
+      "desired_state": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "agreed_change": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "expected_final_state": "Public/agent-facing tool names consistently use wiki_<name>.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Improves tool selection.",
+      "affected_layers": [
+        "api",
+        "adapters",
+        "skills",
+        "runtime"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-MAINTAIN-002",
+      "current_state": "Generic maintenance/fix-all tool was proposed.",
+      "current_project_state": "Generic maintenance/fix-all tool was proposed.",
+      "desired_state": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "agreed_change": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "expected_final_state": "No generic wiki_maintain; self-repair is automatic/targeted and semantic repair routes to loops/gates.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Avoid vague hidden side effects.",
+      "affected_layers": [
+        "api",
+        "graph",
+        "runtime",
+        "validation",
+        "gc"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "TOOLS-CORE-003",
+      "current_state": "Future tool surface lacked final scope.",
+      "current_project_state": "Future tool surface lacked final scope.",
+      "desired_state": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "agreed_change": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "expected_final_state": "Core tools are wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime.",
+      "validated_final_state": "",
+      "status": "pending",
+      "proof_refs": [],
+      "rationale": "Efficient specialized phase-aligned tool surface.",
+      "affected_layers": [
+        "api",
+        "compilers",
+        "runtime",
+        "skills",
+        "adapters"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Use graph/state as primary agent read/routing/resume index while canonical truth remains in KB, roadmap, builds, validation, code, tests, and Git proof."
+    },
+    {
+      "id": "D2",
+      "summary": "Treat execution graph as planning/runtime lens in generated graph, not second canonical graph store."
+    },
+    {
+      "id": "D3",
+      "summary": "Prioritize backend worker daemon scheduling over board/TUI UX; chat remains sufficient UI during backend refactor."
+    },
+    {
+      "id": "D4",
+      "summary": "Introduce durable Brain lease semantics, worker question/block/unblock, run-scoped worker lifecycle, and model policy metadata before full parallel execution."
+    },
+    {
+      "id": "D5",
+      "summary": "Adopt high-level wiki_<name> tool surface: wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime."
+    },
+    {
+      "id": "D6",
+      "summary": "Drop generic wiki_maintain; deterministic repair is automatic or targeted, semantic repair routes to correct compiler/gate."
+    },
+    {
+      "id": "D7",
+      "summary": "Workflow tools should batch common operations, return compact envelopes, and support dry-run/preflight, idempotency, fingerprints, and recovery guidance."
+    }
+  ],
+  "knowledge_changes": [
+    "Updated API/API vNext with wiki_<name> naming, six core tools, no wiki_maintain, batching, compact outputs, and idempotent workflow writes.",
+    "Updated runtime with backend scheduling priority, Brain lease, run-scoped workers, durable escalation, question classes, and model policy.",
+    "Updated graph with graph-centered agent access, execution lens, and drift categories.",
+    "Updated roadmap/compiler contracts with planning-owned execution graph metadata indexed by graph/runtime.",
+    "Updated adapter/build/agency/worktree/control-room/file-structure/change-lifecycle docs from codewiki_* tool names to wiki_<name> tool names where they described agent-facing tools.",
+    "Updated product drift story from codewiki_state to wiki_state."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "BRAIN-WORKER-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Worker escalation/block/unblock protocol recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Brain lease semantics recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Execution graph lens and planning ownership recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Model policy metadata recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Run-scoped worker lifecycle recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-006",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Worker question classes and routing recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "BRAIN-WORKER-007",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Backend-first scheduling precursor recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "GRAPH-ACCESS-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Graph-centered access recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "GRAPH-LENSES-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Execution graph as lens recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "GRAPH-QUERY-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "wiki_state graph-indexed lenses recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "DRIFT-STATE-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/product/stories/drift.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Drift categories and wiki_state/status agreement recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "DAEMON-PRIORITY-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Backend daemon scheduling priority recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-EFF-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Batch workflow operations recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-EFF-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Graph-indexed read lenses recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-EFF-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Six workflow tools recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-EFF-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Compact tool envelope recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-EFF-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Idempotency/fingerprint/recovery recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-NAME-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "wiki_<name> naming recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-MAINTAIN-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "No generic wiki_maintain recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "TOOLS-CORE-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Core high-level tools recorded.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Product drift story now references wiki_state naming and graph/state agreement."
+    ],
+    "system_impact": [
+      "API, runtime, graph, roadmap, compiler, extension, agency, build, worktree, control-room, file-structure, and lifecycle system docs updated."
+    ],
+    "downstream_planning_questions": [
+      "Plan concrete roadmap work for wiki_decide batch row operations and low-level wiki_diff_table replacement/internalization.",
+      "Plan concrete roadmap work for wiki_state graph lens API that returns compact state, resume, execution, trace, audit, and daemon-context views.",
+      "Plan concrete roadmap work for wiki_runtime Brain lease, job/run lifecycle, worker question/block/unblock, model policy, and bounded dispatcher scheduling.",
+      "Plan migration path that keeps current low-level tools as compatibility/debug surfaces until high-level tools are validated.",
+      "Plan execution graph metadata schema for planning_build and generated graph lens before enabling full parallel worker execution."
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "Plan concrete roadmap work for wiki_decide batch row operations and low-level wiki_diff_table replacement/internalization.",
+    "Plan concrete roadmap work for wiki_state graph lens API that returns compact state, resume, execution, trace, audit, and daemon-context views.",
+    "Plan concrete roadmap work for wiki_runtime Brain lease, job/run lifecycle, worker question/block/unblock, model policy, and bounded dispatcher scheduling.",
+    "Plan migration path that keeps current low-level tools as compatibility/debug surfaces until high-level tools are validated.",
+    "Plan execution graph metadata schema for planning_build and generated graph lens before enabling full parallel worker execution."
+  ],
+  "assumptions": [
+    "Chat remains sufficient UI while backend scheduling is built.",
+    "Current low-level tools remain available for compatibility/debug until high-level workflow tools replace them.",
+    "Diagram node IDs containing codewiki_* are component identifiers, not agent-facing tool names."
+  ],
+  "open_questions": [
+    "Exact schema and implementation order for wiki_runtime and wiki_state graph lenses must be planned next.",
+    "Whether roadmap display IDs/epochs should be added remains a separate unapproved planning/decision topic."
+  ],
+  "non_goals": [
+    "Do not implement board/TUI UX in this decision.",
+    "Do not implement full parallel worker spawning before Brain lease, claims, execution graph, and escalation safeguards.",
+    "Do not make the graph canonical truth.",
+    "Do not add a generic wiki_maintain/fix-all tool."
+  ],
+  "risks": [
+    "High-risk daemon automation can create hidden side effects if implemented before idempotency, artifact claims, validation gates, and escalation routing.",
+    "Changing tool names requires careful compatibility and staged migration from current low-level tools."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      "Updated API/API vNext with wiki_<name> naming, six core tools, no wiki_maintain, batching, compact outputs, and idempotent workflow writes.",
+      "Updated runtime with backend scheduling priority, Brain lease, run-scoped workers, durable escalation, question classes, and model policy.",
+      "Updated graph with graph-centered agent access, execution lens, and drift categories.",
+      "Updated roadmap/compiler contracts with planning-owned execution graph metadata indexed by graph/runtime.",
+      "Updated adapter/build/agency/worktree/control-room/file-structure/change-lifecycle docs from codewiki_* tool names to wiki_<name> tool names where they described agent-facing tools.",
+      "Updated product drift story from codewiki_state to wiki_state.",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/product/stories/drift.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

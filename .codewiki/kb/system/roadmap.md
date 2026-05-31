@@ -5,7 +5,7 @@ state: active
 summary: Work truth for active items, priority, status, blockers, progress, and closure.
 owners:
   - architecture
-updated: "2026-05-27"
+updated: "2026-05-31"
 ---
 
 # Roadmap
@@ -28,13 +28,13 @@ A planning build decides which requirements need work, whether to refine active 
 
 When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking. When an interactive adapter is available, candidate tasks and sprint changes should be shown as row-level approval items before canonical roadmap mutation.
 
-Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates.
+Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates. Backend worker daemon scheduling is a higher priority than board or other rich UX work; chat is sufficient until roadmap execution can be scheduled, blocked, retried, and parallelized safely.
 
 ## Sprints
 
 A sprint is a bounded cohort of tasks with shared outcome, scope, budget, and closure checkpoint. Sprints group related tasks without turning CodeWiki into project-management software.
 
-Sprint metadata records id, title, outcome, status, task ids, scope, budget limits, and gates. The active sprint should be decomposed into executable tasks. Generated graph and roadmap state expose sprint ids, active sprint ids, task membership, scope, budgets, and gates.
+Sprint metadata records id, title, outcome, status, task ids, scope, budget limits, and gates. The active sprint should be decomposed into executable tasks. Planning may add execution-graph metadata for task dependencies, parallel waves, conflict scopes, validation gates, model policy, escalation target, and close/report order. Generated graph and roadmap state expose sprint ids, active sprint ids, task membership, scope, budgets, gates, and execution graph lenses for runtime scheduling.
 
 ## Task boundary contract
 
@@ -52,7 +52,7 @@ It should not duplicate full decision, planning, or implementation briefs. Refin
 
 Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Waiters and wake notifications also live in the session queue, so release or expiry can wake blocked sessions with source refs and next-action intent. Worktrees isolate filesystem state; validation isolates judgment.
 
-Parallel write work should be planned as role-isolated execution. A dispatcher may select independent roadmap tasks by priority/order while excluding overlapping code/spec/roadmap/build/validation scopes and active artifact holders. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue, dispatcher, and worktree factory own temporary filesystem leases, claim intents, branch/worktree metadata, and source-backed worker resume packets.
+Parallel write work should be planned as role-isolated execution. A dispatcher may select independent roadmap tasks by planning-owned dependency/order metadata while excluding overlapping code/spec/roadmap/build/validation scopes and active artifact holders. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue, dispatcher, and worktree factory own temporary filesystem leases, claim intents, branch/worktree metadata, and source-backed worker resume packets.
 
 Task-close and publication readiness should assume a publisher queue when parallel sessions are active. Builders produce branch or patch refs, validators verify immutable refs from fresh worktrees, and the publisher serializes merge, generated-state update, final commit, and clean proof. Closing a task from a shared dirty root worktree is not sufficient when isolated role refs or pending publisher work exist.
 

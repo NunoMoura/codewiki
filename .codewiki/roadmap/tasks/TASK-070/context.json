@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T08:41:29Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-070/context.json",
+  "task": {
+    "id": "TASK-070",
+    "title": "Implement runtime scheduler foundation",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "change_type": "task",
+    "summary": "Add runtime scheduler primitives for Brain leases, daemon job/run states, durable worker questions, block/unblock, retry, stale heartbeat handling, and model policy metadata.",
+    "labels": [
+      "runtime-scheduler",
+      "brain-lease",
+      "worker-escalation",
+      "model-policy"
+    ],
+    "goal": {
+      "outcome": "CodeWiki runtime can coordinate safe scheduler state without full autonomous parallel worker spawning.",
+      "acceptance": [
+        "Runtime state records one active Brain lease with session/ref, heartbeat, active work refs, expiry, and takeover semantics.",
+        "Daemon job/run records support question, blocked, unblock/requeue, retry, stale heartbeat, and terminal states with source refs and exact block reasons.",
+        "Job records can carry worker profile/model policy metadata including desired model, fallback, budget/risk, and approval refs.",
+        "Dispatcher tick remains bounded and does not close roadmap tasks, bypass gates, or spawn unsupported workers silently.",
+        "Tests cover lease claim/heartbeat/takeover, block/question/unblock, stale/retry behavior, and bounded dispatch invariants."
+      ],
+      "non_goals": [
+        "Do not implement unrestricted parallel worker spawning.",
+        "Do not implement TUI/board UX.",
+        "Do not let runtime mutate roadmap truth directly or bypass validation gateways."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted runtime tests",
+        "wiki_audit profiles=source-contract,changed,generated-parity"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

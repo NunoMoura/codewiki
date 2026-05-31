@@ -6,7 +6,7 @@ summary: Source concept root for CodeWiki daemon-capable software-development ru
 owners:
   - architecture
   - engineering
-updated: "2026-05-30"
+updated: "2026-05-31"
 diagram_refs:
   - component-map:runtime
   - file-structure-map:runtime_orchestration_boundary
@@ -133,6 +133,22 @@ completed/cancelled are terminal
 ```
 
 A pass boundary never mutates the roadmap directly. It enqueues or hands off the next compiler/gateway loop with source-backed refs. A fail/block boundary keeps the same loop/job blocked until rebuilt, repaired, rerouted by validation, or explicitly escalated. Artifact status in `.codewiki/session/queue.json` remains the short-lived concurrency lease; daemon jobs record execution attempts, heartbeats, retries, and handoff metadata.
+
+Backend daemon scheduling is the priority before board or other rich UX work. Chat remains sufficient as the user interface while the runtime proves safe scheduling, escalation, graph-centered access, and bounded parallel execution.
+
+## Brain lease and worker lifecycle
+
+The runtime should use a durable Brain lease for each project instead of assuming the first open session remains the conductor forever. The default election may allow the first project session to claim the Brain role, but the runtime truth is a lease that records session id, session file, heartbeat, active sprint or roadmap refs, model policy, and takeover rules. When the Brain lease is stale or absent, workers block or a new session explicitly claims the Brain role through policy-gated runtime state.
+
+Worker sessions are run-scoped by default. A worker is spawned from a source-backed kickoff, reads graph/roadmap/build refs, acquires narrow artifact scopes, heartbeats during the run, emits implementation or validation evidence, records `completed`, `blocked`, `failed`, `stale`, or `cancelled`, releases claims, persists handoff metadata, and then shuts down unless policy keeps it alive for review. Durable state belongs in CodeWiki refs, not worker chat history.
+
+## Worker escalation and model policy
+
+Workers ask the Brain through durable runtime records, not direct chat. When a worker encounters ambiguity it records a question or block on the job/run with attempted evidence, source refs, suggested options, and a block reason such as `user_input_required`, `planning_required`, `decision_required`, `validation_required`, `artifact_conflict`, `platform_limited`, or `retry_limit`. The Brain answers through a durable comment or resolution, then the dispatcher unblocks or requeues the job, or routes the issue to decision/planning/validation when the answer changes semantics, scope, or proof requirements.
+
+Planning/runtime metadata may assign model policy per job: desired model/provider, role profile, thinking level, fallback model, token/cost budget, risk tier, and approval evidence for expensive or high-risk model use. Runtime starts the worker with the requested model when the adapter advertises support; otherwise it follows fallback policy or blocks as `platform_limited`.
+
+Worker question classes are explicit: evidence gaps retry locally, task-scope ambiguity escalates to the Brain, semantic/product/system changes route to decision, schedule or task-boundary changes route to planning, validation/proof blocks route to the gate capability, and budget/model upgrades above policy require Brain or user approval evidence.
 
 ## Daemon dispatcher skeleton
 

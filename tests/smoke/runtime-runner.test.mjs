@@ -381,6 +381,19 @@ function daemonJob(overrides = {}) {
 		store: daemonStore(daemonJob()),
 		now: "2026-05-30T00:01:00.000Z",
 		worker: { session_id: "daemon-session", claim_id: "CLAIM-065" },
+		workerProfile: {
+			role: "builder",
+			mode: "implementation",
+			capabilities: ["runtime-scheduler"],
+			notes: ["run scoped"],
+		},
+		modelPolicy: {
+			provider: "pi",
+			model: "strong-model",
+			fallback_model: "fast-model",
+			approval_refs: ["decision:BRAIN-WORKER-004"],
+			notes: ["scheduler test"],
+		},
 		leaseTtlMs: 60_000,
 		executeAttempt: () => ({
 			ended_at: "2026-05-30T00:02:00.000Z",
@@ -399,6 +412,8 @@ function daemonJob(overrides = {}) {
 	assert.equal(job.runs[0].status, "completed");
 	assert.equal(job.runs[0].heartbeat_count, 1);
 	assert.equal(job.runs[0].lease_expires_at, "2026-05-30T00:02:00.000Z");
+	assert.equal(job.runs[0].worker_profile?.role, "builder");
+	assert.equal(job.runs[0].model_policy?.fallback_model, "fast-model");
 	assert.equal(job.runs[0].handoff?.summary, "dispatcher skeleton pass");
 }
 

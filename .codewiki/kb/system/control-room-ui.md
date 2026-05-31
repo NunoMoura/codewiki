@@ -6,7 +6,7 @@ summary: Standalone local web UI and hosting surface for CodeWiki.
 owners:
   - architecture
   - engineering
-updated: "2026-05-16"
+updated: "2026-05-31"
 ---
 
 # CodeWiki UI
@@ -58,7 +58,7 @@ The CodeWiki UI should use typed CodeWiki API capabilities or thin HTTP endpoint
 - contextual build, validation, diff-table, or source detail only when linked from the active view,
 - repo-backed preference summary and option mapping derived from `.codewiki/config.json` for the header Settings page.
 
-Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as decision diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations. Decision and planning approval controls should render row/task cards with approve, edit, reject, and defer actions, then write through `codewiki_diff_table` or roadmap planning use cases rather than treating chat prose as canonical approval.
+Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as decision diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations. Decision and planning approval controls should render row/task cards with approve, edit, reject, and defer actions, then write through `wiki_diff_table` or roadmap planning use cases rather than treating chat prose as canonical approval.
 
 ## Status contract
 

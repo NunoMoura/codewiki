@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-30"
+updated: "2026-05-31"
 diagram_refs:
   - file-structure-map:intended_file_structure
   - file-structure-map:current_layered_source
@@ -81,7 +81,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
-| Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `codewiki_agency` entrypoint |
+| Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `wiki_agency` entrypoint |
 | CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/store.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/gateway/**` gateway report/preflight/tool/type/transaction ownership, `src/validation/**` compatibility re-export shims, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |

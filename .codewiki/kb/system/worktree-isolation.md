@@ -5,7 +5,7 @@ state: active
 summary: Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.
 owners:
   - architecture
-updated: "2026-05-26"
+updated: "2026-05-31"
 code_paths:
   - src/session/claims.ts
   - src/session/artifact-status-tool.ts
@@ -60,11 +60,11 @@ Wait/wake records must name the real blocker and the next safe action. Good bloc
 
 Wake notifications are durable session-queue records, not direct inter-agent chat. Release and expiry events enqueue pending wake notifications with waiter id, task/build refs, source refs, and next-action intent. Heartbeats extend holder or waiter leases; stale holders expire with queue evidence and can wake blocked waiters. Wake delivery marks notifications delivered so repeat watchers do not spam the same session.
 
-Worker handoff packets are source-backed resume packets, not shared chat. Each dispatched worker receives task/context refs, source refs, follow-up intent, role worktree plan, and artifact claim scope. Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `codewiki_resume_context`, and re-mark scopes before writing.
+Worker handoff packets are source-backed resume packets, not shared chat. Each dispatched worker receives task/context refs, source refs, follow-up intent, role worktree plan, and artifact claim scope. Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `wiki_resume_context`, and re-mark scopes before writing.
 
 ## Cleanup sequencing
 
-Compatibility cleanup removes legacy session-handoff surfaces from normal user-facing recovery flow after role worktree/publisher orchestration is validated. Any future compatibility/debug behavior must be explicitly scoped to a migration task and must not replace `codewiki_resume_context`, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh-context starts.
+Compatibility cleanup removes legacy session-handoff surfaces from normal user-facing recovery flow after role worktree/publisher orchestration is validated. Any future compatibility/debug behavior must be explicitly scoped to a migration task and must not replace `wiki_resume_context`, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh-context starts.
 
 ## Related docs
 

@@ -6,7 +6,7 @@ summary: Packaged CodeWiki distribution, current Pi extension surface, and CodeW
 owners:
   - architecture
   - engineering
-updated: "2026-05-16"
+updated: "2026-05-31"
 ---
 
 # Extension
@@ -22,10 +22,10 @@ The extension is not the product boundary. CodeWiki is the repo-local contract, 
 The Pi adapter owns:
 
 - `/wiki-*` commands,
-- `codewiki_*` tools,
+- `wiki_<name>` tools,
 - `Alt+W` compact visual status UI,
 - `/wiki-ui [repo-path] [port]` to start the local CodeWiki UI, attempt to open its browser URL, and print a plain local URL fallback,
-- `codewiki_agency` as the current Pi-facing agency controller entrypoint,
+- `wiki_agency` as the current Pi-facing agency controller entrypoint until the vNext runtime workflow supersedes direct agency execution,
 - session lifecycle hooks,
 - packaged workflow skills,
 - bootstrap/adoption entrypoints that call API/concept tools,
@@ -46,7 +46,7 @@ The Pi adapter owns:
 - Pi SDK and TUI imports belong only in the Pi adapter.
 - Browser UI and local web-server code must not depend on Pi SDK or Pi TUI packages.
 - Pi-specific behavior must translate into API use cases, not own domain semantics.
-- VCC recall, generic native compaction, and session-reset hooks are adapter recovery points, not normal CodeWiki memory. Pi may use CodeWiki-owned compaction as the normal same-session soft refresh path because the injected summary is regenerated from `codewiki_resume_context`, implementation builds, roadmap state, validation, and graph state.
+- VCC recall, generic native compaction, and session-reset hooks are adapter recovery points, not normal CodeWiki memory. Pi may use CodeWiki-owned compaction as the normal same-session soft refresh path because the injected summary is regenerated from `wiki_resume_context`, implementation builds, roadmap state, validation, and graph state.
 - Agency behavior must enforce gated agency budgets and stop conditions instead of running unbounded work.
 - The package should not become a general sandbox, hosted service, unbounded long-running runtime, or replacement for harness execution.
 - Runtime checks must validate actual package loading under supported Node versions.
