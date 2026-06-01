@@ -1,10 +1,13 @@
 import { unique } from "../shared/utils.ts";
+import { normalizeValidationGate } from "./gates.ts";
 
 export const DEFAULT_REQUIRED_AUDIT_PROFILES: Record<string, string[]> = {
 	decision: ["alignment", "stale-reference"],
 	planning: ["alignment"],
 	implementation: ["alignment", "changed"],
 	"task-close": ["alignment", "changed", "task", "generated-parity"],
+	"sprint-close": ["alignment", "changed", "generated-parity"],
+	"ship-ready": ["alignment", "package", "security", "stale-reference"],
 	publication: ["alignment", "package", "security"],
 	publish: ["alignment", "package", "security"],
 	release: ["alignment", "package", "security", "stale-reference"],
@@ -27,10 +30,14 @@ export function requiredAuditProfiles(
 	explicit?: string[],
 	policyProfile?: string,
 ): string[] {
-	const profileKey = profile.trim().toLowerCase();
-	const policyKey = String(policyProfile || "")
-		.trim()
-		.toLowerCase();
+	const rawProfileKey = profile.trim().toLowerCase();
+	const rawPolicyKey = String(policyProfile || "").trim().toLowerCase();
+	const profileKey = DEFAULT_REQUIRED_AUDIT_PROFILES[rawProfileKey]
+		? rawProfileKey
+		: normalizeValidationGate(profile);
+	const policyKey = DEFAULT_REQUIRED_AUDIT_PROFILES[rawPolicyKey]
+		? rawPolicyKey
+		: normalizeValidationGate(policyProfile);
 	return unique([
 		...(DEFAULT_REQUIRED_AUDIT_PROFILES[profileKey] ?? []),
 		...(policyKey && policyKey !== profileKey

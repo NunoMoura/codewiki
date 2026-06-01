@@ -1,4 +1,5 @@
 import { unique } from "../shared/utils.ts";
+import { normalizeValidationGate } from "./gates.ts";
 
 export type ProductionPolicyStatus = "satisfied" | "missing";
 
@@ -225,7 +226,7 @@ export function productionPolicyProfileEnabled(
 export function evaluateProductionPolicyProfile(
 	input: ProductionPolicyInput,
 ): ProductionPolicyResult {
-	const profile = normalizedWord(input.profile || "implementation");
+	const profile = normalizeValidationGate(input.profile || "implementation");
 	const changeClass = normalizedWord(
 		input.changeClass || changeClassFromBuild(input.build) || "code",
 	);
@@ -347,7 +348,7 @@ function productionPolicyRequirements(input: {
 	packageReadinessRequired: boolean;
 }): ProductionPolicyRequirement[] {
 	const requirements = [...BASE_REQUIREMENTS];
-	if (input.profile === "task-close")
+	if (["task-close", "sprint-close", "ship-ready"].includes(input.profile))
 		requirements.push(...TASK_CLOSE_REQUIREMENTS);
 	if (input.packageReadinessRequired)
 		requirements.push(...PACKAGE_REQUIREMENTS);
@@ -598,7 +599,7 @@ function requiresPackageReadiness(
 	const text = [profile, policyProfile, changeClass, ...buildPathRefs(build)]
 		.map((value) => String(value || "").toLowerCase())
 		.join(" ");
-	return /\b(package|publication|publish|release|pack|package\.json|package-lock\.json|npm)\b/.test(
+	return /\b(package|ship-ready|publication|publish|release|pack|package\.json|package-lock\.json|npm)\b/.test(
 		text,
 	);
 }
@@ -618,7 +619,7 @@ function requiresSecurityAudit(
 	riskTier: string,
 ): boolean {
 	return (
-		["publication", "publish", "release"].includes(profile) ||
+		profile === "ship-ready" ||
 		changeClass === "security" ||
 		riskTier === "release"
 	);

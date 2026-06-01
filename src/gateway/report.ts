@@ -20,6 +20,7 @@ import {
 	isSemanticTraceability,
 } from "../change/traceability.ts";
 import { auditEvidenceGaps, auditRequirement } from "../policy/gate-policy.ts";
+import { normalizeValidationGate } from "../policy/gates.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { WorkflowLoop } from "../session/types.ts";
 import {
@@ -79,16 +80,13 @@ function validationIsolationRequirement(
 	profile: string,
 	policyProfile?: string,
 ) {
-	const normalizedProfile = profile.trim().toLowerCase();
-	const normalizedPolicy = String(policyProfile || "")
-		.trim()
-		.toLowerCase();
+	const normalizedProfile = normalizeValidationGate(profile);
+	const normalizedPolicy = normalizeValidationGate(policyProfile);
 	const preCommitProfiles = new Set(["implementation"]);
 	const immutableProfiles = new Set([
 		"task-close",
-		"publication",
-		"publish",
-		"release",
+		"sprint-close",
+		"ship-ready",
 	]);
 	const required =
 		preCommitProfiles.has(normalizedProfile) ||
@@ -105,7 +103,7 @@ function validationIsolationRequirement(
 				? "fresh-context-checked-content"
 				: "fresh-context-preferred",
 		immutableRequired
-			? "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+			? "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content proof."
 			: required
 				? "Implementation validation requires independent validator context and checked content proof."
 				: "Fresh validation is preferred but not required for this profile.",
@@ -192,7 +190,7 @@ function validationCommitReadinessGaps(
 	profile: string,
 	isolationGaps: string[],
 ): string[] {
-	if (profile.trim().toLowerCase() !== "implementation") return [];
+	if (normalizeValidationGate(profile) !== "implementation") return [];
 	if (input.verdict !== "pass") return [];
 	if (isolationGaps.length > 0) return [];
 	const source = (input.source ?? "").trim();
@@ -290,15 +288,11 @@ function validationSemanticTraceability(
 	profile: string,
 ): { gaps: string[]; warnings: string[] } {
 	if (input.verdict !== "pass") return { gaps: [], warnings: [] };
-	const normalizedProfile = profile.trim().toLowerCase();
+	const normalizedProfile = normalizeValidationGate(profile);
 	if (
-		![
-			"implementation",
-			"task-close",
-			"publication",
-			"publish",
-			"release",
-		].includes(normalizedProfile)
+		!["implementation", "task-close", "sprint-close", "ship-ready"].includes(
+			normalizedProfile,
+		)
 	)
 		return { gaps: [], warnings: [] };
 	const source = (input.source ?? "").trim();
@@ -332,18 +326,11 @@ function validationSemanticTraceability(
 	return { gaps: unique(gaps), warnings: [] };
 }
 
-const VALIDATION_TASK_ID_PROFILES = new Set([
-	"implementation",
+const VALIDATION_TASK_ID_GATES = new Set(["implementation", "task-close"]);
+const IMMUTABLE_VALIDATION_GATES = new Set([
 	"task-close",
-	"publication",
-	"publish",
-	"release",
-]);
-const IMMUTABLE_VALIDATION_PROFILES = new Set([
-	"task-close",
-	"publication",
-	"publish",
-	"release",
+	"sprint-close",
+	"ship-ready",
 ]);
 
 type ValidationPreflightSource = {
@@ -480,10 +467,8 @@ function graphDecisionPropagationResidualGaps(
 			"implementation",
 			"task-close",
 			"sprint-close",
-			"publication",
-			"publish",
-			"release",
-		].includes(profile.trim().toLowerCase())
+			"ship-ready",
+		].includes(normalizeValidationGate(profile))
 	)
 		return [];
 	try {
@@ -510,7 +495,7 @@ function graphSemanticExecutionClosureForTask(
 	input: CodewikiValidationReportInput,
 	profile: string,
 ): { gaps: string[]; risks: string[]; refs: string[] } {
-	if (profile.trim().toLowerCase() !== "task-close") {
+	if (normalizeValidationGate(profile) !== "task-close") {
 		return { gaps: [], risks: [], refs: [] };
 	}
 	const taskId = String(input.task_id || "").trim();
@@ -548,13 +533,215 @@ function graphSemanticExecutionClosureForTask(
 	}
 }
 
+function readRoadmapForSprintClose(project: WikiProject): {
+	tasks: Record<string, any>;
+	sprints: Record<string, any>;
+} {
+	try {
+		const data = JSON.parse(
+			readFileSync(resolve(project.root, project.roadmapPath), "utf8"),
+		);
+		const tasks: Record<string, any> = { ...(data?.tasks || {}) };
+		try {
+			const archivePath = resolve(
+				project.root,
+				dirname(project.roadmapPath),
+				"archive.jsonl",
+			);
+			for (const line of readFileSync(archivePath, "utf8").split(/\r?\n/)) {
+				if (!line.trim()) continue;
+				try {
+					const record = JSON.parse(line);
+					const task = record?.task || record;
+					const id = String(task?.id || record?.id || "").trim();
+					if (id && !tasks[id]) tasks[id] = task;
+				} catch {
+					// ignore malformed archive lines in preflight; generated audits cover them separately
+				}
+			}
+		} catch {
+			// archive is optional
+		}
+		return { tasks, sprints: data?.sprints || {} };
+	} catch {
+		return { tasks: {}, sprints: {} };
+	}
+}
+
+function sprintIdFromValidationInput(
+	input: CodewikiValidationReportInput,
+): string {
+	const values = unique([
+		String(input.sprint_id || ""),
+		String(input.task_id || ""),
+		String(input.source || ""),
+		...trimList(input.checks),
+		...trimList(input.audit_refs),
+		...trimList(input.audit_reports),
+	]);
+	for (const value of values) {
+		const match = /\bSPRINT-[0-9]+\b/i.exec(value);
+		if (match) return match[0].toUpperCase();
+	}
+	return "";
+}
+
+function sprintSharedRiskNeedsApproval(sprint: any): boolean {
+	const haystack = [
+		sprint?.budget?.risk,
+		...(Array.isArray(sprint?.gates) ? sprint.gates : []),
+	]
+		.map((value) => String(value || "").toLowerCase())
+		.join("\n");
+	return /\b(high|security|migration|ship-ready|publication|publish|release|destructive|approval)\b/.test(
+		haystack,
+	);
+}
+
+function inputHasApprovalEvidence(
+	input: CodewikiValidationReportInput,
+): boolean {
+	return [
+		...trimList(input.checks),
+		...trimList(input.audit_refs),
+		...trimList(input.audit_reports),
+		...trimList(input.issues?.map((issue) => issue.summary)),
+	].some((value) =>
+		/\b(approval:user|user[-_ ]approval|explicit[-_ ]approval|approved[-_ ]by[-_ ]user|semantic[-_ ]approval)\b/i.test(
+			value,
+		),
+	);
+}
+
+function graphSprintCloseGaps(
+	project: WikiProject,
+	sprintId: string,
+	taskIds: string[],
+): string[] {
+	try {
+		const graph = JSON.parse(
+			readFileSync(resolve(project.root, project.graphPath), "utf8"),
+		);
+		if (!graph?.views?.roadmap) return [`sprint:${sprintId}:generated_state`];
+		const closure =
+			graph?.views?.semantic_execution_closure ||
+			graph?.views?.lenses?.audit?.semantic_execution_closure ||
+			graph?.views?.lenses?.trace?.semantic_execution_closure ||
+			null;
+		if (!closure?.scopes?.tasks) return [];
+		return unique(
+			taskIds.flatMap((taskId) =>
+				trimList(closure.scopes.tasks?.[taskId]?.gaps).map(
+					(gap) => `sprint:${sprintId}:semantic_closure:${taskId}:${gap}`,
+				),
+			),
+		);
+	} catch {
+		return [`sprint:${sprintId}:generated_state`];
+	}
+}
+
+function validationSprintCloseGaps(
+	project: WikiProject,
+	input: CodewikiValidationReportInput,
+	profile: string,
+): string[] {
+	if (normalizeValidationGate(profile) !== "sprint-close") return [];
+	const sprintId = sprintIdFromValidationInput(input);
+	if (!sprintId) return ["sprint_id"];
+	const roadmap = readRoadmapForSprintClose(project);
+	const sprint = roadmap.sprints[sprintId];
+	if (!sprint) return [`sprint:${sprintId}:missing`];
+	const gaps: string[] = [];
+	if (!String(sprint.outcome || "").trim())
+		gaps.push(`sprint:${sprintId}:shared_outcome`);
+	const taskIds = trimList(sprint.task_ids);
+	if (taskIds.length === 0) gaps.push(`sprint:${sprintId}:task_ids`);
+	for (const taskId of taskIds) {
+		const task = roadmap.tasks[taskId];
+		if (!task) {
+			gaps.push(`sprint:${sprintId}:task:${taskId}:missing`);
+			continue;
+		}
+		const status = String(task.status || "")
+			.trim()
+			.toLowerCase();
+		if (!["closed", "done", "cancelled", "canceled"].includes(status))
+			gaps.push(`sprint:${sprintId}:task:${taskId}:not_closed`);
+	}
+	if (sprintSharedRiskNeedsApproval(sprint) && !inputHasApprovalEvidence(input))
+		gaps.push(`sprint:${sprintId}:shared_risk_approval`);
+	gaps.push(...graphSprintCloseGaps(project, sprintId, taskIds));
+	return unique(gaps);
+}
+
+function validationShipReadyGaps(
+	input: CodewikiValidationReportInput,
+	build: any,
+	profile: string,
+	isolation: ReturnType<typeof normalizeValidationIsolation> | undefined,
+): string[] {
+	if (normalizeValidationGate(profile) !== "ship-ready") return [];
+	const haystack = [
+		input.policy_profile,
+		input.source,
+		build?.summary,
+		build?.publication?.target,
+		build?.publication?.remote,
+		build?.publication?.branch,
+		build?.publication?.release_notes,
+		...trimList(input.checks),
+		...trimList(input.audit_refs),
+		...trimList(input.audit_reports),
+		...trimList(build?.produces?.publication),
+	]
+		.map((value) => String(value || "").toLowerCase())
+		.join("\n");
+	const targets = new Set<string>();
+	if (
+		/\b(commit|head|tree)\b/.test(haystack) ||
+		isolation?.head_sha ||
+		isolation?.tree_sha
+	)
+		targets.add("commit");
+	if (/\b(package|pack|npm)\b/.test(haystack) || isolation?.package_digest)
+		targets.add("package");
+	if (/\b(archive|tarball)\b/.test(haystack) || isolation?.archive_ref)
+		targets.add("archive");
+	if (
+		/\b(remote|push|branch)\b/.test(haystack) ||
+		isolation?.remote_ref ||
+		isolation?.published_sha
+	)
+		targets.add("remote");
+	if (/\b(release|tag)\b/.test(haystack)) targets.add("release");
+	const gaps: string[] = [];
+	if (targets.size === 0) gaps.push("ship_ready_target");
+	if (targets.has("package") && !isolation?.package_digest)
+		gaps.push("package_digest");
+	if (targets.has("archive") && !isolation?.archive_ref)
+		gaps.push("archive_ref");
+	if (
+		(targets.has("remote") || targets.has("release")) &&
+		!isolation?.remote_ref &&
+		!isolation?.published_sha
+	)
+		gaps.push("remote_ref_or_published_sha");
+	if (
+		build?.publication?.safe_to_push === false ||
+		build?.publication?.push_readiness?.safe_to_push === false
+	)
+		gaps.push("ship_ready_safe_to_promote");
+	return unique(gaps);
+}
+
 function validationDecisionPropagationGaps(
 	project: WikiProject,
 	input: CodewikiValidationReportInput,
 	build: any,
 	profile: string,
 ): string[] {
-	const normalizedProfile = profile.trim().toLowerCase();
+	const normalizedProfile = normalizeValidationGate(profile);
 	const gaps: string[] = [];
 	const kind = String(build?.kind || "").trim();
 	if (normalizedProfile === "planning" && kind === "planning_build") {
@@ -563,13 +750,9 @@ function validationDecisionPropagationGaps(
 		);
 	}
 	if (
-		[
-			"implementation",
-			"task-close",
-			"publication",
-			"publish",
-			"release",
-		].includes(normalizedProfile) &&
+		["implementation", "task-close", "sprint-close", "ship-ready"].includes(
+			normalizedProfile,
+		) &&
 		kind === "implementation_build"
 	) {
 		gaps.push(...implementationPlanningPropagationGaps(project, build));
@@ -611,8 +794,8 @@ function validationTaskIdGaps(
 	build: any,
 	profile: string,
 ): string[] {
-	const normalizedProfile = profile.trim().toLowerCase();
-	if (!VALIDATION_TASK_ID_PROFILES.has(normalizedProfile)) return [];
+	const normalizedProfile = normalizeValidationGate(profile);
+	if (!VALIDATION_TASK_ID_GATES.has(normalizedProfile)) return [];
 	const inputTaskId = String(input.task_id || "").trim();
 	const buildTaskId = String(build?.task_id || build?.task?.id || "").trim();
 	const gaps: string[] = [];
@@ -623,7 +806,7 @@ function validationTaskIdGaps(
 }
 
 function validationDecisionMappingGaps(build: any, profile: string): string[] {
-	if (profile.trim().toLowerCase() !== "decision") return [];
+	if (normalizeValidationGate(profile) !== "decision") return [];
 	if (String(build?.kind || "").trim() !== "decision_build") return [];
 	const approvedIds = new Set(trimList(build?.approved_diff_rows));
 	const rows = Array.isArray(build?.diff_table) ? build.diff_table : [];
@@ -667,15 +850,14 @@ function validationDecisionMappingGaps(build: any, profile: string): string[] {
 }
 
 function validationAmbiguityGaps(build: any, profile: string): string[] {
-	const normalizedProfile = profile.trim().toLowerCase();
+	const normalizedProfile = normalizeValidationGate(profile);
 	if (
 		![
 			"planning",
 			"implementation",
 			"task-close",
-			"publication",
-			"publish",
-			"release",
+			"sprint-close",
+			"ship-ready",
 		].includes(normalizedProfile)
 	)
 		return [];
@@ -692,17 +874,13 @@ function validationUpstreamBuildGaps(
 	build: any,
 	profile: string,
 ): string[] {
-	const normalizedProfile = profile.trim().toLowerCase();
+	const normalizedProfile = normalizeValidationGate(profile);
 	const gaps: string[] = [];
 	if (!build) {
 		if (
-			[
-				"implementation",
-				"task-close",
-				"publication",
-				"publish",
-				"release",
-			].includes(normalizedProfile) &&
+			["implementation", "task-close", "ship-ready"].includes(
+				normalizedProfile,
+			) &&
 			!(input.source ?? "").trim()
 		)
 			gaps.push("source_implementation_build");
@@ -814,7 +992,7 @@ function buildValidationCheckpointCommit(input: {
 	validationReport: string;
 	checks: string[];
 }) {
-	const profile = input.profile.trim().toLowerCase();
+	const profile = normalizeValidationGate(input.profile);
 	const passed = input.verdict.trim().toLowerCase() === "pass";
 	const recommended =
 		passed && profile === "implementation" && Boolean(input.source);
@@ -839,7 +1017,7 @@ function buildValidationCheckpointCommit(input: {
 				: []),
 		]),
 		note: recommended
-			? "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+			? "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
 			: "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build.",
 	};
 }
@@ -925,6 +1103,7 @@ function inferValidationRouting(
 		explicitClass ||
 		(joined.includes("decision_propagation") ||
 		joined.includes("semantic_closure") ||
+		joined.includes("sprint_close") ||
 		joined.includes("planning gap")
 			? "planning_gap"
 			: undefined) ||
@@ -942,6 +1121,10 @@ function inferValidationRouting(
 		joined.includes("validation_isolation") ||
 		joined.includes("content_proof") ||
 		joined.includes("publication_readiness") ||
+		joined.includes("ship_ready") ||
+		joined.includes("package_digest") ||
+		joined.includes("archive_ref") ||
+		joined.includes("remote_ref") ||
 		joined.includes("clean=true") ||
 		joined.includes("immutable")
 			? "content_proof_missing"
@@ -992,17 +1175,22 @@ export function buildGatewayPreflight(
 	project: WikiProject,
 	input: CodewikiValidationReportInput,
 ) {
-	const profile = input.profile.trim();
+	const inputProfile = input.profile.trim();
+	const profile = normalizeValidationGate(input.gate || inputProfile);
 	const policyProfile =
-		(input.policy_profile ?? input.profile ?? "").trim() || undefined;
+		(input.policy_profile
+			? normalizeValidationGate(input.policy_profile)
+			: profile) || undefined;
+	const auditProfileForRequirement = input.gate ? profile : inputProfile;
+	const auditPolicyProfile = input.policy_profile ? policyProfile : undefined;
 	const source = readValidationPreflightSource(project, input);
 	const isolation = normalizeValidationIsolation(input.isolation);
 	const isolationReq = validationIsolationRequirement(profile, policyProfile);
 	const isolationGaps = validationIsolationGaps(isolation, isolationReq);
 	const publisherGaps = validationPublisherResultGaps(isolation, isolationReq);
 	const auditReq = auditRequirement(
-		profile,
-		policyProfile,
+		auditProfileForRequirement,
+		auditPolicyProfile,
 		input.required_audits,
 	);
 	const auditGaps = auditEvidenceGaps(
@@ -1035,16 +1223,22 @@ export function buildGatewayPreflight(
 		input,
 		profile,
 	);
+	const sprintCloseGaps = validationSprintCloseGaps(project, input, profile);
+	const shipReadyGaps = validationShipReadyGaps(
+		input,
+		source.build,
+		profile,
+		isolation,
+	);
 	const staleRefs = validationStaleRefs(project, input, source);
 	const closePublicationBlockers = unique([
 		...publisherGaps.map((gap) => `publisher_result:${gap}`),
-		...(IMMUTABLE_VALIDATION_PROFILES.has(profile.toLowerCase()) &&
-		isolation?.clean !== true
+		...(IMMUTABLE_VALIDATION_GATES.has(profile) && isolation?.clean !== true
 			? ["clean=true"]
 			: []),
-		...(["publication", "publish", "release"].includes(profile.toLowerCase()) &&
+		...(profile === "ship-ready" &&
 		source.build?.publication?.push_readiness?.safe_to_push === false
-			? ["publication_safe_to_push"]
+			? ["ship_ready_safe_to_promote"]
 			: []),
 	]);
 	const risk = classifyValidationRisk(input, source.build);
@@ -1080,6 +1274,8 @@ export function buildGatewayPreflight(
 		...ambiguityGaps,
 		...decisionPropagationGaps,
 		...semanticClosure.gaps,
+		...sprintCloseGaps,
+		...shipReadyGaps,
 		...auditGaps,
 		...taskIdGaps,
 		...isolationGaps,
@@ -1103,6 +1299,8 @@ export function buildGatewayPreflight(
 		decision_propagation: decisionPropagationGaps,
 		semantic_closure: semanticClosure.gaps,
 		semantic_closure_risks: semanticClosure.risks,
+		sprint_close: sprintCloseGaps,
+		ship_ready: shipReadyGaps,
 		audit_evidence: auditGaps,
 		task_ids: taskIdGaps,
 		content_proof: isolationGaps,
@@ -1147,6 +1345,18 @@ export function buildGatewayPreflight(
 			"medium",
 			semanticClosure.risks,
 			"Semantic execution closure report lists remaining risks for close review.",
+		),
+		...validationPreflightIssue(
+			"sprint-close",
+			"high",
+			sprintCloseGaps,
+			"Sprint-close gate blockers must clear before closing a sprint cohort.",
+		),
+		...validationPreflightIssue(
+			"ship-ready",
+			"high",
+			shipReadyGaps,
+			"Ship-ready gate requires exact promotion target proof.",
 		),
 		...validationPreflightIssue(
 			"audit-evidence",
@@ -1198,6 +1408,8 @@ export function buildGatewayPreflight(
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
 		...semanticClosure.gaps,
 		...semanticClosure.risks,
+		...sprintCloseGaps.map((gap) => `sprint_close:${gap}`),
+		...shipReadyGaps.map((gap) => `ship_ready:${gap}`),
 		...auditGaps.map((gap) => `audit:${gap}`),
 		...taskIdGaps.map((gap) => `task_id:${gap}`),
 		...isolationGaps.map((gap) => `content_proof:${gap}`),
@@ -1211,6 +1423,8 @@ export function buildGatewayPreflight(
 		version: 1,
 		status,
 		profile,
+		gate: profile,
+		input_profile: inputProfile !== profile ? inputProfile : undefined,
 		task_id:
 			input.task_id ||
 			source.build?.task_id ||
@@ -1223,10 +1437,12 @@ export function buildGatewayPreflight(
 			"open semantic questions",
 			"decision-row propagation coverage",
 			"semantic execution closure report",
+			"sprint-close cohort readiness",
+			"ship-ready promotion proof",
 			"required audit evidence",
 			"task id consistency",
 			"content proof strategy",
-			"close/publication blockers",
+			"close/ship-ready blockers",
 			"risk-tier approval policy",
 			"production policy profile",
 		],
@@ -1275,9 +1491,14 @@ export async function writeGatewayReport(
 
 	const created = nowIso();
 	const isolation = normalizeValidationIsolation(input.isolation);
-	const profile = input.profile.trim();
+	const inputProfile = input.profile.trim();
+	const profile = normalizeValidationGate(input.gate || inputProfile);
 	const policyProfile =
-		(input.policy_profile ?? input.profile ?? "").trim() || undefined;
+		(input.policy_profile
+			? normalizeValidationGate(input.policy_profile)
+			: profile) || undefined;
+	const auditProfileForRequirement = input.gate ? profile : inputProfile;
+	const auditPolicyProfile = input.policy_profile ? policyProfile : undefined;
 	const requirement = validationIsolationRequirement(profile, policyProfile);
 	const isolationGaps = validationIsolationGaps(isolation, requirement);
 	const publisherResultGaps = validationPublisherResultGaps(
@@ -1298,8 +1519,8 @@ export async function writeGatewayReport(
 	const auditRefs = unique(trimList(input.audit_refs));
 	const auditReports = unique(trimList(input.audit_reports));
 	const auditReq = auditRequirement(
-		profile,
-		policyProfile,
+		auditProfileForRequirement,
+		auditPolicyProfile,
 		input.required_audits,
 	);
 	const auditGaps =
@@ -1318,14 +1539,20 @@ export async function writeGatewayReport(
 		input.verdict === "pass" ? preflight.missing.stale_refs : [];
 	const decisionPropagationGaps =
 		input.verdict === "pass" ? preflight.missing.decision_propagation : [];
+	const sprintCloseGaps =
+		input.verdict === "pass" ? preflight.missing.sprint_close : [];
+	const shipReadyGaps =
+		input.verdict === "pass" ? preflight.missing.ship_ready : [];
 	const riskApprovalGaps =
 		input.verdict === "pass" ? preflight.missing.user_approval : [];
 	const productionPolicyGaps =
 		input.verdict === "pass" ? preflight.missing.production_policy : [];
 	const publicationReadinessGaps =
 		input.verdict === "pass"
-			? preflight.missing.close_publication_blockers.filter(
-					(gap) => gap === "publication_safe_to_push",
+			? preflight.missing.close_publication_blockers.filter((gap) =>
+					["publication_safe_to_push", "ship_ready_safe_to_promote"].includes(
+						gap,
+					),
 				)
 			: [];
 	const policyGaps = unique([
@@ -1339,6 +1566,8 @@ export async function writeGatewayReport(
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...sprintCloseGaps.map((gap) => `sprint_close:${gap}`),
+		...shipReadyGaps.map((gap) => `ship_ready:${gap}`),
 		...auditGaps.map((profileName) => `audit:${profileName}`),
 		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
 		...productionPolicyGaps,
@@ -1489,6 +1718,24 @@ export async function writeGatewayReport(
 					},
 				]
 			: [];
+	const sprintCloseIssue =
+		sprintCloseGaps.length > 0
+			? [
+					{
+						severity: "high",
+						summary: `Sprint-close blockers remain: ${sprintCloseGaps.join(", ")}.`,
+					},
+				]
+			: [];
+	const shipReadyIssue =
+		shipReadyGaps.length > 0
+			? [
+					{
+						severity: "high",
+						summary: `Ship-ready blockers remain: ${shipReadyGaps.join(", ")}.`,
+					},
+				]
+			: [];
 	const riskApprovalIssue =
 		riskApprovalGaps.length > 0
 			? [
@@ -1534,10 +1781,13 @@ export async function writeGatewayReport(
 		kind: "validation_report",
 		created,
 		profile,
+		gate: profile,
+		input_profile: inputProfile !== profile ? inputProfile : undefined,
 		task_id: (input.task_id ?? "").trim() || undefined,
+		sprint_id: (input.sprint_id ?? "").trim() || undefined,
 		verdict,
 		rationale: policyBlocked
-			? `${input.rationale.trim()} Policy blocks ${profile} validation until ${policyGaps.join(", ")} are recorded.`
+			? `${input.rationale.trim()} Policy blocks ${profile} gate validation until ${policyGaps.join(", ")} are recorded.`
 			: input.rationale.trim(),
 		checks: (input.checks ?? []).map((v) => v.trim()).filter(Boolean),
 		issues: [
@@ -1552,6 +1802,8 @@ export async function writeGatewayReport(
 			...commitReadinessIssue,
 			...traceabilityIssue,
 			...decisionPropagationIssue,
+			...sprintCloseIssue,
+			...shipReadyIssue,
 			...auditIssue,
 			...riskApprovalIssue,
 			...productionPolicyIssue,
@@ -1584,6 +1836,8 @@ export async function writeGatewayReport(
 				? ["semantic_build_traceability"]
 				: []),
 			...(decisionPropagationGaps.length > 0 ? ["decision_propagation"] : []),
+			...(sprintCloseGaps.length > 0 ? ["sprint_close"] : []),
+			...(shipReadyGaps.length > 0 ? ["ship_ready"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
 			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
 			...(productionPolicyGaps.length > 0 ? ["production_policy"] : []),
@@ -1621,7 +1875,7 @@ export async function writeGatewayReport(
 				: []),
 			...(publisherResultGaps.length > 0
 				? [
-						"Publish through the publisher queue or cite its clean immutable result proof before this profile can pass.",
+						"Publish through the publisher queue or cite its clean immutable result proof before this gate can pass.",
 					]
 				: []),
 			...(commitReadinessGaps.length > 0
@@ -1637,6 +1891,16 @@ export async function writeGatewayReport(
 			...(decisionPropagationGaps.length > 0
 				? [
 						"Create or validate a superseding planning build that maps each accepted decision row/downstream question to knowledge-only, roadmap task, sprint metadata, or explicit deferred owner/trigger/rationale evidence.",
+					]
+				: []),
+			...(sprintCloseGaps.length > 0
+				? [
+						"Close or route all sprint tasks, clear shared sprint risks, and refresh generated state before sprint-close can pass.",
+					]
+				: []),
+			...(shipReadyGaps.length > 0
+				? [
+						"Record exact ship-ready target proof such as commit/tree, package digest, archive ref, remote ref, or release approval before promotion.",
 					]
 				: []),
 			...(auditGaps.length > 0
@@ -1681,7 +1945,7 @@ export async function writeGatewayReport(
 		production_policy_requirement: preflight.production_policy,
 		preflight,
 		commit_readiness_requirement:
-			profile.trim().toLowerCase() === "implementation"
+			profile === "implementation"
 				? {
 						required: true,
 						evidence: [
@@ -1702,12 +1966,10 @@ export async function writeGatewayReport(
 		semantic_traceability_requirement: {
 			required:
 				traceabilityPolicy.gaps.length > 0 ||
-				profile.trim().toLowerCase() === "implementation" ||
+				profile === "implementation" ||
 				Boolean(
 					(input.source ?? "").trim() &&
-						["task-close", "publication", "publish", "release"].includes(
-							profile.trim().toLowerCase(),
-						),
+						["task-close", "sprint-close", "ship-ready"].includes(profile),
 				),
 			evidence: [
 				"source implementation build",

@@ -205,16 +205,16 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		name: "wiki_gateway",
 		label: "Codewiki Validation",
 		description:
-			"Preflight or write a validation report (pass, fail, or block) for a compiler handoff or task close.",
+			"Preflight or write a validation report (pass, fail, or block) for a named gateway gate.",
 		promptSnippet:
 			"Preflight gateway metadata/risk and write validation reports with verdict and rationale",
 		promptGuidelines: [
-			"Use preflight_only=true before expensive fresh validation to surface missing upstream builds, audits, task ids, content proof, stale refs, close/publication blockers, and risk approval gaps.",
+			"Use preflight_only=true before expensive fresh validation to surface missing upstream builds, audits, task/sprint ids, content proof, stale refs, close/ship-ready blockers, and risk approval gaps.",
 			"Use after running a validation gateway. Passing validation can be transient; fail/block/policy-required reports should persist under .codewiki/validation/.",
-			"Profile must match a known validation gateway profile: decision, planning, implementation, task-close, drift-audit, or graph-audit.",
-			"Pass reports must cite required audit evidence through audit_refs/audit_reports for the profile.",
-			"Implementation profile requires fresh_context=true, clean state, and checked content proof (SHA/tree or working_tree_digest). Task-close/publication/publish/release require clean=true plus immutable commit/tree/package/archive/remote proof.",
-			"High-risk tiers such as semantic-system, security/migration/publication, and destructive changes require explicit user approval evidence before lower-layer promotion.",
+			"Preferred gates are decision, planning, implementation, task-close, sprint-close, and ship-ready; backward-compatible profile aliases such as publication, publish, and release are retained.",
+			"Pass reports must cite required audit evidence through audit_refs/audit_reports for the gate.",
+			"Implementation gate requires fresh_context=true, clean state, and checked content proof (SHA/tree or working_tree_digest). Task-close, sprint-close, and ship-ready require clean=true plus immutable commit/tree/package/archive/remote proof.",
+			"High-risk tiers such as semantic-system, security/migration/ship-ready, and destructive changes require explicit user approval evidence before lower-layer promotion.",
 		],
 		parameters: codewikiValidationReportSchema,
 		execute: (project, params) =>

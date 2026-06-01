@@ -4,6 +4,7 @@ import {
 	normalizeTraceabilityExemption,
 } from "../change/traceability.ts";
 import { unique } from "../shared/utils.ts";
+import { normalizeValidationGate } from "./gates.ts";
 
 export const HIGH_RISK_VALIDATION_TIERS = new Set([
 	"semantic-system",
@@ -67,7 +68,7 @@ export function classifyValidationRisk(
 	input: ValidationRiskPolicyInput,
 	build: Record<string, any> | null | undefined,
 ): ValidationRiskPolicyResult {
-	const profile = input.profile.trim().toLowerCase();
+	const profile = normalizeValidationGate(input.profile);
 	const policyProfile = String(input.policy_profile || "")
 		.trim()
 		.toLowerCase();
@@ -117,7 +118,7 @@ export function classifyValidationRisk(
 		reason =
 			"Destructive or irreversible wording requires explicit user approval before promotion.";
 	} else if (
-		["publication", "publish", "release"].includes(profile) ||
+		profile === "ship-ready" ||
 		/\b(security|migration|publication|publish|release|secret|credential|remote|breaking[- ]api)\b/.test(
 			haystack,
 		)

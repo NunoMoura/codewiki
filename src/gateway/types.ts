@@ -1,5 +1,22 @@
 import type { SubagentVerdict } from "../agency/types.ts";
-import type { ChangeClaimRole, WorkflowLoop, WorktreeIsolationMetadata } from "../session/types.ts";
+import {
+	VALIDATION_GATE_ALIAS_VALUES,
+	VALIDATION_GATE_VALUES,
+	isValidationGate,
+	normalizeValidationGate,
+} from "../policy/gates.ts";
+import type {
+	ChangeClaimRole,
+	WorkflowLoop,
+	WorktreeIsolationMetadata,
+} from "../session/types.ts";
+
+export {
+	VALIDATION_GATE_ALIAS_VALUES,
+	VALIDATION_GATE_VALUES,
+	isValidationGate,
+	normalizeValidationGate,
+};
 
 export type TaskVerifierVerdict = SubagentVerdict;
 
@@ -13,15 +30,19 @@ export const VALIDATION_FAILURE_CLASS_VALUES = [
 	"runtime_conflict",
 ] as const;
 
-export type CodewikiValidationFailureClass = (typeof VALIDATION_FAILURE_CLASS_VALUES)[number];
+export type CodewikiValidationFailureClass =
+	(typeof VALIDATION_FAILURE_CLASS_VALUES)[number];
 
-export interface CodewikiValidationIsolationInput extends WorktreeIsolationMetadata {
+export interface CodewikiValidationIsolationInput
+	extends WorktreeIsolationMetadata {
 	role?: ChangeClaimRole;
 }
 
 export interface CodewikiValidationReportInput {
 	repoPath?: string;
 	profile: string;
+	gate?: string;
+	sprint_id?: string;
 	task_id?: string;
 	verdict: "pass" | "fail" | "block";
 	rationale: string;

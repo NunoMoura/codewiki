@@ -16,21 +16,23 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
 
 3. `wiki_audit`
    - Run required audit profiles or cite existing audit refs before a pass verdict when policy requires them.
-   - Common profile sets:
+   - Common gate/profile sets:
      - decision/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
      - implementation: `alignment`, `changed`, plus `horizontal-alignment` when KB/code/source coherence is the risk surface and `source-contract` when API/tool/package surfaces changed;
      - task-close: `alignment`, `changed`, `task`, `generated-parity`;
+     - sprint-close: `alignment`, `changed`, `generated-parity` plus sprint cohort proof;
+     - ship-ready: `alignment`, `package`, `security`, `stale-reference` when available;
      - graph/drift: `graph-audit`, `drift-audit`, `horizontal-alignment`, `source-contract`, `generated-parity` or configured equivalents;
-     - publication/release: package/security/publication policy profiles when available.
+     - publication/publish/release remain backward-compatible ship-ready aliases.
 
 4. `wiki_gateway`
-   - Use `preflight_only=true` to return gateway preflight without writing a report. Preflight checks source readability, accepted upstream builds, required audits, task ids, content proof strategy, stale refs, close/publication blockers, and risk approval policy.
-   - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/publication needs proof, or submitted refs expected an explicit report.
-   - Required fields: `profile`, `task_id` if any, `source`, `verdict`, `rationale`, `checks`, `issues`, `audit_refs`/`audit_reports`, `failed_criteria`, `blocking_questions`, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and `isolation` when required.
+   - Use `preflight_only=true` to return gateway preflight without writing a report. Preflight checks source readability, accepted upstream builds, required audits, task/sprint ids, content proof strategy, stale refs, close/ship-ready blockers, and risk approval policy.
+   - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/sprint-close/ship-ready needs proof, or submitted refs expected an explicit report.
+   - Required fields: `profile` or preferred `gate`, `task_id`/`sprint_id` if any, `source`, `verdict`, `rationale`, `checks`, `issues`, `audit_refs`/`audit_reports`, `failed_criteria`, `blocking_questions`, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and `isolation` when required.
    - Implementation pass requires `isolation.fresh_context=true`, explicit `clean` value, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, or equivalent allowed by policy).
-   - Task-close/publication/publish/release pass requires `isolation.fresh_context=true`, `clean=true`, immutable proof (`validated_sha`, `head_sha`, `published_sha`, `tree_sha`, `package_digest`, `archive_ref`, or `remote_ref`), and publication readiness when publishing.
-   - Mechanical/docs and code-local tiers do not need extra user approval beyond accepted semantics, but still require normal gateway proof. Semantic-system tiers need accepted decision/planning evidence. Security, migration, publication, release, and destructive tiers require explicit user approval evidence before promotion.
-- A GC restore ledger is not validation/content proof. Pre-commit tracked GC blocks close/publication readiness; post-commit GC is hygiene that must name the archive commit/tree and preserve restore commands.
+   - Task-close, sprint-close, and ship-ready pass require `isolation.fresh_context=true`, `clean=true`, immutable proof (`validated_sha`, `head_sha`, `published_sha`, `tree_sha`, `package_digest`, `archive_ref`, or `remote_ref`), and promotion readiness when shipping.
+   - Mechanical/docs and code-local tiers do not need extra user approval beyond accepted semantics, but still require normal gateway proof. Semantic-system tiers need accepted decision/planning evidence. Security, migration, ship-ready, and destructive tiers require explicit user approval evidence before promotion.
+- A GC restore ledger is not validation/content proof. Pre-commit tracked GC blocks close/ship-ready readiness; post-commit GC is hygiene that must name the archive commit/tree and preserve restore commands.
 
 ## Fresh validator context
 
@@ -61,8 +63,8 @@ Return `block` when:
 - fresh-context isolation is required but absent;
 - content proof is missing or too weak for the boundary;
 - high-risk work lacks accepted semantic traceability or explicit user approval evidence required by its risk tier;
-- publication readiness is missing when publication/publish/release is being validated;
-- tracked CodeWiki artifacts were purged before the archive/close/publication commit or without restore-ledger proof;
+- ship-ready readiness is missing when ship-ready or its publication/publish/release aliases are being validated;
+- tracked CodeWiki artifacts were purged before the archive/close/ship-ready commit or without restore-ledger proof;
 - task is an umbrella/container/sprint coordinator;
 - sibling tasks overlap without explicit dependency/split rationale;
 - validator cannot safely inspect enough source to decide.

@@ -18,6 +18,8 @@ Policy lives under `src/policy/**`. Gateway report, preflight, transaction, and 
 
 ## Gate index
 
+Gateway terminology uses named gates. The tool still accepts the legacy `profile` field for compatibility; preferred gate names are `decision`, `planning`, `implementation`, `task-close`, `sprint-close`, and `ship-ready`. Legacy `publication`, `publish`, and `release` inputs are treated as ship-ready aliases.
+
 | Gate | Purpose |
 | --- | --- |
 | `decision` | Approved semantic decisions, KB mappings, risk approval, and no unapproved semantics. |
@@ -39,7 +41,7 @@ Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/
 
 Vertical alignment traces intent through decision builds, knowledge/diagrams, planning builds, roadmap tasks, implementation builds, validation reports, and content proof. Horizontal alignment checks coherence inside one layer. Graph context helps routing but is not final authority.
 
-Implementation validation requires fresh-context isolation, explicit clean-state value, checked content proof, and a commit-ready implementation build. Dirty implementation validation may use a working-tree digest. Task-close, ship-ready, publish, and release require clean immutable proof such as commit SHA, tree SHA, package digest, archive ref, or remote ref.
+Implementation validation requires fresh-context isolation, explicit clean-state value, checked content proof, and a commit-ready implementation build. Dirty implementation validation may use a working-tree digest. Task-close, sprint-close, and ship-ready require clean immutable proof such as commit SHA, tree SHA, package digest, archive ref, or remote ref.
 
 ## Rules
 

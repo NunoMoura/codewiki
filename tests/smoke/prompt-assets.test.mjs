@@ -99,7 +99,7 @@ const validationTools = readFileSync(resolve(repoRoot, "skills", "codewiki-valid
 assert.match(validationTools, /restart validation from the source\/build refs/, "validation tool reference should cover fresh validator restart");
 assert.match(validationTools, /Do not call `wiki_build`/, "validation tool reference should forbid build compilation");
 assert.match(validationTools, /Return `block` when/, "validation tool reference should define block criteria");
-assert.match(validationTools, /Task-close\/publication\/publish\/release pass requires/, "validation tool reference should define stronger close/publication proof");
+assert.match(validationTools, /Task-close, sprint-close, and ship-ready pass require/, "validation tool reference should define stronger close/ship-ready proof");
 
 const task = {
 	id: "TASK-083",

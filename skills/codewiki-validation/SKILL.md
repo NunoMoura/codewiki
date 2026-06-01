@@ -50,7 +50,7 @@ Read only enough source truth to decide:
 ## Workflow
 
 1. **Confirm validation boundary**
-   - Identify profile: `decision`, `planning`, `implementation`, `task-close`, `drift-audit`, `graph-audit`, publication/publish/release policy, or configured equivalent.
+   - Identify gate: `decision`, `planning`, `implementation`, `task-close`, `sprint-close`, `ship-ready`, or a backward-compatible profile alias such as publication/publish/release.
    - If current context is not fresh where policy requires it, stop and restart validation from the source refs instead of judging from builder context.
 
 2. **Load state and source refs**
@@ -60,7 +60,7 @@ Read only enough source truth to decide:
 
 3. **Run/review audits and preflight**
    - Run `wiki_audit` for required profiles or cite existing audit refs.
-   - Run `wiki_gateway preflight_only=true` when source/build metadata, decision-row propagation, task id, audit evidence, content proof, stale refs, close/publication blockers, or risk approval may block the pass.
+   - Run `wiki_gateway preflight_only=true` when source/build metadata, decision-row propagation, task/sprint id, audit evidence, content proof, stale refs, close/ship-ready blockers, or risk approval may block the pass.
    - A pass verdict must include required audit evidence when profile policy requires it.
 
 4. **Check vertical alignment**
@@ -77,13 +77,13 @@ Read only enough source truth to decide:
 
 7. **Apply isolation/content-proof and risk gates**
    - Implementation validation requires `fresh_context=true`, a clean-state value, required audits, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, etc.).
-   - Task-close/publication/publish/release require `fresh_context=true`, `clean=true`, immutable committed/published/archive proof (`validated_sha`, `head_sha`, `tree_sha`, `package_digest`, `archive_ref`, `remote_ref`, etc.), and publication readiness when publishing.
+   - Task-close, sprint-close, and ship-ready require `fresh_context=true`, `clean=true`, immutable committed/published/archive proof (`validated_sha`, `head_sha`, `tree_sha`, `package_digest`, `archive_ref`, `remote_ref`, etc.), and promotion readiness when shipping.
    - High-risk or semantic-system gates should run from fresh validation context; decision/planning may record a recommendation while policy-specific isolation can make it blocking.
    - Passing validation reports may emit post-gateway context-boundary metadata, local-only implementation checkpoint metadata, and Pi `/reload` guidance for extension/skill/runtime/API paths; validation never reloads or restarts Pi itself.
-   - Working-tree digest alone can support dirty pre-commit implementation validation, not task-close/publication.
+   - Working-tree digest alone can support dirty pre-commit implementation validation, not task-close, sprint-close, or ship-ready.
    - Mechanical/docs and code-local changes can use the low-risk fast path only after normal gateway evidence is complete.
-   - Semantic-system changes must cite accepted decision/planning evidence; security, migration, publication, release, and destructive tiers require explicit user approval evidence before promotion.
-   - Pre-commit tracked GC blocks close/publication readiness. Post-commit GC may be reviewed as hygiene only after archive commit/tree proof exists and must not erase the proof commit.
+   - Semantic-system changes must cite accepted decision/planning evidence; security, migration, ship-ready, and destructive tiers require explicit user approval evidence before promotion.
+   - Pre-commit tracked GC blocks close/ship-ready readiness. Post-commit GC may be reviewed as hygiene only after archive commit/tree proof exists and must not erase the proof commit.
 
 8. **Record verdict**
    - Use `wiki_gateway` with profile, source/build refs, task id if any, verdict, rationale, checks, issues, audit refs/reports, failed criteria/blocking questions, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and isolation fields.

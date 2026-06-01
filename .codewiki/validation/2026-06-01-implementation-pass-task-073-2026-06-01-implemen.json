@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-01T03:32:58Z",
+  "profile": "implementation",
+  "task_id": "TASK-073",
+  "verdict": "pass",
+  "rationale": "Implementation build validates against TASK-073 acceptance from source refs. Gateway gate names now include sprint-close and ship-ready, publication/publish/release profile aliases remain compatible, sprint-close/ship-ready blockers are surfaced in preflight/report output, schema/tool/skill docs use gate terminology, and targeted/full checks pass. Dirty content proof covers pre-commit implementation validation.",
+  "checks": [
+    "source: .codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+    "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "npm run test:pack — pass",
+    "wiki_audit profiles=changed,source-contract,alignment task_id=TASK-073 — source-contract/task pass; changed/generated graph and pre-existing graph-health warnings only",
+    "working_tree_digest sha256:682e60168030fbbd9f0774eb5c566b37de0c06c18253a77c073808fda1fec755"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Working tree is dirty for pre-commit implementation validation; task-close still needs clean commit/tree proof."
+    },
+    {
+      "severity": "warning",
+      "summary": "Changed audit warning is generated graph dirtiness; alignment warning is pre-existing graph-health warnings."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "changed",
+    "source-contract",
+    "alignment",
+    "wiki_audit profiles=changed,source-contract,alignment task_id=TASK-073 — warning only generated graph dirtiness and pre-existing graph-health"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:682e60168030fbbd9f0774eb5c566b37de0c06c18253a77c073808fda1fec755"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-073",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+    "validation_report": ".codewiki/validation/2026-06-01-implementation-pass-task-073-2026-06-01-implemen.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+      ".codewiki/validation/2026-06-01-implementation-pass-task-073-2026-06-01-implemen.json",
+      "src/policy/gates.ts",
+      "src/policy/gate-policy.ts",
+      "src/policy/production-profile.ts",
+      "src/policy/risk.ts",
+      "src/gateway/types.ts",
+      "src/gateway/report.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/index.ts",
+      "package.json",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/index_graph.json",
+      "tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-073",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+    "validation_report": ".codewiki/validation/2026-06-01-implementation-pass-task-073-2026-06-01-implemen.json",
+    "commit_title": "checkpoint(codewiki): TASK-073 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-073",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-01-implementation-pass-task-073-2026-06-01-implemen.json",
+      "CodeWiki-Checks: source: .codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json; node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs — pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass; node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass; npm run typecheck — pass; npm run test:smoke — pass; npm run check:architecture — pass; npm run test:pack — pass; wiki_audit profiles=changed,source-contract,alignment task_id=TASK-073 — source-contract/task pass; changed/generated graph and pre-existing graph-health warnings only; working_tree_digest sha256:682e60168030fbbd9f0774eb5c566b37de0c06c18253a77c073808fda1fec755"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/policy/gates.ts",
+      "src/policy/gate-policy.ts",
+      "src/policy/production-profile.ts",
+      "src/policy/risk.ts",
+      "src/gateway/types.ts",
+      "src/gateway/report.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/index.ts",
+      "package.json",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed",
+      "Pi package extension or skill metadata changed",
+      "packaged CodeWiki skill prompt changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-073",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:682e60168030fbbd9f0774eb5c566b37de0c06c18253a77c073808fda1fec755",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validated from implementation build and source refs with dirty pre-commit content proof; no task-close/publication claim.",
+    "role": "validator"
+  }
+}

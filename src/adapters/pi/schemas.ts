@@ -25,7 +25,11 @@ import {
 	WORKFLOW_LOOP_VALUES,
 } from "../../session/types.ts";
 import { CODEWIKI_STATE_SECTION_VALUES } from "../../state/types.ts";
-import { VALIDATION_FAILURE_CLASS_VALUES } from "../../gateway/types.ts";
+import {
+	VALIDATION_FAILURE_CLASS_VALUES,
+	VALIDATION_GATE_ALIAS_VALUES,
+	VALIDATION_GATE_VALUES,
+} from "../../gateway/types.ts";
 
 export const changeTypeSchema = Type.Union(
 	CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
@@ -242,6 +246,11 @@ export const workflowLoopSchema = Type.Union(
 );
 export const validationFailureClassSchema = Type.Union(
 	VALIDATION_FAILURE_CLASS_VALUES.map((value) => Type.Literal(value)),
+);
+export const validationGateSchema = Type.Union(
+	[...VALIDATION_GATE_VALUES, ...VALIDATION_GATE_ALIAS_VALUES].map((value) =>
+		Type.Literal(value),
+	),
 );
 export const auditProfileSchema = Type.Union(
 	AUDIT_PROFILE_VALUES.map((value) => Type.Literal(value)),
@@ -634,8 +643,10 @@ export const codewikiValidationReportSchema = Type.Object({
 	repoPath: repoPathToolField,
 	profile: Type.String({
 		minLength: 1,
-		description: "Validation profile: decision, planning, implementation, task-close, drift-audit, etc.",
+		description: "Validation gate/profile name. Preferred gates: decision, planning, implementation, task-close, sprint-close, ship-ready. Backward-compatible aliases such as publication, publish, and release are accepted.",
 	}),
+	gate: Type.Optional(validationGateSchema),
+	sprint_id: Type.Optional(Type.String()),
 	task_id: Type.Optional(Type.String()),
 	verdict: Type.Union([
 		Type.Literal("pass"),
