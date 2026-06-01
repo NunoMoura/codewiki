@@ -631,6 +631,38 @@ function recordList(value: unknown): UnknownRecord[] {
 	return list(value).filter(isRecord);
 }
 
+function hasDurablePlanningResolutionEvidence(entry: UnknownRecord): boolean {
+	if (!String(entry.evidence || "").trim()) return false;
+	const resolution = String(entry.resolution || "").trim().toLowerCase();
+	if (["roadmap-task", "task", "tasks"].includes(resolution)) {
+		return list(entry.task_ids).length > 0;
+	}
+	if (resolution === "sprint") return list(entry.sprint_ids).length > 0;
+	if (["knowledge-only", "non-executable", "not-applicable", "rejected", "blocked"].includes(resolution)) {
+		return list(entry.knowledge_refs).length > 0 || list(entry.source_refs).length > 0;
+	}
+	if (resolution === "deferred") {
+		return Boolean(
+			String(entry.owner || "").trim() &&
+				String(entry.trigger || "").trim() &&
+				String(entry.rationale || "").trim(),
+		);
+	}
+	return Boolean(list(entry.source_refs).length || list(entry.knowledge_refs).length);
+}
+
+function planningBuildHasTestStrategy(buildData: UnknownRecord): boolean {
+	if (list(buildData.tdd_plan).length > 0) return true;
+	if (list(buildData.candidate_test_files).length > 0) return true;
+	if (list(buildData.evidence_mapping).length > 0) return true;
+	if (list(buildData.acceptance_mapping).length > 0) return true;
+	const decisionRows = recordList(buildData.decision_row_resolutions);
+	const downstreamQuestions = recordList(buildData.downstream_question_resolutions);
+	return [...decisionRows, ...downstreamQuestions].some(
+		hasDurablePlanningResolutionEvidence,
+	);
+}
+
 function isBuildV2(build: { data?: UnknownRecord }): boolean {
 	return Number(build.data?.schema_version || 0) >= 2;
 }
@@ -768,17 +800,13 @@ function lintPlanningBuildV2(buildPath: string, data: unknown): LintIssue[] {
 			),
 		);
 	}
-	if (
-		!list(buildData.tdd_plan).length &&
-		!list(buildData.candidate_test_files).length &&
-		!list(buildData.evidence_mapping).length
-	) {
+	if (!planningBuildHasTestStrategy(buildData)) {
 		issues.push(
 			createIssue(
 				"warning",
 				"planning-build-missing-test-strategy",
 				buildPath,
-				"Planning build v2 should include TDD/test strategy or evidence mapping.",
+				"Planning build v2 should include TDD/test strategy, evidence mapping, or durable row/question resolution evidence.",
 			),
 		);
 	}

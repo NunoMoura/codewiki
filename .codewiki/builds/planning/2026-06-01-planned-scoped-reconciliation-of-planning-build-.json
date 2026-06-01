@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-01T05:25:31Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-15T05:25:31.000Z",
+    "purge_after": "2026-06-29T05:25:31.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-074-1",
+      "text": "Planning-build lint must preserve warnings for builds with no TDD plan, candidate tests, evidence mapping, acceptance mapping, or durable row/question evidence.",
+      "source_refs": [],
+      "state": "planned"
+    },
+    {
+      "id": "REQ-074-2",
+      "text": "Planning-build lint must treat durable row/question resolution evidence as planning strategy evidence.",
+      "source_refs": [],
+      "state": "planned"
+    },
+    {
+      "id": "REQ-074-3",
+      "text": "Current Pi distribution correction planning-build warnings must no longer surface as uncovered reconciliation after graph refresh.",
+      "source_refs": [],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Regression test covers missing strategy warning.",
+      "evidence": "Planned test file tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+      "requirement_ids": [
+        "REQ-074-1"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Regression test covers durable row/question evidence pass.",
+      "evidence": "Planned test file tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+      "requirement_ids": [
+        "REQ-074-2"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Graph refresh/audit confirms no uncovered warning remains.",
+      "evidence": "Planned wiki_state/wiki_audit after implementation",
+      "requirement_ids": [
+        "REQ-074-3"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Planned scoped reconciliation of `planning-build-missing-test-strategy` lint warning as TASK-074.",
+  "task_ids": [
+    "TASK-074"
+  ],
+  "task_changes": [
+    "Created TASK-074 to update planning-build lint/test coverage so durable row/question evidence counts as planning strategy evidence while truly strategy-free planning builds still warn."
+  ],
+  "roadmap_changes": [
+    "Created TASK-074 to update planning-build lint/test coverage so durable row/question evidence counts as planning strategy evidence while truly strategy-free planning builds still warn."
+  ],
+  "tdd_plan": [
+    "Add regression smoke test that asserts planning-build lint still warns when no test/evidence strategy exists.",
+    "Assert planning-build lint does not warn when decision row/downstream question resolutions include evidence and durable task/knowledge/deferred disposition.",
+    "Assert real graph/reconciliation no longer reports planning-build-missing-test-strategy for the Pi distribution correction planning builds after refresh."
+  ],
+  "candidate_test_files": [
+    "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/state/lint.ts",
+    "package.json"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "PI-DIST-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-074"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+      ],
+      "owner": "TASK-074",
+      "trigger": "reconciliation warning uncovered after TASK-073 closure",
+      "trigger_state": "roadmap open task created for lint reconciliation",
+      "rationale": "The uncovered warning came from the Pi distribution planning builds; TASK-074 is the scoped executable remediation.",
+      "evidence": "wiki_state reported reconciliation:decision for planning-build-missing-test-strategy with no open roadmap coverage.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "How should the uncovered planning-build-missing-test-strategy warning be reconciled?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-074"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/index_graph.json",
+        "src/state/lint.ts"
+      ],
+      "owner": "TASK-074",
+      "trigger": "user requested reconciliation",
+      "trigger_state": "task created and ready for implementation",
+      "rationale": "The warning needs source-owned lint behavior and regression tests rather than historic build rewrites.",
+      "evidence": "TASK-074 acceptance names lint behavior and test proof.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Regression test covers missing strategy warning.",
+      "evidence": "Planned test file tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+      "requirement_ids": [
+        "REQ-074-1"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Regression test covers durable row/question evidence pass.",
+      "evidence": "Planned test file tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+      "requirement_ids": [
+        "REQ-074-2"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Graph refresh/audit confirms no uncovered warning remains.",
+      "evidence": "Planned wiki_state/wiki_audit after implementation",
+      "requirement_ids": [
+        "REQ-074-3"
+      ],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "Durable planning row/question evidence can satisfy the planning strategy lint contract without rewriting historic accepted builds."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not rewrite historic planning builds.",
+    "Do not suppress planning-build errors for missing decision sources or roadmap outputs.",
+    "Do not change task-close or implementation validation requirements."
+  ],
+  "risks": [
+    "Lint relaxation must stay narrow so truly strategy-free planning builds still warn."
+  ],
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-074"
+    ],
+    "validation": [],
+    "source": [
+      "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-074"
+    ],
+    "code": [
+      "src/state/lint.ts",
+      "package.json"
+    ],
+    "tests": [
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

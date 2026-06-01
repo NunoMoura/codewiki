@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-01T05:34:03Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-074",
+  "verdict": "block",
+  "rationale": "Implementation build validates against TASK-074 acceptance. Planning-build lint now preserves missing-strategy warnings for truly uncovered planning builds while accepting durable row/question resolution evidence; regression covers synthetic and real Pi distribution correction planning builds. Checks pass. Dirty content proof supports pre-commit implementation validation. Policy blocks implementation gate validation until upstream:accepted_planning_build_ref:.codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json:missing_planning_validation_pass are recorded.",
+  "checks": [
+    "source: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run check:architecture — pass",
+    "npm run test:smoke — pass",
+    "npm run test:pack — pass",
+    "wiki_audit profiles=changed,source-contract,alignment task_id=TASK-074 — source-contract/task pass; changed/generated-view and pre-existing graph-health warnings only",
+    "working_tree_digest sha256:7b416a05dd1c8b39758d36a64c0642cdf45383dfd891d5f1cba9c2189c9b17af"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Working tree is dirty for pre-commit implementation validation; task-close still needs clean commit/tree proof."
+    },
+    {
+      "severity": "warning",
+      "summary": "Separate pre-existing roadmap-missing-code-path warning remains outside TASK-074 scope."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing accepted upstream gateway evidence: accepted_planning_build_ref:.codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json:missing_planning_validation_pass."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "changed",
+    "source-contract",
+    "alignment",
+    "wiki_audit profiles=changed,source-contract,alignment task_id=TASK-074 — warning only generated view dirtiness and pre-existing graph-health"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:7b416a05dd1c8b39758d36a64c0642cdf45383dfd891d5f1cba9c2189c9b17af"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-074",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "validation_report": ".codewiki/validation/2026-06-01-implementation-block-task-074-2026-06-01-impleme.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+      ".codewiki/validation/2026-06-01-implementation-block-task-074-2026-06-01-impleme.json",
+      "src/state/lint.ts",
+      "package.json",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-074",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "validation_report": ".codewiki/validation/2026-06-01-implementation-block-task-074-2026-06-01-impleme.json",
+    "commit_title": "checkpoint(codewiki): TASK-074 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-074",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-01-implementation-block-task-074-2026-06-01-impleme.json",
+      "CodeWiki-Checks: source: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json; node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs — pass; npm run typecheck — pass; npm run check:architecture — pass; npm run test:smoke — pass; npm run test:pack — pass; wiki_audit profiles=changed,source-contract,alignment task_id=TASK-074 — source-contract/task pass; changed/generated-view and pre-existing graph-health warnings only; working_tree_digest sha256:7b416a05dd1c8b39758d36a64c0642cdf45383dfd891d5f1cba9c2189c9b17af"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/lint.ts",
+      "package.json"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi package extension or skill metadata changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "upstream_gateway"
+  ],
+  "blocking_questions": [
+    "Run and cite the required upstream gateway pass before lower-layer promotion."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-074",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready promotion proof",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [
+        "accepted_planning_build_ref:.codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json:missing_planning_validation_pass"
+      ],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "upstream-builds",
+        "severity": "high",
+        "summary": "Missing accepted upstream build and gateway-pass evidence.",
+        "evidence": [
+          "accepted_planning_build_ref:.codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json:missing_planning_validation_pass"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:7b416a05dd1c8b39758d36a64c0642cdf45383dfd891d5f1cba9c2189c9b17af",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validated from implementation build and source refs with dirty pre-commit content proof; no task-close/publication claim.",
+    "role": "validator"
+  }
+}
