@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T05:58:50Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-075/context.json",
+  "task": {
+    "id": "TASK-075",
+    "title": "Reconcile cancelled roadmap code-path lint",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "bug",
+    "change_type": "code",
+    "summary": "Adjust roadmap path lint so cancelled or otherwise non-open historic tasks do not surface missing code-path reconciliation warnings after source removal, while open tasks still warn on missing paths.",
+    "labels": [
+      "reconciliation",
+      "lint",
+      "roadmap"
+    ],
+    "goal": {
+      "outcome": "The remaining `roadmap-missing-code-path` warning for cancelled TASK-012/TASK-036 stale UI paths is resolved without hiding missing path warnings for active roadmap tasks.",
+      "acceptance": [
+        "Roadmap lint still warns when an open task references a missing code path.",
+        "Roadmap lint does not warn when a cancelled/non-open historic task references a path removed by later validated work.",
+        "The current graph no longer routes the TASK-012 `src/ui` warning as uncovered reconciliation after refresh.",
+        "Regression test covers open-task warning and cancelled-task suppression."
+      ],
+      "non_goals": [
+        "Do not rewrite historic cancelled task evidence.",
+        "Do not remove path validation for active roadmap work.",
+        "Do not suppress missing spec/source validation globally."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-075 roadmap lint smoke test",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "wiki_audit changed/source-contract/alignment"
+      ]
+    },
+    "delta": {
+      "desired": "Lint/reconciliation treats non-open historic task code paths as archived evidence while preserving warnings for active tasks.",
+      "current": "Graph reconciliation reports `roadmap-missing-code-path` because cancelled TASK-012 still references removed `src/ui`.",
+      "closure": "Task closes after lint behavior and regression tests pass and graph no longer routes the cancelled TASK-012 missing path warning."
+    }
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-01T05:54:54Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-15T05:54:54.000Z",
+    "purge_after": "2026-06-29T05:54:54.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted scoped reconciliation decision for cancelled roadmap code-path lint after web UI removal.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "RMD-CANCELLED-CODE-PATH-LINT",
+      "current_state": "Cancelled historic roadmap tasks such as TASK-012/TASK-036 retain code_paths that reference removed browser UI source, so roadmap lint routes them as active `roadmap-missing-code-path` reconciliation warnings.",
+      "current_project_state": "Cancelled historic roadmap tasks such as TASK-012/TASK-036 retain code_paths that reference removed browser UI source, so roadmap lint routes them as active `roadmap-missing-code-path` reconciliation warnings.",
+      "desired_state": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "agreed_change": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "expected_final_state": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Cancelled tasks are not executable current work. Rewriting their historic evidence is less safe than making lint distinguish active roadmap validation from historical refs.",
+      "affected_layers": [
+        "roadmap",
+        "validation",
+        "source"
+      ],
+      "risk": "Low; scoped to code_paths existence warnings for non-open roadmap tasks.",
+      "user_action": "approved",
+      "alternatives": [
+        "Rewrite or purge historic cancelled task code_paths, rejected because it mutates old evidence.",
+        "Suppress all roadmap missing code path warnings, rejected because active task validation must remain."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "RMD-CANCELLED-CODE-PATH-LINT"
+  ],
+  "approved_rows": [
+    {
+      "id": "RMD-CANCELLED-CODE-PATH-LINT",
+      "current_state": "Cancelled historic roadmap tasks such as TASK-012/TASK-036 retain code_paths that reference removed browser UI source, so roadmap lint routes them as active `roadmap-missing-code-path` reconciliation warnings.",
+      "current_project_state": "Cancelled historic roadmap tasks such as TASK-012/TASK-036 retain code_paths that reference removed browser UI source, so roadmap lint routes them as active `roadmap-missing-code-path` reconciliation warnings.",
+      "desired_state": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "agreed_change": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "expected_final_state": "Missing code-path lint applies to active/open roadmap tasks, while cancelled/non-open historic tasks are treated as evidence and do not block current reconciliation after validated source removal.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Cancelled tasks are not executable current work. Rewriting their historic evidence is less safe than making lint distinguish active roadmap validation from historical refs.",
+      "affected_layers": [
+        "roadmap",
+        "validation",
+        "source"
+      ],
+      "risk": "Low; scoped to code_paths existence warnings for non-open roadmap tasks.",
+      "user_action": "approved",
+      "alternatives": [
+        "Rewrite or purge historic cancelled task code_paths, rejected because it mutates old evidence.",
+        "Suppress all roadmap missing code path warnings, rejected because active task validation must remain."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Roadmap missing code-path warnings remain active for open tasks but are suppressed for cancelled/non-open historic tasks."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "RMD-CANCELLED-CODE-PATH-LINT",
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Existing roadmap/graph docs distinguish active roadmap truth from historical/generated evidence; no KB prose change was required for this source-lint reconciliation.",
+      "deferred": true,
+      "deferred_reason": "No durable product/system semantics changed beyond lint behavior; implementation evidence owns the exact behavior."
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users no longer see cancelled historic task paths as active reconciliation blockers."
+    ],
+    "system_impact": [
+      "Roadmap lint and graph reconciliation distinguish active open task path validation from historic cancelled task refs."
+    ],
+    "downstream_planning_questions": [
+      "Create scoped task to update lint and regression coverage for cancelled roadmap code-path refs."
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "How should cancelled-task missing code paths be reconciled after web UI source removal?",
+    "Create scoped task to update lint and regression coverage for cancelled roadmap code-path refs."
+  ],
+  "assumptions": [],
+  "open_questions": [],
+  "non_goals": [
+    "Do not rewrite historic cancelled task evidence.",
+    "Do not remove active/open task missing code-path validation.",
+    "Do not suppress missing spec/source validation globally."
+  ],
+  "risks": [
+    "Lint relaxation must stay narrow to code-path existence checks for non-open tasks."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/graph.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

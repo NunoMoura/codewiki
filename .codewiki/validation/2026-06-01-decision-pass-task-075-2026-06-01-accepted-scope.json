@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-01T05:57:10Z",
+  "profile": "decision",
+  "gate": "decision",
+  "task_id": "TASK-075",
+  "verdict": "pass",
+  "rationale": "Decision build for TASK-075 records a scoped, approved reconciliation row: active/open roadmap tasks still validate missing code paths, while cancelled/non-open historic tasks do not create active missing-code-path reconciliation blockers. No KB prose change was required; propagation maps to TASK-075 planning/implementation. Required audits pass with only generated-view/pre-existing graph-health warnings.",
+  "checks": [
+    "source: .codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+    "wiki_audit profiles=changed,source-contract,alignment,stale-reference task_id=TASK-075 — source-contract/stale-reference/task pass; warnings only generated views and pre-existing graph-health",
+    "working_tree_digest sha256:980f759c03e5106966dff50c6d31d2172078f6a5325fd0ac376acf6e54144038"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "No KB prose changed; decision row maps directly to source lint behavior and TASK-075 execution."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "changed",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "changed",
+    "source-contract",
+    "alignment",
+    "stale-reference",
+    "wiki_audit profiles=changed,source-contract,alignment,stale-reference task_id=TASK-075 — warning only generated view dirtiness and pre-existing graph-health"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:980f759c03e5106966dff50c6d31d2172078f6a5325fd0ac376acf6e54144038"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-075",
+    "source_build": ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+    "validation_report": ".codewiki/validation/2026-06-01-decision-pass-task-075-2026-06-01-accepted-scope.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+      ".codewiki/validation/2026-06-01-decision-pass-task-075-2026-06-01-accepted-scope.json",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/graph.md"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-075",
+    "source_build": ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+    "validation_report": ".codewiki/validation/2026-06-01-decision-pass-task-075-2026-06-01-accepted-scope.json",
+    "commit_title": "checkpoint(codewiki): TASK-075 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-075",
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-01-decision-pass-task-075-2026-06-01-accepted-scope.json",
+      "CodeWiki-Checks: source: .codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json; wiki_audit profiles=changed,source-contract,alignment,stale-reference task_id=TASK-075 — source-contract/stale-reference/task pass; warnings only generated views and pre-existing graph-health; working_tree_digest sha256:980f759c03e5106966dff50c6d31d2172078f6a5325fd0ac376acf6e54144038"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "changed",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:changed or profile:changed",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "task_id": "TASK-075",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready promotion proof",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:980f759c03e5106966dff50c6d31d2172078f6a5325fd0ac376acf6e54144038",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Decision validation performed pre-commit as upstream evidence for planning/implementation validation.",
+    "role": "validator"
+  }
+}

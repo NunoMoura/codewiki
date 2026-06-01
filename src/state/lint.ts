@@ -549,18 +549,20 @@ export function lintRoadmapEntries(
 			}
 		});
 
-		codePaths.forEach((codePath) => {
-			if (!existsSync(resolve(repoRoot, codePath))) {
-				issues.push(
-					createIssue(
-						"warning",
-						"roadmap-missing-code-path",
-						sourcePath,
-						`${entryId} references missing code path: ${codePath}`,
-					),
-				);
-			}
-		});
+		if (isOpenRoadmapStatus(status)) {
+			codePaths.forEach((codePath) => {
+				if (!existsSync(resolve(repoRoot, codePath))) {
+					issues.push(
+						createIssue(
+							"warning",
+							"roadmap-missing-code-path",
+							sourcePath,
+							`${entryId} references missing code path: ${codePath}`,
+						),
+					);
+				}
+			});
+		}
 
 		(entry.research_ids || []).forEach((researchId) => {
 			if (!researchIds.has(researchId)) {
