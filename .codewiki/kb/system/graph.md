@@ -151,7 +151,6 @@ Status, `wiki_state`, and CodeWiki UI views must consume the generated-state rec
 
 ## Related docs
 
-- [CodeWiki UI](control-room-ui.md)
 - [Knowledge](knowledge.md)
 - [Roadmap](roadmap.md)
 - [Builds](builds.md)

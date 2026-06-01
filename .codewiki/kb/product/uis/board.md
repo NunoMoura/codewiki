@@ -40,7 +40,6 @@ Cards should surface the user's decision-relevant information first: outcome, cu
 
 - [Use Gated Agency](../stories/automation.md)
 - [Terminal UI](terminal.md)
-- [Deprecated Browser CodeWiki UI](control-room.md)
 - [Status Panel UI](status-panel.md)
 - [Roadmap](../../system/roadmap.md)
 - [Builds](../../system/builds.md)

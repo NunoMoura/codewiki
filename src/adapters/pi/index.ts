@@ -1,5 +1,4 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { ActiveStatusPanel } from "../../state/types.ts";
 import { registerBootstrapFeatures } from "./bootstrap.ts";
 import {
 	codewikiBuildToolInputSchema,
@@ -18,7 +17,6 @@ import { registerUiCommand } from "./commands/ui.ts";
 import { currentTaskLink } from "./session.ts";
 import { readRoadmapTask } from "../../roadmap/store.ts";
 import {
-	rememberStatusDockProject,
 	resolveStatusDockProject,
 	resolveToolProject,
 } from "../../project/context.ts";
@@ -32,6 +30,7 @@ import { registerCodewikiAuditTool } from "./tools/audit.ts";
 import { registerCodewikiResumeContextTool } from "./tools/resume-context.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
+import { installCodewikiPromptContract } from "./prompt-contract.ts";
 import {
 	buildPostGatewayContextRefreshRequest,
 	installCodewikiCompaction,
@@ -40,16 +39,11 @@ import {
 import { registerCodewikiStateTool } from "./tools/state.ts";
 import { executeCodewikiRoadmap } from "./tools/task.ts";
 import {
-	activeStatusPanelGlobal,
 	clearStatusDock,
-	openStatusPanel,
 	refreshStatusDock,
-	setActiveStatusPanelGlobal,
 	setTaskSessionStatus,
 	withUiErrorHandling,
 } from "./ui/manager.ts";
-
-const COMMAND_PREFIX = "wiki";
 
 interface ProjectToolRegistration {
 	name: string;
@@ -111,7 +105,7 @@ function resultPayload(result: any): unknown {
 export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerBootstrapFeatures(pi);
 	installCodewikiCompaction(pi);
-	let activeStatusPanel: ActiveStatusPanel | null = activeStatusPanelGlobal;
+	installCodewikiPromptContract(pi);
 	let disposeArtifactWake: (() => void) | null = null;
 
 	pi.on("session_shutdown", () => {
@@ -164,54 +158,6 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerStatusCommand(pi);
 	registerUiCommand(pi);
 	registerResumeCommand(pi);
-
-	pi.registerShortcut("alt+w", {
-		description: "Toggle Codewiki status panel",
-		handler: async (ctx) => {
-			await withUiErrorHandling(ctx, async () => {
-				if (activeStatusPanel?.close) {
-					activeStatusPanel.close();
-					activeStatusPanel = activeStatusPanelGlobal;
-					return;
-				}
-				const resolved = await resolveStatusDockProject(ctx, {
-					allowWhenOff: true,
-				});
-				if (!resolved) {
-					ctx.ui.notify(
-						`No codewiki project resolved. Use /${COMMAND_PREFIX}-bootstrap first or work inside a repo with .codewiki/config.json.`,
-						"warning",
-					);
-					return;
-				}
-				await rememberStatusDockProject(resolved.project);
-				await refreshStatusDock(
-					resolved.project,
-					ctx,
-					currentTaskLink(ctx),
-					resolved,
-				);
-				const opened = await openStatusPanel(
-					pi,
-					resolved.project,
-					ctx,
-					"both",
-					currentTaskLink(ctx),
-					resolved.source,
-					(activeStatusPanelRef) => {
-						activeStatusPanel = activeStatusPanelRef;
-						setActiveStatusPanelGlobal(activeStatusPanelRef);
-					},
-				);
-				if (!opened) {
-					ctx.ui.notify(
-						"Custom UI unavailable. Use wiki_state output or configure Pi UI mode.",
-						"warning",
-					);
-				}
-			});
-		},
-	});
 
 	registerCodewikiStateTool(pi);
 	registerCodewikiResumeContextTool(pi);

@@ -336,10 +336,9 @@ async function main() {
 		["src/**/*.ts", "scripts/**/*.mjs", "tests/**/*.mjs"],
 		"Knip project metadata",
 	);
-	ensureIncludes(
-		packageJson.knip.ignoreDependencies ?? [],
-		["cytoscape"],
-		"Knip dependency rationale metadata",
+	assert.ok(
+		!(packageJson.knip.ignoreDependencies ?? []).includes("cytoscape"),
+		"cytoscape should not remain as an ignored dependency after browser UI removal",
 	);
 	console.log(
 		`✓ package manifest looks correct (${packageJson.name}@${packageJson.version})`,
@@ -418,8 +417,8 @@ async function main() {
 			);
 		}
 		assert.ok(
-			extension.shortcuts.has("alt+w"),
-			"Expected alt+w shortcut for toggling the status panel",
+			!extension.shortcuts.has("alt+w"),
+			"Alt+W should not be registered as a package-specific shortcut",
 		);
 		const extensionToolNames = [...extension.tools.keys()];
 		const removedRoadmapToolAlias = ["codewiki", "task"].join("_");
@@ -2266,8 +2265,9 @@ async function main() {
 		const auditCommand = extension.commands.get("audit");
 		const configCommand = extension.commands.get("wiki-config");
 		const statusCommand = extension.commands.get("wiki-status");
+		const uiCommand = extension.commands.get("wiki-ui");
 		const resumeCommand = extension.commands.get("wiki-resume");
-		const statusShortcut = extension.shortcuts.get("alt+w");
+
 		assert.ok(
 			auditCommand && typeof auditCommand.handler === "function",
 			"audit command missing handler",
@@ -2281,13 +2281,30 @@ async function main() {
 			"wiki-status command missing handler",
 		);
 		assert.ok(
+			uiCommand && typeof uiCommand.handler === "function",
+			"wiki-ui command missing deprecation handler",
+		);
+		assert.ok(
 			resumeCommand && typeof resumeCommand.handler === "function",
 			"wiki-resume command missing handler",
 		);
+		await uiCommand.handler("", {
+			cwd: projectDir,
+			ui: {
+				notify: (message, level) =>
+					statusNotifications.push({ message, level }),
+			},
+		});
 		assert.ok(
-			statusShortcut && typeof statusShortcut.handler === "function",
-			"alt+w shortcut missing handler",
+			statusNotifications.some(
+				(entry) =>
+					entry.level === "warning" &&
+					/wiki-ui is deprecated/.test(String(entry.message)) &&
+					/wiki-status/.test(String(entry.message)),
+			),
+			"wiki-ui should be a deprecation shim that points to Pi-hosted commands",
 		);
+
 		await configCommand.handler("", {
 			cwd: projectDir,
 			isIdle: () => configIdle,
@@ -2354,7 +2371,7 @@ async function main() {
 			"Esc while agent is active should keep config panel open after abort",
 		);
 		configIdle = true;
-		await statusShortcut.handler({
+		await statusCommand.handler("", {
 			cwd: projectDir,
 			isIdle: () => panelIdle,
 			abort: () => {
@@ -2391,7 +2408,7 @@ async function main() {
 		assert.equal(
 			autoDockPrefs.lastRepoPath,
 			projectDir,
-			"panel toggle should remember the last resolved repo for future global sessions",
+			"wiki-status should remember the last resolved repo for future global sessions",
 		);
 		widgetState.key = null;
 		widgetState.content = null;
@@ -3409,7 +3426,7 @@ async function main() {
 			statusNotifications.every(
 				(entry) => !/Wiki: Smoke Wiki/.test(String(entry.message)),
 			),
-			"alt+w should prefer opening the panel over posting a long notify when custom UI is available",
+			"wiki-status should prefer opening the panel over posting a long notify when custom UI is available",
 		);
 		assert.equal(
 			typeof widgetState.content,
@@ -3423,7 +3440,7 @@ async function main() {
 					/[🟢🟡🔴]/u.test(String(entry.value)) &&
 					/Smoke Wiki/.test(String(entry.value)),
 			),
-			"panel toggle should refresh the one-line status summary with repo name and traffic-light circle",
+			"wiki-status should refresh the one-line status summary with repo name and traffic-light circle",
 		);
 		const widgetInstance = widgetState.content?.(
 			{ terminal: { columns: 120, rows: 32 } },

@@ -41,7 +41,7 @@ When package-local assets need repo specs, use `wiki_state` to locate the instal
 1. Run `wiki_state` when `.codewiki/config.json` exists or may exist. Treat it as the routing map, not final truth.
 2. If the repo has no CodeWiki config, use `/wiki-bootstrap` or internal `wiki_setup`/`wiki_bootstrap`.
 3. If commands are missing after install, ask the user to run `/reload`.
-4. Use `/wiki-ui` for the rich local Control Room; use `Alt+W` and `wiki_state` for compact status.
+4. Use `/wiki-status`, `/wiki-resume`, and `wiki_state` for compact status and continuation. `/wiki-ui` is a deprecation shim that points to supported Pi-hosted commands.
 5. Use `bootstrap/onboarding.md` after bootstrap to infer project shape, ask only high-value questions, and propose next status/resume action.
 
 ## Package surface
@@ -52,8 +52,7 @@ Public commands:
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-config`
 - `/wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
-- `/wiki-ui [repo-path] [port]`
-- `Alt+W` to toggle the compact live status panel
+- `/wiki-ui` (deprecated shim; points to supported Pi-hosted commands)
 
 Internal agent tools:
 

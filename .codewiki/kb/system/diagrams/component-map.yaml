@@ -6,14 +6,14 @@ purpose: Show major CodeWiki domain, application, UI, adapter, truth, and proof 
 source_docs:
   - .codewiki/kb/system/overview.md
   - .codewiki/kb/system/file-structure.md
-  - .codewiki/kb/system/control-room-ui.md
+  - .codewiki/kb/system/terminal-ui.md
   - .codewiki/kb/system/api.md
   - .codewiki/kb/system/graph.md
   - .codewiki/kb/system/agency.md
   - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/adapters.md
 renderer:
-  preferred: cytoscape
+  preferred: layered_graph
   fallback: mermaid_flowchart
 groups:
   - id: surfaces
@@ -33,11 +33,11 @@ nodes:
     label: User / agent intent
     group: surfaces
     kind: actor
-  - id: control_room_ui
-    label: CodeWiki UI
+  - id: terminal_ui
+    label: Pi-hosted CodeWiki surface
     group: ui_layer
     kind: ui
-    source: .codewiki/kb/system/control-room-ui.md
+    source: .codewiki/kb/system/terminal-ui.md
   - id: extension
     label: Extension
     group: adapter_layer
@@ -133,7 +133,7 @@ nodes:
     kind: publication
 edges:
   - from: user_intent
-    to: control_room_ui
+    to: terminal_ui
     label: observes and navigates
   - from: user_intent
     to: extension
@@ -141,7 +141,7 @@ edges:
   - from: extension
     to: adapters
     label: registers host surfaces
-  - from: control_room_ui
+  - from: terminal_ui
     to: api
     label: delegates semantic reads/writes
   - from: adapters

@@ -99,8 +99,8 @@ async function run() {
 						priority: "medium",
 						kind: "feature",
 						summary: "Make graph navigation readable.",
-						spec_paths: [".codewiki/kb/product/uis/control-room.md"],
-						code_paths: ["src/ui/web/control-room.ts"],
+						spec_paths: [".codewiki/kb/product/uis/status-panel.md"],
+						code_paths: ["src/adapters/pi/ui/manager.ts"],
 						labels: ["graph", "ui"],
 						goal: {
 							outcome: "Graph navigation is readable.",
@@ -128,8 +128,8 @@ async function run() {
 						priority: "high",
 						kind: "feature",
 						summary: "Add graph spacing refinements.",
-						spec_paths: [".codewiki/kb/product/uis/control-room.md"],
-						code_paths: ["tests/smoke/control-room.test.mjs"],
+						spec_paths: [".codewiki/kb/product/uis/status-panel.md"],
+						code_paths: ["tests/smoke/package-smoke.test.mjs"],
 						labels: ["graph", "readability"],
 						goal: {
 							outcome: "Graph nodes have readable spacing.",
@@ -161,8 +161,8 @@ async function run() {
 		);
 		const taskOne = roadmapAfterRefine.tasks[firstTask.details.created[0].id];
 		assert.equal(taskOne.priority, "high");
-		assert.ok(taskOne.code_paths.includes("src/ui/web/control-room.ts"));
-		assert.ok(taskOne.code_paths.includes("tests/smoke/control-room.test.mjs"));
+		assert.ok(taskOne.code_paths.includes("src/adapters/pi/ui/manager.ts"));
+		assert.ok(taskOne.code_paths.includes("tests/smoke/package-smoke.test.mjs"));
 		assert.ok(taskOne.labels.includes("readability"));
 		assert.ok(taskOne.goal.acceptance.includes("Graph renders nodes."));
 		assert.ok(taskOne.goal.acceptance.includes("Nodes have minimum spacing."));

@@ -30,10 +30,10 @@ systems:
   - id: chat_interface
     label: Agent chat interface
     boundary: external
-  - id: control_room
-    label: Local CodeWiki UI
+  - id: pi_codewiki_surface
+    label: Pi-hosted CodeWiki surface
     boundary: codewiki
-    source: .codewiki/kb/system/control-room-ui.md
+    source: .codewiki/kb/system/terminal-ui.md
   - id: pi_adapter
     label: Pi adapter
     boundary: codewiki
@@ -54,8 +54,8 @@ relationships:
     to: chat_interface
     label: directs agent work
   - from: maintainer
-    to: control_room
-    label: monitors second-screen status and navigation
+    to: pi_codewiki_surface
+    label: inspects Pi-hosted status and navigation
   - from: agent
     to: codewiki_api
     label: reads and mutates through tools
@@ -63,15 +63,15 @@ relationships:
     to: codewiki_api
     label: extends typed capabilities
   - from: future_external_user
-    to: control_room
-    label: inspects repo-local state
+    to: pi_codewiki_surface
+    label: inspects repo-local state through supported adapters
   - from: chat_interface
     to: pi_adapter
     label: invokes packaged tools and commands
   - from: pi_adapter
     to: codewiki_api
     label: delegates semantics
-  - from: control_room
+  - from: pi_codewiki_surface
     to: codewiki_api
     label: reads curated state and routes actions
   - from: codewiki_api

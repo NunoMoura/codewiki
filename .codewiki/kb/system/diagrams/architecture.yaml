@@ -2,10 +2,10 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki System Architecture
 kind: architecture_map
-purpose: Show the high-level CodeWiki user surfaces, application workflow components, durable truth stores, generated graph, executable proof, and publication support with the same node/edge contract previously stored in ../architecture.mmd.
+purpose: Show the high-level CodeWiki user surfaces, application workflow components, durable truth stores, generated graph, executable proof, and publication support from canonical YAML.
 source_docs:
   - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/control-room-ui.md
+  - .codewiki/kb/system/terminal-ui.md
   - .codewiki/kb/system/extension.md
   - .codewiki/kb/system/adapters.md
   - .codewiki/kb/system/api.md
@@ -16,7 +16,6 @@ source_docs:
   - .codewiki/kb/system/builds.md
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/graph.md
-  - .codewiki/kb/system/architecture.mmd
 renderer:
   preferred: layered_graph
   fallback: mermaid_flowchart
@@ -44,11 +43,11 @@ nodes:
     label: User / agent intent
     group: surfaces
     kind: actor
-  - id: control_room
-    label: CodeWiki UI
+  - id: terminal_surface
+    label: Pi-hosted CodeWiki surface
     group: surfaces
     kind: ui
-    source: .codewiki/kb/system/control-room-ui.md
+    source: .codewiki/kb/system/terminal-ui.md
   - id: extension
     label: Extension
     group: integration
@@ -110,14 +109,14 @@ nodes:
     summary: Commit, PR, issue, release, and push support.
 edges:
   - from: user
-    to: control_room
+    to: terminal_surface
   - from: user
     to: extension
   - from: extension
-    to: control_room
+    to: terminal_surface
   - from: extension
     to: adapters
-  - from: control_room
+  - from: terminal_surface
     to: api
   - from: adapters
     to: api
@@ -171,8 +170,3 @@ edges:
     to: publication
   - from: code_tests
     to: publication
-compatibility_exports:
-  - path: .codewiki/kb/system/architecture.mmd
-    format: mermaid_flowchart
-    status: compatibility_export_only
-    note: YAML in this file is canonical; Mermaid is retained only for compatibility during migration.

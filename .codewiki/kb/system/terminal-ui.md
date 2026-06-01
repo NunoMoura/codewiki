@@ -15,7 +15,7 @@ diagram_refs:
 
 # Terminal UI and Agent Visual Language
 
-CodeWiki is terminal-first. Pi chat, Pi TUI panels, and explicit `/wiki-*` commands are the primary user experience. Browser UI code is deprecated and should be removed through a validated cleanup task.
+CodeWiki is terminal-first. Pi chat and explicit `/wiki-*` commands are the primary user experience today. Richer Pi TUI design is future work; browser UI code is deprecated and should be removed through a validated cleanup task.
 
 The terminal UI is not a separate truth system. It renders source-backed views from `.codewiki/kb/**`, roadmap state, builds, validation reports, session/runtime state, generated graph lenses, and Git proof. Rendered ASCII, Unicode, Mermaid, SVG, HTML, PNG, Cytoscape JSON, or future terminal snapshots are not canonical truth.
 
@@ -93,13 +93,13 @@ Do not create a broad `wiki_visualize` mega-tool. Prefer specific commands and `
 
 ## Removal boundary for web UI
 
-The standalone browser Control Room is deprecated. Cleanup should remove:
+The standalone browser Control Room is deprecated. Cleanup now removes active browser source and keeps only migration evidence:
 
-- `src/ui/web/**`,
-- `/wiki-ui` launcher behavior or convert it to a temporary deprecation message,
-- browser Control Room tests,
-- browser UI product/system docs or rewrite them as terminal-first docs,
-- unused browser-only dependencies after package tests prove they are unused.
+- `src/ui/web/**` removed,
+- `/wiki-ui` converted to a temporary deprecation message,
+- browser Control Room tests removed,
+- browser UI product/system docs retained only as deprecated migration evidence,
+- browser-only dependencies removed after package tests prove they are unused.
 
 If shareable non-terminal output is needed later, generate explicit exports such as Markdown reports, Mermaid, or SVG from canonical YAML/graph state. Those exports are artifacts, not product UI source truth.
 

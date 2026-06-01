@@ -6,10 +6,6 @@ import { join } from "node:path";
 import { buildGraph } from "../../src/state/graph.ts";
 import { readCodewikiState } from "../../src/state/reader.ts";
 import { loadProject } from "../../src/project/context.ts";
-import {
-	buildControlRoomGraphModel,
-	buildControlRoomStateModel,
-} from "../../src/ui/web/control-room.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-graph-lenses-"));
 const decisionPath =
@@ -474,30 +470,6 @@ try {
 	assert.ok(
 		state.audit.content_proof_refs.includes(checkedDigest),
 		"state audit include should expose content proof",
-	);
-
-	const uiGraph = await buildControlRoomGraphModel(project);
-	assert.equal(
-		uiGraph.nodes.filter((node) => node.kind === "lens_family").length,
-		5,
-		"Control Room graph should expose default lens family nodes",
-	);
-	assert.equal(
-		uiGraph.nodes.some((node) => node.id === `validation:${validationPath}`),
-		false,
-		"non-next validation internals stay collapsed by default",
-	);
-
-	const uiState = await buildControlRoomStateModel(project);
-	assert.equal(
-		uiState.graph.nodes,
-		5,
-		"Control Room status count should use default lens families",
-	);
-	assert.equal(
-		uiState.gates.closure_gaps,
-		1,
-		"Control Room state should expose semantic closure gap count",
 	);
 } finally {
 	await rm(root, { recursive: true, force: true });

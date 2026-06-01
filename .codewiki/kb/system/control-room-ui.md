@@ -17,14 +17,11 @@ This document remains temporarily to preserve migration context and references u
 
 ## Deprecated scope
 
-Deprecated browser-specific scope includes:
+Deprecated browser-specific source scope has been removed. The remaining migration surface is:
 
-- `src/ui/web/**`,
-- `/wiki-ui` browser launcher behavior,
-- browser Control Room tests,
-- browser-hosted Board/Map/KB/Sessions pages,
-- browser-only diagram parsing and rendering,
-- browser-only dependencies after proof they are unused.
+- `/wiki-ui` as a deprecation shim that points to Pi-hosted commands,
+- historic/deprecated browser product docs retained as migration evidence,
+- immutable historic builds, validation reports, and archive refs that mention the old browser UI.
 
 ## Replacement direction
 

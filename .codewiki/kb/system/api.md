@@ -14,7 +14,7 @@ updated: "2026-06-01"
 
 The CodeWiki API is the stable semantic facade for CodeWiki operations. Adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations call the facade or explicit concept contracts instead of editing `.codewiki/` internals directly. Pi tools are one adapter over this API, not the only access path.
 
-Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki-*` commands, `wiki_*` tools, TUI panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, audit, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
+Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki-*` commands, `wiki_*` tools, Pi-hosted status/config panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, audit, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
 
 The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
 
@@ -35,7 +35,7 @@ The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-v
 
 ## Access surfaces
 
-Pi TUI/chat with CodeWiki commands, tools, status panels, skills, and prompt contract is the intended first-class interactive terminal surface. The legacy browser Control Room, optional CLI/MCP wrappers, Claude Code, Codex, other agents, and humans all preserve the same `.codewiki/` semantics. Host adapters translate external inputs into API calls and must fail closed when a required host capability is missing.
+Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contract is the intended first-class interactive terminal surface. The legacy browser Control Room is deprecated; optional CLI/MCP wrappers, Claude Code, Codex, other agents, and humans all preserve the same `.codewiki/` semantics. Host adapters translate external inputs into API calls and must fail closed when a required host capability is missing.
 
 ## Write rules
 

@@ -16,10 +16,7 @@ import {
 	rebuildAndSummarize,
 	runRebuild,
 } from "../../../state/artifacts.ts";
-import {
-	readRoadmapFile,
-	updateRoadmapTask,
-} from "../../../roadmap/store.ts";
+import { readRoadmapFile, updateRoadmapTask } from "../../../roadmap/store.ts";
 import { isRoadmapTaskToken } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
 import { recordSessionTaskAction } from "../../../session/runtime.ts";
@@ -109,7 +106,7 @@ async function runResumeCommand(
 	);
 	if (!selection.task) {
 		ctx.ui.notify(
-			`${project.label}: no artifact-available roadmap task for /${commandName}. ${selection.skipped.length > 0 ? `Skipped: ${selection.skipped.slice(0, 3).join("; ")}. ` : ""}Open /wiki-status or use Alt+W if you need a different direction.`,
+			`${project.label}: no artifact-available roadmap task for /${commandName}. ${selection.skipped.length > 0 ? `Skipped: ${selection.skipped.slice(0, 3).join("; ")}. ` : ""}Open /wiki-status if you need a different direction.`,
 			"warning",
 		);
 		await refreshStatusDock(project, ctx, currentTaskLink(ctx));

@@ -16,7 +16,7 @@ code_paths_mode: explicit_override
 
 The status panel is the compact host-native status and fallback navigation surface for CodeWiki. Terminal UI is the primary rich visual product surface. The status panel should summarize health, focus, next action, gated agency state, task status, evidence, and resume guidance while staying small enough to coexist with host surfaces.
 
-The current Pi visual surface opens with `Alt+W`. Future host-native panels should preserve the same compact status semantics even when their shortcut, panel system, or rendering framework differs.
+The current Pi visual surface opens through `/wiki-status`. Future host-native panels should preserve the same compact status semantics even when their panel system or rendering framework changes; no default package-specific shortcut is reserved.
 
 The status panel should make terminal-first CodeWiki commands and Pi TUI panels discoverable. Browser CodeWiki UI launch paths are deprecated.
 
@@ -51,5 +51,4 @@ The panel should not expose Product, System, Graph, Leases, Knowledge, Builds, V
 - [Board UI](board.md)
 - [Map Navigation UI](graph-navigation.md)
 - [Terminal UI System Component](../../system/terminal-ui.md)
-- [Deprecated Browser UI System Component](../../system/control-room-ui.md)
 - [Extension](../../system/extension.md)

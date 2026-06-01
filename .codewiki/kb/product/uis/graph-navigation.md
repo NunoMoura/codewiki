@@ -48,6 +48,5 @@ The Map is an inspection surface, not an editor. Selecting a node or edge opens 
 
 - [Low-Token Navigation](../stories/navigation.md)
 - [Terminal UI](terminal.md)
-- [Deprecated Browser CodeWiki UI](control-room.md)
 - [Status Panel UI](status-panel.md)
 - [Graph](../../system/graph.md)

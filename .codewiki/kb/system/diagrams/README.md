@@ -48,9 +48,9 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 
 | File | Kind | Purpose | Preferred rendering |
 | --- | --- | --- | --- |
-| `architecture.yaml` | `architecture_map` | Show the high-level system architecture previously represented by `../architecture.mmd` with stable IDs and renderer hints. | Layered graph, future TUI ASCII, or Mermaid flowchart export. |
+| `architecture.yaml` | `architecture_map` | Show the high-level system architecture with stable IDs and renderer hints. | Layered graph, future TUI ASCII, or Mermaid flowchart export. |
 | `context-map.yaml` | `context_map` | Show users, access surfaces, external systems, and the project boundary. | Graph/SVG or Mermaid flowchart. |
-| `component-map.yaml` | `component_map` | Show major runtime components, adapters, data stores, and dependency direction. | Cytoscape/custom SVG or Mermaid flowchart. |
+| `component-map.yaml` | `component_map` | Show major runtime components, adapters, data stores, and dependency direction. | Layered graph, custom SVG, or Mermaid flowchart. |
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `data-model.yaml` | `data_model` | Show durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
 | `state-lifecycle.yaml` | `state_lifecycle` | Show task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
@@ -63,12 +63,11 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 - File-structure diagrams should show ownership and drift categories without duplicating full component docs.
 - Diagram files should not duplicate full component docs.
 - Generated state/graph output remains `.codewiki/index_graph.json`; diagram files are intended system knowledge.
-- Generated HTML, SVG, PNG, Cytoscape JSON, Mermaid output, Unicode terminal views, ASCII diagrams, or future TUI render output must be treated as render artifacts, not source truth.
-- `architecture.yaml` is the canonical architecture diagram. `../architecture.mmd` is retained only as a Mermaid compatibility/export artifact and must not be edited as canonical truth.
+- Generated HTML, SVG, PNG, graph JSON, Mermaid output, Unicode terminal views, ASCII diagrams, or future TUI render output must be treated as render artifacts, not source truth.
+- `architecture.yaml` is the canonical architecture diagram. Hand-maintained `../architecture.mmd` was removed; future Mermaid output should be generated from YAML when needed.
 
 ## Related docs
 
 - [Terminal UI and Agent Visual Language](../terminal-ui.md)
-- [Deprecated Browser UI](../control-room-ui.md)
 - [File Structure](../file-structure.md)
 - [System Overview](../overview.md)

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-31T22:18:49Z",
+  "updated": "2026-06-01T01:57:00Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -549,6 +549,8 @@
         ".codewiki/kb/system/diagrams/README.md",
         ".codewiki/kb/system/extension.md",
         ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/components/adapters-and-ui.md",
         ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
         ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
         ".codewiki/kb/product/uis/terminal.md",
@@ -557,22 +559,24 @@
         ".codewiki/kb/system/adapters.md"
       ],
       "code_paths": [
-        "src/ui/web",
         "src/adapters/pi/commands/ui.ts",
-        "src/index.ts",
+        "src/adapters/pi/prompt-contract.ts",
         "src/adapters/pi/index.ts",
         "src/adapters/pi/commands",
         "src/adapters/pi/ui",
-        "tests/smoke/control-room.test.mjs",
+        "src/knowledge/diagram-parser.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/hot-context.test.mjs",
         "package.json",
+        "package-lock.json",
         "README.md",
-        ".codewiki/kb/system/architecture.mmd",
         "skills/codewiki",
         "src/state",
-        "src/knowledge/diagram-parser.ts",
-        "tests",
-        "src/adapters/pi",
-        "src/project"
+        "src/project",
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
       ],
       "research_ids": [],
       "labels": [
@@ -628,7 +632,7 @@
         "closure": "Task closes after web UI/browser source truth is removed or deprecated with proof and package/tests/audits pass.\nRefinement: Prompt contract implemented, tested, and validated as Pi-extension behavior."
       },
       "created": "2026-05-31",
-      "updated": "2026-05-31T22:18:26Z"
+      "updated": "2026-06-01T01:57:00Z"
     },
     "TASK-072": {
       "id": "TASK-072",

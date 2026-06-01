@@ -6,7 +6,6 @@ import { join } from "node:path";
 import { buildGraph } from "../../src/state/graph.ts";
 import { readCodewikiState } from "../../src/state/reader.ts";
 import { loadProject } from "../../src/project/context.ts";
-import { buildControlRoomGraphModel, buildControlRoomStateModel } from "../../src/ui/web/control-room.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-hot-context-"));
 const buildPath = ".codewiki/builds/implementation/2026-05-12-task-999.json";
@@ -101,14 +100,6 @@ try {
 	});
 	assert.equal(stateWithArchive.archive.restore_index[0].id, "TASK-999");
 	assert.equal(stateWithArchive.archive.git_archive.archive_refs[0], "refs/codewiki/archive/task/TASK-999");
-
-	const uiGraph = await buildControlRoomGraphModel(project);
-	assert.equal(uiGraph.nodes.some((node) => node.kind === "git_archive_ref"), false);
-	assert.equal(uiGraph.nodes.some((node) => node.id === `build:${buildPath}`), false);
-	assert.ok(uiGraph.stats.hidden_cold_nodes >= 2);
-
-	const uiState = await buildControlRoomStateModel(project);
-	assert.equal(uiState.graph.nodes, 5, "UI state graph count should use default lens families");
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

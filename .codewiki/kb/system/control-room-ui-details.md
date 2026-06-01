@@ -13,7 +13,7 @@ updated: "2026-05-31"
 
 This document is deprecated with the standalone browser CodeWiki UI. Active terminal-first UX detail belongs in [Terminal UI and Agent Visual Language](terminal-ui.md).
 
-The previous browser-specific requirements for Cytoscape rendering, local server assets, browser Settings, browser Sessions, and header navigation should not guide new implementation work. They may be used only as migration evidence while deleting `src/ui/web/**`, `/wiki-ui`, browser tests, and browser-only dependencies.
+The previous browser-specific requirements for graph rendering, local server assets, browser Settings, browser Sessions, and header navigation should not guide new implementation work. They remain only as migration evidence after removal of `src/ui/web/**`, browser tests, and browser-only dependencies.
 
 ## Principles retained for terminal UX
 

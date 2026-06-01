@@ -7,17 +7,16 @@ owners:
   - product
   - design
 updated: "2026-05-31"
-code_paths:
-  - src/ui/web
-  - src/adapters/pi/commands
-code_paths_mode: explicit_override
+source_refs:
+  - .codewiki/kb/system/control-room-ui.md
+  - .codewiki/kb/system/terminal-ui.md
 ---
 
 # Deprecated Browser UI Details
 
 This browser-specific detail document is deprecated. New UX detail belongs in [Terminal UI](terminal.md) and [Terminal UI and Agent Visual Language](../../system/terminal-ui.md).
 
-The previous browser style, local server, header navigation, and second-screen expectations should not drive new implementation work. Remove or archive this document with the web UI cleanup task after product/system references are updated.
+The previous browser style, local server, header navigation, and second-screen expectations should not drive new implementation work. This document remains as deprecated migration evidence until product docs are archived or collapsed.
 
 ## Still-valid principles
 

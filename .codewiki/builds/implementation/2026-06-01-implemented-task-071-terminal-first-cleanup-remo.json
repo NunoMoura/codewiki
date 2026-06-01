@@ -1,0 +1,1213 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-01T01:43:49Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+  "task_id": "TASK-071",
+  "task": {
+    "id": "TASK-071",
+    "title": "Remove deprecated browser UI and architecture Mermaid source",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Remove the deprecated web Control Room surface, `/wiki-ui` launcher/docs/tests, browser-specific dependencies if unused, and `.codewiki/kb/system/architecture.mmd` after active code/docs render or reference canonical YAML instead.",
+    "spec_paths": [
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/system/control-room-ui-details.md",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/components/adapters-and-ui.md",
+      ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands",
+      "src/adapters/pi/ui",
+      "src/knowledge/diagram-parser.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/hot-context.test.mjs",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "skills/codewiki",
+      "src/state",
+      "src/project",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "goal": {
+      "outcome": "Deprecated browser UI and hand-maintained Mermaid architecture source are removed or reduced to an explicit deprecation shim, leaving terminal/Pi TUI plus canonical YAML as the active UX/source path.",
+      "acceptance": [
+        "No active docs or README advertise the standalone browser Control Room as supported product direction.",
+        "`/wiki-ui` is removed or returns only a clear deprecation message pointing to terminal commands; behavior is covered by tests or removed from command registration tests.",
+        "`src/ui/web/**` and browser Control Room tests are removed unless a small compatibility shim is explicitly justified.",
+        "`.codewiki/kb/system/architecture.mmd` is removed from active KB source; active docs and code reference `.codewiki/kb/system/diagrams/architecture.yaml` or generated views instead.",
+        "Unused browser-only dependencies such as `cytoscape` are removed only if typecheck, smoke tests, architecture checks, and pack dry-run prove they are unused.",
+        "Package README, system/product UI docs, and file-structure ownership maps align with terminal-first UX and no stale browser source truth.",
+        "Pi extension injects or appends a small CodeWiki contract only when CodeWiki config/context applies.",
+        "Contract tells agents to use wiki_state, respect canonical/generated/runtime boundaries, route semantic work through CodeWiki loops, and avoid hand-editing generated state.",
+        "Detailed loop instructions remain in skills; prompt does not duplicate full skill docs.",
+        "Tests or smoke coverage prove prompt injection/resource loading behavior."
+      ],
+      "non_goals": [
+        "Do not implement full terminal renderer in this task.",
+        "Do not remove backend/API graph/state capabilities.",
+        "Do not rewrite immutable historic builds or validation reports that reference old web UI or architecture.mmd.",
+        "Do not implement new `/wiki board`, `/wiki diagram`, or `/wiki trace` commands here unless needed as a deprecation fallback.",
+        "Do not build a full terminal app or full graph renderer.",
+        "Do not fork Pi Code.",
+        "Do not move full CodeWiki skills into Pi base prompt.",
+        "Do not rename workflow skill folders in this task.",
+        "Do not implement optional direct CLI distribution."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run check:architecture",
+        "npm run test:pack",
+        "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed",
+        "targeted package/resource/prompt smoke tests",
+        "wiki_audit source-contract and changed"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-15T01:43:49.000Z",
+    "purge_after": "2026-06-29T01:43:49.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
+    "wiki_audit source-contract,changed task_id=TASK-071 — warning only for changed generated files"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-071 terminal-first cleanup: removed browser Control Room source/tests/dependency and architecture.mmd source, converted /wiki-ui to deprecation shim, aligned docs/diagrams/file-structure maps, and added repo-scoped Pi prompt contract injection with smoke coverage.",
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+      ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-071"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/knowledge/diagram-parser.ts",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/prompts/resume-implementation.md",
+      ".codewiki/kb/system/architecture.mmd",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/context-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/system/control-room-ui-details.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/components/adapters-and-ui.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/product/uis/status-panel.md",
+      ".codewiki/kb/product/uis/control-room-details.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/uis/board.md",
+      ".codewiki/kb/product/uis/graph-navigation.md",
+      ".codewiki/roadmap/queue.json"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/hot-context.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ],
+    "validation": [
+      "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+      "wiki_audit source-contract,changed task_id=TASK-071"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-071"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+    "spec_paths": [
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/system/control-room-ui-details.md",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/components/adapters-and-ui.md",
+      ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+      ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands",
+      "src/adapters/pi/ui",
+      "src/knowledge/diagram-parser.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/hot-context.test.mjs",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "skills/codewiki",
+      "src/state",
+      "src/project",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/hot-context.test.mjs",
+    "tests/smoke/builds.test.mjs"
+  ],
+  "code_files": [
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/prompt-contract.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/knowledge/diagram-parser.ts",
+    "package.json",
+    "package-lock.json",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    ".codewiki/kb/system/architecture.mmd",
+    ".codewiki/kb/system/diagrams/architecture.yaml",
+    ".codewiki/kb/system/diagrams/README.md",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/context-map.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/terminal-ui.md",
+    ".codewiki/kb/system/control-room-ui.md",
+    ".codewiki/kb/system/control-room-ui-details.md",
+    ".codewiki/kb/system/extension.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/components/adapters-and-ui.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/product/uis/status-panel.md",
+    ".codewiki/kb/product/uis/control-room-details.md",
+    ".codewiki/kb/product/overview.md",
+    ".codewiki/kb/product/uis/board.md",
+    ".codewiki/kb/product/uis/graph-navigation.md",
+    ".codewiki/roadmap/queue.json"
+  ],
+  "files_changed": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/hot-context.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/prompt-contract.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/knowledge/diagram-parser.ts",
+    "package.json",
+    "package-lock.json",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    ".codewiki/kb/system/architecture.mmd",
+    ".codewiki/kb/system/diagrams/architecture.yaml",
+    ".codewiki/kb/system/diagrams/README.md",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/context-map.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/terminal-ui.md",
+    ".codewiki/kb/system/control-room-ui.md",
+    ".codewiki/kb/system/control-room-ui-details.md",
+    ".codewiki/kb/system/extension.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/components/adapters-and-ui.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/product/uis/status-panel.md",
+    ".codewiki/kb/product/uis/control-room-details.md",
+    ".codewiki/kb/product/overview.md",
+    ".codewiki/kb/product/uis/board.md",
+    ".codewiki/kb/product/uis/graph-navigation.md",
+    ".codewiki/roadmap/queue.json"
+  ],
+  "checks_run": [
+    "lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics",
+    "npm run typecheck — pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "npm run test:pack — pass",
+    "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views",
+    "wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      "roadmap_task_id": "TASK-071",
+      "test_files": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/hot-context.test.mjs",
+        "tests/smoke/builds.test.mjs"
+      ],
+      "evidence": [
+        "Used existing package-smoke as command/resource regression surface and changed expectations before/with implementation: no Alt+W shortcut, /wiki-ui deprecation shim, cytoscape absent.",
+        "Added prompt-contract smoke before final validation to prove hook registration, idempotent appending, no injection outside CodeWiki projects, and injection inside CodeWiki projects.",
+        "Ran graph-lenses/hot-context targeted tests after removing Control Room imports to prove generated graph/state flows still work without browser UI models."
+      ],
+      "notes": [
+        "No browser Control Room compatibility shim was kept beyond /wiki-ui warning command because task allowed removal/deprecation and package smoke covers behavior.",
+        "changed audit warnings are generated-view warnings for .codewiki/index_graph.json and TASK-071 generated context/task views after canonical updates; generated-parity passes."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+      "roadmap_task_id": "TASK-071",
+      "code_files": [
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/prompt-contract.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/knowledge/diagram-parser.ts",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/prompts/resume-implementation.md",
+        ".codewiki/kb/system/architecture.mmd",
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/README.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/context-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/control-room-ui-details.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/components/adapters-and-ui.md",
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/product/uis/status-panel.md",
+        ".codewiki/kb/product/uis/control-room-details.md",
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/product/uis/board.md",
+        ".codewiki/kb/product/uis/graph-navigation.md",
+        ".codewiki/roadmap/queue.json"
+      ],
+      "evidence": [
+        "Deleted src/ui/web/control-room.ts and tests/smoke/control-room.test.mjs; removed browser server/model dependency path from package tarball.",
+        "Simplified src/adapters/pi/commands/ui.ts to a deprecation-only command and removed Alt+W status shortcut registration from src/adapters/pi/index.ts.",
+        "Added src/adapters/pi/prompt-contract.ts and registered it from the Pi adapter.",
+        "Removed cytoscape from package.json and package-lock.json, and removed the Knip ignore rationale.",
+        "Deleted .codewiki/kb/system/architecture.mmd and retargeted active architecture docs/diagrams to .codewiki/kb/system/diagrams/architecture.yaml.",
+        "Aligned CodeWiki dogfood docs, diagram maps, and roadmap TASK-071 path scope with terminal-first active surfaces."
+      ],
+      "notes": [
+        "File-structure audit initially exposed stale deprecated-path policy for active components/** and flows/** detail docs; src/knowledge/diagram-parser.ts and file-structure docs were aligned so architecture check passes without suppressing real deprecated paths.",
+        "No full terminal renderer, graph renderer, new /wiki board/diagram/trace commands, Pi fork, skill rename, or optional CLI distribution work was added."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Used existing package-smoke as command/resource regression surface and changed expectations before/with implementation: no Alt+W shortcut, /wiki-ui deprecation shim, cytoscape absent.",
+    "Added prompt-contract smoke before final validation to prove hook registration, idempotent appending, no injection outside CodeWiki projects, and injection inside CodeWiki projects.",
+    "Ran graph-lenses/hot-context targeted tests after removing Control Room imports to prove generated graph/state flows still work without browser UI models."
+  ],
+  "code_change_evidence": [
+    "Deleted src/ui/web/control-room.ts and tests/smoke/control-room.test.mjs; removed browser server/model dependency path from package tarball.",
+    "Simplified src/adapters/pi/commands/ui.ts to a deprecation-only command and removed Alt+W status shortcut registration from src/adapters/pi/index.ts.",
+    "Added src/adapters/pi/prompt-contract.ts and registered it from the Pi adapter.",
+    "Removed cytoscape from package.json and package-lock.json, and removed the Knip ignore rationale.",
+    "Deleted .codewiki/kb/system/architecture.mmd and retargeted active architecture docs/diagrams to .codewiki/kb/system/diagrams/architecture.yaml.",
+    "Aligned CodeWiki dogfood docs, diagram maps, and roadmap TASK-071 path scope with terminal-first active surfaces."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "No active docs or README advertise standalone browser Control Room as supported product direction.",
+      "evidence": "README.md and active system/product docs now mark /wiki-ui/browser Control Room as deprecated or migration evidence; stale-reference audit passes."
+    },
+    {
+      "criterion": "/wiki-ui removed or only clear deprecation message pointing to terminal commands, with coverage.",
+      "evidence": "src/adapters/pi/commands/ui.ts now registers only a warning shim pointing to /wiki-status, /wiki-resume, /wiki-config, and /audit; tests/smoke/package-smoke.test.mjs asserts shim behavior."
+    },
+    {
+      "criterion": "src/ui/web/** and browser Control Room tests removed unless justified shim remains.",
+      "evidence": "src/ui/web/control-room.ts and tests/smoke/control-room.test.mjs deleted; remaining shim is package command only."
+    },
+    {
+      "criterion": "architecture.mmd removed from active KB source and active docs/code reference architecture.yaml or generated views.",
+      "evidence": ".codewiki/kb/system/architecture.mmd deleted; diagrams/README.md and file-structure docs name architecture.yaml as canonical; active code only reads generated .codewiki/views/system/architecture.mmd as render artifact fallback."
+    },
+    {
+      "criterion": "Unused browser-only dependencies such as cytoscape removed after proof.",
+      "evidence": "cytoscape removed from package.json/package-lock.json/knip ignore list; typecheck, smoke, architecture, and pack dry-run pass."
+    },
+    {
+      "criterion": "README, system/product UI docs, and file-structure maps align with terminal-first UX and no stale browser source truth.",
+      "evidence": "README.md, .codewiki/kb/system/{terminal-ui,control-room-ui,extension,api,adapters,file-structure}.md, product UI docs, and diagram maps updated; source-contract/stale-reference/file-structure audits pass."
+    },
+    {
+      "criterion": "Pi extension injects/appends small CodeWiki contract only when CodeWiki config/context applies.",
+      "evidence": "src/adapters/pi/prompt-contract.ts installs before_agent_start hook that appends contract only when maybeLoadProject resolves; tests/smoke/prompt-contract.test.mjs covers injection and no-injection paths."
+    },
+    {
+      "criterion": "Prompt contract includes core CodeWiki invariants and leaves detailed loops in skills.",
+      "evidence": "Contract mentions wiki_state, canonical/generated/runtime boundaries, decision->planning->implementation->validation routing, artifact status, resume context, and explicitly says detailed loop policy stays in skills."
+    },
+    {
+      "criterion": "Smoke coverage proves prompt injection/resource loading behavior.",
+      "evidence": "tests/smoke/prompt-contract.test.mjs and package-smoke resource loader checks pass; npm run test:smoke includes prompt-contract test."
+    }
+  ],
+  "validation_refs": [
+    "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+    "wiki_audit source-contract,changed task_id=TASK-071"
+  ],
+  "closure_brief": {
+    "user_intent": "Continue and complete TASK-071 implementation after task-close context refresh.",
+    "implemented_changes": [
+      "Removed deprecated browser Control Room source/test/dependency path.",
+      "Converted /wiki-ui into deprecation shim pointing to Pi-hosted commands.",
+      "Removed architecture.mmd from active KB source and retargeted docs/diagrams to architecture.yaml/render artifacts.",
+      "Added bounded CodeWiki prompt contract injection for Pi-hosted CodeWiki projects with smoke coverage.",
+      "Aligned package README, skills, system/product docs, file-structure maps, generated graph/views, and TASK-071 scope."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/**",
+        ".codewiki/kb/product/**"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-071/context.json",
+        ".codewiki/roadmap/tasks/TASK-071/task.json"
+      ],
+      "code": [
+        "src/adapters/pi/**",
+        "src/knowledge/diagram-parser.ts",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "skills/codewiki/**"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/hot-context.test.mjs",
+        "tests/smoke/builds.test.mjs"
+      ],
+      "validation": [
+        "wiki_audit scoped reports via tool output",
+        "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+        "wiki_audit source-contract,changed task_id=TASK-071"
+      ]
+    },
+    "acceptance_evidence": [
+      "npm run typecheck — pass",
+      "npm run test:smoke — pass",
+      "npm run check:architecture — pass",
+      "npm run test:pack — pass",
+      "wiki_audit source-contract/stale-reference/generated-parity/changed/task — pass except generated-view changed warnings"
+    ],
+    "checks": [
+      "lsp_diagnostics changed TypeScript — pass",
+      "npm run typecheck — pass",
+      "npm run test:smoke — pass",
+      "npm run check:architecture — pass",
+      "npm run test:pack — pass",
+      "targeted prompt/package/graph/hot-context smoke tests — pass",
+      "wiki_audit scoped profiles — pass/warnings only generated views"
+    ],
+    "non_goals_preserved": [
+      "No full terminal renderer or full graph renderer implemented.",
+      "No backend/API graph/state capabilities removed.",
+      "No immutable historic builds or validation reports rewritten.",
+      "No new /wiki board, /wiki diagram, or /wiki trace commands added.",
+      "No Pi fork, skill-folder rename, or optional CLI distribution added."
+    ],
+    "remaining_risks": [
+      "Requires fresh implementation/task-close validation before closing TASK-071."
+    ]
+  },
+  "risks": [
+    "Fresh validation still required before task close; builder context should not close TASK-071.",
+    "Generated .codewiki read models changed and should be reviewed/committed or regenerated by validator before publication."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-071",
+      "task_id": "TASK-071",
+      "next_focus_task_id": "TASK-072",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-071",
+        "title": "Remove deprecated browser UI and architecture Mermaid source",
+        "summary": "Implemented TASK-071 terminal-first cleanup: removed browser Control Room source/tests/dependency and architecture.mmd source, converted /wiki-ui to deprecation shim, aligned docs/diagrams/file-structure maps, and added repo-scoped Pi prompt contract injection with smoke coverage.",
+        "spec_paths": [
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/system/control-room-ui-details.md",
+          ".codewiki/kb/system/diagrams/architecture.yaml",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/components/adapters-and-ui.md",
+          ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+          ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
+          ".codewiki/kb/product/uis/terminal.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/adapters.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/prompt-contract.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands",
+          "src/adapters/pi/ui",
+          "src/knowledge/diagram-parser.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/prompt-contract.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/hot-context.test.mjs",
+          "package.json",
+          "package-lock.json",
+          "README.md",
+          "skills/codewiki",
+          "src/state",
+          "src/project",
+          ".codewiki/kb/system/diagrams/architecture.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          ".codewiki/kb/system/architecture.mmd",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/context-map.yaml",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/system/control-room-ui-details.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/components/adapters-and-ui.md",
+          ".codewiki/kb/system/overview.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/product/uis/status-panel.md",
+          ".codewiki/kb/product/uis/control-room-details.md",
+          ".codewiki/kb/product/overview.md",
+          ".codewiki/kb/product/uis/board.md",
+          ".codewiki/kb/product/uis/graph-navigation.md",
+          ".codewiki/roadmap/queue.json"
+        ],
+        "acceptance": [
+          "No active docs or README advertise the standalone browser Control Room as supported product direction.",
+          "`/wiki-ui` is removed or returns only a clear deprecation message pointing to terminal commands; behavior is covered by tests or removed from command registration tests.",
+          "`src/ui/web/**` and browser Control Room tests are removed unless a small compatibility shim is explicitly justified.",
+          "`.codewiki/kb/system/architecture.mmd` is removed from active KB source; active docs and code reference `.codewiki/kb/system/diagrams/architecture.yaml` or generated views instead.",
+          "Unused browser-only dependencies such as `cytoscape` are removed only if typecheck, smoke tests, architecture checks, and pack dry-run prove they are unused.",
+          "Package README, system/product UI docs, and file-structure ownership maps align with terminal-first UX and no stale browser source truth.",
+          "Pi extension injects or appends a small CodeWiki contract only when CodeWiki config/context applies.",
+          "Contract tells agents to use wiki_state, respect canonical/generated/runtime boundaries, route semantic work through CodeWiki loops, and avoid hand-editing generated state.",
+          "Detailed loop instructions remain in skills; prompt does not duplicate full skill docs.",
+          "Tests or smoke coverage prove prompt injection/resource loading behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run check:architecture",
+          "npm run test:pack",
+          "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed",
+          "targeted package/resource/prompt smoke tests",
+          "wiki_audit source-contract and changed"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+        "checks_run": [
+          "lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics",
+          "npm run typecheck — pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+          "npm run test:smoke — pass",
+          "npm run check:architecture — pass",
+          "npm run test:pack — pass",
+          "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views",
+          "wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views"
+        ],
+        "test_design_evidence": [
+          "Used existing package-smoke as command/resource regression surface and changed expectations before/with implementation: no Alt+W shortcut, /wiki-ui deprecation shim, cytoscape absent.",
+          "Added prompt-contract smoke before final validation to prove hook registration, idempotent appending, no injection outside CodeWiki projects, and injection inside CodeWiki projects.",
+          "Ran graph-lenses/hot-context targeted tests after removing Control Room imports to prove generated graph/state flows still work without browser UI models."
+        ],
+        "code_change_evidence": [
+          "Deleted src/ui/web/control-room.ts and tests/smoke/control-room.test.mjs; removed browser server/model dependency path from package tarball.",
+          "Simplified src/adapters/pi/commands/ui.ts to a deprecation-only command and removed Alt+W status shortcut registration from src/adapters/pi/index.ts.",
+          "Added src/adapters/pi/prompt-contract.ts and registered it from the Pi adapter.",
+          "Removed cytoscape from package.json and package-lock.json, and removed the Knip ignore rationale.",
+          "Deleted .codewiki/kb/system/architecture.mmd and retargeted active architecture docs/diagrams to .codewiki/kb/system/diagrams/architecture.yaml.",
+          "Aligned CodeWiki dogfood docs, diagram maps, and roadmap TASK-071 path scope with terminal-first active surfaces."
+        ],
+        "validation_refs": [
+          "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+          "wiki_audit source-contract,changed task_id=TASK-071"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-071",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-071",
+      "show_build": "git show refs/codewiki/archive/task/TASK-071:.codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/control-room-ui-details.md",
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/README.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/components/adapters-and-ui.md",
+        ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+        ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
+        ".codewiki/kb/product/uis/terminal.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/adapters.md",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/prompt-contract.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/commands",
+        "src/adapters/pi/ui",
+        "src/knowledge/diagram-parser.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/hot-context.test.mjs",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "skills/codewiki",
+        "src/state",
+        "src/project",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-071 Remove deprecated browser UI and architecture Mermaid source implementation evidence",
+      "body": "Implemented TASK-071 terminal-first cleanup: removed browser Control Room source/tests/dependency and architecture.mmd source, converted /wiki-ui to deprecation shim, aligned docs/diagrams/file-structure maps, and added repo-scoped Pi prompt contract injection with smoke coverage.\n\nChecks: lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run test:smoke — pass, npm run check:architecture — pass, npm run test:pack — pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views, wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views\nValidation: wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071, wiki_audit source-contract,changed task_id=TASK-071\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-071\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json\nCodeWiki-Checks: lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run test:smoke — pass, npm run check:architecture — pass, npm run test:pack — pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views, wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views\nCodeWiki-Validation: wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071, wiki_audit source-contract,changed task_id=TASK-071\nCodeWiki-Recover: /wiki-restore TASK-071\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-071\nCodeWiki-Digest: sha256:21b7460fd3f5cb896e83079edd2886a7fe70335102f6a034508a7dffae33716a\nCodeWiki-Restore: /wiki-restore TASK-071",
+      "trailers": [
+        "CodeWiki-Task: TASK-071",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+        "CodeWiki-Checks: lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run test:smoke — pass, npm run check:architecture — pass, npm run test:pack — pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views, wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views",
+        "CodeWiki-Validation: wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071, wiki_audit source-contract,changed task_id=TASK-071",
+        "CodeWiki-Recover: /wiki-restore TASK-071",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-071",
+        "CodeWiki-Digest: sha256:21b7460fd3f5cb896e83079edd2886a7fe70335102f6a034508a7dffae33716a",
+        "CodeWiki-Restore: /wiki-restore TASK-071"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-071 Remove deprecated browser UI and architecture Mermaid source implementation evidence",
+      "body": "Implemented TASK-071 terminal-first cleanup: removed browser Control Room source/tests/dependency and architecture.mmd source, converted /wiki-ui to deprecation shim, aligned docs/diagrams/file-structure maps, and added repo-scoped Pi prompt contract injection with smoke coverage.\n\nChecks: lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run test:smoke — pass, npm run check:architecture — pass, npm run test:pack — pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views, wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views\nValidation: wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071, wiki_audit source-contract,changed task_id=TASK-071\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-071\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json\nCodeWiki-Checks: lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run test:smoke — pass, npm run check:architecture — pass, npm run test:pack — pass, wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views, wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views\nCodeWiki-Validation: wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071, wiki_audit source-contract,changed task_id=TASK-071\nCodeWiki-Recover: /wiki-restore TASK-071\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-071\nCodeWiki-Digest: sha256:21b7460fd3f5cb896e83079edd2886a7fe70335102f6a034508a7dffae33716a\nCodeWiki-Restore: /wiki-restore TASK-071"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-071",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-071"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-071",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-071",
+        "show_build": "git show refs/codewiki/archive/task/TASK-071:.codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/system/control-room-ui-details.md",
+          ".codewiki/kb/system/diagrams/architecture.yaml",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/components/adapters-and-ui.md",
+          ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+          ".codewiki/validation/2026-05-31-decision-pass-2026-05-31-accepted-terminal-fir.json",
+          ".codewiki/kb/product/uis/terminal.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/adapters.md",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/prompt-contract.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands",
+          "src/adapters/pi/ui",
+          "src/knowledge/diagram-parser.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/prompt-contract.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/hot-context.test.mjs",
+          "package.json",
+          "package-lock.json",
+          "README.md",
+          "skills/codewiki",
+          "src/state",
+          "src/project",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-071",
+      "build_path": ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-071",
+      "commit_sha": "",
+      "digest": "sha256:21b7460fd3f5cb896e83079edd2886a7fe70335102f6a034508a7dffae33716a",
+      "restore_command": "/wiki-restore TASK-071"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:a198f8d7647ed21bc0fb86545f5f23227955e92e868a86349c3ec6f043a88b97",
+          "bytes": 9826
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:e596fe192ffa36a5f3eeb410d865db781734ecf4ff5cea8b18c4e314ed10e099",
+          "bytes": 113190
+        },
+        {
+          "path": "tests/smoke/prompt-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:6e559214042f0128ab7d34ede5ead962cae2bb67b94cb9c869526957367d5399",
+          "bytes": 2229
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:bd82808c733ef1877e54a4eea05a03d77f9d213e776aa15cbbd89cb763f3371c",
+          "bytes": 13164
+        },
+        {
+          "path": "tests/smoke/hot-context.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f4e88f8ba4e4c43dd30f94d7f5dd30830bc3f43ebe6f72c46889cf4f3d2a6b30",
+          "bytes": 4711
+        },
+        {
+          "path": "tests/smoke/builds.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:be14e4e1cf2e95617ed995ed7fe6be0de5ef4b684a037272b661c53f8838cd62",
+          "bytes": 29870
+        },
+        {
+          "path": "src/adapters/pi/commands/ui.ts",
+          "role": "code_file",
+          "sha256": "sha256:23f7bd60b317268063355a1123e1b7276565fd0aad3e95c0a2d77da76bf75964",
+          "bytes": 518
+        },
+        {
+          "path": "src/adapters/pi/prompt-contract.ts",
+          "role": "code_file",
+          "sha256": "sha256:3611fed9c3e96789edbabaff2e8e16f86a589e24828d0c328c163fe9bd1ee205",
+          "bytes": 2388
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:aa4b8d49b9a62ea0e7d101fcc41f792707f8e3bfeaa236f699cd78235756c6db",
+          "bytes": 13142
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:e26dd0cda2fa81dbf378efe93e1890e7b7ad522836ecebec396b2f55f198d0c1",
+          "bytes": 12173
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:f563d90d87afd2c753b6c1921d999b1b4a33ceea6f073aad38b091cb77ab3b8a",
+          "bytes": 75267
+        },
+        {
+          "path": "src/adapters/pi/ui/theme.ts",
+          "role": "code_file",
+          "sha256": "sha256:1c71e00d8ddb76b0e2a5fb1711101b1632b0e9a9bf72bc7136247188ef7e6534",
+          "bytes": 8375
+        },
+        {
+          "path": "src/knowledge/diagram-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:8babb251259de21af41a254a31acb381dcf2bb243d60ad6dba6969c7a316fb10",
+          "bytes": 43205
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:f35751d01da02cfdb69a16feba98c3109c067363ba5f4167dad127bc15079d38",
+          "bytes": 3436
+        },
+        {
+          "path": "package-lock.json",
+          "role": "code_file",
+          "sha256": "sha256:5278edb1046b4bb92df48c58250e1dcd7d77d3e3abc082ff1d6f1e126f6ddb59",
+          "bytes": 76243
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:b7e626c3a9696225b208401b25c34541a3dbf4d1ddfc93dee5edb3c6d1b0bb8c",
+          "bytes": 24359
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:b16678743a23c41a5aae6b3179b20965b0099eb25aadebb46148254081999c4a",
+          "bytes": 8713
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "role": "code_file",
+          "sha256": "sha256:4998fc182fa3e173ec0fca63ed6d48080415c05193a8899545d741472cb96bc9",
+          "bytes": 3413
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/architecture.yaml",
+          "role": "code_file",
+          "sha256": "sha256:84bcdf37badcb9546b2ba2f91513b2132ed2bfdac7a86b84efa6efe04affb76a",
+          "bytes": 4100
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/README.md",
+          "role": "code_file",
+          "sha256": "sha256:54779bc846004fd1588bf76d07fbf248071025c01b8e3fa3214b4e93f5c93bc9",
+          "bytes": 4474
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/component-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:8ef8fa962d48bf0ba1da7ce60b6babeedbda983a3ad782f4195446210019fe38",
+          "bytes": 6977
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/context-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:044ba8d0134d2605be984fbbad705e5c5fa1a8b1a30f31582dddfbe330385dc6",
+          "bytes": 2639
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:abffc57e909609788ca85a7e0bb0323db9cde94fe816542107a4a3f06c75fae2",
+          "bytes": 22205
+        },
+        {
+          "path": ".codewiki/kb/system/terminal-ui.md",
+          "role": "code_file",
+          "sha256": "sha256:c81b241ce666d745941463adb03bae2380220c9f92ad2e881f631c5b18a93f78",
+          "bytes": 6320
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui.md",
+          "role": "code_file",
+          "sha256": "sha256:ad89423a1d07a31827334cbe7e370655bc9e80bc0d184eab7c12f8a420c39bed",
+          "bytes": 2254
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui-details.md",
+          "role": "code_file",
+          "sha256": "sha256:960319548fec1e5a1aa8d458edca1eb89b03d489d6db2af2f1fb62da7eef94f0",
+          "bytes": 1518
+        },
+        {
+          "path": ".codewiki/kb/system/extension.md",
+          "role": "code_file",
+          "sha256": "sha256:d54205abab351911d6294909cde7a42a57d6c0fe00e8d47edb285669749eb769",
+          "bytes": 4200
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:14a943704bda35759119776a96e7999648244009c5049228b1fec4df1bd88d05",
+          "bytes": 4280
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "role": "code_file",
+          "sha256": "sha256:9288113f9097e41c1ddda153a1adfa87f425ac8b58345f9f3b6e7d26ed23f133",
+          "bytes": 10019
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:615a050e22d61d576a02c6498323ff2f0e82d4b56660f8e953ca0f1eb47f0b8f",
+          "bytes": 14426
+        },
+        {
+          "path": ".codewiki/kb/system/components/adapters-and-ui.md",
+          "role": "code_file",
+          "sha256": "sha256:cd99345d600adb8b593244c9b8495f49c6a5255ec244e46444bd2b1fabf43d55",
+          "bytes": 1482
+        },
+        {
+          "path": ".codewiki/kb/system/overview.md",
+          "role": "code_file",
+          "sha256": "sha256:4fcde2932953c2d067da272089fd949ff6132b2c98d6a8e88f61b97d0995ee4c",
+          "bytes": 8172
+        },
+        {
+          "path": ".codewiki/kb/system/graph.md",
+          "role": "code_file",
+          "sha256": "sha256:8d4d8a4204b98197d509cba3003179a2e58e201b9de53c06f142589d1807a6d1",
+          "bytes": 11265
+        },
+        {
+          "path": ".codewiki/kb/product/uis/status-panel.md",
+          "role": "code_file",
+          "sha256": "sha256:da92479c859408f9c1525732258c104c4a36daf00efd8bc79610a3d100bf8359",
+          "bytes": 3504
+        },
+        {
+          "path": ".codewiki/kb/product/uis/control-room-details.md",
+          "role": "code_file",
+          "sha256": "sha256:dba1fb429c9ed02025dc065e1f7987d9e1cc035313f3e057b06520ceb4532f1e",
+          "bytes": 1294
+        },
+        {
+          "path": ".codewiki/kb/product/overview.md",
+          "role": "code_file",
+          "sha256": "sha256:62418c1d699f4fe249b15dd30db16678db9bf06ae019bfb7bad70df23f1b69c6",
+          "bytes": 4035
+        },
+        {
+          "path": ".codewiki/kb/product/uis/board.md",
+          "role": "code_file",
+          "sha256": "sha256:c4828d5b6b8b83135ddc5aed41f9423b6652138a711906ae5ff38bc67e1fcd8b",
+          "bytes": 2944
+        },
+        {
+          "path": ".codewiki/kb/product/uis/graph-navigation.md",
+          "role": "code_file",
+          "sha256": "sha256:9ea3e43973772dc822789720c7f3631b6b734677b0ea3e9d0fc6eddff93732a0",
+          "bytes": 2737
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "role": "code_file",
+          "sha256": "sha256:30eae1f290babb404e207fd8cf4a2969e442dd49559a81e6efacd390d08adf5f",
+          "bytes": 78215
+        }
+      ],
+      "skipped": [
+        {
+          "path": "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+          "role": "validation_ref",
+          "reason": "missing"
+        },
+        {
+          "path": "wiki_audit source-contract,changed task_id=TASK-071",
+          "role": "validation_ref",
+          "reason": "missing"
+        },
+        {
+          "path": ".codewiki/kb/system/architecture.mmd",
+          "role": "code_file",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-071",
+      "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/prompt-contract.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/knowledge/diagram-parser.ts",
+          "package.json",
+          "package-lock.json",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          ".codewiki/kb/system/architecture.mmd",
+          ".codewiki/kb/system/diagrams/architecture.yaml",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/context-map.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/system/control-room-ui-details.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/components/adapters-and-ui.md",
+          ".codewiki/kb/system/overview.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/product/uis/status-panel.md",
+          ".codewiki/kb/product/uis/control-room-details.md",
+          ".codewiki/kb/product/overview.md",
+          ".codewiki/kb/product/uis/board.md",
+          ".codewiki/kb/product/uis/graph-navigation.md",
+          ".codewiki/roadmap/queue.json",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/prompt-contract.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/hot-context.test.mjs",
+          "tests/smoke/builds.test.mjs"
+        ],
+        "validation_refs": [
+          "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+          "wiki_audit source-contract,changed task_id=TASK-071"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-071",
+        "restore_command": "/wiki-restore TASK-071"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics on changed TypeScript files — pass, 0 diagnostics",
+        "npm run typecheck — pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+        "npm run test:smoke — pass",
+        "npm run check:architecture — pass",
+        "npm run test:pack — pass",
+        "wiki_audit profiles=source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — source-contract/stale-reference/generated-parity/task pass; changed warnings only for regenerated .codewiki views",
+        "wiki_audit profiles=source-contract,changed task_id=TASK-071 — source-contract/task pass; changed warnings only for regenerated .codewiki views"
+      ],
+      "validation_refs": [
+        "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071",
+        "wiki_audit source-contract,changed task_id=TASK-071"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

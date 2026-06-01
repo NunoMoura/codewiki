@@ -65,20 +65,20 @@ The default diagram families are:
 | File | Diagram kind | Purpose | Renderer target |
 | --- | --- | --- | --- |
 | `diagrams/context-map.yaml` | Context map | Users, access surfaces, external systems, and project boundary. | Graph/SVG or Mermaid flowchart. |
-| `diagrams/component-map.yaml` | Component/container map | Major runtime components, adapters, data stores, and dependency direction. | Cytoscape/custom SVG or Mermaid flowchart. |
+| `diagrams/component-map.yaml` | Component/container map | Major runtime components, adapters, data stores, and dependency direction. | Layered graph, custom SVG, or Mermaid flowchart. |
 | `diagrams/key-flow.yaml` | Key flow sequence | Most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `diagrams/data-model.yaml` | Data/domain model | Durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
 | `diagrams/state-lifecycle.yaml` | State/lifecycle map | Task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
 | `diagrams/file-structure-map.yaml` | File-structure map | Intended source/tree ownership, current implementation shape, approved migration deltas, and drift-lens categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
-Renderer-specific Mermaid, Cytoscape, SVG, HTML, Unicode, or ASCII output is generated or renderer input unless a later task promotes it to canonical truth. `system/diagrams/architecture.yaml` is the canonical architecture diagram source. `system/architecture.mmd` is deprecated compatibility/export state pending removal. New diagram work targets `system/diagrams/**`.
+Renderer-specific Mermaid, SVG, HTML, Unicode, ASCII, or graph JSON output is generated or renderer input unless a later task promotes it to canonical truth. `system/diagrams/architecture.yaml` is the canonical architecture diagram source. Hand-maintained `system/architecture.mmd` has been removed; future render artifacts should be generated from YAML. New diagram work targets `system/diagrams/**`.
 
 ## Component-doc map
 
 | Architecture node | Owning doc | Primary paths |
 | --- | --- | --- |
 | Terminal UI | `terminal-ui.md` | `src/adapters/pi/ui/**`, `src/adapters/pi/commands/**`, terminal command views |
-| Deprecated browser UI | `control-room-ui.md` | `src/ui/web/**`, `/wiki-ui` launcher pending removal |
+| Deprecated browser UI | `control-room-ui.md` | Removed source path; `/wiki-ui` remains only a deprecation shim |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
@@ -113,7 +113,7 @@ Deprecated `.codewiki/` paths must not be recreated by templates or normal agent
 .codewiki/evidence/**
 ```
 
-Legacy nested system KB folders removed by the flattening migration remain invalid: `clients/**`, `compilers/**`, `components/**`, `extensions/**`, `flows/**`, `runtime/**`, `architecture.json`, and `v2-operating-model.md`.
+Legacy nested system KB folders removed by the flattening migration remain invalid: `clients/**`, `compilers/**`, `extensions/**`, `runtime/**`, `architecture.json`, and `v2-operating-model.md`. Active `components/**` and `flows/**` detail docs are source-linked system knowledge and remain valid until a future flattening decision replaces their refs.
 
 ## Path taxonomy
 
@@ -132,12 +132,12 @@ Architecture and audit checks use these classes to prevent dogfood state, genera
 
 ## Package target layout
 
-Accepted direction: concept-root source ownership. Main concepts live in `src/<concept>/**` with models, use cases, tool/API entrypoints, and local implementation nearby. Adapters and UI stay exposure layers; shared code stays primitive-only; no top-level `infrastructure/` exists.
+Accepted direction: concept-root source ownership. Main concepts live in `src/<concept>/**` with models, use cases, tool/API entrypoints, and local implementation nearby. Adapters are the exposure layer and may contain host-native UI panels; shared code stays primitive-only; no top-level `infrastructure/` exists.
 
 Current source roots:
 
 ```text
-src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,shared,adapters,ui}/
+src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,shared,adapters}/
 
 Compatibility-only shim roots:
 
@@ -173,7 +173,7 @@ Rules:
 - Concept model code has no Node I/O, Pi, adapter, UI, skill, or script imports.
 - Concept use cases own concrete behavior and may use concept-local runtime implementations behind contracts.
 - Cross-concept APIs must be explicit through the API facade, shared ports, or named contracts; do not recreate a dumping-ground `shared` or `application` under a new name.
-- `adapters/**` translate host/protocol APIs into API/concept calls and translate results back. Browser UI source stays under `src/ui/**`.
+- `adapters/**` translate host/protocol APIs into API/concept calls and translate results back. Current Pi-hosted UI panels stay under `src/adapters/pi/ui/**`; browser UI source has been removed.
 - `src/shared/**` stays small and primitive-only; `src/domain/shared/**` must not be recreated.
 - `core/**`, `engine/**`, `src/domain/**`, `src/application/**`, and top-level `infrastructure/**` must not exist in target source.
 

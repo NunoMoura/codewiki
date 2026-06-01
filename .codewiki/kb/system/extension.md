@@ -23,8 +23,7 @@ The Pi adapter owns:
 
 - `/wiki-*` commands,
 - `wiki_<name>` tools,
-- `Alt+W` compact visual status UI,
-- terminal-first `/wiki-*` command surfaces and Pi TUI panels; `/wiki-ui` is deprecated and should be removed or changed to a deprecation message during web UI cleanup,
+- terminal-first `/wiki-*` command surfaces and Pi-hosted status/config views; `/wiki-ui` is a deprecated shim that points to active commands,
 - `wiki_agency` as the current Pi-facing agency controller entrypoint until the vNext runtime workflow supersedes direct agency execution,
 - session lifecycle hooks,
 - CodeWiki system-prompt injection for repos with `.codewiki/config.json`,
@@ -45,7 +44,7 @@ The Pi adapter owns:
 ## Boundaries
 
 - Pi SDK and TUI imports belong only in the Pi adapter.
-- Browser UI and local web-server code must not depend on Pi SDK or Pi TUI packages.
+- Deprecated browser UI and local web-server code must not re-enter the active package without a new accepted decision and validation plan.
 - Pi-specific behavior must translate into API use cases, not own domain semantics.
 - VCC recall, generic native compaction, and session-reset hooks are adapter recovery points, not normal CodeWiki memory. Pi may use CodeWiki-owned compaction as the normal same-session soft refresh path because the injected summary is regenerated from `wiki_resume_context`, implementation builds, roadmap state, validation, and graph state.
 - Agency behavior must enforce gated agency budgets and stop conditions instead of running unbounded work.
@@ -65,7 +64,6 @@ The Pi adapter owns:
 ## Related docs
 
 - [Terminal UI and Agent Visual Language](terminal-ui.md)
-- [Deprecated Browser UI](control-room-ui.md)
 - [Adapters](adapters.md)
 - [API](api.md)
 - [File Structure](file-structure.md)

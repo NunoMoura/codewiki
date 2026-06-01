@@ -20,7 +20,7 @@ Adapters do not own CodeWiki semantics. Domain and application layers own semant
 
 Tools, commands, skills, CLI, MCP, package APIs, and harness integrations are adapter or API access surfaces. They are not product UIs unless they render a visual screen, panel, board, graph view, or editor interface for a human.
 
-Visual UI expectations live under product `uis/**` and system UI docs. Browser UI source belongs under `src/ui/**`, not under `src/adapters/**`. Harness-native approval controls such as Pi TUI decision cards belong in adapters but must write through CodeWiki capabilities such as `wiki_diff_table`; they must not bypass decision builds or gateway validation. Adapter, launch, protocol, and harness mechanics live here and in [CodeWiki API](api.md).
+Visual UI expectations live under product `uis/**` and system UI docs. Active Pi-hosted status/config panels live under `src/adapters/pi/ui/**`; deprecated browser UI source has been removed. Harness-native approval controls such as Pi decision cards belong in adapters but must write through CodeWiki capabilities such as `wiki_diff_table`; they must not bypass decision builds or gateway validation. Adapter, launch, protocol, and harness mechanics live here and in [CodeWiki API](api.md).
 
 ## Current adapter
 
@@ -59,8 +59,8 @@ Potential future access paths:
 | Claude Code | CLI or MCP. |
 | Codex | CLI or MCP. |
 | Other local agents | CLI, MCP, or package API. |
-| Editor integrations | CLI, MCP, local CodeWiki UI URL, or language-specific wrapper. |
-| Humans | Local CodeWiki UI, CLI/status output, and compact host panels. |
+| Editor integrations | CLI, MCP, host-native extension, or language-specific wrapper. |
+| Humans | Pi-hosted commands/status output and compact host panels. |
 
 Do not create empty adapter implementations before they are needed. Keep the structure ready, but implement only real access surfaces.
 
@@ -83,13 +83,11 @@ Role worktree and publisher details live in [Role Worktree Isolation](worktree-i
 - Adapters never hand-edit generated graph state.
 - Adapters should support bounded context and compact outputs.
 - Adapter differences must not create different truth semantics.
-- Browser UI code lives under `src/ui/**` and must not import Pi SDK or Pi TUI packages.
 - Adapter-exposed agency controls must route through application tools and the agency controller rather than running unbounded loops directly.
 - Adapter session-control mechanisms must be explicit context boundaries with bounded kickoff context; they must not silently carry builder chat history across isolation boundaries. Same-agent auto-pickup after reset must start from a source-backed custom kickoff or equivalent user-role-safe message, not from an assistant message. Handoff wording is reserved for transfer between sessions, agents, or roles.
 
 ## Related docs
 
 - [API](api.md)
-- [CodeWiki UI](control-room-ui.md)
 - [Extension](extension.md)
 - [Agency Controller](agency.md)

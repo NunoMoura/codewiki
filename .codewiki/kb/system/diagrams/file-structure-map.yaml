@@ -55,9 +55,8 @@ nodes:
     label: Current UI
     group: exposure
     kind: component
-    source: .codewiki/kb/system/control-room-ui.md
-    paths:
-      - src/ui/**
+    source: .codewiki/kb/system/terminal-ui.md
+    note: Pi-hosted status/config panels live inside the Pi adapter path and are owned by current_adapters for strict file-structure purposes.
   - id: concept_root_target
     label: Concept-root source ownership target
     group: source_target

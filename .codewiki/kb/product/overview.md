@@ -55,7 +55,6 @@ Visual UI docs should describe what users see and understand. System docs should
 - [Use Gated Agency](stories/automation.md)
 - [Low-Token Navigation](stories/navigation.md)
 - [Terminal UI](uis/terminal.md)
-- [Deprecated Browser CodeWiki UI](uis/control-room.md)
 - [Status Panel UI](uis/status-panel.md)
 - [Board UI](uis/board.md)
 - [Graph Navigation UI](uis/graph-navigation.md)

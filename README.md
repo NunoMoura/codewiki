@@ -24,10 +24,8 @@ Public command surface is intentionally small:
   - runs source-owned CodeWiki audit profiles and prints human-readable evidence
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-status [repo-path]`
-- `Alt+W`
-  - toggles compact live Codewiki status panel
-- `/wiki-ui [repo-path] [port]`
-  - starts the standalone local CodeWiki Control Room, opens the browser when possible, and prints its local URL fallback
+- `/wiki-ui`
+  - deprecated shim; use `/wiki-status`, `/wiki-resume`, `/wiki-config`, and `/audit` instead
 - `/wiki-config`
   - opens interactive Codewiki configuration with option lists and toggles
   - optional args remain available for direct fallback updates: `[show|auto|pin|off|minimal|standard|full] [repo-path]`
@@ -61,7 +59,6 @@ The `knip` metadata in `package.json` is intentionally part of the package maint
 - `scripts/*.mjs` as maintained CLI/script surfaces, including `scripts/codewiki-gateway.mjs`
 - `tests/**/*.mjs` as the repository smoke and task regression suite
 
-`cytoscape` is listed as an intentional dependency false positive because the Control Room serves its browser bundle through `nodeRequire.resolve("cytoscape/dist/cytoscape.min.js")`; static dependency scanners do not see that dynamic asset lookup reliably.
 
 ### Skills
 
@@ -219,7 +216,6 @@ npm run test:pack
 /audit --file-structure
 /wiki-config
 /wiki-status
-/wiki-ui
 /wiki-resume
 ```
 
@@ -278,19 +274,13 @@ Recommended loop:
 /wiki-status
 ```
 
-4. For the standalone browser Control Room, run:
-
-```text
-/wiki-ui
-```
-
-5. When roadmap work is ready to continue, run:
+4. When roadmap work is ready to continue, run:
 
 ```text
 /wiki-resume
 ```
 
-6. Let the agent use internal roadmap/task tools when work maps to existing tasks or when unresolved delta should become a new task.
+5. Let the agent use internal roadmap/task tools when work maps to existing tasks or when unresolved delta should become a new task.
 
 Working rule for this repo:
 
@@ -349,17 +339,17 @@ Starter bootstrap includes:
 
 ### Status, fix, and review
 
-`/wiki-ui` starts the standalone local Control Room on `127.0.0.1`, attempts to open the browser, and prints the plain local URL as a fallback. It is the rich visual surface for System and Graph navigation and is independent of Pi TUI rendering.
+`/wiki-ui` is deprecated and returns a warning that points to Pi-hosted CodeWiki commands. Browser Control Room source is no longer the active product direction.
 
-`Alt+W` opens the compact live status panel backed by the same drift-first read model. It remains useful as a host-native launcher/fallback when the full Control Room is not needed.
+`/wiki-status` opens the current compact status surface when custom UI is available and falls back to command output when it is not. Broader TUI design remains future work.
 
-The always-on surface is optional. When enabled it uses Pi's status area for a one-line summary instead of a tall above-editor dock. `/wiki-config` owns summary visibility, pinning, and panel density through an interactive settings panel.
+The always-on status summary is optional. When enabled it uses Pi's status area for a one-line summary instead of a tall above-editor dock. `/wiki-config` owns summary visibility, pinning, and panel density through an interactive settings panel.
 
 `/wiki-status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
 `/audit` is the deterministic evidence command. It runs the same source-owned audit engine used by gateways and tools; omit flags for the full audit, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--changed`, `--task TASK-###`, and `--layer product,system`.
 
-`/wiki-config`, `/wiki-status`, `/wiki-ui`, `/wiki-resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
+`/wiki-config`, `/wiki-status`, `/wiki-resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 
 `/wiki-resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
 
@@ -371,7 +361,7 @@ The Pi adapter customizes compaction after the agent loop ends. Loop-boundary to
 
 ### Status summary and panel
 
-The extension renders an optional one-line status summary plus a compact live status panel toggled with `Alt+W`. The standalone Control Room is available through `/wiki-ui`. These surfaces read `.codewiki/index_graph.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
+The extension renders an optional one-line status summary plus a compact status panel opened through `/wiki-status`. These surfaces read `.codewiki/index_graph.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
 
 - `minimal`
 - `standard`
@@ -386,7 +376,7 @@ Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.js
 Runtime rule:
 
 - first resolve the nearest ancestor containing `.codewiki/config.json` from current cwd
-- if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-config`, `/wiki-ui`, and `/wiki-resume` may target an explicit repo path instead
+- if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-config`, and `/wiki-resume` may target an explicit repo path instead
 - in UI mode, those commands may offer a picker across candidate repos discovered below current cwd
 - summary visibility and pinned-repo fallback are user-owned UI preferences, not repo-owned wiki files
 - if no wiki exists yet, `/wiki-bootstrap` targets the enclosing git repo root when present, else the current working directory
