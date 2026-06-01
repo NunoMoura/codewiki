@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T06:52:56.872Z",
+  "generated_at": "2026-06-01T06:53:52.358Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -43124,137 +43124,6 @@
       "lens_family": "proof"
     },
     {
-      "id": "claim:CLAIM-282",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-282",
-      "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-      "agent_name": "Sable",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-      "expires_at": "2026-06-01T08:45:37.613Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-        "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-        "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-076"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/control-room.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/control-room-details.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/control-room-ui.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/control-room-ui-details.md"
-        },
-        {
-          "layer": "build",
-          "ref": "decision/planning/implementation builds for TASK-076"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-076",
-      "kind": "change_claim_scope",
-      "path": "TASK-076",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/product/uis/control-room.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/product/uis/control-room.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/product/uis/control-room-details.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/product/uis/control-room-details.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/control-room-ui.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/control-room-ui.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/control-room-ui-details.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/control-room-ui-details.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:decision/planning/implementation builds for TASK-076",
-      "kind": "change_claim_scope",
-      "path": "decision/planning/implementation builds for TASK-076",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim:CLAIM-281",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-281",
-      "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-      "agent_name": "Sable",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-      "expires_at": "2026-06-01T08:44:44.460Z",
-      "scopes": [
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/control-room.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/control-room-details.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/control-room-ui.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/control-room-ui-details.md"
-        },
-        {
-          "layer": "roadmap",
-          "description": "create/close scoped reconciliation task"
-        },
-        {
-          "layer": "build",
-          "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:create/close scoped reconciliation task",
-      "kind": "change_claim_scope",
-      "path": "create/close scoped reconciliation task",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:decision/planning/implementation builds for unscoped-doc reconciliation",
-      "kind": "change_claim_scope",
-      "path": "decision/planning/implementation builds for unscoped-doc reconciliation",
-      "lens_family": "work"
-    },
-    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -58160,16 +58029,6 @@
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/roadmap/queue.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "roadmap-missing-code-path",
-      "message": "TASK-012 references missing code path: src/ui",
       "lens_family": "proof"
     }
   ],
@@ -133102,71 +132961,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-282",
-      "to": "task:TASK-076"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:TASK-076"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:.codewiki/kb/product/uis/control-room.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:.codewiki/kb/product/uis/control-room-details.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:.codewiki/kb/system/control-room-ui.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:.codewiki/kb/system/control-room-ui-details.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-282",
-      "to": "claim_scope:decision/planning/implementation builds for TASK-076"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:.codewiki/kb/product/uis/control-room.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:.codewiki/kb/product/uis/control-room-details.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:.codewiki/kb/system/control-room-ui.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:.codewiki/kb/system/control-room-ui-details.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:create/close scoped reconciliation task"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-281",
-      "to": "claim_scope:decision/planning/implementation builds for unscoped-doc reconciliation"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -149038,11 +148832,6 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
       "to": "task:TASK-076"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "to": "doc:.codewiki/roadmap/queue.json"
     }
   ],
   "views": {
@@ -149056,7 +148845,7 @@
             "id": "decision",
             "label": "Decision",
             "summary": "Approved intent, requirement rows, risk state, and semantic direction.",
-            "state": "drift",
+            "state": "aligned",
             "item_count": 0,
             "badges": [
               {
@@ -149135,7 +148924,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 31,
+            "item_count": 21,
             "badges": [
               {
                 "id": "open_tasks",
@@ -149159,7 +148948,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -149223,7 +149012,7 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 2,
+            "item_count": 1,
             "badges": [
               {
                 "id": "validation_reports",
@@ -149257,8 +149046,7 @@
               }
             ],
             "hot_refs": [
-              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
+              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml"
             ],
             "collapsed": true
           }
@@ -149281,10 +149069,10 @@
           }
         },
         "next_action": {
-          "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work."
+          "item_id": null,
+          "source_id": null,
+          "loop": "observe",
+          "reason": "No reconciliation item currently requires a compiler loop."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -149324,151 +149112,7 @@
           },
           "source_refs": []
         },
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-              ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-075-reconciliation-for-cancelle.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -166791,47 +166435,7 @@
           "working_tree_digest:sha256:c9b45c3b7751d3f0909b90cdb31d360bbc9aa4858555f2850080def101364131",
           "working_tree_digest:sha256:eafdd6232d3d2736b027b2361948019e50dddcfb3b79834e3fe7729d9568d97a"
         ],
-        "reconciliation_items": [
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          }
-        ],
+        "reconciliation_items": [],
         "traceability_gaps": [],
         "semantic_change_gaps": [],
         "semantic_execution_closure": {
@@ -168292,614 +167896,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 2,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 2
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-282",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-076",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-          "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12"
-        },
-        {
-          "id": "CLAIM-281",
-          "role": "builder",
-          "mode": "write"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-282",
-          "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-          "agent_name": "Sable",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-          "task_id": "TASK-076",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-            "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-            "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-076"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room-details.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui-details.md"
-            },
-            {
-              "layer": "build",
-              "ref": "decision/planning/implementation builds for TASK-076"
-            }
-          ],
-          "created_at": "2026-06-01T06:45:37Z",
-          "updated_at": "2026-06-01T06:45:37Z",
-          "expires_at": "2026-06-01T08:45:37.613Z"
-        },
-        {
-          "id": "CLAIM-281",
-          "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-          "agent_name": "Sable",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-          "scopes": [
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room-details.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui-details.md"
-            },
-            {
-              "layer": "roadmap",
-              "description": "create/close scoped reconciliation task"
-            },
-            {
-              "layer": "build",
-              "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-            }
-          ],
-          "created_at": "2026-06-01T06:44:44Z",
-          "updated_at": "2026-06-01T06:44:44Z",
-          "expires_at": "2026-06-01T08:44:44.460Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/control-room-details.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/control-room.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/control-room-ui-details.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/control-room-ui.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "description": "create/close scoped reconciliation task"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "decision/planning/implementation builds for TASK-076"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-076"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 2,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/control-room-details.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/control-room.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/control-room-ui-details.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/control-room-ui.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "description": "create/close scoped reconciliation task"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "decision/planning/implementation builds for TASK-076"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-281",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-              "expires_at": "2026-06-01T08:44:44.460Z",
-              "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-076"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-282",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-076",
-              "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-              "expires_at": "2026-06-01T08:45:37.613Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -183333,151 +182348,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-075-reconciliation-for-cancelle.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -184427,33 +183298,24 @@
       }
     },
     "workflow_cursor": {
-      "active_loop": "decision",
-      "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-      "input_refs": [
-        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/queue.json"
-      ],
-      "expected_output": "decision_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "sprint",
         "id": "SPRINT-017"
       },
       "isolation": {
         "required": false,
-        "mode": "agent-owned-new-session",
-        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-        "evidence": [
-          "source build/task refs read",
-          "new_session or context_refresh when useful"
-        ],
-        "handoff": "decision_loop context boundary"
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
       "context_boundary": "none",
-      "handoff_refs": [
-        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/queue.json"
-      ]
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -184480,10 +183342,7 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
             ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
           ],
-          "claim_ids": [
-            "CLAIM-282",
-            "CLAIM-281"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -186204,76 +185063,27 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        }
-      ],
-      "counts_by_loop": {
-        "decision": 3
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "decision",
-        "command": "Run decision compiler",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
         "isolation_required": false,
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "decision_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ]
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
-        "knowledge": "drift",
-        "roadmap": "drift",
+        "knowledge": "aligned",
+        "roadmap": "aligned",
         "code": "aligned",
         "validation": "aligned"
       }
@@ -186281,10 +185091,9 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-01T06:52:56.705Z",
+      "generated_at": "2026-06-01T06:53:52.115Z",
       "counts": {
-        "large-doc": 1,
-        "roadmap-missing-code-path": 3
+        "large-doc": 1
       },
       "issues": [
         {
@@ -186292,35 +185101,17 @@
           "kind": "large-doc",
           "path": ".codewiki/kb/system/file-structure.md",
           "message": "Live doc has 1649 words; consider split or cut."
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-012 references missing code path: src/ui"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-036 references missing code path: src/ui/web/control-room.ts"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-036 references missing code path: tests/smoke/control-room.test.mjs"
         }
       ]
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-01T06:52:56Z",
+      "generated_at": "2026-06-01T06:53:52Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 4,
-        "total_issues": 4
+        "warnings": 1,
+        "total_issues": 1
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -187623,7 +186414,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-01T06:52:56Z",
+      "generated_at": "2026-06-01T06:53:52Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -187632,8 +186423,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 4,
-        "total_issues": 4
+        "warnings": 1,
+        "total_issues": 1
       },
       "summary": {
         "total_specs": 39,
@@ -187698,39 +186489,29 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:decision",
-        "command": "Run decision compiler",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "decision",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "input_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ],
-        "expected_output": "decision_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "sprint",
           "id": "SPRINT-017"
         },
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "decision_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ]
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -187757,10 +186538,7 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
               ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
             ],
-            "claim_ids": [
-              "CLAIM-282",
-              "CLAIM-281"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -188138,8 +186916,8 @@
         ]
       },
       "direction": [
-        "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 2 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "No open deterministic drift requires action right now.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
@@ -191983,7 +190761,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-01T06:52:56Z",
+        "generated_at": "2026-06-01T06:53:52Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -192038,14 +190816,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T06:52:56Z",
+            "checked_at": "2026-06-01T06:53:52Z",
             "revision": {
               "git": {
-                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "270872f8c562e322d8c2dabae24a769441e1a8f2",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -192113,7 +190889,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
+                  ".codewiki/roadmap/queue.json": "05ed7e2e71e3e1c980b0e8550e090874e6317af7",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -192295,15 +191071,15 @@
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "0f6cca620c9a2df707965914a2dd5af6d5523fecaac0980b04bfdca46408139e",
-              "digest": "e3336e984e1c8e3ec4da12b0aa05ff0b5c75ccc3f7270cf429746bee4156d29f"
+              "code_digest": "0ed840680d93570989eb4293e32d54e1210b3afbe3b71c1ab97fa954fe5196e7",
+              "digest": "d9297e3e8b8b811a1c1e6b0f6a7abb0da8968f70e14f9c1a18ae20e617463d93"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:52:56Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T06:53:52Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -192787,14 +191563,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-01T06:52:56Z",
+            "checked_at": "2026-06-01T06:53:52Z",
             "revision": {
               "git": {
-                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "270872f8c562e322d8c2dabae24a769441e1a8f2",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -192851,7 +191625,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
+                  ".codewiki/roadmap/queue.json": "05ed7e2e71e3e1c980b0e8550e090874e6317af7",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -193027,15 +191801,15 @@
               },
               "spec_digest": "24be0c855b0e3a5e9ac28b37fc115bdc3709d885ccd2bea7f6c2216e25b956ef",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "da0b261377d692e5cb999b4cbb2b9953b04c98ffc5f934ebfab1717c1605bfc6",
-              "digest": "3ad6046cd5cbe1a82d0cfb680c9e46da641f28815d3bc144f71212d471ade264"
+              "code_digest": "6609c9eb2f833c8ac8533d02a3c5846c0b5fc15456e8f4b432f75dfea1157d2e",
+              "digest": "35035952710f5bf510f883f32b04b820371d1f3a791122296b0d44a45ae2058a"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:52:56Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T06:53:52Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -193496,14 +192270,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T06:52:56Z",
+            "checked_at": "2026-06-01T06:53:52Z",
             "revision": {
               "git": {
-                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "270872f8c562e322d8c2dabae24a769441e1a8f2",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -193571,7 +192343,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
+                  ".codewiki/roadmap/queue.json": "05ed7e2e71e3e1c980b0e8550e090874e6317af7",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -193753,15 +192525,15 @@
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "0f6cca620c9a2df707965914a2dd5af6d5523fecaac0980b04bfdca46408139e",
-              "digest": "e3336e984e1c8e3ec4da12b0aa05ff0b5c75ccc3f7270cf429746bee4156d29f"
+              "code_digest": "0ed840680d93570989eb4293e32d54e1210b3afbe3b71c1ab97fa954fe5196e7",
+              "digest": "d9297e3e8b8b811a1c1e6b0f6a7abb0da8968f70e14f9c1a18ae20e617463d93"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:52:56Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T06:53:52Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -194234,363 +193006,35 @@
         ]
       },
       "resume": {
-        "source": "agency",
+        "source": "next_step",
         "task_id": "",
-        "lane_id": "product_system",
-        "heading": "Product ↔ System",
-        "command": "/wiki-status",
-        "reason": "Resume from stale agency lane.",
+        "lane_id": "",
+        "heading": "Roadmap clear",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now.",
         "status": "in_progress",
-        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
+        "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
+        "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-06-01T06:52:56Z",
+        "generated_at": "2026-06-01T06:53:52Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 2,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-282",
-            "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-            "agent_name": "Sable",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-            "task_id": "TASK-076",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-              "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-              "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-076"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/control-room.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/control-room-details.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/control-room-ui.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/control-room-ui-details.md"
-              },
-              {
-                "layer": "build",
-                "ref": "decision/planning/implementation builds for TASK-076"
-              }
-            ],
-            "created_at": "2026-06-01T06:45:37Z",
-            "updated_at": "2026-06-01T06:45:37Z",
-            "expires_at": "2026-06-01T08:45:37.613Z"
-          },
-          {
-            "id": "CLAIM-281",
-            "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-            "agent_name": "Sable",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-            "scopes": [
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/control-room.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/control-room-details.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/control-room-ui.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/control-room-ui-details.md"
-              },
-              {
-                "layer": "roadmap",
-                "description": "create/close scoped reconciliation task"
-              },
-              {
-                "layer": "build",
-                "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-              }
-            ],
-            "created_at": "2026-06-01T06:44:44Z",
-            "updated_at": "2026-06-01T06:44:44Z",
-            "expires_at": "2026-06-01T08:44:44.460Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room-details.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/control-room.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui-details.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/control-room-ui.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "description": "create/close scoped reconciliation task"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": "decision/planning/implementation builds for TASK-076"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": "decision/planning/implementation builds for unscoped-doc reconciliation"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-281",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile unscoped deprecated browser UI docs by adding explicit scope metadata.",
-                "expires_at": "2026-06-01T08:44:44.460Z",
-                "next_safe_action": "Wait for CLAIM-281 release or validated publisher/patch ref for CLAIM-281; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-076"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-282",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-076",
-                "summary": "Implement TASK-076 deprecated browser UI doc scoping.",
-                "expires_at": "2026-06-01T08:45:37.613Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-076; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-282 release or validated publisher/patch ref for codewiki/TASK-076/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 2,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
