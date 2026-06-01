@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T05:36:45.452Z",
+  "generated_at": "2026-06-01T05:40:42.579Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -42620,159 +42620,6 @@
       "lens_family": "proof"
     },
     {
-      "id": "claim:CLAIM-278",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-278",
-      "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-      "agent_name": "Sable",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-      "expires_at": "2026-06-01T07:24:40.709Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-        "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-        "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-074"
-        },
-        {
-          "layer": "source",
-          "path": "src/state/lint.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/tasks/TASK-074/**"
-        },
-        {
-          "layer": "source",
-          "path": "package.json"
-        },
-        {
-          "layer": "build",
-          "ref": "planning_build:TASK-074"
-        },
-        {
-          "layer": "build",
-          "ref": "implementation_build:TASK-074"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-074",
-      "kind": "change_claim_scope",
-      "path": "TASK-074",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/lint.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/lint.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/tasks/TASK-074/**",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/TASK-074/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:package.json",
-      "kind": "change_claim_scope",
-      "path": "package.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:planning_build:TASK-074",
-      "kind": "change_claim_scope",
-      "path": "planning_build:TASK-074",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:implementation_build:TASK-074",
-      "kind": "change_claim_scope",
-      "path": "implementation_build:TASK-074",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim:CLAIM-277",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-277",
-      "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-      "agent_name": "Sable",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-      "expires_at": "2026-06-01T07:23:36.034Z",
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "description": "create scoped reconciliation task"
-        },
-        {
-          "layer": "source",
-          "path": "src/state/lint.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/tasks/**"
-        },
-        {
-          "layer": "source",
-          "path": "package.json"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/graph.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/compilers.md"
-        },
-        {
-          "layer": "build",
-          "ref": "planning/implementation builds for reconciliation"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:create scoped reconciliation task",
-      "kind": "change_claim_scope",
-      "path": "create scoped reconciliation task",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/tasks/**",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/graph.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/graph.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/compilers.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/compilers.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:planning/implementation builds for reconciliation",
-      "kind": "change_claim_scope",
-      "path": "planning/implementation builds for reconciliation",
-      "lens_family": "work"
-    },
-    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -57221,26 +57068,6 @@
       "severity": "warning",
       "issue_kind": "roadmap-missing-code-path",
       "message": "TASK-012 references missing code path: src/ui",
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "planning-build-missing-test-strategy",
-      "message": "Planning build v2 should include TDD/test strategy or evidence mapping.",
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "planning-build-missing-test-strategy",
-      "message": "Planning build v2 should include TDD/test strategy or evidence mapping.",
       "lens_family": "proof"
     }
   ],
@@ -131461,76 +131288,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-278",
-      "to": "task:TASK-074"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:TASK-074"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:src/state/lint.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:tests/tasks/TASK-074/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:package.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:planning_build:TASK-074"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-278",
-      "to": "claim_scope:implementation_build:TASK-074"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:create scoped reconciliation task"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:src/state/lint.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:tests/tasks/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:package.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:.codewiki/kb/system/graph.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-277",
-      "to": "claim_scope:planning/implementation builds for reconciliation"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -146951,16 +146708,6 @@
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-      "to": "doc:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-      "to": "doc:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json"
     }
   ],
   "views": {
@@ -147053,7 +146800,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 34,
+            "item_count": 21,
             "badges": [
               {
                 "id": "open_tasks",
@@ -147077,7 +146824,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -147141,7 +146888,7 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 8,
+            "item_count": 6,
             "badges": [
               {
                 "id": "validation_reports",
@@ -147180,9 +146927,7 @@
               "lint:unscoped-doc:.codewiki/kb/product/uis/control-room.md",
               "lint:unscoped-doc:.codewiki/kb/system/control-room-ui-details.md",
               "lint:unscoped-doc:.codewiki/kb/system/control-room-ui.md",
-              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-              "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-              "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json"
+              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
             ],
             "collapsed": true
           }
@@ -147205,10 +146950,10 @@
           }
         },
         "next_action": {
-          "item_id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          "source_id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+          "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "loop": "decision",
-          "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work."
+          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -147248,147 +146993,7 @@
           },
           "source_refs": []
         },
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-              ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -164301,32 +163906,6 @@
             "doc_paths": [
               ".codewiki/roadmap/queue.json"
             ]
-          },
-          {
-            "id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-            "source_id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-            "source_id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json"
-            ]
           }
         ],
         "traceability_gaps": [],
@@ -165788,704 +165367,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 2,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 2
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-278",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-074",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-          "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12"
-        },
-        {
-          "id": "CLAIM-277",
-          "role": "builder",
-          "mode": "write"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-278",
-          "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-          "agent_name": "Sable",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-          "task_id": "TASK-074",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-            "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-            "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-074"
-            },
-            {
-              "layer": "source",
-              "path": "src/state/lint.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/tasks/TASK-074/**"
-            },
-            {
-              "layer": "source",
-              "path": "package.json"
-            },
-            {
-              "layer": "build",
-              "ref": "planning_build:TASK-074"
-            },
-            {
-              "layer": "build",
-              "ref": "implementation_build:TASK-074"
-            }
-          ],
-          "created_at": "2026-06-01T05:24:40Z",
-          "updated_at": "2026-06-01T05:24:40Z",
-          "expires_at": "2026-06-01T07:24:40.709Z"
-        },
-        {
-          "id": "CLAIM-277",
-          "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-          "agent_name": "Sable",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "description": "create scoped reconciliation task"
-            },
-            {
-              "layer": "source",
-              "path": "src/state/lint.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/tasks/**"
-            },
-            {
-              "layer": "source",
-              "path": "package.json"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/graph.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/compilers.md"
-            },
-            {
-              "layer": "build",
-              "ref": "planning/implementation builds for reconciliation"
-            }
-          ],
-          "created_at": "2026-06-01T05:23:36Z",
-          "updated_at": "2026-06-01T05:23:36Z",
-          "expires_at": "2026-06-01T07:23:36.034Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/compilers.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "description": "create scoped reconciliation task"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "implementation_build:TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "package.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "planning_build:TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "planning/implementation builds for reconciliation"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-074/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 2,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/compilers.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "description": "create scoped reconciliation task"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "implementation_build:TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "package.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "planning_build:TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": "planning/implementation builds for reconciliation"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-074"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-277",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-              "expires_at": "2026-06-01T07:23:36.034Z",
-              "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-074/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-278",
-              "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-              "agent_name": "Sable",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-074",
-              "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-              "expires_at": "2026-06-01T07:24:40.709Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -180520,147 +179420,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -181611,10 +180371,10 @@
     },
     "workflow_cursor": {
       "active_loop": "decision",
-      "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+      "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
       "input_refs": [
-        "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-        ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/queue.json"
       ],
       "expected_output": "decision_build",
       "exit_gate": "validation pass or explicit user decision",
@@ -181634,8 +180394,8 @@
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-        ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/queue.json"
       ]
     },
     "gc": {
@@ -181663,10 +180423,7 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
             ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
           ],
-          "claim_ids": [
-            "CLAIM-278",
-            "CLAIM-277"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -183440,42 +182197,16 @@
           "doc_paths": [
             ".codewiki/roadmap/queue.json"
           ]
-        },
-        {
-          "id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          "source_id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-          "source_id": "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json"
-          ]
         }
       ],
       "counts_by_loop": {
-        "decision": 9
+        "decision": 7
       },
       "next_action": {
         "loop": "decision",
         "command": "Run decision compiler",
-        "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -183489,8 +182220,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ]
       },
       "layer_states": {
@@ -183504,12 +182235,11 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-01T05:36:45.283Z",
+      "generated_at": "2026-06-01T05:40:42.342Z",
       "counts": {
         "unscoped-doc": 4,
         "large-doc": 1,
-        "roadmap-missing-code-path": 3,
-        "planning-build-missing-test-strategy": 2
+        "roadmap-missing-code-path": 3
       },
       "issues": [
         {
@@ -183559,29 +182289,17 @@
           "kind": "roadmap-missing-code-path",
           "path": ".codewiki/roadmap/queue.json",
           "message": "TASK-036 references missing code path: tests/smoke/control-room.test.mjs"
-        },
-        {
-          "severity": "warning",
-          "kind": "planning-build-missing-test-strategy",
-          "path": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          "message": "Planning build v2 should include TDD/test strategy or evidence mapping."
-        },
-        {
-          "severity": "warning",
-          "kind": "planning-build-missing-test-strategy",
-          "path": ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-          "message": "Planning build v2 should include TDD/test strategy or evidence mapping."
         }
       ]
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-01T05:36:45Z",
+      "generated_at": "2026-06-01T05:40:42Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 10,
-        "total_issues": 10
+        "warnings": 8,
+        "total_issues": 8
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -184884,7 +183602,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-01T05:36:45Z",
+      "generated_at": "2026-06-01T05:40:42Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -184893,8 +183611,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 10,
-        "total_issues": 10
+        "warnings": 8,
+        "total_issues": 8
       },
       "summary": {
         "total_specs": 39,
@@ -184971,15 +183689,15 @@
       "next_step": {
         "kind": "reconciliation:decision",
         "command": "Run decision compiler",
-        "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
       },
       "workflow_cursor": {
         "active_loop": "decision",
-        "reason": "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
         "input_refs": [
-          "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ],
         "expected_output": "decision_build",
         "exit_gate": "validation pass or explicit user decision",
@@ -184999,8 +183717,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "lint:planning-build-missing-test-strategy:.codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-          ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json"
+          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/queue.json"
         ]
       },
       "gc": {
@@ -185028,10 +183746,7 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
               ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
             ],
-            "claim_ids": [
-              "CLAIM-278",
-              "CLAIM-277"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -185397,8 +184112,8 @@
         ]
       },
       "direction": [
-        "Lint warning (planning-build-missing-test-strategy) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 2 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
@@ -189226,7 +187941,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-01T05:36:45Z",
+        "generated_at": "2026-06-01T05:40:42Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -189281,14 +187996,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T05:36:45Z",
+            "checked_at": "2026-06-01T05:40:42Z",
             "revision": {
               "git": {
-                "head": "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "2afaaf2c7e627cbbee22b1bdd595417528a49031",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -189356,7 +188069,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6005a92c6ba60c242808efd449106eebafaa0c18",
+                  ".codewiki/roadmap/queue.json": "1111ad6623ffa3d7e946cd0914b1a16e64b82889",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -189538,15 +188251,15 @@
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "9714927416a5d35d5100f2d0abc034b369ce6e73aace9a90d52447256b3c9169",
-              "digest": "e9fc831e9c6baa464bf7f1f7159a6582960ceb3338a5239b3baa61380abc2b0b"
+              "code_digest": "187b4f2864db80a2bb0c25d1a93f1adfe57b75d233ea52735e7cb9394ea3fa4f",
+              "digest": "72bfb9a362721dce0921ed88ce7e84def168306699450b7c3ac6937580e05079"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T05:36:45Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T05:40:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -190034,14 +188747,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-01T05:36:45Z",
+            "checked_at": "2026-06-01T05:40:42Z",
             "revision": {
               "git": {
-                "head": "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "2afaaf2c7e627cbbee22b1bdd595417528a49031",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -190097,7 +188808,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6005a92c6ba60c242808efd449106eebafaa0c18",
+                  ".codewiki/roadmap/queue.json": "1111ad6623ffa3d7e946cd0914b1a16e64b82889",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -190273,15 +188984,15 @@
               },
               "spec_digest": "24be0c855b0e3a5e9ac28b37fc115bdc3709d885ccd2bea7f6c2216e25b956ef",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "33a38d42798c30e0acad4ebbc629b922228647dd82e02423e8357e2f5d63f590",
-              "digest": "ba94d68ee0b949f45d958eba61e245c3d11942a30ecb07139515f9228d2185c0"
+              "code_digest": "3a732cd4ee6c59a4c6170bbc8d137d413e254cda2ad1b54812a3c3bf65ef15ae",
+              "digest": "1102589329e1c6c67fa955d938cfb9c95e04a9a4d3c5db78711d8d167d78f255"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T05:36:45Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T05:40:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -190744,14 +189455,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T05:36:45Z",
+            "checked_at": "2026-06-01T05:40:42Z",
             "revision": {
               "git": {
-                "head": "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "2afaaf2c7e627cbbee22b1bdd595417528a49031",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -190819,7 +189528,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "6005a92c6ba60c242808efd449106eebafaa0c18",
+                  ".codewiki/roadmap/queue.json": "1111ad6623ffa3d7e946cd0914b1a16e64b82889",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -191001,15 +189710,15 @@
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "9714927416a5d35d5100f2d0abc034b369ce6e73aace9a90d52447256b3c9169",
-              "digest": "e9fc831e9c6baa464bf7f1f7159a6582960ceb3338a5239b3baa61380abc2b0b"
+              "code_digest": "187b4f2864db80a2bb0c25d1a93f1adfe57b75d233ea52735e7cb9394ea3fa4f",
+              "digest": "72bfb9a362721dce0921ed88ce7e84def168306699450b7c3ac6937580e05079"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-01T05:36:45Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-01T05:40:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -191495,401 +190204,26 @@
         "status": "in_progress",
         "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
+        "agency": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
       },
       "parallel": {
-        "generated_at": "2026-06-01T05:36:45Z",
+        "generated_at": "2026-06-01T05:40:42Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 2,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-278",
-            "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-            "agent_name": "Sable",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-            "task_id": "TASK-074",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-              "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-              "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-074"
-              },
-              {
-                "layer": "source",
-                "path": "src/state/lint.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/tasks/TASK-074/**"
-              },
-              {
-                "layer": "source",
-                "path": "package.json"
-              },
-              {
-                "layer": "build",
-                "ref": "planning_build:TASK-074"
-              },
-              {
-                "layer": "build",
-                "ref": "implementation_build:TASK-074"
-              }
-            ],
-            "created_at": "2026-06-01T05:24:40Z",
-            "updated_at": "2026-06-01T05:24:40Z",
-            "expires_at": "2026-06-01T07:24:40.709Z"
-          },
-          {
-            "id": "CLAIM-277",
-            "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-            "agent_name": "Sable",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "description": "create scoped reconciliation task"
-              },
-              {
-                "layer": "source",
-                "path": "src/state/lint.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/tasks/**"
-              },
-              {
-                "layer": "source",
-                "path": "package.json"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/graph.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/compilers.md"
-              },
-              {
-                "layer": "build",
-                "ref": "planning/implementation builds for reconciliation"
-              }
-            ],
-            "created_at": "2026-06-01T05:23:36Z",
-            "updated_at": "2026-06-01T05:23:36Z",
-            "expires_at": "2026-06-01T07:23:36.034Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/compilers.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/graph.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "description": "create scoped reconciliation task"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": "implementation_build:TASK-074"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "package.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": "planning_build:TASK-074"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": "planning/implementation builds for reconciliation"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/state/lint.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-074"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/tasks/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-277",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "summary": "Reconcile uncovered planning-build-missing-test-strategy lint warning by creating and implementing scoped remediation task.",
-                "expires_at": "2026-06-01T07:23:36.034Z",
-                "next_safe_action": "Wait for CLAIM-277 release or validated publisher/patch ref for CLAIM-277; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/tasks/TASK-074/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-278",
-                "session_id": "019e7de2-90ac-7516-9f1d-0134d990df12",
-                "agent_name": "Sable",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-074",
-                "summary": "Implement TASK-074 planning-build test strategy lint reconciliation.",
-                "expires_at": "2026-06-01T07:24:40.709Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "branch": "codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12",
-                  "notes": "factory=role-worktree; task=TASK-074; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-278 release or validated publisher/patch ref for codewiki/TASK-074/builder/019e7de2-90ac-7516-9f1d-0134d990df12; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 2,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
