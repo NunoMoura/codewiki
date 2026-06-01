@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-01T05:36:24Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-074",
+  "verdict": "pass",
+  "rationale": "TASK-074 is ready to close. Planning and implementation validation passed, checks passed, changed/task/generated-parity audits pass, and clean immutable commit/tree proof is available. The original planning-build-missing-test-strategy reconciliation warning is resolved; a separate historic TASK-012 roadmap-missing-code-path warning remains outside scope.",
+  "checks": [
+    "planning validation: .codewiki/validation/2026-06-01-planning-pass-task-074-2026-06-01-planned-scoped.json",
+    "implementation validation: .codewiki/validation/2026-06-01-implementation-pass-task-074-2026-06-01-implemen.json",
+    "implementation build: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "commit HEAD: 64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
+    "tree: b2215c2da58fb665bece6386e5f0cbb912cf908b",
+    "npm run typecheck — pass",
+    "npm run check:architecture — pass",
+    "npm run test:smoke — pass",
+    "npm run test:pack — pass",
+    "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-074 — changed/task/generated-parity pass; alignment warning only pre-existing graph-health"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit reports pre-existing graph health warnings; no TASK-074 task, changed, generated-parity, or close blocker remains."
+    },
+    {
+      "severity": "warning",
+      "summary": "A separate historic TASK-012 roadmap-missing-code-path warning remains outside TASK-074 scope."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "changed",
+    "task",
+    "generated-parity",
+    "alignment",
+    "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-074 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
+    "b2215c2da58fb665bece6386e5f0cbb912cf908b"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-074",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "validation_report": ".codewiki/validation/2026-06-01-task-close-pass-task-074-2026-06-01-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+      ".codewiki/validation/2026-06-01-task-close-pass-task-074-2026-06-01-implemented-.json",
+      "src/state/lint.ts",
+      "package.json",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-074",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+    "validation_report": ".codewiki/validation/2026-06-01-task-close-pass-task-074-2026-06-01-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-074 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-074",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-01-task-close-pass-task-074-2026-06-01-implemented-.json",
+      "CodeWiki-Checks: planning validation: .codewiki/validation/2026-06-01-planning-pass-task-074-2026-06-01-planned-scoped.json; implementation validation: .codewiki/validation/2026-06-01-implementation-pass-task-074-2026-06-01-implemen.json; implementation build: .codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json; commit HEAD: 64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb; tree: b2215c2da58fb665bece6386e5f0cbb912cf908b; npm run typecheck — pass; npm run check:architecture — pass; npm run test:smoke — pass; npm run test:pack — pass; wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-074 — changed/task/generated-parity pass; alignment warning only pre-existing graph-health"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/lint.ts",
+      "package.json"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi package extension or skill metadata changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "b2215c2da58fb665bece6386e5f0cbb912cf908b"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-074",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready promotion proof",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
+    "validated_sha": "64f9587fa4bcb6264ddc3e2cec72153b4abe2bbb",
+    "tree_sha": "b2215c2da58fb665bece6386e5f0cbb912cf908b",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean implementation checkpoint commit after planning and implementation validation; no publication/push claim.",
+    "role": "validator"
+  }
+}
