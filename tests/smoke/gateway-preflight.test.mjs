@@ -467,10 +467,11 @@ try {
 			},
 			{
 				id: "EXPLICIT-DEFER",
-				current_state: "Migration target undecided.",
-				desired_state: "Migration can be deferred with owner and trigger.",
+				current_state: "Non-executable policy target undecided.",
+				desired_state:
+					"Non-executable policy note can be deferred with owner and trigger.",
 				rationale: "No safe target yet.",
-				affected_layers: ["roadmap"],
+				affected_layers: ["knowledge"],
 				user_action: "approved",
 			},
 		],
@@ -531,12 +532,130 @@ try {
 	const deferredPreflight = buildGatewayPreflight(project, {
 		profile: "planning",
 		verdict: "pass",
-		rationale: "Knowledge-only and deferred rows are fully resolved.",
+		rationale:
+			"Knowledge-only and non-executable deferred rows are fully resolved.",
 		source: deferredPlan.path,
 		audit_refs: ["audit:alignment"],
 	});
 	assert.equal(deferredPreflight.status, "ready");
 	assert.deepEqual(deferredPreflight.missing.decision_propagation, []);
+
+	const executableDeferredDecision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept daemon worker scheduling follow-up fixture.",
+		diff_table: [
+			{
+				id: "DAEMON-WORKER-FOLLOWUP",
+				current_state:
+					"Daemon execution graph follow-up can hide in build-only deferral after TASK-070.",
+				desired_state:
+					"Daemon execution graph and worker scheduling follow-up must have durable roadmap/sprint work.",
+				rationale: "TASK-072 regression fixture.",
+				affected_layers: ["runtime", "graph", "code"],
+				user_action: "approved",
+			},
+		],
+		row_to_kb_mappings: [
+			{
+				row_id: "DAEMON-WORKER-FOLLOWUP",
+				knowledge_refs: [".codewiki/kb/system/graph.md"],
+				evidence:
+					"Graph docs capture daemon execution graph and worker scheduling follow-up.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Agents see daemon follow-up planning gaps."],
+			downstream_planning_questions: [
+				"How should daemon worker scheduling follow-up continue after TASK-070?",
+			],
+		},
+		knowledge_changes: [".codewiki/kb/system/graph.md"],
+	});
+	await writeGatewayPass("decision", executableDeferredDecision.path);
+	const executableDeferredPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Defer daemon worker scheduling follow-up without roadmap work.",
+		source_decision_build: executableDeferredDecision.path,
+		decision_row_resolutions: [
+			{
+				row_id: "DAEMON-WORKER-FOLLOWUP",
+				resolution: "deferred",
+				owner: "runtime-maintainers",
+				trigger: "TASK-070 runtime scheduler foundation validates",
+				rationale: "Wait for TASK-070 proof before follow-up.",
+				evidence:
+					"Build-only deferred daemon execution graph / worker scheduling follow-up after TASK-070.",
+				source_refs: [
+					"TASK-070",
+					".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
+				],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question:
+					"How should daemon worker scheduling follow-up continue after TASK-070?",
+				resolution: "deferred",
+				owner: "runtime-maintainers",
+				trigger: "TASK-070 runtime scheduler foundation validates",
+				rationale: "Same deferral as row.",
+				evidence: "Question is deferred in build evidence only.",
+				source_refs: ["TASK-070"],
+			},
+		],
+	});
+	const executableDeferredBlocked = buildGatewayPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale:
+			"Executable deferred rows must map to durable roadmap/sprint work.",
+		source: executableDeferredPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(executableDeferredBlocked.status, "blocked");
+	assert.ok(
+		executableDeferredBlocked.missing.decision_propagation.some(
+			(entry) =>
+				entry.includes("DAEMON-WORKER-FOLLOWUP") &&
+				entry.includes("executable_requires_task_or_sprint"),
+		),
+	);
+	assert.equal(executableDeferredBlocked.routing.failure_class, "planning_gap");
+	const executableMappedPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Map daemon worker scheduling follow-up to roadmap work.",
+		source_decision_build: executableDeferredDecision.path,
+		decision_row_resolutions: [
+			{
+				row_id: "DAEMON-WORKER-FOLLOWUP",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-070"],
+				evidence:
+					"TASK-070 owns durable daemon execution graph and worker scheduling follow-up.",
+				source_refs: ["TASK-070"],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question:
+					"How should daemon worker scheduling follow-up continue after TASK-070?",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-070"],
+				evidence: "TASK-070 is the durable follow-up route.",
+				source_refs: ["TASK-070"],
+			},
+		],
+	});
+	const executableMappedPreflight = buildGatewayPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Executable rows with task mapping can pass.",
+		source: executableMappedPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(executableMappedPreflight.status, "ready");
+	assert.deepEqual(executableMappedPreflight.missing.decision_propagation, []);
 
 	await mkdir(join(root, ".codewiki/kb/system/diagrams"), { recursive: true });
 	await writeFile(
@@ -552,7 +671,7 @@ try {
 				current_state: "Deferred work can remain hidden after trigger.",
 				desired_state: "Satisfied deferral trigger routes to planning.",
 				rationale: "Regression fixture.",
-				affected_layers: ["roadmap"],
+				affected_layers: ["knowledge"],
 				user_action: "approved",
 			},
 		],

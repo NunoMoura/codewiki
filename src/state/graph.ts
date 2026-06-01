@@ -2222,6 +2222,28 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				gaps,
 			};
 		});
+	const knownDecisionTaskIds = unique([
+		...roadmapEntries.map((task) => task.id),
+		...archivedTaskIds,
+	]);
+	const knownDecisionSprintIds = normalizedSprints.map((sprint) => sprint.id);
+	const decisionPropagationAssessmentFor = (decision: BuildArtifact) =>
+		assessDecisionPropagation(
+			decision.data,
+			uniqueBuildsByPath(
+				planningByDecision.get(normalizeCodewikiRef(decision.path)) || [],
+			).filter(
+				(planningBuild) =>
+					!supersededByPath.has(normalizeCodewikiRef(planningBuild.path)),
+			),
+			{
+				knownTaskIds: knownDecisionTaskIds,
+				knownSprintIds: knownDecisionSprintIds,
+				satisfiedDeferredTriggers:
+					fileStructureDrift.satisfied_deferred_triggers || [],
+			},
+		);
+
 	for (const row of semanticChangeRows.filter((row) => row.gaps.length > 0)) {
 		reconciliationItems.push({
 			id: `reconcile:semantic-build:${row.path}`,
@@ -2275,7 +2297,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			!decisionConsumed(build) ||
 			buildLinkedToOpenTask(build) ||
 			buildDirty(build) ||
-			hasOpenDownstreamTask
+			hasOpenDownstreamTask ||
+			decisionPropagationAssessmentFor(build).gaps.length > 0
 		);
 	})) {
 		const decisionPath = normalizeCodewikiRef(decision.path);
@@ -2470,25 +2493,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		);
 	})) {
 		const decisionPath = normalizeCodewikiRef(decision.path);
-		const planningBuilds = uniqueBuildsByPath(
-			planningByDecision.get(decisionPath) || [],
-		).filter(
-			(planningBuild) =>
-				!supersededByPath.has(normalizeCodewikiRef(planningBuild.path)),
-		);
-		const assessment = assessDecisionPropagation(
-			decision.data,
-			planningBuilds,
-			{
-				knownTaskIds: unique([
-					...roadmapEntries.map((task) => task.id),
-					...archivedTaskIds,
-				]),
-				knownSprintIds: normalizedSprints.map((sprint) => sprint.id),
-				satisfiedDeferredTriggers:
-					fileStructureDrift.satisfied_deferred_triggers || [],
-			},
-		);
+		const assessment = decisionPropagationAssessmentFor(decision);
 		if (assessment.rows.length === 0 && assessment.questions.length === 0)
 			continue;
 		const decoratedRows = assessment.rows.map((row) => ({

@@ -42,6 +42,7 @@ A build by itself is pre-gateway. Gateway-pass boundaries are the normal safe co
 
 - Compilers do not validate their own outputs.
 - Planning is not implementation and should not change code.
+- Planning must classify approved decision rows as executable task/sprint mapped, durable knowledge-only/non-executable disposition, rejected/not-applicable disposition, or unplanned gap; build-only deferred evidence is not a valid disposition for executable work.
 - Implementation is TDD-aligned where practical and records justified exceptions for docs-only, config-only, or non-testable work.
 - Any compiler may escalate to decision when intent is unclear.
 - Normal loop continuation uses CodeWiki source refs and `wiki_resume_context`, not VCC recall or generic chat summaries.

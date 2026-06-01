@@ -471,10 +471,21 @@ function implementationPlanningPropagationGaps(
 
 function graphDecisionPropagationResidualGaps(
 	project: WikiProject,
-	input: CodewikiValidationReportInput,
+	_input: CodewikiValidationReportInput,
 	profile: string,
 ): string[] {
-	if (profile.trim().toLowerCase() !== "task-close") return [];
+	if (
+		![
+			"planning",
+			"implementation",
+			"task-close",
+			"sprint-close",
+			"publication",
+			"publish",
+			"release",
+		].includes(profile.trim().toLowerCase())
+	)
+		return [];
 	try {
 		const graph = JSON.parse(
 			readFileSync(resolve(project.root, project.graphPath), "utf8"),
@@ -485,16 +496,6 @@ function graphDecisionPropagationResidualGaps(
 			? graph.views.decision_propagation.residuals
 			: [];
 		if (residuals.length === 0) return [];
-		const openTaskIds = Array.isArray(graph?.views?.roadmap?.open_task_ids)
-			? graph.views.roadmap.open_task_ids
-					.map((id: unknown) => String(id || "").trim())
-					.filter(Boolean)
-			: [];
-		const taskId = String(input.task_id || "").trim();
-		const roadmapWouldBeEmpty =
-			openTaskIds.length === 0 ||
-			(taskId && openTaskIds.length === 1 && openTaskIds[0] === taskId);
-		if (!roadmapWouldBeEmpty) return [];
 		return residuals.map(
 			(item: any) =>
 				`${String(item.decision_build || "decision_build")}:${String(item.kind || "row")}:${String(item.id || "unknown")}:${trimList(item.gaps).join("|") || "missing_resolution"}`,

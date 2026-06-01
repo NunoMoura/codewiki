@@ -124,7 +124,7 @@ Graph reconciliation should classify drift in the same state machine used by sta
 - `proof_mismatch`: validation, commit, tree, package, archive, or remote proof does not attest to the content it claims.
 - `runtime_coordination_conflict`: leases, jobs, waits, worktrees, or publisher state conflict with the selected action.
 
-Hard drift blocks lower-layer execution until the correct loop or runtime operation resolves it. Validators still decide pass, fail, or block; the graph supplies the shared routing and evidence map.
+Hard drift blocks lower-layer execution until the correct loop or runtime operation resolves it. Accepted executable decision rows without durable task/sprint mapping are hard planning drift: generated graph, status, resume context, and validation preflight must surface them before unrelated implementation or close routing. Validators still decide pass, fail, or block; the graph supplies the shared routing and evidence map.
 
 ## Freshness
 

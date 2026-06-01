@@ -1438,7 +1438,10 @@ export function buildStatusState(
 	parallel.claim_pending_wake_count = claimState.pending_wake_count;
 	parallel.claims = claimState.claims.slice(0, 12);
 	parallel.claim_waiters = claimState.waiters.slice(0, 12);
-	parallel.claim_wake_notifications = claimState.wake_notifications.slice(0, 12);
+	parallel.claim_wake_notifications = claimState.wake_notifications.slice(
+		0,
+		12,
+	);
 	parallel.claim_conflicts = claimState.conflicts.slice(0, 12);
 	parallel.artifact_statuses = (claimState.artifact_statuses || []).slice(
 		0,
@@ -1621,6 +1624,11 @@ export function buildStatusState(
 	if (fileStructure) {
 		direction.push(
 			`File-structure drift: ${fileStructureActionableDrift} actionable item(s), ${fileStructureCounts.approved_migration_delta || 0} approved migration delta(s).`,
+		);
+	}
+	if (decisionPropagationStatus?.residual_count) {
+		direction.push(
+			`Decision propagation gaps: ${decisionPropagationStatus.residual_count} accepted row/question mapping(s) need planning before unrelated implementation or close.`,
 		);
 	}
 

@@ -2,7 +2,11 @@ import { renderSkillAsset } from "./skill-assets.ts";
 import { unique } from "../shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
-import type { GraphFile, RoadmapTaskContextPacket, StatusScope } from "./types.ts";
+import type {
+	GraphFile,
+	RoadmapTaskContextPacket,
+	StatusScope,
+} from "./types.ts";
 import type { LintReport } from "../gateway/types.ts";
 
 export function statusColor(report: LintReport): "green" | "yellow" | "red" {
@@ -236,6 +240,25 @@ function renderFollowUpIntentSection(followUpIntent: string): string {
 	return trimmed ? `User follow-up intent:\n${trimmed}` : "";
 }
 
+function renderDecisionPropagationPromptLines(
+	graph: GraphFile | null,
+): string[] {
+	const decisionPropagation = contextRecord(graph?.views?.decision_propagation);
+	const residuals = Array.isArray(decisionPropagation.residuals)
+		? decisionPropagation.residuals
+		: [];
+	if (residuals.length === 0) return [];
+	return [
+		"Decision propagation blockers:",
+		...residuals.slice(0, 8).map((item: unknown) => {
+			const row = contextRecord(item);
+			const gaps = contextStringList(row.gaps);
+			return `- ${row.decision_build ?? "decision_build"} ${row.kind ?? "row"} ${row.id ?? "unknown"}: ${gaps.length > 0 ? gaps.join(", ") : "missing durable planning disposition"}`;
+		}),
+		"Resolve these planning gaps before unrelated implementation or close work.",
+	];
+}
+
 export function codePrompt(
 	project: WikiProject,
 	graph: GraphFile | null,
@@ -247,6 +270,7 @@ export function codePrompt(
 ): string {
 	const drift = buildDriftContext(project, graph);
 	const taskContextLines = renderTaskContextForPrompt(taskContext);
+	const decisionPropagationLines = renderDecisionPropagationPromptLines(graph);
 	const fallbackContextLines = [
 		...renderScopeForPrompt("both", drift),
 		"Context files:",
@@ -262,13 +286,19 @@ export function codePrompt(
 		`- Summary: ${task.summary}`,
 		...(task.goal.outcome ? [`- Outcome: ${task.goal.outcome}`] : []),
 		...(task.goal.acceptance.length > 0
-			? ["- Success signals:", ...task.goal.acceptance.map((item) => `  - ${item}`)]
+			? [
+					"- Success signals:",
+					...task.goal.acceptance.map((item) => `  - ${item}`),
+				]
 			: []),
 		...(task.goal.non_goals.length > 0
 			? ["- Non-goals:", ...task.goal.non_goals.map((item) => `  - ${item}`)]
 			: []),
 		...(task.goal.verification.length > 0
-			? ["- Verification steps:", ...task.goal.verification.map((item) => `  - ${item}`)]
+			? [
+					"- Verification steps:",
+					...task.goal.verification.map((item) => `  - ${item}`),
+				]
 			: []),
 	];
 	const taskRefLines = [
@@ -279,16 +309,22 @@ export function codePrompt(
 			? ["Code paths:", ...task.code_paths.map((path) => `- ${path}`)]
 			: []),
 		...(task.research_ids.length > 0
-			? ["Research ids:", ...task.research_ids.map((researchId) => `- ${researchId}`)]
+			? [
+					"Research ids:",
+					...task.research_ids.map((researchId) => `- ${researchId}`),
+				]
 			: []),
 	];
 	return renderSkillAsset("prompts/resume-implementation.md", {
 		"project.label": project.label,
 		"task.id": task.id,
 		"task.summary_block": renderBlock(taskSummaryLines),
-		"task.context_block": renderBlock(
-			taskContextLines.length > 0 ? taskContextLines : fallbackContextLines,
-		),
+		"task.context_block": renderBlock([
+			...decisionPropagationLines,
+			...(taskContextLines.length > 0
+				? taskContextLines
+				: fallbackContextLines),
+		]),
 		"task.delta_block": renderBlock([
 			`- Desired: ${task.delta.desired}`,
 			`- Current: ${task.delta.current}`,
@@ -296,7 +332,7 @@ export function codePrompt(
 		]),
 		"task.refs_block": renderBlock(taskRefLines),
 		"preflight.color": statusColor(report),
-		"evidence": evidence,
-		"follow_up_intent_section": renderFollowUpIntentSection(followUpIntent),
+		evidence: evidence,
+		follow_up_intent_section: renderFollowUpIntentSection(followUpIntent),
 	});
 }

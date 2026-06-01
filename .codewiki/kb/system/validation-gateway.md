@@ -31,7 +31,7 @@ See [Implementation, validation, and close](flows/implementation-validation-clos
 
 ## Preflight and routing
 
-Preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation. Fail/block verdicts classify the failure and recommend the smallest safe next loop: same compiler loop, planning, decision, validation/proof, observe/wait, or user approval.
+Preflight reports missing upstream builds, audits, task ids, decision-propagation gaps, content proof, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation. Accepted executable decision rows without durable task/sprint mapping block planning, implementation, and close as `planning_gap`. Fail/block verdicts classify the failure and recommend the smallest safe next loop: same compiler loop, planning, decision, validation/proof, observe/wait, or user approval.
 
 Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/ship-ready, and destructive. Low-risk paths still validate; high-risk tiers escalate before lower-layer promotion.
 
