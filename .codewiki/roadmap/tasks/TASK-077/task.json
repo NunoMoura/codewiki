@@ -1,0 +1,70 @@
+{
+  "id": "TASK-077",
+  "title": "Implement canonical /wiki command router",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "feature",
+  "summary": "Implement the core `/wiki bootstrap`, `/wiki status`, `/wiki resume`, and `/wiki config` user command surface while preserving legacy command shims.",
+  "spec_paths": [
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/terminal-ui.md",
+    ".codewiki/kb/product/uis/terminal.md"
+  ],
+  "code_paths": [
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/commands/config.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "src/checks/source-contract.ts",
+    "README.md",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/project-resolution.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "commands",
+    "pi-adapter",
+    "status-surface",
+    "config",
+    "compatibility-shims"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Users have canonical `/wiki bootstrap`, `/wiki status`, `/wiki resume`, and `/wiki config` entrypoints with legacy command compatibility and no extra agent-facing bootstrap/config tools.",
+    "acceptance": [
+      "A canonical `/wiki` command path dispatches `bootstrap`, `status`, `resume`, and `config` subcommands, or Pi-equivalent registration proves those exact user command strings are available.",
+      "`/wiki bootstrap` starts CodeWiki in greenfield and brownfield repositories by calling setup/bootstrap backend functions directly, not by exposing a new normal agent tool.",
+      "`/wiki status` renders developer-facing health, active focus, next action, blockers, latest validation signal, automation-readiness summary, and source refs.",
+      "`/wiki resume` continues from CodeWiki source refs and last known stable state, preserving existing resume-context behavior.",
+      "`/wiki config` renders user CodeWiki preference/configuration choices for selection in the TUI.",
+      "Legacy `/wiki-bootstrap`, `/wiki-status`, `/wiki-resume`, `/wiki-config`, `/wiki-ui`, and `/audit` behavior remains as documented compatibility or deprecation shims until replacement coverage is validated.",
+      "README, command help, and source-contract snapshots reflect the canonical command surface and compatibility shims without treating low-level tools as user commands."
+    ],
+    "non_goals": [
+      "Do not implement `/wiki system` or `/wiki product` navigation in this task.",
+      "Do not consolidate the internal six-tool agent API in this task.",
+      "Do not remove legacy commands before compatibility behavior and source-contract coverage exist.",
+      "Do not add dedicated `wiki_bootstrap`, `wiki_config`, or `wiki_project` normal agent tools."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs",
+      "wiki_gate/task-close linters for source-contract, stale-reference, changed, and alignment"
+    ]
+  },
+  "delta": {
+    "desired": "Canonical core `/wiki` command routing exists for bootstrap/status/resume/config, legacy shims remain documented, and bootstrap/config call backend functions directly.",
+    "current": "Current Pi adapter exposes hyphenated legacy commands and standalone compatibility surfaces, while accepted knowledge defines canonical `/wiki bootstrap`, `/wiki status`, `/wiki resume`, and `/wiki config`.",
+    "closure": "Task closes after command registration/routing, source-contract docs, compatibility shims, and command tests pass."
+  },
+  "created": "2026-06-01",
+  "updated": "2026-06-01T20:59:47Z"
+}

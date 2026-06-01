@@ -24,26 +24,9 @@ const repoPathToolField = Type.Optional(
 export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 	pi.registerCommand("wiki-bootstrap", {
 		description:
-			"Adopt or scaffold a repo-local codebase wiki, then start intelligent onboarding. Usage: /wiki-bootstrap [project name] [--force]",
-		getArgumentCompletions: (prefix) => {
-			const options = ["--force"];
-			const items = options.filter((item) => item.startsWith(prefix));
-			return items.length
-				? items.map((value) => ({ value, label: value }))
-				: null;
-		},
-		handler: async (args, ctx) => {
-			try {
-				const result = await bootstrapFromCurrentProject(
-					ctx.cwd,
-					parseBootstrapArgs(args, { allowForce: true }),
-				);
-				ctx.ui.notify(formatBootstrapSummary("Bootstrapped", result), "info");
-				queueOnboardingPrompt(pi, ctx, result);
-			} catch (error) {
-				ctx.ui.notify(formatError(error), "error");
-			}
-		},
+			"Compatibility shim for /wiki bootstrap. Usage: /wiki-bootstrap [project name] [--force]",
+		getArgumentCompletions: completeBootstrapArgs,
+		handler: async (args, ctx) => runBootstrapCommand(pi, args, ctx),
 	});
 
 	pi.registerTool({
@@ -61,8 +44,18 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 			projectName: Type.Optional(Type.String()),
 			repoPath: repoPathToolField,
 		}),
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			return executeCodewikiSetupTool(params, { cwd: ctx.cwd }, bootstrapToolPorts());
+		async execute(
+			_toolCallId: string,
+			params: any,
+			_signal: unknown,
+			_onUpdate: unknown,
+			ctx: any,
+		) {
+			return executeCodewikiSetupTool(
+				params,
+				{ cwd: ctx.cwd },
+				bootstrapToolPorts(),
+			);
 		},
 	} as any);
 
@@ -92,10 +85,43 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 			),
 			repoPath: repoPathToolField,
 		}),
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			return executeCodewikiBootstrapTool(params, { cwd: ctx.cwd }, bootstrapToolPorts());
+		async execute(
+			_toolCallId: string,
+			params: any,
+			_signal: unknown,
+			_onUpdate: unknown,
+			ctx: any,
+		) {
+			return executeCodewikiBootstrapTool(
+				params,
+				{ cwd: ctx.cwd },
+				bootstrapToolPorts(),
+			);
 		},
 	} as any);
+}
+
+export function completeBootstrapArgs(prefix: string) {
+	const options = ["--force"];
+	const items = options.filter((item) => item.startsWith(prefix));
+	return items.length ? items.map((value) => ({ value, label: value })) : null;
+}
+
+export async function runBootstrapCommand(
+	pi: ExtensionAPI,
+	args: string,
+	ctx: any,
+): Promise<void> {
+	try {
+		const result = await bootstrapFromCurrentProject(
+			ctx.cwd,
+			parseBootstrapArgs(args, { allowForce: true }),
+		);
+		ctx.ui.notify(formatBootstrapSummary("Bootstrapped", result), "info");
+		queueOnboardingPrompt(pi, ctx, result);
+	} catch (error) {
+		ctx.ui.notify(formatError(error), "error");
+	}
 }
 
 function queueOnboardingPrompt(

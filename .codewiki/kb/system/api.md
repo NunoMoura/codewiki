@@ -14,28 +14,30 @@ updated: "2026-06-01"
 
 The CodeWiki API is the stable semantic facade for CodeWiki operations. Adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations call the facade or explicit concept contracts instead of editing `.codewiki/` internals directly. Pi tools are one adapter over this API, not the only access path.
 
-Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki-*` commands, `wiki_*` tools, Pi-hosted status/config panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, audit, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
+Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki ...` commands, six normal `wiki_*` agent tools, Pi-hosted status/config panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, linter, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
 
-The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
+The target user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`. Bootstrap and config are user commands whose adapters call backend functions directly; they do not require dedicated normal agent tools.
+
+The target normal internal agent tool surface is wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime. The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
 
 ## Capability index
 
 | Capability | Owner detail |
 | --- | --- |
-| State and resume context | [State engine](components/state-engine.md), [Resume context boundary](flows/resume-context-boundary.md) |
+| State and graph lenses | [State engine](components/state-engine.md), [Resume context boundary](flows/resume-context-boundary.md) |
 | Decision, planning, implementation | [Compiler loops](components/compilers.md), [Decision to planning](flows/decision-to-planning.md), [Planning to implementation](flows/planning-to-implementation.md) |
 | Roadmap and sprint work truth | [Roadmap work truth](components/roadmap-work-truth.md) |
-| Session queue and artifact status | [Session coordination](components/session-coordination.md), [Artifact claim wait/wake](flows/artifact-claim-wait-wake.md) |
-| Runtime and daemon dispatch | [Runtime and daemon](components/runtime-daemon.md), [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) |
-| Builds, validation, publication, GC | [Builds and proof](components/builds-and-proof.md), [Validation gateway](components/validation-gateway.md), [Publication and GC](flows/publication-gc.md) |
+| Gateway, gates, linters, tests, and validation | [Validation gateway](components/validation-gateway.md) |
+| Session queue, leases, runtime, and daemon dispatch | [Session coordination](components/session-coordination.md), [Runtime and daemon](components/runtime-daemon.md), [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) |
+| Builds, content evidence, publication, and retention | [Builds and content evidence](components/builds-and-proof.md), [Publication and GC](flows/publication-gc.md) |
 | Adapters and user surfaces | [Adapters and UI](components/adapters-and-ui.md) |
 | Knowledge parsing and truth | [Knowledge base](components/knowledge-base.md) |
 
-The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). Public agent tools use the `wiki_<name>` convention. Low-level primitives remain internal, compatibility, audit, or expert/debug surfaces unless a workflow requires direct exposure.
+The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). Normal agent tools use the `wiki_<name>` convention and are limited to the six target tools. Low-level primitives remain internal, compatibility, or expert/debug surfaces unless a migration task explicitly keeps direct exposure.
 
 ## Access surfaces
 
-Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contract is the intended first-class interactive terminal surface. The legacy browser Control Room is deprecated; optional CLI/MCP wrappers, Claude Code, Codex, other agents, and humans all preserve the same `.codewiki/` semantics. Host adapters translate external inputs into API calls and must fail closed when a required host capability is missing.
+Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contract is the intended first-class interactive terminal surface. The legacy browser Control Room is deprecated; optional CLI/MCP wrappers, Claude Code, Codex, other agents, and humans all preserve the same `.codewiki/` semantics. Host adapters translate external inputs into API calls and must fail closed when a required host capability is missing. User commands render state and navigation; internal tools execute agent workflow boundaries.
 
 ## Write rules
 
@@ -43,10 +45,10 @@ Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contrac
 - Code/test/doc execution flows through implementation tasks.
 - Roadmap mutation uses CodeWiki roadmap tools; roadmap tasks track work truth rather than full requirements briefs.
 - Parallel sessions mark affected scopes through artifact status before overlapping writes.
-- Validation, task-close, ship-ready, publish, and release callers provide required fresh-context and content-proof evidence.
+- Validation, task-close, ship-ready, publish, and release callers provide required fresh-context and immutable content evidence.
 - Runtime/daemon job records are execution attempts, not roadmap truth.
 - Generated graph and task views are never hand-edited.
-- Tracked CodeWiki GC runs only after archive/close/publication proof exists.
+- Tracked CodeWiki GC runs only after archive/close/publication content evidence exists.
 
 ## API boundary
 

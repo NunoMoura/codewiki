@@ -32,118 +32,122 @@ import { splitCommandArgs } from "../../../shared/utils.ts";
 export function registerConfigCommand(pi: ExtensionAPI): void {
 	pi.registerCommand(`wiki-config`, {
 		description:
-			"Configure Codewiki status summary and panel behavior. Usage: /wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]",
-		getArgumentCompletions: (prefix) => {
-			const options = [
-				"show",
-				...STATUS_DOCK_MODE_VALUES,
-				...STATUS_DOCK_DENSITY_VALUES,
-			];
-			const items = options.filter((item) => item.startsWith(prefix));
-			return items.map((value) => ({ value, label: value }));
-		},
+			"Compatibility shim for /wiki config. Usage: /wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]",
+		getArgumentCompletions: completeConfigCommandOptions,
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
-				const input = parseConfigCommandInput(args);
-				const prefs = await readStatusDockPrefs();
-				if (input.kind === "show") {
-					const resolved = await resolveStatusDockProject(ctx, {
-						allowWhenOff: true,
-					});
-					if (resolved) {
-						await rememberStatusDockProject(resolved.project);
-						await refreshStatusDock(
-							resolved.project,
-							ctx,
-							currentTaskLink(ctx),
-							resolved,
-						);
-					}
-					const opened = await openConfigPanel(ctx, resolved?.project ?? null);
-					if (!opened) {
-						if (!resolved) {
-							ctx.ui.notify(
-								`No codewiki project resolved. Use /wiki-bootstrap first or work inside a repo with .codewiki/config.json.`,
-								"warning",
-							);
-							return;
-						}
-						ctx.ui.notify(
-							formatStatusConfigSummary(
-								prefs,
-								effectiveAgencyPolicy(resolved.project.config),
-							),
-							"info",
-						);
-					}
-					return;
-				}
-				if (input.density) {
-					const nextPrefs = { ...prefs, density: input.density };
-					await writeStatusDockPrefs(nextPrefs);
-					if (activeStatusPanelGlobal) {
-						activeStatusPanelGlobal.density = input.density;
-						activeStatusPanelGlobal.requestRender?.();
-					}
-					const resolved = await resolveStatusDockProject(ctx);
-					if (resolved)
-						await refreshStatusDock(
-							resolved.project,
-							ctx,
-							currentTaskLink(ctx),
-							resolved,
-						);
-					else clearStatusDock(ctx);
-					ctx.ui.notify(
-						`Status panel density set to ${input.density}.`,
-						"info",
-					);
-					return;
-				}
-				if (input.mode === "off") {
-					const nextPrefs = { ...prefs, mode: "off" as StatusDockMode };
-					await writeStatusDockPrefs(nextPrefs);
-					clearStatusDock(ctx);
-					ctx.ui.notify("Status summary hidden.", "info");
-					return;
-				}
-				if (input.mode === "auto") {
-					const nextPrefs = { ...prefs, mode: "auto" as StatusDockMode };
-					await writeStatusDockPrefs(nextPrefs);
-					const resolved = await resolveStatusDockProject(ctx);
-					if (resolved)
-						await refreshStatusDock(
-							resolved.project,
-							ctx,
-							currentTaskLink(ctx),
-							resolved,
-						);
-					else clearStatusDock(ctx);
-					ctx.ui.notify("Status summary set to auto mode.", "info");
-					return;
-				}
-				const project = await resolveCommandProject(
-					ctx,
-					input.pathArg,
-					`wiki-config`,
-				);
-				const nextPrefs = {
-					...prefs,
-					mode: "pin" as StatusDockMode,
-					pinnedRepoPath: project.root,
-				};
-				await writeStatusDockPrefs(nextPrefs);
-				await refreshStatusDock(project, ctx, currentTaskLink(ctx), {
-					...project,
-					project,
-					statusState:
-						(await maybeReadStatusState(project.statusStatePath)) ?? undefined,
-					source: "pinned",
-				});
-				ctx.ui.notify(`Status summary pinned to ${project.root}.`, "info");
+				await runConfigCommand(args, ctx, "wiki-config");
 			});
 		},
 	});
+}
+
+export function completeConfigCommandOptions(prefix: string) {
+	const options = [
+		"show",
+		...STATUS_DOCK_MODE_VALUES,
+		...STATUS_DOCK_DENSITY_VALUES,
+	];
+	return options
+		.filter((item) => item.startsWith(prefix))
+		.map((value) => ({ value, label: value }));
+}
+
+export async function runConfigCommand(
+	args: string,
+	ctx: any,
+	commandName = "wiki config",
+): Promise<void> {
+	const input = parseConfigCommandInput(args);
+	const prefs = await readStatusDockPrefs();
+	if (input.kind === "show") {
+		const resolved = await resolveStatusDockProject(ctx, {
+			allowWhenOff: true,
+		});
+		if (resolved) {
+			await rememberStatusDockProject(resolved.project);
+			await refreshStatusDock(
+				resolved.project,
+				ctx,
+				currentTaskLink(ctx),
+				resolved,
+			);
+		}
+		const opened = await openConfigPanel(ctx, resolved?.project ?? null);
+		if (!opened) {
+			if (!resolved) {
+				ctx.ui.notify(
+					`No codewiki project resolved. Use /wiki bootstrap first or work inside a repo with .codewiki/config.json.`,
+					"warning",
+				);
+				return;
+			}
+			ctx.ui.notify(
+				formatStatusConfigSummary(
+					prefs,
+					effectiveAgencyPolicy(resolved.project.config),
+				),
+				"info",
+			);
+		}
+		return;
+	}
+	if (input.density) {
+		const nextPrefs = { ...prefs, density: input.density };
+		await writeStatusDockPrefs(nextPrefs);
+		if (activeStatusPanelGlobal) {
+			activeStatusPanelGlobal.density = input.density;
+			activeStatusPanelGlobal.requestRender?.();
+		}
+		const resolved = await resolveStatusDockProject(ctx);
+		if (resolved)
+			await refreshStatusDock(
+				resolved.project,
+				ctx,
+				currentTaskLink(ctx),
+				resolved,
+			);
+		else clearStatusDock(ctx);
+		ctx.ui.notify(`Status panel density set to ${input.density}.`, "info");
+		return;
+	}
+	if (input.mode === "off") {
+		const nextPrefs = { ...prefs, mode: "off" as StatusDockMode };
+		await writeStatusDockPrefs(nextPrefs);
+		clearStatusDock(ctx);
+		ctx.ui.notify("Status summary hidden.", "info");
+		return;
+	}
+	if (input.mode === "auto") {
+		const nextPrefs = { ...prefs, mode: "auto" as StatusDockMode };
+		await writeStatusDockPrefs(nextPrefs);
+		const resolved = await resolveStatusDockProject(ctx);
+		if (resolved)
+			await refreshStatusDock(
+				resolved.project,
+				ctx,
+				currentTaskLink(ctx),
+				resolved,
+			);
+		else clearStatusDock(ctx);
+		ctx.ui.notify("Status summary set to auto mode.", "info");
+		return;
+	}
+	const project = await resolveCommandProject(ctx, input.pathArg, commandName);
+	const nextPrefs = {
+		...prefs,
+		mode: "pin" as StatusDockMode,
+		pinnedRepoPath: project.root,
+	};
+	await writeStatusDockPrefs(nextPrefs);
+	await refreshStatusDock(project, ctx, currentTaskLink(ctx), {
+		...project,
+		project,
+		statusState:
+			(await maybeReadStatusState(project.statusStatePath)) ?? undefined,
+		source: "pinned",
+	});
+	ctx.ui.notify(`Status summary pinned to ${project.root}.`, "info");
 }
 
 export function parseConfigCommandInput(args: string): {

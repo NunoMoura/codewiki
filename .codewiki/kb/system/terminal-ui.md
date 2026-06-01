@@ -6,7 +6,7 @@ summary: Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggere
 owners:
   - architecture
   - design
-updated: "2026-05-31"
+updated: "2026-06-01"
 diagram_refs:
   - component-map:extension
   - component-map:api
@@ -15,15 +15,15 @@ diagram_refs:
 
 # Terminal UI and Agent Visual Language
 
-CodeWiki is terminal-first. Pi chat and explicit `/wiki-*` commands are the primary user experience today. Richer Pi TUI design is future work; browser UI code is deprecated and should be removed through a validated cleanup task.
+CodeWiki is terminal-first. Pi chat, Pi TUI panels, and explicit `/wiki ...` commands are the primary user experience today. Richer Pi TUI design is future work; browser UI code is deprecated and should not receive new product investment.
 
-The terminal UI is not a separate truth system. It renders source-backed views from `.codewiki/kb/**`, roadmap state, builds, validation reports, session/runtime state, generated graph lenses, and Git proof. Rendered ASCII, Unicode, Mermaid, SVG, HTML, PNG, Cytoscape JSON, or future terminal snapshots are not canonical truth.
+The terminal UI is not a separate truth system. It renders source-backed views from `.codewiki/kb/**`, roadmap state, builds, validation reports, session/runtime state, generated graph lenses, and immutable content evidence. Rendered ASCII, Unicode, Mermaid, SVG, HTML, PNG, Cytoscape JSON, or future terminal snapshots are not canonical truth.
 
 ## Commercial fit
 
 CodeWiki users are maintainers, agents, extension authors, workflow authors, and future technical integrations. They operate inside coding harnesses, terminals, WSL, SSH, CI, and local repositories. Terminal-native UX reduces context switching, works headlessly, is easy to copy into chat/PRs/issues, and matches CodeWiki's role as a repo-local software development OS for agents.
 
-The product should not compete as a browser dashboard. CodeWiki should win by making repository intent, work state, orchestration, drift, and validation proof visible inside the developer's active terminal.
+The product should not compete as a browser dashboard. CodeWiki should win by making repository intent, work state, orchestration, drift, and validation evidence visible inside the developer's active terminal.
 
 ## Command-triggered surfaces
 
@@ -31,15 +31,14 @@ Terminal UX should be specific and task-oriented rather than one large app:
 
 | Command family | Purpose |
 | --- | --- |
-| `/wiki status` | Compact project health, active focus, next action, drift, blockers, and latest gate signal. |
-| `/wiki board` | Roadmap lanes/cards from roadmap truth, gates, blockers, and closure evidence. |
-| `/wiki diagram <name>` | Render a canonical YAML diagram as a terminal view. |
-| `/wiki diagram <name> --focus <id>` | Render selected node/entity/state/step plus neighbors and source refs. |
-| `/wiki trace <ref>` | Render decision → planning → task → implementation → validation → Git proof chains. |
-| `/wiki runtime` | Render Brain lease, jobs/runs, worker questions, block/unblock, and model policy state. |
-| `/wiki decide` | Render pending decision rows as terminal cards with approve/edit/reject/defer actions. |
+| `/wiki bootstrap` | Start CodeWiki in a greenfield or brownfield repository through command-adapter backend setup/bootstrap calls. |
+| `/wiki status` | Compact developer-facing project state: health, active focus, next action, blockers, validation signal, automation readiness, and source refs. |
+| `/wiki resume` | Continue from the last known stable state using CodeWiki source refs and context-boundary evidence. |
+| `/wiki config` | Render CodeWiki preferences/configuration choices for user selection in the TUI. |
+| `/wiki system <diagram type>` | Render a canonical system diagram. The user can toggle components or flows, see the selected item highlighted in ASCII/Unicode, and press Enter to open the corresponding component/flow Markdown source. |
+| `/wiki product` | Navigate product knowledge. The user can choose overview or users; overview opens the product overview source, while users can be selected and their stories toggled before opening the corresponding KB source. |
 
-Existing tools such as `wiki_state`, `wiki_resume_context`, `wiki_audit`, `wiki_gateway`, `wiki_roadmap`, `wiki_build`, and `wiki_runtime`-style future workflow capabilities remain semantic APIs. Terminal commands call those capabilities; they do not own source truth.
+Existing hyphenated commands and standalone compatibility commands are migration shims only. Internal tools such as `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` remain semantic APIs for agents and adapters. Terminal commands call API/backend capabilities; they do not own source truth.
 
 ## Visual grammars
 
@@ -47,13 +46,13 @@ Agents and TUI panels should use a small set of visual grammars:
 
 | Grammar | Best for | Notes |
 | --- | --- | --- |
-| `board` | Roadmap and sprint state. | Deterministic lanes such as Now, Ready, Blocked, Gate/Done recent. |
-| `tree` | File structure, ownership, nested docs, focused dependency paths. | Shows source paths and drift badges. |
-| `sequence` | Key flows, handoffs, compiler/runtime steps. | Prefer vertical steps when terminal width is small. |
+| `card` | Status, config choices, selected product/system item. | Shows concise fields and source refs. |
+| `tree` | Product navigation, file structure, ownership, nested docs, focused dependency paths. | Shows source paths and drift badges. |
+| `sequence` | Key flows, compiler/runtime steps, system flows. | Prefer vertical steps when terminal width is small. |
 | `state` | Lifecycle, gateway, task, runtime job states. | Show allowed transitions and current state. |
-| `layered_graph` | Architecture and component maps. | Use lanes/groups and small node counts only. |
-| `trace_chain` | Proof and vertical alignment. | Decision → planning → implementation → validation → Git. |
-| `matrix` | Drift, acceptance mapping, task/row resolution, audit summaries. | Good for compact comparisons. |
+| `layered_graph` | System diagrams and component maps. | Use lanes/groups and small node counts only. |
+| `trace_chain` | Validation and vertical alignment. | Decision → planning → implementation → validation → content evidence. |
+| `matrix` | Drift, acceptance mapping, row resolution, linter/validation summaries. | Good for compact comparisons. |
 
 The renderer should use Unicode box drawing by default and ASCII fallback when needed.
 
@@ -62,16 +61,16 @@ The renderer should use Unicode box drawing by default and ASCII fallback when n
 The terminal must not render the full generated graph by default. Full graph views are too dense for users and agents. Render focused lenses instead:
 
 - current task or sprint,
-- selected node plus direct neighbors,
-- selected proof chain,
-- selected diagram group/lane,
+- selected system diagram node/flow plus direct neighbors,
+- selected product user/story path,
+- selected trace chain,
 - selected blocker/question,
 - drift category with affected refs,
 - summarized omitted counts.
 
 When a view omits data, it should say how much was omitted and which command or source ref expands it.
 
-## Diagram rendering
+## System diagram rendering
 
 Canonical diagrams live under `.codewiki/kb/system/diagrams/**` as YAML. Terminal renderers read those YAML files or generated graph lenses derived from them.
 
@@ -80,16 +79,25 @@ Diagram rendering should prioritize interpretation over fidelity:
 - architecture/component maps render as grouped lanes or focused neighborhoods,
 - sequence flows render as ordered steps or simple swimlanes,
 - state lifecycle maps render as states plus transitions,
-- file-structure maps render as trees with ownership/drift badges,
+- file-structure maps render as trees,
 - data models render as entity cards plus relation lists.
 
-Large arbitrary graph rendering is a non-goal. If a diagram is too dense, the terminal should ask for focus or render a summary with top-level groups.
+`/wiki system <diagram type>` should let the user move through components or flows, highlight the selected item, and open the linked Markdown explanation on Enter. Large arbitrary graph rendering is a non-goal. If a diagram is too dense, the terminal should ask for focus or render a summary with top-level groups.
+
+## Product navigation rendering
+
+`/wiki product` should make product knowledge browsable without exposing raw folder structure first. The top-level choice is:
+
+- overview,
+- users.
+
+Choosing overview opens or renders `.codewiki/kb/product/overview.md`. Choosing users lets the user select a user and toggle through that user's stories. Pressing Enter opens or renders the corresponding product KB Markdown file. The TUI may use tree, card, and matrix grammars, but source Markdown remains canonical.
 
 ## Agent visual expression
 
-Agents may draw small diagrams in chat when it improves understanding. A CodeWiki visual skill should teach agents when to use `board`, `tree`, `sequence`, `state`, `layered_graph`, `trace_chain`, and `matrix` patterns. Deterministic renderer code should handle source-backed layouts for commands and TUI panels.
+Agents may draw small diagrams in chat when it improves understanding. A CodeWiki visual skill should teach agents when to use `card`, `tree`, `sequence`, `state`, `layered_graph`, `trace_chain`, and `matrix` patterns. Deterministic renderer code should handle source-backed layouts for commands and TUI panels.
 
-Do not create a broad `wiki_visualize` mega-tool. Prefer specific commands and `wiki_state`/graph lenses with render options once the backend surface is ready.
+Do not create a broad `wiki_visualize` mega-tool. Prefer specific commands and `wiki_state` graph lenses with render options once the backend surface is ready.
 
 ## Removal boundary for web UI
 

@@ -58,7 +58,7 @@ import type {
 export function registerResumeCommand(pi: ExtensionAPI): void {
 	pi.registerCommand(`wiki-resume`, {
 		description:
-			"Resume roadmap work from current task focus or next open task. Usage: /wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]",
+			"Compatibility shim for /wiki resume. Usage: /wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]",
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
 				await runResumeCommand(pi, "wiki-resume", args, ctx);
@@ -67,9 +67,9 @@ export function registerResumeCommand(pi: ExtensionAPI): void {
 	});
 }
 
-async function runResumeCommand(
+export async function runResumeCommand(
 	pi: ExtensionAPI,
-	commandName: "wiki-resume",
+	commandName: string,
 	args: string,
 	ctx: ExtensionCommandContext,
 ): Promise<void> {

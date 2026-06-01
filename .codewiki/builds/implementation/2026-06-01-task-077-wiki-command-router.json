@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-01T12:02:13Z",
+  "source": "TASK-077 from .codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "task_id": "TASK-077",
+  "task": {
+    "id": "TASK-077",
+    "title": "Implement canonical /wiki command router",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "summary": "Implement the core `/wiki bootstrap`, `/wiki status`, `/wiki resume`, and `/wiki config` user command surface while preserving legacy command shims.",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/commands/config.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/checks/source-contract-snapshot.ts",
+      "src/checks/source-contract.ts",
+      "README.md",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/project-resolution.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Users have canonical `/wiki bootstrap`, `/wiki status`, `/wiki resume`, and `/wiki config` entrypoints with legacy command compatibility and no extra agent-facing bootstrap/config tools.",
+      "acceptance": [
+        "A canonical `/wiki` command path dispatches `bootstrap`, `status`, `resume`, and `config` subcommands, or Pi-equivalent registration proves those exact user command strings are available.",
+        "`/wiki bootstrap` starts CodeWiki in greenfield and brownfield repositories by calling setup/bootstrap backend functions directly, not by exposing a new normal agent tool.",
+        "`/wiki status` renders developer-facing health, active focus, next action, blockers, latest validation signal, automation-readiness summary, and source refs.",
+        "`/wiki resume` continues from CodeWiki source refs and last known stable state, preserving existing resume-context behavior.",
+        "`/wiki config` renders user CodeWiki preference/configuration choices for selection in the TUI.",
+        "Legacy `/wiki-bootstrap`, `/wiki-status`, `/wiki-resume`, `/wiki-config`, `/wiki-ui`, and `/audit` behavior remains as documented compatibility or deprecation shims until replacement coverage is validated.",
+        "README, command help, and source-contract snapshots reflect the canonical command surface and compatibility shims without treating low-level tools as user commands."
+      ],
+      "non_goals": [
+        "Do not implement `/wiki system` or `/wiki product` navigation in this task.",
+        "Do not consolidate the internal six-tool agent API in this task.",
+        "Do not remove legacy commands before compatibility behavior and source-contract coverage exist.",
+        "Do not add dedicated `wiki_bootstrap`, `wiki_config`, or `wiki_project` normal agent tools."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs",
+        "wiki_gate/task-close linters for source-contract, stale-reference, changed, and alignment"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-08T12:02:13.000Z",
+    "purge_after": "2026-06-15T12:02:13.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "implemented"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "source-contract",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "source-ref-implementation",
+        "reason": "Implementation started from validated planning refs and task packet.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "wiki_resume_context TASK-077",
+          ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          ".codewiki/roadmap/tasks/TASK-077/task.json"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-required",
+        "reason": "TASK-077 changes public command/source-contract behavior and needs independent implementation/task-close validation.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation_build should be validated from source refs by fresh validator"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-validation-handoff",
+        "reason": "Do not close TASK-077 from builder context.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "this implementation build",
+          "changed source/test files",
+          "checks_run list"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "TASK-077-AC1",
+      "text": "A canonical `/wiki` command path dispatches `bootstrap`, `status`, `resume`, and `config` subcommands, or Pi-equivalent registration proves those exact user command strings are available.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC2",
+      "text": "`/wiki bootstrap` starts CodeWiki in greenfield and brownfield repositories by calling setup/bootstrap backend functions directly, not by exposing a new normal agent tool.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC3",
+      "text": "`/wiki status` renders developer-facing status through existing status panel behavior.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC4",
+      "text": "`/wiki resume` continues from CodeWiki source refs and last known stable task state, preserving existing resume-context behavior.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC5",
+      "text": "`/wiki config` renders user CodeWiki preference/configuration choices for selection in the TUI.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC6",
+      "text": "Legacy `/wiki-bootstrap`, `/wiki-status`, `/wiki-resume`, `/wiki-config`, `/wiki-ui`, and `/audit` behavior remains as documented compatibility or deprecation shims until replacement coverage is validated.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "TASK-077-AC7",
+      "text": "README, command help, and source-contract snapshots reflect the canonical command surface and compatibility shims without treating low-level tools as user commands.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-077/task.json"
+      ],
+      "state": "implemented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Canonical `/wiki` command dispatch exists for bootstrap/status/resume/config.",
+      "evidence": "src/adapters/pi/commands/wiki.ts registers `wiki`, parses subcommands, dispatches to shared command runners, and exposes subcommand completions.",
+      "requirement_ids": [
+        "TASK-077-AC1"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/wiki.ts",
+        "src/adapters/pi/index.ts"
+      ]
+    },
+    {
+      "criterion": "Bootstrap/config use command backend functions directly, not new agent tools.",
+      "evidence": "Bootstrap runner is exported from src/adapters/pi/bootstrap.ts and config runner from src/adapters/pi/commands/config.ts; no new `wiki_bootstrap`, `wiki_config`, or `wiki_project` normal tool was added.",
+      "requirement_ids": [
+        "TASK-077-AC2",
+        "TASK-077-AC5"
+      ],
+      "source_refs": [
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/index.ts"
+      ]
+    },
+    {
+      "criterion": "Status/resume behavior preserved through router.",
+      "evidence": "Status/resume runners were exported and reused by `/wiki status` and `/wiki resume`; existing legacy handlers call the same runners.",
+      "requirement_ids": [
+        "TASK-077-AC3",
+        "TASK-077-AC4"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/commands/wiki.ts"
+      ]
+    },
+    {
+      "criterion": "Legacy command shims remain available.",
+      "evidence": "Package smoke test expects `audit`, `wiki`, `wiki-bootstrap`, `wiki-config`, `wiki-status`, `wiki-ui`, and `wiki-resume`; legacy shim descriptions now point to canonical `/wiki ...` forms.",
+      "requirement_ids": [
+        "TASK-077-AC6"
+      ],
+      "source_refs": [
+        "tests/smoke/package-smoke.test.mjs",
+        "src/adapters/pi/commands/ui.ts"
+      ]
+    },
+    {
+      "criterion": "Source contract and README reflect canonical command router.",
+      "evidence": "README command section documents `/wiki bootstrap/status/resume/config` and compatibility shims; source-contract parser recognizes `/wiki ...`; source-contract smoke asserts snapshot includes canonical `wiki` router and legacy command names.",
+      "requirement_ids": [
+        "TASK-077-AC7"
+      ],
+      "source_refs": [
+        "README.md",
+        "src/checks/source-contract.ts",
+        "tests/smoke/source-contract.test.mjs"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "lsp_diagnostics: no diagnostics in touched TS files",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+    "npm run typecheck: pass",
+    "git diff --check -- TASK-077 changed files: pass"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-077 canonical `/wiki` command router for bootstrap/status/resume/config with legacy command shims preserved and source-contract coverage updated.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-077"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-077/task.json",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "README.md",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/commands/config.ts",
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/checks/source-contract.ts"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/project-resolution.test.mjs"
+    ],
+    "validation": [
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs",
+      "npm run typecheck",
+      "git diff --check -- TASK-077 changed files"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-077"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/commands/config.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/checks/source-contract-snapshot.ts",
+      "src/checks/source-contract.ts",
+      "README.md",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/project-resolution.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/project-resolution.test.mjs"
+  ],
+  "code_files": [
+    "README.md",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/commands/config.ts",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/commands/wiki.ts",
+    "src/checks/source-contract.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "README.md",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/commands/config.ts",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/commands/wiki.ts",
+    "src/checks/source-contract.ts"
+  ],
+  "checks_run": [
+    "lsp_diagnostics on touched TS files => 0 diagnostics",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass",
+    "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass",
+    "npm run typecheck => pass",
+    "git diff --check -- TASK-077 changed files => pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-077",
+      "test_files": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/project-resolution.test.mjs"
+      ],
+      "evidence": [
+        "Added failing source-contract expectation for canonical `wiki` router command before implementation.",
+        "Updated package smoke to require `wiki` command registration, exact command count 7, and router subcommand completion for `status`.",
+        "Used existing package-smoke config/status/bootstrap/project-resolution coverage to prove legacy behavior still works after runner extraction."
+      ],
+      "notes": [
+        "Targeted tests and typecheck pass.",
+        "wiki_audit from the currently loaded Pi extension may report stale source-contract warning for `wiki` until `/reload`; direct source test using current files passes."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-077",
+      "code_files": [
+        "README.md",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/commands/wiki.ts",
+        "src/checks/source-contract.ts"
+      ],
+      "evidence": [
+        "Added src/adapters/pi/commands/wiki.ts router for `/wiki <bootstrap|status|resume|config>`.",
+        "Extracted reusable runners from bootstrap/status/resume/config commands so router and legacy shims call same behavior.",
+        "Registered router in src/adapters/pi/index.ts without removing legacy commands.",
+        "Updated source-contract parser and README command contract for `/wiki ...`.",
+        "Updated `/wiki-ui` deprecation message to point at canonical `/wiki status/resume/config` forms."
+      ],
+      "notes": [
+        "No `/wiki system` or `/wiki product` implemented; still TASK-078.",
+        "No six-tool agent API consolidation done; still TASK-080.",
+        "No dedicated `wiki_config`, `wiki_project`, or new normal agent tool added."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added failing source-contract expectation for canonical `wiki` router command before implementation.",
+    "Updated package smoke to require `wiki` command registration, exact command count 7, and router subcommand completion for `status`.",
+    "Used existing package-smoke config/status/bootstrap/project-resolution coverage to prove legacy behavior still works after runner extraction."
+  ],
+  "code_change_evidence": [
+    "Added src/adapters/pi/commands/wiki.ts router for `/wiki <bootstrap|status|resume|config>`.",
+    "Extracted reusable runners from bootstrap/status/resume/config commands so router and legacy shims call same behavior.",
+    "Registered router in src/adapters/pi/index.ts without removing legacy commands.",
+    "Updated source-contract parser and README command contract for `/wiki ...`.",
+    "Updated `/wiki-ui` deprecation message to point at canonical `/wiki status/resume/config` forms."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Canonical `/wiki` command path dispatches bootstrap/status/resume/config.",
+      "evidence": "src/adapters/pi/commands/wiki.ts + package smoke expected `wiki` command/completion."
+    },
+    {
+      "criterion": "Bootstrap/config call backend functions directly and no extra normal agent tool was added.",
+      "evidence": "runBootstrapCommand/runConfigCommand reuse existing backend functions; extension tool list unchanged except command router."
+    },
+    {
+      "criterion": "Status/resume/config behavior preserved.",
+      "evidence": "Shared runStatusCommand/runResumeCommand/runConfigCommand called by both router and legacy shims; existing package smoke command exercises still pass."
+    },
+    {
+      "criterion": "Legacy shims preserved.",
+      "evidence": "Package smoke expects `audit`, `wiki-bootstrap`, `wiki-config`, `wiki-status`, `wiki-ui`, `wiki-resume` plus new `wiki`."
+    },
+    {
+      "criterion": "README/source-contract updated.",
+      "evidence": "README documents canonical router and compatibility shims; source-contract smoke passes."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with next planned production-surface implementation task TASK-077.",
+    "implemented_changes": [
+      "Added canonical `/wiki` router command for bootstrap/status/resume/config.",
+      "Preserved legacy command shims and reused shared runners.",
+      "Updated README/source-contract tests and parser to recognize canonical router plus shims."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/commands/wiki.ts",
+        "src/checks/source-contract.ts",
+        "README.md"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "source-contract smoke pass",
+      "package smoke pass",
+      "project-resolution smoke pass",
+      "typecheck pass"
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs",
+      "npm run typecheck",
+      "git diff --check -- TASK-077 changed files"
+    ],
+    "non_goals_preserved": [
+      "No `/wiki system` or `/wiki product` implementation.",
+      "No agent tool surface consolidation.",
+      "No removal of legacy shims.",
+      "No new bootstrap/config normal agent tools."
+    ],
+    "remaining_risks": [
+      "Live Pi runtime needs `/reload` before using new command.",
+      "Fresh validation/task-close still required before closing TASK-077."
+    ]
+  },
+  "risks": [
+    "Pi extension runtime must be reloaded before live session exposes the new `/wiki` command.",
+    "Implementation validation should run in fresh context and account for changed README/source-contract behavior.",
+    "Task-close/ship-ready gates from TASK-082 are not implemented yet, so full production-ready close may need policy-aware validation/defer."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-077",
+      "task_id": "TASK-077",
+      "next_focus_task_id": "TASK-078",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-077",
+        "title": "Implement canonical /wiki command router",
+        "summary": "Implemented TASK-077 canonical `/wiki` command router for bootstrap/status/resume/config with legacy command shims preserved and source-contract coverage updated.",
+        "spec_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/product/uis/terminal.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands/status.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/commands/config.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "src/checks/source-contract.ts",
+          "README.md",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/project-resolution.test.mjs",
+          "src/adapters/pi/commands/wiki.ts"
+        ],
+        "acceptance": [
+          "A canonical `/wiki` command path dispatches `bootstrap`, `status`, `resume`, and `config` subcommands, or Pi-equivalent registration proves those exact user command strings are available.",
+          "`/wiki bootstrap` starts CodeWiki in greenfield and brownfield repositories by calling setup/bootstrap backend functions directly, not by exposing a new normal agent tool.",
+          "`/wiki status` renders developer-facing health, active focus, next action, blockers, latest validation signal, automation-readiness summary, and source refs.",
+          "`/wiki resume` continues from CodeWiki source refs and last known stable state, preserving existing resume-context behavior.",
+          "`/wiki config` renders user CodeWiki preference/configuration choices for selection in the TUI.",
+          "Legacy `/wiki-bootstrap`, `/wiki-status`, `/wiki-resume`, `/wiki-config`, `/wiki-ui`, and `/audit` behavior remains as documented compatibility or deprecation shims until replacement coverage is validated.",
+          "README, command help, and source-contract snapshots reflect the canonical command surface and compatibility shims without treating low-level tools as user commands."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs",
+          "wiki_gate/task-close linters for source-contract, stale-reference, changed, and alignment"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        "checks_run": [
+          "lsp_diagnostics on touched TS files => 0 diagnostics",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass",
+          "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass",
+          "npm run typecheck => pass",
+          "git diff --check -- TASK-077 changed files => pass"
+        ],
+        "test_design_evidence": [
+          "Added failing source-contract expectation for canonical `wiki` router command before implementation.",
+          "Updated package smoke to require `wiki` command registration, exact command count 7, and router subcommand completion for `status`.",
+          "Used existing package-smoke config/status/bootstrap/project-resolution coverage to prove legacy behavior still works after runner extraction."
+        ],
+        "code_change_evidence": [
+          "Added src/adapters/pi/commands/wiki.ts router for `/wiki <bootstrap|status|resume|config>`.",
+          "Extracted reusable runners from bootstrap/status/resume/config commands so router and legacy shims call same behavior.",
+          "Registered router in src/adapters/pi/index.ts without removing legacy commands.",
+          "Updated source-contract parser and README command contract for `/wiki ...`.",
+          "Updated `/wiki-ui` deprecation message to point at canonical `/wiki status/resume/config` forms."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-077",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-077",
+      "show_build": "git show refs/codewiki/archive/task/TASK-077:.codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/product/uis/terminal.md",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "src/checks/source-contract.ts",
+        "README.md",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/project-resolution.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-077 Implement canonical /wiki command router implementation evidence",
+      "body": "Implemented TASK-077 canonical `/wiki` command router for bootstrap/status/resume/config with legacy command shims preserved and source-contract coverage updated.\n\nChecks: lsp_diagnostics on touched TS files => 0 diagnostics, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass, npm run typecheck => pass, git diff --check -- TASK-077 changed files => pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-077\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json\nCodeWiki-Checks: lsp_diagnostics on touched TS files => 0 diagnostics, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass, npm run typecheck => pass, git diff --check -- TASK-077 changed files => pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-077\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-077\nCodeWiki-Digest: sha256:762a323ccbaf1a4ca93961798741cdafbacc41ae9a5f01553e9a08f97d24f769\nCodeWiki-Restore: /wiki-restore TASK-077",
+      "trailers": [
+        "CodeWiki-Task: TASK-077",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+        "CodeWiki-Checks: lsp_diagnostics on touched TS files => 0 diagnostics, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass, npm run typecheck => pass, git diff --check -- TASK-077 changed files => pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-077",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-077",
+        "CodeWiki-Digest: sha256:762a323ccbaf1a4ca93961798741cdafbacc41ae9a5f01553e9a08f97d24f769",
+        "CodeWiki-Restore: /wiki-restore TASK-077"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-077 Implement canonical /wiki command router implementation evidence",
+      "body": "Implemented TASK-077 canonical `/wiki` command router for bootstrap/status/resume/config with legacy command shims preserved and source-contract coverage updated.\n\nChecks: lsp_diagnostics on touched TS files => 0 diagnostics, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass, npm run typecheck => pass, git diff --check -- TASK-077 changed files => pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-077\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json\nCodeWiki-Checks: lsp_diagnostics on touched TS files => 0 diagnostics, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass, npm run typecheck => pass, git diff --check -- TASK-077 changed files => pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-077\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-077\nCodeWiki-Digest: sha256:762a323ccbaf1a4ca93961798741cdafbacc41ae9a5f01553e9a08f97d24f769\nCodeWiki-Restore: /wiki-restore TASK-077"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-077",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-077"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-077",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-077",
+        "show_build": "git show refs/codewiki/archive/task/TASK-077:.codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/product/uis/terminal.md",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands/status.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/commands/config.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "src/checks/source-contract.ts",
+          "README.md",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/project-resolution.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-077",
+      "build_path": ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-077",
+      "commit_sha": "",
+      "digest": "sha256:762a323ccbaf1a4ca93961798741cdafbacc41ae9a5f01553e9a08f97d24f769",
+      "restore_command": "/wiki-restore TASK-077"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:afb47afb8bdcb1e87c4557f65305736abe672101a4acc5b6489e5fddbdc78bbc",
+          "bytes": 30880
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:b9af6db4f5904aefa8bb974b67713f3b832047ac3cee6117ede15dedad78a4af",
+          "bytes": 113548
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:68fdc138a7619d21f920fa90bf6363d6b6ef1542738615fd8a7e70f6827ecf95",
+          "bytes": 5101
+        },
+        {
+          "path": "tests/smoke/project-resolution.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:bf41a8ab597cdd8989d660c9698aaaf671c65b02a7664bfb2b6c15c1bf19873c",
+          "bytes": 1153
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:360fe2400465600afcaf9e808f3ae68f53a2a30d7f0f755cf44256beb71d45cf",
+          "bytes": 24911
+        },
+        {
+          "path": "src/adapters/pi/bootstrap.ts",
+          "role": "code_file",
+          "sha256": "sha256:35a21cdaeef1dd9ba86ada2657bd538be997cee2d3bb1a3fd38b686e534a2824",
+          "bytes": 4175
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:d2a844a2b15a83dbb0ff6c0f1e2962bfb799c0df53ea1b6dcbf4655c6d993a85",
+          "bytes": 13273
+        },
+        {
+          "path": "src/adapters/pi/commands/status.ts",
+          "role": "code_file",
+          "sha256": "sha256:767e158a2c83d5866556365004663cb7704d13c64e172803a59d80095288bab9",
+          "bytes": 2419
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:0e1a4d368f015d89a7729215cb08609a8bd9ffc2bba1834726c54beba0dd0a7b",
+          "bytes": 12147
+        },
+        {
+          "path": "src/adapters/pi/commands/config.ts",
+          "role": "code_file",
+          "sha256": "sha256:aba739d9a0f8cfcf5d48ce7746b0e7f7572a0b08d2f6333f752d7749563c8bd7",
+          "bytes": 5237
+        },
+        {
+          "path": "src/adapters/pi/commands/ui.ts",
+          "role": "code_file",
+          "sha256": "sha256:22dd26c341b9680e9a1ffe042e2a437ad74db4062bb0727a5767efce031c5fc1",
+          "bytes": 518
+        },
+        {
+          "path": "src/adapters/pi/commands/wiki.ts",
+          "role": "code_file",
+          "sha256": "sha256:9f7367316246a381b48b06701055c88744af7bd22e10860c1c740a8e2d0e5726",
+          "bytes": 2321
+        },
+        {
+          "path": "src/checks/source-contract.ts",
+          "role": "code_file",
+          "sha256": "sha256:6d3a59b4918cbbc429498efae503370295a94e60adf20f6bc8e6da66ca7a21b5",
+          "bytes": 10054
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-077",
+      "source_build": ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "README.md",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/commands/status.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/commands/config.ts",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/commands/wiki.ts",
+          "src/checks/source-contract.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/project-resolution.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-077",
+        "restore_command": "/wiki-restore TASK-077"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics on touched TS files => 0 diagnostics",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs => pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs => pass",
+        "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs => pass",
+        "npm run typecheck => pass",
+        "git diff --check -- TASK-077 changed files => pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01",
+  "context_path": ".codewiki/roadmap/tasks/TASK-083/context.json",
+  "task": {
+    "id": "TASK-083",
+    "title": "Add automation-readiness runtime predicate",
+    "status": "todo",
+    "priority": "high",
+    "kind": "agent-workflow",
+    "change_type": "system",
+    "summary": "Implement graph/runtime automation-readiness status so agents and daemon flows know when work is runnable, blocked, retryable, or promotable without inferring from chat.",
+    "labels": [
+      "automation-readiness",
+      "runtime",
+      "agency",
+      "leases",
+      "daemon"
+    ],
+    "goal": {
+      "outcome": "Automation can select or reject work from a deterministic readiness predicate instead of chat inference or roadmap status alone.",
+      "acceptance": [
+        "Generated state exposes automation-readiness for tasks and sprints with states such as runnable, blocked, waiting, retryable, and promotable or equivalent source-backed categories.",
+        "Readiness evaluation considers executable task boundary, accepted decision/planning refs or approved exemption, gate policy, risk/approval state, scoped leases/worktree strategy, candidate files, model policy, blocker status, context-boundary plan, and deterministic next action.",
+        "The automation-readiness state is available to the focused state lens without requiring full graph output.",
+        "Agency planning and runtime runner refuse to schedule work whose readiness contract is missing, stale, blocked, ambiguous, or conflicts with active leases.",
+        "Wait/wake output names exact blockers and next safe actions using lease ids, branch refs, validation refs, publisher refs, or rebase requirements.",
+        "Tests cover runnable, blocked, waiting-on-lease, retryable-after-failure, and promotable-after-validation scenarios."
+      ],
+      "non_goals": [
+        "Do not implement unbounded autonomous editing.",
+        "Do not bypass decision, planning, implementation, validation, task-close, ship-ready, publication, destructive, or approval gates.",
+        "Do not create a second competing runtime graph store.",
+        "Do not infer requirements from chat history when source refs are missing."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+        "wiki_gate/task-close linters for alignment, changed, generated-parity, and source-contract"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

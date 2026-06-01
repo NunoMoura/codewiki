@@ -10,12 +10,18 @@ import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 const repoRoot = resolve(import.meta.dirname, "..", "..");
 const expectedFixture = JSON.parse(
 	await readFile(
-		resolve(repoRoot, "tests/fixtures/source-contract/wiki-tools.expected.json"),
+		resolve(
+			repoRoot,
+			"tests/fixtures/source-contract/wiki-tools.expected.json",
+		),
 		"utf8",
 	),
 );
 
-async function writeFixtureProject({ toolName = "wiki_state", commandName = "wiki-status" } = {}) {
+async function writeFixtureProject({
+	toolName = "wiki_state",
+	commandName = "wiki-status",
+} = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-source-contract-"));
 	await mkdir(resolve(root, ".codewiki/kb/system"), { recursive: true });
 	await mkdir(resolve(root, "src/adapters/pi"), { recursive: true });
@@ -69,13 +75,38 @@ try {
 		try {
 			const snapshotA = await generateSourceContractSnapshot(project);
 			const snapshotB = await generateSourceContractSnapshot(project);
-			assert.deepEqual(snapshotA, snapshotB, "source contract snapshot should be deterministic");
-			assert.deepEqual(snapshotA.tools, expectedFixture.tools, "snapshot should capture tool names");
-			assert.deepEqual(snapshotA.commands, expectedFixture.commands, "snapshot should capture command names");
-			assert.ok(snapshotA.api_exports.includes("* from ./tools.ts"), "snapshot should capture API facade exports");
-			assert.deepEqual(snapshotA.package.knip_entry, [...expectedFixture.knip_entry].sort(), "snapshot should capture package entry surfaces");
-			assert.equal(Object.hasOwn(snapshotA, "generated_at"), false, "snapshot must not include timestamp truth");
-			const audit = await auditSourceContract(project, { include_fingerprints: false });
+			assert.deepEqual(
+				snapshotA,
+				snapshotB,
+				"source contract snapshot should be deterministic",
+			);
+			assert.deepEqual(
+				snapshotA.tools,
+				expectedFixture.tools,
+				"snapshot should capture tool names",
+			);
+			assert.deepEqual(
+				snapshotA.commands,
+				expectedFixture.commands,
+				"snapshot should capture command names",
+			);
+			assert.ok(
+				snapshotA.api_exports.includes("* from ./tools.ts"),
+				"snapshot should capture API facade exports",
+			);
+			assert.deepEqual(
+				snapshotA.package.knip_entry,
+				[...expectedFixture.knip_entry].sort(),
+				"snapshot should capture package entry surfaces",
+			);
+			assert.equal(
+				Object.hasOwn(snapshotA, "generated_at"),
+				false,
+				"snapshot must not include timestamp truth",
+			);
+			const audit = await auditSourceContract(project, {
+				include_fingerprints: false,
+			});
 			assert.equal(audit.status, "pass", JSON.stringify(audit.issues, null, 2));
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -87,8 +118,14 @@ try {
 			toolName: ["codewiki", "state"].join("_"),
 		});
 		try {
-			const audit = await auditSourceContract(project, { include_fingerprints: false });
-			assert.equal(audit.status, "fail", "stale internal tool namespace should fail against wiki_* expectation");
+			const audit = await auditSourceContract(project, {
+				include_fingerprints: false,
+			});
+			assert.equal(
+				audit.status,
+				"fail",
+				"stale internal tool namespace should fail against wiki_* expectation",
+			);
 			assert.ok(
 				audit.issues.some((issue) => issue.kind === "tool-namespace-stale"),
 				"stale old-prefix tool should produce actionable namespace issue",
@@ -106,8 +143,18 @@ try {
 		});
 		assert.equal(report.status, "pass", JSON.stringify(report.issues, null, 2));
 		const result = report.profile_results[0];
-		assert.ok(result.details.snapshot.tools.includes("wiki_state"), "repo snapshot should include current live tool names");
-		assert.ok(result.details.snapshot.commands.includes("wiki-status"), "repo snapshot should include command names");
+		assert.ok(
+			result.details.snapshot.tools.includes("wiki_state"),
+			"repo snapshot should include current live tool names",
+		);
+		assert.ok(
+			result.details.snapshot.commands.includes("wiki"),
+			"repo snapshot should include canonical wiki router command",
+		);
+		assert.ok(
+			result.details.snapshot.commands.includes("wiki-status"),
+			"repo snapshot should include legacy command names",
+		);
 	}
 
 	console.log("✓ source contract check smoke passed");

@@ -6,7 +6,7 @@ summary: System mechanism for bounded roadmap automation through agency cycles a
 owners:
   - architecture
   - engineering
-updated: "2026-05-31"
+updated: "2026-06-01"
 code_paths:
   - src/agency
   - src/runtime
@@ -22,7 +22,7 @@ code_paths_mode: explicit_override
 
 The agency controller is the system mechanism behind the product need for gated agency. It decides whether CodeWiki may continue automatically while enforcing explicit token, time, cost, write, session, risk, validation, policy, and approval gates.
 
-The product concept is gated agency. The agency controller owns autonomy level, approval cadence, scope selection, planning, and budget/risk policy. The CodeWiki runtime owns bounded execution mechanics after an agency plan is authorized: acquiring scoped claims, running one compiler or gateway preparation step, requesting context boundaries, recording workflow-efficiency evidence, and stopping or routing to the next loop. Agency may route backward to decision or planning when missing semantics or task-boundary doubts appear, but it should not absorb runtime orchestration concerns.
+The product concept is gated agency. The agency controller owns autonomy level, approval cadence, scope selection, planning, and budget/risk policy. The CodeWiki runtime owns bounded execution mechanics after an agency plan is authorized: acquiring scoped leases, running one compiler or gateway preparation step, requesting context boundaries, recording workflow-efficiency evidence, and stopping or routing to the next loop. Agency may route backward to decision or planning when missing semantics or task-boundary doubts appear, but it should not absorb runtime orchestration concerns.
 
 ## Inputs
 
@@ -87,7 +87,7 @@ A config-level contract may expose:
 | Mode | Responsibility |
 | --- | --- |
 | `observe` | Read graph and roadmap state, report next safe action, write nothing. |
-| `maintain` | Refresh generated state or run safe audits inside a small write budget. |
+| `maintain` | Refresh generated state or run safe linters inside a small write budget. |
 | `work` | Authorize one bounded runtime step inside explicit gates, including compiler invocation or gateway preparation when policy permits. |
 
 These modes are implementation controls, not product stories. Product docs should describe the user-visible gated agency experience.
@@ -101,7 +101,7 @@ The controller must stop when any gate fails:
 - user approval is required,
 - intent is ambiguous,
 - validation fails or blocks,
-- checks fail,
+- required linters or executable tests fail,
 - policy forbids the next action,
 - the configured approval cadence boundary is reached,
 - a context reset cannot produce a protocol-safe auto-pickup boundary,
@@ -118,7 +118,7 @@ graph state -> agency scope/policy -> CodeWiki runtime step -> compiler/gateway 
                 decision/planning <- ambiguity, failed gate, or blocked validation
 ```
 
-When intent is unclear, a requirement is not unequivocally represented in the accepted decision build, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When roadmap/task boundaries are incomplete, it routes to planning. When code/tests must change and planning proof is valid, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually. If the adapter cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
+When intent is unclear, a requirement is not unequivocally represented in the accepted decision build, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When roadmap/task boundaries are incomplete, it routes to planning. When code/tests must change and planning evidence is valid, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually. If the adapter cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
 
 ## Context reset and auto-pickup
 
@@ -139,7 +139,7 @@ If the adapter cannot guarantee a valid next-turn boundary, agency must block or
 - Parallel sprint execution must mark narrow artifact scopes in use and stop on write/write conflicts unless policy explicitly permits override.
 - Parallel write execution should allocate task/role worktrees through the worktree factory when the adapter or local runtime can provide them. Shared-root writes are a solo-mode fallback, not the default for overlapping builder, validator, publisher, or cleanup roles.
 - Agency plans must expose token, time, cost, write, session, and risk budgets in bounded context and policy output.
-- Agency wait and wake output must name exact blockers and next safe actions, such as claim ids, branch refs, patch refs, validation refs, publisher commits, or rebase requirements. It should not tell agents to wait for a vague dirty worktree when an isolated role ref or publisher queue can express the dependency. Artifact wait wakeups must use durable CodeWiki session-queue wake records with source refs and `wiki_resume_context` intent, not direct inter-agent chat.
+- Agency wait and wake output must name exact blockers and next safe actions, such as lease ids, branch refs, patch refs, validation refs, publisher commits, or rebase requirements. It should not tell agents to wait for a vague dirty worktree when an isolated role ref or publisher queue can express the dependency. Artifact wait wakeups must use durable CodeWiki session-queue wake records with source refs and `wiki_resume_context` intent, not direct inter-agent chat.
 - Agency may spend session budget by requesting adapter session boundaries; each boundary must carry a minimal kickoff prompt from `wiki_resume_context`, source refs, task/build ids, agency level, approval cadence, and expected output. Same-agent CodeWiki-owned compaction or `context_refresh` is soft context hygiene; `new_session` is hard replacement-session hygiene; handoff means transfer to another session, agent, or role. In Pi, tool-context requests must not inject slash commands through follow-up chat; CodeWiki-owned compaction is the normal same-terminal refresh path and must auto-pick up through a protocol-safe custom kickoff when allowed by the agency contract, command-context `/wiki-resume --new` is the hard replacement-session path, and any unsupported boundary fallback must be reported as platform-limited, not routine user work.
 - Agency and close reports should expose workflow-efficiency evidence when a task changes orchestration: user interrupts avoided or required, manual command count, session boundaries used, and any remaining platform-limited steps.
 

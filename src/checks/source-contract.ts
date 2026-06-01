@@ -29,8 +29,9 @@ interface ExpectedContract {
 
 const PROFILE = "source-contract";
 const TOOL_TOKEN_RE = /`((?:codewiki|wiki)_[a-z0-9_]+)`/g;
-const COMMAND_TOKEN_RE = /`\/(audit|wiki-[a-z0-9-]+)(?:\s|`|\[|$)/g;
-const PATH_TOKEN_RE = /`((?:src\/[^`]+\.ts|scripts\/[^`]+\.mjs|tests\/[^`]+\.mjs))`/g;
+const COMMAND_TOKEN_RE = /`\/(audit|wiki(?:-[a-z0-9-]+)?)(?:\s|`|\[|$)/g;
+const PATH_TOKEN_RE =
+	/`((?:src\/[^`]+\.ts|scripts\/[^`]+\.mjs|tests\/[^`]+\.mjs))`/g;
 const STALE_TOOL_PREFIX = ["codewiki", ""].join("_");
 const CODEWIKI_PREFIX_RE = new RegExp(`^${STALE_TOOL_PREFIX}(.+)$`);
 const WIKI_PREFIX_RE = /^wiki_(.+)$/;
@@ -214,7 +215,11 @@ function packageEntryIssues(
 	issues: AuditIssue[],
 ): void {
 	for (const entry of expected.knip_entry) {
-		if (snapshot.package.knip_entry.some((actual) => entryPatternCovers(actual, entry)))
+		if (
+			snapshot.package.knip_entry.some((actual) =>
+				entryPatternCovers(actual, entry),
+			)
+		)
 			continue;
 		issues.push(
 			createIssue(
@@ -227,7 +232,13 @@ function packageEntryIssues(
 		);
 	}
 	for (const entry of snapshot.package.knip_entry) {
-		if (expected.knip_entry.some((documented) => entryPatternCovers(entry, documented) || entryPatternCovers(documented, entry)))
+		if (
+			expected.knip_entry.some(
+				(documented) =>
+					entryPatternCovers(entry, documented) ||
+					entryPatternCovers(documented, entry),
+			)
+		)
 			continue;
 		issues.push(
 			createIssue(

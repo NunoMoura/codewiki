@@ -385,6 +385,7 @@ async function main() {
 			commandNames,
 			[
 				"audit",
+				"wiki",
 				"wiki-bootstrap",
 				"wiki-config",
 				"wiki-status",
@@ -395,8 +396,8 @@ async function main() {
 		);
 		assert.equal(
 			commandNames.length,
-			6,
-			`Expected exactly 6 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`,
+			7,
+			`Expected exactly 7 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`,
 		);
 		for (const legacyCommand of [
 			"wiki-fix",
@@ -2263,6 +2264,7 @@ async function main() {
 			widget: null,
 		};
 		const auditCommand = extension.commands.get("audit");
+		const wikiCommand = extension.commands.get("wiki");
 		const configCommand = extension.commands.get("wiki-config");
 		const statusCommand = extension.commands.get("wiki-status");
 		const uiCommand = extension.commands.get("wiki-ui");
@@ -2271,6 +2273,15 @@ async function main() {
 		assert.ok(
 			auditCommand && typeof auditCommand.handler === "function",
 			"audit command missing handler",
+		);
+		assert.ok(
+			wikiCommand && typeof wikiCommand.handler === "function",
+			"wiki router command missing handler",
+		);
+		assert.deepEqual(
+			wikiCommand.getArgumentCompletions?.("s")?.map((item) => item.value),
+			["status"],
+			"wiki router should complete canonical subcommands",
 		);
 		assert.ok(
 			configCommand && typeof configCommand.handler === "function",
@@ -2300,7 +2311,7 @@ async function main() {
 				(entry) =>
 					entry.level === "warning" &&
 					/wiki-ui is deprecated/.test(String(entry.message)) &&
-					/wiki-status/.test(String(entry.message)),
+					/\/wiki status/.test(String(entry.message)),
 			),
 			"wiki-ui should be a deprecation shim that points to Pi-hosted commands",
 		);

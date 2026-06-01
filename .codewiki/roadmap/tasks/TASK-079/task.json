@@ -1,0 +1,61 @@
+{
+  "id": "TASK-079",
+  "title": "Add focused graph lens query API",
+  "status": "todo",
+  "priority": "high",
+  "kind": "feature",
+  "summary": "Extend state reads with focused graph lens queries for status, resume, trace, task, sprint, validation, runtime, and automation-readiness subsets.",
+  "spec_paths": [
+    ".codewiki/kb/system/graph.md"
+  ],
+  "code_paths": [
+    "src/state/tool.ts",
+    "src/state/types.ts",
+    "src/state/reader.ts",
+    "src/state/builders.ts",
+    "src/state/graph.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/resume-context.ts",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "state-lenses",
+    "context-reduction",
+    "graph-query"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Agents and TUI commands can request focused graph/state subsets instead of broad noisy status payloads.",
+    "acceptance": [
+      "State read inputs accept `view` or `lens` plus optional focus/ref/include filters without breaking existing callers.",
+      "Lens families exist for status, resume, trace, task, sprint, validation, runtime, and automation-readiness.",
+      "Lens responses include source refs, omitted-count metadata, next safe action, blockers, freshness, and expansion hints instead of dumping the full graph.",
+      "Existing summary/roadmap/session include behavior remains backward-compatible during migration.",
+      "Resume context and status command paths can consume lens output without using chat history as source truth.",
+      "Graph lens tests cover status, trace, task/sprint or validation, runtime, and automation-readiness subsets."
+    ],
+    "non_goals": [
+      "Do not implement `/wiki system` or `/wiki product` TUI rendering in this task.",
+      "Do not remove resume-context compatibility before the tool migration lands.",
+      "Do not make generated lens output canonical truth.",
+      "Do not hand-edit `.codewiki/index_graph.json`."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+      "wiki_gate/task-close linters for generated-parity, alignment, changed, and source-contract"
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-06-01",
+  "updated": "2026-06-01"
+}

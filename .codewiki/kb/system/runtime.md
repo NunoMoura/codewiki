@@ -2,7 +2,7 @@
 id: spec.system.runtime
 title: CodeWiki Runtime
 state: active
-summary: Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, claims, compiler/gateway preparation, harness boundaries, and session spawning.
+summary: Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, leases, compiler/gateway preparation, harness boundaries, and session spawning.
 owners:
   - architecture
   - engineering
@@ -21,9 +21,9 @@ code_paths_mode: explicit_override
 
 ## Responsibility
 
-The CodeWiki runtime executes and, after the daemon refactor, dispatches CodeWiki software-development loops after agency policy authorizes them. It is not the Node runtime, a generic chat gateway, or an arbitrary agent swarm. CodeWiki builds on Pi Code as its primary runtime foundation and layers roadmap, compiler, gateway, worktree, proof, and daemon-job semantics above it.
+The CodeWiki runtime executes and, after the daemon refactor, dispatches CodeWiki software-development loops after agency policy authorizes them. It is not the Node runtime, a generic chat gateway, or an arbitrary agent swarm. CodeWiki builds on Pi Code as its primary runtime foundation and layers roadmap, compiler, gateway, worktree, content-evidence, and daemon-job semantics above it.
 
-The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures Pi Code with CodeWiki defaults, prompt contract, tools, skills, and workflow policy instead of forking Pi internals. Forking is reserved for a future blocker where Pi SDK/runtime hooks cannot enforce required CodeWiki behavior. Optional CLI entrypoints may support bootstrap, CI, audit, or admin workflows, but interactive development happens through Pi-hosted CodeWiki surfaces.
+The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures Pi Code with CodeWiki defaults, prompt contract, tools, skills, and workflow policy instead of forking Pi internals. Forking is reserved for a future blocker where Pi SDK/runtime hooks cannot enforce required CodeWiki behavior. Optional CLI entrypoints may support bootstrap, CI, linter, or admin workflows, but interactive development happens through Pi-hosted CodeWiki surfaces.
 
 Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence.
 
@@ -31,7 +31,7 @@ Runtime performs one bounded execution step at a time. Agency decides whether Co
 
 - [Runtime and daemon component](components/runtime-daemon.md) owns runtime paths and contracts.
 - [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) describes job/run lifecycle.
-- [Artifact claim wait/wake](flows/artifact-claim-wait-wake.md) describes session queue coordination.
+- [Artifact lease wait/wake](flows/artifact-claim-wait-wake.md) describes session queue coordination. The file path retains legacy claim wording until migration renames it.
 - [Resume context boundary](flows/resume-context-boundary.md) describes source-backed context refresh and replacement-session starts.
 
 ## Source layout
@@ -55,7 +55,7 @@ A pass boundary emits or references required handoff/build/validation/content re
 
 - Runtime does not bypass decision, planning, implementation, validation, task-close, ship-ready, publish, release, or destructive gates.
 - Runtime treats artifact status as temporary coordination evidence.
-- Runtime releases claims it acquires before returning unless the adapter/process fails and records that failure.
+- Runtime releases leases it acquires before returning unless the adapter/process fails and records that failure.
 - Runtime requests host capabilities through explicit adapter ports and records platform-limited evidence instead of fabricating behavior.
 - Dogfood operational state under `.codewiki/runtime/**` is repo-local state, not package source.
 

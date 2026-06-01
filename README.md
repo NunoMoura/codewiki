@@ -18,18 +18,26 @@ That is the right shape for this package:
 
 ### Commands
 
-Public command surface is intentionally small:
+Public command surface is intentionally small. Canonical command router:
+
+- `/wiki bootstrap [project name] [--force]`
+  - starts CodeWiki in greenfield or brownfield projects through command-adapter backend setup/bootstrap calls
+- `/wiki status [repo-path] [status|product|system|board|graph]`
+  - opens the developer-facing CodeWiki status panel with health, focus, next action, blockers, validation signal, automation-readiness summary, and source refs
+- `/wiki resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
+  - queues agent continuation from CodeWiki source refs and the last known stable task state
+- `/wiki config [show|auto|pin|off|minimal|standard|full] [repo-path]`
+  - opens interactive CodeWiki configuration with option lists and toggles
+
+Compatibility shims remain available during migration:
 
 - `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--source-contract|--package|--changed|--task TASK-###|--layer product,system|--json]`
-  - runs source-owned CodeWiki audit profiles and prints human-readable evidence
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-status [repo-path]`
-- `/wiki-ui`
-  - deprecated shim; use `/wiki-status`, `/wiki-resume`, `/wiki-config`, and `/audit` instead
-- `/wiki-config`
-  - opens interactive Codewiki configuration with option lists and toggles
-  - optional args remain available for direct fallback updates: `[show|auto|pin|off|minimal|standard|full] [repo-path]`
+- `/wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]`
 - `/wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
+- `/wiki-ui`
+  - deprecated shim; use `/wiki status`, `/wiki resume`, `/wiki config`, and `/audit` instead
 
 ### Internal agent tools
 

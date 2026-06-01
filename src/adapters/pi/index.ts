@@ -14,6 +14,7 @@ import { registerConfigCommand } from "./commands/config.ts";
 import { registerResumeCommand } from "./commands/resume.ts";
 import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
+import { registerWikiCommand } from "./commands/wiki.ts";
 import { currentTaskLink } from "./session.ts";
 import { readRoadmapTask } from "../../roadmap/store.ts";
 import {
@@ -153,6 +154,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		});
 	});
 
+	registerWikiCommand(pi);
 	registerAuditCommand(pi);
 	registerConfigCommand(pi);
 	registerStatusCommand(pi);

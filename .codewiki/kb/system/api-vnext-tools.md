@@ -2,52 +2,67 @@
 id: spec.system.api-vnext-tools
 title: API vNext Tool Surface
 state: active
-summary: Preferred reduced public commands and agent workflow tools for the CodeWiki API.
+summary: Preferred reduced user command and internal agent tool surface for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-31"
+updated: "2026-06-01"
 diagram_refs:
   - component-map:api
 ---
 
 # API vNext Tool Surface
 
-This focused companion to [CodeWiki API](api.md) keeps the reduced workflow-tool direction reachable without making `api.md` too large. Source-facing API facade code lives in `src/api/tools.ts`.
+This focused companion to [CodeWiki API](api.md) keeps the reduced command and workflow-tool direction reachable without making `api.md` too large. Source-facing API facade code lives in `src/api/tools.ts`.
 
-## vNext tool surface
+## Target user commands
 
-The vNext API should reduce the common public and agent tool surface. Low-level primitives may stay internal, but deprecated public aliases and shim tools are removed instead of preserved.
-
-Preferred public/user-facing commands:
+The vNext user command surface is small and TUI-oriented. User commands render or navigate source-backed state; they do not define workflow semantics by themselves.
 
 | Command | Responsibility |
 | --- | --- |
-| `/wiki status` | Read current project state, health, next action, and active blockers. |
-| `/wiki decide` | Capture or approve semantic decisions at the right abstraction layer. |
-| `/wiki plan` | Align accepted decisions with roadmap tasks, sprint scope, execution graph metadata, and planning builds. |
-| `/wiki implement` | Run one bounded implementation step for an executable roadmap item under gates. |
-| `/wiki gate` | Run deterministic audits, validation gateways, and proof preflights. |
-| `/wiki runtime` | Operate approved runtime/daemon scheduling, worker jobs, Brain leases, and block/unblock flows. |
-| `/wiki board` | Render roadmap lanes/cards from roadmap truth, gates, blockers, and closure evidence. |
-| `/wiki diagram <name>` | Render canonical YAML diagrams as focused terminal views. |
-| `/wiki trace <ref>` | Render decision, planning, implementation, validation, and Git proof chains. |
+| `/wiki bootstrap` | Start CodeWiki in a greenfield or brownfield repository. The command adapter calls bootstrap/setup backend functions directly; this does not require a dedicated normal agent tool. |
+| `/wiki status` | Show the most important developer-facing project state: health, active focus, next action, blockers, latest validation signal, automation readiness, and relevant source refs. |
+| `/wiki resume` | Let the agent continue from the last known stable state using CodeWiki source refs, not chat history. |
+| `/wiki config` | Render user CodeWiki preferences/configuration choices in the TUI and apply selected settings through command-adapter backend calls. |
+| `/wiki system <diagram type>` | Render a canonical system diagram in the TUI. Users can toggle components or flows, see the selected item highlighted in ASCII/Unicode, and open the corresponding component/flow Markdown source on Enter. |
+| `/wiki product` | Navigate product knowledge. Users can choose overview or users; overview opens the product overview source, while users can be selected and their stories toggled before opening the corresponding KB Markdown source. |
 
-There is no generic maintenance command or fix-all maintenance tool. Deterministic generated-state repair is part of state reads and write postconditions. Semantic drift routes to decision, planning, implementation, or validation gates. Runtime cleanup belongs to runtime. Archive and retention cleanup remain targeted lifecycle operations such as `wiki_gc` after archive proof exists.
+Legacy `/wiki-*` hyphen commands and standalone compatibility commands such as `/audit` may remain during migration as shims with deprecation metadata. They are not canonical user vocabulary.
 
-Preferred agent workflow capabilities:
+Workflow verbs such as decide, plan, implement, gate, and runtime are agent/tool phases. Users may ask for those actions in chat, but they are not primary slash-command names in the target surface.
 
-| Capability | Responsibility |
+## Target internal agent tools
+
+The normal internal agent tool surface is exactly six tools:
+
+| Tool | Responsibility |
 | --- | --- |
-| State | Graph-indexed state, resume, trace, execution, audit, daemon-context, and source-ref lenses. |
-| Decide | Decision proposal, batch row approve/edit/reject/defer, KB mapping, and decision-build orchestration. |
-| Plan | Planning-build creation, roadmap refinement, sprint/task propagation, execution graph metadata, and model policy proposals. |
-| Implement | Bounded implementation evidence, checks, changed refs, and implementation-build preparation for one executable item. |
-| Gate | Audits, validation gateways, proof preflights, and pass/fail/block reports. |
-| Runtime | Brain lease, daemon jobs/runs, worker scheduling, artifact claims, durable questions/block/unblock, model allocation, retries, and worker lifecycle. |
+| `wiki_state` | Graph-indexed state and query entrypoint. Supports `view`/`lens` plus optional focus/ref/include filters for status, resume context, trace, system/product navigation, task/sprint, validation, runtime, and automation-readiness subsets. |
+| `wiki_decide` | Decision rows, row approval/edit/reject/defer, knowledge mapping, propagation evidence, and decision-build orchestration. |
+| `wiki_plan` | Roadmap and sprint alignment, task shaping, planning-build orchestration, implementation handoff, and planning-owned execution metadata. |
+| `wiki_implement` | One executable task boundary: TDD-aligned test/code evidence, linter execution summaries, changed refs, acceptance mapping, and implementation-build orchestration. |
+| `wiki_gate` | Gateway preflight and validation for named gates, including required linters, executable code tests when relevant, isolation, content evidence, and pass/fail/block verdicts. |
+| `wiki_runtime` | Session focus, leases, daemon jobs/runs, block/unblock state, context boundaries, agency scheduling, lifecycle/archive coordination, and platform-limited runtime evidence. |
 
-These capabilities use `wiki_<name>` tool names when implemented and exposed. Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session-boundary staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them. Targeted lifecycle tools such as `wiki_gc` may remain available for explicit archive/retention work, but they are not a generic repair surface.
+Existing low-level primitives such as raw diff-table mutation, raw build writing, validation report writing, roadmap mutation, session focus, lease mutation, linter execution, generated-state refresh, and archive ledger writes should become internal implementation details of these six workflow tools unless a compatibility or expert/debug surface explicitly needs them during migration.
 
-Each workflow tool owns one user-level phase, supports batched common operations, exposes source refs, policy outcomes, and recovery steps, and avoids becoming an opaque do-everything API.
+Each workflow tool owns one phase boundary, supports batched common operations, exposes source refs, validation outcomes, and recovery steps, and avoids becoming an opaque do-everything API.
+
+## State query lenses
+
+`wiki_state` is the preferred read surface for agents and automation. It should accept a compact lens request instead of forcing callers to consume broad status payloads. Initial lens families should include:
+
+- `status`: health, active focus, blockers, next action, latest validation signal;
+- `resume`: stable continuation packet refs and context-boundary metadata;
+- `trace`: decision → planning → task/sprint → implementation → validation → content evidence;
+- `system`: diagram refs, selected component/flow neighbors, and linked component/flow docs;
+- `product`: overview, users, stories, and linked product docs;
+- `task` / `sprint`: executable work boundary, acceptance, gates, blockers, and candidate files;
+- `validation`: gate requirements, linter/test status, recent pass/fail/block reports;
+- `runtime`: leases, jobs/runs, waits, wake signals, context boundaries, and agency readiness;
+- `automation-readiness`: whether a task/sprint can be safely scheduled, blocked, retried, or promoted.
+
+A lens result should return omitted-count metadata and source refs for expansion instead of dumping the full graph.
 
 ## Related docs
 
@@ -55,3 +70,4 @@ Each workflow tool owns one user-level phase, supports batched common operations
 - [Terminal UI and Agent Visual Language](terminal-ui.md)
 - [Adapters](adapters.md)
 - [Agency Controller](agency.md)
+- [Graph](graph.md)

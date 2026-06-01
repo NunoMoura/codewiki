@@ -5,7 +5,7 @@ state: active
 summary: Work truth for active items, priority, status, blockers, progress, and closure.
 owners:
   - architecture
-updated: "2026-05-31"
+updated: "2026-06-01"
 ---
 
 # Roadmap
@@ -52,9 +52,9 @@ It should not duplicate full decision, planning, or implementation briefs. Refin
 
 Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Waiters and wake notifications also live in the session queue, so release or expiry can wake blocked sessions with source refs and next-action intent. Worktrees isolate filesystem state; validation isolates judgment.
 
-Parallel write work should be planned as role-isolated execution. A dispatcher may select independent roadmap tasks by planning-owned dependency/order metadata while excluding overlapping code/spec/roadmap/build/validation scopes and active artifact holders. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue, dispatcher, and worktree factory own temporary filesystem leases, claim intents, branch/worktree metadata, and source-backed worker resume packets.
+Parallel write work should be planned as role-isolated execution. A dispatcher may select independent roadmap tasks by planning-owned dependency/order metadata while excluding overlapping code/spec/roadmap/build/validation scopes and active artifact holders. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue, dispatcher, and worktree factory own temporary filesystem leases, lease intents, branch/worktree metadata, and source-backed worker resume packets.
 
-Task-close and publication readiness should assume a publisher queue when parallel sessions are active. Builders produce branch or patch refs, validators verify immutable refs from fresh worktrees, and the publisher serializes merge, generated-state update, final commit, and clean proof. Closing a task from a shared dirty root worktree is not sufficient when isolated role refs or pending publisher work exist.
+Task-close and publication readiness should assume a publisher queue when parallel sessions are active. Builders produce branch or patch refs, validators verify immutable refs from fresh worktrees, and the publisher serializes merge, generated-state update, final commit, and clean content evidence. Closing a task from a shared dirty root worktree is not sufficient when isolated role refs or pending publisher work exist.
 
 ## Status semantics
 
@@ -69,7 +69,7 @@ Short-lived closure statuses are:
 - `done`,
 - `cancelled`.
 
-Deprecated workflow statuses such as `research`, `implement`, and `verify` must not be emitted as roadmap status. Task phases are not canonical. Validation readiness belongs to validation/build/commit-proof evidence, not roadmap status.
+Deprecated workflow statuses such as `research`, `implement`, and `verify` must not be emitted as roadmap status. Task phases are not canonical. Validation readiness belongs to validation/build/content evidence, not roadmap status. A `done` task must be production-ready for its scope; it is not merely implemented.
 
 ## Gated agency support
 
@@ -91,19 +91,23 @@ After checkpoint or retention expiry, closed/cancelled detail should leave activ
 
 Agents own this maintenance boundary. After a task close, sprint close, release checkpoint, or roadmap-end commit, the agent must run or explicitly defer a GC review. The review either purges eligible cold/pass/runtime artifacts through the safe GC path or records why no purge was safe. Leaving purgeable artifacts hot without a block/defer reason is drift.
 
-Default context should hide cold roadmap and archive history unless the user explicitly requests restore, archive inspection, audit, or refinement.
+Default context should hide cold roadmap and archive history unless the user explicitly requests restore, archive inspection, validation detail, or refinement.
 
 ## Closure
 
-Work closes only when linked intent/spec/evidence is traceable, required checks ran or were deferred by policy, validation passed or policy explains why it is not required, and an implementation build or equivalent evidence brief exists for implemented changes.
+Work closes only when linked intent/spec/evidence is traceable, required linters ran or were deferred by policy, executable code tests passed when code behavior changes, validation passed, and an implementation build or equivalent evidence brief exists for implemented changes.
 
-Implementation closure should trace through a planning build unless the work is docs-only, validation-only, or covered by a migration exception. Generated closure views may summarize approved decision rows through planning, tasks/sprints, implementation builds, validation reports, and Git/content proof for review, but roadmap state, builds, validation reports, and Git remain the canonical truth sources.
+A code-changing task is not done unless TDD/code-behavior tests pass, required linters pass, the implementation build is accepted by the gateway, task-close validation passes, and the exact changed content passes a task-scoped ship-ready gate. If code derived from an approved decision is not production-ready, the task remains `in_progress` or `blocked` and must route back to implementation, planning, or decision.
+
+A sprint is done when every included task is task-done or explicitly cancelled, the shared sprint outcome and cross-task risks are reconciled, sprint-close validation passes, and the sprint content candidate is ship-ready when it changes shippable code or package behavior. Ship-ready means an exact content candidate is safe to promote; publication, release, push, remote update, or destructive action remains a separate explicit approval boundary when policy requires it.
+
+Implementation closure should trace through a planning build unless the work is docs-only, validation-only, or covered by a migration exception. Generated closure views may summarize approved decision rows through planning, tasks/sprints, implementation builds, validation reports, and Git/content evidence for review, but roadmap state, builds, validation reports, and Git remain the canonical truth sources.
 
 ## Generated task views
 
 Task folders under `.codewiki/roadmap/tasks/**` are generated from `.codewiki/roadmap/queue.json`. They are not requirements briefs and must not be hand-edited. Rebuilds regenerate missing views and prune stale task directories.
 
-Until planning-loop refactor is complete, agents must not treat a green graph or no open tasks as proof that accepted decision propagated through decision and planning.
+Until planning-loop refactor is complete, agents must not treat a green graph or no open tasks as evidence that accepted decision propagated through decision and planning.
 
 ## Related docs
 

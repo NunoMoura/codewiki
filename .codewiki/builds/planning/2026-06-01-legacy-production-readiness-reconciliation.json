@@ -1,0 +1,761 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-01T11:44:25Z",
+  "source": "User approved adding old closed work reconciliation to a separate sprint after agreeing not to reopen historical tasks blindly.",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-01T11:44:25.000Z",
+    "purge_after": "2026-07-31T11:44:25.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 3,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "source-contract",
+      "file-structure",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "user-approved-planning",
+        "reason": "The roadmap addition follows accepted production-ready semantics and explicit user approval.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "User agreed to separate reconciliation sprint rather than reopening old tasks blindly.",
+          ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "planning-gateway",
+        "reason": "Planning validation should confirm the task is not an umbrella task and is gated behind SPRINT-019/TASK-082.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required",
+          "TASK-084 and SPRINT-020 roadmap refs"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "deferred-implementation",
+        "reason": "Reconciliation should wait until new production-ready gates exist enough to audit legacy closures consistently.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful",
+          "SPRINT-020 gate: start after SPRINT-019 closes or TASK-082 gates validated"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-LEGACY-001",
+      "text": "Do not reopen or rewrite old closed tasks; reconcile them through new source-backed inventory and remediation tasks.",
+      "source_refs": [
+        "user approval",
+        "TASK-084"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "REQ-LEGACY-002",
+      "text": "Run reconciliation only after SPRINT-019 closes or after TASK-082 production-ready closure gates are implemented and validated; otherwise record deferred evidence.",
+      "source_refs": [
+        "SPRINT-020"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "REQ-LEGACY-003",
+      "text": "Create remediation tasks only for concrete source-backed production-readiness gaps discovered by inventory.",
+      "source_refs": [
+        "TASK-084"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Separate reconciliation sprint created.",
+      "evidence": "SPRINT-020 contains TASK-084 and gates start behind SPRINT-019/TASK-082.",
+      "requirement_ids": [
+        "REQ-LEGACY-001",
+        "REQ-LEGACY-002",
+        "REQ-LEGACY-003"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#SPRINT-020"
+      ]
+    },
+    {
+      "criterion": "Task has direct executable outcome, not umbrella closure.",
+      "evidence": "TASK-084 acceptance requires inventory classification, source refs, remediation task creation only for concrete gaps, and validation of the inventory result.",
+      "requirement_ids": [
+        "REQ-LEGACY-001",
+        "REQ-LEGACY-003"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-084"
+      ]
+    },
+    {
+      "criterion": "Existing production-surface decision propagation remains resolved.",
+      "evidence": "This supplemental planning build carries forward SURFACE-001..SURFACE-006 and Q1..Q14 mappings from .codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json so latest-build reconciliation stays complete.",
+      "requirement_ids": [],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Planned legacy production-readiness reconciliation as SPRINT-020 with TASK-084 inventory work after SPRINT-019 establishes the new production-ready gates; preserves full production-surface decision propagation mappings from the active planning handoff.",
+  "task_ids": [
+    "TASK-084"
+  ],
+  "task_changes": [
+    "Created TASK-084 to inventory legacy closed work under the new production-ready policy.",
+    "Created SPRINT-020 as planned reconciliation sprint gated behind SPRINT-019/TASK-082.",
+    "Carried forward production-surface row/question mappings from the active planning build so supplemental planning does not hide existing propagation evidence."
+  ],
+  "roadmap_changes": [
+    "Created TASK-084 to inventory legacy closed work under the new production-ready policy.",
+    "Created SPRINT-020 as planned reconciliation sprint gated behind SPRINT-019/TASK-082.",
+    "Carried forward production-surface row/question mappings from the active planning build so supplemental planning does not hide existing propagation evidence."
+  ],
+  "tdd_plan": [
+    "TASK-084 is inventory/validation work: start by defining expected classifications and sample legacy candidates, then run source-backed inventory, then validate the inventory result. If remediation tasks are created, each later task must use TDD for code-changing fixes."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/runtime/**",
+    "src/agency/**",
+    "src/session/**",
+    "src/gateway/**",
+    "src/policy/**",
+    "src/roadmap/**",
+    "src/state/**",
+    "src/adapters/pi/**",
+    "src/api/**",
+    "tests/**"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "SURFACE-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-077",
+        "TASK-078"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-077",
+        ".codewiki/roadmap/queue.json#TASK-078"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Core command router and system/product navigation remain planned in SPRINT-019.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "SURFACE-002",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-079",
+        "TASK-080"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-079",
+        ".codewiki/roadmap/queue.json#TASK-080"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Focused state lenses and six-tool facade remain planned in SPRINT-019.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "SURFACE-003",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-081"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-081"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Lexicon enforcement remains planned in SPRINT-019.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "SURFACE-004",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-080",
+        "TASK-081",
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-080",
+        ".codewiki/roadmap/queue.json#TASK-081",
+        ".codewiki/roadmap/queue.json#TASK-082"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Quality vocabulary migration remains split across six-tool, lexicon linter, and gateway policy tasks.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "SURFACE-005",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-082",
+        "TASK-084"
+      ],
+      "sprint_ids": [
+        "SPRINT-019",
+        "SPRINT-020"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-082",
+        ".codewiki/roadmap/queue.json#TASK-084"
+      ],
+      "owner": "planning compiler",
+      "trigger": "production-ready done semantics plus user-approved legacy reconciliation",
+      "rationale": "New closure gates are planned in TASK-082; old closed work reconciliation is planned in TASK-084 after those gates exist.",
+      "evidence": "TASK-082 and TASK-084 created.",
+      "inferred": false
+    },
+    {
+      "row_id": "SURFACE-006",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-079",
+        "TASK-083",
+        "TASK-084"
+      ],
+      "sprint_ids": [
+        "SPRINT-019",
+        "SPRINT-020"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-079",
+        ".codewiki/roadmap/queue.json#TASK-083",
+        ".codewiki/roadmap/queue.json#TASK-084"
+      ],
+      "owner": "planning compiler",
+      "trigger": "automation-readiness decision plus user-approved legacy reconciliation",
+      "rationale": "Automation readiness implementation is planned in SPRINT-019; old daemon/runtime/agency work will be reconciled in SPRINT-020.",
+      "evidence": "TASK-079, TASK-083, and TASK-084 created.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "Q1",
+      "question": "Implement six user commands and legacy shims.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-077",
+        "TASK-078"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-077",
+        ".codewiki/roadmap/queue.json#TASK-078"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by command-router and TUI navigation tasks.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q2",
+      "question": "Implement six normal internal tools and compatibility/deprecation behavior for low-level tools.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-080"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-080"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by six-tool facade task.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q3",
+      "question": "Add `wiki_state view/lens` graph-subset query schema and implementation.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-079"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-079"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by state lens task.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q4",
+      "question": "Migrate legacy audit engine terminology/surfaces into gateway-required linters.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-080",
+        "TASK-081",
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-080",
+        ".codewiki/roadmap/queue.json#TASK-081",
+        ".codewiki/roadmap/queue.json#TASK-082"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved across tool facade, lexicon linter, and gateway policy tasks.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q5",
+      "question": "Enforce pruned lexicon in source-contract or stale-reference linters.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-081"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-081"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by lexicon linter task.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q6",
+      "question": "Update task-close/sprint-close/ship-ready gateway policy so code-changing tasks cannot close before production-ready quality passes.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-082"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by production-ready closure gates task.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q7",
+      "question": "Build `/wiki system <diagram type>` and `/wiki product` TUI navigation from source-backed lenses.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-078"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-078"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Resolved by TUI navigation task.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q8",
+      "question": "Plan command migration to `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`, including legacy shim policy.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-077",
+        "TASK-078"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-077",
+        ".codewiki/roadmap/queue.json#TASK-078"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q1 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q9",
+      "question": "Plan internal tool migration to `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`, including compatibility aliases for existing low-level tools.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-080"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-080"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q2 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q10",
+      "question": "Plan `wiki_state` lens schema and first lens implementation.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-079"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-079"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q3 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q11",
+      "question": "Plan linter terminology/source migration from `/audit` and `wiki_audit` to gateway-required linters.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-080",
+        "TASK-081",
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-080",
+        ".codewiki/roadmap/queue.json#TASK-081",
+        ".codewiki/roadmap/queue.json#TASK-082"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q4 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q12",
+      "question": "Plan task-close/sprint-close/ship-ready policy changes enforcing production-ready done semantics.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-082"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q6 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q13",
+      "question": "Plan lexicon enforcement via source-contract/stale-reference/file-structure linter rules.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-081"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-081"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q5 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q14",
+      "question": "Plan TUI renderers for system diagrams and product navigation.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-078"
+      ],
+      "sprint_ids": [
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-078"
+      ],
+      "owner": "planning compiler",
+      "trigger": "carry-forward production-surface planning mapping",
+      "rationale": "Duplicate planning question resolved by Q7 task set.",
+      "evidence": "Carried forward from production-surface planning build.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "LEGACY-Q1",
+      "question": "Should closed daemon/runtime/agency work that is not production-ready be added to roadmap in a different sprint?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-084",
+        "TASK-082"
+      ],
+      "sprint_ids": [
+        "SPRINT-020",
+        "SPRINT-019"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-084",
+        ".codewiki/roadmap/queue.json#SPRINT-020"
+      ],
+      "owner": "planning compiler",
+      "trigger": "user approved recommendation",
+      "rationale": "The safe route is a planned reconciliation sprint with inventory-first remediation, not reopening old tasks blindly.",
+      "evidence": "SPRINT-020/TASK-084 created with gates requiring SPRINT-019/TASK-082 readiness first.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Separate reconciliation sprint created.",
+      "evidence": "SPRINT-020 contains TASK-084 and gates start behind SPRINT-019/TASK-082.",
+      "requirement_ids": [
+        "REQ-LEGACY-001",
+        "REQ-LEGACY-002",
+        "REQ-LEGACY-003"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#SPRINT-020"
+      ]
+    },
+    {
+      "criterion": "Task has direct executable outcome, not umbrella closure.",
+      "evidence": "TASK-084 acceptance requires inventory classification, source refs, remediation task creation only for concrete gaps, and validation of the inventory result.",
+      "requirement_ids": [
+        "REQ-LEGACY-001",
+        "REQ-LEGACY-003"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json#TASK-084"
+      ]
+    },
+    {
+      "criterion": "Existing production-surface decision propagation remains resolved.",
+      "evidence": "This supplemental planning build carries forward SURFACE-001..SURFACE-006 and Q1..Q14 mappings from .codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json so latest-build reconciliation stays complete.",
+      "requirement_ids": [],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+      ]
+    }
+  ],
+  "assumptions": [
+    "SPRINT-020 should not preempt SPRINT-019; it is planned behind the new gate/linter/tooling work.",
+    "TASK-084 may create or refine remediation tasks later if and only if source-backed gaps exist.",
+    "Closed tasks remain closed as history."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement remediation in the inventory task.",
+    "Do not reopen closed tasks or rewrite historical closure evidence.",
+    "Do not start SPRINT-020 before SPRINT-019/TASK-082 gate readiness unless only recording deferral evidence."
+  ],
+  "risks": [
+    "If run before TASK-082, reconciliation can only mark some findings deferred because the new gate cannot yet adjudicate them.",
+    "Closed legacy work may span many old sprints; inventory must stay focused on production-facing daemon/runtime/agency/worktree/gateway/tool-surface capabilities."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-084"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/queue.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-084",
+      ".codewiki/roadmap/queue.json#SPRINT-020",
+      ".codewiki/roadmap/queue.json#TASK-084"
+    ],
+    "code": [
+      "src/runtime/**",
+      "src/agency/**",
+      "src/session/**",
+      "src/gateway/**",
+      "src/policy/**",
+      "src/roadmap/**",
+      "src/state/**",
+      "src/adapters/pi/**",
+      "src/api/**",
+      "tests/**"
+    ],
+    "tests": [
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-01T10:48:36Z",
+  "source": "User approved all rows in DT-2026-06-01-production-surface-automation after brainstorming from source truth.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-01T10:48:36.000Z",
+    "purge_after": "2026-07-31T10:48:36.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "source-contract",
+      "changed"
+    ],
+    "audit_refs": [
+      "profile:file-structure",
+      "profile:source-contract",
+      "profile:alignment",
+      "profile:changed",
+      "profile:stale-reference",
+      "approval:user all-approved"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "source-truth-start",
+        "reason": "User explicitly requested continuation from CodeWiki source truth, not chat history.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "wiki_state refresh=true",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Decision build records accepted semantic intent and KB edits; implementation/planning gates will require fresh validation as policy needs.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required",
+          "wiki_audit changed=true profiles=file-structure,source-contract,alignment",
+          "wiki_audit profiles=stale-reference"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "source-ref-planning",
+        "reason": "Planning should start from this accepted decision build and source refs, not chat memory.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful",
+          "decision_build produced from approved diff rows and KB refs"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-SURFACE-001",
+      "text": "CodeWiki user slash command surface must be six commands: `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`. Bootstrap/config command adapters call backend functions directly instead of requiring dedicated normal agent tools.",
+      "source_refs": [
+        "SURFACE-001"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-002",
+      "text": "Normal internal agent tool surface must be six tools: `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; low-level current tools become internal primitives or compatibility aliases.",
+      "source_refs": [
+        "SURFACE-002"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-003",
+      "text": "`wiki_state` must support focused `view`/`lens` queries for graph subsets such as status, resume, trace, system, product, task, sprint, validation, runtime, and automation-readiness.",
+      "source_refs": [
+        "SURFACE-002"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-004",
+      "text": "`lexicon.md` must be canonical, enforceable, pruned to active first-class terms, and free of unused glossary clutter.",
+      "source_refs": [
+        "SURFACE-003"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-005",
+      "text": "Quality vocabulary must be gateway → gates → linters/tests → validation; tests remain executable code behavior only; audit/proof/check terminology is not canonical and remains only as migration/internal compatibility until removed.",
+      "source_refs": [
+        "SURFACE-004"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-006",
+      "text": "Task done and sprint done must mean production-ready for their scopes; code-changing task closure requires passing code tests, required linters, gateway acceptance, task-close validation, and task-scoped ship-ready validation.",
+      "source_refs": [
+        "SURFACE-005"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-SURFACE-007",
+      "text": "Automation readiness must be a graph/runtime contract for safe scheduling, blocking, retrying, or promotion using task boundary, accepted refs, gate policy, risk state, leases/worktrees, candidate files, model policy, blockers, context boundary, and deterministic next action.",
+      "source_refs": [
+        "SURFACE-006"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "All production-surface rows approved.",
+      "evidence": ".codewiki/runtime/diff-tables.json#DT-2026-06-01-production-surface-automation rows SURFACE-001..SURFACE-006 user_action=approved",
+      "requirement_ids": [
+        "REQ-SURFACE-001",
+        "REQ-SURFACE-002",
+        "REQ-SURFACE-003",
+        "REQ-SURFACE-004",
+        "REQ-SURFACE-005",
+        "REQ-SURFACE-006",
+        "REQ-SURFACE-007"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Canonical knowledge updated for approved semantics.",
+      "evidence": "Updated lexicon, API/API-vNext, terminal UI, graph, validation gateway, roadmap, agency, runtime, linter migration, and product terminal docs.",
+      "requirement_ids": [
+        "REQ-SURFACE-001",
+        "REQ-SURFACE-002",
+        "REQ-SURFACE-003",
+        "REQ-SURFACE-004",
+        "REQ-SURFACE-005",
+        "REQ-SURFACE-006",
+        "REQ-SURFACE-007"
+      ],
+      "source_refs": []
+    },
+    {
+      "criterion": "Source-contract compatibility risk surfaced.",
+      "evidence": "wiki_audit file-structure/source-contract/alignment/changed: source-contract pass after keeping target tool list out of current expected-contract syntax; warnings remain graph-health/generated-file-changed due active lease/generated state.",
+      "requirement_ids": [
+        "REQ-SURFACE-002",
+        "REQ-SURFACE-005"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [
+    "profile:file-structure",
+    "profile:source-contract",
+    "profile:alignment",
+    "profile:changed",
+    "profile:stale-reference",
+    "approval:user all-approved"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted production-ready CodeWiki surface and automation-readiness decisions: six user commands, six internal agent tools, `wiki_state` graph lenses, enforceable pruned lexicon, gateway/gate/linter/test/validation quality vocabulary, production-ready done semantics, and automation-readiness scheduling contract.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "SURFACE-001",
+      "current_state": "Current package/user command surface and docs are split and partly inconsistent; source registers hyphenated legacy commands and standalone `/audit` while system docs mention broader future command concepts.",
+      "current_project_state": "Current package/user command surface and docs are split and partly inconsistent; source registers hyphenated legacy commands and standalone `/audit` while system docs mention broader future command concepts.",
+      "desired_state": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "agreed_change": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "expected_final_state": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User-facing commands should be few, developer-centered, TUI/navigation-oriented, and separate from internal workflow tools.",
+      "affected_layers": [
+        "product",
+        "system",
+        "api",
+        "terminal-ui",
+        "skills",
+        "adapters",
+        "source-contract"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-002",
+      "current_state": "Current Pi adapter exposes 13 internal agent tools and `wiki_state` lacks a canonical focused lens query surface.",
+      "current_project_state": "Current Pi adapter exposes 13 internal agent tools and `wiki_state` lacks a canonical focused lens query surface.",
+      "desired_state": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "agreed_change": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "expected_final_state": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Six workflow tools are enough for agents if each owns one loop/runtime boundary and state reads can be focused.",
+      "affected_layers": [
+        "system",
+        "api",
+        "runtime",
+        "graph",
+        "skills",
+        "adapters",
+        "source-contract"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-003",
+      "current_state": "Lexicon is active but indirect, broad, and vulnerable to synonym drift.",
+      "current_project_state": "Lexicon is active but indirect, broad, and vulnerable to synonym drift.",
+      "desired_state": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "agreed_change": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "expected_final_state": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Automation readiness requires one small enforced vocabulary, not broad glossary clutter.",
+      "affected_layers": [
+        "knowledge",
+        "system",
+        "validation",
+        "skills",
+        "source-contract"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-004",
+      "current_state": "Docs/source expose overlapping quality words such as tests, checks, audits, linters, gates, validation, evidence, and proof.",
+      "current_project_state": "Docs/source expose overlapping quality words such as tests, checks, audits, linters, gates, validation, evidence, and proof.",
+      "desired_state": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "agreed_change": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "expected_final_state": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Users should ask which gate, linter, or code test failed instead of reasoning about audits/checks/proof as separate product concepts.",
+      "affected_layers": [
+        "lexicon",
+        "knowledge",
+        "roadmap",
+        "validation",
+        "gateway",
+        "source-contract",
+        "skills"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-005",
+      "current_state": "Current closure language can imply a task may be done before produced code is production-ready.",
+      "current_project_state": "Current closure language can imply a task may be done before produced code is production-ready.",
+      "desired_state": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "agreed_change": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "expected_final_state": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "CodeWiki should not normalize done-but-not-shippable work derived from approved decisions.",
+      "affected_layers": [
+        "lexicon",
+        "roadmap",
+        "validation",
+        "gateway",
+        "graph",
+        "runtime",
+        "agency"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-006",
+      "current_state": "Graph, agency, and runtime docs describe routing/stop conditions but lack one automation-readiness contract.",
+      "current_project_state": "Graph, agency, and runtime docs describe routing/stop conditions but lack one automation-readiness contract.",
+      "desired_state": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "agreed_change": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "expected_final_state": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Daemon-capable CodeWiki needs a crisp readiness predicate so automation does not infer intent from chat or bypass gates.",
+      "affected_layers": [
+        "graph",
+        "agency",
+        "runtime",
+        "roadmap",
+        "validation",
+        "session"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "SURFACE-001",
+    "SURFACE-002",
+    "SURFACE-003",
+    "SURFACE-004",
+    "SURFACE-005",
+    "SURFACE-006"
+  ],
+  "approved_rows": [
+    {
+      "id": "SURFACE-001",
+      "current_state": "Current package/user command surface and docs are split and partly inconsistent; source registers hyphenated legacy commands and standalone `/audit` while system docs mention broader future command concepts.",
+      "current_project_state": "Current package/user command surface and docs are split and partly inconsistent; source registers hyphenated legacy commands and standalone `/audit` while system docs mention broader future command concepts.",
+      "desired_state": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "agreed_change": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "expected_final_state": "Public user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`; bootstrap/config adapters call backend functions directly; workflow verbs stay agent/tool phases.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User-facing commands should be few, developer-centered, TUI/navigation-oriented, and separate from internal workflow tools.",
+      "affected_layers": [
+        "product",
+        "system",
+        "api",
+        "terminal-ui",
+        "skills",
+        "adapters",
+        "source-contract"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-002",
+      "current_state": "Current Pi adapter exposes 13 internal agent tools and `wiki_state` lacks a canonical focused lens query surface.",
+      "current_project_state": "Current Pi adapter exposes 13 internal agent tools and `wiki_state` lacks a canonical focused lens query surface.",
+      "desired_state": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "agreed_change": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "expected_final_state": "Normal internal agent surface is exactly `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`; `wiki_state` supports view/lens graph subset queries; low-level tools fold into internals or compatibility aliases.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Six workflow tools are enough for agents if each owns one loop/runtime boundary and state reads can be focused.",
+      "affected_layers": [
+        "system",
+        "api",
+        "runtime",
+        "graph",
+        "skills",
+        "adapters",
+        "source-contract"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-003",
+      "current_state": "Lexicon is active but indirect, broad, and vulnerable to synonym drift.",
+      "current_project_state": "Lexicon is active but indirect, broad, and vulnerable to synonym drift.",
+      "desired_state": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "agreed_change": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "expected_final_state": "`lexicon.md` is canonical, enforceable, pruned, and contains only active first-class CodeWiki terms; unused terms are removed completely.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Automation readiness requires one small enforced vocabulary, not broad glossary clutter.",
+      "affected_layers": [
+        "knowledge",
+        "system",
+        "validation",
+        "skills",
+        "source-contract"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-004",
+      "current_state": "Docs/source expose overlapping quality words such as tests, checks, audits, linters, gates, validation, evidence, and proof.",
+      "current_project_state": "Docs/source expose overlapping quality words such as tests, checks, audits, linters, gates, validation, evidence, and proof.",
+      "desired_state": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "agreed_change": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "expected_final_state": "Canonical public hierarchy is gateway owns gates; gates run required linters and executable tests when code behavior changes; gateway produces validation. Audit/proof/checks are not canonical lexicon terms.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Users should ask which gate, linter, or code test failed instead of reasoning about audits/checks/proof as separate product concepts.",
+      "affected_layers": [
+        "lexicon",
+        "knowledge",
+        "roadmap",
+        "validation",
+        "gateway",
+        "source-contract",
+        "skills"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-005",
+      "current_state": "Current closure language can imply a task may be done before produced code is production-ready.",
+      "current_project_state": "Current closure language can imply a task may be done before produced code is production-ready.",
+      "desired_state": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "agreed_change": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "expected_final_state": "Done means production-ready for scope; code-changing tasks require passing code tests, required linters, accepted implementation evidence, task-close validation, and task-scoped ship-ready validation; publication remains separate explicit approval.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "CodeWiki should not normalize done-but-not-shippable work derived from approved decisions.",
+      "affected_layers": [
+        "lexicon",
+        "roadmap",
+        "validation",
+        "gateway",
+        "graph",
+        "runtime",
+        "agency"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "SURFACE-006",
+      "current_state": "Graph, agency, and runtime docs describe routing/stop conditions but lack one automation-readiness contract.",
+      "current_project_state": "Graph, agency, and runtime docs describe routing/stop conditions but lack one automation-readiness contract.",
+      "desired_state": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "agreed_change": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "expected_final_state": "Automation readiness is a graph/runtime contract for safe runnable/blocked/retry/promote state using accepted refs, task boundary, gates, risk, leases, candidate files, blockers, context boundary, and deterministic next action.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Daemon-capable CodeWiki needs a crisp readiness predicate so automation does not infer intent from chat or bypass gates.",
+      "affected_layers": [
+        "graph",
+        "agency",
+        "runtime",
+        "roadmap",
+        "validation",
+        "session"
+      ],
+      "risk": "medium-high",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Public user commands are `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`."
+    },
+    {
+      "id": "D2",
+      "summary": "Normal internal agent tools are `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`."
+    },
+    {
+      "id": "D3",
+      "summary": "`wiki_state` is the focused state/graph lens read API."
+    },
+    {
+      "id": "D4",
+      "summary": "`lexicon.md` is canonical, enforceable, and pruned to active terms."
+    },
+    {
+      "id": "D5",
+      "summary": "Quality vocabulary is gateway/gate/linter/test/validation; audit/proof/checks are migration/internal only."
+    },
+    {
+      "id": "D6",
+      "summary": "Task done and sprint done mean production-ready for scope; ship-ready validates exact content candidate quality, while publication/release remain separate approval actions."
+    },
+    {
+      "id": "D7",
+      "summary": "Automation readiness is a graph/runtime scheduling contract."
+    }
+  ],
+  "knowledge_changes": [
+    "Rewrote .codewiki/kb/lexicon.md as pruned canonical vocabulary.",
+    "Rewrote .codewiki/kb/system/api-vnext-tools.md with six user commands, six internal tools, and wiki_state lens families.",
+    "Updated .codewiki/kb/system/api.md with target surface summary and content-evidence language while avoiding source-contract false expectations.",
+    "Rewrote .codewiki/kb/system/terminal-ui.md with `/wiki system` and `/wiki product` TUI expectations.",
+    "Updated .codewiki/kb/system/graph.md with `wiki_state` lenses, Validation family, linter/content-evidence terminology, and automation-readiness state framing.",
+    "Updated .codewiki/kb/system/validation-gateway.md with gate/linter/test/validation vocabulary and production-ready closure semantics.",
+    "Updated .codewiki/kb/system/roadmap.md with production-ready task/sprint done rules.",
+    "Updated .codewiki/kb/system/agency.md and runtime.md with lease/linter/content-evidence wording and automation stop conditions.",
+    "Rewrote .codewiki/kb/system/audits.md as linter-engine migration contract.",
+    "Updated product overview and terminal UI docs with the six-command user surface."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "SURFACE-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/product/uis/terminal.md"
+      ],
+      "diagram_refs": [
+        "component-map:api",
+        "component-map:extension"
+      ],
+      "evidence": "User command surface and command-adapter backend caveat recorded in API/API-vNext and terminal/product UI docs.",
+      "deferred": false
+    },
+    {
+      "row_id": "SURFACE-002",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [
+        "component-map:api",
+        "component-map:graph"
+      ],
+      "evidence": "Six internal tool target and wiki_state lens/read model recorded across lexicon, API, graph, agency, and runtime docs.",
+      "deferred": false
+    },
+    {
+      "row_id": "SURFACE-003",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Lexicon rewritten as small canonical active vocabulary with unused terms removed and compatibility aliases kept outside lexicon.",
+      "deferred": false
+    },
+    {
+      "row_id": "SURFACE-004",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api-vnext-tools.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Gateway/gate/linter/test/validation vocabulary and legacy audit/proof/check migration recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "SURFACE-005",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Task done, sprint done, and ship-ready quality boundaries recorded.",
+      "deferred": false
+    },
+    {
+      "row_id": "SURFACE-006",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/api-vnext-tools.md"
+      ],
+      "diagram_refs": [
+        "component-map:graph"
+      ],
+      "evidence": "Automation readiness contract recorded through state lenses, agency stop/routing rules, and runtime lease/job boundaries.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "mixed",
+    "product_impact": [
+      "User command surface becomes six TUI/navigation commands centered on bootstrap, status, resume, config, system diagrams, and product navigation.",
+      "Product terminal UI now expects source-backed `/wiki system` and `/wiki product` navigation.",
+      "Quality UX becomes gate/linter/test/validation rather than audit/check/proof vocabulary."
+    ],
+    "system_impact": [
+      "Internal agent tool target collapses to six workflow tools.",
+      "`wiki_state` becomes focused graph lens query API.",
+      "Gateway/validation, roadmap closure, graph, agency, runtime, and linter migration docs now align around production-ready automation semantics."
+    ],
+    "downstream_planning_questions": [
+      "Plan command migration to `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`, including legacy shim policy.",
+      "Plan internal tool migration to `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`, including compatibility aliases for existing low-level tools.",
+      "Plan `wiki_state` lens schema and first lens implementation.",
+      "Plan linter terminology/source migration from `/audit` and `wiki_audit` to gateway-required linters.",
+      "Plan task-close/sprint-close/ship-ready policy changes enforcing production-ready done semantics.",
+      "Plan lexicon enforcement via source-contract/stale-reference/file-structure linter rules.",
+      "Plan TUI renderers for system diagrams and product navigation."
+    ]
+  },
+  "diagram_refs": [
+    "component-map:api",
+    "component-map:extension",
+    "component-map:graph"
+  ],
+  "downstream_planning_questions": [
+    "Implement six user commands and legacy shims.",
+    "Implement six normal internal tools and compatibility/deprecation behavior for low-level tools.",
+    "Add `wiki_state view/lens` graph-subset query schema and implementation.",
+    "Migrate legacy audit engine terminology/surfaces into gateway-required linters.",
+    "Enforce pruned lexicon in source-contract or stale-reference linters.",
+    "Update task-close/sprint-close/ship-ready gateway policy so code-changing tasks cannot close before production-ready quality passes.",
+    "Build `/wiki system <diagram type>` and `/wiki product` TUI navigation from source-backed lenses.",
+    "Plan command migration to `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`, including legacy shim policy.",
+    "Plan internal tool migration to `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`, including compatibility aliases for existing low-level tools.",
+    "Plan `wiki_state` lens schema and first lens implementation.",
+    "Plan linter terminology/source migration from `/audit` and `wiki_audit` to gateway-required linters.",
+    "Plan task-close/sprint-close/ship-ready policy changes enforcing production-ready done semantics.",
+    "Plan lexicon enforcement via source-contract/stale-reference/file-structure linter rules.",
+    "Plan TUI renderers for system diagrams and product navigation."
+  ],
+  "assumptions": [
+    "Current low-level tools remain available as compatibility aliases until implementation migration removes or hides them.",
+    "Source-contract validation should not treat future target tool names in API vNext docs as current registered tool expectations until source migration tasks implement them.",
+    "Generated graph warning is non-blocking for this decision because current session holds a lease and generated-state refresh changed the generated graph."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not change source code or Pi command/tool registration in the decision loop.",
+    "Do not remove current compatibility tools before replacement commands/tools and source-contract policy exist.",
+    "Do not create a browser UI or visualization mega-tool.",
+    "Do not treat linter migration as source rename work in this decision build."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      ".codewiki/runtime/diff-tables.json#DT-2026-06-01-production-surface-automation",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/uis/terminal.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "Rewrote .codewiki/kb/lexicon.md as pruned canonical vocabulary.",
+      "Rewrote .codewiki/kb/system/api-vnext-tools.md with six user commands, six internal tools, and wiki_state lens families.",
+      "Updated .codewiki/kb/system/api.md with target surface summary and content-evidence language while avoiding source-contract false expectations.",
+      "Rewrote .codewiki/kb/system/terminal-ui.md with `/wiki system` and `/wiki product` TUI expectations.",
+      "Updated .codewiki/kb/system/graph.md with `wiki_state` lenses, Validation family, linter/content-evidence terminology, and automation-readiness state framing.",
+      "Updated .codewiki/kb/system/validation-gateway.md with gate/linter/test/validation vocabulary and production-ready closure semantics.",
+      "Updated .codewiki/kb/system/roadmap.md with production-ready task/sprint done rules.",
+      "Updated .codewiki/kb/system/agency.md and runtime.md with lease/linter/content-evidence wording and automation stop conditions.",
+      "Rewrote .codewiki/kb/system/audits.md as linter-engine migration contract.",
+      "Updated product overview and terminal UI docs with the six-command user surface.",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/uis/terminal.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [
+      "wiki_audit profiles:file-structure,source-contract,alignment,changed => warning; file-structure/source-contract pass; stale-reference pass; graph-health/generated-file warnings remain non-blocking for decision build"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}
