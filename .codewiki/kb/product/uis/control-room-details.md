@@ -6,7 +6,11 @@ summary: Deprecated detailed browser UI expectations retained temporarily during
 owners:
   - product
   - design
-updated: "2026-05-31"
+updated: "2026-06-01"
+code_paths:
+  - src/adapters/pi/commands/ui.ts
+  - src/adapters/pi/commands/status.ts
+code_paths_mode: explicit_override
 source_refs:
   - .codewiki/kb/system/control-room-ui.md
   - .codewiki/kb/system/terminal-ui.md

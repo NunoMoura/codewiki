@@ -6,7 +6,11 @@ summary: Deprecated browser Control Room product contract retained temporarily d
 owners:
   - product
   - design
-updated: "2026-05-31"
+updated: "2026-06-01"
+code_paths:
+  - src/adapters/pi/commands/ui.ts
+  - src/adapters/pi/commands/status.ts
+code_paths_mode: explicit_override
 ---
 
 # Deprecated Browser CodeWiki UI

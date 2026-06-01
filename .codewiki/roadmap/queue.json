@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-06-01T06:00:13Z",
+  "updated": "2026-06-01T06:51:40Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036"
+    "TASK-036",
+    "TASK-076"
   ],
   "tasks": {
     "TASK-012": {
@@ -530,6 +531,60 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
+    },
+    "TASK-076": {
+      "id": "TASK-076",
+      "title": "Scope deprecated browser UI docs",
+      "status": "in_progress",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Add explicit source scope metadata to deprecated browser UI product/system docs so they remain intentional migration evidence without unscoped-doc reconciliation warnings.",
+      "spec_paths": [
+        ".codewiki/kb/product/uis/control-room.md",
+        ".codewiki/kb/product/uis/control-room-details.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/control-room-ui-details.md",
+        ".codewiki/kb/system/terminal-ui.md"
+      ],
+      "code_paths": [
+        ".codewiki/kb/product/uis/control-room.md",
+        ".codewiki/kb/product/uis/control-room-details.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/control-room-ui-details.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "reconciliation",
+        "docs",
+        "deprecated-browser-ui"
+      ],
+      "change_type": "product",
+      "goal": {
+        "outcome": "Deprecated browser UI docs are explicitly scoped to the compatibility shim/terminal-first migration evidence and no longer surface unscoped-doc warnings.",
+        "acceptance": [
+          "Deprecated product/browser UI docs include explicit scope metadata pointing to active compatibility/migration refs.",
+          "Deprecated system/browser UI docs include explicit scope metadata pointing to active compatibility/migration refs.",
+          "unscoped-doc warnings for the four deprecated browser UI docs disappear after graph refresh.",
+          "No active docs re-advertise browser Control Room as supported product direction."
+        ],
+        "non_goals": [
+          "Do not reintroduce browser UI source paths as active implementation targets.",
+          "Do not remove immutable historic builds or validation refs.",
+          "Do not implement new terminal UI behavior."
+        ],
+        "verification": [
+          "wiki_state refresh",
+          "wiki_audit changed,stale-reference,generated-parity",
+          "manual grep for unscoped-doc deprecated browser docs"
+        ]
+      },
+      "delta": {
+        "desired": "The deprecated docs have explicit scope metadata to active deprecation shim/terminal migration refs while remaining clearly deprecated.",
+        "current": "Four deprecated browser UI docs are retained as migration evidence but have no explicit scope metadata, so graph reconciliation reports unscoped-doc warnings.",
+        "closure": "Task closes after graph refresh no longer reports the four unscoped-doc warnings and audits pass."
+      },
+      "created": "2026-06-01",
+      "updated": "2026-06-01T06:51:40Z"
     }
   },
   "sprints": {

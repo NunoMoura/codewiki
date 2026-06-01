@@ -6,7 +6,11 @@ summary: Deprecated browser UI implementation details retained temporarily durin
 owners:
   - architecture
   - engineering
-updated: "2026-05-31"
+updated: "2026-06-01"
+code_paths:
+  - src/adapters/pi/commands/ui.ts
+  - src/adapters/pi/ui/manager.ts
+code_paths_mode: explicit_override
 ---
 
 # Deprecated Browser UI Implementation Details
