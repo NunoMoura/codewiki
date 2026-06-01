@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-01T02:43:42Z",
+  "profile": "task-close",
+  "task_id": "TASK-072",
+  "verdict": "pass",
+  "rationale": "TASK-072 is ready to close. Implementation validation passed, required checks passed, generated-parity/task/changed audits pass, decision-propagation semantic closure is represented in the implementation build and tests, and clean immutable commit/tree proof is recorded. Remaining alignment warning is pre-existing graph-health noise, not a TASK-072 blocker.",
+  "checks": [
+    "implementation validation: .codewiki/validation/2026-06-01-implementation-pass-task-072-2026-06-01-implemen.json",
+    "implementation build: .codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+    "commit HEAD: 104d7b0b068df4eb20e3ac4a0d6677ab5d7fbfdf",
+    "tree: 92f8b95207fd7e41a878d7823eff4fd0c61f791f",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "npm run test:pack — pass",
+    "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-072 — changed/task/generated-parity pass; alignment warning only pre-existing graph-health"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit reports pre-existing graph health warnings; no TASK-072 task, changed, generated-parity, or close blocker remains."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "changed",
+    "task",
+    "generated-parity",
+    "alignment",
+    "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-072 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "104d7b0b068df4eb20e3ac4a0d6677ab5d7fbfdf",
+    "92f8b95207fd7e41a878d7823eff4fd0c61f791f"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-072",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+    "validation_report": ".codewiki/validation/2026-06-01-task-close-pass-task-072-2026-06-01-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+      ".codewiki/validation/2026-06-01-task-close-pass-task-072-2026-06-01-implemented-.json",
+      "src/build/decision-propagation.ts",
+      "src/state/graph.ts",
+      "src/state/builders.ts",
+      "src/state/prompt.ts",
+      "src/gateway/report.ts",
+      "package.json",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/index_graph.json",
+      "tests/tasks/TASK-072/decision-propagation-gaps.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-072",
+    "source_build": ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+    "validation_report": ".codewiki/validation/2026-06-01-task-close-pass-task-072-2026-06-01-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-072 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-072",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-01-task-close-pass-task-072-2026-06-01-implemented-.json",
+      "CodeWiki-Checks: implementation validation: .codewiki/validation/2026-06-01-implementation-pass-task-072-2026-06-01-implemen.json; implementation build: .codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json; commit HEAD: 104d7b0b068df4eb20e3ac4a0d6677ab5d7fbfdf; tree: 92f8b95207fd7e41a878d7823eff4fd0c61f791f; npm run typecheck — pass; npm run test:smoke — pass; npm run check:architecture — pass; npm run test:pack — pass; wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-072 — changed/task/generated-parity pass; alignment warning only pre-existing graph-health"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/build/decision-propagation.ts",
+      "src/state/graph.ts",
+      "src/state/builders.ts",
+      "src/state/prompt.ts",
+      "src/gateway/report.ts",
+      "package.json"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi package extension or skill metadata changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "92f8b95207fd7e41a878d7823eff4fd0c61f791f"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-072",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "104d7b0b068df4eb20e3ac4a0d6677ab5d7fbfdf",
+    "validated_sha": "104d7b0b068df4eb20e3ac4a0d6677ab5d7fbfdf",
+    "tree_sha": "92f8b95207fd7e41a878d7823eff4fd0c61f791f",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean implementation checkpoint commit after implementation validation; no publication/push claim.",
+    "role": "validator"
+  }
+}
