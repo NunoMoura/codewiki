@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-06-01T03:33:19Z",
+  "updated": "2026-06-01T03:35:02Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036",
-    "TASK-073"
+    "TASK-036"
   ],
   "tasks": {
     "TASK-012": {
@@ -531,56 +530,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
-    },
-    "TASK-073": {
-      "id": "TASK-073",
-      "title": "Add gateway gate names sprint-close and ship-ready",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "feature",
-      "summary": "Introduce named gateway gate terminology and support conditional sprint-close and ship-ready gates while preserving compatibility for existing gateway profile inputs.",
-      "spec_paths": [],
-      "code_paths": [
-        "src/policy",
-        "src/gateway/types.ts",
-        "src/adapters/pi/schemas.ts",
-        "tests/smoke/policy-gate.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "gateway-gates",
-        "ship-ready",
-        "sprint-close",
-        "terminology"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Gateway users and agents can use decision, planning, implementation, task-close, sprint-close, and ship-ready as named gates.",
-        "acceptance": [
-          "Supported gate names include decision, planning, implementation, task-close, sprint-close, and ship-ready.",
-          "Gateway docs and public-facing schema/tool language use gate terminology while preserving backward-compatible profile input if retained.",
-          "Sprint-close gate validates cohort closure readiness when a sprint is being closed: tasks, shared outcome, cross-task accepted rows, shared risks, and generated state.",
-          "Ship-ready gate validates exact-content promotion readiness for commit/package/archive/remote/release targets with immutable proof and approval as needed.",
-          "Tests cover accepted gate names, backward compatibility for existing profile calls if retained, sprint-close blockers, and ship-ready proof requirements."
-        ],
-        "non_goals": [
-          "Do not implement full worker spawning or automatic validator session launch.",
-          "Do not remove backward compatibility abruptly if existing tools/tests use profile.",
-          "Do not perform package release or remote push."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "targeted gateway/policy smoke tests",
-          "wiki_audit changed/source-contract/alignment as applicable"
-        ]
-      },
-      "delta": {
-        "desired": "Gateway exposes consistent gate terminology with sprint-close and ship-ready gates.",
-        "current": "Gateway source and schemas use profile/publication terminology; sprint-close and ship-ready are not first-class gate names.",
-        "closure": ""
-      },
-      "created": "2026-05-31",
-      "updated": "2026-06-01T03:33:19Z"
     }
   },
   "sprints": {
