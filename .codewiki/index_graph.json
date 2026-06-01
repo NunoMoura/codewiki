@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T06:51:41.010Z",
+  "generated_at": "2026-06-01T06:52:56.872Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -8713,48 +8713,6 @@
       "lens_family": "execution"
     },
     {
-      "id": "task:TASK-076",
-      "kind": "roadmap_task",
-      "title": "Scope deprecated browser UI docs",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "product",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:.codewiki/kb/product/uis/control-room-details.md",
-      "kind": "code_path",
-      "path": ".codewiki/kb/product/uis/control-room-details.md",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:.codewiki/kb/system/control-room-ui.md",
-      "kind": "code_path",
-      "path": ".codewiki/kb/system/control-room-ui.md",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:.codewiki/kb/system/control-room-ui-details.md",
-      "kind": "code_path",
-      "path": ".codewiki/kb/system/control-room-ui-details.md",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:.codewiki/kb/product/uis/control-room.md",
-      "kind": "code_path",
-      "path": ".codewiki/kb/product/uis/control-room.md",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
       "id": "code:src/adapters/pi/commands/audit.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/commands/audit.ts",
@@ -9254,6 +9212,38 @@
       "id": "code:src/mutation-queue.ts",
       "kind": "code_path",
       "path": "src/mutation-queue.ts",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:.codewiki/kb/product/uis/control-room-details.md",
+      "kind": "code_path",
+      "path": ".codewiki/kb/product/uis/control-room-details.md",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:.codewiki/kb/system/control-room-ui.md",
+      "kind": "code_path",
+      "path": ".codewiki/kb/system/control-room-ui.md",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:.codewiki/kb/system/control-room-ui-details.md",
+      "kind": "code_path",
+      "path": ".codewiki/kb/system/control-room-ui-details.md",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:.codewiki/kb/product/uis/control-room.md",
+      "kind": "code_path",
+      "path": ".codewiki/kb/product/uis/control-room.md",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -58109,6 +58099,70 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+        "validated_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+        "tree_sha": "6aa23d8b84bbd1f9c1ee792461016f071689e179",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Clean implementation checkpoint commit after decision, planning, and implementation validation; no publication/push claim.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json"
+        ],
+        "audit_evidence_refs": [
+          "changed",
+          "task",
+          "generated-parity",
+          "alignment",
+          "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health"
+        ],
+        "content_proof_refs": [
+          "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+          "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health",
+      "kind": "audit_evidence",
+      "path": "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+      "kind": "content_proof",
+      "path": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:6aa23d8b84bbd1f9c1ee792461016f071689e179",
+      "kind": "content_proof",
+      "path": "6aa23d8b84bbd1f9c1ee792461016f071689e179",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "kind": "lint_issue",
       "path": ".codewiki/roadmap/queue.json",
@@ -78609,163 +78663,6 @@
       "to": "code:tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
     },
     {
-      "kind": "task_spec",
-      "from": "task:TASK-076",
-      "to": "doc:.codewiki/kb/product/uis/control-room.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room.md",
-      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room.md",
-      "to": "code:.codewiki/kb/system/control-room-ui.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room.md",
-      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-076",
-      "to": "doc:.codewiki/kb/product/uis/control-room-details.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
-      "to": "code:.codewiki/kb/product/uis/control-room.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
-      "to": "code:.codewiki/kb/system/control-room-ui.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
-      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-076",
-      "to": "doc:.codewiki/kb/system/control-room-ui.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:.codewiki/kb/product/uis/control-room.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-076",
-      "to": "doc:.codewiki/kb/system/control-room-ui-details.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:.codewiki/kb/product/uis/control-room.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:.codewiki/kb/system/control-room-ui.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-076",
-      "to": "doc:.codewiki/kb/system/terminal-ui.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/terminal-ui.md",
-      "to": "code:.codewiki/kb/product/uis/control-room.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/terminal-ui.md",
-      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/terminal-ui.md",
-      "to": "code:.codewiki/kb/system/control-room-ui.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/terminal-ui.md",
-      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-076"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-076",
-      "to": "code:.codewiki/kb/product/uis/control-room.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-076",
-      "to": "code:.codewiki/kb/product/uis/control-room-details.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-076",
-      "to": "code:.codewiki/kb/system/control-room-ui.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-076",
-      "to": "code:.codewiki/kb/system/control-room-ui-details.md"
-    },
-    {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/file-structure.md",
       "to": "code:src/domain/audit/types.ts",
@@ -79912,6 +79809,90 @@
       "to": "code:src/mutation-queue.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room.md",
+      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room.md",
+      "to": "code:.codewiki/kb/system/control-room-ui.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room.md",
+      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
+      "to": "code:.codewiki/kb/product/uis/control-room.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
+      "to": "code:.codewiki/kb/system/control-room-ui.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/product/uis/control-room-details.md",
+      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui.md",
+      "to": "code:.codewiki/kb/product/uis/control-room.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui.md",
+      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui.md",
+      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
+      "to": "code:.codewiki/kb/product/uis/control-room.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
+      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
+      "to": "code:.codewiki/kb/system/control-room-ui.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json"
     },
     {
       "kind": "doc_code_path",
@@ -88904,6 +88885,20 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/terminal-ui.md",
+      "to": "code:.codewiki/kb/system/control-room-ui.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/terminal-ui.md",
+      "to": "code:.codewiki/kb/system/control-room-ui-details.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/terminal-ui.md",
       "to": "code:.codewiki/kb/system/extension.md",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
@@ -88954,6 +88949,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/terminal-ui.md",
       "to": "code:.codewiki/kb/product/uis/status-panel.md",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/terminal-ui.md",
+      "to": "code:.codewiki/kb/product/uis/control-room-details.md",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
     },
@@ -148985,6 +148987,59 @@
       "to": "task:TASK-075"
     },
     {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "audit:wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "content_proof:e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "content_proof:6aa23d8b84bbd1f9c1ee792461016f071689e179",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+      "to": "task:TASK-076"
+    },
+    {
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
@@ -149080,16 +149135,12 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 32,
+            "item_count": 31,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 1,
-                "refs": [
-                  "TASK-076"
-                ],
-                "ref_count": 1
+                "count": 0
               },
               {
                 "id": "done_tasks",
@@ -149177,7 +149228,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 229
+                "count": 230
               },
               {
                 "id": "fail_or_block_validation",
@@ -149187,12 +149238,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 643
+                "count": 644
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1687
+                "count": 1689
               },
               {
                 "id": "traceability_gaps",
@@ -149222,11 +149273,11 @@
             "collapsed": 173
           },
           "validations": {
-            "total": 229,
-            "pass": 195,
+            "total": 230,
+            "pass": 196,
             "fail_or_block": 34,
             "hot": 8,
-            "collapsed": 229
+            "collapsed": 230
           }
         },
         "next_action": {
@@ -149274,71 +149325,6 @@
           "source_refs": []
         },
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/kb/product/uis/control-room-details.md",
-            "change_type": "product",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/product/uis/control-room.md",
-            "change_type": "product",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui-details.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          },
           {
             "path": ".codewiki/roadmap/queue.json",
             "change_type": "task",
@@ -160867,6 +160853,27 @@
               "92bea11fdd34bfd22ce852708446e193b3cf2b58"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-076",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json"
+            ],
+            "audit_evidence_refs": [
+              "changed",
+              "task",
+              "generated-parity",
+              "alignment",
+              "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health"
+            ],
+            "content_proof_refs": [
+              "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+              "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -164426,6 +164433,25 @@
             "publisher_result_refs": [
               "92bea11fdd34bfd22ce852708446e193b3cf2b58"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+            "task_id": "TASK-076",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+            "validated_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+              "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+            ],
+            "publisher_result_refs": [
+              "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -165055,6 +165081,7 @@
           "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-073 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
           "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-074 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
           "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-075 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
+          "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health",
           "wiki_audit source-contract,changed task_id=TASK-071 — warning only for changed generated files",
           "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
@@ -165419,6 +165446,7 @@
           "691a296cc9cc9a32c069d7d23a914d6e95506f80",
           "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
           "6a7f41f8f823e4781016fb83608d72f84e5f269d",
+          "6aa23d8b84bbd1f9c1ee792461016f071689e179",
           "6d5e597c53b29934405d7b9584a57ba10be7aba9",
           "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -165510,6 +165538,7 @@
           "dfecc0fdf292145ada89957f8073790c4f585d32",
           "e0a5b88d2e7567541bf3d5ed00cd6c5605b030e8",
           "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+          "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
           "e21eef41a964b85105f40e0edad9285f3c0ed4e7",
           "e252c85cadbf10fce7a5a27b06e87c2f2a9de32e",
           "e288b5fdf5786a246c8e7335a54470658065faba1bea7597a8d61cabc9717e15",
@@ -166801,17 +166830,6 @@
             "doc_paths": [
               ".codewiki/roadmap/queue.json"
             ]
-          },
-          {
-            "id": "reconcile:task:TASK-076",
-            "source_id": "task:TASK-076",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-076",
-            "reason": "TASK-076 is open implementation delta below knowledge."
           }
         ],
         "traceability_gaps": [],
@@ -167085,15 +167103,10 @@
       "task_ids": [
         "TASK-012",
         "TASK-023",
-        "TASK-036",
-        "TASK-076"
+        "TASK-036"
       ],
-      "open_task_ids": [
-        "TASK-076"
-      ],
-      "in_progress_task_ids": [
-        "TASK-076"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [],
@@ -167103,8 +167116,7 @@
         "TASK-036"
       ],
       "status_counts": {
-        "cancelled": 3,
-        "in_progress": 1
+        "cancelled": 3
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -172447,6 +172459,25 @@
           "publisher_result_refs": [
             "92bea11fdd34bfd22ce852708446e193b3cf2b58"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+          "task_id": "TASK-076",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+          "validated_sha": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+            "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+          ],
+          "publisher_result_refs": [
+            "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+          ]
         }
       ]
     },
@@ -173986,6 +174017,7 @@
         "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-073 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
         "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-074 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
         "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-075 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
+        "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health",
         "wiki_audit source-contract,changed task_id=TASK-071 — warning only for changed generated files",
         "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
@@ -174350,6 +174382,7 @@
         "691a296cc9cc9a32c069d7d23a914d6e95506f80",
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
         "6a7f41f8f823e4781016fb83608d72f84e5f269d",
+        "6aa23d8b84bbd1f9c1ee792461016f071689e179",
         "6d5e597c53b29934405d7b9584a57ba10be7aba9",
         "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -174441,6 +174474,7 @@
         "dfecc0fdf292145ada89957f8073790c4f585d32",
         "e0a5b88d2e7567541bf3d5ed00cd6c5605b030e8",
         "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+        "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
         "e21eef41a964b85105f40e0edad9285f3c0ed4e7",
         "e252c85cadbf10fce7a5a27b06e87c2f2a9de32e",
         "e288b5fdf5786a246c8e7335a54470658065faba1bea7597a8d61cabc9717e15",
@@ -181060,6 +181094,27 @@
             "92bea11fdd34bfd22ce852708446e193b3cf2b58"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-06-01-task-close-pass-task-076-2026-06-01-implemented-.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-076",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json"
+          ],
+          "audit_evidence_refs": [
+            "changed",
+            "task",
+            "generated-parity",
+            "alignment",
+            "wiki_audit profiles=changed,task,generated-parity,alignment task_id=TASK-076 — changed/task/generated-parity pass; alignment warning only graph-health"
+          ],
+          "content_proof_refs": [
+            "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
+            "6aa23d8b84bbd1f9c1ee792461016f071689e179"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -183280,71 +183335,6 @@
       "rows": [],
       "semantic_change_rows": [
         {
-          "path": ".codewiki/kb/product/uis/control-room-details.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/product/uis/control-room.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui-details.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        },
-        {
           "path": ".codewiki/roadmap/queue.json",
           "change_type": "task",
           "semantic": true,
@@ -183498,12 +183488,9 @@
         "task_ids": [
           "TASK-012",
           "TASK-023",
-          "TASK-036",
-          "TASK-076"
+          "TASK-036"
         ],
-        "open_task_ids": [
-          "TASK-076"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -184436,30 +184423,6 @@
             "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
           ]
-        },
-        "TASK-076": {
-          "kind": "task",
-          "id": "TASK-076",
-          "task_ids": [
-            "TASK-076"
-          ],
-          "open_task_ids": [
-            "TASK-076"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            ".codewiki/kb/system/terminal-ui.md"
-          ],
-          "code_paths": [
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md"
-          ]
         }
       }
     },
@@ -184502,9 +184465,7 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-076"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-017"
           ],
@@ -186282,22 +186243,10 @@
           "doc_paths": [
             ".codewiki/roadmap/queue.json"
           ]
-        },
-        {
-          "id": "reconcile:task:TASK-076",
-          "source_id": "task:TASK-076",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-076",
-          "reason": "TASK-076 is open implementation delta below knowledge."
         }
       ],
       "counts_by_loop": {
-        "decision": 3,
-        "implementation": 1
+        "decision": 3
       },
       "next_action": {
         "loop": "decision",
@@ -186325,14 +186274,14 @@
         "intent": "aligned",
         "knowledge": "drift",
         "roadmap": "drift",
-        "code": "drift",
+        "code": "aligned",
         "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-01T06:51:40.795Z",
+      "generated_at": "2026-06-01T06:52:56.705Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 3
@@ -186366,7 +186315,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-01T06:51:41Z",
+      "generated_at": "2026-06-01T06:52:56Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -186377,16 +186326,15 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 4,
-        "open_count": 1,
+        "task_count": 3,
+        "open_count": 0,
         "sprint_count": 18,
         "active_sprint_count": 1,
         "status_counts": {
-          "cancelled": 3,
-          "in_progress": 1
+          "cancelled": 3
         },
         "priority_counts": {
-          "medium": 2,
+          "medium": 1,
           "high": 2
         }
       },
@@ -186394,15 +186342,10 @@
         "ordered_task_ids": [
           "TASK-012",
           "TASK-023",
-          "TASK-036",
-          "TASK-076"
+          "TASK-036"
         ],
-        "open_task_ids": [
-          "TASK-076"
-        ],
-        "executable_open_task_ids": [
-          "TASK-076"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -187128,12 +187071,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-076"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-076"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -187144,7 +187083,6 @@
           "TASK-036"
         ],
         "recent_task_ids": [
-          "TASK-076",
           "TASK-036",
           "TASK-023",
           "TASK-012"
@@ -187680,68 +187618,12 @@
           "loop": {
             "updated_at": ""
           }
-        },
-        "TASK-076": {
-          "id": "TASK-076",
-          "title": "Scope deprecated browser UI docs",
-          "status": "in_progress",
-          "priority": "medium",
-          "kind": "docs",
-          "change_type": "product",
-          "summary": "Add explicit source scope metadata to deprecated browser UI product/system docs so they remain intentional migration evidence without unscoped-doc reconciliation warnings.",
-          "labels": [
-            "reconciliation",
-            "docs",
-            "deprecated-browser-ui"
-          ],
-          "goal": {
-            "outcome": "Deprecated browser UI docs are explicitly scoped to the compatibility shim/terminal-first migration evidence and no longer surface unscoped-doc warnings.",
-            "acceptance": [
-              "Deprecated product/browser UI docs include explicit scope metadata pointing to active compatibility/migration refs.",
-              "Deprecated system/browser UI docs include explicit scope metadata pointing to active compatibility/migration refs.",
-              "unscoped-doc warnings for the four deprecated browser UI docs disappear after graph refresh.",
-              "No active docs re-advertise browser Control Room as supported product direction."
-            ],
-            "non_goals": [
-              "Do not reintroduce browser UI source paths as active implementation targets.",
-              "Do not remove immutable historic builds or validation refs.",
-              "Do not implement new terminal UI behavior."
-            ],
-            "verification": [
-              "wiki_state refresh",
-              "wiki_audit changed,stale-reference,generated-parity",
-              "manual grep for unscoped-doc deprecated browser docs"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            ".codewiki/kb/system/terminal-ui.md"
-          ],
-          "code_paths": [
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md"
-          ],
-          "updated": "2026-06-01T06:51:40Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-076/context.json",
-          "loop": {
-            "updated_at": ""
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-01T06:51:41Z",
+      "generated_at": "2026-06-01T06:52:56Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -187756,13 +187638,13 @@
       "summary": {
         "total_specs": 39,
         "mapped_specs": 39,
-        "aligned_specs": 53,
-        "tracked_specs": 5,
+        "aligned_specs": 58,
+        "tracked_specs": 0,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 4,
-        "open_task_count": 1,
+        "task_count": 3,
+        "open_task_count": 0,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 0
@@ -187770,14 +187652,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 5,
-          "total": 5,
+          "value": 0,
+          "total": 0,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 4,
+          "total": 3,
           "percent": 0
         },
         "spec_mapping": {
@@ -187788,23 +187670,9 @@
         }
       },
       "views": {
-        "risky_spec_paths": [
-          ".codewiki/kb/product/uis/control-room-details.md",
-          ".codewiki/kb/product/uis/control-room.md",
-          ".codewiki/kb/system/control-room-ui-details.md",
-          ".codewiki/kb/system/control-room-ui.md",
-          ".codewiki/kb/system/terminal-ui.md"
-        ],
-        "top_risky_spec_paths": [
-          ".codewiki/kb/product/uis/control-room-details.md",
-          ".codewiki/kb/product/uis/control-room.md",
-          ".codewiki/kb/system/control-room-ui-details.md",
-          ".codewiki/kb/system/control-room-ui.md",
-          ".codewiki/kb/system/terminal-ui.md"
-        ],
-        "open_task_ids": [
-          "TASK-076"
-        ],
+        "risky_spec_paths": [],
+        "top_risky_spec_paths": [],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -187874,9 +187742,7 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-076"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-017"
             ],
@@ -188277,7 +188143,7 @@
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
-        "Tracked drift coverage: 5/5.",
+        "No tracked spec drift is open.",
         "File-structure drift: 0 actionable item(s), 0 approved migration delta(s)."
       ],
       "file_structure": {
@@ -188326,346 +188192,6 @@
         "deviations": []
       },
       "specs": [
-        {
-          "path": ".codewiki/kb/product/uis/control-room-details.md",
-          "title": "Deprecated Browser UI Details",
-          "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/pi/commands/ui.ts",
-            "src/adapters/pi/commands/status.ts",
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            "src/knowledge/doc-parser.ts",
-            "src/state/graph.ts",
-            "src/state/lint.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, .codewiki",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-076",
-            "status": "in_progress",
-            "title": "Scope deprecated browser UI docs"
-          },
-          "revision": {
-            "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-076"
-        },
-        {
-          "path": ".codewiki/kb/product/uis/control-room.md",
-          "title": "Deprecated Browser CodeWiki UI",
-          "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/pi/commands/ui.ts",
-            "src/adapters/pi/commands/status.ts",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            "src/knowledge/doc-parser.ts",
-            "src/state/graph.ts",
-            "src/state/lint.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, .codewiki",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-076",
-            "status": "in_progress",
-            "title": "Scope deprecated browser UI docs"
-          },
-          "revision": {
-            "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-076"
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui-details.md",
-          "title": "Deprecated Browser UI Implementation Details",
-          "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/pi/commands/ui.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "package.json",
-            ".pi-lens",
-            "src/index.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/audit/tool.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/roadmap/tool.ts",
-            "src/state/graph/rebuilder.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-context.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "src/session/types.ts",
-            "src/roadmap/types.ts",
-            "src/state/graph.ts",
-            "src/state/builders.ts",
-            "src/state/reader.ts",
-            "src/state/types.ts",
-            "src/state/lint.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "src/state/rebuild.ts",
-            "src/roadmap/store.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/gateway-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            "src/knowledge/doc-parser.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, package.json +6 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-076",
-            "status": "in_progress",
-            "title": "Scope deprecated browser UI docs"
-          },
-          "revision": {
-            "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-076"
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui.md",
-          "title": "Deprecated Browser UI",
-          "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/pi/commands/ui.ts",
-            "src/adapters/pi/commands/status.ts",
-            "src/api",
-            "src/shared",
-            "src/adapters",
-            "src/ui",
-            "tests",
-            "src/state/reader.ts",
-            "src/state/builders.ts",
-            "src/state/graph.ts",
-            "src/audit/tool.ts",
-            "package.json",
-            ".pi-lens",
-            "src/index.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/roadmap/tool.ts",
-            "src/state/graph/rebuilder.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-context.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "src/session/types.ts",
-            "src/roadmap/types.ts",
-            "src/state/types.ts",
-            "src/state/lint.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "src/state/rebuild.ts",
-            "src/roadmap/store.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/gateway-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            "src/knowledge/doc-parser.ts",
-            "src/project/templates.ts",
-            "src/adapters/pi/prompt-contract.ts",
-            "package-lock.json",
-            "skills/codewiki/SKILL.md",
-            "skills/codewiki/prompts/resume-implementation.md",
-            ".codewiki/kb/system/architecture.mmd",
-            ".codewiki/kb/system/diagrams/architecture.yaml",
-            ".codewiki/kb/system/diagrams/README.md",
-            ".codewiki/kb/system/diagrams/component-map.yaml",
-            ".codewiki/kb/system/diagrams/context-map.yaml",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/terminal-ui.md",
-            ".codewiki/kb/system/extension.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/components/adapters-and-ui.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/product/uis/status-panel.md",
-            ".codewiki/kb/product/overview.md",
-            ".codewiki/kb/product/uis/board.md",
-            ".codewiki/kb/product/uis/graph-navigation.md",
-            ".codewiki/roadmap/queue.json"
-          ],
-          "code_area": "src, tests +8 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-076",
-            "status": "in_progress",
-            "title": "Scope deprecated browser UI docs"
-          },
-          "revision": {
-            "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-076"
-        },
-        {
-          "path": ".codewiki/kb/system/terminal-ui.md",
-          "title": "Terminal UI and Agent Visual Language",
-          "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/kb/**",
-            ".codewiki/kb/system/diagrams/**",
-            ".codewiki/kb/product/uis/control-room.md",
-            ".codewiki/kb/product/uis/control-room-details.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            "src/adapters/pi/commands/ui.ts",
-            "src/adapters/pi/prompt-contract.ts",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/knowledge/diagram-parser.ts",
-            "package.json",
-            "package-lock.json",
-            "README.md",
-            "skills/codewiki/SKILL.md",
-            "skills/codewiki/prompts/resume-implementation.md",
-            ".codewiki/kb/system/architecture.mmd",
-            ".codewiki/kb/system/diagrams/architecture.yaml",
-            ".codewiki/kb/system/diagrams/README.md",
-            ".codewiki/kb/system/diagrams/component-map.yaml",
-            ".codewiki/kb/system/diagrams/context-map.yaml",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/extension.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/components/adapters-and-ui.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/product/uis/status-panel.md",
-            ".codewiki/kb/product/overview.md",
-            ".codewiki/kb/product/uis/board.md",
-            ".codewiki/kb/product/uis/graph-navigation.md",
-            ".codewiki/roadmap/queue.json"
-          ],
-          "code_area": ".codewiki, src +4 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-076",
-            "status": "in_progress",
-            "title": "Scope deprecated browser UI docs"
-          },
-          "revision": {
-            "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-076"
-        },
         {
           "path": ".codewiki/kb/lexicon.md",
           "title": "Lexicon",
@@ -189015,6 +188541,66 @@
           "primary_task": null,
           "revision": {
             "digest": "7ebee0fc16560e5dafd72818a3824da14db69e6e99af20593497d0ac86bff09f",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/product/uis/control-room-details.md",
+          "title": "Deprecated Browser UI Details",
+          "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/pi/commands/ui.ts",
+            "src/adapters/pi/commands/status.ts",
+            ".codewiki/kb/product/uis/control-room.md",
+            ".codewiki/kb/system/control-room-ui.md",
+            ".codewiki/kb/system/control-room-ui-details.md",
+            "src/knowledge/doc-parser.ts",
+            "src/state/graph.ts",
+            "src/state/lint.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, .codewiki",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/product/uis/control-room.md",
+          "title": "Deprecated Browser CodeWiki UI",
+          "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/pi/commands/ui.ts",
+            "src/adapters/pi/commands/status.ts",
+            ".codewiki/kb/product/uis/control-room-details.md",
+            ".codewiki/kb/system/control-room-ui.md",
+            ".codewiki/kb/system/control-room-ui-details.md",
+            "src/knowledge/doc-parser.ts",
+            "src/state/graph.ts",
+            "src/state/lint.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, .codewiki",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -190420,6 +190006,199 @@
           "primary_task": null,
           "revision": {
             "digest": "96a4502c8bc9a8686ac087a47aa4b81b6f62dbb8ff9bbf77014f7fc6d1226ce9",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui-details.md",
+          "title": "Deprecated Browser UI Implementation Details",
+          "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/pi/commands/ui.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "package.json",
+            ".pi-lens",
+            "src/index.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/audit/tool.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/roadmap/tool.ts",
+            "src/state/graph/rebuilder.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-context.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "src/session/types.ts",
+            "src/roadmap/types.ts",
+            "src/state/graph.ts",
+            "src/state/builders.ts",
+            "src/state/reader.ts",
+            "src/state/types.ts",
+            "src/state/lint.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "src/state/rebuild.ts",
+            "src/roadmap/store.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            ".codewiki/kb/product/uis/control-room.md",
+            ".codewiki/kb/product/uis/control-room-details.md",
+            ".codewiki/kb/system/control-room-ui.md",
+            "src/knowledge/doc-parser.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, package.json +6 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui.md",
+          "title": "Deprecated Browser UI",
+          "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/pi/commands/ui.ts",
+            "src/adapters/pi/commands/status.ts",
+            "src/api",
+            "src/shared",
+            "src/adapters",
+            "src/ui",
+            "tests",
+            "src/state/reader.ts",
+            "src/state/builders.ts",
+            "src/state/graph.ts",
+            "src/audit/tool.ts",
+            "package.json",
+            ".pi-lens",
+            "src/index.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/roadmap/tool.ts",
+            "src/state/graph/rebuilder.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-context.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "src/session/types.ts",
+            "src/roadmap/types.ts",
+            "src/state/types.ts",
+            "src/state/lint.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "src/state/rebuild.ts",
+            "src/roadmap/store.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            ".codewiki/kb/product/uis/control-room.md",
+            ".codewiki/kb/product/uis/control-room-details.md",
+            ".codewiki/kb/system/control-room-ui-details.md",
+            "src/knowledge/doc-parser.ts",
+            "src/project/templates.ts",
+            "src/adapters/pi/prompt-contract.ts",
+            "package-lock.json",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/prompts/resume-implementation.md",
+            ".codewiki/kb/system/architecture.mmd",
+            ".codewiki/kb/system/diagrams/architecture.yaml",
+            ".codewiki/kb/system/diagrams/README.md",
+            ".codewiki/kb/system/diagrams/component-map.yaml",
+            ".codewiki/kb/system/diagrams/context-map.yaml",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/kb/system/terminal-ui.md",
+            ".codewiki/kb/system/extension.md",
+            ".codewiki/kb/system/api.md",
+            ".codewiki/kb/system/adapters.md",
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/components/adapters-and-ui.md",
+            ".codewiki/kb/system/overview.md",
+            ".codewiki/kb/system/graph.md",
+            ".codewiki/kb/product/uis/status-panel.md",
+            ".codewiki/kb/product/overview.md",
+            ".codewiki/kb/product/uis/board.md",
+            ".codewiki/kb/product/uis/graph-navigation.md",
+            ".codewiki/roadmap/queue.json"
+          ],
+          "code_area": "src, tests +8 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -191846,6 +191625,62 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/terminal-ui.md",
+          "title": "Terminal UI and Agent Visual Language",
+          "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/kb/**",
+            ".codewiki/kb/system/diagrams/**",
+            "src/adapters/pi/commands/ui.ts",
+            "src/adapters/pi/prompt-contract.ts",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/commands/resume.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/knowledge/diagram-parser.ts",
+            "package.json",
+            "package-lock.json",
+            "README.md",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/prompts/resume-implementation.md",
+            ".codewiki/kb/system/architecture.mmd",
+            ".codewiki/kb/system/diagrams/architecture.yaml",
+            ".codewiki/kb/system/diagrams/README.md",
+            ".codewiki/kb/system/diagrams/component-map.yaml",
+            ".codewiki/kb/system/diagrams/context-map.yaml",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/kb/system/control-room-ui.md",
+            ".codewiki/kb/system/control-room-ui-details.md",
+            ".codewiki/kb/system/extension.md",
+            ".codewiki/kb/system/api.md",
+            ".codewiki/kb/system/adapters.md",
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/components/adapters-and-ui.md",
+            ".codewiki/kb/system/overview.md",
+            ".codewiki/kb/system/graph.md",
+            ".codewiki/kb/product/uis/status-panel.md",
+            ".codewiki/kb/product/uis/control-room-details.md",
+            ".codewiki/kb/product/overview.md",
+            ".codewiki/kb/product/uis/board.md",
+            ".codewiki/kb/product/uis/graph-navigation.md",
+            ".codewiki/roadmap/queue.json"
+          ],
+          "code_area": ".codewiki, src +4 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/validation-gateway.md",
           "title": "Validation Gateway",
           "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, sprint close, or ship-ready promotion.",
@@ -192148,7 +191983,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-01T06:51:41Z",
+        "generated_at": "2026-06-01T06:52:56Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -192203,16 +192038,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T06:51:41Z",
+            "checked_at": "2026-06-01T06:52:56Z",
             "revision": {
               "git": {
-                "head": "1b3adab609862667374cda774493ab88d267f813",
+                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
                   ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
@@ -192227,8 +192058,8 @@
                   ".codewiki/kb/product/stories/navigation.md": "bf0ca5d655ec995efe1bbfbf12d2995db5b64b39",
                   ".codewiki/kb/product/stories/sanitation.md": "23ee3952d606d522c18f5cd0ed07a47205332cf5",
                   ".codewiki/kb/product/uis/board.md": "5cf23f8b68f63b96d8897451bdfa9ebd3eeb457e",
-                  ".codewiki/kb/product/uis/control-room-details.md": "bdd52e4858bcccb750d6ccc9a4f74bc883bc53ad",
-                  ".codewiki/kb/product/uis/control-room.md": "ff4a64eacf5a6a5a9374c9edf0a9e9ee092f2eb6",
+                  ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
+                  ".codewiki/kb/product/uis/control-room.md": "ca16ba5a418b520d0fceeebf5fef846b1814b044",
                   ".codewiki/kb/product/uis/graph-navigation.md": "88b0168f0b80e0d88c6968484c9bd9d86f81f1bb",
                   ".codewiki/kb/product/uis/status-panel.md": "df497fea92c83cb33d8a5d41413252ad2f4ac4a6",
                   ".codewiki/kb/product/uis/terminal.md": "5615610f6463a708df1364e3d7b9fbbed83faf71",
@@ -192256,8 +192087,8 @@
                   ".codewiki/kb/system/components/session-coordination.md": "2ea9ab0bf2accc27d38864240129cff38a14c542",
                   ".codewiki/kb/system/components/state-engine.md": "67806373d64ed702c4c91408fb820155e94a1db6",
                   ".codewiki/kb/system/components/validation-gateway.md": "84b61df1f2b6342cf2931b658eef8f64514faa6e",
-                  ".codewiki/kb/system/control-room-ui-details.md": "a89cd8cf595496c298335a28f818b58aeec4c823",
-                  ".codewiki/kb/system/control-room-ui.md": "a43f3b933d2707325117ccb2dfeece798f7f1860",
+                  ".codewiki/kb/system/control-room-ui-details.md": "a6ebfda63a59b9e0d67f19c138949a0e2d8cc5a5",
+                  ".codewiki/kb/system/control-room-ui.md": "d63091e19285d42998e54d042a3f13868f666a09",
                   ".codewiki/kb/system/diagrams/README.md": "cc0f20d38fc891814b404e2c9bbf6a974482dd40",
                   ".codewiki/kb/system/diagrams/architecture.yaml": "4aa6de6dd3d0f4ac1986c9d24dc1f1df2004c9b5",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "5522b1739e204181e399d9abbd70bbcd6b1d8b1a",
@@ -192282,7 +192113,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "f23fb9e21317390c112e99af65c30ced48f96485",
+                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -192463,20 +192294,18 @@
                 }
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
-              "task_digest": "abacfce1db935516f7b321b03de23b031998e8b3122eaa668a1ae3dcf9a4ccd3",
-              "code_digest": "e92d69658df12e5481f37aac04afd80d91813463821a1ea9a0623bf366acc402",
-              "digest": "9f788c1eec500cb10f964bc6806e3ac3c0eb5cbdeadf4428a486cd8dc66aa7f9"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "0f6cca620c9a2df707965914a2dd5af6d5523fecaac0980b04bfdca46408139e",
+              "digest": "e3336e984e1c8e3ec4da12b0aa05ff0b5c75ccc3f7270cf429746bee4156d29f"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:51:41Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-06-01T06:52:56Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/product/uis/control-room.md",
               ".codewiki/kb/product/overview.md",
               ".codewiki/kb/product/stories/automation.md",
               ".codewiki/kb/product/stories/drift.md",
@@ -192484,6 +192313,8 @@
               ".codewiki/kb/product/stories/navigation.md",
               ".codewiki/kb/product/stories/sanitation.md",
               ".codewiki/kb/product/uis/board.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/product/uis/control-room.md",
               ".codewiki/kb/product/uis/graph-navigation.md",
               ".codewiki/kb/product/uis/status-panel.md",
               ".codewiki/kb/product/uis/terminal.md",
@@ -192491,9 +192322,6 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -192513,6 +192341,8 @@
               ".codewiki/kb/system/components/session-coordination.md",
               ".codewiki/kb/system/components/state-engine.md",
               ".codewiki/kb/system/components/validation-gateway.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
@@ -192530,20 +192360,11 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/commands/status.ts",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts",
-              ".codewiki/kb/product/uis/control-room-details.md",
               ".codewiki/kb/product",
               "src/api",
               "src/shared",
@@ -192552,7 +192373,11 @@
               "tests",
               "src/state/reader.ts",
               "src/state/builders.ts",
+              "src/state/graph.ts",
               "src/audit/tool.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/extension.md",
@@ -192637,12 +192462,18 @@
               "tests/smoke/package-smoke.test.mjs",
               "src/adapters/pi/tools/state.ts",
               "src/adapters/pi/tools/resume-context.ts",
+              "src/adapters/pi/commands/status.ts",
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/compaction.ts",
               "src/adapters/pi/ui/manager.ts",
               "src/adapters/pi/schemas.ts",
               "tests/setup-env.mjs",
               "src/adapters/pi/commands",
+              "src/adapters/pi/commands/ui.ts",
+              ".codewiki/kb/product/uis/control-room.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
               "src/adapters/pi/prompt-contract.ts",
               "src/adapters/pi/index.ts",
               "src/adapters/pi/ui/theme.ts",
@@ -192666,41 +192497,12 @@
               ".codewiki/roadmap/queue.json",
               "skills",
               "src",
-              ".pi-lens",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "tests/smoke",
-              "CHANGELOG.md",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/validation/report.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/product/uis/status-panel.md",
-              ".codewiki/kb/**",
-              ".codewiki/kb/system/diagrams/**",
               "src/adapters/**",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/ui/**",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
+              ".codewiki/kb/product/uis/status-panel.md",
               "src/agency",
               "src/runtime",
               "src/adapters/pi",
@@ -192740,12 +192542,18 @@
               "src/build/tool.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
+              "src/validation/preflight.ts",
+              "src/validation/report.ts",
+              "src/validation/tool.ts",
               "src/validation/index.ts",
+              "src/gateway/index.ts",
+              "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "src/application/prompt.ts",
               "src/application/resume-context.ts",
               "src/application/state-artifacts.ts",
               "src/application/state-builders.ts",
+              "scripts/codewiki-gateway.mjs",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
@@ -192786,6 +192594,7 @@
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/application/knowledge/diagram-parser.ts",
               "src/application/tools/audit.ts",
+              "src/audit/types.ts",
               "src/application/tools/audit.ts (deleted)",
               "src/domain/audit/types.ts (deleted)",
               "src/adapters/pi/commands/audit.ts",
@@ -192794,6 +192603,27 @@
               ".codewiki/roadmap/tasks/TASK-012/task.json",
               "src/build",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "tests/tasks/TASK-022/**",
               "git commits and tree SHAs",
@@ -192912,6 +192742,7 @@
               "src/roadmap",
               "src/state",
               "src/gc",
+              ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/product/",
@@ -192925,21 +192756,13 @@
               ".codewiki/kb/**/*.md",
               ".codewiki/kb/**/*.yaml"
             ],
-            "code_area": "src, .codewiki +15 more",
-            "open_task_ids": [
-              "TASK-076"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md"
-            ],
+            "code_area": ".codewiki, src +15 more",
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 57,
-              "aligned_specs": 52,
-              "tracked_specs": 5,
+              "aligned_specs": 57,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -192964,16 +192787,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-01T06:51:41Z",
+            "checked_at": "2026-06-01T06:52:56Z",
             "revision": {
               "git": {
-                "head": "1b3adab609862667374cda774493ab88d267f813",
+                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
                   ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
@@ -192982,8 +192801,8 @@
                   ".codewiki/kb/product/": "",
                   ".codewiki/kb/product/overview.md": "4fa33846a0912e7d99f6d4091e4540bfc02a73a2",
                   ".codewiki/kb/product/uis/board.md": "5cf23f8b68f63b96d8897451bdfa9ebd3eeb457e",
-                  ".codewiki/kb/product/uis/control-room-details.md": "bdd52e4858bcccb750d6ccc9a4f74bc883bc53ad",
-                  ".codewiki/kb/product/uis/control-room.md": "ff4a64eacf5a6a5a9374c9edf0a9e9ee092f2eb6",
+                  ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
+                  ".codewiki/kb/product/uis/control-room.md": "ca16ba5a418b520d0fceeebf5fef846b1814b044",
                   ".codewiki/kb/product/uis/graph-navigation.md": "88b0168f0b80e0d88c6968484c9bd9d86f81f1bb",
                   ".codewiki/kb/product/uis/status-panel.md": "df497fea92c83cb33d8a5d41413252ad2f4ac4a6",
                   ".codewiki/kb/system/": "",
@@ -193006,8 +192825,8 @@
                   ".codewiki/kb/system/components/session-coordination.md": "2ea9ab0bf2accc27d38864240129cff38a14c542",
                   ".codewiki/kb/system/components/state-engine.md": "67806373d64ed702c4c91408fb820155e94a1db6",
                   ".codewiki/kb/system/components/validation-gateway.md": "84b61df1f2b6342cf2931b658eef8f64514faa6e",
-                  ".codewiki/kb/system/control-room-ui-details.md": "a89cd8cf595496c298335a28f818b58aeec4c823",
-                  ".codewiki/kb/system/control-room-ui.md": "a43f3b933d2707325117ccb2dfeece798f7f1860",
+                  ".codewiki/kb/system/control-room-ui-details.md": "a6ebfda63a59b9e0d67f19c138949a0e2d8cc5a5",
+                  ".codewiki/kb/system/control-room-ui.md": "d63091e19285d42998e54d042a3f13868f666a09",
                   ".codewiki/kb/system/diagrams/README.md": "cc0f20d38fc891814b404e2c9bbf6a974482dd40",
                   ".codewiki/kb/system/diagrams/architecture.yaml": "4aa6de6dd3d0f4ac1986c9d24dc1f1df2004c9b5",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "5522b1739e204181e399d9abbd70bbcd6b1d8b1a",
@@ -193032,7 +192851,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "f23fb9e21317390c112e99af65c30ced48f96485",
+                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -193207,21 +193026,18 @@
                 }
               },
               "spec_digest": "24be0c855b0e3a5e9ac28b37fc115bdc3709d885ccd2bea7f6c2216e25b956ef",
-              "task_digest": "abacfce1db935516f7b321b03de23b031998e8b3122eaa668a1ae3dcf9a4ccd3",
-              "code_digest": "53a9e4db5b4c9f41b35f42d76d0c14067ea4f1cbf3146b323e23e68f56ee66cd",
-              "digest": "d685e8e73311d58ab333e1df5ffc260322fcdbaf16d64d1411bf2a6d7e24f5ed"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "da0b261377d692e5cb999b4cbb2b9953b04c98ffc5f934ebfab1717c1605bfc6",
+              "digest": "3ad6046cd5cbe1a82d0cfb680c9e46da641f28815d3bc144f71212d471ade264"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:51:41Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-06-01T06:52:56Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -193241,6 +193057,8 @@
               ".codewiki/kb/system/components/session-coordination.md",
               ".codewiki/kb/system/components/state-engine.md",
               ".codewiki/kb/system/components/validation-gateway.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
@@ -193258,109 +193076,25 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/audit/tool.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/graph.ts",
-              "src/state/builders.ts",
-              "src/state/reader.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/store.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts",
-              "src/adapters/pi/commands/status.ts",
-              "src/api",
-              "src/shared",
-              "src/adapters",
-              "src/ui",
-              "tests",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/adapters/pi/prompt-contract.ts",
-              "package-lock.json",
-              "skills/codewiki/SKILL.md",
-              "skills/codewiki/prompts/resume-implementation.md",
-              ".codewiki/kb/system/architecture.mmd",
-              ".codewiki/kb/system/diagrams/architecture.yaml",
-              ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/diagrams/component-map.yaml",
-              ".codewiki/kb/system/diagrams/context-map.yaml",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/kb/system/terminal-ui.md",
-              ".codewiki/kb/system/extension.md",
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/components/adapters-and-ui.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/product/uis/status-panel.md",
-              ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/product/uis/board.md",
-              ".codewiki/kb/product/uis/graph-navigation.md",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/kb/**",
-              ".codewiki/kb/system/diagrams/**",
               "src/adapters/**",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/ui/**",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts",
+              ".codewiki/kb/product/overview.md",
+              ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/components/api-facade.md",
               ".codewiki/kb/system/components/compilers.md",
               ".codewiki/kb/system/components/validation-gateway.md",
@@ -193369,6 +193103,7 @@
               ".codewiki/kb/system/components/roadmap-work-truth.md",
               ".codewiki/kb/system/components/session-coordination.md",
               ".codewiki/kb/system/components/knowledge-base.md",
+              ".codewiki/kb/system/components/adapters-and-ui.md",
               ".codewiki/kb/system/components/builds-and-proof.md",
               ".codewiki/kb/system/flows/decision-to-planning.md",
               ".codewiki/kb/system/flows/planning-to-implementation.md",
@@ -193379,10 +193114,40 @@
               ".codewiki/kb/system/flows/publication-gc.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/validation-gateway.md",
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/prompt-contract.ts",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/knowledge/diagram-parser.ts",
+              "package.json",
+              "package-lock.json",
+              "README.md",
+              "skills/codewiki/SKILL.md",
+              "skills/codewiki/prompts/resume-implementation.md",
+              ".codewiki/kb/system/architecture.mmd",
+              ".codewiki/kb/system/diagrams/architecture.yaml",
+              ".codewiki/kb/system/diagrams/README.md",
+              ".codewiki/kb/system/diagrams/component-map.yaml",
+              ".codewiki/kb/system/diagrams/context-map.yaml",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/kb/system/terminal-ui.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/graph.md",
+              ".codewiki/kb/product/uis/status-panel.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/product/uis/board.md",
+              ".codewiki/kb/product/uis/graph-navigation.md",
+              ".codewiki/roadmap/queue.json",
               "src/agency",
               "src/runtime",
               "src/project/types.ts",
               "src/adapters/pi",
+              "src/state/resume-context.ts",
               "src/project/context.ts",
               "src/project/root.ts",
               "src/project/bootstrap.ts",
@@ -193397,23 +193162,38 @@
               "src/gc/types.ts",
               "src/gc/runtime.ts",
               "src/gc/tool.ts",
+              "src/session/types.ts",
               "src/session/links.ts",
               "src/session/worktree-isolation.ts",
               "src/session/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/roadmap/types.ts",
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
+              "src/roadmap/tool.ts",
+              "src/state/types.ts",
+              "src/state/reader.ts",
               "src/state/artifacts.ts",
+              "src/state/builders.ts",
+              "src/state/rebuild.ts",
+              "src/state/graph/rebuilder.ts",
               "src/state/prompt.ts",
               "src/state/skill-assets.ts",
               "src/state/local/rebuild-runner.ts",
               "src/state/local/status-dock-prefs.ts",
               "src/state/tool.ts",
               "src/state/resume-tool.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
               "src/shared/ports.ts",
               "src/shared/utils.ts",
               "src/shared/lock.ts",
+              "src/index.ts",
               "scripts/check-architecture.mjs",
               "tests/tasks/TASK-076/restructure.test.mjs",
               "src/agency/types.ts",
@@ -193458,12 +193238,19 @@
               "src/build/tool.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
+              "src/validation/preflight.ts",
+              "src/validation/report.ts",
+              "src/validation/tool.ts",
               "src/validation/index.ts",
+              "src/gateway/index.ts",
+              "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "src/application/prompt.ts",
               "src/application/resume-context.ts",
               "src/application/state-artifacts.ts",
               "src/application/state-builders.ts",
+              "src/adapters/pi/commands/status.ts",
+              "scripts/codewiki-gateway.mjs",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
@@ -193488,6 +193275,7 @@
               "src/roadmap/runtime.ts",
               "src/adapters/pi/tools/task.ts",
               "src/application/state.ts",
+              "src/audit/tool.ts",
               "src/domain/state/types.ts",
               "src/adapters/pi/tools/state.ts",
               "src/adapters/pi/tools/resume-context.ts",
@@ -193502,11 +193290,13 @@
               "removed src/domain/shared/utils.ts",
               "removed src/mutation-queue.ts",
               ".codewiki/kb/system/api-vnext-tools.md",
+              ".codewiki/kb/system/adapters.md",
               "src/checks/**",
               "tests/smoke/horizontal-alignment.test.mjs",
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/application/knowledge/diagram-parser.ts",
               "src/application/tools/audit.ts",
+              "src/audit/types.ts",
               "src/application/tools/audit.ts (deleted)",
               "src/domain/audit/types.ts (deleted)",
               "src/adapters/pi/commands/audit.ts",
@@ -193515,6 +193305,28 @@
               ".codewiki/roadmap/tasks/TASK-012/task.json",
               "src/build",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "tests/tasks/TASK-022/**",
               "git commits and tree SHAs",
@@ -193539,6 +193351,12 @@
               ".codewiki/index_graph.json",
               "src/policy/**",
               "src/validation/**",
+              ".codewiki/kb/product/uis/control-room.md",
+              "src/api",
+              "src/shared",
+              "src/adapters",
+              "src/ui",
+              "tests",
               ".codewiki/kb/system/knowledge.md",
               "skills/codewiki/**",
               "skills/codewiki-validation/**",
@@ -193633,6 +193451,7 @@
               "src/roadmap",
               "src/state",
               "src/gc",
+              ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/product/",
@@ -193646,19 +193465,13 @@
               ".codewiki/kb/**/*.md",
               ".codewiki/kb/**/*.yaml"
             ],
-            "code_area": "src, package.json +15 more",
-            "open_task_ids": [
-              "TASK-076"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md"
-            ],
+            "code_area": "src, .codewiki +15 more",
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 41,
-              "aligned_specs": 38,
-              "tracked_specs": 3,
+              "aligned_specs": 41,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -193683,16 +193496,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-01T06:51:41Z",
+            "checked_at": "2026-06-01T06:52:56Z",
             "revision": {
               "git": {
-                "head": "1b3adab609862667374cda774493ab88d267f813",
+                "head": "e1a5a1bba1a00cea259c9f4799532da68ba31d15",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
                   ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
@@ -193707,8 +193516,8 @@
                   ".codewiki/kb/product/stories/navigation.md": "bf0ca5d655ec995efe1bbfbf12d2995db5b64b39",
                   ".codewiki/kb/product/stories/sanitation.md": "23ee3952d606d522c18f5cd0ed07a47205332cf5",
                   ".codewiki/kb/product/uis/board.md": "5cf23f8b68f63b96d8897451bdfa9ebd3eeb457e",
-                  ".codewiki/kb/product/uis/control-room-details.md": "bdd52e4858bcccb750d6ccc9a4f74bc883bc53ad",
-                  ".codewiki/kb/product/uis/control-room.md": "ff4a64eacf5a6a5a9374c9edf0a9e9ee092f2eb6",
+                  ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
+                  ".codewiki/kb/product/uis/control-room.md": "ca16ba5a418b520d0fceeebf5fef846b1814b044",
                   ".codewiki/kb/product/uis/graph-navigation.md": "88b0168f0b80e0d88c6968484c9bd9d86f81f1bb",
                   ".codewiki/kb/product/uis/status-panel.md": "df497fea92c83cb33d8a5d41413252ad2f4ac4a6",
                   ".codewiki/kb/product/uis/terminal.md": "5615610f6463a708df1364e3d7b9fbbed83faf71",
@@ -193736,8 +193545,8 @@
                   ".codewiki/kb/system/components/session-coordination.md": "2ea9ab0bf2accc27d38864240129cff38a14c542",
                   ".codewiki/kb/system/components/state-engine.md": "67806373d64ed702c4c91408fb820155e94a1db6",
                   ".codewiki/kb/system/components/validation-gateway.md": "84b61df1f2b6342cf2931b658eef8f64514faa6e",
-                  ".codewiki/kb/system/control-room-ui-details.md": "a89cd8cf595496c298335a28f818b58aeec4c823",
-                  ".codewiki/kb/system/control-room-ui.md": "a43f3b933d2707325117ccb2dfeece798f7f1860",
+                  ".codewiki/kb/system/control-room-ui-details.md": "a6ebfda63a59b9e0d67f19c138949a0e2d8cc5a5",
+                  ".codewiki/kb/system/control-room-ui.md": "d63091e19285d42998e54d042a3f13868f666a09",
                   ".codewiki/kb/system/diagrams/README.md": "cc0f20d38fc891814b404e2c9bbf6a974482dd40",
                   ".codewiki/kb/system/diagrams/architecture.yaml": "4aa6de6dd3d0f4ac1986c9d24dc1f1df2004c9b5",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "5522b1739e204181e399d9abbd70bbcd6b1d8b1a",
@@ -193762,7 +193571,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "dc89c0bec70fcec3c9e83161cea069602bb4d02e",
                   ".codewiki/kb/system/validation-gateway.md": "a2d21d8c8f66fb39cb793872cbbbcce29b55f6e3",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "f23fb9e21317390c112e99af65c30ced48f96485",
+                  ".codewiki/roadmap/queue.json": "6f67adbe4a8fd884c920f3326b21b7305f415076",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -193943,20 +193752,18 @@
                 }
               },
               "spec_digest": "c49edf9d9a765589758678c1605aa38e37dfd1f7e0e2d2349361c00d85671a5b",
-              "task_digest": "abacfce1db935516f7b321b03de23b031998e8b3122eaa668a1ae3dcf9a4ccd3",
-              "code_digest": "e92d69658df12e5481f37aac04afd80d91813463821a1ea9a0623bf366acc402",
-              "digest": "9f788c1eec500cb10f964bc6806e3ac3c0eb5cbdeadf4428a486cd8dc66aa7f9"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "0f6cca620c9a2df707965914a2dd5af6d5523fecaac0980b04bfdca46408139e",
+              "digest": "e3336e984e1c8e3ec4da12b0aa05ff0b5c75ccc3f7270cf429746bee4156d29f"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-01T06:51:41Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-06-01T06:52:56Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/product/uis/control-room.md",
               ".codewiki/kb/product/overview.md",
               ".codewiki/kb/product/stories/automation.md",
               ".codewiki/kb/product/stories/drift.md",
@@ -193964,6 +193771,8 @@
               ".codewiki/kb/product/stories/navigation.md",
               ".codewiki/kb/product/stories/sanitation.md",
               ".codewiki/kb/product/uis/board.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/product/uis/control-room.md",
               ".codewiki/kb/product/uis/graph-navigation.md",
               ".codewiki/kb/product/uis/status-panel.md",
               ".codewiki/kb/product/uis/terminal.md",
@@ -193971,9 +193780,6 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -193993,6 +193799,8 @@
               ".codewiki/kb/system/components/session-coordination.md",
               ".codewiki/kb/system/components/state-engine.md",
               ".codewiki/kb/system/components/validation-gateway.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/file-structure.md",
@@ -194010,20 +193818,11 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/terminal-ui.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/commands/status.ts",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts",
-              ".codewiki/kb/product/uis/control-room-details.md",
               ".codewiki/kb/product",
               "src/api",
               "src/shared",
@@ -194032,7 +193831,11 @@
               "tests",
               "src/state/reader.ts",
               "src/state/builders.ts",
+              "src/state/graph.ts",
               "src/audit/tool.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/extension.md",
@@ -194117,12 +193920,18 @@
               "tests/smoke/package-smoke.test.mjs",
               "src/adapters/pi/tools/state.ts",
               "src/adapters/pi/tools/resume-context.ts",
+              "src/adapters/pi/commands/status.ts",
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/compaction.ts",
               "src/adapters/pi/ui/manager.ts",
               "src/adapters/pi/schemas.ts",
               "tests/setup-env.mjs",
               "src/adapters/pi/commands",
+              "src/adapters/pi/commands/ui.ts",
+              ".codewiki/kb/product/uis/control-room.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
               "src/adapters/pi/prompt-contract.ts",
               "src/adapters/pi/index.ts",
               "src/adapters/pi/ui/theme.ts",
@@ -194146,41 +193955,12 @@
               ".codewiki/roadmap/queue.json",
               "skills",
               "src",
-              ".pi-lens",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "tests/smoke",
-              "CHANGELOG.md",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/validation/report.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/product/uis/status-panel.md",
-              ".codewiki/kb/**",
-              ".codewiki/kb/system/diagrams/**",
               "src/adapters/**",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/ui/**",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
+              ".codewiki/kb/product/uis/status-panel.md",
               "src/agency",
               "src/runtime",
               "src/adapters/pi",
@@ -194220,12 +194000,18 @@
               "src/build/tool.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
+              "src/validation/preflight.ts",
+              "src/validation/report.ts",
+              "src/validation/tool.ts",
               "src/validation/index.ts",
+              "src/gateway/index.ts",
+              "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "src/application/prompt.ts",
               "src/application/resume-context.ts",
               "src/application/state-artifacts.ts",
               "src/application/state-builders.ts",
+              "scripts/codewiki-gateway.mjs",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
@@ -194266,6 +194052,7 @@
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/application/knowledge/diagram-parser.ts",
               "src/application/tools/audit.ts",
+              "src/audit/types.ts",
               "src/application/tools/audit.ts (deleted)",
               "src/domain/audit/types.ts (deleted)",
               "src/adapters/pi/commands/audit.ts",
@@ -194274,6 +194061,27 @@
               ".codewiki/roadmap/tasks/TASK-012/task.json",
               "src/build",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "tests/tasks/TASK-022/**",
               "git commits and tree SHAs",
@@ -194392,6 +194200,7 @@
               "src/roadmap",
               "src/state",
               "src/gc",
+              ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/product/",
@@ -194405,21 +194214,13 @@
               ".codewiki/kb/**/*.md",
               ".codewiki/kb/**/*.yaml"
             ],
-            "code_area": "src, .codewiki +15 more",
-            "open_task_ids": [
-              "TASK-076"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/terminal-ui.md"
-            ],
+            "code_area": ".codewiki, src +15 more",
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 57,
-              "aligned_specs": 52,
-              "tracked_specs": 5,
+              "aligned_specs": 57,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -194433,19 +194234,19 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-076",
-        "lane_id": "",
-        "heading": "TASK-076 — Scope deprecated browser UI docs",
-        "command": "/wiki-resume TASK-076",
-        "reason": "Resume roadmap task (in_progress).",
+        "source": "agency",
+        "task_id": "",
+        "lane_id": "product_system",
+        "heading": "Product ↔ System",
+        "command": "/wiki-status",
+        "reason": "Resume from stale agency lane.",
         "status": "in_progress",
-        "verification": "wiki_state refresh",
+        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-06-01T06:51:41Z",
+        "generated_at": "2026-06-01T06:52:56Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -194799,346 +194600,6 @@
       "wiki": {
         "rows": [
           {
-            "path": ".codewiki/kb/product/uis/control-room-details.md",
-            "title": "Deprecated Browser UI Details",
-            "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/commands/status.ts",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, .codewiki",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-076",
-              "status": "in_progress",
-              "title": "Scope deprecated browser UI docs"
-            },
-            "revision": {
-              "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-076"
-          },
-          {
-            "path": ".codewiki/kb/product/uis/control-room.md",
-            "title": "Deprecated Browser CodeWiki UI",
-            "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/commands/status.ts",
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, .codewiki",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-076",
-              "status": "in_progress",
-              "title": "Scope deprecated browser UI docs"
-            },
-            "revision": {
-              "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-076"
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui-details.md",
-            "title": "Deprecated Browser UI Implementation Details",
-            "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/audit/tool.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/graph.ts",
-              "src/state/builders.ts",
-              "src/state/reader.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/store.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, package.json +6 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-076",
-              "status": "in_progress",
-              "title": "Scope deprecated browser UI docs"
-            },
-            "revision": {
-              "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-076"
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui.md",
-            "title": "Deprecated Browser UI",
-            "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/commands/status.ts",
-              "src/api",
-              "src/shared",
-              "src/adapters",
-              "src/ui",
-              "tests",
-              "src/state/reader.ts",
-              "src/state/builders.ts",
-              "src/state/graph.ts",
-              "src/audit/tool.ts",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/store.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/gateway-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts",
-              "src/adapters/pi/prompt-contract.ts",
-              "package-lock.json",
-              "skills/codewiki/SKILL.md",
-              "skills/codewiki/prompts/resume-implementation.md",
-              ".codewiki/kb/system/architecture.mmd",
-              ".codewiki/kb/system/diagrams/architecture.yaml",
-              ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/diagrams/component-map.yaml",
-              ".codewiki/kb/system/diagrams/context-map.yaml",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/kb/system/terminal-ui.md",
-              ".codewiki/kb/system/extension.md",
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/components/adapters-and-ui.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/product/uis/status-panel.md",
-              ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/product/uis/board.md",
-              ".codewiki/kb/product/uis/graph-navigation.md",
-              ".codewiki/roadmap/queue.json"
-            ],
-            "code_area": "src, tests +8 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-076",
-              "status": "in_progress",
-              "title": "Scope deprecated browser UI docs"
-            },
-            "revision": {
-              "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-076"
-          },
-          {
-            "path": ".codewiki/kb/system/terminal-ui.md",
-            "title": "Terminal UI and Agent Visual Language",
-            "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/kb/**",
-              ".codewiki/kb/system/diagrams/**",
-              ".codewiki/kb/product/uis/control-room.md",
-              ".codewiki/kb/product/uis/control-room-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              "src/adapters/pi/commands/ui.ts",
-              "src/adapters/pi/prompt-contract.ts",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/knowledge/diagram-parser.ts",
-              "package.json",
-              "package-lock.json",
-              "README.md",
-              "skills/codewiki/SKILL.md",
-              "skills/codewiki/prompts/resume-implementation.md",
-              ".codewiki/kb/system/architecture.mmd",
-              ".codewiki/kb/system/diagrams/architecture.yaml",
-              ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/diagrams/component-map.yaml",
-              ".codewiki/kb/system/diagrams/context-map.yaml",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/kb/system/extension.md",
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/components/adapters-and-ui.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/product/uis/status-panel.md",
-              ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/product/uis/board.md",
-              ".codewiki/kb/product/uis/graph-navigation.md",
-              ".codewiki/roadmap/queue.json"
-            ],
-            "code_area": ".codewiki, src +4 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-076",
-              "status": "in_progress",
-              "title": "Scope deprecated browser UI docs"
-            },
-            "revision": {
-              "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-076"
-          },
-          {
             "path": ".codewiki/kb/lexicon.md",
             "title": "Lexicon",
             "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -195487,6 +194948,66 @@
             "primary_task": null,
             "revision": {
               "digest": "7ebee0fc16560e5dafd72818a3824da14db69e6e99af20593497d0ac86bff09f",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/product/uis/control-room-details.md",
+            "title": "Deprecated Browser UI Details",
+            "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/commands/status.ts",
+              ".codewiki/kb/product/uis/control-room.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, .codewiki",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/product/uis/control-room.md",
+            "title": "Deprecated Browser CodeWiki UI",
+            "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/commands/status.ts",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, .codewiki",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -196892,6 +196413,199 @@
             "primary_task": null,
             "revision": {
               "digest": "96a4502c8bc9a8686ac087a47aa4b81b6f62dbb8ff9bbf77014f7fc6d1226ce9",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/control-room-ui-details.md",
+            "title": "Deprecated Browser UI Implementation Details",
+            "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "package.json",
+              ".pi-lens",
+              "src/index.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/audit/tool.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/roadmap/tool.ts",
+              "src/state/graph/rebuilder.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "src/session/types.ts",
+              "src/roadmap/types.ts",
+              "src/state/graph.ts",
+              "src/state/builders.ts",
+              "src/state/reader.ts",
+              "src/state/types.ts",
+              "src/state/lint.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/state/rebuild.ts",
+              "src/roadmap/store.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              ".codewiki/kb/product/uis/control-room.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
+              "src/knowledge/doc-parser.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, package.json +6 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/control-room-ui.md",
+            "title": "Deprecated Browser UI",
+            "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/commands/status.ts",
+              "src/api",
+              "src/shared",
+              "src/adapters",
+              "src/ui",
+              "tests",
+              "src/state/reader.ts",
+              "src/state/builders.ts",
+              "src/state/graph.ts",
+              "src/audit/tool.ts",
+              "package.json",
+              ".pi-lens",
+              "src/index.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/roadmap/tool.ts",
+              "src/state/graph/rebuilder.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "src/session/types.ts",
+              "src/roadmap/types.ts",
+              "src/state/types.ts",
+              "src/state/lint.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/state/rebuild.ts",
+              "src/roadmap/store.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              ".codewiki/kb/product/uis/control-room.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              "src/knowledge/doc-parser.ts",
+              "src/project/templates.ts",
+              "src/adapters/pi/prompt-contract.ts",
+              "package-lock.json",
+              "skills/codewiki/SKILL.md",
+              "skills/codewiki/prompts/resume-implementation.md",
+              ".codewiki/kb/system/architecture.mmd",
+              ".codewiki/kb/system/diagrams/architecture.yaml",
+              ".codewiki/kb/system/diagrams/README.md",
+              ".codewiki/kb/system/diagrams/component-map.yaml",
+              ".codewiki/kb/system/diagrams/context-map.yaml",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/kb/system/terminal-ui.md",
+              ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/api.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/components/adapters-and-ui.md",
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/graph.md",
+              ".codewiki/kb/product/uis/status-panel.md",
+              ".codewiki/kb/product/overview.md",
+              ".codewiki/kb/product/uis/board.md",
+              ".codewiki/kb/product/uis/graph-navigation.md",
+              ".codewiki/roadmap/queue.json"
+            ],
+            "code_area": "src, tests +8 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -198318,6 +198032,62 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/terminal-ui.md",
+            "title": "Terminal UI and Agent Visual Language",
+            "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/kb/**",
+              ".codewiki/kb/system/diagrams/**",
+              "src/adapters/pi/commands/ui.ts",
+              "src/adapters/pi/prompt-contract.ts",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/knowledge/diagram-parser.ts",
+              "package.json",
+              "package-lock.json",
+              "README.md",
+              "skills/codewiki/SKILL.md",
+              "skills/codewiki/prompts/resume-implementation.md",
+              ".codewiki/kb/system/architecture.mmd",
+              ".codewiki/kb/system/diagrams/architecture.yaml",
+              ".codewiki/kb/system/diagrams/README.md",
+              ".codewiki/kb/system/diagrams/component-map.yaml",
+              ".codewiki/kb/system/diagrams/context-map.yaml",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/api.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/components/adapters-and-ui.md",
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/graph.md",
+              ".codewiki/kb/product/uis/status-panel.md",
+              ".codewiki/kb/product/uis/control-room-details.md",
+              ".codewiki/kb/product/overview.md",
+              ".codewiki/kb/product/uis/board.md",
+              ".codewiki/kb/product/uis/graph-navigation.md",
+              ".codewiki/roadmap/queue.json"
+            ],
+            "code_area": ".codewiki, src +4 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/validation-gateway.md",
             "title": "Validation Gateway",
             "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, sprint close, or ship-ready promotion.",
@@ -198625,78 +198395,6 @@
             "label": "Product",
             "rows": [
               {
-                "path": ".codewiki/kb/product/uis/control-room-details.md",
-                "title": "Deprecated Browser UI Details",
-                "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters/pi/commands/ui.ts",
-                  "src/adapters/pi/commands/status.ts",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/system/control-room-ui.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/state/graph.ts",
-                  "src/state/lint.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, .codewiki",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-076",
-                  "status": "in_progress",
-                  "title": "Scope deprecated browser UI docs"
-                },
-                "revision": {
-                  "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-076"
-              },
-              {
-                "path": ".codewiki/kb/product/uis/control-room.md",
-                "title": "Deprecated Browser CodeWiki UI",
-                "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters/pi/commands/ui.ts",
-                  "src/adapters/pi/commands/status.ts",
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/state/graph.ts",
-                  "src/state/lint.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, .codewiki",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-076",
-                  "status": "in_progress",
-                  "title": "Scope deprecated browser UI docs"
-                },
-                "revision": {
-                  "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-076"
-              },
-              {
                 "path": ".codewiki/kb/product/overview.md",
                 "title": "Product",
                 "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
@@ -198991,6 +198689,66 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/product/uis/control-room-details.md",
+                "title": "Deprecated Browser UI Details",
+                "summary": "Deprecated detailed browser UI expectations retained temporarily during terminal-first migration.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters/pi/commands/ui.ts",
+                  "src/adapters/pi/commands/status.ts",
+                  ".codewiki/kb/product/uis/control-room.md",
+                  ".codewiki/kb/system/control-room-ui.md",
+                  ".codewiki/kb/system/control-room-ui-details.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/state/graph.ts",
+                  "src/state/lint.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, .codewiki",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "07411dfaf8f2da5d4e9eb8ac4c1004252599223f76cf8373dcfe9fb9ddce7acf",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/product/uis/control-room.md",
+                "title": "Deprecated Browser CodeWiki UI",
+                "summary": "Deprecated browser Control Room product contract retained temporarily during terminal-first migration.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters/pi/commands/ui.ts",
+                  "src/adapters/pi/commands/status.ts",
+                  ".codewiki/kb/product/uis/control-room-details.md",
+                  ".codewiki/kb/system/control-room-ui.md",
+                  ".codewiki/kb/system/control-room-ui-details.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/state/graph.ts",
+                  "src/state/lint.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, .codewiki",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "2803fdf1670e1046a1ae5b2e2f2c06f15ba9fa6c8903e13bb82a07b9d5cc2bce",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/product/uis/graph-navigation.md",
                 "title": "Map Navigation UI",
                 "summary": "Product expectations for visual Map navigation over graph-backed CodeWiki relationships.",
@@ -199234,274 +198992,6 @@
             "id": "system",
             "label": "System",
             "rows": [
-              {
-                "path": ".codewiki/kb/system/control-room-ui-details.md",
-                "title": "Deprecated Browser UI Implementation Details",
-                "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters/pi/commands/ui.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "package.json",
-                  ".pi-lens",
-                  "src/index.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/audit/tool.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "src/session/types.ts",
-                  "src/roadmap/types.ts",
-                  "src/state/graph.ts",
-                  "src/state/builders.ts",
-                  "src/state/reader.ts",
-                  "src/state/types.ts",
-                  "src/state/lint.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "src/state/rebuild.ts",
-                  "src/roadmap/store.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/gateway-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, package.json +6 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-076",
-                  "status": "in_progress",
-                  "title": "Scope deprecated browser UI docs"
-                },
-                "revision": {
-                  "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-076"
-              },
-              {
-                "path": ".codewiki/kb/system/control-room-ui.md",
-                "title": "Deprecated Browser UI",
-                "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters/pi/commands/ui.ts",
-                  "src/adapters/pi/commands/status.ts",
-                  "src/api",
-                  "src/shared",
-                  "src/adapters",
-                  "src/ui",
-                  "tests",
-                  "src/state/reader.ts",
-                  "src/state/builders.ts",
-                  "src/state/graph.ts",
-                  "src/audit/tool.ts",
-                  "package.json",
-                  ".pi-lens",
-                  "src/index.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "src/session/types.ts",
-                  "src/roadmap/types.ts",
-                  "src/state/types.ts",
-                  "src/state/lint.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "src/state/rebuild.ts",
-                  "src/roadmap/store.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/gateway-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/project/templates.ts",
-                  "src/adapters/pi/prompt-contract.ts",
-                  "package-lock.json",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki/prompts/resume-implementation.md",
-                  ".codewiki/kb/system/architecture.mmd",
-                  ".codewiki/kb/system/diagrams/architecture.yaml",
-                  ".codewiki/kb/system/diagrams/README.md",
-                  ".codewiki/kb/system/diagrams/component-map.yaml",
-                  ".codewiki/kb/system/diagrams/context-map.yaml",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/terminal-ui.md",
-                  ".codewiki/kb/system/extension.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/components/adapters-and-ui.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/kb/system/graph.md",
-                  ".codewiki/kb/product/uis/status-panel.md",
-                  ".codewiki/kb/product/overview.md",
-                  ".codewiki/kb/product/uis/board.md",
-                  ".codewiki/kb/product/uis/graph-navigation.md",
-                  ".codewiki/roadmap/queue.json"
-                ],
-                "code_area": "src, tests +8 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-076",
-                  "status": "in_progress",
-                  "title": "Scope deprecated browser UI docs"
-                },
-                "revision": {
-                  "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-076"
-              },
-              {
-                "path": ".codewiki/kb/system/terminal-ui.md",
-                "title": "Terminal UI and Agent Visual Language",
-                "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/kb/**",
-                  ".codewiki/kb/system/diagrams/**",
-                  ".codewiki/kb/product/uis/control-room.md",
-                  ".codewiki/kb/product/uis/control-room-details.md",
-                  ".codewiki/kb/system/control-room-ui.md",
-                  ".codewiki/kb/system/control-room-ui-details.md",
-                  "src/adapters/pi/commands/ui.ts",
-                  "src/adapters/pi/prompt-contract.ts",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "package.json",
-                  "package-lock.json",
-                  "README.md",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki/prompts/resume-implementation.md",
-                  ".codewiki/kb/system/architecture.mmd",
-                  ".codewiki/kb/system/diagrams/architecture.yaml",
-                  ".codewiki/kb/system/diagrams/README.md",
-                  ".codewiki/kb/system/diagrams/component-map.yaml",
-                  ".codewiki/kb/system/diagrams/context-map.yaml",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/extension.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/components/adapters-and-ui.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/kb/system/graph.md",
-                  ".codewiki/kb/product/uis/status-panel.md",
-                  ".codewiki/kb/product/overview.md",
-                  ".codewiki/kb/product/uis/board.md",
-                  ".codewiki/kb/product/uis/graph-navigation.md",
-                  ".codewiki/roadmap/queue.json"
-                ],
-                "code_area": ".codewiki, src +4 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-076",
-                  "status": "in_progress",
-                  "title": "Scope deprecated browser UI docs"
-                },
-                "revision": {
-                  "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-076"
-              },
               {
                 "path": ".codewiki/kb/lexicon.md",
                 "title": "Lexicon",
@@ -200724,6 +200214,199 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "96a4502c8bc9a8686ac087a47aa4b81b6f62dbb8ff9bbf77014f7fc6d1226ce9",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/control-room-ui-details.md",
+                "title": "Deprecated Browser UI Implementation Details",
+                "summary": "Deprecated browser UI implementation details retained temporarily during terminal-first migration.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters/pi/commands/ui.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "package.json",
+                  ".pi-lens",
+                  "src/index.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/audit/tool.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "src/session/types.ts",
+                  "src/roadmap/types.ts",
+                  "src/state/graph.ts",
+                  "src/state/builders.ts",
+                  "src/state/reader.ts",
+                  "src/state/types.ts",
+                  "src/state/lint.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "src/state/rebuild.ts",
+                  "src/roadmap/store.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  ".codewiki/kb/product/uis/control-room.md",
+                  ".codewiki/kb/product/uis/control-room-details.md",
+                  ".codewiki/kb/system/control-room-ui.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, package.json +6 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "d45fb1663af3ec034ca68a56a888c23a4907fdbe298026da4586abb5d65c71ef",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/control-room-ui.md",
+                "title": "Deprecated Browser UI",
+                "summary": "Deprecated standalone browser Control Room contract retained temporarily as migration evidence; terminal UI is the active UX direction.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters/pi/commands/ui.ts",
+                  "src/adapters/pi/commands/status.ts",
+                  "src/api",
+                  "src/shared",
+                  "src/adapters",
+                  "src/ui",
+                  "tests",
+                  "src/state/reader.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts",
+                  "src/audit/tool.ts",
+                  "package.json",
+                  ".pi-lens",
+                  "src/index.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "src/session/types.ts",
+                  "src/roadmap/types.ts",
+                  "src/state/types.ts",
+                  "src/state/lint.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "src/state/rebuild.ts",
+                  "src/roadmap/store.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  ".codewiki/kb/product/uis/control-room.md",
+                  ".codewiki/kb/product/uis/control-room-details.md",
+                  ".codewiki/kb/system/control-room-ui-details.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/project/templates.ts",
+                  "src/adapters/pi/prompt-contract.ts",
+                  "package-lock.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  ".codewiki/kb/system/architecture.mmd",
+                  ".codewiki/kb/system/diagrams/architecture.yaml",
+                  ".codewiki/kb/system/diagrams/README.md",
+                  ".codewiki/kb/system/diagrams/component-map.yaml",
+                  ".codewiki/kb/system/diagrams/context-map.yaml",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/terminal-ui.md",
+                  ".codewiki/kb/system/extension.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/components/adapters-and-ui.md",
+                  ".codewiki/kb/system/overview.md",
+                  ".codewiki/kb/system/graph.md",
+                  ".codewiki/kb/product/uis/status-panel.md",
+                  ".codewiki/kb/product/overview.md",
+                  ".codewiki/kb/product/uis/board.md",
+                  ".codewiki/kb/product/uis/graph-navigation.md",
+                  ".codewiki/roadmap/queue.json"
+                ],
+                "code_area": "src, tests +8 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "9c8dc0f2f0bbf698c26ab8931c6faeb34579e2d9b256b06c954ea244991c004b",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -202150,6 +201833,62 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/terminal-ui.md",
+                "title": "Terminal UI and Agent Visual Language",
+                "summary": "Terminal-first CodeWiki UX contract for Pi TUI panels, command-triggered views, and source-backed ASCII/Unicode visual rendering.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/kb/**",
+                  ".codewiki/kb/system/diagrams/**",
+                  "src/adapters/pi/commands/ui.ts",
+                  "src/adapters/pi/prompt-contract.ts",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "package.json",
+                  "package-lock.json",
+                  "README.md",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  ".codewiki/kb/system/architecture.mmd",
+                  ".codewiki/kb/system/diagrams/architecture.yaml",
+                  ".codewiki/kb/system/diagrams/README.md",
+                  ".codewiki/kb/system/diagrams/component-map.yaml",
+                  ".codewiki/kb/system/diagrams/context-map.yaml",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/control-room-ui.md",
+                  ".codewiki/kb/system/control-room-ui-details.md",
+                  ".codewiki/kb/system/extension.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/components/adapters-and-ui.md",
+                  ".codewiki/kb/system/overview.md",
+                  ".codewiki/kb/system/graph.md",
+                  ".codewiki/kb/product/uis/status-panel.md",
+                  ".codewiki/kb/product/uis/control-room-details.md",
+                  ".codewiki/kb/product/overview.md",
+                  ".codewiki/kb/product/uis/board.md",
+                  ".codewiki/kb/product/uis/graph-navigation.md",
+                  ".codewiki/roadmap/queue.json"
+                ],
+                "code_area": ".codewiki, src +4 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "4379e0d45de1a7e86108783b602f71e73e7e298facc53edda2e429281f08c7c6",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/validation-gateway.md",
                 "title": "Validation Gateway",
                 "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, sprint close, or ship-ready promotion.",
@@ -202460,12 +202199,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-076",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-076"
-        ],
-        "next_task_id": "TASK-076",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -203199,9 +202936,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-076"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
