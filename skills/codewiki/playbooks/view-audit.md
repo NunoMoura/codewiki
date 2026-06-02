@@ -1,4 +1,4 @@
-# CodeWiki Graph Audit
+# CodeWiki Graph linter
 
 Graph auditor is a read-only subagent role. It verifies generated graph/index state, not product behavior.
 
@@ -18,7 +18,7 @@ Graph auditor is a read-only subagent role. It verifies generated graph/index st
 - `findings`: compact bullets with paths
 - `proposals`: optional `follow_up` or `task_delta`; no patches from the auditor
 
-## Checks
+## linters/tests
 
 1. Confirm generated files are marked as generated and not canonical truth.
 2. Compare graph revision/digest fields with sampled source files when practical.

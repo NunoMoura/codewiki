@@ -66,14 +66,14 @@ Proposal decision builds may record draft rows, but must not record approved row
 
 ## `wiki_gate`
 
-Use `wiki_gate` for deterministic audit evidence and decision gateway reports when policy/risk requires:
+Use `wiki_gate` for deterministic linter evidence and decision gateway reports when policy/risk requires:
 
 ```text
 wiki_gate action="preflight" profile="decision" verdict="pass" source=".codewiki/builds/decision/...json" rationale="..."
 wiki_gate action="validate" profile="decision" verdict="pass|fail|block" source=".codewiki/builds/decision/...json" checks_run=[...]
 ```
 
-Validation checks approved-row coverage, KB mappings, product/system propagation, diagram refs, stale references, and risk approval.
+Validation linters/tests approved-row coverage, KB mappings, product/system propagation, diagram refs, stale references, and risk approval.
 
 ## Compatibility aliases
 

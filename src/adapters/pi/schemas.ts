@@ -143,7 +143,7 @@ export const roadmapTaskGoalSchema = Type.Object({
 	verification: Type.Optional(
 		Type.Array(Type.String(), {
 			description:
-				"Checks, tests, or review steps required before closing the task.",
+				"Linters, tests, or review steps required before closing the task.",
 		}),
 	),
 });
@@ -264,7 +264,7 @@ export const worktreeIsolationSchema = Type.Object({
 	),
 	related_claim_ids: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Related claim ids used to audit isolation.",
+			description: "Related claim ids used to review isolation.",
 		}),
 	),
 	notes: Type.Optional(Type.String({ description: "Short isolation note." })),
@@ -498,7 +498,7 @@ export const codewikiAuditToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	profiles: Type.Optional(
 		Type.Array(auditProfileSchema, {
-			description: "Selected audit profiles. Omit for full audit.",
+			description: "Selected linter profiles. Omit for the full linter run.",
 		}),
 	),
 	paths: Type.Optional(
@@ -506,21 +506,21 @@ export const codewikiAuditToolInputSchema = Type.Object({
 	),
 	layers: Type.Optional(
 		Type.Array(Type.String({ minLength: 1 }), {
-			description: "Selected logical layers for scoped alignment audit.",
+			description: "Selected logical layers for scoped alignment linting.",
 			default: [],
 		}),
 	),
 	task_id: Type.Optional(
 		Type.String({
 			minLength: 1,
-			description: "Roadmap task id for the task audit profile.",
+			description: "Roadmap task id for the task linter profile.",
 		}),
 	),
 	changed: Type.Optional(
-		Type.Boolean({ description: "Include the changed-files audit profile." }),
+		Type.Boolean({ description: "Include the changed-files linter profile." }),
 	),
 	full: Type.Optional(
-		Type.Boolean({ description: "Run the full default audit profile set." }),
+		Type.Boolean({ description: "Run the full default linter profile set." }),
 	),
 	include_fingerprints: Type.Optional(
 		Type.Boolean({

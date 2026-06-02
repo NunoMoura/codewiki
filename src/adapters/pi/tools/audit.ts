@@ -21,15 +21,15 @@ export async function executeCodewikiAuditTool(
 export function registerCodewikiAuditTool(pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "wiki_audit",
-		label: "Codewiki Audit",
+		label: "CodeWiki Linter Evidence (wiki_audit compatibility)",
 		description:
-			"Run source-owned CodeWiki audit profiles and return machine-readable evidence.",
+			"Run source-owned CodeWiki linter profiles and return machine-readable evidence.",
 		promptSnippet:
-			"Run full or scoped CodeWiki audits through the shared application API.",
+			"Run full or scoped CodeWiki linters through the shared application API.",
 		promptGuidelines: [
-			"Use this for deterministic audit evidence before gateways, task close, publication, or architecture changes.",
-			"Omit profiles for the default full audit. Select profiles for scoped checks such as file-structure, security, alignment, horizontal-alignment, source-contract, package, changed, task, or generated-parity.",
-			"Audits produce evidence only; validation gateways still decide pass, fail, or block.",
+			"Use this for deterministic linter evidence before gateways, task close, publication, or architecture changes.",
+			"Omit profiles for the default full linter run. Select profiles such as file-structure, security, alignment, horizontal-alignment, source-contract, package, lexicon, changed, task, or generated-parity.",
+			"Linters produce evidence only; validation gateways still decide pass, fail, or block.",
 		],
 		parameters: codewikiAuditToolInputSchema,
 		...codewikiToolMetadata("wiki_audit"),

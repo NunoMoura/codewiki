@@ -43,6 +43,7 @@ assert.deepEqual(
 		"package",
 		"security",
 		"generated-parity",
+		"lexicon",
 		"changed",
 		"task",
 	],

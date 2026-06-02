@@ -60,12 +60,12 @@ Normal internal agent workflow tools:
 - `wiki_decide` — decision rows, approvals, KB mappings, propagation evidence, and decision builds.
 - `wiki_plan` — roadmap task/sprint alignment, durable roadmap lifecycle, and planning builds.
 - `wiki_implement` — task-scoped TDD/code evidence and implementation builds; ordinary file/code tools still edit source.
-- `wiki_gate` — audits, gateway preflight, validation reports, and linter/test evidence routing.
+- `wiki_gate` — linter profiles, gateway preflight, validation reports, and linter/test evidence routing.
 - `wiki_runtime` — session focus, artifact leases/wait-wake, agency scheduling, context boundaries, and lifecycle/archive coordination.
 
 Compatibility/expert aliases remain registered during migration for low-level primitives: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_gateway`, `wiki_roadmap`, `wiki_gc`, `wiki_diff_table`, `wiki_session`, and `wiki_agency`. These aliases carry deprecation metadata and should not be the normal agent surface.
 
-Daily default flow: `wiki_state` for routing and high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `wiki_runtime` for overlap coordination and runtime boundaries, `wiki_decide`/`wiki_plan`/`wiki_implement` for compiler work, `wiki_gate` for audits and validation, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `wiki_runtime` for post-commit lifecycle/archive coordination when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
+Daily default flow: `wiki_state` for routing and high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `wiki_runtime` for overlap coordination and runtime boundaries, `wiki_decide`/`wiki_plan`/`wiki_implement` for compiler work, `wiki_gate` for linter evidence and validation, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `wiki_runtime` for post-commit lifecycle/archive coordination when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
 
 ## Core invariants
 
@@ -73,9 +73,9 @@ Daily default flow: `wiki_state` for routing and high-signal continuation from C
 - `.codewiki/roadmap/queue.json` is canonical roadmap truth for tasks, ordering, and sprint metadata. Mutate it through CodeWiki tools only.
 - `.codewiki/roadmap/tasks/**` and `.codewiki/index_graph.json` are generated read models. Never hand-edit them.
 - `.codewiki/session/**` and `.codewiki/runtime/**` are operational coordination state, not durable product truth.
-- `.codewiki/builds/**` contains transient compiler handoff artifacts. Compile durable changes into knowledge, roadmap, code, tests, validation, or publication proof.
+- `.codewiki/builds/**` contains transient compiler handoff artifacts. Compile durable changes into knowledge, roadmap, code, tests, validation, or publication evidence.
 - `.codewiki/validation/**` contains fail/block/policy-required/current validation reports.
-- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then use `wiki_runtime` with archive commit/tree proof and commit the ledger/deletions separately.
+- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then use `wiki_runtime` with archive commit/tree evidence and commit the ledger/deletions separately.
 - Tests live in code/test directories, not in `.codewiki/kb/**` or roadmap task folders.
 - Git remains the full history mechanism; do not duplicate raw event history inside CodeWiki.
 - In this repository, `.codewiki/**` is dogfood state and `src/**`, `skills/**`, `scripts/**`, `tests/**`, `README.md`, and `package.json` are product/package source.
@@ -108,8 +108,8 @@ Routing rules:
 - Accepted semantic intent and knowledge changes become `decision_build`.
 - Roadmap task shaping and sprint-aware cohort decisions go through planning and `planning_build`.
 - Code/test/docs execution happens in implementation and emits `implementation_build` before validation.
-- Independent checks happen in validation from exact refs, audits, and required proof.
-- Post-close/post-publication maintenance uses `wiki_runtime` for GC dry-run after immutable commit proof exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
+- Independent validation happens from exact refs, linter evidence, and required content evidence.
+- Post-close/post-publication maintenance uses `wiki_runtime` for GC dry-run after immutable commit evidence exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
 
 ## Coordination and memory
 
@@ -125,7 +125,7 @@ Routing rules:
 Agency modes are bounded:
 
 - `observe`: read status/graph only and report next action.
-- `maintain`: refresh/audit graph/index state and propose safe maintenance within budget.
+- `maintain`: refresh/review graph/index state and propose safe maintenance within budget.
 - `work`: resume a task or compiler workflow only inside explicit cycle, wall-time, write, session, and risk budgets.
 
-Stop on budget exhaustion, medium/high risk beyond budget, ambiguity, destructive action, failed checks, missing approval, or unavailable required validation proof.
+Stop on budget exhaustion, medium/high risk beyond budget, ambiguity, destructive action, failed linters/tests, missing approval, or unavailable required validation evidence.

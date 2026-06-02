@@ -7,6 +7,7 @@ export const AUDIT_PROFILE_VALUES = [
 	"package",
 	"security",
 	"generated-parity",
+	"lexicon",
 	"changed",
 	"task",
 ] as const;

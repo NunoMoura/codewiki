@@ -1,6 +1,6 @@
 # Implementation compiler tools
 
-Use these tools while executing one atomic roadmap task. Implementation produces evidence; validation decides pass/fail/block; task-close requires policy proof.
+Use these tools while executing one atomic roadmap task. Implementation produces evidence; validation decides pass/fail/block; task-close requires policy evidence.
 
 ## Required sequence
 
@@ -22,25 +22,25 @@ Use these tools while executing one atomic roadmap task. Implementation produces
    - Release leases when implementation evidence is recorded.
    - Runtime lease state is coordination evidence, not roadmap truth.
 
-5. Tests, edits, and checks
+5. Tests, edits, and linters/tests
    - Use ordinary file/edit/test tools for source changes.
    - Prefer tests before behavior changes when practical.
    - Record exact commands and outcomes.
 
 6. `wiki_implement`
-   - Compile after implementation checks and before gateway validation with an `implementation_build` payload.
+   - Compile after implementation linters/tests and before gateway validation with an `implementation_build` payload.
    - Include `source_planning_build`, `task_id`, `test_files`, `code_files`, `checks_run`, `acceptance_mapping`, `test_design_evidence`, `code_change_evidence`, `tester_notes`, `builder_notes`, `risks`, and `closure_brief`.
    - Include traceability metadata: `change_type`, upstream/accepted build refs, or a valid generated/runtime/mechanical exemption.
-   - For commit-ready work, include publication/commit title/body or closure proof text required by policy.
+   - For commit-ready work, include publication/commit title/body or closure evidence text required by policy.
    - Use `roadmap_evidence` only for builder progress; do not close tasks from builder context when fresh validation is required.
 
 7. Fresh validation context
    - Use the implementation build ref as the validator source when fresh validation is required.
-   - Expected validator output: `wiki_gate profile="implementation"` pass/fail/block with `fresh_context=true`, clean-state value, checked content proof (`tree_sha`, `validated_sha`, or `working_tree_digest`), audit refs, and rationale.
+   - Expected validator output: `wiki_gate profile="implementation"` pass/fail/block with `fresh_context=true`, clean-state value, checked content evidence (`tree_sha`, `validated_sha`, or `working_tree_digest`), linter refs, and rationale.
 
 8. Roadmap lifecycle
    - Use `wiki_implement` to append builder evidence and staged validation source refs.
-   - Use `wiki_plan action="close"` only after required passing validation/task-close proof exists.
+   - Use `wiki_plan action="close"` only after required passing validation/task-close evidence exists.
    - Do not patch status directly for final closure.
 
 9. Post-commit lifecycle/archive
@@ -60,12 +60,12 @@ For every acceptance criterion, record:
 - requirement/build/source refs;
 - test or review evidence;
 - code/doc paths touched;
-- checks that prove it;
+- linters/tests that prove it;
 - any justified exception or residual risk.
 
 ## Fresh validation gate
 
-Implementation validation must happen after the `implementation_build` exists. A passing implementation validation requires fresh-context evidence and checked content proof. Task-close/publication validation is stricter: it needs clean committed/published/archive proof, not only builder confidence.
+Implementation validation must happen after the `implementation_build` exists. A passing implementation validation requires fresh-context evidence and checked content evidence. Task-close/publication validation is stricter: it needs clean committed/published/archive evidence, not only builder confidence.
 
 If validation fails or blocks:
 
@@ -80,6 +80,6 @@ If validation fails or blocks:
 - Do not create or reshape roadmap tasks except to append evidence or route a blocker.
 - Do not change accepted requirements without decision/planning routing.
 - Do not compile validation before the `implementation_build` exists.
-- Do not close a task from builder context when policy requires fresh validation/content proof.
-- Do not pre-commit purge tracked `.codewiki` builds, validation reports, or roadmap artifacts; post-commit GC needs archive proof and a restore ledger.
+- Do not close a task from builder context when policy requires fresh validation/content evidence.
+- Do not pre-commit purge tracked `.codewiki` builds, validation reports, or roadmap artifacts; post-commit GC needs archive evidence and a restore ledger.
 - Do not use legacy claim wording; use runtime leases/artifact status.

@@ -22,13 +22,13 @@ export function registerCodewikiGateTool(pi: ExtensionAPI): void {
 		name: "wiki_gate",
 		label: "CodeWiki Gate",
 		description:
-			"Normal CodeWiki gate workflow tool for audits, gateway preflight, validation reports, and check evidence routing.",
+			"Normal CodeWiki gate workflow tool for linters, gateway preflight, validation reports, and evidence routing.",
 		promptSnippet:
-			"Use wiki_gate for audit evidence, gateway preflight, validation reports, and linter/test check routing.",
+			"Use wiki_gate for linter evidence, gateway preflight, validation reports, and linter/test routing.",
 		promptGuidelines: [
-			"Use this as the normal validation/gate tool after running required linters, tests, audits, or source-contract checks.",
-			"Run audit profiles through the audit input and pass check evidence through checks_run or gateway.checks.",
-			"Use action='preflight' before writing validation reports when source refs, audits, or content proof may be incomplete.",
+			"Use this as the normal validation/gate tool after running required linters, tests, or source-contract profiles.",
+			"Run linter profiles through the compatibility input field and pass test/linter evidence through checks_run or gateway.checks.",
+			"Use action='preflight' before writing validation reports when source refs, linters, or content evidence may be incomplete.",
 			"Do not call low-level wiki_audit or wiki_gateway for normal gate work unless expert compatibility behavior is explicitly required.",
 		],
 		parameters: codewikiGateToolInputSchema,

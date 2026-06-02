@@ -11,13 +11,13 @@ updated: "2026-05-17"
 
 # CodeWiki Planning Compiler
 
-Use this skill after decision mode has produced a validated `decision_build`, or when validation/audit routes work to roadmap alignment. The planning loop creates or refines executable roadmap tasks and emits a `planning_build` for implementation.
+Use this skill after decision mode has produced a validated `decision_build`, or when validation/linter evidence routes work to roadmap alignment. The planning loop creates or refines executable roadmap tasks and emits a `planning_build` for implementation.
 
 For exact tool arguments and output fields, read `references/tools.md` when needed.
 
 ## Core rules
 
-- Start from a validated `decision_build` or an explicit validation/audit route to planning.
+- Start from a validated `decision_build` or an explicit validation/linter route to planning.
 - Start with `wiki_state`, then read the decision build, changed knowledge refs, active tasks, and active sprint context directly.
 - Decision owns semantic intent and knowledge. Planning owns roadmap alignment. Implementation owns code/tests.
 - Use `wiki_plan` for roadmap creation/refinement, sprint metadata, durable roadmap lifecycle, and planning-build creation. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
@@ -70,9 +70,9 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - The build is the implementation handoff. It should be compact enough for a fresh implementation session to execute without reading prior chat.
 
 7. **Validate planning**
-   - Run `wiki_gate` for task/alignment audit evidence when policy or risk requires it.
+   - Run `wiki_gate` for task/alignment linter evidence when policy or risk requires it.
    - Use `wiki_gate` with a planning-specific profile, or the available decision/profile policy, when validation is required, failed, blocked, or policy-required.
-   - Validation checks decision-to-roadmap alignment, task atomicity, boundary quality, and planning build completeness.
+   - Validation reviews decision-to-roadmap alignment, task atomicity, boundary quality, and planning build completeness.
 
 8. **Route to implementation**
    - Provide the `planning_build` ref and target task id as source refs when implementation must start fresh.

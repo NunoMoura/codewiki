@@ -1612,7 +1612,7 @@ export function renderHomeTab(
 				: "blocked";
 	const blockedCount = roadmapState?.views?.blocked_task_ids?.length ?? 0;
 	const statusFactors = [
-		`Checks: errors=${countIssuesBySeverity(report, "error")} warnings=${countIssuesBySeverity(report, "warning")}`,
+		`Linters: errors=${countIssuesBySeverity(report, "error")} warnings=${countIssuesBySeverity(report, "warning")}`,
 		`Tasks: ${state.summary.open_task_count} open · ${state.summary.done_task_count} done · ${blockedCount} blocked`,
 		`Knowledge: ${state.summary.aligned_specs}/${state.summary.total_specs} aligned · ${state.summary.unmapped_specs} unmapped`,
 		`Claims: ${state.parallel?.active_claim_count ?? 0} active · ${state.parallel?.claim_conflict_count ?? 0} conflict(s)`,
@@ -1725,7 +1725,7 @@ export function buildHomeIssues(
 	if (activeTask && !activeTask.loop?.evidence) {
 		issues.push({
 			severity: "warning",
-			title: "Current work still needs proof",
+			title: "Current work still needs evidence",
 			impact:
 				"The active work should not be treated as production-ready before independent checking.",
 			recommended:
@@ -1794,7 +1794,7 @@ export function buildHomeProductionPath(
 				? "Active · Work remains open"
 				: "Ready · No open work detected",
 		activeTask?.loop?.evidence
-			? "Ready · Latest work has recorded proof"
+			? "Ready · Latest work has recorded evidence"
 			: "Waiting · Independent check",
 	];
 }

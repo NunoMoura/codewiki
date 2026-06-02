@@ -60,7 +60,7 @@ export const CODEWIKI_TOOL_SURFACE: Record<
 		compatibility_alias_for: "wiki_gate",
 		deprecated: true,
 		deprecation_message:
-			"Use wiki_gate for normal gate/audit evidence routing; reserve wiki_audit for deterministic expert audit runs.",
+			"Use wiki_gate for normal gate/linter evidence routing; reserve wiki_audit for deterministic expert linter runs through the compatibility alias.",
 	},
 	wiki_build: {
 		surface: "compatibility",

@@ -11,11 +11,7 @@ updated: '2026-06-01'
 
 # Lexicon
 
-This file is the canonical vocabulary contract for CodeWiki. It should stay small and active: keep terms that humans, agents, source contracts, command help, tool schemas, generated views, and validation reports are expected to use. Remove unused or obsolete terms instead of preserving them as glossary clutter. Temporary compatibility aliases may exist in source schemas or adapters during migration, but they are not canonical lexicon entries unless this file names them as active vocabulary.
-
-## Canonical knowledge base
-
-Durable project truth under `.codewiki/kb/**`: intended product behavior, user stories, visual UIs, system access surfaces, design seams, and workflow rules. It should not contain executable tests, raw transcripts, generated state, runtime job logs, or event history.
+This file is the canonical vocabulary contract for CodeWiki. It should stay small and active: keep terms that humans, agents, source contracts, command help, tool schemas, generated views, and validation reports are expected to use. Remove unused or obsolete terms instead of preserving them as glossary clutter. Temporary compatibility terms may exist in source schemas or adapters during migration only when this file defines their replacement, allowed contexts, and deletion trigger. They are not canonical vocabulary.
 
 ## Command
 
@@ -41,7 +37,7 @@ An adapter-exposed `wiki_*` tool intended for agents and automation. The target 
 - `wiki_gate`,
 - `wiki_runtime`.
 
-Low-level build, roadmap, session, lease, linter, and report writers are implementation primitives or compatibility aliases, not normal agent vocabulary.
+Low-level build, roadmap, session, lease, linter, and report writers are implementation primitives or temporary compatibility tools, not normal agent vocabulary.
 
 ## State lens
 
@@ -58,10 +54,6 @@ A roadmap task is done only when it is production-ready for its scope. Code-chan
 ## Sprint
 
 A bounded work wave through the compiler pipeline. A sprint groups one or more roadmap tasks with a shared outcome, scope, budget, gates, and closure checkpoint. Sprints let agents and users scope execution at roadmap, sprint, or task level without creating umbrella tasks.
-
-## Sprint done
-
-A sprint is done when every included task is task-done or explicitly cancelled, shared outcome and cross-task risks are reconciled, sprint-close validation passes, and the sprint content candidate is ship-ready when it changes shippable code or package behavior.
 
 ## Ship-ready
 
@@ -151,10 +143,6 @@ Coherence within one layer: knowledge, roadmap, code, tests, validation, and gen
 
 Primary generated hot state index at `.codewiki/index_graph.json`. Domain language calls this state; the graph is the generated representation. It maps knowledge, tasks, builds, tests, code, validation reports, session leases, runtime jobs, and compact requirement traceability with typed nodes and edges. It is generated and must not be hand-edited.
 
-## State propagation
-
-The state engine's ability to expose downstream or upstream drift after a source layer changes. Changing decision intent triggers knowledge or planning drift. Changing knowledge triggers planning drift. Changing planning triggers implementation drift. Changing code can trigger validation, planning, or decision drift.
-
 ## Runtime
 
 The CodeWiki execution layer that performs one bounded step after policy authorizes it. Runtime coordinates session focus, leases, jobs, block/unblock state, context boundaries, agency scheduling, and lifecycle/archive coordination without owning durable product or roadmap truth.
@@ -190,6 +178,35 @@ A visual user interface that a human can see and interact with, such as Pi TUI p
 ## System access surface
 
 A technical distribution, adapter, command, internal tool, package API, editor integration, service agent, or runtime capability that delivers CodeWiki behavior. Stable access contracts live in `.codewiki/kb/system/api.md` and `.codewiki/kb/system/api-vnext-tools.md`.
+
+## Temporary compatibility term
+
+A non-canonical project expression that still has a project-specific meaning because current source, schema, command, file-path, profile-name, or migration docs need it for compatibility. Every temporary compatibility term must name the canonical replacement, the exact allowed contexts, and the deletion trigger. New user-facing docs and agent guidance must not use these terms as canonical vocabulary.
+
+### audit
+
+- Canonical replacement: linter, gateway, or validation evidence depending on context.
+- Removed expression pattern: `\baudit(?:s|ed|ing)?\b`
+- Allowed compatibility tokens: `/audit`, `wiki_audit`, `codewiki_audit`, `src/audit/**`, `src/adapters/pi/commands/audit.ts`, `src/adapters/pi/tools/audit.ts`, `audit_refs`, `audit_reports`, `AUDIT_*`, `Audit*`, `audit:*`, `graph-audit`, `drift-audit`, `view-audit.md`, `audit.test.mjs`, `audit-drift.test.mjs`.
+- Allowed source literals: `audit`.
+- Allowed migration docs: `.codewiki/kb/system/audits.md`.
+- Deletion trigger: remove after command, tool, schema, validation-report, and profile-name migrations no longer require audit wording for backward compatibility.
+
+### proof
+
+- Canonical replacement: evidence or content evidence.
+- Removed expression pattern: `\bproofs?\b`
+- Allowed compatibility tokens: `proof_refs`, `publisher-proof`.
+- Allowed migration docs: `.codewiki/kb/system/audits.md`.
+- Deletion trigger: remove after schemas, validation reports, publisher worktree records, and migration docs use evidence wording only.
+
+### checks
+
+- Canonical replacement: linters and tests.
+- Removed expression pattern: `\bchecks\b`
+- Allowed compatibility tokens: `checks_run`, `gateway.checks`, `CodeWiki-Checks`.
+- Allowed migration docs: `.codewiki/kb/system/audits.md`.
+- Deletion trigger: remove after build schemas, validation reports, commit trailers, and command/test summaries use linter/test wording only.
 
 ## Related docs
 

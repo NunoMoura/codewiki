@@ -25,11 +25,11 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Use `wiki_runtime` to record focus and coordinate narrow write scopes before non-trivial edits when parallel overlap is possible.
 - Use TDD/test-design first where practical. If tests cannot be added, record why in tester evidence.
 - Change only files required by task acceptance and non-goals.
-- Compile the implementation build through `wiki_implement` after edits and checks, before implementation validation. Do not treat the build itself as a compaction boundary; post-gateway compaction is allowed only after the validation pass records source refs.
-- Start validation from CodeWiki refs and a fresh/independent context when policy requires proof; do not close the task from builder context when independent proof is required.
+- Compile the implementation build through `wiki_implement` after edits and linters/tests, before implementation validation. Do not treat the build itself as a compaction boundary; post-gateway compaction is allowed only after the validation pass records source refs.
+- Start validation from CodeWiki refs and a fresh/independent context when policy requires content evidence; do not close the task from builder context when independent evidence is required.
 - After implementation validation passes, use the validation report's local-only checkpoint metadata when a checkpoint commit is useful; task-close or publication metadata belongs in a separate close/publication commit.
-- Close only after passing task-close validation/content proof when policy requires it.
-- After any task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` for GC dry-run/lifecycle/archive coordination; purge eligible artifacts only with archive commit/tree proof or record defer/block evidence.
+- Close only after passing task-close validation/content evidence when policy requires it.
+- After any task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` for GC dry-run/lifecycle/archive coordination; purge eligible artifacts only with archive commit/tree evidence or record defer/block evidence.
 
 ## Workflow
 
@@ -45,7 +45,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Do not force through write/write conflicts unless user/policy explicitly allows it.
 
 3. **Derive tests or test design**
-   - Map each acceptance criterion to tests, review checks, or test-design evidence.
+   - Map each acceptance criterion to tests, review linters, or test-design evidence.
    - Add or update tests before behavior changes when practical.
    - For documentation-only, generated-only, runtime-only, or non-testable changes, record the justified exception.
 
@@ -54,23 +54,23 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Preserve existing style and avoid unrelated refactors.
    - Keep requirement ids, task id, and accepted upstream build refs traceable in evidence.
 
-5. **Run checks**
-   - Run relevant targeted tests first, then broader checks required by task policy.
+5. **Run linters/tests**
+   - Run relevant targeted tests first, then broader linters required by task policy.
    - Record exact commands and outcomes.
-   - Stop on failed checks unless the failure is unrelated and clearly documented.
+   - Stop on failed linters/tests unless the failure is unrelated and clearly documented.
 
 6. **Compile implementation build**
-   - Call `wiki_implement action="build"` after checks pass or after a documented blocked attempt.
+   - Call `wiki_implement action="build"` after linters/tests pass or after a documented blocked attempt.
    - Include `source_planning_build`, `task_id`, `test_files`, `code_files`, `checks_run`, `acceptance_mapping`, `test_design_evidence`, `code_change_evidence`, `tester_notes`, `builder_notes`, `risks`, and a closure brief.
    - Include publication/commit recommendation text when policy or task-close validation requires commit readiness.
 
 7. **Request fresh validation**
-   - Provide the implementation build ref, task id, changed files, checks, and expected validator output to a fresh validation context.
-   - The validator must start from artifacts, not builder chat context, and record `fresh_context=true` plus checked content proof.
+   - Provide the implementation build ref, task id, changed files, linters/tests, and expected validator output to a fresh validation context.
+   - The validator must start from artifacts, not builder chat context, and record `fresh_context=true` plus checked content evidence.
 
 8. **Record task evidence**
    - Use `wiki_implement` to append builder evidence and staged validation handoff.
-   - Use `wiki_plan action="close"` only after the required passing validation/task-close proof exists.
+   - Use `wiki_plan action="close"` only after the required passing validation/task-close evidence exists.
    - After the close/publication commit captures revive context, use `wiki_runtime` for GC dry-run; if tracked candidates exist, purge only with `archive_sha`/`tree_sha` and keep the restore ledger, otherwise record why GC is deferred or blocked.
    - Release runtime leases when done.
 
@@ -79,9 +79,9 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 End implementation mode with:
 
 - changed files and why they changed;
-- tests/checks run with outcomes;
+- tests/linters run with outcomes;
 - `implementation_build` path;
-- fresh validation source refs and required proof;
+- fresh validation source refs and required evidence;
 - post-commit GC review status: purged with ledger, deferred, blocked, or not yet eligible;
 - task status recommendation: `in_progress`, `blocked`, or `done after validation`;
 - remaining risks or follow-up routing.
@@ -94,5 +94,5 @@ Stop and route back when:
 - source planning build is missing, stale, or inconsistent with task acceptance;
 - requirements need user approval not present in accepted builds;
 - implementation would violate non-goals or overlap another active task unsafely;
-- checks fail and no scoped fix is available;
+- linters/tests fail and no scoped fix is available;
 - validation requires fresh context and no independent validation path is available.

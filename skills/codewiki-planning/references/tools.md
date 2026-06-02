@@ -32,10 +32,10 @@ Use these tools in planning mode. Canonical writes are limited to roadmap task t
   - Release leases when done.
 
 - `wiki_gate`
-  - Use for deterministic audit evidence before planning validation or implementation source handoff.
-  - Common audit profiles: `task`, `alignment`, `horizontal-alignment`, `source-contract`, `generated-parity`, `changed`.
+  - Use for deterministic linter evidence before planning validation or implementation source handoff.
+  - Common linter profiles: `task`, `alignment`, `horizontal-alignment`, `source-contract`, `generated-parity`, `changed`.
   - Use preflight/validation when planning validation is required, failed, blocked, or policy-required.
-  - Rationale should cite decision build refs, changed KB paths, task ids, audit refs, and task-boundary checks.
+  - Rationale should cite decision build refs, changed KB paths, task ids, linter refs, and task-boundary linters/tests.
 
 - Fresh implementation context
   - Use the accepted planning build as source ref when implementation must start from fresh context.

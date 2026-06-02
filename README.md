@@ -35,7 +35,7 @@ Public command surface is intentionally small. Canonical command router:
 
 Compatibility shims remain available during migration:
 
-- `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--source-contract|--package|--changed|--task TASK-###|--layer product,system|--json]`
+- `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--source-contract|--package|--lexicon|--changed|--task TASK-###|--layer product,system|--json]`
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-status [repo-path]`
 - `/wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]`
@@ -58,7 +58,7 @@ Compatibility shims remain available during migration:
 
 During migration the low-level primitives remain registered with compatibility/deprecation metadata: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_diff_table`, `wiki_gc`, `wiki_gateway`, `wiki_roadmap`, `wiki_session`, and `wiki_agency`. They are for wrapper parity, debugging, and old-agent compatibility, not the normal agent surface.
 
-All internal `wiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on the six normal workflow tools: `wiki_state` for state and source-backed continuation, `wiki_decide` for decisions and decision builds, `wiki_plan` for roadmap/sprint alignment and planning builds, `wiki_implement` for implementation evidence and implementation builds, `wiki_gate` for audits/preflight/validation, and `wiki_runtime` for leases, session focus, wait/wake, agency scheduling, context boundaries, and lifecycle/archive coordination. Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
+All internal `wiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on the six normal workflow tools: `wiki_state` for state and source-backed continuation, `wiki_decide` for decisions and decision builds, `wiki_plan` for roadmap/sprint alignment and planning builds, `wiki_implement` for implementation evidence and implementation builds, `wiki_gate` for linter/preflight/validation, and `wiki_runtime` for leases, session focus, wait/wake, agency scheduling, context boundaries, and lifecycle/archive coordination. Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
 
 ### Static analysis entrypoints
 
@@ -88,7 +88,7 @@ The main CodeWiki skill covers package invariants, bootstrap/status flow, sprint
 - decision compiler guidance with semantic diff-table approval, KB edits, product/system propagation, and accepted `decision_build` handoffs
 - planning compiler guidance for atomic roadmap tasks, `planning_build` evidence, validation, and implementation handoff
 - implementation compiler guidance for one-task execution, TDD/test-design evidence, `implementation_build` before validation, and fresh validation handoff
-- validation gateway guidance for build/task-close/drift/publication checks with no-mutation rules, audit refs, pass/fail/block semantics, and required proof
+- validation gateway guidance for build/task-close/drift/publication linter/test runs with no-mutation rules, linter evidence refs, pass/fail/block semantics, and required content evidence
 - research evidence that supports `.codewiki/kb`
 - fresh-context task validation
 - architecture review grounded in CodeWiki specs and roadmap tasks
@@ -358,7 +358,7 @@ The always-on status summary is optional. When enabled it uses Pi's status area 
 
 `/wiki status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
-`/audit` is the deterministic evidence command. It runs the same source-owned audit engine used by gateways and tools; omit flags for the full audit, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--changed`, `--task TASK-###`, and `--layer product,system`.
+`/audit` is the deterministic linter evidence command retained as a compatibility command name. It runs the same source-owned linter engine used by gateways and tools; omit flags for the default linter run, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--lexicon`, `--changed`, `--task TASK-###`, and `--layer product,system`.
 
 `/wiki config`, `/wiki status`, `/wiki resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 
@@ -397,8 +397,8 @@ It then uses that repo config to:
 - find authored docs, source/research support, roadmap, and optional generated markdown export paths
 - run the packaged TypeScript rebuild engine
 - read `.codewiki/index_graph.json`
-- build semantic audit scopes from `.codewiki/config.json`
-- append structured roadmap tasks to `.codewiki/roadmap/queue.json` when audits uncover real unresolved delta
+- build semantic linter scopes from `.codewiki/config.json`
+- append structured roadmap tasks to `.codewiki/roadmap/queue.json` when linters uncover real unresolved delta
 - update or close existing roadmap tasks through package-native mutation tools instead of manual JSON edits
 - append Pi custom session entries that link current session to roadmap tasks
 - read active task context from Pi session state at runtime

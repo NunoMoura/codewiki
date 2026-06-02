@@ -9,9 +9,9 @@ Use this catalog as the skill-facing map for normal internal `wiki_*` tools. Sou
 | `wiki_state` | `src/state/tool.ts`, `src/state/resume-tool.ts` | Read graph-first state, focused lenses, task context, and source-backed continuation refs. | Read-only except optional generated-state rebuild through ports. |
 | `wiki_decide` | `src/workflow/tool.ts`, `src/change/tool.ts`, `src/build/tool.ts` | Manage decision rows, approvals, KB mappings, propagation evidence, and decision-build creation. | Pending diff rows plus transient `decision_build` writes; canonical KB edits happen with normal file tools after approved rows. |
 | `wiki_plan` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Mutate roadmap task truth, sprint metadata, durable roadmap lifecycle, and planning-build handoffs. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"`; planning builds are transient handoffs. |
-| `wiki_implement` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Record task-scoped TDD/code evidence and implementation-build creation without replacing file/code edit tools. | Appends builder evidence and writes transient `implementation_build`; task closure still needs validation proof. |
-| `wiki_gate` | `src/workflow/tool.ts`, `src/audit/tool.ts`, `src/gateway/tool.ts` | Run deterministic audits, gateway preflight, validation reports, and linter/test evidence routing. | `action="preflight"` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
-| `wiki_runtime` | `src/workflow/tool.ts`, `src/session/tool.ts`, `src/session/artifact-status-tool.ts`, `src/agency/tool.ts`, `src/gc/tool.ts` | Manage session focus, leases, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination. | Runtime coordination only except post-commit GC with archive proof and restore ledger. |
+| `wiki_implement` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Record task-scoped TDD/code evidence and implementation-build creation without replacing file/code edit tools. | Appends builder evidence and writes transient `implementation_build`; task closure still needs validation evidence. |
+| `wiki_gate` | `src/workflow/tool.ts`, `src/audit/tool.ts`, `src/gateway/tool.ts` | Run deterministic linter profiles, gateway preflight, validation reports, and linter/test evidence routing. | `action="preflight"` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
+| `wiki_runtime` | `src/workflow/tool.ts`, `src/session/tool.ts`, `src/session/artifact-status-tool.ts`, `src/agency/tool.ts`, `src/gc/tool.ts` | Manage session focus, leases, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination. | Runtime coordination only except post-commit GC with archive evidence and restore ledger. |
 
 ## Compatibility/expert aliases
 
@@ -21,7 +21,7 @@ Do not use these aliases as the normal agent surface. Prefer the six workflow to
 
 ## Post-commit GC path
 
-Do not manually delete tracked `.codewiki` builds, validation reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` with a GC dry-run. If tracked artifacts are eligible, purge only with the archive commit/tree proof:
+Do not manually delete tracked `.codewiki` builds, validation reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` with a GC dry-run. If tracked artifacts are eligible, purge only with the archive commit/tree evidence:
 
 ```json
 {
@@ -34,7 +34,7 @@ Do not manually delete tracked `.codewiki` builds, validation reports, or roadma
 }
 ```
 
-The GC ledger restores tracked files with `git restore --source=<archive-sha> -- <path>`. The ledger is not validation proof and must not replace task-close/publication content proof.
+The GC ledger restores tracked files with `git restore --source=<archive-sha> -- <path>`. The ledger is not validation evidence and must not replace task-close/publication content evidence.
 
 ## Sprint metadata path
 

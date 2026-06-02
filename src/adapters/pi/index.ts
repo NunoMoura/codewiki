@@ -182,14 +182,14 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		name: "wiki_gc",
 		label: "Codewiki GC",
 		description:
-			"Dry-run or purge eligible CodeWiki artifacts after archive commit proof and restore-ledger emission.",
+			"Dry-run or purge eligible CodeWiki artifacts after archive commit evidence and restore-ledger emission.",
 		promptSnippet:
-			"Run post-commit CodeWiki garbage collection with archive proof and restore ledger.",
+			"Run post-commit CodeWiki garbage collection with archive evidence and restore ledger.",
 		promptGuidelines: [
 			"Use after task-close, sprint-close, publication, or roadmap-end commits to keep .codewiki hot state small.",
 			"Run action='dry-run' before destructive purge to inspect tracked and runtime candidates.",
 			"Tracked purge requires archive_sha and tree_sha for the commit that still contains deleted artifacts; GC writes a restore ledger before deletion.",
-			"Do not use GC ledger proof as validation/content proof; fail/block/current-policy reports remain hot until policy permits archival.",
+			"Do not use GC ledger evidence as validation/content evidence; fail/block/current-policy reports remain hot until policy permits archival.",
 		],
 		parameters: codewikiGcToolInputSchema,
 		execute: (project, params) => executeCodewikiGcTool(project, params as any),
@@ -204,7 +204,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		promptSnippet:
 			"Write accepted compiler handoff builds with lifecycle metadata",
 		promptGuidelines: [
-			"Use kind='decision' after the user accepts semantic rows and KB changes are mapped; use kind='planning' for roadmap alignment; use kind='implementation' to record test/code/check evidence for a task.",
+			"Use kind='decision' after the user accepts semantic rows and KB changes are mapped; use kind='planning' for roadmap alignment; use kind='implementation' to record test/code/linter evidence for a task.",
 			"Builds are transient payloads, not long-term truth; canonical truth belongs in knowledge, roadmap, tests, and code.",
 			"Build policy records loop_start, validation, and next_loop isolation requirements so downstream loops can start fresh from artifacts instead of chat memory.",
 			"Decision builds replace the old split intent/knowledge handoff: record approved rows, row-to-KB mappings, product/system propagation, risks, non-goals, and downstream planning questions.",
@@ -223,11 +223,11 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		promptSnippet:
 			"Preflight gateway metadata/risk and write validation reports with verdict and rationale",
 		promptGuidelines: [
-			"Use preflight_only=true before expensive fresh validation to surface missing upstream builds, audits, task/sprint ids, content proof, stale refs, close/ship-ready blockers, and risk approval gaps.",
+			"Use preflight_only=true before expensive fresh validation to surface missing upstream builds, linter evidence, task/sprint ids, content evidence, stale refs, close/ship-ready blockers, and risk approval gaps.",
 			"Use after running a validation gateway. Passing validation can be transient; fail/block/policy-required reports should persist under .codewiki/validation/.",
 			"Preferred gates are decision, planning, implementation, task-close, sprint-close, and ship-ready; backward-compatible profile aliases such as publication, publish, and release are retained.",
-			"Pass reports must cite required audit evidence through audit_refs/audit_reports for the gate.",
-			"Implementation gate requires fresh_context=true, clean state, and checked content proof (SHA/tree or working_tree_digest). Task-close, sprint-close, and ship-ready require clean=true plus immutable commit/tree/package/archive/remote proof.",
+			"Pass reports must cite required linter evidence through audit_refs/audit_reports compatibility fields for the gate.",
+			"Implementation gate requires fresh_context=true, clean state, and checked content evidence (SHA/tree or working_tree_digest). Task-close, sprint-close, and ship-ready require clean=true plus immutable commit/tree/package/archive/remote evidence.",
 			"High-risk tiers such as semantic-system, security/migration/ship-ready, and destructive changes require explicit user approval evidence before lower-layer promotion.",
 		],
 		parameters: codewikiValidationReportSchema,
@@ -314,7 +314,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Run bounded CodeWiki agency planning without unbounded autonomous edits",
 		promptGuidelines: [
 			"Use observe for read-only status and next-action selection.",
-			"Use maintain for safe generated-view refresh and audit planning under write budget.",
+			"Use maintain for safe generated-view refresh and linter planning under write budget.",
 			"Use work only when user intent allows bounded implementation; stop on risk, ambiguity, or budget.",
 			"Parent agent remains responsible for any canonical writes, commits, pushes, or version bumps.",
 		],

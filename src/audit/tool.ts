@@ -15,6 +15,7 @@ import type {
 import type { WikiProject } from "../project/types.ts";
 import { AUDIT_PROFILE_VALUES } from "./types.ts";
 import { auditHorizontalAlignment } from "../checks/horizontal-alignment.ts";
+import { auditLexicon } from "../checks/lexicon.ts";
 import { auditSourceContract } from "../checks/source-contract.ts";
 import { formatError, nowIso, unique } from "../shared/utils.ts";
 import { pathExists } from "../project/local/filesystem.ts";
@@ -1541,7 +1542,7 @@ async function auditTask(
 				profile,
 				"error",
 				"missing-task-id",
-				"Task audit requires task_id or /audit --task TASK-###.",
+				"Task linter requires task_id or /audit --task TASK-###.",
 			),
 		);
 	} else if (!task) {
@@ -1623,7 +1624,7 @@ async function auditTask(
 		status: statusForIssues(issues),
 		summary: taskId
 			? `Checked roadmap task ${taskId}.`
-			: "Task audit missing task id.",
+			: "Task linter missing task id.",
 		checked_scopes: { root: project.root, task_id: taskId, files: [queuePath] },
 		issues,
 		evidence_refs: [
@@ -1656,6 +1657,8 @@ async function runProfile(
 			return auditSecurity(project, input);
 		case "generated-parity":
 			return auditGeneratedParity(project, input);
+		case "lexicon":
+			return auditLexicon(project, input);
 		case "changed":
 			return auditChanged(project, input);
 		case "task":
@@ -1714,7 +1717,7 @@ export async function executeCodewikiAudit(
 
 export function formatAuditReport(report: AuditReport): string {
 	const lines = [
-		`CodeWiki audit: ${report.status}`,
+		`CodeWiki linter evidence: ${report.status}`,
 		`profiles: ${report.profiles.join(", ")}`,
 		`issues: ${report.issues.length}`,
 	];
@@ -1733,5 +1736,5 @@ export function formatAuditReport(report: AuditReport): string {
 }
 
 export function explainAuditError(error: unknown): string {
-	return `CodeWiki audit failed: ${formatError(error)}`;
+	return `CodeWiki linter evidence failed: ${formatError(error)}`;
 }

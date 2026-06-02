@@ -13,13 +13,14 @@ updated: "2026-05-19"
 
 Use this skill before canonical knowledge, roadmap, or code changes when user intent is ambiguous, strategic, semantic, architectural, product-facing, system-facing, or requires approval.
 
-The decision loop replaces the old split intent/knowledge handoff. It turns discussion, grounded reads, approved semantic rows, product/system KB edits, and propagation checks into one accepted `decision_build` consumed directly by planning.
+The decision loop replaces the old split intent/knowledge handoff. It turns discussion, grounded reads, approved semantic rows, product/system KB edits, lexicon alignment, and propagation evidence into one accepted `decision_build` consumed directly by planning.
 
 For exact tool arguments and output fields, read `references/tools.md` when needed.
 
 ## Core rules
 
 - Start with `wiki_state` and read only the knowledge/code paths needed to ground the proposal.
+- Read `.codewiki/kb/lexicon.md` before proposing project-specific technical terms or updating KB; align decisions to canonical vocabulary, and add temporary compatibility terms only with replacement, narrow allowed contexts, and deletion trigger.
 - Do not create roadmap tasks or edit source code in decision mode.
 - Use `wiki_decide` for semantic change proposals, row approvals, KB mappings, propagation evidence, and decision-build creation.
 - Require explicit user action for each row: approve, edit, reject, or defer.
@@ -76,8 +77,8 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
    - Include `decision_mode="accepted"`, `diff_table`, `approved_diff_rows`, `knowledge_changes`, `row_to_kb_mappings`, `propagation`, `diagram_refs`, `downstream_planning_questions`, requirements, assumptions, open questions, non-goals, and risks.
 
 6. **Validate or route**
-   - Run audits when policy/risk requires.
-   - Use `wiki_gate` for decision audits, preflight, and fail/block/policy-required reports.
+   - Run linter profiles when policy/risk requires.
+   - Use `wiki_gate` for decision linter evidence, preflight, and fail/block/policy-required reports.
    - Route executable work to planning from the accepted `decision_build`.
 
 ## Stop conditions

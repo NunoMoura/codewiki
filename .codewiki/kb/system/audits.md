@@ -44,6 +44,7 @@ The target surface is `wiki_gate` plus gateway-required linters. `/audit` remain
 | `generated-parity` | Check generated graph/views/task shards against canonical sources and detect stale generated output. | Graph rebuild, task-close, publication. |
 | `changed` | Restrict linter execution to changed files and their owning layers while preserving required upstream/downstream checks. | Fast implementation iteration. |
 | `task` | Evaluate one task, its accepted builds, evidence, files, and closure readiness. | Task-close. |
+| `lexicon` | Check canonical project vocabulary, temporary compatibility terms, and user-facing or agent-guidance drift against `.codewiki/kb/lexicon.md`. | Decision, KB updates, command/help text, skill guidance, generated views, validation reports. |
 
 Profiles should return machine-readable findings, warnings, evidence refs, checked inputs, and content digests where applicable.
 
@@ -53,6 +54,7 @@ Gateways call deterministic linter engines directly. Gateway policy selects requ
 
 Examples:
 
+- Decision and KB-update validation can require `lexicon` so new project-specific technical terms match `.codewiki/kb/lexicon.md` or add a defined temporary compatibility term with replacement, narrow allowed contexts, and deletion trigger.
 - Documentation validation requires `alignment` and `stale-reference` for changed knowledge paths.
 - Horizontal consistency validation can require `horizontal-alignment` when KB claims, explicit KB-code refs, API/import contracts, or same-layer source/docs coherence are the risk surface.
 - API, adapter, tool namespace, or package-facing source changes can require `source-contract` so documented tool/command/API surfaces and package roots do not drift from source.
@@ -83,6 +85,7 @@ Hot linter reports should persist only when they block, fail, are policy-require
 - Linter rules must understand canonical, generated, transient, runtime, dogfood, source, test, optional-helper-script, package, and system-diagram path classes.
 - System diagram linters parse `.codewiki/kb/system/diagrams/**/*.yaml`, verify declared `diagram_refs`, and report `requires_doc` gaps through migration mode warnings or hard errors according to `codewiki.system_diagrams.diagram_refs.mode`.
 - Gateway-required linters should be scoped by policy to avoid unnecessary cost.
+- Decision-loop agents should read `.codewiki/kb/lexicon.md` before proposing or updating KB terms; vocabulary drift can be semantic drift, not just wording drift.
 - If a non-deterministic validator finds drift not covered by a linter profile, a follow-up task should add or extend a deterministic linter rule.
 
 ## Related docs

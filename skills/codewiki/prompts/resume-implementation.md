@@ -29,11 +29,11 @@ Rules:
 - Derive tests or test-design evidence before behavior changes where practical.
 - Implement surgically according to specs and roadmap; surface drift instead of silently choosing code over wiki.
 - During implementation, use lint, typecheck, tests, runtime decision, and targeted scripts as short-cycle correction signals for mechanical quality.
-- Compile an `implementation_build` with `wiki_implement` after edits/checks and before requesting implementation validation.
+- Compile an `implementation_build` with `wiki_implement` after edits/linters/tests and before requesting implementation validation.
 - Request fresh validation from CodeWiki source refs when policy requires independent context. Validation gateway judges alignment/coherence and must start from artifacts, not builder chat.
 - Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal implementation memory; use CodeWiki resume context, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh continuation.
-- Do not close the task from builder context when policy requires fresh validation/content proof. Use `wiki_implement` for builder evidence; use `wiki_plan action="close"` only after required pass proof exists.
-- Keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, wiki-resume, and /audit; `/wiki-ui` is only a deprecation shim.
+- Do not close the task from builder context when policy requires fresh validation/content evidence. Use `wiki_implement` for builder evidence; use `wiki_plan action="close"` only after required pass evidence exists.
+- Keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, wiki-resume, and /linter; `/wiki-ui` is only a deprecation shim.
 - Do not create a separate user-facing wiki-edit command; update roadmap/wiki artifacts automatically when user intent requires it.
 - Rebuild generated outputs before finishing.
 - Rerun deterministic status before summarizing.
@@ -43,11 +43,11 @@ Helper-safe next steps:
 - Honor artifact-status conflicts; do not override another holder unless user/policy explicitly says so.
 - Treat temporary session usage as coordination evidence, not canonical task truth.
 - Preserve user follow-up intent as a requirement input, but record durable decisions through builds/tasks/docs.
-- Record exact checks, changed files, acceptance mapping, and remaining risks in the implementation build.
+- Record exact linters/tests, changed files, acceptance mapping, and remaining risks in the implementation build.
 
 Output format:
 - Changes made
-- Checks run
+- linters/tests run
 - `implementation_build` path
 - Fresh validation handoff path/command if staged
 - Task status recommendation: in_progress|done after validation|blocked
