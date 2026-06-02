@@ -3177,6 +3177,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		reconciliationAction,
 		roadmapEntries,
 		activeSprintIds,
+		sprints: sprintViews,
 		builds,
 		validations,
 		dirtyPaths,

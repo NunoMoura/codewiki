@@ -188,7 +188,12 @@ export async function buildResumeContextForTask(
 		evidence,
 		follow_up_intent: input.followUpIntent || "",
 		context_path: taskContext?.context_path ?? null,
-		source_refs: resumeContextSourceRefs(project, input.task, taskContext),
+		source_refs: resumeContextSourceRefs(
+			project,
+			input.graph,
+			input.task,
+			taskContext,
+		),
 	};
 }
 
@@ -361,8 +366,18 @@ function preflightSummary(
 	};
 }
 
+function resumeLensSourceRefs(graph: GraphFile | null): string[] {
+	const lenses = graph?.views?.lenses as Record<string, unknown> | undefined;
+	const resumeLens = lenses?.resume as Record<string, unknown> | undefined;
+	const refs = resumeLens?.source_refs;
+	return Array.isArray(refs)
+		? refs.map((ref) => String(ref || "").trim()).filter(Boolean)
+		: [];
+}
+
 function resumeContextSourceRefs(
 	project: WikiProject,
+	graph: GraphFile | null,
 	task: RoadmapTaskRecord,
 	taskContext: RoadmapTaskContextPacket | null,
 ): string[] {
@@ -372,6 +387,7 @@ function resumeContextSourceRefs(
 		project.graphPath.replace(`${project.root}/`, ""),
 		taskContext?.context_path ||
 			`.codewiki/roadmap/tasks/${task.id}/context.json`,
+		...resumeLensSourceRefs(graph),
 		...task.spec_paths,
 		...task.code_paths,
 	]);

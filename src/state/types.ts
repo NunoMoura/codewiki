@@ -23,6 +23,18 @@ export const CODEWIKI_STATE_SECTION_VALUES = [
 	"claims",
 	"archive",
 ] as const;
+export const CODEWIKI_STATE_LENS_VALUES = [
+	"status",
+	"resume",
+	"trace",
+	"system",
+	"product",
+	"task",
+	"sprint",
+	"validation",
+	"runtime",
+	"automation-readiness",
+] as const;
 export const STATUS_DOCK_DENSITY_VALUES = [
 	"minimal",
 	"standard",
@@ -40,9 +52,22 @@ export const STATUS_SCOPE_VALUES = [
 
 export type CodewikiStateSection =
 	(typeof CODEWIKI_STATE_SECTION_VALUES)[number];
+export type CodewikiStateLensId = (typeof CODEWIKI_STATE_LENS_VALUES)[number];
 export type StatusDockDensity = (typeof STATUS_DOCK_DENSITY_VALUES)[number];
 export type StatusDockMode = (typeof STATUS_DOCK_MODE_VALUES)[number];
 export type StatusScope = (typeof STATUS_SCOPE_VALUES)[number];
+
+export interface CodewikiStateLensFocus {
+	taskId?: string;
+	task_id?: string;
+	sprintId?: string;
+	sprint_id?: string;
+	ref?: string;
+	refs?: string[];
+	path?: string;
+	paths?: string[];
+	[key: string]: unknown;
+}
 
 export interface RoadmapStateTaskSummary {
 	id: string;
@@ -146,6 +171,11 @@ export interface CodewikiResumeContextToolInput {
 export interface CodewikiStateToolInput {
 	repoPath?: string;
 	refresh?: boolean;
+	view?: CodewikiStateLensId;
+	lens?: CodewikiStateLensId;
+	focus?: CodewikiStateLensFocus;
+	ref?: string;
+	refs?: string[];
 	include?: CodewikiStateSection[];
 	taskId?: string;
 }

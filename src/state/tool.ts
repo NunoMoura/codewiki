@@ -17,6 +17,11 @@ export async function executeCodewikiStateTool(
 		include: input.include,
 		taskId: input.taskId,
 		refresh: input.refresh ?? false,
+		view: input.view,
+		lens: input.lens,
+		focus: input.focus,
+		ref: input.ref,
+		refs: input.refs,
 	}, ports as any);
 	return {
 		summary: formatCodewikiStateSummary(project, result),
@@ -39,6 +44,12 @@ export function formatCodewikiStateSummary(
 		`Health: ${health.color} (${health.errors} errors, ${health.warnings} warnings)`,
 		`Roadmap: open ${summary.open_task_count}; next ${nextAction.taskId ?? "none"}; unmapped ${summary.unmapped_spec_count}`,
 	];
+	const lens = result.lens as any;
+	if (lens?.id) {
+		parts.push(
+			`Lens: ${lens.id}; blockers ${(lens.blockers || []).length}; source refs ${(lens.source_refs || []).length}`,
+		);
+	}
 
 	if (session?.focused_task_id) {
 		parts.push(`Session: focusing on ${session.focused_task_id}`);

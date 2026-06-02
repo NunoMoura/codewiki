@@ -24,7 +24,10 @@ import {
 	CHANGE_CLAIM_ROLE_VALUES,
 	WORKFLOW_LOOP_VALUES,
 } from "../../session/types.ts";
-import { CODEWIKI_STATE_SECTION_VALUES } from "../../state/types.ts";
+import {
+	CODEWIKI_STATE_LENS_VALUES,
+	CODEWIKI_STATE_SECTION_VALUES,
+} from "../../state/types.ts";
 import {
 	VALIDATION_FAILURE_CLASS_VALUES,
 	VALIDATION_GATE_ALIAS_VALUES,
@@ -223,6 +226,22 @@ export const changeClaimScopeSchema = Type.Object({
 export const codewikiStateSectionSchema = Type.Union(
 	CODEWIKI_STATE_SECTION_VALUES.map((value) => Type.Literal(value)),
 );
+export const codewikiStateLensSchema = Type.Union(
+	CODEWIKI_STATE_LENS_VALUES.map((value) => Type.Literal(value)),
+);
+const codewikiStateLensFocusSchema = Type.Object(
+	{
+		taskId: Type.Optional(Type.String({ minLength: 1 })),
+		task_id: Type.Optional(Type.String({ minLength: 1 })),
+		sprintId: Type.Optional(Type.String({ minLength: 1 })),
+		sprint_id: Type.Optional(Type.String({ minLength: 1 })),
+		ref: Type.Optional(Type.String({ minLength: 1 })),
+		refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+		path: Type.Optional(Type.String({ minLength: 1 })),
+		paths: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	},
+	{ additionalProperties: true },
+);
 export const repoPathToolField = Type.Optional(
 	Type.String({
 		description:
@@ -393,11 +412,26 @@ export const codewikiStateToolInputSchema = Type.Object({
 				"When true, rebuild derived graph/state files before reading.",
 		}),
 	),
+	view: Type.Optional(
+		Type.Union([codewikiStateLensSchema, Type.String({ minLength: 1 })], {
+			description:
+				"Focused graph/state lens to read. Alias of lens; known values include status, resume, trace, task, sprint, validation, runtime, and automation-readiness.",
+		}),
+	),
+	lens: Type.Optional(
+		Type.Union([codewikiStateLensSchema, Type.String({ minLength: 1 })], {
+			description:
+				"Focused graph/state lens to read. Alias of view.",
+		}),
+	),
+	focus: Type.Optional(codewikiStateLensFocusSchema),
+	ref: Type.Optional(Type.String({ minLength: 1 })),
+	refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	include: Type.Optional(
 		Type.Array(codewikiStateSectionSchema, {
 			uniqueItems: true,
 			description:
-				"Sections to include. Default: ['summary', 'roadmap', 'session'].",
+				"Sections to include. Default: ['summary', 'roadmap', 'session']. Kept backward-compatible while lens-specific filtering migrates to focus/ref.",
 		}),
 	),
 	taskId: Type.Optional(toolTaskIdField),

@@ -70,6 +70,35 @@ try {
 		status: "todo",
 		summary: "Fixture task sharing a sprint but not a row task mapping.",
 	};
+	await mkdir(join(root, ".codewiki/roadmap"), { recursive: true });
+	await writeFile(
+		join(root, ".codewiki/roadmap/queue.json"),
+		JSON.stringify(
+			{
+				version: 1,
+				updated: "2026-05-20T00:00:00Z",
+				order: ["TASK-100", "TASK-101", "TASK-102"],
+				tasks: {
+					"TASK-100": task,
+					"TASK-101": missingTask,
+					"TASK-102": sprintSiblingTask,
+				},
+				sprints: {
+					"SPRINT-900": {
+						id: "SPRINT-900",
+						title: "Lens sprint",
+						status: "active",
+						outcome: "Exercise focused graph lenses.",
+						task_ids: ["TASK-100", "TASK-102"],
+						gates: ["implementation"],
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+
 	const decisionBuild = {
 		path: decisionPath,
 		kind: "decision_build",
@@ -304,6 +333,58 @@ try {
 		"audit lens should expose content proof refs",
 	);
 
+	for (const lensId of [
+		"status",
+		"resume",
+		"task",
+		"sprint",
+		"validation",
+		"runtime",
+		"automation-readiness",
+	]) {
+		const lens = graph.views.lenses[lensId];
+		assert.equal(lens.id, lensId, `${lensId} lens should be addressable`);
+		assert.ok(
+			Array.isArray(lens.source_refs) && lens.source_refs.length > 0,
+			`${lensId} lens should expose source refs`,
+		);
+		assert.equal(
+			typeof lens.omitted_counts,
+			"object",
+			`${lensId} lens should expose omitted counts`,
+		);
+		assert.equal(
+			typeof lens.next_safe_action,
+			"object",
+			`${lensId} lens should expose next safe action`,
+		);
+		assert.ok(Array.isArray(lens.blockers), `${lensId} blockers are explicit`);
+		assert.equal(
+			lens.freshness.status,
+			"fresh",
+			`${lensId} lens should expose freshness metadata`,
+		);
+		assert.ok(
+			Array.isArray(lens.expansion_hints) && lens.expansion_hints.length > 0,
+			`${lensId} lens should expose expansion hints`,
+		);
+	}
+	assert.ok(
+		graph.views.lenses.status.data.open_task_count >= 2,
+		"status lens summarizes work instead of dumping graph nodes",
+	);
+	assert.ok(
+		graph.views.lenses.validation.data.validation_reports.some(
+			(row) => row.path === validationPath,
+		),
+		"validation lens exposes compact validation subset",
+	);
+	assert.equal(
+		typeof graph.views.lenses["automation-readiness"].data.ready,
+		"boolean",
+		"automation readiness lens should expose a deterministic readiness signal",
+	);
+
 	const closureReport = graph.views.semantic_execution_closure;
 	assert.equal(
 		closureReport.invariant.includes("generated_view_not_canonical_truth"),
@@ -471,6 +552,105 @@ try {
 		state.audit.content_proof_refs.includes(checkedDigest),
 		"state audit include should expose content proof",
 	);
+
+	const ports = {
+		fileStore: {},
+		rebuildRunner: { run: async () => {} },
+		sessionStore: { getSessionBranch: () => [] },
+	};
+	const statusState = await readCodewikiState(
+		project,
+		{ include: ["summary"], taskId: undefined, refresh: false, lens: "status" },
+		ports,
+	);
+	assert.equal(statusState.lens.id, "status");
+	assert.ok(statusState.lens.source_refs.includes(project.roadmapPath));
+	assert.ok(statusState.lens.freshness.generated_at);
+	assert.ok(Array.isArray(statusState.lens.expansion_hints));
+	assert.equal(typeof statusState.lens.next_safe_action, "object");
+	assert.equal(typeof statusState.lens.omitted_counts, "object");
+
+	const traceState = await readCodewikiState(
+		project,
+		{
+			include: ["summary"],
+			taskId: undefined,
+			refresh: false,
+			view: "trace",
+			ref: "REQ-LENS",
+		},
+		ports,
+	);
+	assert.equal(traceState.lens.id, "trace");
+	assert.ok(
+		traceState.lens.data.requirement_rows.some(
+			(row) => row.requirement_id === "REQ-LENS",
+		),
+		"trace lens read should honor ref focus",
+	);
+
+	const taskState = await readCodewikiState(
+		project,
+		{
+			include: ["summary"],
+			taskId: "TASK-100",
+			refresh: false,
+			lens: "task",
+		},
+		ports,
+	);
+	assert.equal(taskState.lens.data.focus_task_id, "TASK-100");
+	assert.equal(taskState.lens.data.task.id, "TASK-100");
+
+	const sprintState = await readCodewikiState(
+		project,
+		{
+			include: ["summary"],
+			taskId: undefined,
+			refresh: false,
+			lens: "sprint",
+			focus: { sprintId: "SPRINT-900" },
+		},
+		ports,
+	);
+	assert.equal(sprintState.lens.data.focus_sprint_id, "SPRINT-900");
+	assert.ok(
+		sprintState.lens.data.tasks.some((row) => row.id === "TASK-100"),
+		"sprint lens should expose focused sprint tasks",
+	);
+
+	const validationState = await readCodewikiState(
+		project,
+		{ include: ["summary"], taskId: undefined, refresh: false, lens: "validation" },
+		ports,
+	);
+	assert.ok(
+		validationState.lens.data.recent_reports.some(
+			(row) => row.path === validationPath,
+		),
+		"validation lens read exposes compact validation reports",
+	);
+
+	const runtimeState = await readCodewikiState(
+		project,
+		{ include: ["summary"], taskId: undefined, refresh: false, lens: "runtime" },
+		ports,
+	);
+	assert.equal(runtimeState.lens.id, "runtime");
+	assert.equal(runtimeState.lens.data.parallel.active_claim_count, 0);
+
+	const automationState = await readCodewikiState(
+		project,
+		{
+			include: ["summary"],
+			taskId: undefined,
+			refresh: false,
+			lens: "automation-readiness",
+		},
+		ports,
+	);
+	assert.equal(automationState.lens.id, "automation-readiness");
+	assert.ok(Array.isArray(automationState.lens.data.stop_reasons));
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

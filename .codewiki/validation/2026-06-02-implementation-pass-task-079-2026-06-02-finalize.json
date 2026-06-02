@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-02T06:13:07Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-079",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes: the submitted TASK-079 implementation build is readable, task-scoped, tied to accepted planning evidence, exposes focused state lens inputs and generated lens families, preserves backward-compatible include reads, and the focused lens smoke coverage plus compaction/resume scheduler checks and TypeScript diagnostics all pass. Scoped audits have warning-only repo/generated-state findings that do not block pre-commit implementation validation; content was validated against a deterministic dirty working-tree digest.",
+  "checks": [
+    "lsp_diagnostics src/state/tool.ts src/state/types.ts src/state/reader.ts src/state/builders.ts src/state/graph.ts src/state/graph/lenses.ts src/state/resume-context.ts src/adapters/pi/schemas.ts — pass (0 diagnostics)",
+    "npm run typecheck — pass",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+    "wiki_audit profiles=generated-parity,alignment,changed,source-contract task_id=TASK-079 — warning-only (generated-parity/source-contract/task pass; alignment/changed warnings)",
+    "wiki_gateway preflight profile=implementation task_id=TASK-079 source=.codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit reports graph health yellow with 8 warnings; no blocking errors."
+    },
+    {
+      "severity": "warning",
+      "summary": "Changed audit reports generated .codewiki graph/task view files dirty; acceptable for dirty pre-commit implementation validation, but publication/task-close still requires clean immutable proof."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
+  "policy_profile": "implementation",
+  "failure_class": "content_proof_missing",
+  "recommended_next_loop": "validation",
+  "stop_reason": "Collect or cite required validation/publication content proof before promotion.",
+  "routing": {
+    "failure_class": "content_proof_missing",
+    "recommended_next_loop": "validation",
+    "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "generated-parity",
+    "source-contract",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:generated-parity",
+    "audit:alignment",
+    "audit:changed",
+    "audit:source-contract",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "wiki_audit profiles=generated-parity,alignment,changed,source-contract task_id=TASK-079 include_fingerprints=true"
+  ],
+  "content_proof_refs": [
+    "78a56b3f88f687dfc88017054b0739f2d7dc9644",
+    "c2b970df3ec618c9f689fdc295bdebea5c2dec6c",
+    "sha256:b57d2a5c2b1d69432916a88e1f70e0df98d36ac35e2d567ad526733d5da283b9"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-079",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-079-2026-06-02-finalize.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
+      ".codewiki/validation/2026-06-02-implementation-pass-task-079-2026-06-02-finalize.json",
+      "src/state/types.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/tool.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/reader.ts",
+      "src/state/resume-context.ts",
+      ".codewiki/index_graph.json",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-079/context.json",
+      ".codewiki/roadmap/tasks/TASK-079/task.json",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-079",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-079-2026-06-02-finalize.json",
+    "commit_title": "checkpoint(codewiki): TASK-079 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-079",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-079-2026-06-02-finalize.json",
+      "CodeWiki-Checks: lsp_diagnostics src/state/tool.ts src/state/types.ts src/state/reader.ts src/state/builders.ts src/state/graph.ts src/state/graph/lenses.ts src/state/resume-context.ts src/adapters/pi/schemas.ts — pass (0 diagnostics); npm run typecheck — pass; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs — pass; node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass; node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass; wiki_audit profiles=generated-parity,alignment,changed,source-contract task_id=TASK-079 — warning-only (generated-parity/source-contract/task pass; alignment/changed warnings); wiki_gateway preflight profile=implementation task_id=TASK-079 source=.codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json — ready (0 issues)"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/types.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/tool.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/reader.ts",
+      "src/state/resume-context.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "generated-parity",
+      "source-contract",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-079",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready promotion proof",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "validated_sha": "78a56b3f88f687dfc88017054b0739f2d7dc9644",
+    "tree_sha": "c2b970df3ec618c9f689fdc295bdebea5c2dec6c",
+    "working_tree_digest": "sha256:b57d2a5c2b1d69432916a88e1f70e0df98d36ac35e2d567ad526733d5da283b9",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Independent fresh validation from CodeWiki source refs. Digest covers 14 dirty entries before writing this validation report; dirty state is acceptable only for pre-commit implementation validation, not task-close/ship-ready.",
+    "role": "validator"
+  }
+}

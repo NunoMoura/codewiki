@@ -1,6 +1,6 @@
 import type { RoadmapTaskRecord } from "../../roadmap/types.ts";
 import { unique } from "../../shared/utils.ts";
-import type { GraphEdge, GraphNode } from "../types.ts";
+import type { CodewikiStateLensId, GraphEdge, GraphNode } from "../types.ts";
 import {
 	buildTaskIds,
 	canonicalSourceRefsForBuild,
@@ -94,6 +94,18 @@ interface ValidationArtifact {
 	taskId?: string;
 	verdict?: string;
 	data?: unknown;
+}
+
+interface GraphRuntimeLensState {
+	active_claim_count: number;
+	warning_count?: number;
+	conflict_count?: number;
+	pending_waiter_count?: number;
+	ready_waiter_count?: number;
+	artifact_statuses?: unknown[];
+	claims?: unknown[];
+	waiters?: unknown[];
+	conflicts?: unknown[];
 }
 
 interface GraphLensBadge {
@@ -218,6 +230,131 @@ function graphLensBadge(
 	return badge;
 }
 
+function stringList(value: unknown): string[] {
+	if (!Array.isArray(value)) return [];
+	return value.map((item) => String(item || "").trim()).filter(Boolean);
+}
+
+function omittedCount(total: number, visible: number): number {
+	return Math.max(0, total - visible);
+}
+
+function compactTaskForLens(task: RoadmapTaskRecord): ReadModelRecord {
+	const taskId = String(task.id || "").trim();
+	const goal = recordOrEmpty(task.goal);
+	return {
+		id: taskId,
+		title: String(task.title || taskId).trim(),
+		status: String(task.status || "todo").trim(),
+		priority: String(task.priority || "").trim(),
+		kind: String(task.kind || "").trim(),
+		summary: String(task.summary || "").trim(),
+		spec_paths: stringList(task.spec_paths),
+		code_paths: stringList(task.code_paths),
+		acceptance_count: stringList(goal.acceptance).length,
+		non_goal_count: stringList(goal.non_goals).length,
+		verification_count: stringList(goal.verification).length,
+		context_ref: taskId
+			? `.codewiki/roadmap/tasks/${taskId}/context.json`
+			: undefined,
+	};
+}
+
+function compactSprintForLens(sprint: ReadModelRecord): ReadModelRecord {
+	return {
+		id: String(sprint.id || "").trim(),
+		title: String(sprint.title || sprint.id || "").trim(),
+		status: String(sprint.status || "").trim(),
+		outcome: String(sprint.outcome || "").trim(),
+		task_ids: stringList(sprint.task_ids),
+		open_task_ids: stringList(sprint.open_task_ids),
+		gates: stringList(sprint.gates),
+		scope: recordOrEmpty(sprint.scope),
+	};
+}
+
+function compactValidationForLens(validation: ValidationArtifact): ReadModelRecord {
+	const data = recordOrEmpty(validation.data);
+	return {
+		path: normalizeCodewikiRef(validation.path),
+		task_id: validation.taskId || data.task_id || data.taskId || null,
+		profile: String(data.profile || data.gate || "").trim() || undefined,
+		verdict: validation.verdict || data.verdict || "unknown",
+		source: data.source || null,
+	};
+}
+
+function graphLensFreshness(sourceRefs: string[]): ReadModelRecord {
+	return {
+		status: "fresh",
+		basis: "generated_index_source_refs",
+		source_ref_count: sourceRefs.length,
+		stale_when:
+			"canonical source refs change without rebuilding generated graph/state",
+	};
+}
+
+function graphLensExpansionHints(
+	id: CodewikiStateLensId,
+	sourceRefs: string[],
+	extra: ReadModelRecord[] = [],
+): ReadModelRecord[] {
+	return [
+		{
+			kind: "lens",
+		lens: id,
+		summary: `Call wiki_state with lens=${id} and a focus/ref filter for details.`,
+		},
+		{
+			kind: "source_refs",
+		summary: "Read canonical source refs before semantic edits.",
+		refs: sourceRefs.slice(0, 8),
+		omitted_ref_count: omittedCount(sourceRefs.length, 8),
+		},
+		...extra,
+	];
+}
+
+function focusedGraphLens(
+	id: CodewikiStateLensId,
+	input: {
+		summary: string;
+		sourceRefs: string[];
+		omittedCounts: ReadModelRecord;
+		nextAction: ReadModelRecord;
+		blockers?: ReadModelRecord[];
+		data: ReadModelRecord;
+		expansionHints?: ReadModelRecord[];
+	},
+): ReadModelRecord {
+	const sourceRefs = unique(input.sourceRefs.map(normalizeCodewikiRef)).filter(
+		Boolean,
+	);
+	const visibleSourceRefs = sourceRefs.slice(0, 32);
+	return {
+		version: 1,
+		id,
+		source: `generated:graph-${id}-lens`,
+		summary: input.summary,
+		source_refs: visibleSourceRefs,
+		omitted_counts: {
+			...input.omittedCounts,
+			source_refs: omittedCount(sourceRefs.length, visibleSourceRefs.length),
+		},
+		next_action: input.nextAction,
+		next_safe_action: input.nextAction,
+		blockers: input.blockers || [],
+		freshness: graphLensFreshness(sourceRefs),
+		expansion_hints: graphLensExpansionHints(
+			id,
+			sourceRefs,
+			input.expansionHints || [],
+		),
+		data: input.data,
+		invariant: "generated_state_not_canonical_truth",
+	};
+}
+
 function isBuildOrValidationNode(node: GraphNode): boolean {
 	const kind = String(node?.kind || "").trim();
 	return kind.endsWith("_build") || kind === "validation_report";
@@ -260,6 +397,7 @@ export function buildGraphLensViews(input: {
 	reconciliationAction: ReadModelRecord | null | undefined;
 	roadmapEntries: RoadmapTaskRecord[];
 	activeSprintIds: string[];
+	sprints: ReadModelRecord[];
 	builds: BuildArtifact[];
 	validations: ValidationArtifact[];
 	dirtyPaths: string[];
@@ -276,7 +414,7 @@ export function buildGraphLensViews(input: {
 	auditEvidenceRefs: string[];
 	contentProofRefs: string[];
 	fileStructureDrift: CompactFileStructureDrift;
-	claimState: { active_claim_count: number };
+	claimState: GraphRuntimeLensState;
 	gc: GraphGcView;
 }) {
 	const nextActionSourceId = extractNextActionSourceId(
@@ -355,6 +493,12 @@ export function buildGraphLensViews(input: {
 	};
 	const openTasks = input.roadmapEntries.filter((task) =>
 		isOpenTaskStatus(String(task.status || "todo")),
+	);
+	const activeTasks = input.roadmapEntries.filter(
+		(task) => String(task.status || "") === "in_progress",
+	);
+	const blockedTasks = input.roadmapEntries.filter(
+		(task) => String(task.status || "") === "blocked",
 	);
 	const doneTasks = input.roadmapEntries.filter(
 		(task) => String(task.status || "") === "done",
@@ -546,12 +690,297 @@ export function buildGraphLensViews(input: {
 		},
 		invariant: "generated_state_not_canonical_truth",
 	};
+	const selectedTask = openTasks[0] || null;
+	const graphNextAction = {
+		kind: input.reconciliationAction?.loop || (selectedTask ? "task" : "observe"),
+		task_id: selectedTask?.id || null,
+		item_id: input.reconciliationAction?.item_id || null,
+		source_id: nextActionSourceId || null,
+		reason:
+			input.reconciliationAction?.reason ||
+			(selectedTask
+				? `Next open task is ${selectedTask.id}.`
+				: "No open roadmap task requires action."),
+	};
+	const graphSourceRefs = unique([
+		".codewiki/index_graph.json",
+		".codewiki/roadmap/queue.json",
+		".codewiki/session/queue.json",
+		...input.canonicalSourceRefs,
+		...buildPaths,
+		...validationPaths,
+	]);
+	const taskSourceRefs = unique([
+		".codewiki/roadmap/queue.json",
+		...openTasks.flatMap((task) => [
+			`.codewiki/roadmap/tasks/${task.id}/context.json`,
+			...stringList(task.spec_paths),
+			...stringList(task.code_paths),
+		]),
+	]);
+	const sprintSourceRefs = unique([
+		".codewiki/roadmap/queue.json",
+		...input.sprints.flatMap((sprint) => stringList(sprint.task_ids)),
+	]).map((ref) =>
+		ref.startsWith("TASK-")
+			? `.codewiki/roadmap/tasks/${ref}/context.json`
+			: ref,
+	);
+	const validationSourceRefs = unique([
+		...validationPaths,
+		...input.auditEvidenceRefs,
+		...input.contentProofRefs,
+	]);
+	const runtimeSourceRefs = unique([
+		".codewiki/session/queue.json",
+		".codewiki/runtime/diff-tables.json",
+		".codewiki/index_graph.json",
+	]);
+	const commonBlockers: ReadModelRecord[] = [
+		...blockedTasks.slice(0, 8).map((task) => ({
+			kind: "blocked_task",
+			ref: task.id,
+			summary: task.summary || task.title || task.id,
+		})),
+		...(semanticGaps.length > 0
+			? [
+				{
+					kind: "semantic_change_gap",
+					count: semanticGaps.length,
+					summary:
+						"Accepted semantic rows still need durable downstream evidence.",
+				},
+			]
+			: []),
+		...(semanticClosureRiskCount > 0
+			? [
+				{
+					kind: "semantic_execution_closure_gap",
+					count: semanticClosureRiskCount,
+					summary: "Semantic execution closure still has gaps.",
+				},
+			]
+			: []),
+		...(traceabilityGaps.length > 0
+			? [
+				{
+					kind: "traceability_gap",
+					count: traceabilityGaps.length,
+					summary: "Requirement traceability has unresolved gaps.",
+				},
+			]
+			: []),
+		...(Number(input.claimState.conflict_count || 0) > 0
+			? [
+				{
+					kind: "runtime_coordination_conflict",
+					count: Number(input.claimState.conflict_count || 0),
+					summary: "Artifact-status conflicts must clear before automation.",
+				},
+			]
+			: []),
+	];
+	const taskPreview = openTasks.slice(0, 8).map(compactTaskForLens);
+	const sprintPreview = input.sprints.slice(0, 8).map(compactSprintForLens);
+	const validationPreview = input.validations
+		.slice(-8)
+		.reverse()
+		.map(compactValidationForLens);
+	const runtimeArtifacts = (input.claimState.artifact_statuses || []).slice(
+		0,
+		12,
+	);
+	const statusLens = focusedGraphLens("status", {
+		summary:
+			"Compact project health, focus, blockers, next action, and latest proof signal.",
+		sourceRefs: graphSourceRefs,
+		omittedCounts: {
+			nodes: input.nodes.length,
+			edges: input.edges.length,
+			open_tasks: omittedCount(openTasks.length, taskPreview.length),
+			validations: omittedCount(input.validations.length, validationPreview.length),
+		},
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: {
+			open_task_count: openTasks.length,
+			active_task_ids: activeTasks.map((task) => task.id),
+			blocked_task_ids: blockedTasks.map((task) => task.id),
+			active_sprint_ids: input.activeSprintIds,
+			latest_validation: validationPreview[0] || null,
+			families,
+		},
+	});
+	const resumeLens = focusedGraphLens("resume", {
+		summary: "Stable continuation refs and context-boundary metadata.",
+		sourceRefs: unique([
+			...taskSourceRefs,
+			...graphSourceRefs.slice(0, 8),
+		]),
+		omittedCounts: { open_tasks: omittedCount(openTasks.length, 1) },
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: {
+			selected_task: selectedTask ? compactTaskForLens(selectedTask) : null,
+			context_refs: selectedTask
+				? [`.codewiki/roadmap/tasks/${selectedTask.id}/context.json`]
+				: [],
+			context_boundary:
+				input.reconciliationAction?.context_boundary ||
+				"Read source refs directly before semantic edits.",
+		},
+	});
+	const taskLens = focusedGraphLens("task", {
+		summary: "Executable task boundaries, candidate files, and blockers.",
+		sourceRefs: taskSourceRefs,
+		omittedCounts: { open_tasks: omittedCount(openTasks.length, taskPreview.length) },
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: { tasks: taskPreview },
+	});
+	const sprintLens = focusedGraphLens("sprint", {
+		summary: "Sprint membership, gates, task scope, and blockers.",
+		sourceRefs: sprintSourceRefs,
+		omittedCounts: { sprints: omittedCount(input.sprints.length, sprintPreview.length) },
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: {
+			active_sprint_ids: input.activeSprintIds,
+			sprints: sprintPreview,
+		},
+	});
+	const validationLens = focusedGraphLens("validation", {
+		summary:
+			"Validation reports, isolation signals, audit refs, and content proof refs.",
+		sourceRefs: validationSourceRefs,
+		omittedCounts: {
+			validation_reports: omittedCount(
+				input.validations.length,
+				validationPreview.length,
+			),
+			reconciliation_items: input.reconciliationItems.length,
+		},
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: {
+			validation_reports: validationPreview,
+			validation_isolation: input.validationIsolationRows.slice(0, 12),
+			audit_evidence_refs: input.auditEvidenceRefs.slice(0, 12),
+			content_proof_refs: input.contentProofRefs.slice(0, 12),
+			traceability_gaps: traceabilityGaps.slice(0, 12),
+		},
+	});
+	const runtimeLens = focusedGraphLens("runtime", {
+		summary:
+			"Artifact leases, waits, wake readiness, conflicts, and runtime coordination.",
+		sourceRefs: runtimeSourceRefs,
+		omittedCounts: {
+			artifact_statuses: omittedCount(
+				(input.claimState.artifact_statuses || []).length,
+				runtimeArtifacts.length,
+			),
+		},
+		nextAction: graphNextAction,
+		blockers: commonBlockers.filter(
+			(blocker) =>
+				String(blocker.kind || "") === "runtime_coordination_conflict",
+		),
+		data: {
+			active_claim_count: input.claimState.active_claim_count,
+			warning_count: Number(input.claimState.warning_count || 0),
+			conflict_count: Number(input.claimState.conflict_count || 0),
+			waiting_count: Number(input.claimState.pending_waiter_count || 0),
+			ready_waiter_count: Number(input.claimState.ready_waiter_count || 0),
+			artifact_statuses: runtimeArtifacts,
+		},
+	});
+	const automationReady =
+		commonBlockers.length === 0 &&
+		String(graphNextAction.kind || "observe") !== "decision";
+	const automationLens = focusedGraphLens("automation-readiness", {
+		summary:
+			"Scheduling readiness, stop reasons, retry blockers, and promotion hints.",
+		sourceRefs: unique([...taskSourceRefs, ...runtimeSourceRefs, ...validationSourceRefs]),
+		omittedCounts: { ready_tasks: omittedCount(openTasks.length, 8) },
+		nextAction: graphNextAction,
+		blockers: commonBlockers,
+		data: {
+			ready: automationReady,
+			ready_task_ids: automationReady
+				? openTasks.slice(0, 8).map((task) => task.id)
+				: [],
+			blocked_task_ids: blockedTasks.map((task) => task.id),
+			stop_reasons: commonBlockers.map((blocker) => blocker.kind),
+			active_sprint_ids: input.activeSprintIds,
+		},
+	});
+	const systemLens = focusedGraphLens("system", {
+		summary: "System specs, diagram refs, and expansion refs for navigation.",
+		sourceRefs: unique([
+			".codewiki/kb/system/",
+			...input.docPaths.filter((path) => path.includes("/system/")),
+		]),
+		omittedCounts: {
+			system_docs: omittedCount(
+				input.docPaths.filter((path) => path.includes("/system/")).length,
+				12,
+			),
+		},
+		nextAction: graphNextAction,
+		data: {
+			doc_paths: input.docPaths
+				.filter((path) => path.includes("/system/"))
+				.slice(0, 12),
+			diagram_ref_count: input.diagramRefCount,
+			diagram_parse_issue_count: input.diagramParseIssueCount,
+		},
+	});
+	const productLens = focusedGraphLens("product", {
+		summary: "Product docs and expansion refs for navigation.",
+		sourceRefs: unique([
+			".codewiki/kb/product/",
+			...input.docPaths.filter((path) => path.includes("/product/")),
+		]),
+		omittedCounts: {
+			product_docs: omittedCount(
+				input.docPaths.filter((path) => path.includes("/product/")).length,
+				12,
+			),
+		},
+		nextAction: graphNextAction,
+		data: {
+			doc_paths: input.docPaths
+				.filter((path) => path.includes("/product/"))
+				.slice(0, 12),
+		},
+	});
 	return {
 		default: defaultLens,
+		status: statusLens,
+		resume: resumeLens,
+		task: taskLens,
+		sprint: sprintLens,
+		validation: validationLens,
+		runtime: runtimeLens,
+		"automation-readiness": automationLens,
+		system: systemLens,
+		product: productLens,
 		trace: {
 			version: 1,
+			id: "trace",
 			source: "generated:graph-trace-lens",
 			exact_refs: true,
+			source_refs: graphSourceRefs.slice(0, 32),
+			omitted_counts: {
+				nodes: input.nodes.length,
+				edges: input.edges.length,
+				source_refs: omittedCount(graphSourceRefs.length, 32),
+			},
+			next_action: graphNextAction,
+			next_safe_action: graphNextAction,
+			blockers: commonBlockers,
+			freshness: graphLensFreshness(graphSourceRefs),
+			expansion_hints: graphLensExpansionHints("trace", graphSourceRefs),
 			requirement_rows: input.traceabilityRows,
 			semantic_execution_closure: input.semanticExecutionClosure,
 			semantic_change_rows: input.semanticChangeRows,
@@ -567,8 +996,22 @@ export function buildGraphLensViews(input: {
 		},
 		audit: {
 			version: 1,
+			id: "audit",
 			source: "generated:graph-audit-lens",
 			exact_refs: true,
+			source_refs: validationSourceRefs.slice(0, 32),
+			omitted_counts: {
+				source_refs: omittedCount(validationSourceRefs.length, 32),
+				validation_reports: omittedCount(
+					input.validationAttestations.length,
+					input.validationAttestations.length,
+				),
+			},
+			next_action: graphNextAction,
+			next_safe_action: graphNextAction,
+			blockers: commonBlockers,
+			freshness: graphLensFreshness(validationSourceRefs),
+			expansion_hints: graphLensExpansionHints("validation", validationSourceRefs),
 			validation_reports: input.validationAttestations,
 			validation_isolation: input.validationIsolationRows,
 			audit_evidence_refs: input.auditEvidenceRefs,

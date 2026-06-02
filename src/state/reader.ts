@@ -7,8 +7,12 @@
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../session/types.ts";
+import { CODEWIKI_STATE_LENS_VALUES } from "./types.ts";
 import type {
+	CodewikiStateLensFocus,
+	CodewikiStateLensId,
 	CodewikiStateSection,
+	GraphFile,
 	RoadmapStateFile,
 	StatusStateFile,
 	RoadmapTaskContextPacket,
@@ -26,6 +30,7 @@ import type {
 	RebuildRunner,
 	SessionStore,
 } from "../shared/ports.ts";
+import { unique } from "../shared/utils.ts";
 
 // ---------------------------------------------------------------------------
 // Section include normalization (was inline in Pi adapter)
@@ -86,6 +91,121 @@ function stringArrayField(
 	return (arrayField(record, key) ?? [])
 		.map((value) => String(value || "").trim())
 		.filter(Boolean);
+}
+
+function normalizeStateLensId(value: unknown): CodewikiStateLensId | null {
+	const raw = String(value || "").trim();
+	if (!raw) return null;
+	const normalized = raw.toLowerCase().replace(/_/g, "-");
+	const aliases: Record<string, CodewikiStateLensId> = {
+		default: "status",
+		roadmap: "task",
+		tasks: "task",
+		sprints: "sprint",
+		gate: "validation",
+		proof: "validation",
+		claims: "runtime",
+		automation: "automation-readiness",
+	};
+	const candidate = aliases[normalized] || normalized;
+	if (
+		CODEWIKI_STATE_LENS_VALUES.includes(candidate as CodewikiStateLensId)
+	) {
+		return candidate as CodewikiStateLensId;
+	}
+	throw new Error(`Unknown CodeWiki state lens: ${raw}`);
+}
+
+function selectedStateLens(opts: {
+	view?: unknown;
+	lens?: unknown;
+}): CodewikiStateLensId | null {
+	const view = normalizeStateLensId(opts.view);
+	const lens = normalizeStateLensId(opts.lens);
+	if (view && lens && view !== lens) {
+		throw new Error(`Conflicting CodeWiki state view/lens: ${view} vs ${lens}`);
+	}
+	return lens || view;
+}
+
+function stringList(value: unknown): string[] {
+	if (Array.isArray(value)) {
+		return value.map((item) => String(item || "").trim()).filter(Boolean);
+	}
+	const single = String(value || "").trim();
+	return single ? [single] : [];
+}
+
+function normalizeLensFocus(opts: {
+	taskId?: string;
+	focus?: CodewikiStateLensFocus;
+	ref?: string;
+	refs?: string[];
+	include?: string[] | undefined;
+}): CodewikiStateLensFocus {
+	const focus = recordOrNull(opts.focus) || {};
+	const refs = unique([
+		...stringList(opts.ref),
+		...stringList(opts.refs),
+		...stringList(focus.ref),
+		...stringList(focus.refs),
+		...stringList(focus.path),
+		...stringList(focus.paths),
+	]);
+	return {
+		...focus,
+		taskId:
+			String(opts.taskId || focus.taskId || focus.task_id || "").trim() ||
+			undefined,
+		sprintId:
+			String(focus.sprintId || focus.sprint_id || "").trim() ||
+			refs.find((ref) => /^SPRINT-/.test(ref)) ||
+			undefined,
+		refs,
+		include: opts.include || [],
+	};
+}
+
+function taskIdFromFocus(
+	focus: CodewikiStateLensFocus,
+	fallback: string | null,
+): string | null {
+	return (
+		String(focus.taskId || focus.task_id || "").trim() ||
+		stringList(focus.refs).find((ref) => /^TASK-/.test(ref)) ||
+		fallback ||
+		null
+	);
+}
+
+function sprintIdFromFocus(focus: CodewikiStateLensFocus): string | null {
+	return (
+		String(focus.sprintId || focus.sprint_id || "").trim() ||
+		stringList(focus.refs).find((ref) => /^SPRINT-/.test(ref)) ||
+		null
+	);
+}
+
+function relGraphPath(project: WikiProject): string {
+	return project.graphPath.replace(`${project.root}/`, "");
+}
+
+function recordMatchesRefs(record: unknown, refs: string[]): boolean {
+	if (refs.length === 0) return true;
+	const text = JSON.stringify(record);
+	return refs.some((ref) => text.includes(ref));
+}
+
+function compactRecordsByRefs(
+	records: unknown[],
+	refs: string[],
+	limit: number,
+): { rows: unknown[]; omitted: number } {
+	const filtered = records.filter((record) => recordMatchesRefs(record, refs));
+	return {
+		rows: filtered.slice(0, limit),
+		omitted: Math.max(0, filtered.length - limit),
+	};
 }
 
 export function buildCodewikiNextAction(
@@ -215,6 +335,429 @@ export function buildCodewikiTaskDetail(
 	};
 }
 
+type LoadedCodewikiStateArtifacts = Awaited<
+	ReturnType<typeof loadCodewikiStateArtifacts>
+>;
+
+function graphLens(
+	graph: GraphFile | null,
+	lensId: CodewikiStateLensId,
+): Record<string, unknown> {
+	const lenses = recordOrNull(graph?.views?.lenses);
+	const lens = recordOrNull(lenses?.[lensId]);
+	return lens || {};
+}
+
+function graphLensData(lens: Record<string, unknown>): Record<string, unknown> {
+	return recordField(lens, "data") || {};
+}
+
+function latestValidationSignal(graph: GraphFile | null): unknown {
+	const lens = graphLens(graph, "validation");
+	const data = graphLensData(lens);
+	return (arrayField(data, "validation_reports") || [])[0] || null;
+}
+
+function stateNextSafeAction(nextAction: {
+	kind: string;
+	taskId: string | null;
+	reason: string;
+	command?: string;
+	item_id?: string;
+}): Record<string, unknown> {
+	return {
+		kind: nextAction.kind,
+		task_id: nextAction.taskId,
+		reason: nextAction.reason,
+		command: nextAction.command || null,
+		item_id: nextAction.item_id || null,
+	};
+}
+
+function buildStateLensBlockers(
+	artifacts: LoadedCodewikiStateArtifacts,
+	health: RoadmapStateFile["health"],
+	baseLens: Record<string, unknown>,
+): Record<string, unknown>[] {
+	const blockers: Record<string, unknown>[] = [];
+	if (health.errors > 0) {
+		blockers.push({
+			kind: "health_errors",
+			count: health.errors,
+			summary: "Generated state reports health errors.",
+		});
+	}
+	const blockedTaskIds = artifacts.roadmapState?.views.blocked_task_ids || [];
+	if (blockedTaskIds.length > 0) {
+		blockers.push({
+			kind: "blocked_tasks",
+			count: blockedTaskIds.length,
+			refs: blockedTaskIds.slice(0, 8),
+		});
+	}
+	const graphClaims = recordOrNull(artifacts.graph?.views?.claims);
+	const conflictCount = Number(
+		graphClaims?.conflict_count ||
+			artifacts.statusState?.parallel.claim_conflict_count ||
+			0,
+	);
+	if (conflictCount > 0) {
+		blockers.push({
+			kind: "runtime_coordination_conflict",
+			count: conflictCount,
+			summary: "Artifact-status conflicts exist.",
+		});
+	}
+	for (const blocker of arrayField(baseLens, "blockers") || []) {
+		const record = recordOrNull(blocker);
+		if (record) blockers.push(record);
+	}
+	return blockers;
+}
+
+function focusedLensSourceRefs(
+	project: WikiProject,
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseLens: Record<string, unknown>,
+	focus: CodewikiStateLensFocus,
+): string[] {
+	return unique([
+		project.roadmapPath,
+		project.statusStatePath,
+		relGraphPath(project),
+		...stringArrayField(baseLens, "source_refs"),
+		...stringList(focus.refs),
+		...(artifacts.statusState?.resume?.task_id
+			? [`.codewiki/roadmap/tasks/${artifacts.statusState.resume.task_id}/context.json`]
+			: []),
+	]);
+}
+
+function stateLensFreshness(
+	artifacts: LoadedCodewikiStateArtifacts,
+	sourceRefs: string[],
+): Record<string, unknown> {
+	return {
+		status: artifacts.graph ? "fresh" : "missing",
+		generated_at:
+			artifacts.graph?.generated_at || artifacts.statusState?.generated_at || null,
+		basis: "generated_graph_and_canonical_source_refs",
+		refresh_performed: artifacts.refreshPerformed,
+		source_ref_count: sourceRefs.length,
+		stale_when:
+			"canonical roadmap, knowledge, build, validation, session, code, or test refs change without rebuild",
+	};
+}
+
+function stateLensExpansionHints(
+	lensId: CodewikiStateLensId,
+	sourceRefs: string[],
+): Record<string, unknown>[] {
+	return [
+		{
+			kind: "source_refs",
+			summary: "Read these canonical refs before changing semantic state.",
+			refs: sourceRefs.slice(0, 10),
+			omitted_ref_count: Math.max(0, sourceRefs.length - 10),
+		},
+		{
+			kind: "lens_expansion",
+			lens: lensId,
+			summary:
+				"Use focus.taskId, focus.sprintId, ref, refs, or include filters for a narrower follow-up read.",
+		},
+	];
+}
+
+function statusLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	health: RoadmapStateFile["health"],
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	return {
+		...baseData,
+		health,
+		summary: artifacts.statusState?.summary || null,
+		roadmap: artifacts.statusState?.roadmap || null,
+		active_focus: artifacts.statusState?.resume || null,
+		latest_validation: latestValidationSignal(artifacts.graph),
+	};
+}
+
+async function taskLensData(
+	project: WikiProject,
+	artifacts: LoadedCodewikiStateArtifacts,
+	focus: CodewikiStateLensFocus,
+	nextTaskId: string | null,
+	baseData: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+	const taskId = taskIdFromFocus(focus, nextTaskId);
+	let taskDetail: Record<string, unknown> | null = null;
+	if (taskId) {
+		const task = await readRoadmapTask(project, taskId);
+		if (task) {
+			const runtimeTask = artifacts.roadmapState?.tasks?.[task.id] ?? null;
+			const contextPacket = await maybeReadTaskContext(
+				project,
+				task.id,
+				runtimeTask,
+			);
+			taskDetail = buildCodewikiTaskDetail(
+				task,
+				runtimeTask,
+				contextPacket,
+			);
+		}
+	}
+	return {
+		...baseData,
+		focus_task_id: taskId,
+		task: taskDetail,
+	};
+}
+
+function sprintLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	focus: CodewikiStateLensFocus,
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	const sprintId = sprintIdFromFocus(focus);
+	const generatedSprints = (arrayField(baseData, "sprints") || [])
+		.map(recordOrNull)
+		.filter((sprint): sprint is Record<string, unknown> => Boolean(sprint));
+	const sprints =
+		artifacts.roadmapState?.views.sprints?.length
+			? artifacts.roadmapState.views.sprints
+			: generatedSprints;
+	const sprint = sprintId
+		? sprints.find((candidate) => String(candidate.id || "") === sprintId) ||
+			null
+		: null;
+	const taskIds = sprint ? stringList((sprint as Record<string, unknown>).task_ids) : [];
+	const generatedTaskData = graphLensData(graphLens(artifacts.graph, "task"));
+	const generatedTasks = (arrayField(generatedTaskData, "tasks") || [])
+		.map(recordOrNull)
+		.filter((task): task is Record<string, unknown> => Boolean(task));
+	const tasks: unknown[] = [];
+	for (const taskId of taskIds) {
+		const task = artifacts.roadmapState?.tasks?.[taskId];
+		if (task) {
+			tasks.push(task);
+			continue;
+		}
+		const generatedTask = generatedTasks.find(
+			(candidate) => String(candidate.id || "") === taskId,
+		);
+		if (generatedTask) tasks.push(generatedTask);
+	}
+	return {
+		...baseData,
+		focus_sprint_id: sprintId,
+		sprint,
+		tasks,
+	};
+}
+
+function traceLensData(
+	baseLens: Record<string, unknown>,
+	focus: CodewikiStateLensFocus,
+): Record<string, unknown> {
+	const refs = stringList(focus.refs);
+	const requirementRows = compactRecordsByRefs(
+		arrayField(baseLens, "requirement_rows") || [],
+		refs,
+		8,
+	);
+	const buildRefs = compactRecordsByRefs(
+		arrayField(baseLens, "build_refs") || [],
+		refs,
+		8,
+	);
+	return {
+		requirement_rows: requirementRows.rows,
+		build_refs: buildRefs.rows,
+		semantic_change_gaps: (
+			arrayField(baseLens, "semantic_change_gaps") || []
+		).slice(0, 8),
+		canonical_source_refs: stringArrayField(
+			baseLens,
+			"canonical_source_refs",
+		).slice(0, 16),
+		omitted_counts: {
+			requirement_rows: requirementRows.omitted,
+			build_refs: buildRefs.omitted,
+		},
+	};
+}
+
+function validationLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	return {
+		...baseData,
+		graph_validation: artifacts.graph?.views?.validation || null,
+		recent_reports: arrayField(baseData, "validation_reports") || [],
+	};
+}
+
+function runtimeLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	const parallel = artifacts.statusState?.parallel;
+	return {
+		...baseData,
+		parallel: parallel
+			? {
+					active_session_count: parallel.active_session_count,
+					collision_task_ids: parallel.collision_task_ids,
+					active_claim_count: parallel.active_claim_count || 0,
+					claim_conflict_count: parallel.claim_conflict_count || 0,
+				}
+			: null,
+		claims: artifacts.graph?.views?.claims || null,
+	};
+}
+
+function automationLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseData: Record<string, unknown>,
+	blockers: Record<string, unknown>[],
+	nextTaskId: string | null,
+): Record<string, unknown> {
+	const openTaskIds =
+		artifacts.roadmapState?.views.executable_open_task_ids ||
+		artifacts.roadmapState?.views.open_task_ids ||
+		[];
+	return {
+		...baseData,
+		ready: blockers.length === 0 && openTaskIds.length > 0,
+		ready_task_ids: blockers.length === 0 ? openTaskIds.slice(0, 8) : [],
+		selected_task_id: nextTaskId,
+		stop_reasons: blockers.map((blocker) => blocker.kind),
+		agency: artifacts.statusState?.agency?.summary || null,
+	};
+}
+
+function systemLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	const systemSection = artifacts.statusState?.wiki.sections.find(
+		(section) => section.id === "system",
+	);
+	return {
+		...baseData,
+		system_diagrams: artifacts.graph?.views?.system_diagrams || null,
+		wiki_section: systemSection || null,
+	};
+}
+
+function productLensData(
+	artifacts: LoadedCodewikiStateArtifacts,
+	baseData: Record<string, unknown>,
+): Record<string, unknown> {
+	const productSection = artifacts.statusState?.wiki.sections.find(
+		(section) => section.id === "product",
+	);
+	return {
+		...baseData,
+		wiki_section: productSection || null,
+	};
+}
+
+async function focusedStateLensData(
+	project: WikiProject,
+	lensId: CodewikiStateLensId,
+	artifacts: LoadedCodewikiStateArtifacts,
+	health: RoadmapStateFile["health"],
+	focus: CodewikiStateLensFocus,
+	nextTaskId: string | null,
+	baseLens: Record<string, unknown>,
+	blockers: Record<string, unknown>[],
+): Promise<Record<string, unknown>> {
+	const baseData = graphLensData(baseLens);
+	if (lensId === "status") return statusLensData(artifacts, health, baseData);
+	if (lensId === "resume") {
+		return {
+			...baseData,
+			resume: artifacts.statusState?.resume || null,
+			workflow_cursor:
+				artifacts.statusState?.workflow_cursor ||
+				artifacts.graph?.views?.workflow_cursor ||
+				null,
+		};
+	}
+	if (lensId === "trace") return traceLensData(baseLens, focus);
+	if (lensId === "task") {
+		return taskLensData(project, artifacts, focus, nextTaskId, baseData);
+	}
+	if (lensId === "sprint") return sprintLensData(artifacts, focus, baseData);
+	if (lensId === "validation") return validationLensData(artifacts, baseData);
+	if (lensId === "runtime") return runtimeLensData(artifacts, baseData);
+	if (lensId === "automation-readiness") {
+		return automationLensData(artifacts, baseData, blockers, nextTaskId);
+	}
+	if (lensId === "system") return systemLensData(artifacts, baseData);
+	return productLensData(artifacts, baseData);
+}
+
+async function buildCodewikiFocusedStateLens(
+	project: WikiProject,
+	lensId: CodewikiStateLensId,
+	artifacts: LoadedCodewikiStateArtifacts,
+	health: RoadmapStateFile["health"],
+	nextAction: ReturnType<typeof buildCodewikiNextAction>,
+	opts: {
+		include: string[] | undefined;
+		taskId: string | undefined;
+		focus?: CodewikiStateLensFocus;
+		ref?: string;
+		refs?: string[];
+	},
+): Promise<Record<string, unknown>> {
+	const focus = normalizeLensFocus(opts);
+	const baseLens = graphLens(artifacts.graph, lensId);
+	const sourceRefs = focusedLensSourceRefs(
+		project,
+		artifacts,
+		baseLens,
+		focus,
+	);
+	const blockers = buildStateLensBlockers(artifacts, health, baseLens);
+	const omittedCounts = {
+		...(recordField(baseLens, "omitted_counts") || {}),
+		source_refs: Math.max(0, sourceRefs.length - 10),
+	};
+	const nextSafeAction = stateNextSafeAction(nextAction);
+	return {
+		version: 1,
+		id: lensId,
+		view: lensId,
+		source: baseLens.source || `state:${lensId}-lens`,
+		focus,
+		source_refs: sourceRefs,
+		omitted_counts: omittedCounts,
+		next_action: nextSafeAction,
+		next_safe_action: nextSafeAction,
+		blockers,
+		freshness: stateLensFreshness(artifacts, sourceRefs),
+		expansion_hints: stateLensExpansionHints(lensId, sourceRefs),
+		data: await focusedStateLensData(
+			project,
+			lensId,
+			artifacts,
+			health,
+			focus,
+			nextAction.taskId,
+			baseLens,
+			blockers,
+		),
+		invariant: "generated_lens_not_canonical_truth",
+	};
+}
+
 // ---------------------------------------------------------------------------
 // Port dependencies for the read-state use case
 // ---------------------------------------------------------------------------
@@ -235,6 +778,11 @@ export async function readCodewikiState(
 		include: string[] | undefined;
 		taskId: string | undefined;
 		refresh: boolean;
+		view?: CodewikiStateLensId;
+		lens?: CodewikiStateLensId;
+		focus?: CodewikiStateLensFocus;
+		ref?: string;
+		refs?: string[];
 	},
 	ports: ReadStatePorts,
 ): Promise<Record<string, unknown>> {
@@ -255,6 +803,11 @@ export async function readCodewikiState(
 		artifacts.roadmapState,
 		activeTaskLink,
 	);
+
+	const requestedLens = selectedStateLens({
+		view: opts.view,
+		lens: opts.lens,
+	});
 
 	const result: Record<string, unknown> = {
 		repo: {
@@ -278,6 +831,23 @@ export async function readCodewikiState(
 		},
 		next_action: nextAction,
 	};
+
+	if (requestedLens) {
+		result.lens = await buildCodewikiFocusedStateLens(
+			project,
+			requestedLens,
+			artifacts,
+			health,
+			nextAction,
+			{
+				include: opts.include,
+				taskId: opts.taskId,
+				focus: opts.focus,
+				ref: opts.ref,
+				refs: opts.refs,
+			},
+		);
+	}
 
 	if (include.includes("roadmap")) {
 		result.roadmap = {

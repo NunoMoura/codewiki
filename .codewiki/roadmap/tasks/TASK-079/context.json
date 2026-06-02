@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01",
+  "generated_at": "2026-06-02T04:00:54Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-079/context.json",
   "task": {
     "id": "TASK-079",
     "title": "Add focused graph lens query API",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "feature",
     "change_type": "system",

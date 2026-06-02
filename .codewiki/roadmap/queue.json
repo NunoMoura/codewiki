@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-02T02:55:32Z",
+  "updated": "2026-06-02T04:00:54Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -540,7 +540,7 @@
     "TASK-079": {
       "id": "TASK-079",
       "title": "Add focused graph lens query API",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "feature",
       "summary": "Extend state reads with focused graph lens queries for status, resume, trace, task, sprint, validation, runtime, and automation-readiness subsets.",
@@ -596,7 +596,7 @@
         "closure": ""
       },
       "created": "2026-06-01",
-      "updated": "2026-06-01"
+      "updated": "2026-06-02T04:00:54Z"
     },
     "TASK-080": {
       "id": "TASK-080",
