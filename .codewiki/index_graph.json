@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T23:54:24.820Z",
+  "generated_at": "2026-06-02T23:55:21.108Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -63043,6 +63043,64 @@
       "default_hidden": true,
       "default_collapsed": true,
       "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "549710d69b556d0179f9009273dca3b29ba79f47",
+        "validated_sha": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+        "tree_sha": "0768a282996c11fc3c049d17c17428821312303c",
+        "package_digest": "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validates the TASK-085 exact content covered by ship-ready; current worktree is clean at 549710d. No promotion boundary requested.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity",
+          "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d"
+        ],
+        "content_proof_refs": [
+          "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+          "549710d69b556d0179f9009273dca3b29ba79f47",
+          "0768a282996c11fc3c049d17c17428821312303c",
+          "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
+      "kind": "audit_evidence",
+      "path": "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:549710d69b556d0179f9009273dca3b29ba79f47",
+      "kind": "content_proof",
+      "path": "549710d69b556d0179f9009273dca3b29ba79f47",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
     }
   ],
   "edges": [
@@ -160556,6 +160614,71 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
       "to": "task:TASK-083"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "audit:wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "content_proof:bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "content_proof:549710d69b556d0179f9009273dca3b29ba79f47",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "content_proof:0768a282996c11fc3c049d17c17428821312303c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "content_proof:sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "to": "task:TASK-085"
     }
   ],
   "views": {
@@ -160747,7 +160870,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 257
+                "count": 258
               },
               {
                 "id": "fail_or_block_validation",
@@ -160757,12 +160880,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 667
+                "count": 668
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1878
+                "count": 1879
               },
               {
                 "id": "traceability_gaps",
@@ -160791,11 +160914,11 @@
             "collapsed": 189
           },
           "validations": {
-            "total": 257,
-            "pass": 219,
+            "total": 258,
+            "pass": 220,
             "fail_or_block": 38,
             "hot": 9,
-            "collapsed": 257
+            "collapsed": 258
           }
         },
         "next_action": {
@@ -160851,11 +160974,11 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4950,
-          "edges": 16176,
+          "nodes": 4953,
+          "edges": 16187,
           "open_tasks": 0,
-          "validations": 249,
-          "source_refs": 1194
+          "validations": 250,
+          "source_refs": 1195
         },
         "next_action": {
           "kind": "implementation",
@@ -160886,7 +161009,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1226,
+          "source_ref_count": 1227,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -160908,7 +161031,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1218
+            "omitted_ref_count": 1219
           }
         ],
         "data": {
@@ -160924,11 +161047,11 @@
             "SPRINT-020"
           ],
           "latest_validation": {
-            "path": ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
-            "task_id": "TASK-083",
+            "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+            "task_id": "TASK-085",
             "profile": "task-close",
             "verdict": "pass",
-            "source": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json"
+            "source": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
           },
           "families": [
             {
@@ -161113,7 +161236,7 @@
                 {
                   "id": "validation_reports",
                   "label": "validation reports",
-                  "count": 257
+                  "count": 258
                 },
                 {
                   "id": "fail_or_block_validation",
@@ -161123,12 +161246,12 @@
                 {
                   "id": "audit_refs",
                   "label": "audit refs",
-                  "count": 667
+                  "count": 668
                 },
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 1878
+                  "count": 1879
                 },
                 {
                   "id": "traceability_gaps",
@@ -161812,9 +161935,9 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "validation_reports": 249,
+          "validation_reports": 250,
           "reconciliation_items": 3,
-          "source_refs": 2753
+          "source_refs": 2756
         },
         "next_action": {
           "kind": "implementation",
@@ -161845,7 +161968,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2785,
+          "source_ref_count": 2788,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -161867,11 +161990,18 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2777
+            "omitted_ref_count": 2780
           }
         ],
         "data": {
           "validation_reports": [
+            {
+              "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+              "task_id": "TASK-085",
+              "profile": "task-close",
+              "verdict": "pass",
+              "source": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+            },
             {
               "path": ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
               "task_id": "TASK-083",
@@ -161920,13 +162050,6 @@
               "profile": "task-close",
               "verdict": "block",
               "source": ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
-            },
-            {
-              "path": ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
-              "task_id": "TASK-083",
-              "profile": "task-close",
-              "verdict": "block",
-              "source": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json"
             }
           ],
           "validation_isolation": [
@@ -162573,7 +162696,7 @@
         ],
         "omitted_counts": {
           "ready_tasks": 2,
-          "source_refs": 2772
+          "source_refs": 2775
         },
         "next_action": {
           "kind": "stop",
@@ -162612,7 +162735,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2804,
+          "source_ref_count": 2807,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -162634,7 +162757,7 @@
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/roadmap.md"
             ],
-            "omitted_ref_count": 2796
+            "omitted_ref_count": 2799
           }
         ],
         "data": {
@@ -163114,9 +163237,9 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4950,
-          "edges": 16176,
-          "source_refs": 1194
+          "nodes": 4953,
+          "edges": 16187,
+          "source_refs": 1195
         },
         "next_action": {
           "kind": "implementation",
@@ -163147,7 +163270,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1226,
+          "source_ref_count": 1227,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -163169,7 +163292,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1218
+            "omitted_ref_count": 1219
           }
         ],
         "requirement_rows": [
@@ -163367,7 +163490,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -163739,7 +163863,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164111,7 +164236,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164483,7 +164609,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164855,7 +164982,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -165227,7 +165355,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -165599,7 +165728,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -176026,7 +176156,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 2753,
+          "source_refs": 2756,
           "validation_reports": 0
         },
         "next_action": {
@@ -176058,7 +176188,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2785,
+          "source_ref_count": 2788,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -176080,7 +176210,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2777
+            "omitted_ref_count": 2780
           }
         ],
         "validation_reports": [
@@ -182062,6 +182192,29 @@
               "sha256:3f687d7048568d54342f5155d516edc03339174b856a672d71ca0949bb4ee295"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-085",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:task",
+              "audit:generated-parity",
+              "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d"
+            ],
+            "content_proof_refs": [
+              "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+              "549710d69b556d0179f9009273dca3b29ba79f47",
+              "0768a282996c11fc3c049d17c17428821312303c",
+              "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -186116,6 +186269,27 @@
             "publisher_result_refs": [
               "b3833c67e24c11d49f28991191bcfcbe55ffa12c"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+            "task_id": "TASK-085",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "549710d69b556d0179f9009273dca3b29ba79f47",
+            "validated_sha": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+              "549710d69b556d0179f9009273dca3b29ba79f47",
+              "0768a282996c11fc3c049d17c17428821312303c",
+              "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+            ],
+            "publisher_result_refs": [
+              "0768a282996c11fc3c049d17c17428821312303c"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -186763,6 +186937,7 @@
           "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+          "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit bd6446a",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract after commit 4496623",
@@ -187145,6 +187320,7 @@
           "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
           "536254c934595eb58c9e23ae3f5e7ea63ea92d0975ce5f2f6d689cf647cd0cc9",
           "5486adacf56008abb2ae5e624f93cb4350a3731a",
+          "549710d69b556d0179f9009273dca3b29ba79f47",
           "56866ca60fbee3dec5403c7e158acbf76b7ec4de",
           "5a635230e5abdbefb6a7755fdb2faf09bfba1d0cc9160c14c8e07b11352bcea8",
           "5ab5cc3e518d37967a61e4cc5a1543167db42cb5",
@@ -203096,6 +203272,27 @@
           "publisher_result_refs": [
             "b3833c67e24c11d49f28991191bcfcbe55ffa12c"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+          "task_id": "TASK-085",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "549710d69b556d0179f9009273dca3b29ba79f47",
+          "validated_sha": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+            "549710d69b556d0179f9009273dca3b29ba79f47",
+            "0768a282996c11fc3c049d17c17428821312303c",
+            "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+          ],
+          "publisher_result_refs": [
+            "0768a282996c11fc3c049d17c17428821312303c"
+          ]
         }
       ]
     },
@@ -204731,6 +204928,7 @@
         "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+        "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit bd6446a",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract after commit 4496623",
@@ -205113,6 +205311,7 @@
         "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
         "536254c934595eb58c9e23ae3f5e7ea63ea92d0975ce5f2f6d689cf647cd0cc9",
         "5486adacf56008abb2ae5e624f93cb4350a3731a",
+        "549710d69b556d0179f9009273dca3b29ba79f47",
         "56866ca60fbee3dec5403c7e158acbf76b7ec4de",
         "5a635230e5abdbefb6a7755fdb2faf09bfba1d0cc9160c14c8e07b11352bcea8",
         "5ab5cc3e518d37967a61e4cc5a1543167db42cb5",
@@ -212614,6 +212813,29 @@
             "sha256:3f687d7048568d54342f5155d516edc03339174b856a672d71ca0949bb4ee295"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-085",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity",
+            "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d"
+          ],
+          "content_proof_refs": [
+            "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+            "549710d69b556d0179f9009273dca3b29ba79f47",
+            "0768a282996c11fc3c049d17c17428821312303c",
+            "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -215045,7 +215267,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -215417,7 +215640,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -215789,7 +216013,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -216161,7 +216386,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -216533,7 +216759,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -216905,7 +217132,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -217277,7 +217505,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -219203,8 +219432,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-02T23:54:24.678Z",
-            "expires_at": "2026-06-03T01:54:24.678Z",
+            "generated_at": "2026-06-02T23:55:20.982Z",
+            "expires_at": "2026-06-03T01:55:20.982Z",
             "sprint_ids": [
               "SPRINT-020"
             ],
@@ -219373,8 +219602,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-02T23:54:24.678Z",
-            "expires_at": "2026-06-03T01:54:24.678Z",
+            "generated_at": "2026-06-02T23:55:20.982Z",
+            "expires_at": "2026-06-03T01:55:20.982Z",
             "sprint_ids": [],
             "source_refs": [
               ".codewiki/roadmap/queue.json",
@@ -219392,7 +219621,8 @@
               ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
-              ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json"
+              ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "candidate_files": {
               "spec_paths": [
@@ -219467,7 +219697,8 @@
               "pass": [
                 ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                 ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
-                ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json"
+                ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+                ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
               ],
               "fail": [],
               "block": []
@@ -219718,8 +219949,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-02T23:54:24.678Z",
-      "expires_at": "2026-06-03T01:54:24.678Z",
+      "generated_at": "2026-06-02T23:55:20.982Z",
+      "expires_at": "2026-06-03T01:55:20.982Z",
       "state": "waiting",
       "tasks": {
         "TASK-084": {
@@ -219734,8 +219965,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-02T23:54:24.678Z",
-          "expires_at": "2026-06-03T01:54:24.678Z",
+          "generated_at": "2026-06-02T23:55:20.982Z",
+          "expires_at": "2026-06-03T01:55:20.982Z",
           "sprint_ids": [
             "SPRINT-020"
           ],
@@ -219882,8 +220113,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-02T23:54:24.678Z",
-          "expires_at": "2026-06-03T01:54:24.678Z",
+          "generated_at": "2026-06-02T23:55:20.982Z",
+          "expires_at": "2026-06-03T01:55:20.982Z",
           "sprint_ids": [],
           "source_refs": [
             ".codewiki/roadmap/queue.json",
@@ -219901,7 +220132,8 @@
             ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
-            ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json"
+            ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+            ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
           ],
           "candidate_files": {
             "spec_paths": [
@@ -219976,7 +220208,8 @@
             "pass": [
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
-              ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json"
+              ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+              ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
             ],
             "fail": [],
             "block": []
@@ -220911,7 +221144,8 @@
         ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
         ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
         ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
-        ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json"
+        ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+        ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
       ]
     },
     "workflow_cursor": {
@@ -222959,7 +223193,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-02T23:54:24.070Z",
+      "generated_at": "2026-06-02T23:55:20.433Z",
       "counts": {
         "large-doc": 2
       },
@@ -222980,7 +223214,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-02T23:54:24Z",
+      "generated_at": "2026-06-02T23:55:21Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -224539,7 +224773,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-02T23:54:25Z",
+      "generated_at": "2026-06-02T23:55:21Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -229001,7 +229235,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-02T23:54:25Z",
+        "generated_at": "2026-06-02T23:55:21Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -229056,10 +229290,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:54:24Z",
+            "checked_at": "2026-06-02T23:55:21Z",
             "revision": {
               "git": {
-                "head": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+                "head": "549710d69b556d0179f9009273dca3b29ba79f47",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -229319,12 +229553,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "7bf547d2afe356e6e0aa1b24b9fd2706bd816f6269f14703fae172aa39e074a2",
-              "digest": "6aa11db53109d4435a34fb5c51f0dbed8de90b1da47882a41ac809268b90a810"
+              "digest": "f3c1266279e38a4f3d15811d9119d19e04a3570afcaa9fae81837ea9a04f99db"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:54:24Z",
+              "checked_at": "2026-06-02T23:55:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -229823,10 +230057,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-02T23:54:25Z",
+            "checked_at": "2026-06-02T23:55:21Z",
             "revision": {
               "git": {
-                "head": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+                "head": "549710d69b556d0179f9009273dca3b29ba79f47",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -230069,12 +230303,12 @@
               "spec_digest": "3e045454a5d1286136c8b98960205c875a3a5d01945c6b4f29024abebca94583",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "9a389c02571f1078096c4f34018634bdcc7b0b8e3238e4891a1a1f87297cb2c1",
-              "digest": "4a1f95b7f111e5ed6901124871a7d17e5a83edb3febfa830b1943a7c90131432"
+              "digest": "2fc405bf283b89b6d1d2dc25b3cd9d72b3e6312f322082642f0580c0f96a42f9"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:54:25Z",
+              "checked_at": "2026-06-02T23:55:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -230550,10 +230784,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:54:25Z",
+            "checked_at": "2026-06-02T23:55:21Z",
             "revision": {
               "git": {
-                "head": "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
+                "head": "549710d69b556d0179f9009273dca3b29ba79f47",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -230813,12 +231047,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "7bf547d2afe356e6e0aa1b24b9fd2706bd816f6269f14703fae172aa39e074a2",
-              "digest": "6aa11db53109d4435a34fb5c51f0dbed8de90b1da47882a41ac809268b90a810"
+              "digest": "f3c1266279e38a4f3d15811d9119d19e04a3570afcaa9fae81837ea9a04f99db"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:54:25Z",
+              "checked_at": "2026-06-02T23:55:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -231318,7 +231552,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-02T23:54:25Z",
+        "generated_at": "2026-06-02T23:55:21Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
