@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-06-02T23:38:40Z",
+  "updated": "2026-06-02T23:55:41Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-084",
-    "TASK-085"
+    "TASK-084"
   ],
   "tasks": {
     "TASK-012": {
@@ -587,61 +586,6 @@
       },
       "created": "2026-06-01",
       "updated": "2026-06-02T22:54:39Z"
-    },
-    "TASK-085": {
-      "id": "TASK-085",
-      "title": "Repair package smoke task-close fixture for production-ready gates",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "testing",
-      "summary": "Update package smoke validation fixture so task-close pass scenarios satisfy the TASK-082 ship-ready/task-close policy or assert the expected block path explicitly.",
-      "spec_paths": [
-        ".codewiki/kb/system/validation-gateway.md",
-        ".codewiki/kb/system/roadmap.md"
-      ],
-      "code_paths": [
-        "tests/smoke/package-smoke.test.mjs",
-        "src/gateway/report.ts",
-        "src/gateway/tool.ts",
-        "src/policy/gate-policy.ts",
-        "src/policy/gates.ts"
-      ],
-      "research_ids": [],
-      "labels": [
-        "legacy-reconciliation",
-        "package-smoke",
-        "task-close",
-        "ship-ready",
-        "production-readiness"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Package smoke coverage agrees with production-ready task-close semantics instead of expecting a pass without task-scoped ship-ready evidence.",
-        "acceptance": [
-          "The package smoke task-close pass fixture first creates or cites task-scoped ship-ready validation for the same implementation build/content candidate, or the fixture is split so missing ship-ready evidence asserts a block result.",
-          "`node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs` passes under current TASK-082 gateway policy.",
-          "Related gateway smoke tests still cover block behavior for missing ship-ready/content proof.",
-          "The fix does not weaken task-close, ship-ready, publication, or fresh validation policy."
-        ],
-        "non_goals": [
-          "Do not bypass production-ready closure gates.",
-          "Do not publish, push, or release.",
-          "Do not broaden package smoke beyond the specific policy mismatch found by TASK-084 inventory."
-        ],
-        "verification": [
-          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
-          "npm run typecheck"
-        ]
-      },
-      "delta": {
-        "desired": "Package smoke validation fixture matches ship-ready/task-close policy.",
-        "current": "TASK-084 inventory reran package smoke and observed task-close pass fixture wrote `task-close-block` because ship-ready evidence was missing.",
-        "closure": "Task closes with package-smoke, gateway-preflight, policy-gate, and typecheck passing under current production-ready gate policy."
-      },
-      "created": "2026-06-02",
-      "updated": "2026-06-02T23:38:40Z"
     }
   },
   "sprints": {
