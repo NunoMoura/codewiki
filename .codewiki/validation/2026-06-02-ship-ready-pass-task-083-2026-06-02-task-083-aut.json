@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-02T22:37:02Z",
+  "profile": "ship-ready",
+  "gate": "ship-ready",
+  "task_id": "TASK-083",
+  "verdict": "pass",
+  "rationale": "TASK-083 ship-ready local package/checkpoint validation passed against clean checkpoint commit 3adc645e0b3f8da0d246e578b27c8c62b1feee74, tree b3833c67e24c11d49f28991191bcfcbe55ffa12c, and package digest sha256:3f687d7048568d54342f5155d516edc03339174b856a672d71ca0949bb4ee295. This validates the local task-close content candidate and does not publish remotely.",
+  "checks": [
+    "user_approval:local_checkpoint_close_only",
+    "npm run typecheck",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "npm pack --pack-destination /tmp/codewiki-pack-mXaRZc --json",
+    "wiki_gate audit profiles=package,security,stale-reference,alignment,changed,generated-parity,source-contract task_id=TASK-083"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+  "policy_profile": "ship-ready",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "package",
+    "security",
+    "stale-reference",
+    "changed",
+    "generated-parity",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference",
+    "audit:alignment",
+    "audit:changed",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:task",
+    "user_approval:local_checkpoint_close_only"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=package,security,stale-reference,alignment,changed,generated-parity,source-contract task_id=TASK-083"
+  ],
+  "content_proof_refs": [
+    "3adc645e0b3f8da0d246e578b27c8c62b1feee74",
+    "b3833c67e24c11d49f28991191bcfcbe55ffa12c",
+    "sha256:3f687d7048568d54342f5155d516edc03339174b856a672d71ca0949bb4ee295"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-083",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+    "validation_report": ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+      ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
+      "src/state/automation-readiness.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/reader.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-083",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+    "validation_report": ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
+    "commit_title": "checkpoint(codewiki): TASK-083 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-083",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
+      "CodeWiki-Checks: user_approval:local_checkpoint_close_only; npm run typecheck; node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs; node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs; node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs; node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs; node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs; npm pack --pack-destination /tmp/codewiki-pack-mXaRZc --json; wiki_gate audit profiles=package,security,stale-reference,alignment,changed,generated-parity,source-contract task_id=TASK-083"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/automation-readiness.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/reader.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "ship-ready validation",
+    "profiles": [
+      "ship-ready"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "b3833c67e24c11d49f28991191bcfcbe55ffa12c"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "package",
+      "security",
+      "stale-reference",
+      "changed",
+      "generated-parity",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:changed or profile:changed",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "ship-ready",
+    "gate": "ship-ready",
+    "task_id": "TASK-083",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "user_approval:local_checkpoint_close_only"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "3adc645e0b3f8da0d246e578b27c8c62b1feee74",
+    "validated_sha": "3adc645e0b3f8da0d246e578b27c8c62b1feee74",
+    "tree_sha": "b3833c67e24c11d49f28991191bcfcbe55ffa12c",
+    "package_digest": "sha256:3f687d7048568d54342f5155d516edc03339174b856a672d71ca0949bb4ee295",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean local checkpoint commit; package tarball created under /tmp only.",
+    "role": "validator"
+  }
+}
