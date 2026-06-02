@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-06-02T02:54:12Z",
+  "updated": "2026-06-02T02:55:32Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-078",
     "TASK-079",
     "TASK-080",
     "TASK-081",
@@ -537,72 +536,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
-    },
-    "TASK-078": {
-      "id": "TASK-078",
-      "title": "Build system and product TUI navigation",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "feature",
-      "summary": "Implement `/wiki system <diagram type>` and `/wiki product` terminal navigation from canonical KB diagrams and product docs.",
-      "spec_paths": [
-        ".codewiki/kb/system/terminal-ui.md",
-        ".codewiki/kb/product/uis/terminal.md",
-        ".codewiki/kb/system/diagrams/README.md",
-        ".codewiki/kb/product/overview.md",
-        ".codewiki/kb/product/users/maintainers.md",
-        ".codewiki/kb/product/users/agents.md"
-      ],
-      "code_paths": [
-        "src/adapters/pi/commands/system.ts",
-        "src/adapters/pi/commands/product.ts",
-        "src/adapters/pi/ui/manager.ts",
-        "src/adapters/pi/ui/text.ts",
-        "src/adapters/pi/ui/theme.ts",
-        "src/knowledge/diagram-parser.ts",
-        "src/knowledge/doc-parser.ts",
-        "tests/smoke/diagram-refs.test.mjs",
-        "tests/smoke/prompt-assets.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "system-diagrams",
-        "product-navigation",
-        "terminal-ui",
-        "tui-renderer"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Users can browse source-backed system diagrams and product knowledge in the terminal through `/wiki system <diagram type>` and `/wiki product`.",
-        "acceptance": [
-          "`/wiki system <diagram type>` lists available canonical diagram types and renders the selected diagram from `.codewiki/kb/system/diagrams/**` or a generated lens derived from those sources.",
-          "The system diagram TUI lets users move between components or flows, highlights the selected item in ASCII/Unicode, and opens or renders the linked component/flow Markdown source on Enter.",
-          "System diagram rendering uses focused lanes, neighborhoods, ordered steps, state transitions, trees, or entity cards instead of full raw graph output.",
-          "`/wiki product` offers overview or users as the top-level choice; overview opens or renders `.codewiki/kb/product/overview.md`.",
-          "The product users view lists product users, lets users toggle each user's stories, and opens or renders the corresponding product KB Markdown source on Enter.",
-          "Views show source refs and omitted-count/focus metadata when content is summarized.",
-          "TUI output does not create hidden UI-only truth and does not depend on deprecated browser UI code."
-        ],
-        "non_goals": [
-          "Do not implement a browser dashboard.",
-          "Do not render the full generated graph by default.",
-          "Do not implement all future diagram layouts beyond the existing canonical diagram families needed for first useful navigation.",
-          "Do not change canonical diagram YAML schema unless a focused validation need requires it."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
-          "wiki_gate/task-close linters for file-structure, generated-parity, stale-reference, and changed"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-06-01",
-      "updated": "2026-06-02T02:54:12Z"
     },
     "TASK-079": {
       "id": "TASK-079",
