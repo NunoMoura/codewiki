@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T23:46:21.537Z",
+  "generated_at": "2026-06-02T23:52:41.605Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -6188,7 +6188,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -45872,8 +45872,8 @@
       "status": "accepted",
       "layer": "build",
       "lifecycle_state": "accepted",
-      "alignment_state": "drift",
-      "compacted": false,
+      "alignment_state": "aligned",
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-085",
       "superseded_by": [],
@@ -45956,11 +45956,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "closure:TASK-085",
-      "kind": "closure_brief",
-      "path": "TASK-085"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
@@ -62199,6 +62194,79 @@
       "kind": "content_proof",
       "path": "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
       "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+        "validated_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+        "tree_sha": "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+        "working_tree_digest": "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh validation from CodeWiki kickoff; commit a7549c6 is clean local content candidate. No remote operation was performed.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6"
+        ],
+        "content_proof_refs": [
+          "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+          "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+          "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
+      "kind": "audit_evidence",
+      "path": "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+      "kind": "content_proof",
+      "path": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+      "kind": "content_proof",
+      "path": "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
+      "kind": "content_proof",
+      "path": "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
+      "proof_kind": "content_proof",
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
@@ -142257,36 +142325,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "build:.codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "task:TASK-085"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "build:.codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "code:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "test:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "to": "closure:TASK-085"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
       "to": "source:.codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
@@ -159590,6 +159628,53 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "audit:wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "content_proof:a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "content_proof:d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "content_proof:15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "to": "task:TASK-085"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
       "to": "source:.codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
       "default_hidden": true
@@ -160501,11 +160586,7 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 1,
-                "refs": [
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
-                "ref_count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -160532,7 +160613,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 255
+                "count": 256
               },
               {
                 "id": "fail_or_block_validation",
@@ -160542,12 +160623,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 665
+                "count": 666
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1872
+                "count": 1875
               },
               {
                 "id": "traceability_gaps",
@@ -160572,15 +160653,15 @@
             "decision": 31,
             "planning": 44,
             "implementation": 114,
-            "hot": 1,
+            "hot": 0,
             "collapsed": 189
           },
           "validations": {
-            "total": 255,
-            "pass": 217,
+            "total": 256,
+            "pass": 218,
             "fail_or_block": 38,
             "hot": 9,
-            "collapsed": 255
+            "collapsed": 256
           }
         },
         "next_action": {
@@ -160636,11 +160717,11 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4941,
-          "edges": 16164,
+          "nodes": 4945,
+          "edges": 16166,
           "open_tasks": 0,
-          "validations": 247,
-          "source_refs": 1192
+          "validations": 248,
+          "source_refs": 1193
         },
         "next_action": {
           "kind": "implementation",
@@ -160671,7 +160752,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1224,
+          "source_ref_count": 1225,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -160693,7 +160774,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1216
+            "omitted_ref_count": 1217
           }
         ],
         "data": {
@@ -160871,11 +160952,7 @@
                 {
                   "id": "dirty_paths",
                   "label": "dirty paths",
-                  "count": 1,
-                  "refs": [
-                    "tests/smoke/package-smoke.test.mjs"
-                  ],
-                  "ref_count": 1
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -160902,7 +160979,7 @@
                 {
                   "id": "validation_reports",
                   "label": "validation reports",
-                  "count": 255
+                  "count": 256
                 },
                 {
                   "id": "fail_or_block_validation",
@@ -160912,12 +160989,12 @@
                 {
                   "id": "audit_refs",
                   "label": "audit refs",
-                  "count": 665
+                  "count": 666
                 },
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 1872
+                  "count": 1875
                 },
                 {
                   "id": "traceability_gaps",
@@ -161601,9 +161678,9 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "validation_reports": 247,
+          "validation_reports": 248,
           "reconciliation_items": 3,
-          "source_refs": 2743
+          "source_refs": 2748
         },
         "next_action": {
           "kind": "implementation",
@@ -161634,7 +161711,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2775,
+          "source_ref_count": 2780,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -161656,7 +161733,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2767
+            "omitted_ref_count": 2772
           }
         ],
         "data": {
@@ -162362,7 +162439,7 @@
         ],
         "omitted_counts": {
           "ready_tasks": 2,
-          "source_refs": 2762
+          "source_refs": 2767
         },
         "next_action": {
           "kind": "stop",
@@ -162401,7 +162478,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2794,
+          "source_ref_count": 2799,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -162423,7 +162500,7 @@
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/roadmap.md"
             ],
-            "omitted_ref_count": 2786
+            "omitted_ref_count": 2791
           }
         ],
         "data": {
@@ -162903,9 +162980,9 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4941,
-          "edges": 16164,
-          "source_refs": 1192
+          "nodes": 4945,
+          "edges": 16166,
+          "source_refs": 1193
         },
         "next_action": {
           "kind": "implementation",
@@ -162936,7 +163013,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1224,
+          "source_ref_count": 1225,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -162958,7 +163035,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1216
+            "omitted_ref_count": 1217
           }
         ],
         "requirement_rows": [
@@ -163145,6 +163222,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -163515,6 +163593,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -163885,6 +163964,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -164255,6 +164335,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -164625,6 +164706,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -164995,6 +165077,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -165365,6 +165448,7 @@
               ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -169153,228 +169237,7 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
           ]
         },
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-              ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-              ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-              ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-              ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
-              ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
-              ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-              ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-075-reconciliation-for-cancelle.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-              ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
-              ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
-              ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json",
-              ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
-              ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
-              ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
-              ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
-              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-              ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
-              ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/package-smoke.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-              ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-              ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
-              ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
-              ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-              ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
-              ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
-              ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
-              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-              ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -176022,7 +175885,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 2743,
+          "source_refs": 2748,
           "validation_reports": 0
         },
         "next_action": {
@@ -176054,7 +175917,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2775,
+          "source_ref_count": 2780,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -176076,7 +175939,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2767
+            "omitted_ref_count": 2772
           }
         ],
         "validation_reports": [
@@ -181747,6 +181610,26 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-085",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6"
+            ],
+            "content_proof_refs": [
+              "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+              "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+              "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
             "verdict": "pass",
             "profile": "planning",
@@ -185807,6 +185690,26 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+            "task_id": "TASK-085",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+            "validated_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+              "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+              "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+            ],
+            "publisher_result_refs": [
+              "d92c2871b4b05d3458dc18f74d85663d6e6c806f"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
             "task_id": "TASK-085",
             "verdict": "pass",
@@ -186677,6 +186580,7 @@
           "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+          "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract after commit 4496623",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference after commit 70d1922",
           "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083",
@@ -186998,6 +186902,7 @@
           "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
           "156afe189611a1da02b17b933361e9dd8dfca5bc",
+          "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
           "1672fd537b791e2193c9cda9edec1b11fb457fbc",
           "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
           "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
@@ -187133,6 +187038,7 @@
           "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
           "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
           "a7519338938f5876d6e34e41990cf748ebdffbfc",
+          "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
           "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
           "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
           "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
@@ -187179,6 +187085,7 @@
           "d344e540bb529503a92888b138251dcdc28ce398",
           "d5dbf6484a0e6c4e0a8aef2c037961c90950a859",
           "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
+          "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
           "d955591e18840527f42a864f2734c7dc08c514b6",
           "da9e44ef4012bf94940f42275f363543a479e991",
           "dc3abdda2b15ff9f7b4168d427a4f9bee58b27b9c8441a06902bf22c55d48524",
@@ -188575,17 +188482,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-            "source_id": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "build",
-            "to_layer": "validation",
-            "next_loop": "validation",
-            "task_id": "TASK-085",
-            "reason": "Accepted implementation build still needs passing validation gateway evidence."
-          },
-          {
             "id": "reconcile:validation:.codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
             "source_id": "validation:.codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
             "state": "blocked",
@@ -188609,6 +188505,17 @@
             "next_loop": "implementation",
             "task_id": "TASK-084",
             "reason": "TASK-084 is blocked; implementation loop needs unblock evidence or rerouting."
+          },
+          {
+            "id": "reconcile:task:TASK-085",
+            "source_id": "task:TASK-085",
+            "state": "drift",
+            "direction": "downward",
+            "from_layer": "roadmap",
+            "to_layer": "code",
+            "next_loop": "implementation",
+            "task_id": "TASK-085",
+            "reason": "TASK-085 is open implementation delta below knowledge."
           }
         ],
         "traceability_gaps": [],
@@ -198015,9 +197922,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": [
-        "tests/smoke/package-smoke.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
       "active_claim_count": 2,
@@ -202741,6 +202646,26 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+          "task_id": "TASK-085",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+          "validated_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+            "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+            "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+          ],
+          "publisher_result_refs": [
+            "d92c2871b4b05d3458dc18f74d85663d6e6c806f"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
           "task_id": "TASK-085",
           "verdict": "pass",
@@ -204599,6 +204524,7 @@
         "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+        "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract after commit 4496623",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference after commit 70d1922",
         "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083",
@@ -204920,6 +204846,7 @@
         "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
         "156afe189611a1da02b17b933361e9dd8dfca5bc",
+        "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
         "1672fd537b791e2193c9cda9edec1b11fb457fbc",
         "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
         "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
@@ -205055,6 +204982,7 @@
         "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
         "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
         "a7519338938f5876d6e34e41990cf748ebdffbfc",
+        "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
         "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
         "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
@@ -205101,6 +205029,7 @@
         "d344e540bb529503a92888b138251dcdc28ce398",
         "d5dbf6484a0e6c4e0a8aef2c037961c90950a859",
         "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
+        "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
         "d955591e18840527f42a864f2734c7dc08c514b6",
         "da9e44ef4012bf94940f42275f363543a479e991",
         "dc3abdda2b15ff9f7b4168d427a4f9bee58b27b9c8441a06902bf22c55d48524",
@@ -212163,6 +212092,26 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-085",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6"
+          ],
+          "content_proof_refs": [
+            "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+            "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+            "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json",
           "verdict": "pass",
           "profile": "planning",
@@ -214852,6 +214801,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -215222,6 +215172,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -215592,6 +215543,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -215962,6 +215914,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -216332,6 +216285,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -216702,6 +216656,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -217072,6 +217027,7 @@
             ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-083-2026-06-02-task-083.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-083-2026-06-02-task-083-aut.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-083-2026-06-02-task-083-au.json",
@@ -217260,228 +217216,7 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
-            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
-            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
-            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
-            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
-            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
-            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
-            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
-            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
-            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
-            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
-            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
-            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
-            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-070-runtime-scheduler-foundatio.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
-            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-pi-distribution-docs-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-final.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows-resolved.json",
-            ".codewiki/builds/implementation/2026-05-31-task-068-system-components-flows.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-074-reconciliation-for-planning.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-075-reconciliation-for-cancelle.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-076-documentation-reconciliatio.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-            ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
-            ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
-            ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json",
-            ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
-            ".codewiki/builds/implementation/2026-06-02-finalized-task-079-focused-graph-lens-query-api-.json",
-            ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
-            ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
-            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-            ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
-            ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/package-smoke.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
-            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
-            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
-            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-            ".codewiki/builds/implementation/2026-06-01-task-077-wiki-command-router.json",
-            ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
-            ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
-            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-            ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -219228,8 +218963,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-02T23:46:21.484Z",
-            "expires_at": "2026-06-03T01:46:21.484Z",
+            "generated_at": "2026-06-02T23:52:41.544Z",
+            "expires_at": "2026-06-03T01:52:41.544Z",
             "sprint_ids": [
               "SPRINT-020"
             ],
@@ -219398,8 +219133,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-02T23:46:21.484Z",
-            "expires_at": "2026-06-03T01:46:21.484Z",
+            "generated_at": "2026-06-02T23:52:41.544Z",
+            "expires_at": "2026-06-03T01:52:41.544Z",
             "sprint_ids": [],
             "source_refs": [
               ".codewiki/roadmap/queue.json",
@@ -219415,6 +219150,7 @@
               ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
               ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
               ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json"
             ],
             "candidate_files": {
@@ -219488,6 +219224,7 @@
             },
             "validation_refs": {
               "pass": [
+                ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                 ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json"
               ],
               "fail": [],
@@ -219739,8 +219476,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-02T23:46:21.484Z",
-      "expires_at": "2026-06-03T01:46:21.484Z",
+      "generated_at": "2026-06-02T23:52:41.544Z",
+      "expires_at": "2026-06-03T01:52:41.544Z",
       "state": "waiting",
       "tasks": {
         "TASK-084": {
@@ -219755,8 +219492,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-02T23:46:21.484Z",
-          "expires_at": "2026-06-03T01:46:21.484Z",
+          "generated_at": "2026-06-02T23:52:41.544Z",
+          "expires_at": "2026-06-03T01:52:41.544Z",
           "sprint_ids": [
             "SPRINT-020"
           ],
@@ -219903,8 +219640,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-02T23:46:21.484Z",
-          "expires_at": "2026-06-03T01:46:21.484Z",
+          "generated_at": "2026-06-02T23:52:41.544Z",
+          "expires_at": "2026-06-03T01:52:41.544Z",
           "sprint_ids": [],
           "source_refs": [
             ".codewiki/roadmap/queue.json",
@@ -219920,6 +219657,7 @@
             ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
             ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
             ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+            ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json"
           ],
           "candidate_files": {
@@ -219993,6 +219731,7 @@
           },
           "validation_refs": {
             "pass": [
+              ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json"
             ],
             "fail": [],
@@ -220926,6 +220665,7 @@
         "src/policy/gates.ts",
         ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
         ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+        ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
         ".codewiki/validation/2026-06-02-planning-pass-task-085-2026-06-02-task-085-packa.json"
       ]
     },
@@ -220976,9 +220716,7 @@
             "SPRINT-017",
             "SPRINT-020"
           ],
-          "build_paths": [
-            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-          ],
+          "build_paths": [],
           "validation_paths": [
             ".codewiki/validation/2026-05-22-decision-block.json",
             ".codewiki/validation/2026-05-22-planning-block.json",
@@ -221184,6 +220922,7 @@
             ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
             ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
             ".codewiki/builds/implementation/2026-06-02-implemented-task-082-local-ship-ready-target-inf.json",
+            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
             ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
             ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
           ],
@@ -221383,6 +221122,7 @@
             ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
             ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
             ".codewiki/builds/implementation/2026-06-02-implemented-task-082-local-ship-ready-target-inf.json",
+            ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
             ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
             ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
           ]
@@ -222889,6 +222629,7 @@
           ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
           ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
           ".codewiki/builds/implementation/2026-06-02-implemented-task-082-local-ship-ready-target-inf.json",
+          ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
           ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
           ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
         ],
@@ -222900,17 +222641,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-          "source_id": "build:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "build",
-          "to_layer": "validation",
-          "next_loop": "validation",
-          "task_id": "TASK-085",
-          "reason": "Accepted implementation build still needs passing validation gateway evidence."
-        },
         {
           "id": "reconcile:validation:.codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
           "source_id": "validation:.codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
@@ -222935,11 +222665,21 @@
           "next_loop": "implementation",
           "task_id": "TASK-084",
           "reason": "TASK-084 is blocked; implementation loop needs unblock evidence or rerouting."
+        },
+        {
+          "id": "reconcile:task:TASK-085",
+          "source_id": "task:TASK-085",
+          "state": "drift",
+          "direction": "downward",
+          "from_layer": "roadmap",
+          "to_layer": "code",
+          "next_loop": "implementation",
+          "task_id": "TASK-085",
+          "reason": "TASK-085 is open implementation delta below knowledge."
         }
       ],
       "counts_by_loop": {
-        "validation": 1,
-        "implementation": 2
+        "implementation": 3
       },
       "next_action": {
         "loop": "implementation",
@@ -222974,7 +222714,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-02T23:46:21.249Z",
+      "generated_at": "2026-06-02T23:52:41.296Z",
       "counts": {
         "large-doc": 2
       },
@@ -222995,7 +222735,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-02T23:46:21Z",
+      "generated_at": "2026-06-02T23:52:41Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -224554,7 +224294,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-02T23:46:21Z",
+      "generated_at": "2026-06-02T23:52:41Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -224693,9 +224433,7 @@
               "SPRINT-017",
               "SPRINT-020"
             ],
-            "build_paths": [
-              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-            ],
+            "build_paths": [],
             "validation_paths": [
               ".codewiki/validation/2026-05-22-decision-block.json",
               ".codewiki/validation/2026-05-22-planning-block.json",
@@ -224901,6 +224639,7 @@
               ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
               ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
               ".codewiki/builds/implementation/2026-06-02-implemented-task-082-local-ship-ready-target-inf.json",
+              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
               ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
               ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
             ],
@@ -225100,6 +224839,7 @@
               ".codewiki/builds/implementation/2026-06-02-implemented-task-079-focused-graph-lens-query-ap.json",
               ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
               ".codewiki/builds/implementation/2026-06-02-implemented-task-082-local-ship-ready-target-inf.json",
+              ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
               ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
               ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
             ]
@@ -229016,7 +228756,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-02T23:46:21Z",
+        "generated_at": "2026-06-02T23:52:41Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -229071,15 +228811,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:46:21Z",
+            "checked_at": "2026-06-02T23:52:41Z",
             "revision": {
               "git": {
-                "head": "1e02449466cc0df41f8c3c98c86c6731d75ed6f6",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -229148,7 +228885,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "20432994d3fd865503755d5bd38f3feecb642e93",
                   ".codewiki/kb/system/validation-gateway.md": "a7e04e4d540f598e0012cc18822a6e190655ae81",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "d9bd04df326a06ca45d6abc955bd6e48bbee13e0",
+                  ".codewiki/roadmap/queue.json": "851e15ea8c1e66a0347267c6c1ba2672e97034a8",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -229313,7 +229050,7 @@
                   "tests/smoke/horizontal-alignment.test.mjs": "f053956470a15a2291242ea6b7e00cd596ff7645",
                   "tests/smoke/hot-retention.test.mjs": "e673ecd53692acd227315cf8beb1761d500da2b5",
                   "tests/smoke/loop-isolation-policy.test.mjs": "8fab325b373dbc9b51f8028c064e7cd847e91780",
-                  "tests/smoke/package-smoke.test.mjs": "0c23ef005b03051d0ce048f5f4090cdf15e7aaff",
+                  "tests/smoke/package-smoke.test.mjs": "c6080f86e37085c0b1a12af10b38b48ecb89338e",
                   "tests/smoke/policy-gate.test.mjs": "1de7ffc3bce1b9ec0897683e21f0923764d43285",
                   "tests/smoke/resume-scheduler.test.mjs": "70cff3a7bb6d6f99b7c03f5389264b55d9932b95",
                   "tests/smoke/roadmap-task-boundary.test.mjs": "1b34eee11de64379e295d6d6f3234d113b0c53ba",
@@ -229337,14 +229074,14 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "7bf547d2afe356e6e0aa1b24b9fd2706bd816f6269f14703fae172aa39e074a2",
-              "digest": "6306b9390f6f73e2c36d6dd8b7d7ae4bebb234b5cef6eb55ce56a616a7d8f098"
+              "digest": "8d9ee5fd746a776131af7193b816e75c981051a98e13d83bd4219d14d943c374"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:46:21Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-02T23:52:41Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -229841,15 +229578,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-02T23:46:21Z",
+            "checked_at": "2026-06-02T23:52:41Z",
             "revision": {
               "git": {
-                "head": "1e02449466cc0df41f8c3c98c86c6731d75ed6f6",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -229907,7 +229641,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "20432994d3fd865503755d5bd38f3feecb642e93",
                   ".codewiki/kb/system/validation-gateway.md": "a7e04e4d540f598e0012cc18822a6e190655ae81",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "d9bd04df326a06ca45d6abc955bd6e48bbee13e0",
+                  ".codewiki/roadmap/queue.json": "851e15ea8c1e66a0347267c6c1ba2672e97034a8",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -230066,7 +229800,7 @@
                   "tests/smoke/horizontal-alignment.test.mjs": "f053956470a15a2291242ea6b7e00cd596ff7645",
                   "tests/smoke/hot-retention.test.mjs": "e673ecd53692acd227315cf8beb1761d500da2b5",
                   "tests/smoke/loop-isolation-policy.test.mjs": "8fab325b373dbc9b51f8028c064e7cd847e91780",
-                  "tests/smoke/package-smoke.test.mjs": "0c23ef005b03051d0ce048f5f4090cdf15e7aaff",
+                  "tests/smoke/package-smoke.test.mjs": "c6080f86e37085c0b1a12af10b38b48ecb89338e",
                   "tests/smoke/policy-gate.test.mjs": "1de7ffc3bce1b9ec0897683e21f0923764d43285",
                   "tests/smoke/resume-scheduler.test.mjs": "70cff3a7bb6d6f99b7c03f5389264b55d9932b95",
                   "tests/smoke/roadmap-task-boundary.test.mjs": "1b34eee11de64379e295d6d6f3234d113b0c53ba",
@@ -230090,14 +229824,14 @@
               "spec_digest": "3e045454a5d1286136c8b98960205c875a3a5d01945c6b4f29024abebca94583",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "9a389c02571f1078096c4f34018634bdcc7b0b8e3238e4891a1a1f87297cb2c1",
-              "digest": "e81f50e20282b49d5953edf66a110ab6babbd1e0d580493b10c15d0f0c8d3a6b"
+              "digest": "98418529ca446a6654ba8605f462ea2f18d191e5799dc94f47a5e4d696be3464"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:46:21Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-02T23:52:41Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/roadmap.md",
@@ -230571,15 +230305,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:46:21Z",
+            "checked_at": "2026-06-02T23:52:41Z",
             "revision": {
               "git": {
-                "head": "1e02449466cc0df41f8c3c98c86c6731d75ed6f6",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -230648,7 +230379,7 @@
                   ".codewiki/kb/system/terminal-ui.md": "20432994d3fd865503755d5bd38f3feecb642e93",
                   ".codewiki/kb/system/validation-gateway.md": "a7e04e4d540f598e0012cc18822a6e190655ae81",
                   ".codewiki/kb/system/worktree-isolation.md": "56549927bf7f8e3dd2fd7216b631555229b8d986",
-                  ".codewiki/roadmap/queue.json": "d9bd04df326a06ca45d6abc955bd6e48bbee13e0",
+                  ".codewiki/roadmap/queue.json": "851e15ea8c1e66a0347267c6c1ba2672e97034a8",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -230813,7 +230544,7 @@
                   "tests/smoke/horizontal-alignment.test.mjs": "f053956470a15a2291242ea6b7e00cd596ff7645",
                   "tests/smoke/hot-retention.test.mjs": "e673ecd53692acd227315cf8beb1761d500da2b5",
                   "tests/smoke/loop-isolation-policy.test.mjs": "8fab325b373dbc9b51f8028c064e7cd847e91780",
-                  "tests/smoke/package-smoke.test.mjs": "0c23ef005b03051d0ce048f5f4090cdf15e7aaff",
+                  "tests/smoke/package-smoke.test.mjs": "c6080f86e37085c0b1a12af10b38b48ecb89338e",
                   "tests/smoke/policy-gate.test.mjs": "1de7ffc3bce1b9ec0897683e21f0923764d43285",
                   "tests/smoke/resume-scheduler.test.mjs": "70cff3a7bb6d6f99b7c03f5389264b55d9932b95",
                   "tests/smoke/roadmap-task-boundary.test.mjs": "1b34eee11de64379e295d6d6f3234d113b0c53ba",
@@ -230837,14 +230568,14 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "12eec41ece79f81776e3c79510368d3bf4e8c336fb3122ea647d2a8f7fb64a7b",
               "code_digest": "7bf547d2afe356e6e0aa1b24b9fd2706bd816f6269f14703fae172aa39e074a2",
-              "digest": "6306b9390f6f73e2c36d6dd8b7d7ae4bebb234b5cef6eb55ce56a616a7d8f098"
+              "digest": "8d9ee5fd746a776131af7193b816e75c981051a98e13d83bd4219d14d943c374"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:46:21Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-06-02T23:52:41Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -231342,7 +231073,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-02T23:46:21Z",
+        "generated_at": "2026-06-02T23:52:41Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
