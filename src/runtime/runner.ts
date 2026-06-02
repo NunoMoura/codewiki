@@ -24,6 +24,10 @@ import type {
 	ArtifactStatusRecord,
 	ChangeClaimRecord,
 } from "../session/types.ts";
+import {
+	automationReadinessRuntimeGate,
+	automationReadinessTaskFromPlan,
+} from "../state/automation-readiness.ts";
 import { stableAgentName } from "../state/builders.ts";
 import {
 	buildCodewikiResumeContext,
@@ -856,6 +860,30 @@ export async function runCodewikiRuntimeStep(
 			"CodeWiki runtime found no selected task.",
 			"no next_task in plan",
 			"skipped",
+		);
+	}
+	const readiness = automationReadinessTaskFromPlan(plan, taskId);
+	const readinessGate = automationReadinessRuntimeGate(readiness, {
+		taskId,
+		now: nowIso(),
+	});
+	if (!readinessGate.ok) {
+		return runtimeStop(
+			state,
+			"automation_readiness",
+			`CodeWiki runtime refused to schedule ${taskId}: ${readinessGate.reason}.`,
+			readinessGate.reason,
+			"blocked",
+			{
+				task_id: taskId,
+				context_boundary: {
+					requested: false,
+					reason: readinessGate.reason,
+					state: readinessGate.state,
+					blockers: readinessGate.blockers,
+					next_safe_action: readinessGate.next_action,
+				},
+			},
 		);
 	}
 	const task = await readTask(project, taskId);

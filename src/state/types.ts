@@ -246,6 +246,7 @@ export interface GraphViews {
 	semantic_execution_closure?: JsonObject;
 	artifact_status?: JsonObject;
 	validation?: JsonObject;
+	automation_readiness?: unknown;
 	code?: {
 		paths?: string[];
 		dirty_paths?: string[];

@@ -30,6 +30,7 @@ The controller reads:
 
 - graph state and recommended next actions,
 - roadmap active sprints, active tasks, blockers, and closure state,
+- graph-derived automation-readiness contracts for tasks and sprints,
 - accepted builds and linked knowledge,
 - validation requirements and policy gates,
 - user-provided budgets such as token limit, time limit, cost limit, cycle limit, write limit, session limit, and risk limit,
@@ -49,6 +50,8 @@ Agency can run at three scopes:
 | `task` | Advance one atomic roadmap work item. |
 
 Sprint scope is the default target for parallel work when a sprint is active. If the harness can spawn sessions or fresh worker processes, CodeWiki may create one isolated execution per sprint or bounded sprint workstream through adapter session-boundary capability. Otherwise it emits a plan-only `session_spawn_plan` with task ids, required scoped leases, and stop reasons for manual or external orchestration.
+
+Automation-readiness is the deterministic scheduling predicate. Generated graph state evaluates each open task and sprint as `runnable`, `blocked`, `waiting`, `retryable`, `promotable`, or `ambiguous` from source refs rather than chat. The predicate checks executable task boundary, accepted planning/decision refs or an approved exemption, gate policy, risk/model approval, scoped leases and worktree strategy, declared candidate files, validation/pass/fail evidence, source-backed context-boundary plan, and the exact next safe action. Agency work plans may schedule only `runnable`, `retryable`, or `promotable` task records with a fresh readiness contract; missing, stale, waiting, blocked, or ambiguous contracts are hard stop reasons.
 
 ## Autonomy levels
 

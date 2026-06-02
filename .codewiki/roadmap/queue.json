@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-02T21:25:52Z",
+  "updated": "2026-06-02T22:03:24Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,7 +536,7 @@
     "TASK-083": {
       "id": "TASK-083",
       "title": "Add automation-readiness runtime predicate",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "agent-workflow",
       "summary": "Implement graph/runtime automation-readiness status so agents and daemon flows know when work is runnable, blocked, retryable, or promotable without inferring from chat.",
@@ -603,7 +603,7 @@
         "closure": ""
       },
       "created": "2026-06-01",
-      "updated": "2026-06-01"
+      "updated": "2026-06-02T22:03:24Z"
     },
     "TASK-084": {
       "id": "TASK-084",

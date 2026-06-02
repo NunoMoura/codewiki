@@ -19,6 +19,7 @@ import {
 } from "../knowledge/diagram-parser.ts";
 import { buildChangeClaimState, claimScopeLabels } from "../session/claims.ts";
 import { unique } from "../shared/utils.ts";
+import { buildAutomationReadinessIndex } from "./automation-readiness.ts";
 import { GraphAccumulator } from "./graph/collector.ts";
 import {
 	buildRefs,
@@ -2948,6 +2949,16 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		clean: claim.worktree?.clean,
 		fresh_context: claim.worktree?.fresh_context,
 	}));
+	const automationReadiness = buildAutomationReadinessIndex({
+		tasks: roadmapEntries.filter((task) =>
+			isOpenTaskStatus(String(task.status || "todo")),
+		),
+		sprints: sprintViews,
+		builds,
+		validations,
+		artifact_statuses: claimState.artifact_statuses || [],
+		next_task_id: openTaskIds[0] || null,
+	});
 	const taskScopeViews = Object.fromEntries(
 		roadmapEntries.map((task) => [
 			task.id,
@@ -2961,6 +2972,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				sprint_ids: sprintByTaskId.get(task.id) || [],
 				spec_paths: task.spec_paths || [],
 				code_paths: task.code_paths || [],
+				automation_readiness: automationReadiness.tasks[task.id] || null,
 			},
 		]),
 	);
@@ -3196,6 +3208,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		fileStructureDrift,
 		claimState,
 		gc,
+		automationReadiness,
 	});
 	applyDefaultLensCompaction(
 		nodes,
@@ -3333,10 +3346,19 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				sprint_ids: sprintViews.map((sprint) => sprint.id),
 			},
 			sprints: Object.fromEntries(
-				sprintViews.map((sprint) => [sprint.id, { kind: "sprint", ...sprint }]),
+				sprintViews.map((sprint) => [
+					sprint.id,
+					{
+						kind: "sprint",
+						...sprint,
+						automation_readiness:
+							automationReadiness.sprints[sprint.id] || null,
+					},
+				]),
 			),
 			tasks: taskScopeViews,
 		},
+		automation_readiness: automationReadiness,
 		workflow_cursor: workflowCursor,
 		gc,
 		archive: {

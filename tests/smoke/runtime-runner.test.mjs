@@ -102,6 +102,27 @@ async function fixtureProject(options = {}) {
 	return { project, task };
 }
 
+function readinessFor(taskId, overrides = {}) {
+	return {
+		version: 1,
+		contract_version: 1,
+		kind: "task",
+		task_id: taskId,
+		state: overrides.state || "runnable",
+		safe_to_schedule: overrides.safe_to_schedule ?? true,
+		expires_at: overrides.expires_at || "2099-01-01T00:00:00.000Z",
+		blockers: overrides.blockers || [],
+		next_action: overrides.next_action || {
+			kind: "run",
+			loop: "implementation",
+			summary: `Run ${taskId}`,
+			command: `wiki_resume_context taskId=${taskId}`,
+			refs: [`.codewiki/roadmap/tasks/${taskId}/context.json`],
+			safe_to_schedule: overrides.safe_to_schedule ?? true,
+		},
+	};
+}
+
 function planFor(taskId, overrides = {}) {
 	const budget = {
 		maxCycles: 1,
@@ -113,16 +134,23 @@ function planFor(taskId, overrides = {}) {
 		risk: "low",
 		...(overrides.budget || {}),
 	};
+	const readiness = overrides.omitReadiness
+		? undefined
+		: readinessFor(taskId, overrides.readiness || {});
 	return {
 		mode: "work",
 		trigger: "manual",
 		budget,
+		...(readiness
+			? { automation_readiness: { tasks: { [taskId]: readiness } } }
+			: {}),
 		cycles: [
 			{
 				cycle: 1,
 				action: "task_advance",
 				next_task: taskId,
 				summary: `Next task: ${taskId}`,
+				...(readiness ? { automation_readiness: readiness } : {}),
 			},
 		],
 		stop: { next_task: taskId, reason: "Ready for execution." },
@@ -279,6 +307,65 @@ async function readQueue(project) {
 	assert.match(result.stop_reason, /maxWrites/);
 	const queue = await readQueue(project);
 	assert.equal(queue.claims.length, 0, "budget stop should not write a claim");
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, { omitReadiness: true }),
+		{},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.action, "automation_readiness");
+	assert.match(result.stop_reason, /contract missing/);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			readiness: { expires_at: "2000-01-01T00:00:00.000Z" },
+		}),
+		{},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.action, "automation_readiness");
+	assert.match(result.stop_reason, /expired/);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			readiness: {
+				state: "blocked",
+				safe_to_schedule: false,
+				blockers: [
+					{
+						kind: "accepted_planning_missing",
+						severity: "high",
+						summary: "No accepted planning build.",
+						refs: [task.id],
+						next_safe_action: "Run planning compiler.",
+					},
+				],
+			},
+		}),
+		{},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.action, "automation_readiness");
+	assert.equal(result.context_boundary.state, "blocked");
+	assert.equal(
+		result.context_boundary.blockers[0].kind,
+		"accepted_planning_missing",
+	);
 }
 
 {

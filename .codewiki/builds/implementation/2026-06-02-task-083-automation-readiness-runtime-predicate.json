@@ -1,0 +1,775 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-02T22:12:30Z",
+  "source": "TASK-083 builder session",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "task_id": "TASK-083",
+  "task": {
+    "id": "TASK-083",
+    "title": "Add automation-readiness runtime predicate",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "agent-workflow",
+    "summary": "Implement graph/runtime automation-readiness status so agents and daemon flows know when work is runnable, blocked, retryable, or promotable without inferring from chat.",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/agency/auto-pickup.ts",
+      "src/agency/config.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts",
+      "src/roadmap/selection.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/session/claims.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/session/runtime.ts",
+      "src/session/types.ts",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Automation can select or reject work from a deterministic readiness predicate instead of chat inference or roadmap status alone.",
+      "acceptance": [
+        "Generated state exposes automation-readiness for tasks and sprints with states such as runnable, blocked, waiting, retryable, and promotable or equivalent source-backed categories.",
+        "Readiness evaluation considers executable task boundary, accepted decision/planning refs or approved exemption, gate policy, risk/approval state, scoped leases/worktree strategy, candidate files, model policy, blocker status, context-boundary plan, and deterministic next action.",
+        "The automation-readiness state is available to the focused state lens without requiring full graph output.",
+        "Agency planning and runtime runner refuse to schedule work whose readiness contract is missing, stale, blocked, ambiguous, or conflicts with active leases.",
+        "Wait/wake output names exact blockers and next safe actions using lease ids, branch refs, validation refs, publisher refs, or rebase requirements.",
+        "Tests cover runnable, blocked, waiting-on-lease, retryable-after-failure, and promotable-after-validation scenarios."
+      ],
+      "non_goals": [
+        "Do not implement unbounded autonomous editing.",
+        "Do not bypass decision, planning, implementation, validation, task-close, ship-ready, publication, destructive, or approval gates.",
+        "Do not create a second competing runtime graph store.",
+        "Do not infer requirements from chat history when source refs are missing."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+        "wiki_gate/task-close linters for alignment, changed, generated-parity, and source-contract"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-09T22:12:30.000Z",
+    "purge_after": "2026-06-16T22:12:30.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-083 automation-readiness runtime predicate implementation",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-083"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/state/automation-readiness.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/reader.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "tests": [
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "validation": [
+      "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-083"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/agency/auto-pickup.ts",
+      "src/agency/config.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts",
+      "src/roadmap/selection.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/session/claims.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/session/runtime.ts",
+      "src/session/types.ts",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs"
+  ],
+  "code_files": [
+    "src/state/automation-readiness.ts",
+    "src/state/graph.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/reader.ts",
+    "src/state/types.ts",
+    "src/agency/planning.ts",
+    "src/runtime/runner.ts",
+    "src/runtime/types.ts",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "files_changed": [
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "src/state/automation-readiness.ts",
+    "src/state/graph.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/reader.ts",
+    "src/state/types.ts",
+    "src/agency/planning.ts",
+    "src/runtime/runner.ts",
+    "src/runtime/types.ts",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "checks_run": [
+    "npm run typecheck",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-083",
+      "test_files": [
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/worktree-dispatcher.test.mjs",
+        "tests/smoke/artifact-wake-queue.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs"
+      ],
+      "evidence": [
+        "Added readiness state-matrix smoke fixtures and runtime gate refusal smoke assertions."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-083",
+      "code_files": [
+        "src/state/automation-readiness.ts",
+        "src/state/graph.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/reader.ts",
+        "src/state/types.ts",
+        "src/agency/planning.ts",
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "evidence": [
+        "Added deterministic readiness builder and exposed it through graph, lenses, agency planning, and runtime runner.",
+        "Pending implementation-build state now points next_action to fresh implementation validation instead of another implementation run.",
+        "Generated graph readiness is scoped to open roadmap tasks to keep automation state focused."
+      ],
+      "notes": [],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added readiness state-matrix smoke fixtures and runtime gate refusal smoke assertions."
+  ],
+  "code_change_evidence": [
+    "Added deterministic readiness builder and exposed it through graph, lenses, agency planning, and runtime runner.",
+    "Pending implementation-build state now points next_action to fresh implementation validation instead of another implementation run.",
+    "Generated graph readiness is scoped to open roadmap tasks to keep automation state focused."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Generated state exposes task/sprint automation-readiness states.",
+      "evidence": "src/state/automation-readiness.ts, src/state/graph.ts, src/state/graph/lenses.ts, tests/smoke/agency-auto-pickup.test.mjs"
+    },
+    {
+      "criterion": "Readiness evaluates source-backed scheduling inputs and deterministic next action.",
+      "evidence": "src/state/automation-readiness.ts"
+    },
+    {
+      "criterion": "Focused state lens exposes readiness without full graph output.",
+      "evidence": "src/state/reader.ts and src/state/graph/lenses.ts"
+    },
+    {
+      "criterion": "Agency/runtime refuse missing, stale, blocked, ambiguous, or lease-conflicting contracts.",
+      "evidence": "src/agency/planning.ts, src/runtime/runner.ts, tests/smoke/runtime-runner.test.mjs"
+    },
+    {
+      "criterion": "Wait/wake blockers name lease ids and next safe actions.",
+      "evidence": "src/state/automation-readiness.ts, tests/smoke/agency-auto-pickup.test.mjs"
+    },
+    {
+      "criterion": "Tests cover runnable, blocked, waiting, retryable, and promotable states.",
+      "evidence": "tests/smoke/agency-auto-pickup.test.mjs"
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-083 automation-readiness runtime predicate.",
+    "implemented_changes": [
+      "Added task/sprint readiness predicate.",
+      "Exposed focused lens and generated graph state.",
+      "Gated agency planning/runtime runner scheduling.",
+      "Added smoke coverage and docs."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/state/automation-readiness.ts",
+        "src/state/graph.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/reader.ts",
+        "src/state/types.ts",
+        "src/agency/planning.ts",
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts"
+      ],
+      "tests": [
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs"
+      ],
+      "validation": [
+        "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+      ]
+    },
+    "acceptance_evidence": [
+      "npm run typecheck",
+      "targeted smoke tests",
+      "wiki_gate source-contract/generated-parity pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+      "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+    ],
+    "non_goals_preserved": [
+      "No unbounded autonomous editing.",
+      "No gate bypass.",
+      "No second runtime graph store.",
+      "No chat-history inference."
+    ],
+    "remaining_risks": [
+      "Fresh validation required."
+    ]
+  },
+  "risks": [
+    "Fresh validation required before task close.",
+    "wiki_gate audit has warnings for generated-file changes and existing graph-health warnings; source-contract/generated-parity passed."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-083",
+      "task_id": "TASK-083",
+      "next_focus_task_id": "TASK-084",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-083",
+        "title": "Add automation-readiness runtime predicate",
+        "summary": "TASK-083 automation-readiness runtime predicate implementation",
+        "spec_paths": [
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md"
+        ],
+        "code_paths": [
+          "src/agency/planning.ts",
+          "src/agency/auto-pickup.ts",
+          "src/agency/config.ts",
+          "src/runtime/runner.ts",
+          "src/runtime/types.ts",
+          "src/roadmap/selection.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/session/claims.ts",
+          "src/session/worktree-dispatcher.ts",
+          "src/session/runtime.ts",
+          "src/session/types.ts",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "tests/smoke/worktree-dispatcher.test.mjs",
+          "tests/smoke/artifact-wake-queue.test.mjs",
+          "src/state/automation-readiness.ts",
+          "src/state/graph.ts",
+          "src/state/graph/lenses.ts",
+          "src/state/reader.ts",
+          "src/state/types.ts",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md"
+        ],
+        "acceptance": [
+          "Generated state exposes automation-readiness for tasks and sprints with states such as runnable, blocked, waiting, retryable, and promotable or equivalent source-backed categories.",
+          "Readiness evaluation considers executable task boundary, accepted decision/planning refs or approved exemption, gate policy, risk/approval state, scoped leases/worktree strategy, candidate files, model policy, blocker status, context-boundary plan, and deterministic next action.",
+          "The automation-readiness state is available to the focused state lens without requiring full graph output.",
+          "Agency planning and runtime runner refuse to schedule work whose readiness contract is missing, stale, blocked, ambiguous, or conflicts with active leases.",
+          "Wait/wake output names exact blockers and next safe actions using lease ids, branch refs, validation refs, publisher refs, or rebase requirements.",
+          "Tests cover runnable, blocked, waiting-on-lease, retryable-after-failure, and promotable-after-validation scenarios."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+          "wiki_gate/task-close linters for alignment, changed, generated-parity, and source-contract"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        "checks_run": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+          "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+        ],
+        "test_design_evidence": [
+          "Added readiness state-matrix smoke fixtures and runtime gate refusal smoke assertions."
+        ],
+        "code_change_evidence": [
+          "Added deterministic readiness builder and exposed it through graph, lenses, agency planning, and runtime runner.",
+          "Pending implementation-build state now points next_action to fresh implementation validation instead of another implementation run.",
+          "Generated graph readiness is scoped to open roadmap tasks to keep automation state focused."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-083",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-083",
+      "show_build": "git show refs/codewiki/archive/task/TASK-083:.codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md",
+        "src/agency/planning.ts",
+        "src/agency/auto-pickup.ts",
+        "src/agency/config.ts",
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts",
+        "src/roadmap/selection.ts",
+        "src/roadmap/task-boundary.ts",
+        "src/session/claims.ts",
+        "src/session/worktree-dispatcher.ts",
+        "src/session/runtime.ts",
+        "src/session/types.ts",
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/worktree-dispatcher.test.mjs",
+        "tests/smoke/artifact-wake-queue.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-083 Add automation-readiness runtime predicate implementation evidence",
+      "body": "TASK-083 automation-readiness runtime predicate implementation\n\nChecks: npm run typecheck, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-083\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json\nCodeWiki-Checks: npm run typecheck, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-083\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-083\nCodeWiki-Digest: sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709\nCodeWiki-Restore: /wiki-restore TASK-083",
+      "trailers": [
+        "CodeWiki-Task: TASK-083",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+        "CodeWiki-Checks: npm run typecheck, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-083",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-083",
+        "CodeWiki-Digest: sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709",
+        "CodeWiki-Restore: /wiki-restore TASK-083"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-083 Add automation-readiness runtime predicate implementation evidence",
+      "body": "TASK-083 automation-readiness runtime predicate implementation\n\nChecks: npm run typecheck, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-083\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json\nCodeWiki-Checks: npm run typecheck, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-083\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-083\nCodeWiki-Digest: sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709\nCodeWiki-Restore: /wiki-restore TASK-083"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-083",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-083"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-083",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-083",
+        "show_build": "git show refs/codewiki/archive/task/TASK-083:.codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          "src/agency/planning.ts",
+          "src/agency/auto-pickup.ts",
+          "src/agency/config.ts",
+          "src/runtime/runner.ts",
+          "src/runtime/types.ts",
+          "src/roadmap/selection.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/session/claims.ts",
+          "src/session/worktree-dispatcher.ts",
+          "src/session/runtime.ts",
+          "src/session/types.ts",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "tests/smoke/worktree-dispatcher.test.mjs",
+          "tests/smoke/artifact-wake-queue.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-083",
+      "build_path": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-083",
+      "commit_sha": "",
+      "digest": "sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709",
+      "restore_command": "/wiki-restore TASK-083"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:afb47afb8bdcb1e87c4557f65305736abe672101a4acc5b6489e5fddbdc78bbc",
+          "bytes": 30880
+        },
+        {
+          "path": "tests/smoke/agency-auto-pickup.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:fd78540eca30d92b2fda38c5bc9fc1c945ef916866972b9a53da3240e6221589",
+          "bytes": 7632
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c147f0d5c2367b9e67890c7dcf94bf3ef917ebca4825fa6bdc8d2984a0ba9451",
+          "bytes": 16734
+        },
+        {
+          "path": "tests/smoke/runtime-job-state.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:07a95391edd4111adc8468eeee1b38838ce23d60b37e422aebed0395a9e8d65f",
+          "bytes": 9827
+        },
+        {
+          "path": "tests/smoke/worktree-dispatcher.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d9b04201142e8722a3655a9dae7c1183bbf40088853e7969ad58561e92d7cee5",
+          "bytes": 7086
+        },
+        {
+          "path": "tests/smoke/artifact-wake-queue.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:258484a03cba0de0b63ac2abde68068ac83b38b4f0c49325c25f2fac54ac96a7",
+          "bytes": 6342
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d705f168d9175464615fb6026851bb284989448c16c7453ca177a745d6cc9b6b",
+          "bytes": 17880
+        },
+        {
+          "path": "src/state/automation-readiness.ts",
+          "role": "code_file",
+          "sha256": "sha256:6f688a1299e6e21df19176b8e79d7d35d14e63fe47dc3a7435b22f896e57dfd2",
+          "bytes": 33050
+        },
+        {
+          "path": "src/state/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:723903cdc00a786076773419471073f6723a7e32afc4d9ab53ceae4992c0d69e",
+          "bytes": 106973
+        },
+        {
+          "path": "src/state/graph/lenses.ts",
+          "role": "code_file",
+          "sha256": "sha256:04f25805a9b14bc3b925c77975218963d3ea7a69495ce6124760bf3c03a74490",
+          "bytes": 32290
+        },
+        {
+          "path": "src/state/reader.ts",
+          "role": "code_file",
+          "sha256": "sha256:5e28dd98d3b6852faad4fe7ea8e28bbadf8a03fe6dc0320b18d7a0b1570bf555",
+          "bytes": 32188
+        },
+        {
+          "path": "src/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:6bb92765dbfc2a8371ace1676a6b9137849898f36502be52d794c4a090c5196c",
+          "bytes": 12534
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "role": "code_file",
+          "sha256": "sha256:d250b3aff78277355ba77fba538879cc747fb79ea1e85764125a6cdc5a4388a7",
+          "bytes": 19255
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "role": "code_file",
+          "sha256": "sha256:ba7566f2395153b71a11581cccbf4131b734ddc59bd03f673b95d81b047034ee",
+          "bytes": 27603
+        },
+        {
+          "path": "src/runtime/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:08c0c3b2b238f998facecec76471ba2476a6e1fcff84e514454ffd39fe53d79b",
+          "bytes": 36111
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "role": "code_file",
+          "sha256": "sha256:8a69233fdff5dd13e5864e9d94cd02b16d667bc8211b29645e918d48670fb6b6",
+          "bytes": 11688
+        },
+        {
+          "path": ".codewiki/kb/system/runtime.md",
+          "role": "code_file",
+          "sha256": "sha256:423e500e9e1ab049cb133d57449e9bfe6fc1987e73879e1b3f270eca8a436ac9",
+          "bytes": 4408
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-083",
+      "source_build": ".codewiki/builds/implementation/2026-06-02-task-083-automation-readiness-runtime-predicate.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/state/automation-readiness.ts",
+          "src/state/graph.ts",
+          "src/state/graph/lenses.ts",
+          "src/state/reader.ts",
+          "src/state/types.ts",
+          "src/agency/planning.ts",
+          "src/runtime/runner.ts",
+          "src/runtime/types.ts",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "tests/smoke/worktree-dispatcher.test.mjs",
+          "tests/smoke/artifact-wake-queue.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-083",
+        "restore_command": "/wiki-restore TASK-083"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+        "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

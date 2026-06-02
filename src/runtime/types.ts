@@ -43,6 +43,7 @@ export interface CodewikiRuntimePlan {
 	cycles: Array<Record<string, unknown>>;
 	stop?: Record<string, unknown>;
 	policy?: Record<string, unknown>;
+	automation_readiness?: Record<string, unknown>;
 }
 
 export const CODEWIKI_DAEMON_JOB_STORE_PATH =

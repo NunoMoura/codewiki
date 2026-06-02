@@ -168,6 +168,67 @@ function schedulerTaskInputs(
 	});
 }
 
+const AUTOMATION_SCHEDULABLE_STATES = new Set([
+	"runnable",
+	"retryable",
+	"promotable",
+]);
+
+function automationReadinessIndex(
+	graph: Record<string, any> | undefined,
+): Record<string, any> | null {
+	const readiness = graph?.automation_readiness;
+	return readiness && typeof readiness === "object" && !Array.isArray(readiness)
+		? readiness
+		: null;
+}
+
+function automationReadinessTask(
+	readiness: Record<string, any> | null,
+	taskId: string,
+): Record<string, any> | null {
+	const tasks = readiness?.tasks;
+	const task = tasks && typeof tasks === "object" ? tasks[taskId] : null;
+	return task && typeof task === "object" && !Array.isArray(task) ? task : null;
+}
+
+function automationSchedulableTaskIds(
+	taskIds: string[],
+	readiness: Record<string, any> | null,
+): string[] {
+	if (!readiness) return [];
+	return taskIds.filter((taskId) => {
+		const task = automationReadinessTask(readiness, taskId);
+		return Boolean(
+			task?.safe_to_schedule &&
+				AUTOMATION_SCHEDULABLE_STATES.has(String(task.state || "")),
+		);
+	});
+}
+
+function automationReadinessStopReasons(
+	taskIds: string[],
+	readiness: Record<string, any> | null,
+): string[] {
+	if (!readiness) return ["automation-readiness contract missing"];
+	return taskIds.flatMap((taskId) => {
+		const task = automationReadinessTask(readiness, taskId);
+		if (!task) return [`${taskId}: automation-readiness contract missing`];
+		if (task.safe_to_schedule) return [];
+		const blockers = Array.isArray(task.blockers) ? task.blockers : [];
+		if (blockers.length === 0)
+			return [
+				`${taskId}: automation-readiness state=${task.state || "blocked"}`,
+			];
+		return blockers.slice(0, 3).map((blocker: any) => {
+			const next = blocker.next_safe_action
+				? ` next=${blocker.next_safe_action}`
+				: "";
+			return `${taskId}: ${blocker.kind || "blocked"}${next}`;
+		});
+	});
+}
+
 function scopeSummary(scope: AgencyScope): string {
 	return scope.kind === "roadmap" ? "roadmap" : `${scope.kind}:${scope.id}`;
 }
@@ -355,9 +416,15 @@ export async function planAgency(
 	const health = state.health as Record<string, unknown> | undefined;
 	const summaryState = state.summary as Record<string, unknown> | undefined;
 	const roadmap = state.roadmap as Record<string, unknown> | undefined;
-	const openTasks = taskIdsForScope(scope, roadmap);
-	const nextTask: string | null = openTasks[0] ?? null;
 	const graph = state.graph as Record<string, any> | undefined;
+	const readiness = automationReadinessIndex(graph);
+	const openTasks = taskIdsForScope(scope, roadmap);
+	const schedulableTasks = automationSchedulableTaskIds(openTasks, readiness);
+	const readinessStopReasons = automationReadinessStopReasons(
+		openTasks,
+		readiness,
+	);
+	const nextTask: string | null = schedulableTasks[0] ?? null;
 	const nextAction = state.next_action as Record<string, unknown> | undefined;
 	const agencyPolicy = effectiveAgencyPolicy(project.config);
 	const gc = graph?.gc || {};
@@ -367,21 +434,28 @@ export async function planAgency(
 		Number(budget.maxSessions ?? parallelism.max_sessions ?? 1),
 	);
 	const claims = graph?.claims || {};
-	const hardStops = agencyHardStopReasons({
-		policy: agencyPolicy,
-		trigger,
-		health,
-		claims,
-		nextStep: nextAction,
-		budget,
-	});
+	const readinessHardStops =
+		mode === "work" && openTasks.length > 0 && schedulableTasks.length === 0
+			? readinessStopReasons
+			: [];
+	const hardStops = [
+		...agencyHardStopReasons({
+			policy: agencyPolicy,
+			trigger,
+			health,
+			claims,
+			nextStep: nextAction,
+			budget,
+		}),
+		...readinessHardStops,
+	];
 	const canSpawnSessions =
 		scope.kind === "sprint" &&
 		Boolean(parallelism.session_per_sprint) &&
 		maxSessions > 1 &&
 		Number(claims.conflict_count || 0) === 0;
 	const schedulerPlan = computeParallelSchedulerPlan(project, {
-		tasks: schedulerTaskInputs(openTasks, graph),
+		tasks: schedulerTaskInputs(schedulableTasks, graph),
 		artifact_statuses: Array.isArray(claims.artifact_statuses)
 			? claims.artifact_statuses
 			: [],
@@ -462,6 +536,8 @@ export async function planAgency(
 				scope,
 				next_task: nextTask,
 				open_tasks: openTasks,
+				schedulable_tasks: schedulableTasks,
+				automation_readiness: readiness,
 				hard_stop_reasons: hardStops,
 			});
 			stop.condition = "Hard stop gate reached.";
@@ -491,8 +567,11 @@ export async function planAgency(
 				scope,
 				next_task: nextTask,
 				open_tasks: openTasks,
+				schedulable_tasks: schedulableTasks,
+				automation_readiness: automationReadinessTask(readiness, nextTask),
 				recommended_next_loop:
-					trigger === "sprint_end" ? "decision" : "implementation",
+					automationReadinessTask(readiness, nextTask)?.next_action?.loop ||
+					(trigger === "sprint_end" ? "decision" : "implementation"),
 				scheduler_plan: schedulerPlan,
 				session_spawn_plan: canSpawnSessions
 					? {
@@ -568,6 +647,11 @@ export async function planAgency(
 				agencyPolicy.context_reset.auto_pickup,
 			next_task: nextTask,
 			open_tasks: openTasks,
+			schedulable_tasks: schedulableTasks,
+			automation_readiness_state: readiness?.state || "missing",
+			automation_readiness_selected_task: nextTask
+				? automationReadinessTask(readiness, nextTask)
+				: null,
 			action: cycles[0]?.action ?? "none",
 			scheduler_status: schedulerPlan.status,
 			scheduler_ready_task_ids: schedulerPlan.allocations.map(

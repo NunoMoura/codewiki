@@ -108,9 +108,7 @@ function normalizeStateLensId(value: unknown): CodewikiStateLensId | null {
 		automation: "automation-readiness",
 	};
 	const candidate = aliases[normalized] || normalized;
-	if (
-		CODEWIKI_STATE_LENS_VALUES.includes(candidate as CodewikiStateLensId)
-	) {
+	if (CODEWIKI_STATE_LENS_VALUES.includes(candidate as CodewikiStateLensId)) {
 		return candidate as CodewikiStateLensId;
 	}
 	throw new Error(`Unknown CodeWiki state lens: ${raw}`);
@@ -428,7 +426,9 @@ function focusedLensSourceRefs(
 		...stringArrayField(baseLens, "source_refs"),
 		...stringList(focus.refs),
 		...(artifacts.statusState?.resume?.task_id
-			? [`.codewiki/roadmap/tasks/${artifacts.statusState.resume.task_id}/context.json`]
+			? [
+					`.codewiki/roadmap/tasks/${artifacts.statusState.resume.task_id}/context.json`,
+				]
 			: []),
 	]);
 }
@@ -440,7 +440,9 @@ function stateLensFreshness(
 	return {
 		status: artifacts.graph ? "fresh" : "missing",
 		generated_at:
-			artifacts.graph?.generated_at || artifacts.statusState?.generated_at || null,
+			artifacts.graph?.generated_at ||
+			artifacts.statusState?.generated_at ||
+			null,
 		basis: "generated_graph_and_canonical_source_refs",
 		refresh_performed: artifacts.refreshPerformed,
 		source_ref_count: sourceRefs.length,
@@ -502,11 +504,7 @@ async function taskLensData(
 				task.id,
 				runtimeTask,
 			);
-			taskDetail = buildCodewikiTaskDetail(
-				task,
-				runtimeTask,
-				contextPacket,
-			);
+			taskDetail = buildCodewikiTaskDetail(task, runtimeTask, contextPacket);
 		}
 	}
 	return {
@@ -525,15 +523,16 @@ function sprintLensData(
 	const generatedSprints = (arrayField(baseData, "sprints") || [])
 		.map(recordOrNull)
 		.filter((sprint): sprint is Record<string, unknown> => Boolean(sprint));
-	const sprints =
-		artifacts.roadmapState?.views.sprints?.length
-			? artifacts.roadmapState.views.sprints
-			: generatedSprints;
+	const sprints = artifacts.roadmapState?.views.sprints?.length
+		? artifacts.roadmapState.views.sprints
+		: generatedSprints;
 	const sprint = sprintId
 		? sprints.find((candidate) => String(candidate.id || "") === sprintId) ||
 			null
 		: null;
-	const taskIds = sprint ? stringList((sprint as Record<string, unknown>).task_ids) : [];
+	const taskIds = sprint
+		? stringList((sprint as Record<string, unknown>).task_ids)
+		: [];
 	const generatedTaskData = graphLensData(graphLens(artifacts.graph, "task"));
 	const generatedTasks = (arrayField(generatedTaskData, "tasks") || [])
 		.map(recordOrNull)
@@ -625,18 +624,74 @@ function automationLensData(
 	baseData: Record<string, unknown>,
 	blockers: Record<string, unknown>[],
 	nextTaskId: string | null,
+	focus: CodewikiStateLensFocus,
 ): Record<string, unknown> {
-	const openTaskIds =
-		artifacts.roadmapState?.views.executable_open_task_ids ||
-		artifacts.roadmapState?.views.open_task_ids ||
-		[];
+	const readiness = recordOrNull(artifacts.graph?.views?.automation_readiness);
+	const taskId = String(
+		focus.taskId ||
+			focus.task_id ||
+			nextTaskId ||
+			readiness?.selected_task_id ||
+			"",
+	).trim();
+	const sprintId = String(focus.sprintId || focus.sprint_id || "").trim();
+	const tasks = recordField(readiness, "tasks") || {};
+	const sprints = recordField(readiness, "sprints") || {};
+	const focusedTask = taskId ? recordOrNull(tasks[taskId]) : null;
+	const focusedSprint = sprintId ? recordOrNull(sprints[sprintId]) : null;
 	return {
 		...baseData,
-		ready: blockers.length === 0 && openTaskIds.length > 0,
-		ready_task_ids: blockers.length === 0 ? openTaskIds.slice(0, 8) : [],
-		selected_task_id: nextTaskId,
-		stop_reasons: blockers.map((blocker) => blocker.kind),
+		ready: Boolean(recordField(readiness, "next_action")?.safe_to_schedule),
+		state: readiness?.state || baseData.state || "missing",
+		selected_task_id: readiness?.selected_task_id || nextTaskId,
+		ready_task_ids: stringArrayField(readiness, "runnable_task_ids")
+			.concat(stringArrayField(readiness, "retryable_task_ids"))
+			.concat(stringArrayField(readiness, "promotable_task_ids"))
+			.slice(0, 8),
+		runnable_task_ids: stringArrayField(readiness, "runnable_task_ids").slice(
+			0,
+			8,
+		),
+		retryable_task_ids: stringArrayField(readiness, "retryable_task_ids").slice(
+			0,
+			8,
+		),
+		promotable_task_ids: stringArrayField(
+			readiness,
+			"promotable_task_ids",
+		).slice(0, 8),
+		waiting_task_ids: stringArrayField(readiness, "waiting_task_ids").slice(
+			0,
+			8,
+		),
+		blocked_task_ids: stringArrayField(readiness, "blocked_task_ids").slice(
+			0,
+			8,
+		),
+		ambiguous_task_ids: stringArrayField(readiness, "ambiguous_task_ids").slice(
+			0,
+			8,
+		),
+		stop_reasons: unique([
+			...stringArrayField(readiness, "stop_reasons"),
+			...blockers.map((blocker) => String(blocker.kind || "")).filter(Boolean),
+		]),
+		next_action:
+			readiness?.next_action ||
+			baseData.next_action ||
+			baseData.next_safe_action ||
+			null,
+		task: focusedTask,
+		sprint: focusedSprint,
 		agency: artifacts.statusState?.agency?.summary || null,
+		contract: readiness
+			? {
+					version: readiness.version,
+					contract_version: readiness.contract_version,
+					generated_at: readiness.generated_at,
+					expires_at: readiness.expires_at,
+				}
+			: null,
 	};
 }
 
@@ -697,7 +752,7 @@ async function focusedStateLensData(
 	if (lensId === "validation") return validationLensData(artifacts, baseData);
 	if (lensId === "runtime") return runtimeLensData(artifacts, baseData);
 	if (lensId === "automation-readiness") {
-		return automationLensData(artifacts, baseData, blockers, nextTaskId);
+		return automationLensData(artifacts, baseData, blockers, nextTaskId, focus);
 	}
 	if (lensId === "system") return systemLensData(artifacts, baseData);
 	return productLensData(artifacts, baseData);
@@ -719,12 +774,7 @@ async function buildCodewikiFocusedStateLens(
 ): Promise<Record<string, unknown>> {
 	const focus = normalizeLensFocus(opts);
 	const baseLens = graphLens(artifacts.graph, lensId);
-	const sourceRefs = focusedLensSourceRefs(
-		project,
-		artifacts,
-		baseLens,
-		focus,
-	);
+	const sourceRefs = focusedLensSourceRefs(project, artifacts, baseLens, focus);
 	const blockers = buildStateLensBlockers(artifacts, health, baseLens);
 	const omittedCounts = {
 		...(recordField(baseLens, "omitted_counts") || {}),
@@ -824,8 +874,7 @@ export async function readCodewikiState(
 			open_task_count: artifacts.statusState?.summary.open_task_count ?? 0,
 			active_task_ids: artifacts.roadmapState?.views.in_progress_task_ids ?? [],
 			blocked_task_ids: artifacts.roadmapState?.views.blocked_task_ids ?? [],
-			active_sprint_ids:
-				artifacts.roadmapState?.views.active_sprint_ids ?? [],
+			active_sprint_ids: artifacts.roadmapState?.views.active_sprint_ids ?? [],
 			next_task_id: nextAction.taskId ?? null,
 			unmapped_spec_count: artifacts.statusState?.summary.unmapped_specs ?? 0,
 		},
@@ -905,6 +954,7 @@ export async function readCodewikiState(
 			expands_to: defaultLens?.expands_to ?? null,
 			claims: graphViews?.claims ?? null,
 			scope_views: graphViews?.scope_views ?? null,
+			automation_readiness: graphViews?.automation_readiness ?? null,
 			workflow_cursor: graphViews?.workflow_cursor ?? null,
 			file_structure: graphViews?.file_structure ?? null,
 			gc: gc

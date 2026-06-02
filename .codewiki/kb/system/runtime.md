@@ -25,7 +25,7 @@ The CodeWiki runtime executes and, after the daemon refactor, dispatches CodeWik
 
 The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures Pi Code with CodeWiki defaults, prompt contract, tools, skills, and workflow policy instead of forking Pi internals. Forking is reserved for a future blocker where Pi SDK/runtime hooks cannot enforce required CodeWiki behavior. Optional CLI entrypoints may support bootstrap, CI, linter, or admin workflows, but interactive development happens through Pi-hosted CodeWiki surfaces.
 
-Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence.
+Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence. Before claiming scopes or requesting a context boundary, runtime verifies the selected task's automation-readiness contract. Missing, expired, ambiguous, blocked, or waiting contracts stop the runner with exact blockers and next safe actions; only `runnable`, `retryable`, or `promotable` contracts may proceed to implementation, validation, or task-close preparation.
 
 ## Component and flow detail
 
@@ -49,7 +49,7 @@ Runtime coordinates `src/agency/**`, `src/session/**`, `src/state/**`, `src/buil
 
 Daemon jobs live at `.codewiki/runtime/jobs.json`. This repo-local runtime state records execution requests and attempts, not roadmap truth. Jobs can be `queued`, `running`, `blocked`, `completed`, or `cancelled`. Runs can be `running`, `completed`, `blocked`, `failed`, `stale`, or `cancelled`.
 
-A pass boundary emits or references required handoff/build/validation/content refs. Fail/block boundaries keep the same loop or job blocked until evidence, policy, retry limits, or user input resolves the issue.
+A pass boundary emits or references required handoff/build/validation/content refs. Fail/block boundaries keep the same loop or job blocked until evidence, policy, retry limits, or user input resolves the issue. Daemon and runner scheduling consume the same graph/runtime readiness predicate so retryable failure, lease wait, and promotion states are source-backed and do not rely on chat inference.
 
 ## Invariants
 
