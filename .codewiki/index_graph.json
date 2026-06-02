@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T23:56:02.154Z",
+  "generated_at": "2026-06-02T23:57:03.592Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -46373,166 +46373,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-320",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-320",
-      "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-      "agent_name": "Seal",
-      "mode": "write",
-      "role": "validator",
-      "status": "active",
-      "summary": "Fresh validation and task-close for TASK-085",
-      "expires_at": "2026-06-03T01:46:21.126Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-        "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-        "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-085"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/gateway/report.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/gateway/tool.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/policy/gate-policy.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/policy/gates.ts"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-085",
-      "kind": "change_claim_scope",
-      "path": "TASK-085",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/gateway/report.ts",
-      "kind": "change_claim_scope",
-      "path": "src/gateway/report.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/gateway/tool.ts",
-      "kind": "change_claim_scope",
-      "path": "src/gateway/tool.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/policy/gate-policy.ts",
-      "kind": "change_claim_scope",
-      "path": "src/policy/gate-policy.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/policy/gates.ts",
-      "kind": "change_claim_scope",
-      "path": "src/policy/gates.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim:CLAIM-319",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-319",
-      "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-      "agent_name": "Seal",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-      "expires_at": "2026-06-03T03:45:40.006Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-        "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-        "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-085"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/validation-gateway.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/roadmap.md"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/package-smoke.test.mjs"
-        },
-        {
-          "layer": "code",
-          "path": "src/gateway/report.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/gateway/tool.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/policy/gate-policy.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/policy/gates.ts"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/validation-gateway.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/validation-gateway.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/roadmap.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/roadmap.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/package-smoke.test.mjs",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -142958,91 +142798,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-320",
-      "to": "task:TASK-085"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:TASK-085"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:.codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:src/gateway/report.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:src/gateway/tool.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:src/policy/gate-policy.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-320",
-      "to": "claim_scope:src/policy/gates.ts"
-    },
-    {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-319",
-      "to": "task:TASK-085"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:TASK-085"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:src/gateway/report.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:src/gateway/tool.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:src/policy/gate-policy.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-319",
-      "to": "claim_scope:src/policy/gates.ts"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -160667,7 +160422,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "blocked",
-            "item_count": 36,
+            "item_count": 24,
             "badges": [
               {
                 "id": "open_tasks",
@@ -160696,7 +160451,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -160869,8 +160624,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4952,
-          "edges": 16172,
+          "nodes": 4940,
+          "edges": 16155,
           "open_tasks": 0,
           "validations": 250,
           "source_refs": 1195
@@ -161030,7 +160785,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "blocked",
-              "item_count": 36,
+              "item_count": 24,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -161059,7 +160814,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 2
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -162129,7 +161884,7 @@
           ".codewiki/index_graph.json"
         ],
         "omitted_counts": {
-          "artifact_statuses": 2,
+          "artifact_statuses": 0,
           "source_refs": 0
         },
         "next_action": {
@@ -162171,337 +161926,12 @@
           }
         ],
         "data": {
-          "active_claim_count": 2,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/roadmap.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/validation-gateway.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "src/gateway/report.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/gateway/report.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "src/gateway/tool.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/gateway/tool.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "src/policy/gate-policy.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/policy/gate-policy.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "src/policy/gates.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-320",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "validator",
-                  "task_id": "TASK-085",
-                  "summary": "Fresh validation and task-close for TASK-085",
-                  "expires_at": "2026-06-03T01:46:21.126Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/policy/gates.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-319",
-                  "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-085",
-                  "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                  "expires_at": "2026-06-03T03:45:40.006Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                    "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -162545,24 +161975,30 @@
           ".codewiki/validation/2026-05-20-task-close-pass-task-003.json"
         ],
         "omitted_counts": {
-          "ready_tasks": 1,
+          "ready_tasks": 0,
           "source_refs": 2765
         },
         "next_action": {
-          "kind": "stop",
-          "loop": "planning",
-          "summary": "No automation-ready task is available.",
-          "command": null,
-          "refs": [],
-          "safe_to_schedule": false
+          "kind": "promote",
+          "loop": "task-close",
+          "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+          "command": "wiki_gate profile=task-close task_id=TASK-084",
+          "refs": [
+            ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+          ],
+          "safe_to_schedule": true
         },
         "next_safe_action": {
-          "kind": "stop",
-          "loop": "planning",
-          "summary": "No automation-ready task is available.",
-          "command": null,
-          "refs": [],
-          "safe_to_schedule": false
+          "kind": "promote",
+          "loop": "task-close",
+          "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+          "command": "wiki_gate profile=task-close task_id=TASK-084",
+          "refs": [
+            ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+          ],
+          "safe_to_schedule": true
         },
         "blockers": [
           {
@@ -162574,12 +162010,6 @@
             "kind": "semantic_execution_closure_gap",
             "count": 52,
             "summary": "Semantic execution closure still has gaps."
-          },
-          {
-            "kind": "retryable_validation_failure"
-          },
-          {
-            "kind": "active_lease"
           }
         ],
         "freshness": {
@@ -162611,38 +162041,38 @@
           }
         ],
         "data": {
-          "ready": false,
-          "state": "waiting",
-          "selected_task_id": null,
-          "ready_task_ids": [],
-          "runnable_task_ids": [],
-          "retryable_task_ids": [],
-          "promotable_task_ids": [],
-          "waiting_task_ids": [
+          "ready": true,
+          "state": "promotable",
+          "selected_task_id": "TASK-084",
+          "ready_task_ids": [
             "TASK-084"
           ],
+          "runnable_task_ids": [],
+          "retryable_task_ids": [],
+          "promotable_task_ids": [
+            "TASK-084"
+          ],
+          "waiting_task_ids": [],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
-          "stop_reasons": [
-            "retryable_validation_failure",
-            "active_lease"
-          ],
+          "stop_reasons": [],
           "active_sprint_ids": [
             "SPRINT-017",
             "SPRINT-020"
           ],
           "tasks": {
             "TASK-084": {
-              "state": "waiting",
+              "state": "promotable",
               "next_action": {
-                "kind": "wait",
-                "loop": "runtime",
-                "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-                "command": "wiki_artifact_status action=wait taskId=TASK-084",
+                "kind": "promote",
+                "loop": "task-close",
+                "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+                "command": "wiki_gate profile=task-close task_id=TASK-084",
                 "refs": [
+                  ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
                 ],
-                "safe_to_schedule": false
+                "safe_to_schedule": true
               },
               "blockers": [
                 {
@@ -162656,23 +162086,6 @@
                   "validation_refs": [
                     ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
                   ],
-                  "retryable": true
-                },
-                {
-                  "kind": "active_lease",
-                  "severity": "medium",
-                  "summary": "Scoped lease CLAIM-320 holds .codewiki/validation/**.",
-                  "refs": [
-                    "CLAIM-320",
-                    "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                  ],
-                  "lease_ids": [
-                    "CLAIM-320"
-                  ],
-                  "branch_refs": [
-                    "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                  ],
-                  "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
                   "retryable": true
                 }
               ],
@@ -162992,8 +162405,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4952,
-          "edges": 16172,
+          "nodes": 4940,
+          "edges": 16155,
           "source_refs": 1195
         },
         "next_action": {
@@ -198025,936 +197438,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 2,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "validator": 1,
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-320",
-          "role": "validator",
-          "mode": "write",
-          "task_id": "TASK-085",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-          "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-        },
-        {
-          "id": "CLAIM-319",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-085",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-          "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-320",
-          "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-          "agent_name": "Seal",
-          "status": "active",
-          "mode": "write",
-          "role": "validator",
-          "summary": "Fresh validation and task-close for TASK-085",
-          "task_id": "TASK-085",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-            "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-            "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-085"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/gateway/report.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/gateway/tool.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/policy/gate-policy.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/policy/gates.ts"
-            }
-          ],
-          "created_at": "2026-06-02T23:46:21Z",
-          "updated_at": "2026-06-02T23:46:21Z",
-          "expires_at": "2026-06-03T01:46:21.126Z"
-        },
-        {
-          "id": "CLAIM-319",
-          "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-          "agent_name": "Seal",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-          "task_id": "TASK-085",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-            "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-            "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-085"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/validation-gateway.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/roadmap.md"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/gateway/tool.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/policy/gate-policy.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/policy/gates.ts"
-            }
-          ],
-          "created_at": "2026-06-02T23:45:40Z",
-          "updated_at": "2026-06-02T23:45:40Z",
-          "expires_at": "2026-06-03T03:45:40.006Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/roadmap.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/validation-gateway.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/policy/gate-policy.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/gate-policy.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/policy/gates.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/gates.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-085"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 2,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/roadmap.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/validation-gateway.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/policy/gate-policy.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/gate-policy.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/policy/gates.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/gates.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-085"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-320",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-085",
-              "summary": "Fresh validation and task-close for TASK-085",
-              "expires_at": "2026-06-03T01:46:21.126Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            },
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-319",
-              "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-085",
-              "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-              "expires_at": "2026-06-03T03:45:40.006Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -218872,16 +217374,16 @@
             "sprint_id": "SPRINT-020",
             "title": "Legacy production-readiness reconciliation",
             "status": "planned",
-            "state": "waiting",
+            "state": "promotable",
             "task_ids": [
               "TASK-084"
             ],
             "runnable_task_ids": [],
             "retryable_task_ids": [],
-            "promotable_task_ids": [],
-            "waiting_task_ids": [
+            "promotable_task_ids": [
               "TASK-084"
             ],
+            "waiting_task_ids": [],
             "blocked_task_ids": [],
             "ambiguous_task_ids": [],
             "blockers": [
@@ -218897,34 +217399,17 @@
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
                 ],
                 "retryable": true
-              },
-              {
-                "kind": "active_lease",
-                "severity": "medium",
-                "summary": "Scoped lease CLAIM-320 holds .codewiki/validation/**.",
-                "refs": [
-                  "CLAIM-320",
-                  "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                ],
-                "lease_ids": [
-                  "CLAIM-320"
-                ],
-                "branch_refs": [
-                  "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                ],
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
-                "retryable": true
               }
             ],
             "next_action": {
-              "kind": "wait",
-              "loop": "planning",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-              "command": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
+              "kind": "promote",
+              "loop": "task-close",
+              "summary": "Sprint SPRINT-020 has automation-ready task TASK-084.",
+              "command": "wiki_resume_context taskId=TASK-084",
               "refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+                ".codewiki/roadmap/tasks/TASK-084/context.json"
               ],
-              "safe_to_schedule": false
+              "safe_to_schedule": true
             },
             "source_refs": [
               ".codewiki/roadmap/queue.json",
@@ -219162,13 +217647,13 @@
             "task_id": "TASK-084",
             "title": "Inventory legacy closed work against production-ready gates",
             "status": "blocked",
-            "state": "waiting",
+            "state": "promotable",
             "runnable": false,
             "retryable": false,
-            "promotable": false,
-            "safe_to_schedule": false,
-            "generated_at": "2026-06-02T23:56:02.037Z",
-            "expires_at": "2026-06-03T01:56:02.037Z",
+            "promotable": true,
+            "safe_to_schedule": true,
+            "generated_at": "2026-06-02T23:57:03.543Z",
+            "expires_at": "2026-06-03T01:57:03.543Z",
             "sprint_ids": [
               "SPRINT-020"
             ],
@@ -219215,7 +217700,7 @@
                 "file-structure",
                 "changed"
               ],
-              "next_loop": "implementation",
+              "next_loop": "task-close",
               "risk": "medium",
               "risk_approval_refs": [
                 ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json"
@@ -219224,9 +217709,7 @@
             "lease_policy": {
               "requires_scoped_write_lease": true,
               "worktree_strategy": "role-worktree",
-              "active_lease_ids": [
-                "CLAIM-320"
-              ],
+              "active_lease_ids": [],
               "waiter_ids": []
             },
             "context_boundary": {
@@ -219273,34 +217756,18 @@
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
                 ],
                 "retryable": true
-              },
-              {
-                "kind": "active_lease",
-                "severity": "medium",
-                "summary": "Scoped lease CLAIM-320 holds .codewiki/validation/**.",
-                "refs": [
-                  "CLAIM-320",
-                  "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                ],
-                "lease_ids": [
-                  "CLAIM-320"
-                ],
-                "branch_refs": [
-                  "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-                ],
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
-                "retryable": true
               }
             ],
             "next_action": {
-              "kind": "wait",
-              "loop": "runtime",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-              "command": "wiki_artifact_status action=wait taskId=TASK-084",
+              "kind": "promote",
+              "loop": "task-close",
+              "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+              "command": "wiki_gate profile=task-close task_id=TASK-084",
               "refs": [
+                ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                 ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
               ],
-              "safe_to_schedule": false
+              "safe_to_schedule": true
             }
           }
         }
@@ -219309,9 +217776,9 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-02T23:56:02.037Z",
-      "expires_at": "2026-06-03T01:56:02.037Z",
-      "state": "waiting",
+      "generated_at": "2026-06-02T23:57:03.543Z",
+      "expires_at": "2026-06-03T01:57:03.543Z",
+      "state": "promotable",
       "tasks": {
         "TASK-084": {
           "version": 1,
@@ -219320,13 +217787,13 @@
           "task_id": "TASK-084",
           "title": "Inventory legacy closed work against production-ready gates",
           "status": "blocked",
-          "state": "waiting",
+          "state": "promotable",
           "runnable": false,
           "retryable": false,
-          "promotable": false,
-          "safe_to_schedule": false,
-          "generated_at": "2026-06-02T23:56:02.037Z",
-          "expires_at": "2026-06-03T01:56:02.037Z",
+          "promotable": true,
+          "safe_to_schedule": true,
+          "generated_at": "2026-06-02T23:57:03.543Z",
+          "expires_at": "2026-06-03T01:57:03.543Z",
           "sprint_ids": [
             "SPRINT-020"
           ],
@@ -219373,7 +217840,7 @@
               "file-structure",
               "changed"
             ],
-            "next_loop": "implementation",
+            "next_loop": "task-close",
             "risk": "medium",
             "risk_approval_refs": [
               ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json"
@@ -219382,9 +217849,7 @@
           "lease_policy": {
             "requires_scoped_write_lease": true,
             "worktree_strategy": "role-worktree",
-            "active_lease_ids": [
-              "CLAIM-320"
-            ],
+            "active_lease_ids": [],
             "waiter_ids": []
           },
           "context_boundary": {
@@ -219431,34 +217896,18 @@
                 ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
               ],
               "retryable": true
-            },
-            {
-              "kind": "active_lease",
-              "severity": "medium",
-              "summary": "Scoped lease CLAIM-320 holds .codewiki/validation/**.",
-              "refs": [
-                "CLAIM-320",
-                "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-              ],
-              "lease_ids": [
-                "CLAIM-320"
-              ],
-              "branch_refs": [
-                "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-              ],
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
-              "retryable": true
             }
           ],
           "next_action": {
-            "kind": "wait",
-            "loop": "runtime",
-            "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-            "command": "wiki_artifact_status action=wait taskId=TASK-084",
+            "kind": "promote",
+            "loop": "task-close",
+            "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+            "command": "wiki_gate profile=task-close task_id=TASK-084",
             "refs": [
+              ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
             ],
-            "safe_to_schedule": false
+            "safe_to_schedule": true
           }
         }
       },
@@ -220040,16 +218489,16 @@
           "sprint_id": "SPRINT-020",
           "title": "Legacy production-readiness reconciliation",
           "status": "planned",
-          "state": "waiting",
+          "state": "promotable",
           "task_ids": [
             "TASK-084"
           ],
           "runnable_task_ids": [],
           "retryable_task_ids": [],
-          "promotable_task_ids": [],
-          "waiting_task_ids": [
+          "promotable_task_ids": [
             "TASK-084"
           ],
+          "waiting_task_ids": [],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
           "blockers": [
@@ -220065,34 +218514,17 @@
                 ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
               ],
               "retryable": true
-            },
-            {
-              "kind": "active_lease",
-              "severity": "medium",
-              "summary": "Scoped lease CLAIM-320 holds .codewiki/validation/**.",
-              "refs": [
-                "CLAIM-320",
-                "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-              ],
-              "lease_ids": [
-                "CLAIM-320"
-              ],
-              "branch_refs": [
-                "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660"
-              ],
-              "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
-              "retryable": true
             }
           ],
           "next_action": {
-            "kind": "wait",
-            "loop": "planning",
-            "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-            "command": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
+            "kind": "promote",
+            "loop": "task-close",
+            "summary": "Sprint SPRINT-020 has automation-ready task TASK-084.",
+            "command": "wiki_resume_context taskId=TASK-084",
             "refs": [
-              ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+              ".codewiki/roadmap/tasks/TASK-084/context.json"
             ],
-            "safe_to_schedule": false
+            "safe_to_schedule": true
           },
           "source_refs": [
             ".codewiki/roadmap/queue.json",
@@ -220109,24 +218541,24 @@
       },
       "runnable_task_ids": [],
       "retryable_task_ids": [],
-      "promotable_task_ids": [],
-      "waiting_task_ids": [
+      "promotable_task_ids": [
         "TASK-084"
       ],
+      "waiting_task_ids": [],
       "blocked_task_ids": [],
       "ambiguous_task_ids": [],
-      "selected_task_id": null,
-      "stop_reasons": [
-        "retryable_validation_failure",
-        "active_lease"
-      ],
+      "selected_task_id": "TASK-084",
+      "stop_reasons": [],
       "next_action": {
-        "kind": "stop",
-        "loop": "planning",
-        "summary": "No automation-ready task is available.",
-        "command": null,
-        "refs": [],
-        "safe_to_schedule": false
+        "kind": "promote",
+        "loop": "task-close",
+        "summary": "TASK-084 has validation evidence and can be promoted through task-close gates.",
+        "command": "wiki_gate profile=task-close task_id=TASK-084",
+        "refs": [
+          ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+          ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+        ],
+        "safe_to_schedule": true
       },
       "source_refs": [
         ".codewiki/roadmap/queue.json",
@@ -220198,10 +218630,7 @@
             ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
           ],
-          "claim_ids": [
-            "CLAIM-320",
-            "CLAIM-319"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -222173,7 +220602,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-02T23:56:01.609Z",
+      "generated_at": "2026-06-02T23:57:03.345Z",
       "counts": {
         "large-doc": 2
       },
@@ -222194,7 +220623,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-02T23:56:02Z",
+      "generated_at": "2026-06-02T23:57:03Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -223689,7 +222118,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-02T23:56:02Z",
+      "generated_at": "2026-06-02T23:57:03Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -223832,10 +222261,7 @@
               ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
             ],
-            "claim_ids": [
-              "CLAIM-320",
-              "CLAIM-319"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -224246,7 +222672,7 @@
       },
       "direction": [
         "TASK-084 is blocked; implementation loop needs unblock evidence or rerouting.",
-        "Parallel sessions: 0 active, 0 collision task(s), 2 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
@@ -228123,7 +226549,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-02T23:56:02Z",
+        "generated_at": "2026-06-02T23:57:03Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -228178,10 +226604,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:56:02Z",
+            "checked_at": "2026-06-02T23:57:03Z",
             "revision": {
               "git": {
-                "head": "9b9d5b0ba22d5a7ec93979e915a2cd67c6d6f00c",
+                "head": "09e0c5b41e3cee4a650eb7c2abf774f5467613b9",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -228436,15 +226862,15 @@
               },
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "9b9b998500666b062c278cd3cba72686ac5d64f5557d6b3a11f5f4fe63bbd6a5",
-              "digest": "4ec857c3e9b1cea564b10d8ff1da48f2b7f98c6b267a9e5359627350b58784fa"
+              "code_digest": "71eedc99988a3ba5cbb07dae8ba3f5d947dee82fa75397453a81b3fd3788932f",
+              "digest": "7e9209c95d0e37495a60daba617379839756d9b042edbbce2feb3573bb244623"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:56:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T23:57:03Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -228932,10 +227358,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-02T23:56:02Z",
+            "checked_at": "2026-06-02T23:57:03Z",
             "revision": {
               "git": {
-                "head": "9b9d5b0ba22d5a7ec93979e915a2cd67c6d6f00c",
+                "head": "09e0c5b41e3cee4a650eb7c2abf774f5467613b9",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -229173,15 +227599,15 @@
               },
               "spec_digest": "3e045454a5d1286136c8b98960205c875a3a5d01945c6b4f29024abebca94583",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "9d01bad97c7dbd0fc3e24bde7ca5c12784555fc63e81d014a5e16242cddb4472",
-              "digest": "9df2fe9ba46569f8e4428a834c81be9767a65f658ee5d7ccb531bc6867939c80"
+              "code_digest": "29a1faba058d0bd780808dd419dc8e37baf729e041d9fcd73123e2ff59e73c1a",
+              "digest": "a5b1633b737f258c893918bcda1164faf5eca0091060e57f4c17a1af96f11d5c"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:56:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T23:57:03Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -229646,10 +228072,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T23:56:02Z",
+            "checked_at": "2026-06-02T23:57:03Z",
             "revision": {
               "git": {
-                "head": "9b9d5b0ba22d5a7ec93979e915a2cd67c6d6f00c",
+                "head": "09e0c5b41e3cee4a650eb7c2abf774f5467613b9",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -229904,15 +228330,15 @@
               },
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "9b9b998500666b062c278cd3cba72686ac5d64f5557d6b3a11f5f4fe63bbd6a5",
-              "digest": "4ec857c3e9b1cea564b10d8ff1da48f2b7f98c6b267a9e5359627350b58784fa"
+              "code_digest": "71eedc99988a3ba5cbb07dae8ba3f5d947dee82fa75397453a81b3fd3788932f",
+              "digest": "7e9209c95d0e37495a60daba617379839756d9b042edbbce2feb3573bb244623"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T23:56:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T23:57:03Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -230401,519 +228827,23 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-02T23:56:02Z",
+        "generated_at": "2026-06-02T23:57:03Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 2,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-320",
-            "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-            "agent_name": "Seal",
-            "status": "active",
-            "mode": "write",
-            "role": "validator",
-            "summary": "Fresh validation and task-close for TASK-085",
-            "task_id": "TASK-085",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-              "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-              "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-085"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/gateway/report.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/gateway/tool.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/policy/gate-policy.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/policy/gates.ts"
-              }
-            ],
-            "created_at": "2026-06-02T23:46:21Z",
-            "updated_at": "2026-06-02T23:46:21Z",
-            "expires_at": "2026-06-03T01:46:21.126Z"
-          },
-          {
-            "id": "CLAIM-319",
-            "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-            "agent_name": "Seal",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-            "task_id": "TASK-085",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-              "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-              "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-085"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/validation-gateway.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/roadmap.md"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/package-smoke.test.mjs"
-              },
-              {
-                "layer": "code",
-                "path": "src/gateway/report.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/gateway/tool.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/policy/gate-policy.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/policy/gates.ts"
-              }
-            ],
-            "created_at": "2026-06-02T23:45:40Z",
-            "updated_at": "2026-06-02T23:45:40Z",
-            "expires_at": "2026-06-03T03:45:40.006Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/roadmap.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/validation-gateway.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/gateway/report.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/gateway/tool.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/gateway/tool.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/policy/gate-policy.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/policy/gate-policy.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/policy/gates.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/policy/gates.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-085"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-320",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-085",
-                "summary": "Fresh validation and task-close for TASK-085",
-                "expires_at": "2026-06-03T01:46:21.126Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-320 release or validated publisher/patch ref for codewiki/TASK-085/validator/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              },
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-319",
-                "session_id": "019e8aba-693f-7de6-acf4-27c552672660",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-085",
-                "summary": "Artifact usage for TASK-085 via /wiki-resume.",
-                "expires_at": "2026-06-03T03:45:40.006Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "branch": "codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660",
-                  "notes": "factory=role-worktree; task=TASK-085; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-319 release or validated publisher/patch ref for codewiki/TASK-085/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 2,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
