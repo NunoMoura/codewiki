@@ -14,7 +14,15 @@ import type {
 	CodewikiRoadmapEvidenceInput,
 	RoadmapStatus,
 } from "./types.ts";
-import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./store.ts";
+import {
+	appendRoadmapTasks,
+	updateRoadmapTask,
+	appendCodewikiTaskEvidence,
+	readRoadmapTask,
+	hasCodewikiTaskPatchChanges,
+	buildRoadmapTaskUpdateFromCodewikiPatch,
+	hasRoadmapTaskUpdateFields,
+} from "./store.ts";
 import { maybeReadRoadmapState } from "../state/artifacts.ts";
 import type { FileStore, RebuildRunner, MessageBus } from "../shared/ports.ts";
 
@@ -36,8 +44,18 @@ export async function createCodewikiTasks(
 	project: WikiProject,
 	inputs: RoadmapTaskInput[],
 	ports: TaskMutationPorts,
-): Promise<{ created: RoadmapTaskRecord[]; reused: RoadmapTaskRecord[]; refined: RoadmapTaskRecord[] }> {
-	const result = await appendRoadmapTasks(null as any, project, null as any, inputs, { refresh: false });
+): Promise<{
+	created: RoadmapTaskRecord[];
+	reused: RoadmapTaskRecord[];
+	refined: RoadmapTaskRecord[];
+}> {
+	const result = await appendRoadmapTasks(
+		null as any,
+		project,
+		null as any,
+		inputs,
+		{ refresh: false },
+	);
 	await ports.rebuildRunner.run(project);
 	return result;
 }
@@ -62,7 +80,11 @@ export async function patchCodewikiTask(
 		return { task, changed: false };
 	}
 
-	const update = buildRoadmapTaskUpdateFromCodewikiPatch(task, stateTask, patch);
+	const update = buildRoadmapTaskUpdateFromCodewikiPatch(
+		task,
+		stateTask,
+		patch,
+	);
 
 	if (!hasRoadmapTaskUpdateFields(update)) {
 		return { task, changed: false };
@@ -77,42 +99,111 @@ export async function patchCodewikiTask(
 // Close task with verification gateway
 // ---------------------------------------------------------------------------
 
-function hasPublisherTaskCloseProof(isolation: any): boolean {
+function hasPublisherTaskCloseEvidence(isolation: any): boolean {
 	return Boolean(
 		isolation?.published_sha ||
-		isolation?.tree_sha ||
-		isolation?.archive_ref ||
-		isolation?.remote_ref,
+			isolation?.tree_sha ||
+			isolation?.archive_ref ||
+			isolation?.remote_ref,
 	);
 }
 
-async function hasPassingTaskCloseValidation(project: WikiProject, taskId: string): Promise<boolean> {
+function validationContentRefs(isolation: any): string[] {
+	return [
+		isolation?.validated_sha,
+		isolation?.head_sha,
+		isolation?.published_sha,
+		isolation?.tree_sha,
+		isolation?.package_digest,
+		isolation?.archive_ref,
+		isolation?.remote_ref,
+		isolation?.working_tree_digest,
+		isolation?.worktree_digest,
+	]
+		.map((value) => String(value || "").trim())
+		.filter(Boolean);
+}
+
+function contentRefsOverlap(left: string[], right: string[]): boolean {
+	if (left.length === 0 || right.length === 0) return false;
+	const rightSet = new Set(right);
+	return left.some((ref) => rightSet.has(ref));
+}
+
+async function readTaskValidationReports(
+	project: WikiProject,
+	taskId: string,
+): Promise<any[]> {
 	const validationDir = resolve(project.root, ".codewiki/validation");
 	let entries: string[];
 	try {
 		entries = await readdir(validationDir);
 	} catch {
-		return false;
+		return [];
 	}
+	const reports: any[] = [];
 	for (const entry of entries) {
 		if (!entry.endsWith(".json")) continue;
 		try {
-			const data = JSON.parse(await readFile(resolve(validationDir, entry), "utf8"));
-			const isolation = data?.isolation || {};
+			const data = JSON.parse(
+				await readFile(resolve(validationDir, entry), "utf8"),
+			);
 			if (
 				data?.kind === "validation_report" &&
-				data?.profile === "task-close" &&
 				data?.task_id === taskId &&
-				data?.verdict === "pass" &&
-				isolation.fresh_context === true &&
-				isolation.clean === true &&
-				hasPublisherTaskCloseProof(isolation)
-			) return true;
+				data?.verdict === "pass"
+			)
+				reports.push(data);
 		} catch {
 			// Ignore malformed or partial validation files; validation writer owns schema errors.
 		}
 	}
-	return false;
+	return reports;
+}
+
+async function taskCloseReadiness(
+	project: WikiProject,
+	taskId: string,
+): Promise<{ ready: boolean; missing: string[] }> {
+	const reports = await readTaskValidationReports(project, taskId);
+	const taskCloseReports = reports.filter(
+		(report) => report?.profile === "task-close",
+	);
+	const shipReadyReports = reports.filter(
+		(report) => report?.profile === "ship-ready",
+	);
+	const missing = new Set<string>();
+	if (taskCloseReports.length === 0) missing.add("task-close validation pass");
+	if (shipReadyReports.length === 0)
+		missing.add("task-scoped ship-ready validation pass");
+	for (const taskClose of taskCloseReports) {
+		const taskCloseIsolation = taskClose?.isolation || {};
+		if (taskCloseIsolation.fresh_context !== true)
+			missing.add("fresh_context=true");
+		if (taskCloseIsolation.clean !== true) missing.add("clean=true");
+		if (!hasPublisherTaskCloseEvidence(taskCloseIsolation))
+			missing.add("publisher result evidence");
+		const closeRefs = validationContentRefs(taskCloseIsolation);
+		if (
+			shipReadyReports.some((shipReady) => {
+				const shipReadyIsolation = shipReady?.isolation || {};
+				return (
+					shipReadyIsolation.fresh_context === true &&
+					shipReadyIsolation.clean === true &&
+					(closeRefs.length === 0 ||
+						contentRefsOverlap(
+							closeRefs,
+							validationContentRefs(shipReadyIsolation),
+						))
+				);
+			})
+		) {
+			return { ready: true, missing: [] };
+		}
+		if (shipReadyReports.length > 0)
+			missing.add("ship-ready validation for exact content candidate");
+	}
+	return { ready: false, missing: [...missing] };
 }
 
 export async function closeCodewikiTask(
@@ -130,20 +221,26 @@ export async function closeCodewikiTask(
 	if (!task) throw new Error(`Roadmap task not found: ${taskId}`);
 
 	// The validation gateway owns task-close decisions. Closing is a
-	// publication/content-proof boundary, so it must cite a passing task-close
-	// validation report with clean publisher result proof rather than dirty
-	// pre-commit implementation evidence or validator-only attestations.
-	if (!await hasPassingTaskCloseValidation(project, task.id)) {
+	// publication/content-evidence boundary, so it must cite passing task-close
+	// validation and task-scoped ship-ready validation for the exact content
+	// candidate rather than dirty pre-commit implementation evidence or
+	// validator-only attestations.
+	const readiness = await taskCloseReadiness(project, task.id);
+	if (!readiness.ready) {
 		throw new Error(
-			`Task close blocked for ${task.id}: requires passing task-close validation with fresh_context=true, clean=true, and publisher result proof (published_sha/tree_sha/archive_ref/remote_ref).`,
+			`Task close blocked for ${task.id}: next_loop=validation; run ship-ready then task-close validation with fresh_context=true, clean=true, publisher result evidence (published_sha/tree_sha/archive_ref/remote_ref), and exact content evidence. Missing: ${readiness.missing.join(", ") || "task-close validation evidence"}.`,
 		);
 	}
 
-	await updateRoadmapTask(project, {
-		taskId: task.id,
-		status: "done",
-		summary: summary?.trim() || evidence?.summary?.trim() || "Task closed.",
-	}, { refresh: false });
+	await updateRoadmapTask(
+		project,
+		{
+			taskId: task.id,
+			status: "done",
+			summary: summary?.trim() || evidence?.summary?.trim() || "Task closed.",
+		},
+		{ refresh: false },
+	);
 
 	await ports.rebuildRunner.run(project);
 
@@ -183,10 +280,14 @@ export async function cancelCodewikiTask(
 	const task = await readRoadmapTask(project, taskId);
 	if (!task) throw new Error(`Roadmap task not found: ${taskId}`);
 
-	await updateRoadmapTask(project, {
-		taskId: task.id,
-		status: "cancelled" as RoadmapStatus,
-		summary: summary ?? task.summary,
-	}, { refresh: false });
+	await updateRoadmapTask(
+		project,
+		{
+			taskId: task.id,
+			status: "cancelled" as RoadmapStatus,
+			summary: summary ?? task.summary,
+		},
+		{ refresh: false },
+	);
 	await ports.rebuildRunner.run(project);
 }

@@ -14,7 +14,7 @@ updated: "2026-06-01"
 
 The validation gateway validates submitted cycle evidence against policy, source refs, exit criteria, required linters, executable tests when code behavior changes, and immutable content evidence. It returns `pass`, `fail`, or `block`. It does not define requirements, write canonical truth, create plans, compile handoffs, or own content by itself.
 
-Policy lives under `src/policy/**`. Gateway report, preflight, transaction, and tool behavior lives under `src/gateway/**`. Compatibility glue lives under `src/validation/**`. Deterministic legacy audit profiles should migrate conceptually to gateway-required linters.
+Policy lives under `src/policy/**`. Gateway report, preflight, transaction, and tool behavior lives under `src/gateway/**`. Compatibility glue lives under `src/validation/**`. Deterministic legacy linter profiles should migrate conceptually to gateway-required linters.
 
 ## Gate index
 
@@ -35,11 +35,11 @@ See [Implementation, validation, and close](flows/implementation-validation-clos
 
 Preflight reports missing upstream builds, required linters, task ids, decision-propagation gaps, content evidence, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation. Accepted executable decision rows without durable task/sprint mapping block planning, implementation, and close as `planning_gap`. Fail/block verdicts classify the failure and recommend the smallest safe next loop: same compiler loop, planning, decision, validation/content-evidence, observe/wait, or user approval.
 
-Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/ship-ready, and destructive. Low-risk paths still validate; high-risk tiers escalate before lower-layer promotion.
+Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/publication, and destructive. Low-risk paths still validate; high-risk tiers escalate before lower-layer promotion. A `ship-ready` gate validates the exact content candidate; publication, release, push, remote update, and destructive actions remain separate approval boundaries.
 
 ## Alignment and content evidence
 
-Vertical alignment traces intent through decision builds, knowledge/diagrams, planning builds, roadmap tasks, implementation builds, validation reports, and immutable content evidence. Horizontal alignment checks coherence inside one layer. Graph context helps routing but is not final authority.
+Vertical alignment traces intent through decision builds, knowledge/diagrams, planning builds, roadmap tasks, implementation builds, validation reports, and immutable content evidence. Horizontal alignment validates coherence inside one layer. Graph context helps routing but is not final authority.
 
 Implementation validation requires fresh-context isolation, explicit clean-state value, checked content evidence, and a commit-ready implementation build. Dirty implementation validation may use a working-tree digest. Task-close, sprint-close, and ship-ready require clean immutable evidence such as commit SHA, tree SHA, package digest, archive ref, or remote ref.
 
@@ -55,7 +55,7 @@ Implementation validation requires fresh-context isolation, explicit clean-state
 
 - [Validation gateway component](components/validation-gateway.md)
 - [Alignment Model](alignment-model.md)
-- [Linter engine migration](audits.md)
+- Linter engine migration document
 - [Builds](builds.md)
 - [Compilers](compilers.md)
 - [Roadmap](roadmap.md)

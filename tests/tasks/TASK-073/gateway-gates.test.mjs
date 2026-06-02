@@ -4,7 +4,10 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { buildGatewayPreflight } from "../../../src/gateway/report.ts";
-import { VALIDATION_GATE_VALUES, normalizeValidationGate } from "../../../src/gateway/types.ts";
+import {
+	VALIDATION_GATE_VALUES,
+	normalizeValidationGate,
+} from "../../../src/gateway/types.ts";
 
 async function writeJson(path, data) {
 	await mkdir(resolve(path, ".."), { recursive: true });
@@ -68,7 +71,8 @@ try {
 				id: "SPRINT-200",
 				title: "Gate fixture sprint",
 				status: "active",
-				outcome: "Close a sprint cohort only after tasks and shared risks clear.",
+				outcome:
+					"Close a sprint cohort only after tasks and shared risks clear.",
 				task_ids: ["TASK-OPEN"],
 				budget: { risk: "high" },
 			},
@@ -85,7 +89,10 @@ try {
 	await mkdir(resolve(root, ".codewiki/roadmap"), { recursive: true });
 	await writeFile(
 		resolve(root, ".codewiki/roadmap/archive.jsonl"),
-		JSON.stringify({ id: "TASK-CLOSED", task: { id: "TASK-CLOSED", status: "closed" } }) + "\n",
+		JSON.stringify({
+			id: "TASK-CLOSED",
+			task: { id: "TASK-CLOSED", status: "closed" },
+		}) + "\n",
 		"utf8",
 	);
 	await writeJson(resolve(root, ".codewiki/index_graph.json"), {
@@ -149,7 +156,10 @@ try {
 		verdict: "pass",
 		rationale: "closed sprint fixture can pass",
 		audit_refs: ["alignment", "changed", "generated-parity"],
-		checks: ["approval:user closed low-risk fixture"],
+		checks: [
+			"approval:user closed low-risk fixture",
+			"sprint risk reconciliation: shared outcome and risk accepted",
+		],
 		isolation: { ...baseIsolation },
 	});
 	assert.equal(sprintReady.status, "ready");

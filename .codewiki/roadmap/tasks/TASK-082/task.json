@@ -1,7 +1,7 @@
 {
   "id": "TASK-082",
   "title": "Enforce production-ready closure gates",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "testing",
   "summary": "Update gateway and roadmap closure policy so code-changing tasks and sprints cannot close unless TDD code tests, linters, validation, and task-scoped ship-ready quality pass.",
@@ -71,5 +71,5 @@
     "closure": ""
   },
   "created": "2026-06-01",
-  "updated": "2026-06-01"
+  "updated": "2026-06-02T19:47:59Z"
 }

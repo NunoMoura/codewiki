@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-02T20:47:02Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-082",
+  "verdict": "pass",
+  "rationale": "Fresh validation of TASK-082 implementation build from source refs. The build maps code-changing task-close/sprint-close/ship-ready closure policy to executable tests, gateway preflight/report behavior, roadmap close enforcement, and scoped terminology updates. Required tests and linters pass or have nonblocking generated-state warnings; task-close and publication remain separate gates and are not granted by this implementation validation.",
+  "checks": [
+    "lsp_diagnostics touched TS/test files: pass (hints only for deprecated change_class in src/roadmap/store.ts)",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass",
+    "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract: warning only for existing graph/generated-change state; task/generated-parity/source-contract pass",
+    "wiki_gate lexicon scoped to gateway docs/source messages: pass",
+    "wiki_gate implementation preflight for source build: ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "CodeWiki audit reported existing generated graph/task view dirty-state warnings; generated-parity, task, and source-contract checks passed and this does not block pre-commit implementation validation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Lexicon profile passes for gateway docs/source messages; broader test fixture/assertion scope still contains temporary compatibility terms such as audit/checks/proof where compatibility fields are intentionally exercised."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:source-contract"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract executed in this validation session"
+  ],
+  "content_proof_refs": [
+    "b3bd0d1acf5b6a86312f7c5ec2943574f5616e46",
+    "sha256:82526847e4566bac654e6015aee28b7b9c4b29da6d44e6b2e71bbb5046095d1b"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-082",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+      ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
+      ".codewiki/kb/system/validation-gateway.md",
+      "src/gateway/report.ts",
+      "src/policy/risk.ts",
+      "src/roadmap/task.ts",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-082",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
+    "commit_title": "checkpoint(codewiki): TASK-082 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-082",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-082-2026-06-02-implemen.json",
+      "CodeWiki-Checks: lsp_diagnostics touched TS/test files: pass (hints only for deprecated change_class in src/roadmap/store.ts); npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass; node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass; node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass; node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass; wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract: warning only for existing graph/generated-change state; task/generated-parity/source-contract pass; wiki_gate lexicon scoped to gateway docs/source messages: pass; wiki_gate implementation preflight for source build: ready (0 issues)"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/policy/risk.ts",
+      "src/roadmap/task.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-082",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "base_sha": "2dcaea1ce1a2ddb16f21cd40dc5f53bd7feaf786",
+    "tree_sha": "b3bd0d1acf5b6a86312f7c5ec2943574f5616e46",
+    "working_tree_digest": "sha256:82526847e4566bac654e6015aee28b7b9c4b29da6d44e6b2e71bbb5046095d1b",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh validator checked dirty pre-commit implementation candidate; working_tree_digest covers current changed files and untracked implementation build before this validation report write. Task-close/ship-ready still require clean=true and immutable exact-content evidence.",
+    "role": "validator"
+  }
+}

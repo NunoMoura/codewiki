@@ -1,11 +1,14 @@
 import assert from "node:assert";
 import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import {
 	assessRoadmapTaskBoundary,
 	assertExecutableRoadmapTask,
 } from "../../src/roadmap/task-boundary.ts";
 import { runTaskClosePreflight } from "../../src/roadmap/store.ts";
+import { closeCodewikiTask } from "../../src/roadmap/task.ts";
 
 const boundedTask = {
 	id: "TASK-900",
@@ -111,5 +114,72 @@ assert.equal(
 	false,
 	"active roadmap tasks should not reference the old roadmap runtime helper path",
 );
+
+const closeRoot = await mkdtemp(join(tmpdir(), "codewiki-close-route-"));
+try {
+	await mkdir(resolve(closeRoot, ".codewiki/roadmap"), { recursive: true });
+	await writeFile(
+		resolve(closeRoot, ".codewiki/roadmap/queue.json"),
+		JSON.stringify(
+			{
+				version: 1,
+				updated: "2026-06-02T00:00:00Z",
+				order: ["TASK-999"],
+				tasks: {
+					"TASK-999": {
+						id: "TASK-999",
+						title: "Close route fixture",
+						status: "in_progress",
+						priority: "high",
+						kind: "testing",
+						summary: "Fixture for close routing.",
+						spec_paths: [],
+						code_paths: ["src/example.ts"],
+						research_ids: [],
+						labels: ["task-close"],
+						change_type: "code",
+						goal: {
+							outcome: "Close only after production-ready gates pass.",
+							acceptance: ["Close reports smallest safe retry loop."],
+							non_goals: [],
+							verification: ["task-close gate"],
+						},
+						delta: { desired: "", current: "", closure: "" },
+						created: "2026-06-02",
+						updated: "2026-06-02",
+					},
+				},
+			},
+			null,
+			2,
+		) + "\n",
+		"utf8",
+	);
+	await assert.rejects(
+		() =>
+			closeCodewikiTask(
+				{
+					root: closeRoot,
+					roadmapPath: ".codewiki/roadmap/queue.json",
+					config: {},
+				},
+				"TASK-999",
+				{
+					fileStore: {},
+					rebuildRunner: { run: async () => {} },
+					messageBus: {},
+				},
+			),
+		(error) => {
+			assert.match(error.message, /next_loop=validation/);
+			assert.match(error.message, /task-close validation/);
+			assert.match(error.message, /ship-ready validation/);
+			return true;
+		},
+		"roadmap close should report the smallest safe validation loop when production-ready evidence is missing",
+	);
+} finally {
+	await rm(closeRoot, { recursive: true, force: true });
+}
 
 console.log("✓ roadmap task boundary smoke passed");

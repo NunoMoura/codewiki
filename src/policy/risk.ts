@@ -68,7 +68,10 @@ export function classifyValidationRisk(
 	input: ValidationRiskPolicyInput,
 	build: Record<string, any> | null | undefined,
 ): ValidationRiskPolicyResult {
-	const profile = normalizeValidationGate(input.profile);
+	const rawProfile = String(input.profile || "")
+		.trim()
+		.toLowerCase();
+	const profile = normalizeValidationGate(rawProfile);
 	const policyProfile = String(input.policy_profile || "")
 		.trim()
 		.toLowerCase();
@@ -91,12 +94,11 @@ export function classifyValidationRisk(
 	const pathRefs = validationPathRefs(build);
 	const docsOnly = pathRefs.length > 0 && pathRefs.every(isDocsOrMechanicalRef);
 	const haystack = [
+		rawProfile,
 		profile,
 		policyProfile,
 		input.source,
 		...(input.checks ?? []),
-		...(input.audit_refs ?? []),
-		...(input.audit_reports ?? []),
 		build?.summary,
 		build?.change_type,
 		build?.change_class,
@@ -108,7 +110,7 @@ export function classifyValidationRisk(
 		.join(" ");
 	let tier = "code-local";
 	let reason =
-		"Code-local change; gateway audits and content proof still required.";
+		"Code-local change; gateway linters and content evidence still required.";
 	if (
 		/\b(destructive|irreversible|drop\s+table|delete\s+all|rm\s+-rf|force[- ]push|wipe|destroy)\b/.test(
 			haystack,
@@ -118,7 +120,7 @@ export function classifyValidationRisk(
 		reason =
 			"Destructive or irreversible wording requires explicit user approval before promotion.";
 	} else if (
-		profile === "ship-ready" ||
+		["publication", "publish", "release"].includes(rawProfile) ||
 		/\b(security|migration|publication|publish|release|secret|credential|remote|breaking[- ]api)\b/.test(
 			haystack,
 		)

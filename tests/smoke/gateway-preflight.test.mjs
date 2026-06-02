@@ -253,6 +253,230 @@ try {
 		),
 	);
 
+	const taskCloseWithoutShipReady = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Task close needs implementation validation and ship-ready.",
+		source: semanticImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		},
+	});
+	assert.equal(taskCloseWithoutShipReady.status, "blocked");
+	assert.ok(
+		taskCloseWithoutShipReady.missing.validation_evidence.includes(
+			"implementation_validation:pass",
+		),
+	);
+	assert.ok(
+		taskCloseWithoutShipReady.missing.task_close_ship_ready.includes(
+			"ship_ready_validation:task:TASK-777",
+		),
+	);
+
+	const noTestImplementation = await writeImplementationBuild(project, {
+		kind: "implementation",
+		summary: "Code change without executable tests.",
+		source_planning_build: planning.path,
+		task_id: "TASK-777",
+		change_type: "code",
+		code_files: ["src/no-test-fixture.ts"],
+		checks_run: ["npm run typecheck: pass"],
+		acceptance_mapping: [
+			{
+				criterion: "Executable code tests required",
+				evidence: "Typecheck alone is insufficient for code behavior.",
+			},
+		],
+		closure_brief: {
+			user_intent: "Prove task-close blocks missing tests.",
+			implemented_changes: ["Changed executable code without tests."],
+			acceptance_evidence: ["Preflight blocks missing tests."],
+			checks: ["npm run typecheck: pass"],
+		},
+	});
+	const noTestTaskClose = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Code-changing task-close needs executable test evidence.",
+		source: noTestImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "notest",
+			tree_sha: "notest-tree",
+		},
+	});
+	assert.equal(noTestTaskClose.status, "blocked");
+	assert.ok(
+		noTestTaskClose.missing.code_tests.includes("code_tests:test_files"),
+	);
+	assert.ok(
+		noTestTaskClose.missing.code_tests.includes(
+			"code_tests:passing_test_check",
+		),
+	);
+
+	const failedTestImplementation = await writeImplementationBuild(project, {
+		kind: "implementation",
+		summary: "Code change with failed executable tests.",
+		source_planning_build: planning.path,
+		task_id: "TASK-777",
+		change_type: "code",
+		test_files: ["tests/failing-fixture.test.mjs"],
+		code_files: ["src/failing-fixture.ts"],
+		checks_run: ["node tests/failing-fixture.test.mjs: fail"],
+		acceptance_mapping: [
+			{
+				criterion: "Executable code tests required",
+				evidence: "tests/failing-fixture.test.mjs covers the behavior.",
+			},
+		],
+		closure_brief: {
+			user_intent: "Prove task-close blocks failed tests.",
+			implemented_changes: ["Changed executable code with failed tests."],
+			acceptance_evidence: ["Preflight blocks failed tests."],
+			checks: ["node tests/failing-fixture.test.mjs: fail"],
+		},
+	});
+	const failedTestTaskClose = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Failed executable tests block task-close.",
+		source: failedTestImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "failedtest",
+			tree_sha: "failedtest-tree",
+		},
+	});
+	assert.equal(failedTestTaskClose.status, "blocked");
+	assert.ok(
+		failedTestTaskClose.missing.code_tests.includes(
+			"code_tests:failed_test_check",
+		),
+	);
+
+	await writeGatewayReport(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Implementation validation pass fixture.",
+		source: semanticImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:semantic-dirty",
+		},
+	});
+	await writeGatewayReport(project, {
+		profile: "ship-ready",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale:
+			"Ship-ready validates the exact content candidate without approving publication.",
+		source: semanticImplementation.path,
+		audit_refs: [
+			"audit:alignment",
+			"audit:package",
+			"audit:security",
+			"audit:stale-reference",
+		],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		},
+	});
+	const taskCloseReady = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Task close has implementation validation and ship-ready.",
+		source: semanticImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		},
+	});
+	assert.equal(taskCloseReady.status, "ready");
+	assert.deepEqual(taskCloseReady.missing.code_tests, []);
+	assert.deepEqual(taskCloseReady.missing.validation_evidence, []);
+	assert.deepEqual(taskCloseReady.missing.task_close_ship_ready, []);
+
+	const mismatchedTaskClose = buildGatewayPreflight(project, {
+		profile: "task-close",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Task close ship-ready must match exact content.",
+		source: semanticImplementation.path,
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "cccccccccccccccccccccccccccccccccccccccc",
+			published_sha: "cccccccccccccccccccccccccccccccccccccccc",
+			tree_sha: "dddddddddddddddddddddddddddddddddddddddd",
+		},
+	});
+	assert.equal(mismatchedTaskClose.status, "blocked");
+	assert.ok(
+		mismatchedTaskClose.missing.task_close_ship_ready.includes(
+			"ship_ready_validation:content_mismatch",
+		),
+	);
+
+	const shipReadyCandidate = buildGatewayPreflight(project, {
+		profile: "ship-ready",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Ship-ready checks quality, not publication approval.",
+		source: semanticImplementation.path,
+		audit_refs: [
+			"audit:alignment",
+			"audit:package",
+			"audit:security",
+			"audit:stale-reference",
+		],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		},
+	});
+	assert.equal(shipReadyCandidate.status, "ready");
+	assert.notEqual(
+		shipReadyCandidate.risk.tier,
+		"security-migration-publication",
+	);
+	assert.deepEqual(shipReadyCandidate.missing.user_approval, []);
+
 	await writeFile(
 		join(root, project.graphPath),
 		JSON.stringify(
@@ -291,8 +515,8 @@ try {
 			role: "validator",
 			fresh_context: true,
 			clean: true,
-			published_sha: "def5678",
-			tree_sha: "tree5678",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
 		},
 	});
 	assert.equal(semanticClosureBlocked.status, "blocked");
@@ -310,6 +534,185 @@ try {
 		),
 	);
 	assert.equal(semanticClosureBlocked.routing.failure_class, "planning_gap");
+
+	await writeFile(
+		join(root, project.graphPath),
+		JSON.stringify(
+			{
+				views: {
+					roadmap: { version: 1 },
+					semantic_execution_closure: {
+						version: 1,
+						invariant: "generated_view_not_canonical_truth",
+						scopes: { tasks: {} },
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+	await mkdir(join(root, ".codewiki/roadmap"), { recursive: true });
+	await writeFile(
+		join(root, project.roadmapPath),
+		JSON.stringify(
+			{
+				version: 1,
+				updated: "2026-06-02T00:00:00Z",
+				order: ["TASK-070", "TASK-777", "TASK-778"],
+				tasks: {
+					"TASK-070": {
+						id: "TASK-070",
+						title: "Daemon worker follow-up fixture",
+						status: "done",
+						priority: "medium",
+						kind: "testing",
+						summary: "Known task mapping fixture.",
+						spec_paths: [],
+						code_paths: ["src/daemon.ts"],
+						research_ids: [],
+						labels: ["daemon"],
+						goal: {
+							outcome: "done",
+							acceptance: ["done"],
+							non_goals: [],
+							verification: ["test"],
+						},
+						delta: { desired: "", current: "", closure: "" },
+						created: "2026-06-02",
+						updated: "2026-06-02",
+					},
+					"TASK-777": {
+						id: "TASK-777",
+						title: "Gateway fixture",
+						status: "done",
+						priority: "high",
+						kind: "testing",
+						summary: "Gateway fixture done.",
+						spec_paths: [],
+						code_paths: ["src/gateway/report.ts"],
+						research_ids: [],
+						labels: ["gateway"],
+						goal: {
+							outcome: "done",
+							acceptance: ["done"],
+							non_goals: [],
+							verification: ["test"],
+						},
+						delta: { desired: "", current: "", closure: "" },
+						created: "2026-06-02",
+						updated: "2026-06-02",
+					},
+					"TASK-778": {
+						id: "TASK-778",
+						title: "Cancelled fixture",
+						status: "cancelled",
+						priority: "medium",
+						kind: "testing",
+						summary: "Cancelled fixture.",
+						spec_paths: [],
+						code_paths: [],
+						research_ids: [],
+						labels: ["gateway"],
+						goal: {
+							outcome: "cancelled",
+							acceptance: ["cancelled"],
+							non_goals: [],
+							verification: ["review"],
+						},
+						delta: { desired: "", current: "", closure: "" },
+						created: "2026-06-02",
+						updated: "2026-06-02",
+					},
+				},
+				sprints: {
+					"SPRINT-777": {
+						id: "SPRINT-777",
+						title: "Gateway sprint fixture",
+						status: "active",
+						outcome:
+							"Gateway sprint closes only after shared outcome reconciliation.",
+						task_ids: ["TASK-777", "TASK-778"],
+						budget: { risk: "medium" },
+						gates: ["sprint-close", "ship-ready"],
+						created: "2026-06-02",
+						updated: "2026-06-02",
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+	const sprintWithoutShipReady = buildGatewayPreflight(project, {
+		profile: "sprint-close",
+		sprint_id: "SPRINT-777",
+		verdict: "pass",
+		rationale: "Sprint close needs reconciliation and ship-ready quality.",
+		source: semanticImplementation.path,
+		audit_refs: ["audit:alignment", "audit:changed", "audit:generated-parity"],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			published_sha: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			tree_sha: "ffffffffffffffffffffffffffffffffffffffff",
+		},
+	});
+	assert.equal(sprintWithoutShipReady.status, "blocked");
+	assert.ok(
+		sprintWithoutShipReady.missing.sprint_close.includes(
+			"sprint:SPRINT-777:risk_reconciliation_evidence",
+		),
+	);
+	assert.ok(
+		sprintWithoutShipReady.missing.sprint_close.includes(
+			"sprint:SPRINT-777:ship_ready_validation",
+		),
+	);
+
+	await writeGatewayReport(project, {
+		profile: "ship-ready",
+		sprint_id: "SPRINT-777",
+		verdict: "pass",
+		rationale:
+			"Sprint content candidate is ship-ready; no publication implied.",
+		source: semanticImplementation.path,
+		audit_refs: [
+			"audit:alignment",
+			"audit:package",
+			"audit:security",
+			"audit:stale-reference",
+		],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			tree_sha: "ffffffffffffffffffffffffffffffffffffffff",
+		},
+	});
+	const sprintReady = buildGatewayPreflight(project, {
+		profile: "sprint-close",
+		sprint_id: "SPRINT-777",
+		verdict: "pass",
+		rationale:
+			"Sprint close has closed tasks, reconciliation, and ship-ready quality.",
+		source: semanticImplementation.path,
+		checks: ["sprint risk reconciliation: shared outcome and risks reconciled"],
+		audit_refs: ["audit:alignment", "audit:changed", "audit:generated-parity"],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			published_sha: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			tree_sha: "ffffffffffffffffffffffffffffffffffffffff",
+		},
+	});
+	assert.equal(sprintReady.status, "ready");
+	assert.deepEqual(sprintReady.missing.sprint_close, []);
 
 	const staleSource = buildGatewayPreflight(project, {
 		profile: "implementation",
@@ -877,7 +1280,7 @@ try {
 			role: "validator",
 			fresh_context: true,
 			clean: true,
-			published_sha: "def5678",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 			package_digest: "sha256:package",
 		},
 	});
@@ -903,7 +1306,7 @@ try {
 			role: "validator",
 			fresh_context: true,
 			clean: true,
-			published_sha: "def5678",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 			package_digest: "sha256:package",
 		},
 	});
@@ -923,7 +1326,7 @@ try {
 			role: "validator",
 			fresh_context: true,
 			clean: true,
-			published_sha: "def5678",
+			published_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 			package_digest: "sha256:package",
 		},
 	});
