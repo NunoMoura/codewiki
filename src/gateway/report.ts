@@ -751,7 +751,6 @@ function shipReadyTargets(
 		input.profile,
 		input.policy_profile,
 		input.source,
-		build?.summary,
 		build?.publication?.target,
 		build?.publication?.remote,
 		build?.publication?.branch,
