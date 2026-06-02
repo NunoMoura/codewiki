@@ -1,12 +1,21 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { runBootstrapCommand } from "../bootstrap.ts";
 import { runConfigCommand } from "./config.ts";
+import { runProductCommand } from "./product.ts";
 import { runResumeCommand } from "./resume.ts";
 import { runStatusCommand } from "./status.ts";
+import { runSystemCommand } from "./system.ts";
 import { splitCommandArgs, joinCommandArgs } from "../../../shared/utils.ts";
 import { withUiErrorHandling } from "../ui/manager.ts";
 
-const WIKI_SUBCOMMANDS = ["bootstrap", "status", "resume", "config"] as const;
+const WIKI_SUBCOMMANDS = [
+	"bootstrap",
+	"status",
+	"resume",
+	"config",
+	"system",
+	"product",
+] as const;
 
 type WikiSubcommand = (typeof WIKI_SUBCOMMANDS)[number];
 
@@ -39,7 +48,7 @@ export function completeWikiCommand(prefix: string) {
 export function registerWikiCommand(pi: ExtensionAPI): void {
 	pi.registerCommand("wiki", {
 		description:
-			"CodeWiki command router. Usage: /wiki <bootstrap|status|resume|config> [...args]",
+			"CodeWiki command router. Usage: /wiki <bootstrap|status|resume|config|system|product> [...args]",
 		getArgumentCompletions: completeWikiCommand,
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
@@ -57,9 +66,15 @@ export function registerWikiCommand(pi: ExtensionAPI): void {
 					case "config":
 						await runConfigCommand(input.rest, ctx, "wiki config");
 						return;
+					case "system":
+						await runSystemCommand(pi, input.rest, ctx, "wiki system");
+						return;
+					case "product":
+						await runProductCommand(pi, input.rest, ctx, "wiki product");
+						return;
 					default:
 						ctx.ui.notify(
-							"Usage: /wiki <bootstrap|status|resume|config> [...args]. /wiki system and /wiki product are planned in TASK-078.",
+							"Usage: /wiki <bootstrap|status|resume|config|system|product> [...args].",
 							"warning",
 						);
 				}

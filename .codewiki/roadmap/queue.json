@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-01T21:01:01Z",
+  "updated": "2026-06-02T02:54:12Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -541,7 +541,7 @@
     "TASK-078": {
       "id": "TASK-078",
       "title": "Build system and product TUI navigation",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "feature",
       "summary": "Implement `/wiki system <diagram type>` and `/wiki product` terminal navigation from canonical KB diagrams and product docs.",
@@ -602,7 +602,7 @@
         "closure": ""
       },
       "created": "2026-06-01",
-      "updated": "2026-06-01"
+      "updated": "2026-06-02T02:54:12Z"
     },
     "TASK-079": {
       "id": "TASK-079",

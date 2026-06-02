@@ -28,6 +28,10 @@ Public command surface is intentionally small. Canonical command router:
   - queues agent continuation from CodeWiki source refs and the last known stable task state
 - `/wiki config [show|auto|pin|off|minimal|standard|full] [repo-path]`
   - opens interactive CodeWiki configuration with option lists and toggles
+- `/wiki system [diagram-kind-or-name]`
+  - opens source-backed system diagram navigation from `.codewiki/kb/system/diagrams/*.yaml`, with focused lanes, ordered steps, state transitions, tree views, source refs, and Markdown detail preview
+- `/wiki product [overview|users]`
+  - opens source-backed product navigation for the product overview and user documents, including user-story previews and source refs
 
 Compatibility shims remain available during migration:
 
@@ -213,7 +217,7 @@ npm run test:pack
 3. Run:
 
 ```text
-/wiki-bootstrap My Project
+/wiki bootstrap My Project
 ```
 
 4. Let the intelligent onboarding follow-up inspect repo shape, infer greenfield vs brownfield signals, and ask only a few high-value questions when needed.
@@ -222,9 +226,9 @@ npm run test:pack
 
 ```text
 /audit --file-structure
-/wiki-config
-/wiki-status
-/wiki-resume
+/wiki config
+/wiki status
+/wiki resume
 ```
 
 ### Existing repo
@@ -234,7 +238,7 @@ If the repo already has a compatible wiki contract, open Pi anywhere inside that
 If the repo needs the contract created first, run:
 
 ```text
-/wiki-bootstrap
+/wiki bootstrap
 ```
 
 from the repo root, or from a subdirectory if you want bootstrap to target the enclosing git repo.
@@ -330,7 +334,7 @@ Use `AGENTS.md` for project conventions. Use packaged skills for package behavio
 
 ### Bootstrap and onboarding
 
-`/wiki-bootstrap` is the single public onboarding entrypoint. It safely adopts or scaffolds the repo-local wiki contract, reuses an existing ancestor wiki root when one is already present, and supports `--force` only when the user explicitly wants starter files overwritten.
+`/wiki bootstrap` is the canonical public onboarding entrypoint. The `/wiki-bootstrap` shim remains available for compatibility. Bootstrap safely adopts or scaffolds the repo-local wiki contract, reuses an existing ancestor wiki root when one is already present, and supports `--force` only when the user explicitly wants starter files overwritten.
 
 Internally, agent tools may still use `wiki_setup` as a safe non-overwriting adopt step and `wiki_bootstrap` for explicit starter scaffolding.
 
@@ -349,19 +353,19 @@ Starter bootstrap includes:
 
 `/wiki-ui` is deprecated and returns a warning that points to Pi-hosted CodeWiki commands. Browser Control Room source is no longer the active product direction.
 
-`/wiki-status` opens the current compact status surface when custom UI is available and falls back to command output when it is not. Broader TUI design remains future work.
+`/wiki status` opens the current compact status surface when custom UI is available and falls back to command output when it is not. The `/wiki-status` shim remains available for compatibility.
 
 The always-on status summary is optional. When enabled it uses Pi's status area for a one-line summary instead of a tall above-editor dock. `/wiki-config` owns summary visibility, pinning, and panel density through an interactive settings panel.
 
-`/wiki-status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
+`/wiki status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
 `/audit` is the deterministic evidence command. It runs the same source-owned audit engine used by gateways and tools; omit flags for the full audit, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--changed`, `--task TASK-###`, and `--layer product,system`.
 
-`/wiki-config`, `/wiki-status`, `/wiki-resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
+`/wiki config`, `/wiki status`, `/wiki resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 
-`/wiki-resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
+`/wiki resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
 
-`/wiki-resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `wiki_state`, build high-signal continuation packets through `wiki_resume_context`, record canonical task progress and evidence through `wiki_roadmap`, coordinate overlapping parallel work through `wiki_artifact_status`, and keep runtime session focus separate through `wiki_session`.
+`/wiki resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `wiki_state`, build high-signal continuation packets through `wiki_resume_context`, record canonical task progress and evidence through `wiki_roadmap`, coordinate overlapping parallel work through `wiki_artifact_status`, and keep runtime session focus separate through `wiki_session`.
 
 For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, chat-history archaeology, and all task shards as default context. Prefer compact state, `wiki_resume_context`, CodeWiki-owned compaction, the current task context shard, or latest lifecycle events first; expand to targeted raw specs/code only when task status, gates, or stale revision requires exact source.
 
@@ -369,13 +373,13 @@ The Pi adapter customizes compaction after the agent loop ends. Loop-boundary to
 
 ### Status summary and panel
 
-The extension renders an optional one-line status summary plus a compact status panel opened through `/wiki-status`. These surfaces read `.codewiki/index_graph.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
+The extension renders an optional one-line status summary plus a compact status panel opened through `/wiki status`. These surfaces read `.codewiki/index_graph.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
 
 - `minimal`
 - `standard`
 - `full`
 
-Use `/wiki-config` to open the interactive configuration panel. Direct args like `/wiki-config pin /path/to/repo` remain available as fallback for scripting or non-UI flows.
+Use `/wiki config` to open the interactive configuration panel. Direct args like `/wiki-config pin /path/to/repo` remain available as fallback for scripting or non-UI flows.
 
 ### Runtime operations
 
@@ -387,7 +391,7 @@ Runtime rule:
 - if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-config`, and `/wiki-resume` may target an explicit repo path instead
 - in UI mode, those commands may offer a picker across candidate repos discovered below current cwd
 - summary visibility and pinned-repo fallback are user-owned UI preferences, not repo-owned wiki files
-- if no wiki exists yet, `/wiki-bootstrap` targets the enclosing git repo root when present, else the current working directory
+- if no wiki exists yet, `/wiki bootstrap` targets the enclosing git repo root when present, else the current working directory
 
 It then uses that repo config to:
 

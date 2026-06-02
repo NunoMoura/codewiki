@@ -1,0 +1,703 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-01T21:49:40Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "task_id": "TASK-078",
+  "task": {
+    "id": "TASK-078",
+    "title": "Build system and product TUI navigation",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "summary": "Implement `/wiki system <diagram type>` and `/wiki product` terminal navigation from canonical KB diagrams and product docs.",
+    "spec_paths": [
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/users/maintainers.md",
+      ".codewiki/kb/product/users/agents.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/text.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/knowledge/doc-parser.ts",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Users can browse source-backed system diagrams and product knowledge in the terminal through `/wiki system <diagram type>` and `/wiki product`.",
+      "acceptance": [
+        "`/wiki system <diagram type>` lists available canonical diagram types and renders the selected diagram from `.codewiki/kb/system/diagrams/**` or a generated lens derived from those sources.",
+        "The system diagram TUI lets users move between components or flows, highlights the selected item in ASCII/Unicode, and opens or renders the linked component/flow Markdown source on Enter.",
+        "System diagram rendering uses focused lanes, neighborhoods, ordered steps, state transitions, trees, or entity cards instead of full raw graph output.",
+        "`/wiki product` offers overview or users as the top-level choice; overview opens or renders `.codewiki/kb/product/overview.md`.",
+        "The product users view lists product users, lets users toggle each user's stories, and opens or renders the corresponding product KB Markdown source on Enter.",
+        "Views show source refs and omitted-count/focus metadata when content is summarized.",
+        "TUI output does not create hidden UI-only truth and does not depend on deprecated browser UI code."
+      ],
+      "non_goals": [
+        "Do not implement a browser dashboard.",
+        "Do not render the full generated graph by default.",
+        "Do not implement all future diagram layouts beyond the existing canonical diagram families needed for first useful navigation.",
+        "Do not change canonical diagram YAML schema unless a focused validation need requires it."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+        "wiki_gate/task-close linters for file-structure, generated-parity, stale-reference, and changed"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-08T21:49:40.000Z",
+    "purge_after": "2026-06-15T21:49:40.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-078 source-backed `/wiki system` and `/wiki product` terminal navigation through the canonical `/wiki` router.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-078",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-078/context.json"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/users/maintainers.md",
+      ".codewiki/kb/product/users/agents.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "README.md"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "README.md"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/project-resolution.test.mjs"
+    ],
+    "validation": [
+      "pending implementation validation"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-078"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/terminal-ui.md",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/users/maintainers.md",
+      ".codewiki/kb/product/users/agents.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/text.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/knowledge/doc-parser.ts",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/project-resolution.test.mjs"
+  ],
+  "code_files": [
+    "src/adapters/pi/commands/wiki.ts",
+    "src/adapters/pi/commands/system.ts",
+    "src/adapters/pi/commands/product.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "README.md"
+  ],
+  "files_changed": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "src/adapters/pi/commands/wiki.ts",
+    "src/adapters/pi/commands/system.ts",
+    "src/adapters/pi/commands/product.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "README.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors)",
+    "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+    "npm run typecheck: pass",
+    "git diff --check && git diff --cached --check: pass",
+    "wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-078",
+      "test_files": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/project-resolution.test.mjs"
+      ],
+      "evidence": [
+        "Existing smoke tests cover diagram refs, prompt assets, source contract, package loading, project resolution, and type safety.",
+        "Package smoke now asserts `/wiki` completions include system/product and product/system panels expose source-backed navigation affordances."
+      ],
+      "notes": [
+        "No dedicated standalone browser/UI dependency was introduced.",
+        "Smoke project fixture lacks system diagram YAML, so system tab test asserts source-backed navigation shell; repository diagram rendering is covered by diagram-refs smoke and typecheck."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-078",
+      "code_files": [
+        "src/adapters/pi/commands/wiki.ts",
+        "src/adapters/pi/commands/system.ts",
+        "src/adapters/pi/commands/product.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "README.md"
+      ],
+      "evidence": [
+        "Added `src/adapters/pi/commands/system.ts` and `src/adapters/pi/commands/product.ts` command runners called only through canonical `/wiki` router.",
+        "Extended `/wiki` router subcommands to dispatch `system` and `product` while preserving legacy command count/shims.",
+        "Enhanced Pi status panel product/system sections with source-backed focused navigation and detail previews from canonical Markdown/YAML.",
+        "Updated README canonical command docs and package smoke expectations."
+      ],
+      "notes": [
+        "Implementation stays within TASK-078 scope and does not add `/wiki system` or `/wiki product` as separate top-level Pi commands.",
+        "`/wiki status product` and `/wiki status system` still work through the existing status section aliases."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Existing smoke tests cover diagram refs, prompt assets, source contract, package loading, project resolution, and type safety.",
+    "Package smoke now asserts `/wiki` completions include system/product and product/system panels expose source-backed navigation affordances."
+  ],
+  "code_change_evidence": [
+    "Added `src/adapters/pi/commands/system.ts` and `src/adapters/pi/commands/product.ts` command runners called only through canonical `/wiki` router.",
+    "Extended `/wiki` router subcommands to dispatch `system` and `product` while preserving legacy command count/shims.",
+    "Enhanced Pi status panel product/system sections with source-backed focused navigation and detail previews from canonical Markdown/YAML.",
+    "Updated README canonical command docs and package smoke expectations."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "`/wiki system <diagram type>` lists available canonical diagram types and renders the selected diagram from `.codewiki/kb/system/diagrams/**` or a generated lens derived from those sources.",
+      "evidence": "`runSystemCommand` resolves the CodeWiki repo, preselects a requested diagram kind/name, and opens the status panel on the system section; `readSystemDiagramCatalog` now parses canonical YAML through `parseSystemDiagrams`."
+    },
+    {
+      "criterion": "The system diagram TUI lets users move between components or flows, highlights the selected item in ASCII/Unicode, and opens or renders the linked component/flow Markdown source on Enter.",
+      "evidence": "System panel uses up/down to move diagrams and left/right to move source-backed focus items; selected rows use `highlightSelectable`; Enter renders selected item details plus Markdown preview when a diagram ref has a linked source."
+    },
+    {
+      "criterion": "System diagram rendering uses focused lanes, neighborhoods, ordered steps, state transitions, trees, or entity cards instead of full raw graph output.",
+      "evidence": "`renderSystemDiagramDetailLines` renders diagram-kind-specific layouts for sequence steps, state transitions, data-model entity cards, file-structure ownership trees, and grouped focused lanes/neighborhood edges."
+    },
+    {
+      "criterion": "`/wiki product` offers overview or users as the top-level choice; overview opens or renders `.codewiki/kb/product/overview.md`.",
+      "evidence": "`runProductCommand` opens the product section; product rendering exposes overview/users top-level choices and renders product overview preview from `.codewiki/kb/product/overview.md`."
+    },
+    {
+      "criterion": "The product users view lists product users, lets users toggle each user's stories, and opens or renders the corresponding product KB Markdown source on Enter.",
+      "evidence": "Product panel uses left/right to switch overview/users, up/down to select user cards, selected user story preview is shown from Markdown, and Enter renders the selected user KB source preview."
+    },
+    {
+      "criterion": "Views show source refs and omitted-count/focus metadata when content is summarized.",
+      "evidence": "Product and system panels render source refs plus `focus`, `diagram`, `item`, and `omitted` metadata for summarized rows."
+    },
+    {
+      "criterion": "TUI output does not create hidden UI-only truth and does not depend on deprecated browser UI code.",
+      "evidence": "The implementation reads canonical Markdown/YAML and generated status graph only; no browser UI files or new UI-only stores were introduced."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue roadmap work after TASK-077 by implementing TASK-078 system/product terminal navigation.",
+    "implemented_changes": [
+      "Added canonical `/wiki system` and `/wiki product` router dispatch.",
+      "Added system/product command runners that open source-backed TUI sections.",
+      "Rendered system diagram YAML as focused lanes, ordered steps, transitions, trees, entity cards, and selectable items.",
+      "Rendered product overview/users navigation with user story previews and Markdown source details.",
+      "Updated README and smoke test coverage."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        "README.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/adapters/pi/commands/wiki.ts",
+        "src/adapters/pi/commands/system.ts",
+        "src/adapters/pi/commands/product.ts",
+        "src/adapters/pi/ui/manager.ts"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "validation": [
+        "pending implementation validation"
+      ]
+    },
+    "acceptance_evidence": [
+      "All TASK-078 acceptance criteria are mapped in implementation build evidence.",
+      "Required smoke tests and typecheck passed."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "npm run typecheck"
+    ],
+    "non_goals_preserved": [
+      "No browser dashboard added.",
+      "No full raw graph renderer added by default.",
+      "No canonical diagram YAML schema change.",
+      "No hidden terminal-only source of truth added."
+    ],
+    "remaining_risks": [
+      "Fresh validation pending.",
+      "Pi reload required before live runtime sees new command modules."
+    ]
+  },
+  "risks": [
+    "Live Pi needs `/reload` before relying on newly added command files and router dispatch in the current runtime.",
+    "Task-close still needs fresh validation and clean commit/tree proof."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-078",
+      "task_id": "TASK-078",
+      "next_focus_task_id": "TASK-079",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-078",
+        "title": "Build system and product TUI navigation",
+        "summary": "Implemented TASK-078 source-backed `/wiki system` and `/wiki product` terminal navigation through the canonical `/wiki` router.",
+        "spec_paths": [
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/product/uis/terminal.md",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/product/overview.md",
+          ".codewiki/kb/product/users/maintainers.md",
+          ".codewiki/kb/product/users/agents.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/commands/system.ts",
+          "src/adapters/pi/commands/product.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/text.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/knowledge/doc-parser.ts",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs",
+          "src/adapters/pi/commands/wiki.ts",
+          "README.md"
+        ],
+        "acceptance": [
+          "`/wiki system <diagram type>` lists available canonical diagram types and renders the selected diagram from `.codewiki/kb/system/diagrams/**` or a generated lens derived from those sources.",
+          "The system diagram TUI lets users move between components or flows, highlights the selected item in ASCII/Unicode, and opens or renders the linked component/flow Markdown source on Enter.",
+          "System diagram rendering uses focused lanes, neighborhoods, ordered steps, state transitions, trees, or entity cards instead of full raw graph output.",
+          "`/wiki product` offers overview or users as the top-level choice; overview opens or renders `.codewiki/kb/product/overview.md`.",
+          "The product users view lists product users, lets users toggle each user's stories, and opens or renders the corresponding product KB Markdown source on Enter.",
+          "Views show source refs and omitted-count/focus metadata when content is summarized.",
+          "TUI output does not create hidden UI-only truth and does not depend on deprecated browser UI code."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+          "wiki_gate/task-close linters for file-structure, generated-parity, stale-reference, and changed"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        "checks_run": [
+          "lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors)",
+          "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+          "npm run typecheck: pass",
+          "git diff --check && git diff --cached --check: pass",
+          "wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)"
+        ],
+        "test_design_evidence": [
+          "Existing smoke tests cover diagram refs, prompt assets, source contract, package loading, project resolution, and type safety.",
+          "Package smoke now asserts `/wiki` completions include system/product and product/system panels expose source-backed navigation affordances."
+        ],
+        "code_change_evidence": [
+          "Added `src/adapters/pi/commands/system.ts` and `src/adapters/pi/commands/product.ts` command runners called only through canonical `/wiki` router.",
+          "Extended `/wiki` router subcommands to dispatch `system` and `product` while preserving legacy command count/shims.",
+          "Enhanced Pi status panel product/system sections with source-backed focused navigation and detail previews from canonical Markdown/YAML.",
+          "Updated README canonical command docs and package smoke expectations."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-078",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-078",
+      "show_build": "git show refs/codewiki/archive/task/TASK-078:.codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/product/uis/terminal.md",
+        ".codewiki/kb/system/diagrams/README.md",
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/product/users/maintainers.md",
+        ".codewiki/kb/product/users/agents.md",
+        "src/adapters/pi/commands/system.ts",
+        "src/adapters/pi/commands/product.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/text.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/knowledge/doc-parser.ts",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-078 Build system and product TUI navigation implementation evidence",
+      "body": "Implemented TASK-078 source-backed `/wiki system` and `/wiki product` terminal navigation through the canonical `/wiki` router.\n\nChecks: lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors), node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, npm run typecheck: pass, git diff --check && git diff --cached --check: pass, wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-078\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json\nCodeWiki-Checks: lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors), node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, npm run typecheck: pass, git diff --check && git diff --cached --check: pass, wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-078\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-078\nCodeWiki-Digest: sha256:f92b315bec7ccccd18e6b026c703711a813bef783d1803636c7da1ef9c247371\nCodeWiki-Restore: /wiki-restore TASK-078",
+      "trailers": [
+        "CodeWiki-Task: TASK-078",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+        "CodeWiki-Checks: lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors), node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, npm run typecheck: pass, git diff --check && git diff --cached --check: pass, wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-078",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-078",
+        "CodeWiki-Digest: sha256:f92b315bec7ccccd18e6b026c703711a813bef783d1803636c7da1ef9c247371",
+        "CodeWiki-Restore: /wiki-restore TASK-078"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-078 Build system and product TUI navigation implementation evidence",
+      "body": "Implemented TASK-078 source-backed `/wiki system` and `/wiki product` terminal navigation through the canonical `/wiki` router.\n\nChecks: lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors), node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, npm run typecheck: pass, git diff --check && git diff --cached --check: pass, wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-078\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json\nCodeWiki-Checks: lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors), node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, npm run typecheck: pass, git diff --check && git diff --cached --check: pass, wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-078\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-078\nCodeWiki-Digest: sha256:f92b315bec7ccccd18e6b026c703711a813bef783d1803636c7da1ef9c247371\nCodeWiki-Restore: /wiki-restore TASK-078"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-078",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-078"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-078",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-078",
+        "show_build": "git show refs/codewiki/archive/task/TASK-078:.codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/product/uis/terminal.md",
+          ".codewiki/kb/system/diagrams/README.md",
+          ".codewiki/kb/product/overview.md",
+          ".codewiki/kb/product/users/maintainers.md",
+          ".codewiki/kb/product/users/agents.md",
+          "src/adapters/pi/commands/system.ts",
+          "src/adapters/pi/commands/product.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/text.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/knowledge/doc-parser.ts",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-078",
+      "build_path": ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-078",
+      "commit_sha": "",
+      "digest": "sha256:f92b315bec7ccccd18e6b026c703711a813bef783d1803636c7da1ef9c247371",
+      "restore_command": "/wiki-restore TASK-078"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:afb47afb8bdcb1e87c4557f65305736abe672101a4acc5b6489e5fddbdc78bbc",
+          "bytes": 30880
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:b404231cd1bcd3b06b7abbeaa371a8b6f6888bd0062ae6a47f085c116737df71",
+          "bytes": 114273
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:077bcdd5463fe6bec84dea8ff3a5538ef21122628bb5ccd6e700f9c85ad23756",
+          "bytes": 15690
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9f34f8b0069938d53d120f43876f46dcbc9be8e37fd48331a1dee98ad6fe2b4e",
+          "bytes": 12920
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "tests/smoke/project-resolution.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:bf41a8ab597cdd8989d660c9698aaaf671c65b02a7664bfb2b6c15c1bf19873c",
+          "bytes": 1153
+        },
+        {
+          "path": "src/adapters/pi/commands/wiki.ts",
+          "role": "code_file",
+          "sha256": "sha256:5b4a21488aea4e9152304d128f7c3c292984e9983c51345e2c5ecc47e31810f2",
+          "bytes": 2628
+        },
+        {
+          "path": "src/adapters/pi/commands/system.ts",
+          "role": "code_file",
+          "sha256": "sha256:12febe184c701af9b0a5b622a8659464601de1c152a4eab88ace73ec85d86a76",
+          "bytes": 2304
+        },
+        {
+          "path": "src/adapters/pi/commands/product.ts",
+          "role": "code_file",
+          "sha256": "sha256:86cbd438234bc6fffbd721ab170ca71fcdfc82809d1a4943e48c0f3a4b514c23",
+          "bytes": 1333
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:f75d286ecf3ec7917ab84e8e42d4edb812ea23af30da59eced11e8b2ff4e178f",
+          "bytes": 81482
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:1f1e2e36405dcef836cdf1d330d5bf6b64c0214118a2d6720094e7d760084e06",
+          "bytes": 25416
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-078",
+      "source_build": ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/adapters/pi/commands/wiki.ts",
+          "src/adapters/pi/commands/system.ts",
+          "src/adapters/pi/commands/product.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "README.md",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/project-resolution.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-078",
+        "restore_command": "/wiki-restore TASK-078"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics on src/adapters/pi/ui/manager.ts, src/adapters/pi/commands/wiki.ts, src/adapters/pi/commands/system.ts, src/adapters/pi/commands/product.ts, tests/smoke/package-smoke.test.mjs: pass (0 errors)",
+        "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+        "npm run typecheck: pass",
+        "git diff --check && git diff --cached --check: pass",
+        "wiki_audit profiles=file-structure,generated-parity,stale-reference,changed,task task_id=TASK-078: warning (file-structure/generated-parity/stale-reference/task pass; changed warns generated graph is dirty)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

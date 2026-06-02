@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01",
+  "generated_at": "2026-06-02T02:54:12Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-078/context.json",
   "task": {
     "id": "TASK-078",
     "title": "Build system and product TUI navigation",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "feature",
     "change_type": "system",

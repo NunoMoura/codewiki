@@ -61,7 +61,6 @@ import {
 	kanbanTaskCircle,
 	isLiveAnimatedTask,
 	roadmapColumnLabel,
-	wikiActivityMarker,
 } from "./theme.ts";
 import {
 	updateTaskLoop,
@@ -76,15 +75,11 @@ import {
 	maybeReadRoadmapState,
 } from "../../../state/artifacts.ts";
 import { effectiveAgencyPolicy } from "../../../agency/types.ts";
+import { parseSystemDiagrams } from "../../../knowledge/diagram-parser.ts";
+import type { ParsedSystemDiagram } from "../../../knowledge/diagram-parser.ts";
 import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";
 import { resolve, dirname, basename } from "node:path";
-import {
-	existsSync,
-	mkdirSync,
-	readdirSync,
-	readFileSync,
-	writeFileSync,
-} from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 export const STATUS_DOCK_WIDGET_KEY = "codewiki-status-dock";
 
@@ -1195,6 +1190,31 @@ export function wikiMarkdownPreview(
 	}
 }
 
+const PRODUCT_OVERVIEW_PATH = ".codewiki/kb/product/overview.md";
+const PRODUCT_USER_PATHS = [
+	".codewiki/kb/product/users/maintainers.md",
+	".codewiki/kb/product/users/agents.md",
+	".codewiki/kb/product/users/package-authors.md",
+	".codewiki/kb/product/users/external-users.md",
+] as const;
+
+function statusSpecByPath(
+	state: StatusStateFile,
+	path: string,
+): StatusStateSpecRow | null {
+	return state.specs.find((row) => row.path === path) ?? null;
+}
+
+function productUserRows(state: StatusStateFile): StatusStateSpecRow[] {
+	return PRODUCT_USER_PATHS.map((path) => statusSpecByPath(state, path)).filter(
+		(row): row is StatusStateSpecRow => Boolean(row),
+	);
+}
+
+function productModeLabel(mode: number): "overview" | "users" {
+	return mode === 1 ? "users" : "overview";
+}
+
 export function readArchitecturePanelData(project: WikiProject): {
 	mermaid: string[];
 	components: ArchitecturePanelComponent[];
@@ -1227,51 +1247,195 @@ export function readArchitecturePanelData(project: WikiProject): {
 	return { mermaid, components };
 }
 
-export function readSystemDiagramCatalog(project: WikiProject): Array<{
-	id: string;
-	title: string;
-	kind: string;
-	path: string;
-	purpose: string;
-}> {
-	const dir = resolve(project.root, ".codewiki/kb/system/diagrams");
-	if (!existsSync(dir)) return [];
-	return readdirSync(dir)
-		.filter((name) => /\.ya?ml$/i.test(name))
-		.sort(
-			(a, b) =>
-				diagramCatalogRank(a) - diagramCatalogRank(b) || a.localeCompare(b),
-		)
-		.map((name) => {
-			const path = `.codewiki/kb/system/diagrams/${name}`;
-			const raw = readFileSync(resolve(dir, name), "utf8");
-			return {
-				id: frontmatterLikeYaml(raw, "id") || path,
-				title: frontmatterLikeYaml(raw, "title") || basename(name, ".yaml"),
-				kind: frontmatterLikeYaml(raw, "kind") || "diagram",
-				path,
-				purpose:
-					frontmatterLikeYaml(raw, "purpose") || "System diagram raw data.",
-			};
-		});
+export function readSystemDiagramCatalog(
+	project: WikiProject,
+): ParsedSystemDiagram[] {
+	return parseSystemDiagrams(project.root, project).diagrams.sort(
+		(a, b) =>
+			diagramCatalogRank(a.path) - diagramCatalogRank(b.path) ||
+			a.title.localeCompare(b.title),
+	);
 }
 
 function diagramCatalogRank(name: string): number {
 	const order = [
 		"context-map",
+		"architecture",
 		"component-map",
 		"key-flow",
 		"data-model",
 		"state-lifecycle",
+		"file-structure-map",
 	];
-	const index = order.findIndex((item) => name.startsWith(item));
+	const base = basename(name).replace(/\.ya?ml$/i, "");
+	const index = order.findIndex((item) => base.startsWith(item));
 	return index >= 0 ? index : order.length;
 }
 
-function frontmatterLikeYaml(raw: string, key: string): string | null {
-	const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-	const match = new RegExp(`^${safeKey}:\\s*(.+)$`, "m").exec(raw);
-	return match ? match[1].trim().replace(/^['"]|['"]$/g, "") : null;
+function systemSourceRefs(diagram: ParsedSystemDiagram): string[] {
+	return unique([
+		diagram.path,
+		...diagram.source_docs,
+		...diagram.refs.map((ref) => ref.source).filter(Boolean),
+	] as string[]);
+}
+
+function formatSystemNodeLine(
+	ref: ParsedSystemDiagram["refs"][number],
+): string {
+	const metadata = ref.metadata ?? {};
+	const group =
+		typeof metadata.group === "string" ? metadata.group : ref.category;
+	const source = ref.source ? ` · ${ref.source}` : "";
+	return `${ref.label} [${group}]${source}`;
+}
+
+function groupedSystemRefLines(
+	diagram: ParsedSystemDiagram,
+	limit: number,
+): string[] {
+	const groups = new Map<string, string[]>();
+	for (const ref of diagram.refs) {
+		const metadata = ref.metadata ?? {};
+		const group =
+			typeof metadata.group === "string" ? metadata.group : ref.category;
+		const items = groups.get(group) ?? [];
+		items.push(ref.label);
+		groups.set(group, items);
+	}
+	const lines: string[] = [];
+	for (const [group, labels] of groups) {
+		if (lines.length >= limit) break;
+		lines.push(`${group}: ${labels.slice(0, 5).join(" → ")}`);
+		if (labels.length > 5) lines.push(`  omitted=${labels.length - 5}`);
+	}
+	return lines;
+}
+
+export function renderSystemDiagramDetailLines(
+	diagram: ParsedSystemDiagram,
+	lineLimit = 18,
+): string[] {
+	const sourceRefs = systemSourceRefs(diagram);
+	const lines: string[] = [
+		`Diagram: ${diagram.kind}`,
+		`Source: ${diagram.path}`,
+		`Source refs: ${sourceRefs.slice(0, 6).join(", ") || diagram.path}`,
+		`Focus: ${diagram.refs.length} item(s), ${diagram.edges.length} edge(s)`,
+		"",
+		diagram.purpose || "System diagram raw data.",
+		"",
+	];
+
+	if (diagram.kind === "sequence_flow") {
+		lines.push("Ordered steps:");
+		const steps = diagram.edges.filter((edge) => edge.kind === "step");
+		for (const [index, edge] of steps.slice(0, lineLimit).entries())
+			lines.push(
+				`${index + 1}. ${edge.from} → ${edge.to}: ${edge.label || edge.ref || "step"}`,
+			);
+		if (steps.length > lineLimit)
+			lines.push(`omitted=${steps.length - lineLimit}`);
+		return lines;
+	}
+
+	if (diagram.kind === "state_lifecycle") {
+		const states = diagram.refs.filter((ref) => ref.category === "lifecycle");
+		const transitions = diagram.edges.filter(
+			(edge) => edge.kind === "transition",
+		);
+		lines.push("States:");
+		states
+			.slice(0, 8)
+			.forEach((ref) => lines.push(`• ${formatSystemNodeLine(ref)}`));
+		if (states.length > 8) lines.push(`omitted_states=${states.length - 8}`);
+		lines.push("", "Transitions:");
+		transitions
+			.slice(0, 8)
+			.forEach((edge) =>
+				lines.push(
+					`${edge.from} → ${edge.to}: ${edge.label || edge.ref || "transition"}`,
+				),
+			);
+		if (transitions.length > 8)
+			lines.push(`omitted_transitions=${transitions.length - 8}`);
+		return lines;
+	}
+
+	if (diagram.kind === "data_model") {
+		const entities = diagram.refs.filter(
+			(ref) => ref.category === "domain_entity",
+		);
+		lines.push("Entity cards:");
+		entities
+			.slice(0, 8)
+			.forEach((ref) => lines.push(`• ${formatSystemNodeLine(ref)}`));
+		if (entities.length > 8)
+			lines.push(`omitted_entities=${entities.length - 8}`);
+		lines.push("", "Relationships:");
+		diagram.edges
+			.slice(0, 8)
+			.forEach((edge) =>
+				lines.push(
+					`${edge.from} → ${edge.to}: ${edge.label || edge.ref || "relationship"}`,
+				),
+			);
+		if (diagram.edges.length > 8)
+			lines.push(`omitted_relationships=${diagram.edges.length - 8}`);
+		return lines;
+	}
+
+	if (diagram.kind === "file_structure_map") {
+		lines.push("Ownership tree:");
+		lines.push(...groupedSystemRefLines(diagram, lineLimit));
+		return lines;
+	}
+
+	lines.push("Focused lanes:");
+	lines.push(...groupedSystemRefLines(diagram, lineLimit));
+	if (diagram.edges.length) {
+		lines.push("", "Neighborhood edges:");
+		diagram.edges
+			.slice(0, 8)
+			.forEach((edge) =>
+				lines.push(
+					`${edge.from} → ${edge.to}: ${edge.label || edge.ref || "edge"}`,
+				),
+			);
+		if (diagram.edges.length > 8)
+			lines.push(`omitted_edges=${diagram.edges.length - 8}`);
+	}
+	return lines;
+}
+
+interface SystemFocusRow {
+	label: string;
+	source?: string;
+	lines: string[];
+}
+
+function systemFocusRows(diagram: ParsedSystemDiagram): SystemFocusRow[] {
+	const refRows = diagram.refs.map((ref) => ({
+		label: `${ref.label} · ${ref.category}`,
+		...(ref.source ? { source: ref.source } : {}),
+		lines: [
+			`Ref: ${ref.ref}`,
+			`Kind: ${ref.raw_kind || ref.category}`,
+			`Diagram: ${diagram.path}`,
+			...(ref.source ? [`Source: ${ref.source}`] : []),
+			`Aliases: ${ref.aliases.slice(0, 4).join(", ")}`,
+		],
+	}));
+	const edgeRows = diagram.edges.map((edge) => ({
+		label: `${edge.from} → ${edge.to}`,
+		lines: [
+			`Flow: ${edge.kind}`,
+			`Diagram: ${diagram.path}`,
+			`${edge.from} → ${edge.to}`,
+			`Label: ${edge.label || edge.ref || "—"}`,
+		],
+	}));
+	return [...refRows, ...edgeRows];
 }
 
 export function readGraphPanelData(project: WikiProject): {
@@ -1712,61 +1876,115 @@ export function renderStatusPanelLines(
 	}
 
 	if (section === "product") {
-		const productPathOrder = [
-			".codewiki/kb/product/users/maintainers.md",
-			".codewiki/kb/product/users/agents.md",
-			".codewiki/kb/product/users/package-authors.md",
-			".codewiki/kb/product/users/external-users.md",
-			".codewiki/kb/product/stories/intent.md",
-			".codewiki/kb/product/stories/navigation.md",
-			".codewiki/kb/product/stories/automation.md",
-			".codewiki/kb/product/stories/drift.md",
-			".codewiki/kb/product/uis/status-panel.md",
-			".codewiki/kb/product/uis/board.md",
-			".codewiki/kb/product/uis/graph-navigation.md",
-		];
-		const productRows = productPathOrder
-			.map((path) => state.specs.find((row) => row.path === path))
-			.filter((row): row is StatusStateSpecRow => Boolean(row));
+		const mode = productModeLabel(panelState.wikiColumnIndex);
+		const overview = statusSpecByPath(state, PRODUCT_OVERVIEW_PATH);
+		const users = productUserRows(state);
+		panelState.wikiColumnIndex = mode === "users" ? 1 : 0;
 		panelState.wikiRowIndex = Math.min(
 			Math.max(0, panelState.wikiRowIndex),
-			Math.max(0, productRows.length - 1),
+			Math.max(0, users.length - 1),
 		);
 		body.push(theme.bold(theme.fg("accent", "Product")));
-		for (const [index, row] of productRows.entries()) {
-			const selected = index === panelState.wikiRowIndex;
+		body.push(
+			`Views: ${mode === "overview" ? "▸ overview" : "overview"} · ${
+				mode === "users" ? "▸ users" : "users"
+			}`,
+		);
+		body.push(
+			theme.fg(
+				"muted",
+				`source refs: ${[PRODUCT_OVERVIEW_PATH, ...PRODUCT_USER_PATHS].join(", ")}`,
+			),
+		);
+		body.push(
+			theme.fg(
+				"muted",
+				"←/→ switch view · ↑/↓ select user · Enter opens source",
+			),
+		);
+		body.push("");
+
+		if (mode === "overview") {
 			body.push(
 				highlightSelectable(
 					theme,
-					`${selected ? "▸" : " "} ${wikiActivityMarker(row, activeLink, roadmapState, panelState.animationTick)} ${row.title || row.path}`,
-					selected,
+					`▸ ${overview?.title || "Product overview"}`,
+					true,
 				),
 			);
-			body.push(theme.fg("muted", row.path));
+			body.push(theme.fg("muted", PRODUCT_OVERVIEW_PATH));
 			body.push(
 				theme.fg(
 					"muted",
 					truncatePlain(
-						row.summary || row.note || "—",
+						overview?.summary ||
+							overview?.note ||
+							"Product goals and user outcomes.",
 						Math.max(12, width - 4),
 					),
 				),
 			);
-			body.push("");
+			body.push("", "Markdown preview:");
+			body.push(...wikiMarkdownPreview(project, PRODUCT_OVERVIEW_PATH));
+		} else {
+			body.push(theme.bold(theme.fg("accent", "Users")));
+			body.push(
+				theme.fg(
+					"muted",
+					`focus=${Math.min(users.length, panelState.wikiRowIndex + 1)}/${users.length} omitted=${Math.max(0, users.length - 8)}`,
+				),
+			);
+			for (const [index, row] of users.slice(0, 8).entries()) {
+				const selected = index === panelState.wikiRowIndex;
+				body.push(
+					highlightSelectable(
+						theme,
+						`${selected ? "▸" : " "} ${row.title || row.path}`,
+						selected,
+					),
+				);
+				body.push(theme.fg("muted", row.path));
+				body.push(
+					theme.fg(
+						"muted",
+						truncatePlain(
+							row.summary || row.note || "User story source.",
+							Math.max(12, width - 4),
+						),
+					),
+				);
+				if (selected) {
+					body.push(theme.fg("muted", "stories:"));
+					body.push(
+						...wikiMarkdownPreview(project, row.path)
+							.slice(0, 3)
+							.map((line) => theme.fg("muted", `  ${line}`)),
+					);
+				}
+				body.push("");
+			}
 		}
 	}
 
 	if (section === "system") {
-		const architecture = readArchitecturePanelData(project);
 		const diagrams = readSystemDiagramCatalog(project);
 		panelState.wikiRowIndex = Math.min(
 			Math.max(0, panelState.wikiRowIndex),
-			Math.max(
-				0,
-				Math.max(diagrams.length, architecture.components.length) - 1,
+			Math.max(0, diagrams.length - 1),
+		);
+		const selectedDiagram = diagrams[panelState.wikiRowIndex];
+		const focusRows = selectedDiagram ? systemFocusRows(selectedDiagram) : [];
+		panelState.graphRowIndex = Math.min(
+			Math.max(0, panelState.graphRowIndex ?? 0),
+			Math.max(0, focusRows.length - 1),
+		);
+		body.push(theme.bold(theme.fg("accent", "System diagrams")));
+		body.push(
+			theme.fg(
+				"muted",
+				"Source truth: .codewiki/kb/system/diagrams/*.yaml · ↑/↓ diagram · ←/→ item · Enter source",
 			),
 		);
-		body.push(theme.bold(theme.fg("accent", "Diagrams")));
 		if (diagrams.length === 0)
 			body.push(
 				theme.fg(
@@ -1774,7 +1992,7 @@ export function renderStatusPanelLines(
 					"No diagram YAML found under .codewiki/kb/system/diagrams.",
 				),
 			);
-		for (const [index, diagram] of diagrams.slice(0, 5).entries()) {
+		for (const [index, diagram] of diagrams.slice(0, 9).entries()) {
 			const selected = index === panelState.wikiRowIndex;
 			body.push(
 				highlightSelectable(
@@ -1793,31 +2011,41 @@ export function renderStatusPanelLines(
 				),
 			);
 		}
-		body.push("");
-		body.push(theme.bold(theme.fg("accent", "Components")));
-		if (architecture.components.length === 0)
-			body.push(theme.fg("muted", "No architecture components found."));
-		for (const [index, component] of architecture.components
-			.slice(0, 8)
-			.entries()) {
-			const selected =
-				diagrams.length === 0 && index === panelState.wikiRowIndex;
-			body.push(
-				highlightSelectable(
-					theme,
-					`${selected ? "▸" : " "} ${component.label || component.id}`,
-					selected,
-				),
-			);
+		if (diagrams.length > 9)
+			body.push(theme.fg("muted", `omitted=${diagrams.length - 9}`));
+		if (selectedDiagram) {
+			body.push("", theme.bold(theme.fg("accent", "Focused render")));
 			body.push(
 				theme.fg(
 					"muted",
-					truncatePlain(
-						`${component.path || "—"}${component.summary ? ` · ${component.summary}` : ""}`,
-						Math.max(12, width - 4),
-					),
+					`diagram=${panelState.wikiRowIndex + 1}/${diagrams.length} item=${Math.min(focusRows.length, (panelState.graphRowIndex ?? 0) + 1)}/${focusRows.length} omitted=${Math.max(0, focusRows.length - 8)} kind=${selectedDiagram.kind}`,
 				),
 			);
+			body.push(
+				...renderSystemDiagramDetailLines(selectedDiagram, 8)
+					.slice(5, 12)
+					.map((line) =>
+						theme.fg("muted", truncatePlain(line, Math.max(12, width - 4))),
+					),
+			);
+			body.push("", theme.bold(theme.fg("accent", "Selectable items")));
+			for (const [index, row] of focusRows.slice(0, 8).entries()) {
+				const selected = index === (panelState.graphRowIndex ?? 0);
+				body.push(
+					highlightSelectable(
+						theme,
+						`${selected ? "▸" : " "} ${truncatePlain(row.label, Math.max(12, width - 4))}`,
+						selected,
+					),
+				);
+				if (selected)
+					body.push(
+						theme.fg(
+							"muted",
+							row.source ? `source=${row.source}` : "source=diagram YAML",
+						),
+					);
+			}
 		}
 	}
 
@@ -2040,6 +2268,8 @@ export async function openStatusPanel(
 	source: string,
 	onState?: (state: ActiveStatusPanel | null) => void,
 	initialSection: StatusPanelSection = "home",
+	initialWikiRowIndex = 0,
+	initialWikiColumnIndex = 0,
 ): Promise<boolean> {
 	const ui = ctx.ui as any;
 	if (
@@ -2057,8 +2287,8 @@ export async function openStatusPanel(
 		activeLink,
 		sessionId: currentSessionId(ctx) ?? "",
 		homeIssueIndex: 0,
-		wikiColumnIndex: 0,
-		wikiRowIndex: 0,
+		wikiColumnIndex: initialWikiColumnIndex,
+		wikiRowIndex: initialWikiRowIndex,
 		roadmapColumnIndex: 0,
 		roadmapRowIndex: 0,
 		graphRowIndex: 0,
@@ -2222,14 +2452,31 @@ export async function openStatusPanel(
 							Math.max(0, issueCount - 1),
 							panelState.homeIssueIndex + 1,
 						);
-				} else if (
-					panelState.section === "product" ||
-					panelState.section === "system"
-				) {
-					if (matchesKey(data, "up") || matchesKey(data, "left"))
+				} else if (panelState.section === "product") {
+					if (matchesKey(data, "left") || matchesKey(data, "right")) {
+						panelState.wikiColumnIndex =
+							panelState.wikiColumnIndex === 1 ? 0 : 1;
+						panelState.wikiRowIndex = 0;
+					}
+					if (matchesKey(data, "up"))
 						panelState.wikiRowIndex = Math.max(0, panelState.wikiRowIndex - 1);
-					if (matchesKey(data, "down") || matchesKey(data, "right"))
+					if (matchesKey(data, "down")) panelState.wikiRowIndex += 1;
+				} else if (panelState.section === "system") {
+					if (matchesKey(data, "up")) {
+						panelState.wikiRowIndex = Math.max(0, panelState.wikiRowIndex - 1);
+						panelState.graphRowIndex = 0;
+					}
+					if (matchesKey(data, "down")) {
 						panelState.wikiRowIndex += 1;
+						panelState.graphRowIndex = 0;
+					}
+					if (matchesKey(data, "left"))
+						panelState.graphRowIndex = Math.max(
+							0,
+							(panelState.graphRowIndex ?? 0) - 1,
+						);
+					if (matchesKey(data, "right"))
+						panelState.graphRowIndex = (panelState.graphRowIndex ?? 0) + 1;
 				} else if (panelState.section === "roadmap") {
 					if (matchesKey(data, "left"))
 						panelState.roadmapColumnIndex = cycleIndex(
@@ -2421,31 +2668,18 @@ export async function openStatusPanel(
 							],
 						});
 				} else if (panelState.section === "product") {
-					const productPathOrder = [
-						".codewiki/kb/product/users/maintainers.md",
-						".codewiki/kb/product/users/agents.md",
-						".codewiki/kb/product/users/package-authors.md",
-						".codewiki/kb/product/users/external-users.md",
-						".codewiki/kb/product/stories/intent.md",
-						".codewiki/kb/product/stories/navigation.md",
-						".codewiki/kb/product/stories/automation.md",
-						".codewiki/kb/product/stories/drift.md",
-						".codewiki/kb/product/uis/status-panel.md",
-						".codewiki/kb/product/uis/board.md",
-						".codewiki/kb/product/uis/graph-navigation.md",
-					];
-					const productRows = productPathOrder
-						.map((path) =>
-							snapshot.state.specs.find((row) => row.path === path),
-						)
-						.filter((row): row is StatusStateSpecRow => Boolean(row));
-					const row = productRows[panelState.wikiRowIndex];
+					const mode = productModeLabel(panelState.wikiColumnIndex);
+					const row =
+						mode === "overview"
+							? statusSpecByPath(snapshot.state, PRODUCT_OVERVIEW_PATH)
+							: productUserRows(snapshot.state)[panelState.wikiRowIndex];
 					if (row) {
 						const preview = wikiMarkdownPreview(panelState.project, row.path);
 						openStatusPanelDetail(panelState, {
 							kind: "wiki",
 							title: row.title || row.path,
 							lines: [
+								`View: product/${mode}`,
 								`Spec: ${row.path}`,
 								"",
 								row.summary || row.note || "No extra detail.",
@@ -2459,38 +2693,22 @@ export async function openStatusPanel(
 					const diagrams = readSystemDiagramCatalog(panelState.project);
 					const diagram = diagrams[panelState.wikiRowIndex];
 					if (diagram) {
+						const focusRow =
+							systemFocusRows(diagram)[panelState.graphRowIndex ?? 0];
+						const preview = focusRow?.source
+							? wikiMarkdownPreview(panelState.project, focusRow.source)
+							: [];
 						openStatusPanelDetail(panelState, {
 							kind: "diagram",
-							title: diagram.title,
+							title: focusRow?.label || diagram.title,
 							lines: [
-								`Diagram: ${diagram.kind}`,
-								`Spec: ${diagram.path}`,
-								"",
-								diagram.purpose,
+								...renderSystemDiagramDetailLines(diagram, 24),
+								...(focusRow ? ["", "Selected item:", ...focusRow.lines] : []),
+								...(preview.length
+									? ["", "Markdown preview:", ...preview]
+									: []),
 							],
 						});
-					} else {
-						const architecture = readArchitecturePanelData(panelState.project);
-						const component = architecture.components[panelState.wikiRowIndex];
-						if (component?.path) {
-							const preview = wikiMarkdownPreview(
-								panelState.project,
-								component.path,
-							);
-							openStatusPanelDetail(panelState, {
-								kind: "wiki",
-								title: component.label || component.id,
-								lines: [
-									`Component: ${component.id}`,
-									`Spec: ${component.path}`,
-									"",
-									component.summary || "No summary.",
-									...(preview.length
-										? ["", "Markdown preview:", ...preview]
-										: []),
-								],
-							});
-						}
 					}
 				} else if (panelState.section === "roadmap") {
 					const taskId =

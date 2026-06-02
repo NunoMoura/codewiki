@@ -2280,8 +2280,13 @@ async function main() {
 		);
 		assert.deepEqual(
 			wikiCommand.getArgumentCompletions?.("s")?.map((item) => item.value),
-			["status"],
+			["status", "system"],
 			"wiki router should complete canonical subcommands",
+		);
+		assert.deepEqual(
+			wikiCommand.getArgumentCompletions?.("p")?.map((item) => item.value),
+			["product"],
+			"wiki router should complete product navigation",
 		);
 		assert.ok(
 			configCommand && typeof configCommand.handler === "function",
@@ -3522,8 +3527,24 @@ async function main() {
 		);
 		assert.match(
 			productPanelLines.join("\n"),
-			/Maintainers[\s\S]*Agents[\s\S]*Intent/i,
-			"Product tab should show maintainers, agents, and stories",
+			/Views:[\s\S]*overview[\s\S]*users[\s\S]*source refs[\s\S]*Product/i,
+			"Product tab should offer overview/users with source refs",
+		);
+		panelState.terminalInput?.("\x1b[C");
+		const widgetInstanceAfterProductUsers = widgetState.content?.(
+			{ terminal: { columns: 120, rows: 32 } },
+			{
+				fg: (_color, text) => text,
+				bg: (_color, text) => text,
+				bold: (text) => text,
+			},
+		);
+		const productUsersPanelLines =
+			widgetInstanceAfterProductUsers?.render(100) ?? [];
+		assert.match(
+			productUsersPanelLines.join("\n"),
+			/Maintainers[\s\S]*stories:[\s\S]*Agents/i,
+			"Product users view should show selectable users and story previews",
 		);
 		assert.doesNotMatch(
 			productPanelLines.join("\n"),
@@ -3542,8 +3563,8 @@ async function main() {
 		const systemPanelLines = widgetInstanceAfterSystemTab?.render(100) ?? [];
 		assert.match(
 			systemPanelLines.join("\n"),
-			/\[System\][\s\S]*Diagrams[\s\S]*Components/i,
-			"System tab should render diagram catalog and source-backed components",
+			/\[System\][\s\S]*System diagrams[\s\S]*Source truth/i,
+			"System tab should render source-backed diagram navigation",
 		);
 		panelState.terminalInput?.("\t");
 		const widgetInstanceAfterBoardTab = widgetState.content?.(
