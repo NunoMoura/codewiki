@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-02T23:52:41Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-085",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes for TASK-085. The package smoke fixture now creates task-scoped implementation and ship-ready prerequisite reports before task-close pass reports, the dedicated missing-evidence block suites still pass, source gateway/policy code was not weakened, and the committed content candidate a7549c6 passed required checks.",
+  "checks": [
+    "approval:user follow-up intent 2026-06-02: validate implementation build, rerun required checks, recompute content digest/tree proof, write implementation/task-close validation, then close TASK-085",
+    "lsp_diagnostics tests/smoke/package-smoke.test.mjs src/gateway/report.ts src/gateway/tool.ts src/policy/gate-policy.ts src/policy/gates.ts: pass (hint only async conversion)",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "npm run typecheck: pass",
+    "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference: warning only existing graph-health; required implementation refs present"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "CodeWiki alignment audit still reports two existing graph-health warnings unrelated to TASK-085; changed/task/generated-parity/package/security/stale-reference profiles passed."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit a7549c6"
+  ],
+  "content_proof_refs": [
+    "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+    "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+    "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-085",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+      ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-085",
+    "source_build": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+    "validation_report": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+    "commit_title": "checkpoint(codewiki): TASK-085 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-085",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      "CodeWiki-Checks: approval:user follow-up intent 2026-06-02: validate implementation build, rerun required checks, recompute content digest/tree proof, write implementation/task-close validation, then close TASK-085; lsp_diagnostics tests/smoke/package-smoke.test.mjs src/gateway/report.ts src/gateway/tool.ts src/policy/gate-policy.ts src/policy/gates.ts: pass (hint only async conversion); node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass; npm run typecheck: pass; wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference: warning only existing graph-health; required implementation refs present"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-085",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user follow-up intent 2026-06-02: validate implementation build, rerun required checks, recompute content digest/tree proof, write implementation/task-close validation, then close TASK-085"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+    "validated_sha": "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
+    "tree_sha": "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
+    "working_tree_digest": "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh validation from CodeWiki kickoff; commit a7549c6 is clean local content candidate. No remote operation was performed.",
+    "role": "validator"
+  }
+}
