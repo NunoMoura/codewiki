@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T09:43:37.038Z",
+  "generated_at": "2026-06-02T09:44:19.713Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -45546,56 +45546,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-304",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-304",
-      "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-      "expires_at": "2026-06-02T11:40:05.284Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-        "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-        "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-081"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-081",
-      "kind": "change_claim_scope",
-      "path": "TASK-081",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -140247,26 +140197,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-304",
-      "to": "task:TASK-081"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-304",
-      "to": "claim_scope:TASK-081"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-304",
-      "to": "claim_scope:.codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-304",
-      "to": "claim_scope:.codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -157052,7 +156982,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 30,
+            "item_count": 26,
             "badges": [
               {
                 "id": "open_tasks",
@@ -157084,7 +157014,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -157257,8 +157187,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4839,
-          "edges": 15858,
+          "nodes": 4835,
+          "edges": 15854,
           "open_tasks": 0,
           "validations": 237,
           "source_refs": 1169
@@ -157412,7 +157342,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 30,
+              "item_count": 26,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -157444,7 +157374,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 1
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -158674,94 +158604,12 @@
           }
         ],
         "data": {
-          "active_claim_count": 1,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-304",
-                  "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "agent_name": "Mole",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-081",
-                  "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                  "expires_at": "2026-06-02T11:40:05.284Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-304",
-                  "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "agent_name": "Mole",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-081",
-                  "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                  "expires_at": "2026-06-02T11:40:05.284Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "task_id": "TASK-081"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-304",
-                  "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "agent_name": "Mole",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-081",
-                  "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                  "expires_at": "2026-06-02T11:40:05.284Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                    "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -159107,8 +158955,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4839,
-          "edges": 15858,
+          "nodes": 4835,
+          "edges": 15854,
           "source_refs": 1169
         },
         "next_action": {
@@ -188787,233 +188635,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-304",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-081",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-          "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-304",
-          "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-          "task_id": "TASK-081",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-            "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-            "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-081"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-            }
-          ],
-          "created_at": "2026-06-02T09:40:05Z",
-          "updated_at": "2026-06-02T09:40:05Z",
-          "expires_at": "2026-06-02T11:40:05.284Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-081"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-081"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-304",
-              "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-081",
-              "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-              "expires_at": "2026-06-02T11:40:05.284Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -207400,9 +207040,7 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
             ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
           ],
-          "claim_ids": [
-            "CLAIM-304"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -209290,7 +208928,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-02T09:43:36.832Z",
+      "generated_at": "2026-06-02T09:44:19.466Z",
       "counts": {
         "large-doc": 2
       },
@@ -209311,7 +208949,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-02T09:43:37Z",
+      "generated_at": "2026-06-02T09:44:19Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -210971,7 +210609,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-02T09:43:37Z",
+      "generated_at": "2026-06-02T09:44:19Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -211129,9 +210767,7 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json",
               ".codewiki/validation/2026-05-31-decision-block-2026-05-31-accepted-graph-center.json"
             ],
-            "claim_ids": [
-              "CLAIM-304"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -211528,7 +211164,7 @@
       },
       "direction": [
         "TASK-082 is open implementation delta below knowledge.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
@@ -215462,7 +215098,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-02T09:43:37Z",
+        "generated_at": "2026-06-02T09:44:19Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -215517,10 +215153,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T09:43:37Z",
+            "checked_at": "2026-06-02T09:44:19Z",
             "revision": {
               "git": {
-                "head": "43dc2f814dbd893a10fd24115feff378261e0ca3",
+                "head": "f594af041dc44f1ffc382c7614503d61581dfc78",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -215787,15 +215423,15 @@
               },
               "spec_digest": "9bb884b5d6e32a324ad3d01525b601db93f5acaa1ff169a9454eb3bc6862518c",
               "task_digest": "409b0ad1fceb3cb8fa8ac9c44b800a24ee9d1424b33741bca30e682c5647a7ad",
-              "code_digest": "ebf5edd2ef6f65fa2ee01836cf9b48b272e10c1530ad3e42b1d6414235d28032",
-              "digest": "d5fa110e25c406e10c3281cef79f2a44dee131c02ca1158e3866551ec14f9466"
+              "code_digest": "dfb50fb6f338677b944f01e125ece3164a5c97015165b0466efb8f45e6fe28f6",
+              "digest": "638d6f513f038bdfa03577da66c917846154f0c2beb2d45d01d80d259960cf31"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T09:43:37Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T09:44:19Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -216302,10 +215938,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-02T09:43:37Z",
+            "checked_at": "2026-06-02T09:44:19Z",
             "revision": {
               "git": {
-                "head": "43dc2f814dbd893a10fd24115feff378261e0ca3",
+                "head": "f594af041dc44f1ffc382c7614503d61581dfc78",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -216555,15 +216191,15 @@
               },
               "spec_digest": "9e9348fde6c92b6f594bf74b1d9ffa503af1d7cf4caf6aa3eae9266b5b61083f",
               "task_digest": "409b0ad1fceb3cb8fa8ac9c44b800a24ee9d1424b33741bca30e682c5647a7ad",
-              "code_digest": "435ed05229696504d1c715114d3807de1208f21092ee7505a8f40743f8315108",
-              "digest": "bfa5b36e70ca0aff8e771dede5d128b3b7ff82ea2f029ba557fe4763f9021d56"
+              "code_digest": "e11288edbf31c79e380f1f3ce1494a9723e07c3be0b6867471f4b38d03720c68",
+              "digest": "e97fc17dd677bb4e902ea692e478632bd864f11013518dcbe82b13a172de3b89"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T09:43:37Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T09:44:19Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/agency.md",
@@ -217047,10 +216683,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-02T09:43:37Z",
+            "checked_at": "2026-06-02T09:44:19Z",
             "revision": {
               "git": {
-                "head": "43dc2f814dbd893a10fd24115feff378261e0ca3",
+                "head": "f594af041dc44f1ffc382c7614503d61581dfc78",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -217317,15 +216953,15 @@
               },
               "spec_digest": "9bb884b5d6e32a324ad3d01525b601db93f5acaa1ff169a9454eb3bc6862518c",
               "task_digest": "409b0ad1fceb3cb8fa8ac9c44b800a24ee9d1424b33741bca30e682c5647a7ad",
-              "code_digest": "ebf5edd2ef6f65fa2ee01836cf9b48b272e10c1530ad3e42b1d6414235d28032",
-              "digest": "d5fa110e25c406e10c3281cef79f2a44dee131c02ca1158e3866551ec14f9466"
+              "code_digest": "dfb50fb6f338677b944f01e125ece3164a5c97015165b0466efb8f45e6fe28f6",
+              "digest": "638d6f513f038bdfa03577da66c917846154f0c2beb2d45d01d80d259960cf31"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-02T09:43:37Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-02T09:44:19Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -217833,138 +217469,23 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-02T09:43:37Z",
+        "generated_at": "2026-06-02T09:44:19Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-304",
-            "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-            "task_id": "TASK-081",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-              "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-081"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-              }
-            ],
-            "created_at": "2026-06-02T09:40:05Z",
-            "updated_at": "2026-06-02T09:40:05Z",
-            "expires_at": "2026-06-02T11:40:05.284Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-06-02-codewiki-implementation-workflow-build.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-304",
-                "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-081",
-                "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                "expires_at": "2026-06-02T11:40:05.284Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-06-02-implementation-pass-task-081-2026-06-02-codewiki.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-304",
-                "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-081",
-                "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                "expires_at": "2026-06-02T11:40:05.284Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-081"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-304",
-                "session_id": "019e87ab-515b-7de3-a52c-f700319fa4ab",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-081",
-                "summary": "Prepare TASK-081 local checkpoint/task-close evidence after implementation validation pass.",
-                "expires_at": "2026-06-02T11:40:05.284Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "branch": "codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab",
-                  "notes": "factory=role-worktree; task=TASK-081; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-304 release or validated publisher/patch ref for codewiki/TASK-081/publisher/019e87ab-515b-7de3-a52c-f700319fa4ab; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
