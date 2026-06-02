@@ -5,6 +5,7 @@ import { resolveToolProject } from "../../../project/context.ts";
 import { codewikiAuditToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
+import { codewikiToolMetadata } from "./surface.ts";
 
 export async function executeCodewikiAuditTool(
 	project: WikiProject,
@@ -31,6 +32,7 @@ export function registerCodewikiAuditTool(pi: ExtensionAPI): void {
 			"Audits produce evidence only; validation gateways still decide pass, fail, or block.",
 		],
 		parameters: codewikiAuditToolInputSchema,
+		...codewikiToolMetadata("wiki_audit"),
 		async execute(
 			_toolCallId: string,
 			params: any,

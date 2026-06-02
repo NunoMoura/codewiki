@@ -18,31 +18,30 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 ## Core rules
 
 - Execute one self-contained roadmap task at a time.
-- Start from `wiki_state` and, when context is noisy/stale/token-heavy, `wiki_resume_context` or CodeWiki-owned compaction; then read the selected task, source `planning_build`, linked knowledge/build refs, validation refs, and candidate code/test paths.
+- Start from `wiki_state` and, when context is noisy/stale/token-heavy, `/wiki resume`, CodeWiki-owned compaction, or source refs from `wiki_state`; then read the selected task, source `planning_build`, linked knowledge/build refs, validation refs, and candidate code/test paths.
 - If the task is an umbrella/container/sprint coordinator, or its acceptance mainly says other tasks must close, stop and route back to planning.
 - If task meaning, product intent, or acceptance needs user approval, stop and route back to decision.
 - If knowledge or planning is stale/wrong, stop and route back to decision or planning.
-- Use `wiki_session` to record focus when starting/resuming a task.
-- Use `wiki_artifact_status` for narrow write scopes before non-trivial edits when parallel overlap is possible.
+- Use `wiki_runtime` to record focus and coordinate narrow write scopes before non-trivial edits when parallel overlap is possible.
 - Use TDD/test-design first where practical. If tests cannot be added, record why in tester evidence.
 - Change only files required by task acceptance and non-goals.
-- Compile `wiki_build kind="implementation"` after edits and checks, before implementation validation. Do not treat the build itself as a compaction boundary; post-gateway compaction is allowed only after the validation pass records source refs.
+- Compile the implementation build through `wiki_implement` after edits and checks, before implementation validation. Do not treat the build itself as a compaction boundary; post-gateway compaction is allowed only after the validation pass records source refs.
 - Start validation from CodeWiki refs and a fresh/independent context when policy requires proof; do not close the task from builder context when independent proof is required.
 - After implementation validation passes, use the validation report's local-only checkpoint metadata when a checkpoint commit is useful; task-close or publication metadata belongs in a separate close/publication commit.
 - Close only after passing task-close validation/content proof when policy requires it.
-- After any task-close, sprint-close, publication, or roadmap-end commit exists, run `wiki_gc action="dry-run"`; purge eligible artifacts only with archive commit/tree proof or record defer/block evidence.
+- After any task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` for GC dry-run/lifecycle/archive coordination; purge eligible artifacts only with archive commit/tree proof or record defer/block evidence.
 
 ## Workflow
 
 1. **Start or resume task**
    - Run `wiki_state` with the task id.
-   - Use `wiki_session action="focus"` for task focus and current loop metadata.
-   - Use `wiki_resume_context` or CodeWiki-owned soft context refresh if the current chat is not already a clean task-start context.
+   - Use `wiki_runtime action="focus"` for task focus and current loop metadata.
+   - Use `/wiki resume`, `wiki_state`, or CodeWiki-owned soft context refresh if the current chat is not already a clean task-start context.
    - Read the selected task, source `planning_build`, linked knowledge refs, validation refs, and listed code/test paths.
    - Confirm task boundary quality and source alignment before editing.
 
 2. **Coordinate write scopes**
-   - Mark narrow `wiki_artifact_status` scopes for code, tests, docs, roadmap evidence, build refs, or validation refs that this task will touch.
+   - Mark narrow `wiki_runtime` lease scopes for code, tests, docs, roadmap evidence, build refs, or validation refs that this task will touch.
    - Do not force through write/write conflicts unless user/policy explicitly allows it.
 
 3. **Derive tests or test design**
@@ -61,7 +60,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Stop on failed checks unless the failure is unrelated and clearly documented.
 
 6. **Compile implementation build**
-   - Call `wiki_build kind="implementation"` after checks pass or after a documented blocked attempt.
+   - Call `wiki_implement action="build"` after checks pass or after a documented blocked attempt.
    - Include `source_planning_build`, `task_id`, `test_files`, `code_files`, `checks_run`, `acceptance_mapping`, `test_design_evidence`, `code_change_evidence`, `tester_notes`, `builder_notes`, `risks`, and a closure brief.
    - Include publication/commit recommendation text when policy or task-close validation requires commit readiness.
 
@@ -70,10 +69,10 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - The validator must start from artifacts, not builder chat context, and record `fresh_context=true` plus checked content proof.
 
 8. **Record task evidence**
-   - Use `wiki_roadmap action="update"` to append builder evidence and staged validation handoff.
-   - Use `wiki_roadmap action="close"` only after the required passing validation/task-close proof exists.
-   - After the close/publication commit captures revive context, run `wiki_gc action="dry-run"`; if tracked candidates exist, purge only with `archive_sha`/`tree_sha` and keep the restore ledger, otherwise record why GC is deferred or blocked.
-   - Release artifact status when done.
+   - Use `wiki_implement` to append builder evidence and staged validation handoff.
+   - Use `wiki_plan action="close"` only after the required passing validation/task-close proof exists.
+   - After the close/publication commit captures revive context, use `wiki_runtime` for GC dry-run; if tracked candidates exist, purge only with `archive_sha`/`tree_sha` and keep the restore ledger, otherwise record why GC is deferred or blocked.
+   - Release runtime leases when done.
 
 ## Output
 

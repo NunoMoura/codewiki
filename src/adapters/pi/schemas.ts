@@ -9,7 +9,10 @@ import {
 	SUBAGENT_VERDICT_VALUES,
 } from "../../agency/types.ts";
 import { AUDIT_PROFILE_VALUES } from "../../audit/types.ts";
-import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "../../change/types.ts";
+import {
+	CHANGE_TYPE_VALUES,
+	TRACEABILITY_EXEMPTION_VALUES,
+} from "../../change/types.ts";
 import { GC_ACTION_VALUES, GC_INCLUDE_VALUES } from "../../gc/types.ts";
 import {
 	ROADMAP_PRIORITY_VALUES,
@@ -186,25 +189,84 @@ export const changeClaimRoleSchema = Type.Union(
 	CHANGE_CLAIM_ROLE_VALUES.map((value) => Type.Literal(value)),
 );
 export const worktreeIsolationSchema = Type.Object({
-	worktree_path: Type.Optional(Type.String({ description: "Filesystem path for the session worktree." })),
-	branch: Type.Optional(Type.String({ description: "Git branch or detached worktree label." })),
-	base_sha: Type.Optional(Type.String({ description: "Git commit SHA where the session started." })),
-	head_sha: Type.Optional(Type.String({ description: "Git commit SHA produced by the builder/publisher." })),
-	validated_sha: Type.Optional(Type.String({ description: "Exact Git commit SHA checked by validation." })),
-	published_sha: Type.Optional(Type.String({ description: "Exact Git commit SHA pushed or released." })),
-	tree_sha: Type.Optional(Type.String({ description: "Exact Git tree SHA checked by validation." })),
-	working_tree_digest: Type.Optional(Type.String({ description: "Deterministic digest of checked dirty working-tree content for pre-commit validation." })),
-	worktree_digest: Type.Optional(Type.String({ description: "Alias for working_tree_digest." })),
-	package_digest: Type.Optional(Type.String({ description: "Package tarball or publication artifact digest." })),
-	archive_ref: Type.Optional(Type.String({ description: "Archive ledger or Git archive ref proving content." })),
-	remote_ref: Type.Optional(Type.String({ description: "Remote ref proving published content." })),
-	clean: Type.Optional(Type.Boolean({ description: "Whether the worktree was clean for the role action." })),
-	fresh_context: Type.Optional(Type.Boolean({ description: "Whether validation used fresh context rather than builder chat context." })),
-	session_id: Type.Optional(Type.String({ description: "Session id for this role, when known." })),
-	claim_id: Type.Optional(Type.String({ description: "Claim id for this role, when known." })),
-	builder_session_id: Type.Optional(Type.String({ description: "Builder session id intentionally separated from validation." })),
-	builder_claim_id: Type.Optional(Type.String({ description: "Builder claim id intentionally separated from validation." })),
-	related_claim_ids: Type.Optional(Type.Array(Type.String(), { description: "Related claim ids used to audit isolation." })),
+	worktree_path: Type.Optional(
+		Type.String({ description: "Filesystem path for the session worktree." }),
+	),
+	branch: Type.Optional(
+		Type.String({ description: "Git branch or detached worktree label." }),
+	),
+	base_sha: Type.Optional(
+		Type.String({ description: "Git commit SHA where the session started." }),
+	),
+	head_sha: Type.Optional(
+		Type.String({
+			description: "Git commit SHA produced by the builder/publisher.",
+		}),
+	),
+	validated_sha: Type.Optional(
+		Type.String({ description: "Exact Git commit SHA checked by validation." }),
+	),
+	published_sha: Type.Optional(
+		Type.String({ description: "Exact Git commit SHA pushed or released." }),
+	),
+	tree_sha: Type.Optional(
+		Type.String({ description: "Exact Git tree SHA checked by validation." }),
+	),
+	working_tree_digest: Type.Optional(
+		Type.String({
+			description:
+				"Deterministic digest of checked dirty working-tree content for pre-commit validation.",
+		}),
+	),
+	worktree_digest: Type.Optional(
+		Type.String({ description: "Alias for working_tree_digest." }),
+	),
+	package_digest: Type.Optional(
+		Type.String({
+			description: "Package tarball or publication artifact digest.",
+		}),
+	),
+	archive_ref: Type.Optional(
+		Type.String({
+			description: "Archive ledger or Git archive ref proving content.",
+		}),
+	),
+	remote_ref: Type.Optional(
+		Type.String({ description: "Remote ref proving published content." }),
+	),
+	clean: Type.Optional(
+		Type.Boolean({
+			description: "Whether the worktree was clean for the role action.",
+		}),
+	),
+	fresh_context: Type.Optional(
+		Type.Boolean({
+			description:
+				"Whether validation used fresh context rather than builder chat context.",
+		}),
+	),
+	session_id: Type.Optional(
+		Type.String({ description: "Session id for this role, when known." }),
+	),
+	claim_id: Type.Optional(
+		Type.String({ description: "Claim id for this role, when known." }),
+	),
+	builder_session_id: Type.Optional(
+		Type.String({
+			description:
+				"Builder session id intentionally separated from validation.",
+		}),
+	),
+	builder_claim_id: Type.Optional(
+		Type.String({
+			description: "Builder claim id intentionally separated from validation.",
+		}),
+	),
+	related_claim_ids: Type.Optional(
+		Type.Array(Type.String(), {
+			description: "Related claim ids used to audit isolation.",
+		}),
+	),
 	notes: Type.Optional(Type.String({ description: "Short isolation note." })),
 });
 export const validationIsolationSchema = Type.Intersect([
@@ -218,10 +280,29 @@ export const changeClaimLayerSchema = Type.Union(
 );
 export const changeClaimScopeSchema = Type.Object({
 	layer: changeClaimLayerSchema,
-	path: Type.Optional(Type.String({ description: "Repo-relative path or glob-like prefix, e.g. .codewiki/kb/system/**." })),
-	task_id: Type.Optional(Type.String({ description: "Roadmap task id when layer is roadmap or artifact status targets task state." })),
-	ref: Type.Optional(Type.String({ description: "Build, validation, graph, branch, or other stable reference." })),
-	description: Type.Optional(Type.String({ description: "Short human label when no path/task/ref fits." })),
+	path: Type.Optional(
+		Type.String({
+			description:
+				"Repo-relative path or glob-like prefix, e.g. .codewiki/kb/system/**.",
+		}),
+	),
+	task_id: Type.Optional(
+		Type.String({
+			description:
+				"Roadmap task id when layer is roadmap or artifact status targets task state.",
+		}),
+	),
+	ref: Type.Optional(
+		Type.String({
+			description:
+				"Build, validation, graph, branch, or other stable reference.",
+		}),
+	),
+	description: Type.Optional(
+		Type.String({
+			description: "Short human label when no path/task/ref fits.",
+		}),
+	),
 });
 export const codewikiStateSectionSchema = Type.Union(
 	CODEWIKI_STATE_SECTION_VALUES.map((value) => Type.Literal(value)),
@@ -292,24 +373,49 @@ export const sprintStatusSchema = Type.Union(
 	SPRINT_STATUS_VALUES.map((value) => Type.Literal(value)),
 );
 export const codewikiSprintSchema = Type.Object({
-	id: Type.Optional(Type.String({ minLength: 1, description: "Existing or desired sprint id, e.g. SPRINT-004." })),
-	title: Type.String({ minLength: 1, description: "Short sprint/cohort title." }),
+	id: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description: "Existing or desired sprint id, e.g. SPRINT-004.",
+		}),
+	),
+	title: Type.String({
+		minLength: 1,
+		description: "Short sprint/cohort title.",
+	}),
 	status: Type.Optional(sprintStatusSchema),
-	outcome: Type.String({ minLength: 1, description: "Shared outcome for related executable tasks." }),
-	task_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	scope: Type.Optional(Type.Object({
-		knowledge: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		code: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	})),
+	outcome: Type.String({
+		minLength: 1,
+		description: "Shared outcome for related executable tasks.",
+	}),
+	task_ids: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	scope: Type.Optional(
+		Type.Object({
+			knowledge: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			code: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+		}),
+	),
 	budget: Type.Optional(agencyBudgetSchema),
-	gates: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	gates: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiIsolationRequirementSchema = Type.Object({
 	required: Type.Optional(Type.Boolean()),
 	mode: Type.Optional(Type.String({ minLength: 1 })),
-	evidence: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	evidence: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	reason: Type.Optional(Type.String({ minLength: 1 })),
-	profiles: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	profiles: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	handoff: Type.Optional(Type.String({ minLength: 1 })),
 });
 const codewikiBuildIsolationPolicySchema = Type.Object({
@@ -320,13 +426,17 @@ const codewikiBuildIsolationPolicySchema = Type.Object({
 export const workflowCursorSchema = Type.Object({
 	active_loop: workflowLoopSchema,
 	reason: Type.Optional(Type.String({ minLength: 1 })),
-	input_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	input_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	expected_output: Type.Optional(Type.String({ minLength: 1 })),
 	exit_gate: Type.Optional(Type.String({ minLength: 1 })),
 	scope: Type.Optional(agencyScopeSchema),
 	isolation: Type.Optional(codewikiIsolationRequirementSchema),
 	context_boundary: Type.Optional(Type.String({ minLength: 1 })),
-	handoff_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	handoff_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 export const codewikiAgencyToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
@@ -338,8 +448,14 @@ export const codewikiAgencyToolInputSchema = Type.Object({
 });
 export const codewikiGcToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
-	action: Type.Optional(Type.Union(GC_ACTION_VALUES.map((value) => Type.Literal(value)))),
-	include: Type.Optional(Type.Array(Type.Union(GC_INCLUDE_VALUES.map((value) => Type.Literal(value))))),
+	action: Type.Optional(
+		Type.Union(GC_ACTION_VALUES.map((value) => Type.Literal(value))),
+	),
+	include: Type.Optional(
+		Type.Array(
+			Type.Union(GC_INCLUDE_VALUES.map((value) => Type.Literal(value))),
+		),
+	),
 	scopes: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	archive_sha: Type.Optional(Type.String({ minLength: 1 })),
 	tree_sha: Type.Optional(Type.String({ minLength: 1 })),
@@ -351,8 +467,7 @@ export const codewikiGcToolInputSchema = Type.Object({
 
 export const toolTaskIdField = Type.String({
 	minLength: 1,
-	description:
-		"Existing task id. Use canonical TASK-### ids.",
+	description: "Existing task id. Use canonical TASK-### ids.",
 });
 export const codewikiRoadmapPatchSchema = Type.Object({
 	title: Type.Optional(Type.String({ minLength: 1 })),
@@ -381,13 +496,38 @@ export const codewikiRoadmapEvidenceSchema = Type.Object({
 });
 export const codewikiAuditToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
-	profiles: Type.Optional(Type.Array(auditProfileSchema, { description: "Selected audit profiles. Omit for full audit." })),
-	paths: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	layers: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { description: "Selected logical layers for scoped alignment audit.", default: [] })),
-	task_id: Type.Optional(Type.String({ minLength: 1, description: "Roadmap task id for the task audit profile." })),
-	changed: Type.Optional(Type.Boolean({ description: "Include the changed-files audit profile." })),
-	full: Type.Optional(Type.Boolean({ description: "Run the full default audit profile set." })),
-	include_fingerprints: Type.Optional(Type.Boolean({ description: "Include source/content fingerprints where available.", default: true })),
+	profiles: Type.Optional(
+		Type.Array(auditProfileSchema, {
+			description: "Selected audit profiles. Omit for full audit.",
+		}),
+	),
+	paths: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	layers: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), {
+			description: "Selected logical layers for scoped alignment audit.",
+			default: [],
+		}),
+	),
+	task_id: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description: "Roadmap task id for the task audit profile.",
+		}),
+	),
+	changed: Type.Optional(
+		Type.Boolean({ description: "Include the changed-files audit profile." }),
+	),
+	full: Type.Optional(
+		Type.Boolean({ description: "Run the full default audit profile set." }),
+	),
+	include_fingerprints: Type.Optional(
+		Type.Boolean({
+			description: "Include source/content fingerprints where available.",
+			default: true,
+		}),
+	),
 });
 
 export const codewikiResumeContextToolInputSchema = Type.Object({
@@ -400,7 +540,13 @@ export const codewikiResumeContextToolInputSchema = Type.Object({
 		}),
 	),
 	taskId: Type.Optional(toolTaskIdField),
-	followUpIntent: Type.Optional(Type.String({ minLength: 1, description: "Optional user follow-up intent to append to the resume packet." })),
+	followUpIntent: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description:
+				"Optional user follow-up intent to append to the resume packet.",
+		}),
+	),
 });
 
 export const codewikiStateToolInputSchema = Type.Object({
@@ -420,8 +566,7 @@ export const codewikiStateToolInputSchema = Type.Object({
 	),
 	lens: Type.Optional(
 		Type.Union([codewikiStateLensSchema, Type.String({ minLength: 1 })], {
-			description:
-				"Focused graph/state lens to read. Alias of view.",
+			description: "Focused graph/state lens to read. Alias of view.",
 		}),
 	),
 	focus: Type.Optional(codewikiStateLensFocusSchema),
@@ -450,26 +595,29 @@ export const codewikiRoadmapToolInputSchema = Type.Object({
 	refresh: Type.Optional(
 		Type.Boolean({
 			default: true,
-			description:
-				"When true, rebuild generated view files after mutation.",
+			description: "When true, rebuild generated view files after mutation.",
 		}),
 	),
 	taskId: Type.Optional(toolTaskIdField),
-	tasks: Type.Optional(Type.Array(codewikiRoadmapCreateSchema, { minItems: 1 })),
+	tasks: Type.Optional(
+		Type.Array(codewikiRoadmapCreateSchema, { minItems: 1 }),
+	),
 	sprint: Type.Optional(codewikiSprintSchema),
 	patch: Type.Optional(codewikiRoadmapPatchSchema),
 	evidence: Type.Optional(codewikiRoadmapEvidenceSchema),
 	summary: Type.Optional(Type.String({ minLength: 1 })),
 });
 export const codewikiBuildLifecycleSchema = Type.Object({
-	state: Type.Optional(Type.Union([
-		Type.Literal("proposed"),
-		Type.Literal("accepted"),
-		Type.Literal("consumed"),
-		Type.Literal("applied"),
-		Type.Literal("validated"),
-		Type.Literal("archived"),
-	])),
+	state: Type.Optional(
+		Type.Union([
+			Type.Literal("proposed"),
+			Type.Literal("accepted"),
+			Type.Literal("consumed"),
+			Type.Literal("applied"),
+			Type.Literal("validated"),
+			Type.Literal("archived"),
+		]),
+	),
 	ttl_days: Type.Optional(Type.Number({ minimum: 1 })),
 	archive_after: Type.Optional(Type.String()),
 	purge_after: Type.Optional(Type.String()),
@@ -483,80 +631,156 @@ export const codewikiDiffTableRowSchema = Type.Object({
 	expected_final_state: Type.Optional(Type.String({ minLength: 1 })),
 	validated_final_state: Type.Optional(Type.String({ minLength: 1 })),
 	status: Type.Optional(Type.String({ minLength: 1 })),
-	proof_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	proof_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	rationale: Type.String({ minLength: 1 }),
-	affected_layers: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	affected_layers: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	risk: Type.Optional(Type.String({ minLength: 1 })),
 	user_action: Type.Optional(Type.String({ minLength: 1 })),
-	alternatives: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	alternatives: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiBuildRefsSchema = Type.Object({
-	decision: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	planning: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	implementation: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	roadmap: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	validation: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	source: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	decision: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	planning: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	implementation: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	roadmap: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	validation: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	source: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiBuildProducesSchema = Type.Object({
-	knowledge: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	roadmap: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	code: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	tests: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	validation: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	publication: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	closure: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	knowledge: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	roadmap: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	code: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	tests: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	validation: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	publication: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	closure: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiClosureBriefSchema = Type.Object({
 	user_intent: Type.String({ minLength: 1 }),
-	implemented_changes: Type.Array(Type.String({ minLength: 1 }), { minItems: 1 }),
-	layers_updated: Type.Optional(Type.Object({
-		knowledge: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		roadmap: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		code: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		tests: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		validation: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	})),
-	acceptance_evidence: Type.Array(Type.String({ minLength: 1 }), { minItems: 1 }),
+	implemented_changes: Type.Array(Type.String({ minLength: 1 }), {
+		minItems: 1,
+	}),
+	layers_updated: Type.Optional(
+		Type.Object({
+			knowledge: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			roadmap: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			code: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			tests: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			validation: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+		}),
+	),
+	acceptance_evidence: Type.Array(Type.String({ minLength: 1 }), {
+		minItems: 1,
+	}),
 	checks: Type.Array(Type.String({ minLength: 1 }), { minItems: 1 }),
-	non_goals_preserved: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	remaining_risks: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	non_goals_preserved: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	remaining_risks: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiBuildCycleSchema = Type.Object({
 	sequence: Type.Optional(Type.Number()),
 	attempt: Type.Optional(Type.String({ minLength: 1 })),
-	supersedes: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	supersedes: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	status: Type.Optional(Type.String({ minLength: 1 })),
 });
 const codewikiBuildPolicySchema = Type.Object({
 	profile: Type.Optional(Type.String({ minLength: 1 })),
-	exit_criteria: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	required_audits: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	audit_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	audit_reports: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	exit_criteria: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	required_audits: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	audit_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	audit_reports: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	isolation: Type.Optional(codewikiBuildIsolationPolicySchema),
 });
 const codewikiBuildRequirementSchema = Type.Object({
 	id: Type.String({ minLength: 1 }),
 	text: Type.String({ minLength: 1 }),
-	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	source_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	state: Type.Optional(Type.String({ minLength: 1 })),
 });
 const codewikiEvidenceMappingSchema = Type.Object({
 	criterion: Type.String({ minLength: 1 }),
 	evidence: Type.String({ minLength: 1 }),
-	requirement_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	requirement_ids: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	source_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 });
 const codewikiDecisionPropagationResolutionSchema = Type.Object({
 	row_id: Type.Optional(Type.String({ minLength: 1 })),
 	question_id: Type.Optional(Type.String({ minLength: 1 })),
 	question: Type.Optional(Type.String({ minLength: 1 })),
 	resolution: Type.String({ minLength: 1 }),
-	task_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	sprint_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	knowledge_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	task_ids: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	sprint_ids: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	knowledge_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	source_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	owner: Type.Optional(Type.String({ minLength: 1 })),
 	trigger: Type.Optional(Type.String({ minLength: 1 })),
 	trigger_state: Type.Optional(Type.String({ minLength: 1 })),
@@ -565,13 +789,17 @@ const codewikiDecisionPropagationResolutionSchema = Type.Object({
 });
 export const codewikiBuildToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
-	kind: Type.Union([
-		Type.Literal("decision"),
-		Type.Literal("planning"),
-		Type.Literal("implementation"),
-	], {
-		description: "Build kind to create. decision: approved semantic intent + knowledge handoff. planning: roadmap alignment → implementation. implementation: roadmap → tests/code.",
-	}),
+	kind: Type.Union(
+		[
+			Type.Literal("decision"),
+			Type.Literal("planning"),
+			Type.Literal("implementation"),
+		],
+		{
+			description:
+				"Build kind to create. decision: approved semantic intent + knowledge handoff. planning: roadmap alignment → implementation. implementation: roadmap → tests/code.",
+		},
+	),
 	summary: Type.String({ minLength: 1 }),
 	slug: Type.Optional(Type.String({ minLength: 1 })),
 	source: Type.Optional(Type.String({ minLength: 1 })),
@@ -580,46 +808,82 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	produces: Type.Optional(codewikiBuildProducesSchema),
 	change_type: Type.Optional(changeTypeSchema),
 	change_class: Type.Optional(changeClassSchema),
-	upstream_build_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	accepted_build_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	traceability: Type.Optional(Type.Object({
-		change_type: Type.Optional(changeTypeSchema),
-		change_class: Type.Optional(changeClassSchema),
-		exemption: Type.Optional(traceabilityExemptionSchema),
-		semantic: Type.Optional(Type.Boolean()),
-		requires_accepted_build: Type.Optional(Type.Boolean()),
-		upstream_build_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		accepted_build_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	})),
+	upstream_build_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	accepted_build_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	traceability: Type.Optional(
+		Type.Object({
+			change_type: Type.Optional(changeTypeSchema),
+			change_class: Type.Optional(changeClassSchema),
+			exemption: Type.Optional(traceabilityExemptionSchema),
+			semantic: Type.Optional(Type.Boolean()),
+			requires_accepted_build: Type.Optional(Type.Boolean()),
+			upstream_build_refs: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			accepted_build_refs: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+		}),
+	),
 	cycle: Type.Optional(codewikiBuildCycleSchema),
 	policy: Type.Optional(codewikiBuildPolicySchema),
 	requirements: Type.Optional(Type.Array(codewikiBuildRequirementSchema)),
 	evidence_mapping: Type.Optional(Type.Array(codewikiEvidenceMappingSchema)),
-	audit_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	audit_reports: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	audit_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	audit_reports: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	agent_assessment: Type.Optional(Type.String()),
 	lifecycle: Type.Optional(codewikiBuildLifecycleSchema),
 	refresh: Type.Optional(Type.Boolean({ default: true })),
 	// Decision-specific
-	decision_mode: Type.Optional(Type.Union([Type.Literal("proposal"), Type.Literal("accepted")])),
-	row_to_kb_mappings: Type.Optional(Type.Array(Type.Object({
-		row_id: Type.String({ minLength: 1 }),
-		knowledge_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		diagram_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		evidence: Type.String({ minLength: 1 }),
-		deferred: Type.Optional(Type.Boolean()),
-		deferred_reason: Type.Optional(Type.String({ minLength: 1 })),
-	}))),
-	propagation: Type.Optional(Type.Object({
-		direction: Type.Optional(Type.String({ minLength: 1 })),
-		product_impact: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		system_impact: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-		no_product_impact: Type.Optional(Type.String({ minLength: 1 })),
-		no_system_impact: Type.Optional(Type.String({ minLength: 1 })),
-		downstream_planning_questions: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	})),
-	diagram_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	downstream_planning_questions: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	decision_mode: Type.Optional(
+		Type.Union([Type.Literal("proposal"), Type.Literal("accepted")]),
+	),
+	row_to_kb_mappings: Type.Optional(
+		Type.Array(
+			Type.Object({
+				row_id: Type.String({ minLength: 1 }),
+				knowledge_refs: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+				diagram_refs: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+				evidence: Type.String({ minLength: 1 }),
+				deferred: Type.Optional(Type.Boolean()),
+				deferred_reason: Type.Optional(Type.String({ minLength: 1 })),
+			}),
+		),
+	),
+	propagation: Type.Optional(
+		Type.Object({
+			direction: Type.Optional(Type.String({ minLength: 1 })),
+			product_impact: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			system_impact: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+			no_product_impact: Type.Optional(Type.String({ minLength: 1 })),
+			no_system_impact: Type.Optional(Type.String({ minLength: 1 })),
+			downstream_planning_questions: Type.Optional(
+				Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+			),
+		}),
+	),
+	diagram_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	downstream_planning_questions: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	// Decision row table
 	diff_table: Type.Optional(Type.Array(codewikiDiffTableRowSchema)),
 	approved_diff_rows: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
@@ -633,8 +897,12 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	source_decision_build: Type.Optional(Type.String()),
 	task_ids: Type.Optional(Type.Array(Type.String())),
 	task_changes: Type.Optional(Type.Array(Type.String())),
-	decision_row_resolutions: Type.Optional(Type.Array(codewikiDecisionPropagationResolutionSchema)),
-	downstream_question_resolutions: Type.Optional(Type.Array(codewikiDecisionPropagationResolutionSchema)),
+	decision_row_resolutions: Type.Optional(
+		Type.Array(codewikiDecisionPropagationResolutionSchema),
+	),
+	downstream_question_resolutions: Type.Optional(
+		Type.Array(codewikiDecisionPropagationResolutionSchema),
+	),
 	tdd_plan: Type.Optional(Type.Array(Type.String())),
 	candidate_test_files: Type.Optional(Type.Array(Type.String())),
 	candidate_code_paths: Type.Optional(Type.Array(Type.String())),
@@ -644,10 +912,14 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	test_files: Type.Optional(Type.Array(Type.String())),
 	code_files: Type.Optional(Type.Array(Type.String())),
 	checks_run: Type.Optional(Type.Array(Type.String())),
-	acceptance_mapping: Type.Optional(Type.Array(Type.Object({
-		criterion: Type.String(),
-		evidence: Type.String(),
-	}))),
+	acceptance_mapping: Type.Optional(
+		Type.Array(
+			Type.Object({
+				criterion: Type.String(),
+				evidence: Type.String(),
+			}),
+		),
+	),
 	test_design_evidence: Type.Optional(Type.Array(Type.String())),
 	code_change_evidence: Type.Optional(Type.Array(Type.String())),
 	tester_notes: Type.Optional(Type.Array(Type.String())),
@@ -655,29 +927,32 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	validation_refs: Type.Optional(Type.Array(Type.String())),
 	risks: Type.Optional(Type.Array(Type.String())),
 	closure_brief: Type.Optional(codewikiClosureBriefSchema),
-	publication: Type.Optional(Type.Object({
-		commit_title: Type.Optional(Type.String()),
-		commit_body: Type.Optional(Type.String()),
-		pr_title: Type.Optional(Type.String()),
-		pr_body: Type.Optional(Type.String()),
-		issue_update: Type.Optional(Type.String()),
-		release_notes: Type.Optional(Type.String()),
-		archive_ref: Type.Optional(Type.String()),
-		commit_sha: Type.Optional(Type.String()),
-		remote: Type.Optional(Type.String()),
-		branch: Type.Optional(Type.String()),
-		restore_command: Type.Optional(Type.String()),
-		secret_scan: Type.Optional(Type.String()),
-		remote_visibility: Type.Optional(Type.String()),
-		private_evidence: Type.Optional(Type.String()),
-		safe_to_push: Type.Optional(Type.Boolean()),
-	})),
+	publication: Type.Optional(
+		Type.Object({
+			commit_title: Type.Optional(Type.String()),
+			commit_body: Type.Optional(Type.String()),
+			pr_title: Type.Optional(Type.String()),
+			pr_body: Type.Optional(Type.String()),
+			issue_update: Type.Optional(Type.String()),
+			release_notes: Type.Optional(Type.String()),
+			archive_ref: Type.Optional(Type.String()),
+			commit_sha: Type.Optional(Type.String()),
+			remote: Type.Optional(Type.String()),
+			branch: Type.Optional(Type.String()),
+			restore_command: Type.Optional(Type.String()),
+			secret_scan: Type.Optional(Type.String()),
+			remote_visibility: Type.Optional(Type.String()),
+			private_evidence: Type.Optional(Type.String()),
+			safe_to_push: Type.Optional(Type.Boolean()),
+		}),
+	),
 });
 export const codewikiValidationReportSchema = Type.Object({
 	repoPath: repoPathToolField,
 	profile: Type.String({
 		minLength: 1,
-		description: "Validation gate/profile name. Preferred gates: decision, planning, implementation, task-close, sprint-close, ship-ready. Backward-compatible aliases such as publication, publish, and release are accepted.",
+		description:
+			"Validation gate/profile name. Preferred gates: decision, planning, implementation, task-close, sprint-close, ship-ready. Backward-compatible aliases such as publication, publish, and release are accepted.",
 	}),
 	gate: Type.Optional(validationGateSchema),
 	sprint_id: Type.Optional(Type.String()),
@@ -689,25 +964,38 @@ export const codewikiValidationReportSchema = Type.Object({
 	]),
 	rationale: Type.String({ minLength: 1 }),
 	checks: Type.Optional(Type.Array(Type.String())),
-	issues: Type.Optional(Type.Array(Type.Object({
-		severity: Type.String(),
-		summary: Type.String(),
-	}))),
+	issues: Type.Optional(
+		Type.Array(
+			Type.Object({
+				severity: Type.String(),
+				summary: Type.String(),
+			}),
+		),
+	),
 	source: Type.Optional(Type.String()),
 	policy_profile: Type.Optional(Type.String({ minLength: 1 })),
-	required_audits: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	audit_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
-	audit_reports: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	required_audits: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	audit_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	audit_reports: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
 	failed_criteria: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	blocking_questions: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	failure_class: Type.Optional(validationFailureClassSchema),
 	recommended_next_loop: Type.Optional(workflowLoopSchema),
 	stop_reason: Type.Optional(Type.String({ minLength: 1 })),
 	isolation: Type.Optional(validationIsolationSchema),
-	preflight_only: Type.Optional(Type.Boolean({
-		default: false,
-		description: "Return gateway preflight without writing a validation report.",
-	})),
+	preflight_only: Type.Optional(
+		Type.Boolean({
+			default: false,
+			description:
+				"Return gateway preflight without writing a validation report.",
+		}),
+	),
 	refresh: Type.Optional(Type.Boolean({ default: true })),
 });
 const codewikiDiffTableRowActionSchema = Type.Object({
@@ -745,6 +1033,131 @@ export const codewikiDiffTableToolInputSchema = Type.Object({
 	alternative: Type.Optional(Type.String({ minLength: 1 })),
 });
 
+const looseWorkflowObjectSchema = Type.Object(
+	{},
+	{ additionalProperties: true },
+);
+export const codewikiDecideToolInputSchema = Type.Object(
+	{
+		repoPath: repoPathToolField,
+		action: Type.Optional(
+			Type.Union([
+				Type.Literal("propose"),
+				Type.Literal("revise"),
+				Type.Literal("rows"),
+				Type.Literal("accept"),
+				Type.Literal("reject"),
+				Type.Literal("defer"),
+				Type.Literal("alternative"),
+				Type.Literal("archive"),
+				Type.Literal("list"),
+				Type.Literal("build"),
+				Type.Literal("decide"),
+			]),
+		),
+		table_id: Type.Optional(Type.String({ minLength: 1 })),
+		row_id: Type.Optional(Type.String({ minLength: 1 })),
+		row_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+		row_actions: Type.Optional(Type.Array(codewikiDiffTableRowActionSchema)),
+		rows: Type.Optional(Type.Array(codewikiDiffTableRowSchema)),
+		decision_build: Type.Optional(looseWorkflowObjectSchema),
+		build: Type.Optional(looseWorkflowObjectSchema),
+		summary: Type.Optional(Type.String({ minLength: 1 })),
+		source: Type.Optional(Type.String({ minLength: 1 })),
+	},
+	{ additionalProperties: true },
+);
+export const codewikiPlanToolInputSchema = Type.Object(
+	{
+		repoPath: repoPathToolField,
+		action: Type.Optional(
+			Type.Union([
+				Type.Literal("plan"),
+				Type.Literal("roadmap"),
+				Type.Literal("sprint"),
+				Type.Literal("create"),
+				Type.Literal("update"),
+				Type.Literal("close"),
+				Type.Literal("cancel"),
+				Type.Literal("checkpoint"),
+				Type.Literal("clear-archive"),
+				Type.Literal("build"),
+			]),
+		),
+		roadmap: Type.Optional(looseWorkflowObjectSchema),
+		planning_build: Type.Optional(looseWorkflowObjectSchema),
+		build: Type.Optional(looseWorkflowObjectSchema),
+		taskId: Type.Optional(toolTaskIdField),
+		tasks: Type.Optional(
+			Type.Array(codewikiRoadmapCreateSchema, { minItems: 1 }),
+		),
+		sprint: Type.Optional(codewikiSprintSchema),
+		patch: Type.Optional(codewikiRoadmapPatchSchema),
+		evidence: Type.Optional(codewikiRoadmapEvidenceSchema),
+		summary: Type.Optional(Type.String({ minLength: 1 })),
+	},
+	{ additionalProperties: true },
+);
+export const codewikiImplementToolInputSchema = Type.Object(
+	{
+		repoPath: repoPathToolField,
+		action: Type.Optional(
+			Type.Union([
+				Type.Literal("implement"),
+				Type.Literal("evidence"),
+				Type.Literal("build"),
+			]),
+		),
+		taskId: Type.Optional(toolTaskIdField),
+		task_id: Type.Optional(Type.String({ minLength: 1 })),
+		roadmap_evidence: Type.Optional(codewikiRoadmapEvidenceSchema),
+		evidence: Type.Optional(codewikiRoadmapEvidenceSchema),
+		implementation_build: Type.Optional(looseWorkflowObjectSchema),
+		build: Type.Optional(looseWorkflowObjectSchema),
+		summary: Type.Optional(Type.String({ minLength: 1 })),
+	},
+	{ additionalProperties: true },
+);
+export const codewikiGateToolInputSchema = Type.Object(
+	{
+		repoPath: repoPathToolField,
+		action: Type.Optional(
+			Type.Union([
+				Type.Literal("audit"),
+				Type.Literal("preflight"),
+				Type.Literal("validate"),
+				Type.Literal("gate"),
+			]),
+		),
+		audit: Type.Optional(looseWorkflowObjectSchema),
+		gateway: Type.Optional(looseWorkflowObjectSchema),
+		validation: Type.Optional(looseWorkflowObjectSchema),
+		profile: Type.Optional(Type.String({ minLength: 1 })),
+		verdict: Type.Optional(
+			Type.Union([
+				Type.Literal("pass"),
+				Type.Literal("fail"),
+				Type.Literal("block"),
+			]),
+		),
+		rationale: Type.Optional(Type.String({ minLength: 1 })),
+		checks_run: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	},
+	{ additionalProperties: true },
+);
+export const codewikiRuntimeToolInputSchema = Type.Object(
+	{
+		repoPath: repoPathToolField,
+		action: Type.Optional(Type.String({ minLength: 1 })),
+		session: Type.Optional(looseWorkflowObjectSchema),
+		artifact_status: Type.Optional(looseWorkflowObjectSchema),
+		lease: Type.Optional(looseWorkflowObjectSchema),
+		agency: Type.Optional(looseWorkflowObjectSchema),
+		gc: Type.Optional(looseWorkflowObjectSchema),
+	},
+	{ additionalProperties: true },
+);
+
 export const codewikiSessionToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	action: Type.Union([
@@ -768,15 +1181,49 @@ export const codewikiSessionToolInputSchema = Type.Object({
 export const codewikiArtifactStatusToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	action: artifactStatusActionSchema,
-	recordId: Type.Optional(Type.String({ minLength: 1, description: "Existing runtime artifact status record id for release/cancel or heartbeat." })),
+	recordId: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description:
+				"Existing runtime artifact status record id for release/cancel or heartbeat.",
+		}),
+	),
 	taskId: Type.Optional(toolTaskIdField),
-	buildRef: Type.Optional(Type.String({ minLength: 1, description: "Optional compiler build path anchoring this artifact status." })),
-	summary: Type.Optional(Type.String({ minLength: 1, description: "Short reason for marking or waiting on artifact status." })),
+	buildRef: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description:
+				"Optional compiler build path anchoring this artifact status.",
+		}),
+	),
+	summary: Type.Optional(
+		Type.String({
+			minLength: 1,
+			description: "Short reason for marking or waiting on artifact status.",
+		}),
+	),
 	mode: Type.Optional(changeClaimModeSchema),
 	role: Type.Optional(changeClaimRoleSchema),
 	worktree: Type.Optional(worktreeIsolationSchema),
 	scopes: Type.Optional(Type.Array(changeClaimScopeSchema, { minItems: 1 })),
-	ttl_minutes: Type.Optional(Type.Number({ minimum: 1, description: "Runtime artifact status TTL in minutes; default 120, max 1440." })),
-	force: Type.Optional(Type.Boolean({ default: false, description: "Allow mark despite write/write artifact conflicts." })),
-	refresh: Type.Optional(Type.Boolean({ default: true, description: "Rebuild generated graph/status after artifact status mutation." })),
+	ttl_minutes: Type.Optional(
+		Type.Number({
+			minimum: 1,
+			description:
+				"Runtime artifact status TTL in minutes; default 120, max 1440.",
+		}),
+	),
+	force: Type.Optional(
+		Type.Boolean({
+			default: false,
+			description: "Allow mark despite write/write artifact conflicts.",
+		}),
+	),
+	refresh: Type.Optional(
+		Type.Boolean({
+			default: true,
+			description:
+				"Rebuild generated graph/status after artifact status mutation.",
+		}),
+	),
 });

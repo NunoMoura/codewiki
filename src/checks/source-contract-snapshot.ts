@@ -9,6 +9,14 @@ import { unique } from "../shared/utils.ts";
 export interface SourceContractSnapshot {
 	version: 1;
 	tools: string[];
+	tool_surfaces: Record<
+		string,
+		{
+			surface: string;
+			compatibility_alias_for?: string;
+			deprecated?: boolean;
+		}
+	>;
 	commands: string[];
 	api_exports: string[];
 	package: {
@@ -26,6 +34,11 @@ export interface SourceContractSnapshot {
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx", ".mts", ".cts"]);
 const TOOL_NAME_RE = /\bname:\s*["'`]((?:codewiki|wiki)_[a-z0-9_]+)["'`]/g;
 const COMMAND_NAME_RE = /\.registerCommand\(\s*["'`]([^"'`]+)["'`]/g;
+const TOOL_SURFACE_ENTRY_RE =
+	/(?:["'`](wiki_[a-z0-9_]+)["'`]|\b(wiki_[a-z0-9_]+)\b)\s*:\s*\{([^}]+)\}/g;
+const TOOL_SURFACE_RE = /\bsurface:\s*["'`]([^"'`]+)["'`]/;
+const TOOL_ALIAS_RE = /\bcompatibility_alias_for:\s*["'`]([^"'`]+)["'`]/;
+const TOOL_DEPRECATED_RE = /\bdeprecated:\s*(true|false)/;
 const EXPORT_BLOCK_RE = /export\s+(?:type\s+)?\{([^}]+)\}/g;
 const EXPORT_STAR_RE = /export\s+\*\s+from\s+["']([^"']+)["']/g;
 const SOURCE_RE = /^(.*?)(?:\s+as\s+.+)?$/;
@@ -62,6 +75,26 @@ function collectMatches(text: string, pattern: RegExp): string[] {
 		if (value) out.push(value);
 	}
 	return unique(out).sort();
+}
+
+function parseToolSurfaces(
+	text: string,
+): SourceContractSnapshot["tool_surfaces"] {
+	const out: SourceContractSnapshot["tool_surfaces"] = {};
+	for (const match of text.matchAll(TOOL_SURFACE_ENTRY_RE)) {
+		const name = String(match[1] || match[2] || "").trim();
+		const body = String(match[3] || "");
+		const surface = body.match(TOOL_SURFACE_RE)?.[1]?.trim();
+		if (!name || !surface) continue;
+		const alias = body.match(TOOL_ALIAS_RE)?.[1]?.trim();
+		const deprecated = body.match(TOOL_DEPRECATED_RE)?.[1];
+		out[name] = {
+			surface,
+			...(alias ? { compatibility_alias_for: alias } : {}),
+			...(deprecated ? { deprecated: deprecated === "true" } : {}),
+		};
+	}
+	return out;
 }
 
 function parseExportNames(text: string): string[] {
@@ -108,10 +141,12 @@ export async function generateSourceContractSnapshot(
 	);
 	const toolNames: string[] = [];
 	const commandNames: string[] = [];
+	const toolSurfaces: SourceContractSnapshot["tool_surfaces"] = {};
 	for (const file of sourceFiles) {
 		const text = await readFile(file, "utf8");
 		toolNames.push(...collectMatches(text, TOOL_NAME_RE));
 		commandNames.push(...collectMatches(text, COMMAND_NAME_RE));
+		Object.assign(toolSurfaces, parseToolSurfaces(text));
 	}
 
 	const apiFiles = [
@@ -132,6 +167,11 @@ export async function generateSourceContractSnapshot(
 	const stablePayload = {
 		version: 1 as const,
 		tools: unique(toolNames).sort(),
+		tool_surfaces: Object.fromEntries(
+			Object.entries(toolSurfaces).sort(([left], [right]) =>
+				left.localeCompare(right),
+			),
+		),
 		commands: unique(commandNames).sort(),
 		api_exports: unique(apiExports).sort(),
 		package: packageContract,

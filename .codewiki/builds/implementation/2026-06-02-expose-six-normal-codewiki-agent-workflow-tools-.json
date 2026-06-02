@@ -1,0 +1,1067 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-02T06:57:49Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "task_id": "TASK-080",
+  "task": {
+    "id": "TASK-080",
+    "title": "Expose six normal agent workflow tools",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Expose `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` as normal agent tools while low-level primitives become compatibility aliases or internals.",
+    "spec_paths": [
+      ".codewiki/kb/system/api-vnext-tools.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/tools/decide.ts",
+      "src/adapters/pi/tools/plan.ts",
+      "src/adapters/pi/tools/implement.ts",
+      "src/adapters/pi/tools/gate.ts",
+      "src/adapters/pi/tools/runtime.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/change/tool.ts",
+      "src/build/tool.ts",
+      "src/roadmap/tool.ts",
+      "src/gateway/tool.ts",
+      "src/gc/tool.ts",
+      "src/session/tool.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/agency/tool.ts",
+      "src/checks/tool.ts",
+      "src/api/tools.ts",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Agents see six normal workflow tools while existing low-level CodeWiki primitives remain safe compatibility aliases or internal use-case functions during migration.",
+      "acceptance": [
+        "Pi adapter exposes `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` as the normal internal agent tool surface.",
+        "`wiki_decide` orchestrates decision rows, approvals, KB mappings, and decision-build creation through existing diff-table/build primitives.",
+        "`wiki_plan` orchestrates roadmap/sprint alignment and planning-build creation through existing roadmap/build primitives.",
+        "`wiki_implement` records task-scoped TDD/code evidence and implementation-build creation without replacing normal file/code edit tools.",
+        "`wiki_gate` owns gateway preflight/validation and required linter/test evidence routing.",
+        "`wiki_runtime` owns session focus, leases, jobs, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination.",
+        "Existing low-level tools remain available only as documented compatibility/expert aliases or are hidden internally; deprecation metadata and source-contract validation prevent accidental normal use.",
+        "README, skills, prompt contract, and source-contract snapshots agree on the six-tool target and compatibility policy."
+      ],
+      "non_goals": [
+        "Do not remove low-level compatibility tools before wrapper parity and source-contract coverage exist.",
+        "Do not merge all behavior into one opaque mega-tool.",
+        "Do not change roadmap/build/validation JSON schemas except compatibility metadata needed for wrapper results.",
+        "Do not make bootstrap/config normal agent tools."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+        "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs",
+        "wiki_gate/task-close linters for source-contract, stale-reference, changed, and alignment"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-16T06:57:49.000Z",
+    "purge_after": "2026-06-30T06:57:49.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Expose six normal CodeWiki agent workflow tools and mark low-level primitives as compatibility aliases for TASK-080.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-080"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/workflow/tool.ts",
+      "src/api/tools.ts",
+      "src/adapters/pi/tools/decide.ts",
+      "src/adapters/pi/tools/plan.ts",
+      "src/adapters/pi/tools/implement.ts",
+      "src/adapters/pi/tools/gate.ts",
+      "src/adapters/pi/tools/runtime.ts",
+      "src/adapters/pi/tools/surface.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/state.ts",
+      "src/adapters/pi/tools/resume-context.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/checks/source-contract.ts",
+      "src/checks/source-contract-snapshot.ts",
+      "README.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      "skills/codewiki/prompts/resume-implementation.md",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-decision/references/tools.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md"
+    ],
+    "tests": [
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-080"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/api-vnext-tools.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/tools/decide.ts",
+      "src/adapters/pi/tools/plan.ts",
+      "src/adapters/pi/tools/implement.ts",
+      "src/adapters/pi/tools/gate.ts",
+      "src/adapters/pi/tools/runtime.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/change/tool.ts",
+      "src/build/tool.ts",
+      "src/roadmap/tool.ts",
+      "src/gateway/tool.ts",
+      "src/gc/tool.ts",
+      "src/session/tool.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/agency/tool.ts",
+      "src/checks/tool.ts",
+      "src/api/tools.ts",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs"
+  ],
+  "code_files": [
+    "src/workflow/tool.ts",
+    "src/api/tools.ts",
+    "src/adapters/pi/tools/decide.ts",
+    "src/adapters/pi/tools/plan.ts",
+    "src/adapters/pi/tools/implement.ts",
+    "src/adapters/pi/tools/gate.ts",
+    "src/adapters/pi/tools/runtime.ts",
+    "src/adapters/pi/tools/surface.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/prompt-contract.ts",
+    "src/checks/source-contract.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "README.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/api-vnext-tools.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    "skills/codewiki-decision/SKILL.md",
+    "skills/codewiki-decision/references/tools.md",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-planning/references/tools.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-implementation/references/tools.md",
+    "skills/codewiki-validation/SKILL.md",
+    "skills/codewiki-validation/references/tools.md"
+  ],
+  "files_changed": [
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs",
+    "src/workflow/tool.ts",
+    "src/api/tools.ts",
+    "src/adapters/pi/tools/decide.ts",
+    "src/adapters/pi/tools/plan.ts",
+    "src/adapters/pi/tools/implement.ts",
+    "src/adapters/pi/tools/gate.ts",
+    "src/adapters/pi/tools/runtime.ts",
+    "src/adapters/pi/tools/surface.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/prompt-contract.ts",
+    "src/checks/source-contract.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "README.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/api-vnext-tools.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    "skills/codewiki-decision/SKILL.md",
+    "skills/codewiki-decision/references/tools.md",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-planning/references/tools.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-implementation/references/tools.md",
+    "skills/codewiki-validation/SKILL.md",
+    "skills/codewiki-validation/references/tools.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors",
+    "npm run typecheck — pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+    "wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-080",
+      "test_files": [
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs"
+      ],
+      "evidence": [
+        "Extended package-smoke assertions to require exactly six metadata-normal tools and deprecation/replacement metadata for every other registered wiki_* tool.",
+        "Updated source-contract audit to treat the six documented tools as the normal set and to enforce compatibility metadata for low-level aliases.",
+        "Updated prompt asset/contract smoke expectations to guard normal-tool prompt and skill drift."
+      ],
+      "notes": [
+        "No behavioral source-edit tool was added; wiki_implement only records evidence/builds and delegates source mutations to normal file/code tools.",
+        "Current task-close audit reports changed/alignment warnings because generated CodeWiki views are tracked and changed after refresh; source-contract and stale-reference profiles pass."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-080",
+      "code_files": [
+        "src/workflow/tool.ts",
+        "src/api/tools.ts",
+        "src/adapters/pi/tools/decide.ts",
+        "src/adapters/pi/tools/plan.ts",
+        "src/adapters/pi/tools/implement.ts",
+        "src/adapters/pi/tools/gate.ts",
+        "src/adapters/pi/tools/runtime.ts",
+        "src/adapters/pi/tools/surface.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/state.ts",
+        "src/adapters/pi/tools/resume-context.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/prompt-contract.ts",
+        "src/checks/source-contract.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "README.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md",
+        "skills/codewiki/prompts/resume-implementation.md",
+        "skills/codewiki-decision/SKILL.md",
+        "skills/codewiki-decision/references/tools.md",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-planning/references/tools.md",
+        "skills/codewiki-implementation/SKILL.md",
+        "skills/codewiki-implementation/references/tools.md",
+        "skills/codewiki-validation/SKILL.md",
+        "skills/codewiki-validation/references/tools.md"
+      ],
+      "evidence": [
+        "Added src/workflow/tool.ts as the normal wrapper executor layer over existing diff-table, roadmap, build, audit, gateway, session, artifact-status, agency, and GC primitives.",
+        "Added Pi adapter normal tool files for decide/plan/implement/gate/runtime and a shared source-owned tool-surface metadata catalog.",
+        "Updated schemas and registration so Pi exposes six normal workflow tools while preserving old primitives as compatibility aliases.",
+        "Updated source-contract snapshot/audit logic so compatibility aliases do not count as normal tools but must declare deprecation/replacement metadata.",
+        "Updated README, system API docs, prompt contract, skills, and prompt assets to align with the six-tool surface."
+      ],
+      "notes": [
+        "The current Pi harness still exposes the old low-level tools in this session because tool registration is loaded before code changes; new normal wrappers will appear after package reload.",
+        "Low-level bootstrap/setup remain registered as compatibility aliases but are not part of the six normal workflow tools."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Extended package-smoke assertions to require exactly six metadata-normal tools and deprecation/replacement metadata for every other registered wiki_* tool.",
+    "Updated source-contract audit to treat the six documented tools as the normal set and to enforce compatibility metadata for low-level aliases.",
+    "Updated prompt asset/contract smoke expectations to guard normal-tool prompt and skill drift."
+  ],
+  "code_change_evidence": [
+    "Added src/workflow/tool.ts as the normal wrapper executor layer over existing diff-table, roadmap, build, audit, gateway, session, artifact-status, agency, and GC primitives.",
+    "Added Pi adapter normal tool files for decide/plan/implement/gate/runtime and a shared source-owned tool-surface metadata catalog.",
+    "Updated schemas and registration so Pi exposes six normal workflow tools while preserving old primitives as compatibility aliases.",
+    "Updated source-contract snapshot/audit logic so compatibility aliases do not count as normal tools but must declare deprecation/replacement metadata.",
+    "Updated README, system API docs, prompt contract, skills, and prompt assets to align with the six-tool surface."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Pi adapter exposes wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime as the normal internal agent tool surface.",
+      "evidence": "src/adapters/pi/index.ts registers the five new workflow tools beside existing wiki_state; src/adapters/pi/tools/surface.ts declares exactly those six as normal; tests/smoke/package-smoke.test.mjs asserts the normal metadata set exactly."
+    },
+    {
+      "criterion": "wiki_decide orchestrates decision rows, approvals, KB mappings, and decision-build creation through existing diff-table/build primitives.",
+      "evidence": "src/workflow/tool.ts executeCodewikiDecideTool routes row/proposal work through src/change/tool.ts and decision builds through src/build/tool.ts; src/adapters/pi/tools/decide.ts exposes the normal Pi wrapper."
+    },
+    {
+      "criterion": "wiki_plan orchestrates roadmap/sprint alignment and planning-build creation through existing roadmap/build primitives.",
+      "evidence": "src/workflow/tool.ts executeCodewikiPlanTool routes roadmap/sprint lifecycle through src/roadmap/tool.ts and planning builds through src/build/tool.ts; src/adapters/pi/tools/plan.ts exposes the wrapper."
+    },
+    {
+      "criterion": "wiki_implement records task-scoped TDD/code evidence and implementation-build creation without replacing normal file/code edit tools.",
+      "evidence": "src/workflow/tool.ts executeCodewikiImplementTool appends roadmap evidence and writes implementation builds; src/adapters/pi/tools/implement.ts prompt guidelines explicitly keep ordinary file/code edit tools as source mutation tools."
+    },
+    {
+      "criterion": "wiki_gate owns gateway preflight/validation and required linter/test evidence routing.",
+      "evidence": "src/workflow/tool.ts executeCodewikiGateTool combines audit and gateway primitive execution; src/adapters/pi/tools/gate.ts routes checks_run into gateway checks and preserves post-gateway context refresh handling."
+    },
+    {
+      "criterion": "wiki_runtime owns session focus, leases, jobs, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination.",
+      "evidence": "src/workflow/tool.ts executeCodewikiRuntimeTool routes session, artifact-status, agency, and GC operations; src/adapters/pi/tools/runtime.ts binds Pi session, status, and agency ports."
+    },
+    {
+      "criterion": "Existing low-level tools remain available only as documented compatibility/expert aliases or are hidden internally; deprecation metadata and source-contract validation prevent accidental normal use.",
+      "evidence": "src/adapters/pi/tools/surface.ts marks low-level tools as compatibility/deprecated with replacement metadata; src/checks/source-contract.ts compares expected normal tools against metadata-filtered normal tools and fails undocumented non-normal tools without compatibility metadata."
+    },
+    {
+      "criterion": "README, skills, prompt contract, and source-contract snapshots agree on the six-tool target and compatibility policy.",
+      "evidence": "README.md, .codewiki/kb/system/api*.md, skills/codewiki/**, focused skill references, and src/adapters/pi/prompt-contract.ts were updated; source-contract smoke passes."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-080: expose six normal CodeWiki workflow tools while keeping low-level primitives as compatibility/expert aliases.",
+    "implemented_changes": [
+      "Exposed wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime as Pi tools beside existing wiki_state.",
+      "Added wrapper orchestration over existing primitive tools and compatibility metadata for low-level aliases.",
+      "Updated source-contract validation, tests, README, system docs, prompt contract, and skills to enforce/document the six-tool target."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/api-vnext-tools.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/workflow/tool.ts",
+        "src/adapters/pi/tools/*.ts",
+        "src/checks/source-contract*.ts"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "source-contract smoke passed with 18 registered tools and six normal tools.",
+      "package-smoke passed with exact normal-tool metadata assertion.",
+      "typecheck and required gateway/diff-table smoke tests passed."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+      "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs"
+    ],
+    "non_goals_preserved": [
+      "Did not remove low-level compatibility tools.",
+      "Did not merge all behavior into one mega-tool.",
+      "Did not change roadmap/build/validation JSON schemas beyond wrapper result metadata and adapter schemas.",
+      "Did not make bootstrap/config normal agent tools."
+    ],
+    "remaining_risks": [
+      "Fresh validation and task-close proof still required before closing TASK-080."
+    ]
+  },
+  "risks": [
+    "Wrapper behavior is implemented as orchestration over primitives; deeper end-to-end wrapper execution coverage can be expanded in a follow-up once Pi reloads expose the new tools in-session.",
+    "Task-close validation should decide whether generated-file changed warnings are acceptable evidence of refreshed views or need commit/revert handling before closure."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-080",
+      "task_id": "TASK-080",
+      "next_focus_task_id": "TASK-081",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-080",
+        "title": "Expose six normal agent workflow tools",
+        "summary": "Expose six normal CodeWiki agent workflow tools and mark low-level primitives as compatibility aliases for TASK-080.",
+        "spec_paths": [
+          ".codewiki/kb/system/api-vnext-tools.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/tools/decide.ts",
+          "src/adapters/pi/tools/plan.ts",
+          "src/adapters/pi/tools/implement.ts",
+          "src/adapters/pi/tools/gate.ts",
+          "src/adapters/pi/tools/runtime.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/change/tool.ts",
+          "src/build/tool.ts",
+          "src/roadmap/tool.ts",
+          "src/gateway/tool.ts",
+          "src/gc/tool.ts",
+          "src/session/tool.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/agency/tool.ts",
+          "src/checks/tool.ts",
+          "src/api/tools.ts",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "src/workflow/tool.ts",
+          "src/adapters/pi/tools/surface.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/tools/state.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/prompt-contract.ts",
+          "src/checks/source-contract.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "README.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          "skills/codewiki-decision/SKILL.md",
+          "skills/codewiki-decision/references/tools.md",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-planning/references/tools.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-implementation/references/tools.md",
+          "skills/codewiki-validation/SKILL.md",
+          "skills/codewiki-validation/references/tools.md"
+        ],
+        "acceptance": [
+          "Pi adapter exposes `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` as the normal internal agent tool surface.",
+          "`wiki_decide` orchestrates decision rows, approvals, KB mappings, and decision-build creation through existing diff-table/build primitives.",
+          "`wiki_plan` orchestrates roadmap/sprint alignment and planning-build creation through existing roadmap/build primitives.",
+          "`wiki_implement` records task-scoped TDD/code evidence and implementation-build creation without replacing normal file/code edit tools.",
+          "`wiki_gate` owns gateway preflight/validation and required linter/test evidence routing.",
+          "`wiki_runtime` owns session focus, leases, jobs, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination.",
+          "Existing low-level tools remain available only as documented compatibility/expert aliases or are hidden internally; deprecation metadata and source-contract validation prevent accidental normal use.",
+          "README, skills, prompt contract, and source-contract snapshots agree on the six-tool target and compatibility policy."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "wiki_gate/task-close linters for source-contract, stale-reference, changed, and alignment"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        "checks_run": [
+          "lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors",
+          "npm run typecheck — pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+          "wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings"
+        ],
+        "test_design_evidence": [
+          "Extended package-smoke assertions to require exactly six metadata-normal tools and deprecation/replacement metadata for every other registered wiki_* tool.",
+          "Updated source-contract audit to treat the six documented tools as the normal set and to enforce compatibility metadata for low-level aliases.",
+          "Updated prompt asset/contract smoke expectations to guard normal-tool prompt and skill drift."
+        ],
+        "code_change_evidence": [
+          "Added src/workflow/tool.ts as the normal wrapper executor layer over existing diff-table, roadmap, build, audit, gateway, session, artifact-status, agency, and GC primitives.",
+          "Added Pi adapter normal tool files for decide/plan/implement/gate/runtime and a shared source-owned tool-surface metadata catalog.",
+          "Updated schemas and registration so Pi exposes six normal workflow tools while preserving old primitives as compatibility aliases.",
+          "Updated source-contract snapshot/audit logic so compatibility aliases do not count as normal tools but must declare deprecation/replacement metadata.",
+          "Updated README, system API docs, prompt contract, skills, and prompt assets to align with the six-tool surface."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-080",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-080",
+      "show_build": "git show refs/codewiki/archive/task/TASK-080:.codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        "src/adapters/pi/tools/decide.ts",
+        "src/adapters/pi/tools/plan.ts",
+        "src/adapters/pi/tools/implement.ts",
+        "src/adapters/pi/tools/gate.ts",
+        "src/adapters/pi/tools/runtime.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/change/tool.ts",
+        "src/build/tool.ts",
+        "src/roadmap/tool.ts",
+        "src/gateway/tool.ts",
+        "src/gc/tool.ts",
+        "src/session/tool.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/agency/tool.ts",
+        "src/checks/tool.ts",
+        "src/api/tools.ts",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-080 Expose six normal agent workflow tools implementation evidence",
+      "body": "Expose six normal CodeWiki agent workflow tools and mark low-level primitives as compatibility aliases for TASK-080.\n\nChecks: lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-080\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json\nCodeWiki-Checks: lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-080\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-080\nCodeWiki-Digest: sha256:63e53d7e1d971ebf7b9e2a77ce910ff20f98306ecb3d94051ee70ed088e3b0af\nCodeWiki-Restore: /wiki-restore TASK-080",
+      "trailers": [
+        "CodeWiki-Task: TASK-080",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+        "CodeWiki-Checks: lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-080",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-080",
+        "CodeWiki-Digest: sha256:63e53d7e1d971ebf7b9e2a77ce910ff20f98306ecb3d94051ee70ed088e3b0af",
+        "CodeWiki-Restore: /wiki-restore TASK-080"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-080 Expose six normal agent workflow tools implementation evidence",
+      "body": "Expose six normal CodeWiki agent workflow tools and mark low-level primitives as compatibility aliases for TASK-080.\n\nChecks: lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-080\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json\nCodeWiki-Checks: lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors, npm run typecheck — pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass, wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-080\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-080\nCodeWiki-Digest: sha256:63e53d7e1d971ebf7b9e2a77ce910ff20f98306ecb3d94051ee70ed088e3b0af\nCodeWiki-Restore: /wiki-restore TASK-080"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-080",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-080"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-080",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-080",
+        "show_build": "git show refs/codewiki/archive/task/TASK-080:.codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          "src/adapters/pi/tools/decide.ts",
+          "src/adapters/pi/tools/plan.ts",
+          "src/adapters/pi/tools/implement.ts",
+          "src/adapters/pi/tools/gate.ts",
+          "src/adapters/pi/tools/runtime.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/change/tool.ts",
+          "src/build/tool.ts",
+          "src/roadmap/tool.ts",
+          "src/gateway/tool.ts",
+          "src/gc/tool.ts",
+          "src/session/tool.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/agency/tool.ts",
+          "src/checks/tool.ts",
+          "src/api/tools.ts",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/tasks/TASK-069/diff-table-batch.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-080",
+      "build_path": ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-080",
+      "commit_sha": "",
+      "digest": "sha256:63e53d7e1d971ebf7b9e2a77ce910ff20f98306ecb3d94051ee70ed088e3b0af",
+      "restore_command": "/wiki-restore TASK-080"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:afb47afb8bdcb1e87c4557f65305736abe672101a4acc5b6489e5fddbdc78bbc",
+          "bytes": 30880
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:5998eca0e2e4fcb3c6eeae502aec469fa831c5c7dbd5c34ab0d55d3576ffe3d3",
+          "bytes": 115388
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:45ff15ba86c1d8b68d1bbfc6f6e6dbd0f9978075c4ee4a5396e818b796566d2c",
+          "bytes": 31355
+        },
+        {
+          "path": "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f300c70a01ec3710106ba1497793841f9880379d61611286ae68f5596c8a9322",
+          "bytes": 5474
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:79534960e53089876909f872874c6f64b5f20c16fa0b2d14ea322dd9076fc994",
+          "bytes": 12897
+        },
+        {
+          "path": "tests/smoke/prompt-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f80532659f6f67ba163211581142fca17c1f32b7f3c93d0aa0948cc914c07d07",
+          "bytes": 2354
+        },
+        {
+          "path": "src/workflow/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:f9cdf67bb926ae536cf26f1400ce961bed0570c6b386d181ff3e63b873602077",
+          "bytes": 15229
+        },
+        {
+          "path": "src/api/tools.ts",
+          "role": "code_file",
+          "sha256": "sha256:280c57ed4f555a8608938e806700c8aa32547988eb04aa0bd1dbc22e4def5e7e",
+          "bytes": 1136
+        },
+        {
+          "path": "src/adapters/pi/tools/decide.ts",
+          "role": "code_file",
+          "sha256": "sha256:0f6a812b3688a66163e89225d2c931fa185f08f336a889c9f2d873e731cc317e",
+          "bytes": 1801
+        },
+        {
+          "path": "src/adapters/pi/tools/plan.ts",
+          "role": "code_file",
+          "sha256": "sha256:2c94bd5faa53e679ccaf6173642ac1363e13c880421e6661392740778b506c4f",
+          "bytes": 1881
+        },
+        {
+          "path": "src/adapters/pi/tools/implement.ts",
+          "role": "code_file",
+          "sha256": "sha256:38a5862563732bd71dd1aad123ef6e689f8286e78ffb520c805e5ef34b76ad4a",
+          "bytes": 2039
+        },
+        {
+          "path": "src/adapters/pi/tools/gate.ts",
+          "role": "code_file",
+          "sha256": "sha256:da69c6fa43f618097349933cb9f08ca4874b4412ad6006e67014f6a8b32efe21",
+          "bytes": 2713
+        },
+        {
+          "path": "src/adapters/pi/tools/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:0312be53280b85aaaaf31442ff9eae53425492179abc5c6c109c39f0cf036980",
+          "bytes": 2967
+        },
+        {
+          "path": "src/adapters/pi/tools/surface.ts",
+          "role": "code_file",
+          "sha256": "sha256:401fb53d03da5b83e5cf77b12b53cbc38be0c43e0af7cef7a84f16efc1c2095d",
+          "bytes": 4314
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:45799992b3df40767f870ab76d3e905cef48dc0f9d65b2190d4666efab737a2f",
+          "bytes": 13863
+        },
+        {
+          "path": "src/adapters/pi/bootstrap.ts",
+          "role": "code_file",
+          "sha256": "sha256:44a5cdbc9a03e7872170cdabe708e59c8e73505c242f9ea61337099b785bb40d",
+          "bytes": 4396
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:c342e5978116d6f62fe908f9387f73f1e504d15b6fd44d31d9f4de33d734171a",
+          "bytes": 40146
+        },
+        {
+          "path": "src/adapters/pi/tools/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:6397f5dd590b8ec612131604812a7a9e40eefe35acce3401d5abdc2ca9c4f979",
+          "bytes": 1724
+        },
+        {
+          "path": "src/adapters/pi/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:a9d512f3b87eec8bf400d716663fd147e3b705f90e5484bfea5c98c08f68ded1",
+          "bytes": 2253
+        },
+        {
+          "path": "src/adapters/pi/tools/artifact-status.ts",
+          "role": "code_file",
+          "sha256": "sha256:c9abd49d90defe7be5b75942b117ce77116f4532c6362d47072698894b9bafb0",
+          "bytes": 2694
+        },
+        {
+          "path": "src/adapters/pi/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:0b3d10969f9e1108a60242b80589442b67227b498bb0a9899f2a4fe68e29852e",
+          "bytes": 2038
+        },
+        {
+          "path": "src/adapters/pi/prompt-contract.ts",
+          "role": "code_file",
+          "sha256": "sha256:75f56104c14c05ac0fd8b1160b9556bbc2b43806cb9b9e0f5ffb0dc557a80ce7",
+          "bytes": 2615
+        },
+        {
+          "path": "src/checks/source-contract.ts",
+          "role": "code_file",
+          "sha256": "sha256:bb50eba31b630573bf8c8dfb0fc373f2b8c84a92b0a79db43c7179197e60289a",
+          "bytes": 11993
+        },
+        {
+          "path": "src/checks/source-contract-snapshot.ts",
+          "role": "code_file",
+          "sha256": "sha256:be5c1b776f7193d0570b5ec88b48fb944a905cdad1857582aa5e3cf9b2c80860",
+          "bytes": 5856
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:47eb6912ef54407935cae419f5d91b86211321581c0018de0f8dc82f2ca7de2c",
+          "bytes": 25679
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:199c9ffd3eb682475281c0aa7e3aa79a19f4bef8bd5dfc91847a977525166547",
+          "bytes": 4927
+        },
+        {
+          "path": ".codewiki/kb/system/api-vnext-tools.md",
+          "role": "code_file",
+          "sha256": "sha256:909df5bf0774a5578671a691873535bc19202f275bf7b8cc4fdd5e3308f935f5",
+          "bytes": 5661
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:d5b7bf103b0089ec9e9b2eeb6fe0edf8da2db48b425b7a3c867322f5f3f0db56",
+          "bytes": 9448
+        },
+        {
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "role": "code_file",
+          "sha256": "sha256:e3749a9a753fc0b5faee25de79de8455d387a1490e25e022fd8d141337d30b53",
+          "bytes": 4148
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "role": "code_file",
+          "sha256": "sha256:74e4abe253607e908cf0e09ad88067b104de116f9f646960aaa955088fe64c3a",
+          "bytes": 3418
+        },
+        {
+          "path": "skills/codewiki-decision/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:99104d64ecb7cfcfd65fdbd5e0bfea75ca32cbafd14a85ba150642ea6f648013",
+          "bytes": 5559
+        },
+        {
+          "path": "skills/codewiki-decision/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:5419ccec7943f2908eb6878f19021b081de050e9323f050b25bff4e36c7d4338",
+          "bytes": 3109
+        },
+        {
+          "path": "skills/codewiki-planning/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:69be12b05fc756c9966ad724995889d712bef4674f1afe94f383a97bcd8216b2",
+          "bytes": 6987
+        },
+        {
+          "path": "skills/codewiki-planning/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:d1269012c5f793bc143b7137ac763235e9826939d80854425556d92ae65e0a46",
+          "bytes": 3765
+        },
+        {
+          "path": "skills/codewiki-implementation/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:7ef5190f9b82bbb9eb3b0f9b27ceb0147b459628621410603566fdc6f72f2eb7",
+          "bytes": 6757
+        },
+        {
+          "path": "skills/codewiki-implementation/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:82cf79eeb27b3d3334cad103ec7e237a98d01f8adc826d2c92d117b6875e3386",
+          "bytes": 4953
+        },
+        {
+          "path": "skills/codewiki-validation/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:6a2c08fe390ee14c0b5c4bdb813132cc936403b9294fe42bb4ecbc555fded6f4",
+          "bytes": 8721
+        },
+        {
+          "path": "skills/codewiki-validation/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:81a1aae8aef737cc6ed69cfd5027d69e179415ccb91873783262147a4ffd9500",
+          "bytes": 6441
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-080",
+      "source_build": ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/workflow/tool.ts",
+          "src/api/tools.ts",
+          "src/adapters/pi/tools/decide.ts",
+          "src/adapters/pi/tools/plan.ts",
+          "src/adapters/pi/tools/implement.ts",
+          "src/adapters/pi/tools/gate.ts",
+          "src/adapters/pi/tools/runtime.ts",
+          "src/adapters/pi/tools/surface.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/tools/state.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/prompt-contract.ts",
+          "src/checks/source-contract.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "README.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          "skills/codewiki-decision/SKILL.md",
+          "skills/codewiki-decision/references/tools.md",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-planning/references/tools.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-implementation/references/tools.md",
+          "skills/codewiki-validation/SKILL.md",
+          "skills/codewiki-validation/references/tools.md",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs",
+          "tests/smoke/prompt-contract.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-080",
+        "restore_command": "/wiki-restore TASK-080"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics (14 touched TypeScript files) — pass, 0 errors",
+        "npm run typecheck — pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs — pass",
+        "wiki_audit profiles=source-contract,changed,alignment,stale-reference task_id=TASK-080 — source-contract/stale-reference/task pass; changed/alignment warnings for tracked generated file changes and graph health warnings"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-02T07:26:54Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-080",
+  "verdict": "block",
+  "rationale": "TASK-080 implementation validation passed, but task-close cannot safely pass yet because the worktree is dirty pre-commit and no immutable commit/tree/archive/remote proof exists. Task-close policy requires fresh_context=true, clean=true, and immutable content proof. Required audits were run; source-contract, stale-reference, and task profiles pass, while changed/alignment warnings reflect dirty generated state and graph-health warnings. Policy blocks task-close gate validation until clean=true, immutable_content_proof, publisher_result:published_sha/tree_sha/archive_ref/remote_ref are recorded.",
+  "checks": [
+    "wiki_gate action=audit profiles=source-contract,stale-reference,changed,alignment task_id=TASK-080 — source-contract pass; stale-reference pass; task pass; changed/alignment warning",
+    "wiki_gate action=preflight profile=task-close task_id=TASK-080 — blocked (5 issues)",
+    "fresh implementation validation pass: .codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+    "npm run typecheck — pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Task-close requires clean=true, but current worktree is dirty pre-commit."
+    },
+    {
+      "severity": "high",
+      "summary": "Task-close requires immutable commit/tree/archive/remote proof; only dirty working_tree_digest proof is available."
+    },
+    {
+      "severity": "medium",
+      "summary": "Changed/alignment audits report dirty generated state and graph-health warnings that should be resolved or accepted before closure/publication."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required validation isolation evidence: clean=true, immutable_content_proof."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing publisher result proof: published_sha/tree_sha/archive_ref/remote_ref."
+    }
+  ],
+  "source": ".codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+  "policy_profile": "task-close",
+  "failure_class": "content_proof_missing",
+  "recommended_next_loop": "validation",
+  "stop_reason": "Task-close blocked until clean immutable content proof exists.",
+  "routing": {
+    "failure_class": "content_proof_missing",
+    "recommended_next_loop": "validation",
+    "stop_reason": "Task-close blocked until clean immutable content proof exists."
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "profile:source-contract",
+    "profile:stale-reference",
+    "profile:changed",
+    "profile:alignment"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:ea2065309879e9c1080b42ec11cd4e465dea48078e35ba8a5b700f885bd2f487"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-080",
+    "source_build": ".codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+    "validation_report": ".codewiki/validation/2026-06-02-task-close-block-task-080-2026-06-02-implementat.json",
+    "source_refs": [
+      ".codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+      ".codewiki/validation/2026-06-02-task-close-block-task-080-2026-06-02-implementat.json"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-080",
+    "source_build": ".codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+    "validation_report": ".codewiki/validation/2026-06-02-task-close-block-task-080-2026-06-02-implementat.json",
+    "commit_title": "checkpoint(codewiki): TASK-080 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-080",
+      "CodeWiki-Build: .codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-02-task-close-block-task-080-2026-06-02-implementat.json",
+      "CodeWiki-Checks: wiki_gate action=audit profiles=source-contract,stale-reference,changed,alignment task_id=TASK-080 — source-contract pass; stale-reference pass; task pass; changed/alignment warning; wiki_gate action=preflight profile=task-close task_id=TASK-080 — blocked (5 issues); fresh implementation validation pass: .codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json; npm run typecheck — pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass; node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs — pass; node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs — pass"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [
+    "clean=true for task-close",
+    "immutable task-close content proof (commit/tree/archive/remote)",
+    "task-close preflight readiness",
+    "validation_isolation",
+    "publisher_result_proof"
+  ],
+  "blocking_questions": [
+    "Commit or otherwise provide immutable tree proof for the validated TASK-080 working tree, then rerun task-close gateway.",
+    "Run this gateway from fresh validator context and record required checked content proof for the profile.",
+    "Publish through the publisher queue or cite its clean immutable result proof before this gate can pass."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [],
+    "gaps": [
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-080",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready promotion proof",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [
+        "semantic_closure:TASK-080:risk:Wrapper behavior is implemented as orchestration over primitives; deeper end-to-end wrapper execution coverage can be expanded in a follow-up once Pi reloads expose the new tools in-session.",
+        "semantic_closure:TASK-080:risk:Task-close validation should decide whether generated-file changed warnings are acceptable evidence of refreshed views or need commit/revert handling before closure.",
+        "semantic_closure:TASK-080:risk:Fresh validation and task-close proof still required before closing TASK-080.",
+        "semantic_closure:TASK-080:risk:Fresh implementation validation still required before closing TASK-079.",
+        "semantic_closure:TASK-080:risk:Existing graph health reports 8 warnings outside this task; generated file changed warnings require validator/publication review.",
+        "semantic_closure:TASK-080:risk:Requires fresh validation before task close.",
+        "semantic_closure:TASK-080:risk:Pre-existing graph health warnings remain."
+      ],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [
+        "audit:task",
+        "audit:generated-parity"
+      ],
+      "task_ids": [],
+      "content_proof": [
+        "clean=true",
+        "immutable_content_proof"
+      ],
+      "stale_refs": [
+        "source:.codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json:not-build-ref"
+      ],
+      "close_publication_blockers": [
+        "publisher_result:published_sha/tree_sha/archive_ref/remote_ref",
+        "clean=true"
+      ],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "evidence": [
+          "semantic_closure:TASK-080:risk:Wrapper behavior is implemented as orchestration over primitives; deeper end-to-end wrapper execution coverage can be expanded in a follow-up once Pi reloads expose the new tools in-session.",
+          "semantic_closure:TASK-080:risk:Task-close validation should decide whether generated-file changed warnings are acceptable evidence of refreshed views or need commit/revert handling before closure.",
+          "semantic_closure:TASK-080:risk:Fresh validation and task-close proof still required before closing TASK-080.",
+          "semantic_closure:TASK-080:risk:Fresh implementation validation still required before closing TASK-079.",
+          "semantic_closure:TASK-080:risk:Existing graph health reports 8 warnings outside this task; generated file changed warnings require validator/publication review.",
+          "semantic_closure:TASK-080:risk:Requires fresh validation before task close.",
+          "semantic_closure:TASK-080:risk:Pre-existing graph health warnings remain."
+        ]
+      },
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required audit evidence.",
+        "evidence": [
+          "audit:task",
+          "audit:generated-parity"
+        ]
+      },
+      {
+        "kind": "content-proof",
+        "severity": "high",
+        "summary": "Missing required content proof strategy.",
+        "evidence": [
+          "clean=true",
+          "immutable_content_proof"
+        ]
+      },
+      {
+        "kind": "stale-refs",
+        "severity": "medium",
+        "summary": "Source or report references are missing or unreadable.",
+        "evidence": [
+          "source:.codewiki/validation/2026-06-02-implementation-pass-task-080-2026-06-02-expose-s.json:not-build-ref"
+        ]
+      },
+      {
+        "kind": "close-publication-blockers",
+        "severity": "high",
+        "summary": "Task-close/publication blockers must clear before validation can pass.",
+        "evidence": [
+          "publisher_result:published_sha/tree_sha/archive_ref/remote_ref",
+          "clean=true"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Task-close blocked until clean immutable content proof exists."
+    },
+    "risk": {
+      "tier": "code-local",
+      "reason": "Code-local change; gateway audits and content proof still required.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:ea2065309879e9c1080b42ec11cd4e465dea48078e35ba8a5b700f885bd2f487",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Post-reload task-close attempt from source refs. Dirty digest includes validation report added after implementation validation; no commit/tree proof available.",
+    "role": "validator"
+  }
+}

@@ -48,6 +48,15 @@ function section(text: string, heading: string, nextHeading: string): string {
 	return text.slice(afterStart, end >= 0 ? end : undefined);
 }
 
+function normalToolSection(text: string): string {
+	const normal = section(
+		text,
+		"#### Normal workflow tools",
+		"#### Compatibility",
+	);
+	return normal.trim() ? normal : text;
+}
+
 function collectMatches(text: string, pattern: RegExp): string[] {
 	const out: string[] = [];
 	for (const match of text.matchAll(pattern)) {
@@ -87,8 +96,16 @@ async function readExpectedContract(
 		"### Static analysis entrypoints",
 		"### Skills",
 	);
+	const apiToolSection = section(
+		apiDoc,
+		"## Normal workflow tools",
+		"## Compatibility",
+	);
 	return {
-		tools: collectMatches(`${toolSection}\n${apiDoc}`, TOOL_TOKEN_RE),
+		tools: collectMatches(
+			`${normalToolSection(toolSection)}\n${apiToolSection || apiDoc}`,
+			TOOL_TOKEN_RE,
+		),
 		commands: collectMatches(commandSection, COMMAND_TOKEN_RE),
 		knip_entry: collectMatches(staticSection, PATH_TOKEN_RE),
 		sources: ["README.md", ".codewiki/kb/system/api.md"],
@@ -151,6 +168,61 @@ function compareLists(input: {
 					`Source ${input.label} '${item}' is not documented in the expected contract.`,
 					input.path,
 					[item],
+				),
+			);
+		}
+	}
+}
+
+function normalToolNames(snapshot: SourceContractSnapshot): string[] {
+	return snapshot.tools
+		.filter((tool) => snapshot.tool_surfaces[tool]?.surface !== "compatibility")
+		.sort();
+}
+
+function compatibilityToolIssues(
+	snapshot: SourceContractSnapshot,
+	expectedTools: string[],
+	issues: AuditIssue[],
+): void {
+	const expected = new Set(expectedTools);
+	for (const tool of snapshot.tools) {
+		const metadata = snapshot.tool_surfaces[tool];
+		if (expected.has(tool)) {
+			if (metadata?.surface === "compatibility") {
+				issues.push(
+					createIssue(
+						"error",
+						"tool-surface-mismatch",
+						`Documented normal tool '${tool}' is marked as compatibility-only in source metadata.`,
+						"src/adapters/pi/tools/surface.ts",
+						[tool],
+					),
+				);
+			}
+			continue;
+		}
+		if (!tool.startsWith("wiki_")) continue;
+		if (metadata?.surface !== "compatibility") {
+			issues.push(
+				createIssue(
+					"error",
+					"tool-compatibility-metadata-missing",
+					`Non-normal tool '${tool}' must be marked as a compatibility tool in source metadata.`,
+					"src/adapters/pi/tools/surface.ts",
+					[tool],
+				),
+			);
+			continue;
+		}
+		if (metadata.deprecated !== true || !metadata.compatibility_alias_for) {
+			issues.push(
+				createIssue(
+					"error",
+					"tool-deprecation-metadata-missing",
+					`Compatibility tool '${tool}' must declare deprecated=true and compatibility_alias_for metadata.`,
+					"src/adapters/pi/tools/surface.ts",
+					[tool],
 				),
 			);
 		}
@@ -338,10 +410,11 @@ export async function auditSourceContract(
 		label: "tool",
 		kindPrefix: "tool-contract",
 		expected: expected.tools,
-		actual: snapshot.tools,
+		actual: normalToolNames(snapshot),
 		path: "README.md",
 		issues,
 	});
+	compatibilityToolIssues(snapshot, expected.tools, issues);
 	compareLists({
 		label: "command",
 		kindPrefix: "command-contract",

@@ -6,6 +6,7 @@ import { codewikiStateToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
 import { piStatePorts } from "./ports.ts";
+import { codewikiToolMetadata } from "./surface.ts";
 
 /** Register the wiki_state tool. */
 export function registerCodewikiStateTool(pi: any) {
@@ -21,9 +22,24 @@ export function registerCodewikiStateTool(pi: any) {
 			"Set refresh=true when derived graph/state files may be stale or missing.",
 		],
 		parameters: codewikiStateToolInputSchema,
-		async execute(_toolCallId: string, params: CodewikiStateToolInput, _signal: any, _onUpdate: any, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_state");
-			const result = await executeCodewikiStateTool(project, params, piStatePorts(ctx));
+		...codewikiToolMetadata("wiki_state"),
+		async execute(
+			_toolCallId: string,
+			params: CodewikiStateToolInput,
+			_signal: any,
+			_onUpdate: any,
+			ctx: ExtensionContext,
+		) {
+			const project = await resolveToolProject(
+				ctx.cwd,
+				params.repoPath,
+				"wiki_state",
+			);
+			const result = await executeCodewikiStateTool(
+				project,
+				params,
+				piStatePorts(ctx),
+			);
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
 				content: [{ type: "text", text: result.summary }],

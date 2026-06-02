@@ -1,4 +1,7 @@
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
 import type { CodewikiArtifactStatusToolInput } from "../../../session/types.ts";
 import { executeCodewikiArtifactStatusTool } from "../../../api/tools.ts";
@@ -7,6 +10,7 @@ import { resolveToolProject } from "../../../project/context.ts";
 import { codewikiArtifactStatusToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
+import { codewikiToolMetadata } from "./surface.ts";
 
 export async function executeCodewikiArtifactStatus(
 	_pi: ExtensionAPI,
@@ -14,8 +18,13 @@ export async function executeCodewikiArtifactStatus(
 	ctx: ExtensionContext,
 	input: CodewikiArtifactStatusToolInput,
 ) {
-	const sessionId = String(ctx.sessionManager?.getSessionId?.() || "session-unknown").trim() || "session-unknown";
-	const result = await executeCodewikiArtifactStatusTool(project, input, { sessionId, agentName: stableAgentName(sessionId) });
+	const sessionId =
+		String(ctx.sessionManager?.getSessionId?.() || "session-unknown").trim() ||
+		"session-unknown";
+	const result = await executeCodewikiArtifactStatusTool(project, input, {
+		sessionId,
+		agentName: stableAgentName(sessionId),
+	});
 	ctx.ui.setStatus?.("codewiki-artifacts", result.statusText);
 	return result;
 }
@@ -34,9 +43,25 @@ export function registerCodewikiArtifactStatusTool(pi: ExtensionAPI): void {
 			"Use action=mark to record current session use, wait to queue behind unavailable artifacts, list to inspect holders/waiters, heartbeat to extend, and release when done.",
 		],
 		parameters: codewikiArtifactStatusToolInputSchema,
-		async execute(_toolCallId: string, params: CodewikiArtifactStatusToolInput, _signal: unknown, _onUpdate: unknown, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_artifact_status");
-			const result = await executeCodewikiArtifactStatus(pi, project, ctx, params);
+		...codewikiToolMetadata("wiki_artifact_status"),
+		async execute(
+			_toolCallId: string,
+			params: CodewikiArtifactStatusToolInput,
+			_signal: unknown,
+			_onUpdate: unknown,
+			ctx: ExtensionContext,
+		) {
+			const project = await resolveToolProject(
+				ctx.cwd,
+				params.repoPath,
+				"wiki_artifact_status",
+			);
+			const result = await executeCodewikiArtifactStatus(
+				pi,
+				project,
+				ctx,
+				params,
+			);
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
 				content: [{ type: "text", text: result.artifact_summary }],

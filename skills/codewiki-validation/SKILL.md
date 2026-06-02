@@ -20,10 +20,10 @@ For exact tool arguments and required fields, read `references/tools.md` when ne
 - Act as an independent validator. Start from artifacts, not builder chat memory.
 - Validate one profile and one submitted source/build at a time.
 - Use `wiki_state` to locate graph/build/task/validation refs, then read canonical sources directly.
-- Use `wiki_audit` for required deterministic evidence before a pass verdict.
-- Use `wiki_gateway preflight_only=true` before expensive fresh validation when metadata, risk, proof, or publication readiness may block late.
-- Use `wiki_gateway` to record pass/fail/block when policy requires a report, when verdict is not pass, or when publication/task-close/current validation needs durable proof.
-- Do not call compiler tools (`wiki_build`, `wiki_diff_table`) in validation mode.
+- Use `wiki_gate` for required deterministic audit evidence before a pass verdict.
+- Use `wiki_gate action="preflight"` before expensive fresh validation when metadata, risk, proof, or publication readiness may block late.
+- Use `wiki_gate` to record pass/fail/block when policy requires a report, when verdict is not pass, or when publication/task-close/current validation needs durable proof.
+- Do not call compiler tools (`wiki_decide`, `wiki_plan`, `wiki_implement`, or compatibility `wiki_build`/`wiki_diff_table`) in validation mode.
 - Do not create/refine/close roadmap tasks in validation mode.
 - Do not edit `.codewiki/kb/**`, source code, tests, roadmap queue, generated views, or builds.
 - Return `pass`, `fail`, or `block`; never return “probably pass”.
@@ -59,8 +59,8 @@ Read only enough source truth to decide:
    - Treat graph as routing context, not final truth.
 
 3. **Run/review audits and preflight**
-   - Run `wiki_audit` for required profiles or cite existing audit refs.
-   - Run `wiki_gateway preflight_only=true` when source/build metadata, decision-row propagation, task/sprint id, audit evidence, content proof, stale refs, close/ship-ready blockers, or risk approval may block the pass.
+   - Run `wiki_gate` for required audit profiles or cite existing audit refs.
+   - Run `wiki_gate action="preflight"` when source/build metadata, decision-row propagation, task/sprint id, audit evidence, content proof, stale refs, close/ship-ready blockers, or risk approval may block the pass.
    - A pass verdict must include required audit evidence when profile policy requires it.
 
 4. **Check vertical alignment**
@@ -86,7 +86,7 @@ Read only enough source truth to decide:
    - Pre-commit tracked GC blocks close/ship-ready readiness. Post-commit GC may be reviewed as hygiene only after archive commit/tree proof exists and must not erase the proof commit.
 
 8. **Record verdict**
-   - Use `wiki_gateway` with profile, source/build refs, task id if any, verdict, rationale, checks, issues, audit refs/reports, failed criteria/blocking questions, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and isolation fields.
+   - Use `wiki_gate` with profile, source/build refs, task id if any, verdict, rationale, checks, issues, audit refs/reports, failed criteria/blocking questions, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and isolation fields.
    - For pass reports, persist only when policy/current publication/task-close/audit requires it.
    - For fail/block, persist deterministic failed criteria and routing recommendation. Prefer `planning_gap -> planning`, `decision_ambiguity` or `risk_approval_missing -> decision`, `compiler_incomplete -> implementation`, `evidence_missing` or `content_proof_missing -> validation`, and `runtime_conflict -> observe/wait`.
 

@@ -1,7 +1,7 @@
 {
   "id": "TASK-080",
   "title": "Expose six normal agent workflow tools",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Expose `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` as normal agent tools while low-level primitives become compatibility aliases or internals.",
@@ -71,5 +71,5 @@
     "closure": ""
   },
   "created": "2026-06-01",
-  "updated": "2026-06-01"
+  "updated": "2026-06-02T07:09:41Z"
 }

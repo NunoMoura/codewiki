@@ -5,7 +5,7 @@ state: active
 summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, runtime, and publication support.
 owners:
   - architecture
-updated: "2026-06-01"
+updated: "2026-06-02"
 ---
 
 # CodeWiki API
@@ -18,7 +18,7 @@ Interactive distribution is Pi-first: CodeWiki is a Pi-based software-developmen
 
 The target user command surface is `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`. Bootstrap and config are user commands whose adapters call backend functions directly; they do not require dedicated normal agent tools.
 
-The target normal internal agent tool surface is wiki_state, wiki_decide, wiki_plan, wiki_implement, wiki_gate, and wiki_runtime. The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
+The target normal internal agent tool surface is `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime`. The API exposes typed capabilities and compact result envelopes. Generated state and large payloads stay in source refs; chat and tool responses should return summaries, changed refs, artifact refs, next actions, and blocking questions.
 
 ## Capability index
 
@@ -33,7 +33,7 @@ The target normal internal agent tool surface is wiki_state, wiki_decide, wiki_p
 | Adapters and user surfaces | [Adapters and UI](components/adapters-and-ui.md) |
 | Knowledge parsing and truth | [Knowledge base](components/knowledge-base.md) |
 
-The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). Normal agent tools use the `wiki_<name>` convention and are limited to the six target tools. Low-level primitives remain internal, compatibility, or expert/debug surfaces unless a migration task explicitly keeps direct exposure.
+The reduced workflow-tool direction is tracked in [API vNext Tool Surface](api-vnext-tools.md). Normal agent tools use the `wiki_<name>` convention and are limited to the six target tools. Low-level primitives remain internal, compatibility, or expert/debug surfaces with deprecation/replacement metadata unless a migration task explicitly keeps direct exposure.
 
 ## Access surfaces
 

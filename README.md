@@ -45,21 +45,20 @@ Compatibility shims remain available during migration:
 
 ### Internal agent tools
 
-- `wiki_setup`
-- `wiki_bootstrap`
-- `wiki_state`
-- `wiki_resume_context`
-- `wiki_artifact_status`
-- `wiki_audit`
-- `wiki_build`
-- `wiki_diff_table`
-- `wiki_gc`
-- `wiki_gateway`
-- `wiki_roadmap`
-- `wiki_session`
-- `wiki_agency`
+#### Normal workflow tools
 
-All internal `wiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`wiki_state`), one resume-context entrypoint (`wiki_resume_context`), one transient compiler-build writer (`wiki_build`), one canonical roadmap mutation entrypoint (`wiki_roadmap`), one artifact-status coordination entrypoint (`wiki_artifact_status`), and one runtime session entrypoint (`wiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `wiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps. CodeWiki resume context is normal memory; VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
+- `wiki_state`
+- `wiki_decide`
+- `wiki_plan`
+- `wiki_implement`
+- `wiki_gate`
+- `wiki_runtime`
+
+#### Compatibility/expert aliases
+
+During migration the low-level primitives remain registered with compatibility/deprecation metadata: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_diff_table`, `wiki_gc`, `wiki_gateway`, `wiki_roadmap`, `wiki_session`, and `wiki_agency`. They are for wrapper parity, debugging, and old-agent compatibility, not the normal agent surface.
+
+All internal `wiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on the six normal workflow tools: `wiki_state` for state and source-backed continuation, `wiki_decide` for decisions and decision builds, `wiki_plan` for roadmap/sprint alignment and planning builds, `wiki_implement` for implementation evidence and implementation builds, `wiki_gate` for audits/preflight/validation, and `wiki_runtime` for leases, session focus, wait/wake, agency scheduling, context boundaries, and lifecycle/archive coordination. Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
 
 ### Static analysis entrypoints
 
@@ -84,7 +83,7 @@ The main CodeWiki skill covers package invariants, bootstrap/status flow, sprint
 
 - intelligent bootstrap/onboarding of a repo-local wiki
 - sprint-aware routing for related executable cohorts without creating umbrella tasks
-- tool catalog mapping `wiki_*` tools to API/concept contracts, including `wiki_roadmap action="sprint"`
+- tool catalog mapping normal `wiki_*` workflow tools to API/concept contracts, including `wiki_plan action="sprint"`
 - skill-owned bootstrap/resume prompt templates consumed by source-owned command orchestration
 - decision compiler guidance with semantic diff-table approval, KB edits, product/system propagation, and accepted `decision_build` handoffs
 - planning compiler guidance for atomic roadmap tasks, `planning_build` evidence, validation, and implementation handoff
@@ -365,11 +364,11 @@ The always-on status summary is optional. When enabled it uses Pi's status area 
 
 `/wiki resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
 
-`/wiki resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `wiki_state`, build high-signal continuation packets through `wiki_resume_context`, record canonical task progress and evidence through `wiki_roadmap`, coordinate overlapping parallel work through `wiki_artifact_status`, and keep runtime session focus separate through `wiki_session`.
+`/wiki resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `wiki_state`, record task progress and implementation evidence through `wiki_implement`, manage roadmap lifecycle through `wiki_plan`, coordinate overlapping parallel work through `wiki_runtime`, and validate through `wiki_gate`.
 
-For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, chat-history archaeology, and all task shards as default context. Prefer compact state, `wiki_resume_context`, CodeWiki-owned compaction, the current task context shard, or latest lifecycle events first; expand to targeted raw specs/code only when task status, gates, or stale revision requires exact source.
+For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, chat-history archaeology, and all task shards as default context. Prefer compact `wiki_state` lenses, `/wiki resume`, CodeWiki-owned compaction, the current task context shard, or latest lifecycle events first; expand to targeted raw specs/code only when task status, gates, or stale revision requires exact source.
 
-The Pi adapter customizes compaction after the agent loop ends. Loop-boundary tools such as `wiki_build`, `wiki_gateway`, and task close/cancel request a soft context refresh after their visible result, while high context-window usage can trigger the same refresh automatically. The compaction summary is not chat-memory truth; it is a regenerated CodeWiki resume packet from graph, roadmap, task context, and recent build evidence.
+The Pi adapter customizes compaction after the agent loop ends. Loop-boundary tools such as `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and task close/cancel request a soft context refresh after their visible result, while high context-window usage can trigger the same refresh automatically. The compaction summary is not chat-memory truth; it is a regenerated CodeWiki resume packet from graph, roadmap, task context, and recent build evidence.
 
 ### Status summary and panel
 

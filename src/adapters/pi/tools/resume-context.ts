@@ -5,6 +5,7 @@ import { resolveToolProject } from "../../../project/context.ts";
 import { codewikiResumeContextToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
+import { codewikiToolMetadata } from "./surface.ts";
 
 /** Register the wiki_resume_context tool. */
 export function registerCodewikiResumeContextTool(pi: any) {
@@ -21,15 +22,30 @@ export function registerCodewikiResumeContextTool(pi: any) {
 			"The tool returns a bounded prompt packet and does not create a new session; Pi uses the same packet for /wiki-resume --new and CodeWiki-owned soft context refresh.",
 		],
 		parameters: codewikiResumeContextToolInputSchema,
-		async execute(_toolCallId: string, params: CodewikiResumeContextToolInput, _signal: any, _onUpdate: any, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_resume_context");
+		...codewikiToolMetadata("wiki_resume_context"),
+		async execute(
+			_toolCallId: string,
+			params: CodewikiResumeContextToolInput,
+			_signal: any,
+			_onUpdate: any,
+			ctx: ExtensionContext,
+		) {
+			const project = await resolveToolProject(
+				ctx.cwd,
+				params.repoPath,
+				"wiki_resume_context",
+			);
 			const result = await executeCodewikiResumeContextTool(project, params, {
 				activeLink: currentTaskLink(ctx),
-				sessionId: String(ctx.sessionManager?.getSessionId?.() || "resume-context-tool"),
+				sessionId: String(
+					ctx.sessionManager?.getSessionId?.() || "resume-context-tool",
+				),
 			});
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
-				content: [{ type: "text", text: result.result.prompt || result.summary }],
+				content: [
+					{ type: "text", text: result.result.prompt || result.summary },
+				],
 				details: result.result,
 			};
 		},

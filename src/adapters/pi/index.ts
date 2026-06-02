@@ -38,6 +38,12 @@ import {
 	requestCodewikiContextRefresh,
 } from "./compaction.ts";
 import { registerCodewikiStateTool } from "./tools/state.ts";
+import { registerCodewikiDecideTool } from "./tools/decide.ts";
+import { registerCodewikiPlanTool } from "./tools/plan.ts";
+import { registerCodewikiImplementTool } from "./tools/implement.ts";
+import { registerCodewikiGateTool } from "./tools/gate.ts";
+import { registerCodewikiRuntimeTool } from "./tools/runtime.ts";
+import { codewikiToolMetadata } from "./tools/surface.ts";
 import { executeCodewikiRoadmap } from "./tools/task.ts";
 import {
 	clearStatusDock,
@@ -75,6 +81,7 @@ function registerProjectTool(
 		promptSnippet: registration.promptSnippet,
 		promptGuidelines: registration.promptGuidelines,
 		parameters: registration.parameters,
+		...codewikiToolMetadata(registration.name),
 		async execute(
 			_toolCallId: string,
 			params: any,
@@ -162,6 +169,11 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerResumeCommand(pi);
 
 	registerCodewikiStateTool(pi);
+	registerCodewikiDecideTool(pi);
+	registerCodewikiPlanTool(pi);
+	registerCodewikiImplementTool(pi);
+	registerCodewikiGateTool(pi);
+	registerCodewikiRuntimeTool(pi);
 	registerCodewikiResumeContextTool(pi);
 	registerCodewikiArtifactStatusTool(pi);
 	registerCodewikiAuditTool(pi);

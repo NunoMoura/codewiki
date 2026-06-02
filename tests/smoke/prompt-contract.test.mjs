@@ -11,6 +11,8 @@ import {
 } from "../../src/adapters/pi/prompt-contract.ts";
 
 assert.match(buildCodewikiSystemPromptContract(), /wiki_state/);
+assert.match(buildCodewikiSystemPromptContract(), /wiki_decide/);
+assert.match(buildCodewikiSystemPromptContract(), /wiki_runtime/);
 assert.match(
 	buildCodewikiSystemPromptContract(),
 	/decision -> planning -> implementation -> validation/,
@@ -67,7 +69,7 @@ try {
 		new RegExp(CODEWIKI_SYSTEM_CONTRACT_MARKER),
 	);
 	assert.match(injected.systemPrompt, /\.codewiki\/kb\/\*\*/);
-	assert.match(injected.systemPrompt, /wiki_artifact_status/);
+	assert.match(injected.systemPrompt, /wiki_runtime/);
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

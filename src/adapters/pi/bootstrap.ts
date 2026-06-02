@@ -13,6 +13,7 @@ import {
 	executeCodewikiBootstrapTool,
 	executeCodewikiSetupTool,
 } from "../../api/tools.ts";
+import { codewikiToolMetadata } from "./tools/surface.ts";
 
 const repoPathToolField = Type.Optional(
 	Type.String({
@@ -44,6 +45,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 			projectName: Type.Optional(Type.String()),
 			repoPath: repoPathToolField,
 		}),
+		...codewikiToolMetadata("wiki_setup"),
 		async execute(
 			_toolCallId: string,
 			params: any,
@@ -85,6 +87,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 			),
 			repoPath: repoPathToolField,
 		}),
+		...codewikiToolMetadata("wiki_bootstrap"),
 		async execute(
 			_toolCallId: string,
 			params: any,

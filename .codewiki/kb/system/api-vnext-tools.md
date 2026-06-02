@@ -5,7 +5,7 @@ state: active
 summary: Preferred reduced user command and internal agent tool surface for CodeWiki.
 owners:
   - architecture
-updated: "2026-06-01"
+updated: "2026-06-02"
 diagram_refs:
   - component-map:api
 ---
@@ -33,7 +33,7 @@ Workflow verbs such as decide, plan, implement, gate, and runtime are agent/tool
 
 ## Target internal agent tools
 
-The normal internal agent tool surface is exactly six tools:
+The normal internal agent tool surface is exactly six tools. The Pi adapter exposes these as normal workflow tools and marks low-level primitives as compatibility/expert aliases during migration:
 
 | Tool | Responsibility |
 | --- | --- |
@@ -44,7 +44,7 @@ The normal internal agent tool surface is exactly six tools:
 | `wiki_gate` | Gateway preflight and validation for named gates, including required linters, executable code tests when relevant, isolation, content evidence, and pass/fail/block verdicts. |
 | `wiki_runtime` | Session focus, leases, daemon jobs/runs, block/unblock state, context boundaries, agency scheduling, lifecycle/archive coordination, and platform-limited runtime evidence. |
 
-Existing low-level primitives such as raw diff-table mutation, raw build writing, validation report writing, roadmap mutation, session focus, lease mutation, linter execution, generated-state refresh, and archive ledger writes should become internal implementation details of these six workflow tools unless a compatibility or expert/debug surface explicitly needs them during migration.
+Existing low-level primitives such as raw diff-table mutation, raw build writing, validation report writing, roadmap mutation, session focus, lease mutation, linter execution, generated-state refresh, and archive ledger writes are compatibility/expert aliases or internal implementation details of these six workflow tools. Compatibility aliases must carry deprecation metadata and a normal-tool replacement so source-contract validation can prevent accidental normal use.
 
 Each workflow tool owns one phase boundary, supports batched common operations, exposes source refs, validation outcomes, and recovery steps, and avoids becoming an opaque do-everything API.
 

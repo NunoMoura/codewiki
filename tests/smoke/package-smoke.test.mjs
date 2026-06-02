@@ -429,6 +429,11 @@ async function main() {
 				"wiki_setup",
 				"wiki_bootstrap",
 				"wiki_state",
+				"wiki_decide",
+				"wiki_plan",
+				"wiki_implement",
+				"wiki_gate",
+				"wiki_runtime",
 				"wiki_resume_context",
 				"wiki_artifact_status",
 				"wiki_audit",
@@ -442,6 +447,44 @@ async function main() {
 			],
 			"extension tools",
 		);
+		const normalWorkflowTools = extensionToolNames
+			.filter(
+				(name) =>
+					extension.tools.get(name)?.definition?.codewikiToolSurface ===
+					"normal",
+			)
+			.sort();
+		assert.deepEqual(
+			normalWorkflowTools,
+			[
+				"wiki_decide",
+				"wiki_gate",
+				"wiki_implement",
+				"wiki_plan",
+				"wiki_runtime",
+				"wiki_state",
+			],
+			"Normal workflow tool surface should be exactly the six target tools",
+		);
+		for (const toolName of extensionToolNames.filter(
+			(name) => name.startsWith("wiki_") && !normalWorkflowTools.includes(name),
+		)) {
+			const definition = extension.tools.get(toolName)?.definition;
+			assert.equal(
+				definition?.codewikiToolSurface,
+				"compatibility",
+				`${toolName} should be marked as a compatibility/expert alias`,
+			);
+			assert.equal(
+				definition?.codewikiDeprecated,
+				true,
+				`${toolName} should carry deprecation metadata`,
+			);
+			assert.ok(
+				definition?.codewikiCompatibilityAliasFor,
+				`${toolName} should name its normal replacement`,
+			);
+		}
 		assert.ok(
 			!extension.tools.has(removedRoadmapToolAlias),
 			"Removed roadmap tool alias should not be registered",

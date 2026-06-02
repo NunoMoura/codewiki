@@ -1,33 +1,36 @@
 # CodeWiki tool catalog
 
-Use this catalog as the skill-facing map for internal `wiki_*` tools. Source-owned contracts live in concept roots when migrated; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
+Use this catalog as the skill-facing map for normal internal `wiki_*` tools. Source-owned contracts live in package roots; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
+
+## Normal workflow tools
 
 | Tool | Application contract | Purpose | Safe mutation path |
 | --- | --- | --- | --- |
-| `wiki_setup` | `src/application/tools/bootstrap.ts` | Adopt CodeWiki without overwriting starter files. | Delegates through bootstrap tool contract; root resolution and Pi UI stay adapter-owned. |
-| `wiki_bootstrap` | `src/application/tools/bootstrap.ts` | Scaffold starter CodeWiki files. | Delegates through bootstrap tool contract; root resolution and Pi UI stay adapter-owned. |
-| `wiki_state` | `src/state/tool.ts` | Read graph-first state; `graph` uses the compact five-family lens, while explicit `trace`/`audit` includes expand exact refs after adapter reload. | Read-only except optional generated-state rebuild through ports. |
-| `wiki_resume_context` | `src/state/resume-tool.ts` | Build bounded resume packets from graph, roadmap, task context, and source refs. | Read-only except optional generated-state rebuild; Pi may inject this packet through CodeWiki-owned compaction for soft context refresh. |
-| `wiki_artifact_status` | `src/session/artifact-status-tool.ts` | Manage runtime artifact status. | Runtime coordination only; not roadmap truth. |
-| `wiki_audit` | `src/audit/tool.ts` | Run deterministic audit profiles. | Read-only evidence; validation decides verdict. |
-| `wiki_build` | `src/application/tools/build.ts` | Write compiler build handoffs. | Writes transient build artifacts and optional generated refresh. |
-| `wiki_gateway` | `src/application/tools/validation.ts` | Preflight gateway metadata/risk or write validation reports. | `preflight_only=true` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
-| `wiki_gc` | `src/gc/tool.ts` | Dry-run or purge eligible CodeWiki artifacts after archive proof. | Use post-commit only: tracked purge requires `archive_sha`/`tree_sha`, writes a restore ledger first, and records a separate GC deletion commit; runtime cleanup is limited to ignored session-boundary artifacts. |
-| `wiki_roadmap` | `src/roadmap/tool.ts` | Mutate roadmap task truth and sprint metadata. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"` and `sprint` input. |
-| `wiki_diff_table` | `src/change/tool.ts` | Manage pending decision diff rows. | Pending semantic diff state only; accepted rows compile into decision builds. |
-| `wiki_session` | `src/session/tool.ts` | Manage runtime session focus. | Runtime focus only; not roadmap truth. |
-| `wiki_agency` | `src/application/tools/agency.ts` | Plan bounded observe/maintain/work cycles. | Planning-only; parent agent owns canonical writes. |
+| `wiki_state` | `src/state/tool.ts`, `src/state/resume-tool.ts` | Read graph-first state, focused lenses, task context, and source-backed continuation refs. | Read-only except optional generated-state rebuild through ports. |
+| `wiki_decide` | `src/workflow/tool.ts`, `src/change/tool.ts`, `src/build/tool.ts` | Manage decision rows, approvals, KB mappings, propagation evidence, and decision-build creation. | Pending diff rows plus transient `decision_build` writes; canonical KB edits happen with normal file tools after approved rows. |
+| `wiki_plan` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Mutate roadmap task truth, sprint metadata, durable roadmap lifecycle, and planning-build handoffs. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"`; planning builds are transient handoffs. |
+| `wiki_implement` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Record task-scoped TDD/code evidence and implementation-build creation without replacing file/code edit tools. | Appends builder evidence and writes transient `implementation_build`; task closure still needs validation proof. |
+| `wiki_gate` | `src/workflow/tool.ts`, `src/audit/tool.ts`, `src/gateway/tool.ts` | Run deterministic audits, gateway preflight, validation reports, and linter/test evidence routing. | `action="preflight"` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
+| `wiki_runtime` | `src/workflow/tool.ts`, `src/session/tool.ts`, `src/session/artifact-status-tool.ts`, `src/agency/tool.ts`, `src/gc/tool.ts` | Manage session focus, leases, wait/wake, context boundaries, agency scheduling, and lifecycle/archive coordination. | Runtime coordination only except post-commit GC with archive proof and restore ledger. |
+
+## Compatibility/expert aliases
+
+Low-level primitives remain registered during migration with compatibility/deprecation metadata so expert flows and older agents do not break: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_gateway`, `wiki_gc`, `wiki_roadmap`, `wiki_diff_table`, `wiki_session`, and `wiki_agency`.
+
+Do not use these aliases as the normal agent surface. Prefer the six workflow tools above unless validating wrapper parity, debugging a primitive, or maintaining backwards compatibility.
 
 ## Post-commit GC path
 
-Do not manually delete tracked `.codewiki` builds, validation reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, run `wiki_gc` with `action="dry-run"`. If tracked artifacts are eligible, purge only with the archive commit/tree proof:
+Do not manually delete tracked `.codewiki` builds, validation reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` with a GC dry-run. If tracked artifacts are eligible, purge only with the archive commit/tree proof:
 
 ```json
 {
-  "action": "purge",
-  "include": ["tracked", "runtime"],
-  "archive_sha": "<commit-containing-revive-context>",
-  "tree_sha": "<tree-of-that-commit>"
+  "gc": {
+    "action": "purge",
+    "include": ["tracked", "runtime"],
+    "archive_sha": "<commit-containing-revive-context>",
+    "tree_sha": "<tree-of-that-commit>"
+  }
 }
 ```
 
@@ -35,7 +38,7 @@ The GC ledger restores tracked files with `git restore --source=<archive-sha> --
 
 ## Sprint metadata path
 
-Do not create umbrella tasks for related work. When accepted intent forms a related executable cohort, use:
+Do not create umbrella tasks for related work. When accepted intent forms a related executable cohort, use `wiki_plan`:
 
 ```json
 {
@@ -47,7 +50,7 @@ Do not create umbrella tasks for related work. When accepted intent forms a rela
     "task_ids": ["TASK-093", "TASK-094", "TASK-095"],
     "scope": {
       "knowledge": ["skills/codewiki/**"],
-      "code": ["src/application/tools/**", "src/adapters/pi/tools/**", "tests/**"]
+      "code": ["src/workflow/**", "src/adapters/pi/tools/**", "tests/**"]
     },
     "gates": ["implementation-validation", "package-smoke"]
   }

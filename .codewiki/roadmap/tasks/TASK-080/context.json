@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01",
+  "generated_at": "2026-06-02T07:09:41Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-080/context.json",
   "task": {
     "id": "TASK-080",
     "title": "Expose six normal agent workflow tools",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

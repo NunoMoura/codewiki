@@ -14,8 +14,8 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
    - Do not rely on builder chat context.
    - Treat `.codewiki/index_graph.json` and generated task views as routing/read models, not canonical proof.
 
-3. `wiki_audit`
-   - Run required audit profiles or cite existing audit refs before a pass verdict when policy requires them.
+3. `wiki_gate`
+   - Run required audit profiles through the `audit` input or cite existing audit refs before a pass verdict when policy requires them.
    - Common gate/profile sets:
      - decision/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
      - implementation: `alignment`, `changed`, plus `horizontal-alignment` when KB/code/source coherence is the risk surface and `source-contract` when API/tool/package surfaces changed;
@@ -25,8 +25,8 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
      - graph/drift: `graph-audit`, `drift-audit`, `horizontal-alignment`, `source-contract`, `generated-parity` or configured equivalents;
      - publication/publish/release remain backward-compatible ship-ready aliases.
 
-4. `wiki_gateway`
-   - Use `preflight_only=true` to return gateway preflight without writing a report. Preflight checks source readability, accepted upstream builds, required audits, task/sprint ids, content proof strategy, stale refs, close/ship-ready blockers, and risk approval policy.
+4. `wiki_gate`
+   - Use `action="preflight"` or `preflight_only=true` to return gateway preflight without writing a report. Preflight checks source readability, accepted upstream builds, required audits, task/sprint ids, content proof strategy, stale refs, close/ship-ready blockers, and risk approval policy.
    - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/sprint-close/ship-ready needs proof, or submitted refs expected an explicit report.
    - Required fields: `profile` or preferred `gate`, `task_id`/`sprint_id` if any, `source`, `verdict`, `rationale`, `checks`, `issues`, `audit_refs`/`audit_reports`, `failed_criteria`, `blocking_questions`, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and `isolation` when required.
    - Implementation pass requires `isolation.fresh_context=true`, explicit `clean` value, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, or equivalent allowed by policy).
@@ -40,9 +40,9 @@ When the current session is not an acceptable validator context, stop and restar
 
 ## Forbidden tools/actions in validation mode
 
-- Do not call `wiki_build`; compilers produce builds.
-- Do not call `wiki_diff_table`; decision compilers capture semantic proposals.
-- Do not call `wiki_roadmap action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
+- Do not call `wiki_implement`, `wiki_plan`, or compatibility `wiki_build`; compilers produce builds and roadmap mutations.
+- Do not call `wiki_decide` or compatibility `wiki_diff_table`; decision compilers capture semantic proposals.
+- Do not call `wiki_plan action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
 - Do not hand-edit `.codewiki/kb/**`, `.codewiki/roadmap/**`, `.codewiki/builds/**`, source code, tests, or generated views.
 - Do not mark work pass without required audits and proof.
 

@@ -54,23 +54,18 @@ Public commands:
 - `/wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
 - `/wiki-ui` (deprecated shim; points to supported Pi-hosted commands)
 
-Internal agent tools:
+Normal internal agent workflow tools:
 
-- `wiki_setup`
-- `wiki_bootstrap`
-- `wiki_state`
-- `wiki_resume_context`
-- `wiki_artifact_status`
-- `wiki_audit`
-- `wiki_build`
-- `wiki_gateway`
-- `wiki_roadmap` (tasks and sprint metadata)
-- `wiki_gc` (post-commit garbage collection with archive proof and restore ledger)
-- `wiki_diff_table`
-- `wiki_session`
-- `wiki_agency`
+- `wiki_state` — graph/status/task/resume lenses and compact source-backed context.
+- `wiki_decide` — decision rows, approvals, KB mappings, propagation evidence, and decision builds.
+- `wiki_plan` — roadmap task/sprint alignment, durable roadmap lifecycle, and planning builds.
+- `wiki_implement` — task-scoped TDD/code evidence and implementation builds; ordinary file/code tools still edit source.
+- `wiki_gate` — audits, gateway preflight, validation reports, and linter/test evidence routing.
+- `wiki_runtime` — session focus, artifact leases/wait-wake, agency scheduling, context boundaries, and lifecycle/archive coordination.
 
-Daily default flow: `wiki_state` for routing, `wiki_resume_context` for high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `wiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `wiki_audit`/`wiki_gateway` for gates, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `wiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
+Compatibility/expert aliases remain registered during migration for low-level primitives: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_gateway`, `wiki_roadmap`, `wiki_gc`, `wiki_diff_table`, `wiki_session`, and `wiki_agency`. These aliases carry deprecation metadata and should not be the normal agent surface.
+
+Daily default flow: `wiki_state` for routing and high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `wiki_runtime` for overlap coordination and runtime boundaries, `wiki_decide`/`wiki_plan`/`wiki_implement` for compiler work, `wiki_gate` for audits and validation, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `wiki_runtime` for post-commit lifecycle/archive coordination when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
 
 ## Core invariants
 
@@ -80,7 +75,7 @@ Daily default flow: `wiki_state` for routing, `wiki_resume_context` for high-sig
 - `.codewiki/session/**` and `.codewiki/runtime/**` are operational coordination state, not durable product truth.
 - `.codewiki/builds/**` contains transient compiler handoff artifacts. Compile durable changes into knowledge, roadmap, code, tests, validation, or publication proof.
 - `.codewiki/validation/**` contains fail/block/policy-required/current validation reports.
-- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then run `wiki_gc` with archive commit/tree proof and commit the ledger/deletions separately.
+- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then use `wiki_runtime` with archive commit/tree proof and commit the ledger/deletions separately.
 - Tests live in code/test directories, not in `.codewiki/kb/**` or roadmap task folders.
 - Git remains the full history mechanism; do not duplicate raw event history inside CodeWiki.
 - In this repository, `.codewiki/**` is dogfood state and `src/**`, `skills/**`, `scripts/**`, `tests/**`, `README.md`, and `package.json` are product/package source.
@@ -96,7 +91,7 @@ Sprint metadata is the grouping mechanism for related executable tasks. Route wo
 - shared budget, gates, validation/publication risk, or cross-task sequencing;
 - related work that would otherwise tempt an umbrella/container task.
 
-Do not hand-edit sprint metadata. Use the roadmap mutation tool from planning and keep semantic sprint scope decisions traceable to a decision or planning build.
+Do not hand-edit sprint metadata. Use `wiki_plan` from planning and keep semantic sprint scope decisions traceable to a decision or planning build.
 
 ## Compiler routing
 
@@ -114,16 +109,16 @@ Routing rules:
 - Roadmap task shaping and sprint-aware cohort decisions go through planning and `planning_build`.
 - Code/test/docs execution happens in implementation and emits `implementation_build` before validation.
 - Independent checks happen in validation from exact refs, audits, and required proof.
-- Post-close/post-publication maintenance runs `wiki_gc action="dry-run"` after immutable commit proof exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
+- Post-close/post-publication maintenance uses `wiki_runtime` for GC dry-run after immutable commit proof exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
 
 ## Coordination and memory
 
 - Keep current user intent, focused task, loaded graph/build refs, and small decisions in chat context only.
 - Persist durable intent in knowledge, roadmap tasks/sprints, builds, validation reports, and source code/tests.
-- Use `wiki_session` for runtime focus; it is not roadmap truth.
-- Use `wiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
+- Use `wiki_runtime` for runtime focus; it is not roadmap truth.
+- Use `wiki_runtime` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
 - Agents may refresh context through CodeWiki-owned compaction or start a new session when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
-- Do not use session-handoff shims for same-agent context hygiene. Reserve handoff language for true transfer between distinct sessions, agents, or roles; use CodeWiki refs plus artifact status/wait-wake coordination for parallel work.
+- Do not use session-handoff shims for same-agent context hygiene. Reserve handoff language for true transfer between distinct sessions, agents, or roles; use CodeWiki refs plus runtime lease/wait-wake coordination for parallel work.
 
 ## Agency policy
 
