@@ -742,14 +742,13 @@ function validationSprintCloseGaps(
 	return unique(gaps);
 }
 
-function validationShipReadyGaps(
+function shipReadyTargets(
 	input: CodewikiValidationReportInput,
 	build: any,
-	profile: string,
 	isolation: ReturnType<typeof normalizeValidationIsolation> | undefined,
-): string[] {
-	if (normalizeValidationGate(profile) !== "ship-ready") return [];
+): Set<string> {
 	const haystack = [
+		input.profile,
 		input.policy_profile,
 		input.source,
 		build?.summary,
@@ -769,7 +768,11 @@ function validationShipReadyGaps(
 		isolation?.tree_sha
 	)
 		targets.add("commit");
-	if (/\b(package|pack|npm)\b/.test(haystack) || isolation?.package_digest)
+	if (
+		/\b(package|pack)\b/.test(haystack) ||
+		/\bnpm\s+(?:pack|publish)\b/.test(haystack) ||
+		isolation?.package_digest
+	)
 		targets.add("package");
 	if (/\b(archive|tarball)\b/.test(haystack) || isolation?.archive_ref)
 		targets.add("archive");
@@ -780,6 +783,30 @@ function validationShipReadyGaps(
 	)
 		targets.add("remote");
 	if (/\b(release|tag)\b/.test(haystack)) targets.add("release");
+	return targets;
+}
+
+function shipReadyPromotionTargeted(
+	input: CodewikiValidationReportInput,
+	build: any,
+	isolation: ReturnType<typeof normalizeValidationIsolation> | undefined,
+): boolean {
+	const rawProfile = String(input.profile || "")
+		.trim()
+		.toLowerCase();
+	if (["publication", "publish", "release"].includes(rawProfile)) return true;
+	const targets = shipReadyTargets(input, build, isolation);
+	return targets.has("remote") || targets.has("release");
+}
+
+function validationShipReadyGaps(
+	input: CodewikiValidationReportInput,
+	build: any,
+	profile: string,
+	isolation: ReturnType<typeof normalizeValidationIsolation> | undefined,
+): string[] {
+	if (normalizeValidationGate(profile) !== "ship-ready") return [];
+	const targets = shipReadyTargets(input, build, isolation);
 	const gaps: string[] = [];
 	if (targets.size === 0) gaps.push("ship_ready_target");
 	if (targets.has("package") && !isolation?.package_digest)
@@ -793,8 +820,9 @@ function validationShipReadyGaps(
 	)
 		gaps.push("remote_ref_or_published_sha");
 	if (
-		build?.publication?.safe_to_push === false ||
-		build?.publication?.push_readiness?.safe_to_push === false
+		shipReadyPromotionTargeted(input, build, isolation) &&
+		(build?.publication?.safe_to_push === false ||
+			build?.publication?.push_readiness?.safe_to_push === false)
 	)
 		gaps.push("ship_ready_safe_to_promote");
 	return unique(gaps);
@@ -1524,6 +1552,7 @@ export function buildGatewayPreflight(
 			? ["clean=true"]
 			: []),
 		...(profile === "ship-ready" &&
+		shipReadyPromotionTargeted(input, source.build, isolation) &&
 		source.build?.publication?.push_readiness?.safe_to_push === false
 			? ["ship_ready_safe_to_promote"]
 			: []),

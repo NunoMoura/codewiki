@@ -1,0 +1,653 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-02T21:13:06Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+  "task_id": "TASK-082",
+  "task": {
+    "id": "TASK-082",
+    "title": "Enforce production-ready closure gates",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "testing",
+    "summary": "Update gateway and roadmap closure policy so code-changing tasks and sprints cannot close unless TDD code tests, linters, validation, and task-scoped ship-ready quality pass.",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/gateway/preflight.ts",
+      "src/gateway/report.ts",
+      "src/gateway/transaction.ts",
+      "src/gateway/types.ts",
+      "src/policy/gate-policy.ts",
+      "src/policy/gates.ts",
+      "src/policy/production-profile.ts",
+      "src/policy/risk.ts",
+      "src/roadmap/store.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/roadmap/status.ts",
+      "src/build/writer.ts",
+      "src/build/types.ts",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Task-close, sprint-close, and ship-ready gates enforce production-ready semantics for code-changing work and preserve publication/release as separate explicit approval boundaries.",
+      "acceptance": [
+        "Gateway preflight blocks code-changing task-close when executable code tests are missing, failed, or not mapped to the implementation build.",
+        "Gateway preflight blocks task-close when required linters or validation evidence are missing for the changed scope.",
+        "Task-close requires task-scoped ship-ready validation for the exact changed content before roadmap status can become `done`.",
+        "Sprint-close requires all sprint tasks to be task-done or explicitly cancelled, shared outcome/risk reconciliation, and ship-ready quality when the sprint changes shippable code/package behavior.",
+        "Ship-ready validates exact content candidate quality but does not imply publication, release, push, remote update, or destructive action approval.",
+        "Gateway/report terminology favors gate, linter, test, validation, and evidence while preserving required compatibility fields.",
+        "Roadmap close/cancel behavior reports the smallest safe next loop when production-ready criteria are missing."
+      ],
+      "non_goals": [
+        "Do not publish, push, release, or perform destructive actions.",
+        "Do not remove existing validation report compatibility fields before migration coverage exists.",
+        "Do not require executable code tests for docs-only or mechanical changes unless policy says behavior changed.",
+        "Do not bypass fresh validation/context requirements for high-risk or ship-ready gates."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs",
+        "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs",
+        "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+        "wiki_gate/task-close linters for alignment, changed, task, generated-parity, and source-contract"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-09T21:13:06.000Z",
+    "purge_after": "2026-06-16T21:13:06.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "typecheck and smoke tests pass",
+      "implementation validation passes before task-close",
+      "ship-ready and task-close run from exact committed content before closure"
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must cite exact changed content before ship-ready/task-close.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-clean-immutable-content",
+        "reason": "Ship-ready and task-close require clean committed content evidence.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-082 closure-gate follow-up so ship-ready validates local content quality without implying package publication or remote promotion.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-082"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/gateway/report.ts"
+    ],
+    "tests": [
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-082"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/gateway/preflight.ts",
+      "src/gateway/report.ts",
+      "src/gateway/transaction.ts",
+      "src/gateway/types.ts",
+      "src/policy/gate-policy.ts",
+      "src/policy/gates.ts",
+      "src/policy/production-profile.ts",
+      "src/policy/risk.ts",
+      "src/roadmap/store.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/roadmap/status.ts",
+      "src/build/writer.ts",
+      "src/build/types.ts",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/tasks/TASK-073/gateway-gates.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+  ],
+  "code_files": [
+    "src/gateway/report.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/tasks/TASK-073/gateway-gates.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+    "src/gateway/report.ts"
+  ],
+  "checks_run": [
+    "lsp_diagnostics src/gateway/report.ts: pass",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass",
+    "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference: warning only for existing graph-health warning; changed/task/generated-parity/source-contract/package/security/stale-reference pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-082",
+      "test_files": [
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/tasks/TASK-073/gateway-gates.test.mjs",
+        "tests/smoke/policy-gate.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+      ],
+      "evidence": [
+        "Regression derived from post-reload ship-ready preflight: generic npm run typecheck created a false package target and push_readiness.safe_to_push=false incorrectly blocked local-only ship-ready.",
+        "Existing TASK-073 package target fixture retained package_digest enforcement for explicit package targets."
+      ],
+      "notes": [
+        "Post-fix gateway-preflight smoke proves local ship-ready can pass without package digest or publication approval.",
+        "TASK-073 gateway gates continue to prove explicit package targets require package_digest."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      "roadmap_task_id": "TASK-082",
+      "code_files": [
+        "src/gateway/report.ts"
+      ],
+      "evidence": [
+        "Added shipReadyTargets and shipReadyPromotionTargeted helpers in src/gateway/report.ts.",
+        "Changed package target inference to ignore generic npm commands except npm pack/publish.",
+        "Scoped safe_to_push blocking to publication/publish/release aliases or remote/release targets."
+      ],
+      "notes": [
+        "This follow-up supersedes the previous TASK-082 implementation build for closure because closure gates exposed an over-strict ship-ready/package inference path after reload."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Regression derived from post-reload ship-ready preflight: generic npm run typecheck created a false package target and push_readiness.safe_to_push=false incorrectly blocked local-only ship-ready.",
+    "Existing TASK-073 package target fixture retained package_digest enforcement for explicit package targets."
+  ],
+  "code_change_evidence": [
+    "Added shipReadyTargets and shipReadyPromotionTargeted helpers in src/gateway/report.ts.",
+    "Changed package target inference to ignore generic npm commands except npm pack/publish.",
+    "Scoped safe_to_push blocking to publication/publish/release aliases or remote/release targets."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Ship-ready validates exact content candidate quality but does not imply publication, release, push, remote update, or destructive action approval.",
+      "evidence": "tests/smoke/gateway-preflight.test.mjs covers a local-only ship-ready implementation with push_readiness.safe_to_push=false and npm run typecheck evidence; preflight remains ready with commit/tree evidence and no package digest."
+    },
+    {
+      "criterion": "Gateway preflight blocks package targets only when package evidence is explicitly targeted.",
+      "evidence": "src/gateway/report.ts now infers package targets from package/pack or npm pack/publish, not generic npm run typecheck; TASK-073 package target fixture still blocks until package_digest is present."
+    },
+    {
+      "criterion": "Publication/release compatibility remains a separate explicit approval boundary.",
+      "evidence": "src/gateway/report.ts keeps safe_to_push blocking for publication/publish/release aliases and remote/release targets while local ship-ready commit quality remains independent."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Close TASK-082 with production-ready closure gates while keeping ship-ready separate from publication/release approval.",
+    "implemented_changes": [
+      "Fixed ship-ready preflight target inference so npm run typecheck does not imply package publication.",
+      "Fixed safe_to_push handling so local ship-ready content validation is not blocked by remote publication approval state.",
+      "Added regression coverage for local-only ship-ready and retained explicit package target coverage."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/gateway/report.ts"
+      ],
+      "tests": [
+        "tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "gateway-preflight smoke pass with local-only ship-ready regression.",
+      "TASK-073 gateway gates pass for explicit package target package_digest enforcement.",
+      "typecheck and policy/roadmap boundary smoke tests pass."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+      "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs",
+      "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+      "wiki_gate audit alignment,changed,task,generated-parity,source-contract,package,security,stale-reference"
+    ],
+    "non_goals_preserved": [
+      "No publish, push, release, remote update, package publish, or destructive action."
+    ],
+    "remaining_risks": [
+      "Existing graph-health warning remains."
+    ]
+  },
+  "risks": [
+    "Existing graph-health warning remains unrelated to TASK-082.",
+    "No push, publication, release, remote update, package publishing, or destructive action was performed."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-082",
+      "task_id": "TASK-082",
+      "next_focus_task_id": "TASK-083",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-082",
+        "title": "Enforce production-ready closure gates",
+        "summary": "Implemented TASK-082 closure-gate follow-up so ship-ready validates local content quality without implying package publication or remote promotion.",
+        "spec_paths": [
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/roadmap.md"
+        ],
+        "code_paths": [
+          "src/gateway/preflight.ts",
+          "src/gateway/report.ts",
+          "src/gateway/transaction.ts",
+          "src/gateway/types.ts",
+          "src/policy/gate-policy.ts",
+          "src/policy/gates.ts",
+          "src/policy/production-profile.ts",
+          "src/policy/risk.ts",
+          "src/roadmap/store.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/roadmap/status.ts",
+          "src/build/writer.ts",
+          "src/build/types.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/policy-gate.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/tasks/TASK-073/gateway-gates.test.mjs",
+          "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+        ],
+        "acceptance": [
+          "Gateway preflight blocks code-changing task-close when executable code tests are missing, failed, or not mapped to the implementation build.",
+          "Gateway preflight blocks task-close when required linters or validation evidence are missing for the changed scope.",
+          "Task-close requires task-scoped ship-ready validation for the exact changed content before roadmap status can become `done`.",
+          "Sprint-close requires all sprint tasks to be task-done or explicitly cancelled, shared outcome/risk reconciliation, and ship-ready quality when the sprint changes shippable code/package behavior.",
+          "Ship-ready validates exact content candidate quality but does not imply publication, release, push, remote update, or destructive action approval.",
+          "Gateway/report terminology favors gate, linter, test, validation, and evidence while preserving required compatibility fields.",
+          "Roadmap close/cancel behavior reports the smallest safe next loop when production-ready criteria are missing."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs",
+          "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs",
+          "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+          "wiki_gate/task-close linters for alignment, changed, task, generated-parity, and source-contract"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        "checks_run": [
+          "lsp_diagnostics src/gateway/report.ts: pass",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass",
+          "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference: warning only for existing graph-health warning; changed/task/generated-parity/source-contract/package/security/stale-reference pass"
+        ],
+        "test_design_evidence": [
+          "Regression derived from post-reload ship-ready preflight: generic npm run typecheck created a false package target and push_readiness.safe_to_push=false incorrectly blocked local-only ship-ready.",
+          "Existing TASK-073 package target fixture retained package_digest enforcement for explicit package targets."
+        ],
+        "code_change_evidence": [
+          "Added shipReadyTargets and shipReadyPromotionTargeted helpers in src/gateway/report.ts.",
+          "Changed package target inference to ignore generic npm commands except npm pack/publish.",
+          "Scoped safe_to_push blocking to publication/publish/release aliases or remote/release targets."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-082",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-082",
+      "show_build": "git show refs/codewiki/archive/task/TASK-082:.codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/roadmap.md",
+        "src/gateway/preflight.ts",
+        "src/gateway/report.ts",
+        "src/gateway/transaction.ts",
+        "src/gateway/types.ts",
+        "src/policy/gate-policy.ts",
+        "src/policy/gates.ts",
+        "src/policy/production-profile.ts",
+        "src/policy/risk.ts",
+        "src/roadmap/store.ts",
+        "src/roadmap/task-boundary.ts",
+        "src/roadmap/status.ts",
+        "src/build/writer.ts",
+        "src/build/types.ts",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/tasks/TASK-073/gateway-gates.test.mjs",
+        "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "fix(codewiki): decouple ship-ready from publication readiness",
+      "body": "Fix TASK-082 ship-ready preflight so local exact-content quality validation does not infer package publication from npm run typecheck and does not block on remote push readiness unless publication/release/remote promotion is explicitly targeted.\n\nCodeWiki-Task: TASK-082",
+      "trailers": [
+        "CodeWiki-Task: TASK-082",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+        "CodeWiki-Checks: lsp_diagnostics src/gateway/report.ts: pass, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass, wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference: warning only for existing graph-health warning; changed/task/generated-parity/source-contract/package/security/stale-reference pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-082",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-082",
+        "CodeWiki-Digest: sha256:1014395e2251ba2111b5456915354fcfc1d6e9e0e161b0666283edf6fde7a8bc",
+        "CodeWiki-Restore: /wiki-restore TASK-082"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "fix(codewiki): decouple ship-ready from publication readiness",
+      "body": "Fix TASK-082 ship-ready preflight so local exact-content quality validation does not infer package publication from npm run typecheck and does not block on remote push readiness unless publication/release/remote promotion is explicitly targeted.\n\nCodeWiki-Task: TASK-082"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-082",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-082"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-082",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-082",
+        "show_build": "git show refs/codewiki/archive/task/TASK-082:.codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/roadmap.md",
+          "src/gateway/preflight.ts",
+          "src/gateway/report.ts",
+          "src/gateway/transaction.ts",
+          "src/gateway/types.ts",
+          "src/policy/gate-policy.ts",
+          "src/policy/gates.ts",
+          "src/policy/production-profile.ts",
+          "src/policy/risk.ts",
+          "src/roadmap/store.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/roadmap/status.ts",
+          "src/build/writer.ts",
+          "src/build/types.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/policy-gate.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/tasks/TASK-073/gateway-gates.test.mjs",
+          "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-082",
+      "build_path": ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-082",
+      "commit_sha": "",
+      "digest": "sha256:1014395e2251ba2111b5456915354fcfc1d6e9e0e161b0666283edf6fde7a8bc",
+      "restore_command": "/wiki-restore TASK-082"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:afb47afb8bdcb1e87c4557f65305736abe672101a4acc5b6489e5fddbdc78bbc",
+          "bytes": 30880
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:28dbe73d771c9625e5d6852d89eb7b578845edd4646e363d6ffdb373cf1033e8",
+          "bytes": 45028
+        },
+        {
+          "path": "tests/tasks/TASK-073/gateway-gates.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d1c2ae0167af8860feea6a7206154f0155e00c8f63f22e3d6cc66aab342c5b1f",
+          "bytes": 6187
+        },
+        {
+          "path": "tests/smoke/policy-gate.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f0606315486db19eee1e1cf346214ced632ec28e960f5081c4b4b25188b1c0da",
+          "bytes": 7151
+        },
+        {
+          "path": "tests/smoke/roadmap-task-boundary.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:204b62f0fb83704cb3b46f4c0b19b39a7fd23ca04397564fc3ffbf35ac15e870",
+          "bytes": 4992
+        },
+        {
+          "path": "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:dd4a01ec1f7b523d612f23ae3403e9a464424923432c77049487fdcd5da3294b",
+          "bytes": 2703
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:e491739558b231edb8400607b673ae1795ce27014cd2e6ebb1f66a84df0bce14",
+          "bytes": 73305
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-082",
+      "source_build": ".codewiki/builds/implementation/2026-06-02-implemented-task-082-closure-gate-follow-up-so-s.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/gateway/report.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/tasks/TASK-073/gateway-gates.test.mjs",
+          "tests/smoke/policy-gate.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-082",
+        "restore_command": "/wiki-restore TASK-082"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics src/gateway/report.ts: pass",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-073/gateway-gates.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-074/planning-build-test-strategy-lint.test.mjs: pass",
+        "wiki_gate audit profiles alignment,changed,task,generated-parity,source-contract,package,security,stale-reference: warning only for existing graph-health warning; changed/task/generated-parity/source-contract/package/security/stale-reference pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "not-run",
+        "remote_visibility": "not-reviewed",
+        "private_evidence": "not-reviewed",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

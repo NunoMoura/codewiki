@@ -477,6 +477,61 @@ try {
 	);
 	assert.deepEqual(shipReadyCandidate.missing.user_approval, []);
 
+	const localOnlyShipReadyImplementation = await writeImplementationBuild(project, {
+		kind: "implementation",
+		summary: "Local-only ship-ready fixture.",
+		source_planning_build: planning.path,
+		task_id: "TASK-777",
+		change_type: "code",
+		test_files: ["tests/smoke/gateway-preflight.test.mjs"],
+		code_files: ["src/local-only-ship-ready.ts"],
+		checks_run: ["npm run typecheck: pass"],
+		acceptance_mapping: [
+			{
+				criterion: "Ship-ready validates local content quality",
+				evidence:
+					"npm run typecheck passes without implying package publication.",
+			},
+		],
+		closure_brief: {
+			user_intent: "Validate local content without publication approval.",
+			implemented_changes: ["Changed local-only package source."],
+			acceptance_evidence: ["Ship-ready preflight is ready."],
+			checks: ["npm run typecheck: pass"],
+		},
+		publication: {
+			push_readiness: {
+				safe_to_push: false,
+				blocked_reasons: ["remote approval not requested"],
+			},
+		},
+	});
+	const localOnlyShipReady = buildGatewayPreflight(project, {
+		profile: "ship-ready",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale:
+			"Ship-ready validates commit quality but does not imply package or remote publication.",
+		source: localOnlyShipReadyImplementation.path,
+		audit_refs: [
+			"audit:alignment",
+			"audit:package",
+			"audit:security",
+			"audit:stale-reference",
+		],
+		checks: ["npm run typecheck: pass"],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			head_sha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			tree_sha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		},
+	});
+	assert.equal(localOnlyShipReady.status, "ready");
+	assert.deepEqual(localOnlyShipReady.missing.ship_ready, []);
+	assert.deepEqual(localOnlyShipReady.missing.close_publication_blockers, []);
+
 	await writeFile(
 		join(root, project.graphPath),
 		JSON.stringify(
