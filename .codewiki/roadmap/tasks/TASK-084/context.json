@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T22:50:28Z",
+  "generated_at": "2026-06-02T22:54:39Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-084/context.json",
   "task": {
     "id": "TASK-084",
     "title": "Inventory legacy closed work against production-ready gates",
-    "status": "in_progress",
+    "status": "blocked",
     "priority": "medium",
     "kind": "testing",
     "change_type": "system",

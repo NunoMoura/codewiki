@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-02T22:50:28Z",
+  "updated": "2026-06-02T22:54:39Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,7 +536,7 @@
     "TASK-084": {
       "id": "TASK-084",
       "title": "Inventory legacy closed work against production-ready gates",
-      "status": "in_progress",
+      "status": "blocked",
       "priority": "medium",
       "kind": "testing",
       "summary": "Audit closed legacy CodeWiki runtime, daemon, agency, worktree, gateway, and tool-surface work against the new production-ready closure policy, then create remediation tasks only for concrete gaps.",
@@ -586,7 +586,7 @@
         "closure": "Task closes with source-backed inventory evidence, any remediation tasks created/refined, explicit deferrals for missing future gates, and validation of the inventory itself."
       },
       "created": "2026-06-01",
-      "updated": "2026-06-02T22:50:28Z"
+      "updated": "2026-06-02T22:54:39Z"
     },
     "TASK-085": {
       "id": "TASK-085",
