@@ -1489,11 +1489,15 @@ async function main() {
 				slug: "impl-smoke",
 				task_id: "TASK-001",
 				source_planning_build: planBuildResult.details.path,
+				consumes: { planning: [resumePlanning.details.path] },
 				test_files: ["tests/smoke/package-smoke.test.mjs"],
 				code_files: ["src/index.ts"],
 				checks_run: ["npm test"],
 				acceptance_mapping: [
-					{ criterion: "Schemas exist", evidence: "npm test pass" },
+					{
+						criterion: "Schemas exist",
+						evidence: "tests/smoke/package-smoke.test.mjs npm test pass",
+					},
 				],
 				test_design_evidence: [
 					"Tester derived schema assertions from planning build before code changes.",
@@ -1515,15 +1519,20 @@ async function main() {
 						tests: ["tests/smoke/package-smoke.test.mjs"],
 						validation: [".codewiki/validation/smoke-pass.json"],
 					},
-					acceptance_evidence: ["Schemas exist: npm test pass"],
+					acceptance_evidence: [
+						"Schemas exist: tests/smoke/package-smoke.test.mjs npm test pass",
+					],
 					checks: ["npm test"],
 					non_goals_preserved: ["No remote publication."],
-					remaining_risks: ["Smoke fixture only; no remote publication."],
+					remaining_risks: [],
 				},
-				risks: ["Smoke fixture only; no remote publication."],
 				publication: {
 					commit_title: "test: record implementation build smoke evidence",
 					pr_body: "Smoke PR draft; not published.",
+					secret_scan: "pass",
+					remote_visibility: "pass",
+					private_evidence: "pass",
+					safe_to_push: true,
 				},
 				lifecycle: { ttl_days: 7 },
 			},
@@ -1552,6 +1561,7 @@ async function main() {
 		);
 		assert.deepEqual(implBuild.consumes.planning, [
 			planBuildResult.details.path,
+			resumePlanning.details.path,
 		]);
 		assert.deepEqual(implBuild.produces.closure, ["TASK-001"]);
 		assert.equal(
@@ -1599,6 +1609,64 @@ async function main() {
 			"audit:task",
 			"audit:generated-parity",
 		];
+		const implementationAuditRefs = ["audit:alignment", "audit:changed"];
+		const shipReadyAuditRefs = [
+			"audit:alignment",
+			"audit:package",
+			"audit:security",
+			"audit:stale-reference",
+		];
+		async function recordTaskClosePrereqs(label, taskId, source) {
+			await validationTool.definition.execute(
+				`${label}-implementation-validation-smoke`,
+				{
+					repoPath: projectDir,
+					profile: "implementation",
+					task_id: taskId,
+					verdict: "pass",
+					rationale:
+						"Implementation validation passed for the task-close content candidate.",
+					source,
+					audit_refs: implementationAuditRefs,
+					isolation: {
+						role: "validator",
+						fresh_context: true,
+						clean: true,
+						tree_sha: "abc1234",
+					},
+				},
+				undefined,
+				undefined,
+				outsideToolCtx,
+			);
+			await validationTool.definition.execute(
+				`${label}-ship-ready-validation-smoke`,
+				{
+					repoPath: projectDir,
+					profile: "ship-ready",
+					task_id: taskId,
+					verdict: "pass",
+					rationale:
+						"Task-scoped ship-ready validation passed for the same content candidate.",
+					source,
+					checks: [
+						"ship-ready smoke content candidate: published def5678 tree abc1234",
+					],
+					audit_refs: shipReadyAuditRefs,
+					isolation: {
+						role: "validator",
+						fresh_context: true,
+						clean: true,
+						published_sha: "def5678",
+						tree_sha: "abc1234",
+						archive_ref: `refs/codewiki/archive/task/${taskId}`,
+					},
+				},
+				undefined,
+				undefined,
+				outsideToolCtx,
+			);
+		}
 		await validationTool.definition.execute(
 			"decision-gateway-pass-smoke",
 			{
@@ -1630,6 +1698,11 @@ async function main() {
 			undefined,
 			undefined,
 			outsideToolCtx,
+		);
+		await recordTaskClosePrereqs(
+			"task-001",
+			"TASK-001",
+			implBuildResult.details.path,
 		);
 		const passReport = await validationTool.definition.execute(
 			"validation-pass-smoke",
@@ -1922,10 +1995,21 @@ async function main() {
 					],
 					checks: ["node tests/smoke/package-smoke.test.mjs"],
 				},
+				publication: {
+					secret_scan: "pass",
+					remote_visibility: "pass",
+					private_evidence: "pass",
+					safe_to_push: true,
+				},
 			},
 			undefined,
 			undefined,
 			outsideToolCtx,
+		);
+		await recordTaskClosePrereqs(
+			"appended-task",
+			appendedTaskId,
+			appendedImplResult.details.path,
 		);
 		await validationTool.definition.execute(
 			"task-close-validation-smoke",
@@ -2824,6 +2908,7 @@ async function main() {
 			kind: "testing",
 			summary: "Ordering-regression fixture for earlier active task.",
 			spec_paths: [".codewiki/kb/product/overview.md"],
+			code_paths: [],
 			created: "2099-01-01T00:00:00Z",
 			updated: "2099-01-01T00:00:00Z",
 		};
@@ -2835,6 +2920,7 @@ async function main() {
 			kind: "verification",
 			summary: "Persisted-focus regression fixture for fresh-session resume.",
 			spec_paths: [".codewiki/kb/product/overview.md"],
+			code_paths: [],
 			created: "2099-01-01T00:00:00Z",
 			updated: "2099-01-01T00:00:00Z",
 		};
@@ -3538,7 +3624,7 @@ async function main() {
 		);
 		assert.match(
 			panelLines.join("\n"),
-			/Status[\s\S]*(🟢|🟡|🔴)[\s\S]*(GREEN|YELLOW|RED)[\s\S]*Checks:[\s\S]*Tasks:[\s\S]*Claims:[\s\S]*Next action/i,
+			/Status[\s\S]*(🟢|🟡|🔴)[\s\S]*(GREEN|YELLOW|RED)[\s\S]*(Checks|Linters):[\s\S]*Tasks:[\s\S]*Claims:[\s\S]*Next action/i,
 			"Status tab should show compact metrics and next action",
 		);
 		panelIdle = false;
@@ -3789,10 +3875,21 @@ async function main() {
 					],
 					checks: ["node tests/smoke/package-smoke.test.mjs"],
 				},
+				publication: {
+					secret_scan: "pass",
+					remote_visibility: "pass",
+					private_evidence: "pass",
+					safe_to_push: true,
+				},
 			},
 			undefined,
 			undefined,
 			outsideToolCtx,
+		);
+		await recordTaskClosePrereqs(
+			"archive-task",
+			archiveTaskId,
+			archiveImplResult.details.path,
 		);
 		await validationTool.definition.execute(
 			"task-archive-close-validation-smoke",

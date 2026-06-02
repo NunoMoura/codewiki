@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-02T22:54:39Z",
+  "updated": "2026-06-02T23:38:40Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -591,7 +591,7 @@
     "TASK-085": {
       "id": "TASK-085",
       "title": "Repair package smoke task-close fixture for production-ready gates",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "testing",
       "summary": "Update package smoke validation fixture so task-close pass scenarios satisfy the TASK-082 ship-ready/task-close policy or assert the expected block path explicitly.",
@@ -641,7 +641,7 @@
         "closure": "Task closes with package-smoke, gateway-preflight, policy-gate, and typecheck passing under current production-ready gate policy."
       },
       "created": "2026-06-02",
-      "updated": "2026-06-02"
+      "updated": "2026-06-02T23:38:40Z"
     }
   },
   "sprints": {

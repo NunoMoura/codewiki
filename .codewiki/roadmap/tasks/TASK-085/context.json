@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02",
+  "generated_at": "2026-06-02T23:38:40Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-085/context.json",
   "task": {
     "id": "TASK-085",
     "title": "Repair package smoke task-close fixture for production-ready gates",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "testing",
     "change_type": "system",
