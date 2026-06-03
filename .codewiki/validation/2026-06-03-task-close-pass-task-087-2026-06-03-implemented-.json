@@ -1,0 +1,309 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T21:38:00Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-087",
+  "verdict": "pass",
+  "rationale": "Task-close validation passed: TASK-087 has accepted implementation evidence, implementation and ship-ready validation passes for the local content candidate, clean immutable head/tree evidence, required audits, and user approval to proceed with local close. No publication action was performed.",
+  "checks": [
+    "git status --short: clean",
+    "git worktree list --porcelain: root plus scratch worktree; scratch worktree clean/documented",
+    "validated implementation commit 630e953e9d972e1fa915e20f58ef014b1f57a2bc tree 69712aff518616df973986bde4e51acca93a99e2",
+    "current clean head bda0dd1fe167129d03aa33702752f47b72e14b83 tree d6ddbf35512e70f9ac592d015377f0e8be5d8ca2",
+    "implementation validation report .codewiki/validation/2026-06-03-implementation-pass-task-087-2026-06-03-implemen.json verdict pass",
+    "ship-ready validation report .codewiki/validation/2026-06-03-ship-ready-pass-task-087-2026-06-03-implemented-.json verdict pass",
+    "wiki_gate audit alignment,changed,source-contract,generated-parity,task TASK-087: warning-only graph-health; changed/source-contract/generated-parity/task pass",
+    "npm run typecheck: pass",
+    "npm run test:smoke: pass",
+    "explicit approval by user: proceed after reload; local close only"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health still reports 7 warnings; not blocking TASK-087 close because generated parity, source-contract, changed, and task audits pass."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Graph health still reports 7 warnings; not blocking TASK-087 close because generated parity, source-contract, changed, and task audits pass.",
+      "refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Graph health still reports 7 warnings; not blocking TASK-087 close because generated parity, source-contract, changed, and task audits pass.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:source-contract",
+    "audit:generated-parity",
+    "audit:task",
+    "profile:task:TASK-087"
+  ],
+  "audit_reports": [
+    "wiki_gate:audit:profiles=alignment,changed,source-contract,generated-parity,task:TASK-087:pre-task-close"
+  ],
+  "content_proof_refs": [
+    "630e953e9d972e1fa915e20f58ef014b1f57a2bc",
+    "bda0dd1fe167129d03aa33702752f47b72e14b83",
+    "d6ddbf35512e70f9ac592d015377f0e8be5d8ca2",
+    "TASK-087-local-content-candidate:630e953e9d972e1fa915e20f58ef014b1f57a2bc"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-087",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+    "validation_report": ".codewiki/validation/2026-06-03-task-close-pass-task-087-2026-06-03-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+      ".codewiki/validation/2026-06-03-task-close-pass-task-087-2026-06-03-implemented-.json",
+      "src/telemetry/artifact-ref.ts",
+      "src/runtime/types.ts",
+      "src/state/automation-readiness.ts",
+      "src/gateway/report.ts",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".gitignore",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/merge-publisher-queue.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-087",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+    "validation_report": ".codewiki/validation/2026-06-03-task-close-pass-task-087-2026-06-03-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-087 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-087",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-task-close-pass-task-087-2026-06-03-implemented-.json",
+      "CodeWiki-Checks: git status --short: clean; git worktree list --porcelain: root plus scratch worktree; scratch worktree clean/documented; validated implementation commit 630e953e9d972e1fa915e20f58ef014b1f57a2bc tree 69712aff518616df973986bde4e51acca93a99e2; current clean head bda0dd1fe167129d03aa33702752f47b72e14b83 tree d6ddbf35512e70f9ac592d015377f0e8be5d8ca2; implementation validation report .codewiki/validation/2026-06-03-implementation-pass-task-087-2026-06-03-implemen.json verdict pass; ship-ready validation report .codewiki/validation/2026-06-03-ship-ready-pass-task-087-2026-06-03-implemented-.json verdict pass; wiki_gate audit alignment,changed,source-contract,generated-parity,task TASK-087: warning-only graph-health; changed/source-contract/generated-parity/task pass; npm run typecheck: pass; npm run test:smoke: pass; explicit approval by user: proceed after reload; local close only"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/telemetry/artifact-ref.ts",
+      "src/runtime/types.ts",
+      "src/state/automation-readiness.ts",
+      "src/gateway/report.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "d6ddbf35512e70f9ac592d015377f0e8be5d8ca2",
+      "TASK-087-local-content-candidate:630e953e9d972e1fa915e20f58ef014b1f57a2bc"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-087",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "next_safe_actions": []
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "explicit approval by user: proceed after reload; local close only"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "head_sha": "bda0dd1fe167129d03aa33702752f47b72e14b83",
+    "validated_sha": "630e953e9d972e1fa915e20f58ef014b1f57a2bc",
+    "tree_sha": "d6ddbf35512e70f9ac592d015377f0e8be5d8ca2",
+    "archive_ref": "TASK-087-local-content-candidate:630e953e9d972e1fa915e20f58ef014b1f57a2bc",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation from clean local checkpoint commit; validated_sha names implementation content candidate, head/tree names current closure-evidence head.",
+    "role": "validator"
+  }
+}
