@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T21:38:50.425Z",
+  "generated_at": "2026-06-03T21:39:18.805Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -47846,118 +47846,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-329",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-329",
-      "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-      "agent_name": "Seal",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-      "expires_at": "2026-06-03T23:31:51.071Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/codewiki",
-        "branch": "main",
-        "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-        "fresh_context": false,
-        "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-087"
-        },
-        {
-          "layer": "roadmap",
-          "path": ".codewiki/roadmap/queue.json"
-        },
-        {
-          "layer": "graph",
-          "path": ".codewiki/index_graph.json"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/**"
-        },
-        {
-          "layer": "source",
-          "path": "tests/**"
-        },
-        {
-          "layer": "source",
-          "path": ".gitignore"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-087",
-      "kind": "change_claim_scope",
-      "path": "TASK-087",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/roadmap/queue.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/roadmap/queue.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/index_graph.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/index_graph.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/**",
-      "kind": "change_claim_scope",
-      "path": "src/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/**",
-      "kind": "change_claim_scope",
-      "path": "tests/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.gitignore",
-      "kind": "change_claim_scope",
-      "path": ".gitignore",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -147920,56 +147808,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-329",
-      "to": "task:TASK-087"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:TASK-087"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.codewiki/roadmap/queue.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.codewiki/index_graph.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.codewiki/builds/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.codewiki/kb/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:src/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:tests/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-329",
-      "to": "claim_scope:.gitignore"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -166514,7 +166352,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 35,
+            "item_count": 25,
             "badges": [
               {
                 "id": "open_tasks",
@@ -166538,7 +166376,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -166711,8 +166549,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5106,
-          "edges": 16775,
+          "nodes": 5096,
+          "edges": 16765,
           "open_tasks": 0,
           "validations": 267,
           "source_refs": 1242
@@ -166867,7 +166705,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 35,
+              "item_count": 25,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -166891,7 +166729,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 1
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -167906,274 +167744,12 @@
           }
         ],
         "data": {
-          "active_claim_count": 1,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "graph",
-                "path": ".codewiki/index_graph.json"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "path": ".codewiki/roadmap/queue.json"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": ".gitignore"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "src/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "task_id": "TASK-087"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "source",
-                "path": "tests/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-329",
-                  "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                  "agent_name": "Seal",
-                  "mode": "write",
-                  "role": "publisher",
-                  "task_id": "TASK-087",
-                  "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                  "expires_at": "2026-06-03T23:31:51.071Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/codewiki",
-                    "branch": "main",
-                    "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                    "fresh_context": false,
-                    "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                  },
-                  "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -168591,8 +168167,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5106,
-          "edges": 16775,
+          "nodes": 5096,
+          "edges": 16765,
           "source_refs": 1242
         },
         "next_action": {
@@ -190725,621 +190301,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-329",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-087",
-          "worktree_path": "/home/nunoc/projects/codewiki",
-          "branch": "main",
-          "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-          "fresh_context": false
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-329",
-          "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-          "agent_name": "Seal",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-          "task_id": "TASK-087",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/codewiki",
-            "branch": "main",
-            "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-            "fresh_context": false,
-            "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-087"
-            },
-            {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/queue.json"
-            },
-            {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/**"
-            },
-            {
-              "layer": "source",
-              "path": "tests/**"
-            },
-            {
-              "layer": "source",
-              "path": ".gitignore"
-            }
-          ],
-          "created_at": "2026-06-03T21:31:51Z",
-          "updated_at": "2026-06-03T21:31:51Z",
-          "expires_at": "2026-06-03T23:31:51.071Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/queue.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".gitignore"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-087"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/queue.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".gitignore"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-087"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-329",
-              "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-              "agent_name": "Seal",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-087",
-              "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-              "expires_at": "2026-06-03T23:31:51.071Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                "fresh_context": false,
-                "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-              },
-              "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -209797,8 +208777,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-03T21:38:50.378Z",
-      "expires_at": "2026-06-03T23:38:50.378Z",
+      "generated_at": "2026-06-03T21:39:18.760Z",
+      "expires_at": "2026-06-03T23:39:18.760Z",
       "state": "missing",
       "tasks": {},
       "sprints": {
@@ -210590,9 +209570,7 @@
             ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
             ".codewiki/validation/2026-06-03-decision-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-329"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -212604,7 +211582,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-03T21:38:50.235Z",
+      "generated_at": "2026-06-03T21:39:18.622Z",
       "counts": {
         "large-doc": 2
       },
@@ -212625,7 +211603,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-03T21:38:50Z",
+      "generated_at": "2026-06-03T21:39:18Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -214132,7 +213110,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-03T21:38:50Z",
+      "generated_at": "2026-06-03T21:39:18Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -214263,9 +213241,7 @@
               ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
               ".codewiki/validation/2026-06-03-decision-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-329"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -214699,7 +213675,7 @@
       },
       "direction": [
         "No open deterministic drift requires action right now.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 39/39.",
@@ -218575,7 +217551,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-03T21:38:50Z",
+        "generated_at": "2026-06-03T21:39:18Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -218630,10 +217606,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T21:38:50Z",
+            "checked_at": "2026-06-03T21:39:18Z",
             "revision": {
               "git": {
-                "head": "be163c691261444028c49b8ac5ef1ea053578f1c",
+                "head": "802514b01bedb9eacd2ef87e56f019d94e02f0bd",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -218889,12 +217865,12 @@
               "spec_digest": "e63dd2ecbbb7edba568e32d4aa6c1a1b2160852c0b21d339f65008a822494197",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "c1a8396d209a02493feba24d88d10ed0b43ce05b3e2850fd8ff22cde8a74b57b",
-              "digest": "629078de8b366be37e378214270b6206fb96f9fb59fb03748c1a35aa030f32a1"
+              "digest": "0ce657b620213107139e7fb7f4f2261c3119eebb22a8fc3045f1279be106351e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T21:38:50Z",
+              "checked_at": "2026-06-03T21:39:18Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -219388,10 +218364,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-03T21:38:50Z",
+            "checked_at": "2026-06-03T21:39:18Z",
             "revision": {
               "git": {
-                "head": "be163c691261444028c49b8ac5ef1ea053578f1c",
+                "head": "802514b01bedb9eacd2ef87e56f019d94e02f0bd",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -219630,12 +218606,12 @@
               "spec_digest": "e59b8ab779e142f04d559a6d2f87871130ee7f8d8b266cd51d1d81db4ac1dbba",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "3acba55f5d38c7e23936680dd02462e72a9c2caa396da5735bbd8fbffe883b51",
-              "digest": "c7d6d64b89f6a53794752a06aa3e6912bd96aa962604bf5961d0f329f8c60017"
+              "digest": "c641b69190e60c344fc3e820f8eeb3d3ffdb40362ea2f84c7143cbe1c8d55cb7"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T21:38:50Z",
+              "checked_at": "2026-06-03T21:39:18Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -220106,10 +219082,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T21:38:50Z",
+            "checked_at": "2026-06-03T21:39:18Z",
             "revision": {
               "git": {
-                "head": "be163c691261444028c49b8ac5ef1ea053578f1c",
+                "head": "802514b01bedb9eacd2ef87e56f019d94e02f0bd",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -220365,12 +219341,12 @@
               "spec_digest": "e63dd2ecbbb7edba568e32d4aa6c1a1b2160852c0b21d339f65008a822494197",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "c1a8396d209a02493feba24d88d10ed0b43ce05b3e2850fd8ff22cde8a74b57b",
-              "digest": "629078de8b366be37e378214270b6206fb96f9fb59fb03748c1a35aa030f32a1"
+              "digest": "0ce657b620213107139e7fb7f4f2261c3119eebb22a8fc3045f1279be106351e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T21:38:50Z",
+              "checked_at": "2026-06-03T21:39:18Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -220865,344 +219841,23 @@
         "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-06-03T21:38:50Z",
+        "generated_at": "2026-06-03T21:39:18Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-329",
-            "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-            "agent_name": "Seal",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-            "task_id": "TASK-087",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/codewiki",
-              "branch": "main",
-              "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-              "fresh_context": false,
-              "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-087"
-              },
-              {
-                "layer": "roadmap",
-                "path": ".codewiki/roadmap/queue.json"
-              },
-              {
-                "layer": "graph",
-                "path": ".codewiki/index_graph.json"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/**"
-              },
-              {
-                "layer": "source",
-                "path": "tests/**"
-              },
-              {
-                "layer": "source",
-                "path": ".gitignore"
-              }
-            ],
-            "created_at": "2026-06-03T21:31:51Z",
-            "updated_at": "2026-06-03T21:31:51Z",
-            "expires_at": "2026-06-03T23:31:51.071Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/queue.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": ".gitignore"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-087"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-329",
-                "session_id": "019e8ce3-2278-7d7f-8fb1-f50b9629e7cf",
-                "agent_name": "Seal",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-087",
-                "summary": "Proceed from implementation validation pass to local checkpoint, task-close validation, and roadmap closure for TASK-087.",
-                "expires_at": "2026-06-03T23:31:51.071Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "a8138632c22241eaecc551ff4cf4d2e0ead6c8d9",
-                  "fresh_context": false,
-                  "notes": "factory=role-worktree; task=TASK-087; role=publisher; base_ref=a8138632c22241eaecc551ff4cf4d2e0ead6c8d9; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Publisher/finalization claim after fresh implementation validation pass; local-only, no remote push."
-                },
-                "next_safe_action": "Wait for CLAIM-329 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
