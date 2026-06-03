@@ -52,7 +52,7 @@ Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contrac
 
 ## API boundary
 
-`src/api/**` re-exports stable package/tool entrypoints from concept roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/runtime/**`, and `src/gc/**`. The facade stays stable while adapter protocols and UI surfaces evolve.
+`src/api/**` re-exports stable package/tool entrypoints from concept roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/runtime/**`, and `src/gc/**`. `src/workflow/**` owns the normal workflow-tool wrapper layer that coordinates those concept primitives into `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` without adding a new user-facing command surface. The facade stays stable while adapter protocols and UI surfaces evolve.
 
 ## Related docs
 

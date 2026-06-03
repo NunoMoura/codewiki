@@ -16,6 +16,7 @@ diagram_refs:
   - file-structure-map:project_concept_root_boundary
   - file-structure-map:knowledge_concept_root_boundary
   - file-structure-map:checks_concept_root_boundary
+  - file-structure-map:workflow_tool_wrappers
   - file-structure-map:deferred_concept_roots
 ---
 
@@ -23,7 +24,7 @@ diagram_refs:
 
 ## Knowledge-base contract
 
-Every CodeWiki project should use the same top-level knowledge-base shape:
+CodeWiki projects use this top-level knowledge-base shape:
 
 ```text
 .codewiki/kb/
@@ -46,21 +47,17 @@ Every CodeWiki project should use the same top-level knowledge-base shape:
       file-structure-map.yaml
 ```
 
-Product docs define users, stories, and visual interfaces. System docs define architecture, API, adapters, distribution, ownership, and diagram raw data.
+Product docs define users/stories/UIs. System docs define architecture, API, adapters, distribution, ownership, and diagram raw data.
 
-At `.codewiki/`, active surfaces are config, KB, roadmap, session coordination, builds, validation, runtime diff tables, source/research support, and generated graph state. In this repo, `.codewiki/` is dogfood state, not package source. Legacy `.codewiki/index/**` and `.codewiki/evidence/**` stay deprecated; use `.codewiki/index_graph.json`, builds, validation reports, and `.codewiki/sources/**` or `research_root`.
+At `.codewiki/`, active surfaces are config, KB, roadmap, session coordination, builds, validation, runtime diff tables, source/research support, and generated graph state. Here `.codewiki/` is dogfood state, not package source. Legacy `.codewiki/index/**` and `.codewiki/evidence/**` stay deprecated; use `.codewiki/index_graph.json`, builds, validation reports, and `.codewiki/sources/**` or `research_root`.
 
-System component docs stay flat: one major component per `system/*.md`. `system/diagrams/**` is the only intended nested system folder.
-
-System diagrams are the vNext allowlist/navigation spine. Every system `.md` except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Primary refs use `<diagram-file-stem>:<local-id>`; `<diagram-id>:<local-id>` is an alias. Diagram nodes may set `requires_doc`; others may remain diagram-only. `codewiki.system_diagrams.diagram_refs.mode` controls migration.
-
-Avoid nested component folders and extra `overview.md` files.
+System component docs stay flat: one component per `system/*.md`; `system/diagrams/**` is the only nested system folder. Diagrams are the vNext allowlist/navigation spine. Migrated system docs declare `diagram_refs` except overview/README docs. Primary refs use `<diagram-file-stem>:<local-id>`; `<diagram-id>:<local-id>` is an alias.
 
 ## Diagram raw-data contract
 
 `system/diagrams/**` stores canonical, agent-editable raw diagram data. YAML is the default raw format because it is readable, diffable, and easier for agents to edit safely than dense diagram DSL.
 
-The default diagram families are:
+Default diagram families:
 
 | File | Diagram kind | Purpose | Renderer target |
 | --- | --- | --- | --- |
@@ -71,7 +68,7 @@ The default diagram families are:
 | `diagrams/state-lifecycle.yaml` | State/lifecycle map | Task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
 | `diagrams/file-structure-map.yaml` | File-structure map | Intended source/tree ownership, current implementation shape, approved migration deltas, and drift-lens categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
-Renderer-specific Mermaid, SVG, HTML, Unicode, ASCII, or graph JSON output is generated or renderer input unless a later task promotes it to canonical truth. `system/diagrams/architecture.yaml` is the canonical architecture diagram source. Hand-maintained `system/architecture.mmd` has been removed; future render artifacts should be generated from YAML. New diagram work targets `system/diagrams/**`.
+Renderer-specific Mermaid, SVG, HTML, Unicode, ASCII, or graph JSON output is generated unless promoted. `system/diagrams/architecture.yaml` is canonical; hand-maintained `system/architecture.mmd` is removed. New diagram work targets `system/diagrams/**`.
 
 ## Component-doc map
 
@@ -81,7 +78,7 @@ Renderer-specific Mermaid, SVG, HTML, Unicode, ASCII, or graph JSON output is ge
 | Deprecated browser UI | `control-room-ui.md` | Removed source path; `/wiki-ui` remains only a deprecation shim |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
-| CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
+| CodeWiki API | `api.md` | `src/api/**` facade modules, `src/workflow/**` normal workflow-tool wrappers, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
 | Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `wiki_agency` entrypoint |
 | CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/store.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
@@ -100,20 +97,20 @@ Renderer-specific Mermaid, SVG, HTML, Unicode, ASCII, or graph JSON output is ge
 | Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` router/bootstrap/prompt/playbook/reference assets and focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Pi project prompt boundary | `adapters.md`, `file-structure.md` | `.pi/APPEND_SYSTEM.md` clarifies `.codewiki/` dogfood state vs package source |
 
-`system/diagrams/*.yaml` may also show external artifacts such as users, code/tests, and publication outputs. Those are not system component docs unless they become owned system components.
+`system/diagrams/*.yaml` may show users, code/tests, and publication outputs; those are not component docs unless promoted.
 
 ## CodeWiki system docs
 
-CodeWiki keeps one flat system doc per major component, plus `overview.md`, terminal-first UI docs, deprecated browser UI migration docs, and canonical raw diagrams under `diagrams/**`. The component-doc map above owns expected docs and primary paths.
+CodeWiki keeps one flat system doc per component, plus `overview.md`, UI/migration docs, and raw diagrams under `diagrams/**`. The component-doc map owns expected docs and primary paths.
 
-Deprecated `.codewiki/` paths must not be recreated by templates or normal agent writes:
+Deprecated `.codewiki/` paths must not be recreated:
 
 ```text
 .codewiki/index/**
 .codewiki/evidence/**
 ```
 
-Legacy nested system KB folders removed by the flattening migration remain invalid: `clients/**`, `compilers/**`, `extensions/**`, `runtime/**`, `architecture.json`, and `v2-operating-model.md`. Active `components/**` and `flows/**` detail docs are source-linked system knowledge and remain valid until a future flattening decision replaces their refs.
+Legacy nested system KB folders removed by flattening remain invalid: `clients/**`, `compilers/**`, `extensions/**`, `runtime/**`, `architecture.json`, and `v2-operating-model.md`. Active `components/**` and `flows/**` detail docs remain valid until a future flattening decision replaces their refs.
 
 ## Path taxonomy
 
@@ -128,31 +125,31 @@ Legacy nested system KB folders removed by the flattening migration remain inval
 | Dogfood runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Repo-local coordination and pending decision UI state; not package source and not durable product truth unless compiled into builds. |
 | Publication proof | Git commits/tree SHAs, package digests, archive ledgers, remote refs | Immutable or external proof of content and publication assertions. |
 
-Architecture and audit checks use these classes to prevent dogfood state, generated outputs, and package source drift.
+Architecture and audit checks use these classes to prevent dogfood/generated/package-source drift.
 
 ## Package target layout
 
-Accepted direction: concept-root source ownership. Main concepts live in `src/<concept>/**` with models, use cases, tool/API entrypoints, and local implementation nearby. Adapters are the exposure layer and may contain host-native UI panels; shared code stays primitive-only; no top-level `infrastructure/` exists.
+Accepted direction: concept-root source ownership. Concepts live in `src/<concept>/**` with models, use cases, tool/API entrypoints, and local implementation nearby. Adapters expose host surfaces; shared code stays primitive-only; no top-level `infrastructure/` exists.
 
-Current source roots:
+Current roots:
 
 ```text
-src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,shared,adapters}/
+src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,shared,workflow,adapters}/
 
-Compatibility-only shim roots:
+Compatibility shims:
 
 ```text
 src/validation/** -> src/gateway/**
 ```
 ```
 
-Deprecated roots:
+Deprecated:
 
 ```text
 src/{domain,application}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a concept root for bounded CodeWiki execution orchestration; approved daemon-runtime direction expands this root toward daemon job dispatch, Pi Code foundation use, runtime capability contracts, and pass-boundary session spawning. This root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state. TASK-058 moves validation gateway implementation ownership into `src/gateway/**` and leaves `src/validation/**` as compatibility-only re-export shims.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a concept root for bounded CodeWiki execution orchestration; approved daemon-runtime direction expands this root toward daemon job dispatch, Pi Code foundation use, runtime capability contracts, and pass-boundary session spawning. This root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state. TASK-058 moves validation gateway implementation ownership into `src/gateway/**` and leaves `src/validation/**` as compatibility-only re-export shims. TASK-080 adds `src/workflow/**` as the normal workflow-tool wrapper root over lower-level compatibility primitives; it is source ownership for orchestration glue, not a new user-facing command surface.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
@@ -179,11 +176,9 @@ Rules:
 
 ## Current migration warning
 
-The repository no longer contains transitional `core/**` or `engine/**` source folders. Generated task shards remain runtime outputs, not target source architecture.
+The repo has no transitional `core/**` or `engine/**` source folders. Generated task shards are runtime outputs, not target source architecture.
 
-The approved migration delta from `src/domain/**` + `src/application/**` toward concept roots is complete. The drift lens now treats recreated `src/domain/**` or `src/application/**` files as deprecated-path failures unless a future decision explicitly approves a temporary compatibility shim with owner, expiry, and tests. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking.
-
-Runtime checks cover direct Node execution and package loading, not only TypeScript typechecking.
+Migration from `src/domain/**` + `src/application/**` to concept roots is complete. The drift lens treats recreated `src/domain/**` or `src/application/**` files as deprecated-path failures unless a future decision approves a temporary shim with owner, expiry, and tests. Migration tasks must preserve public behavior, compatibility exports, direct Node execution, package loading, and typechecking.
 
 ## Related docs
 

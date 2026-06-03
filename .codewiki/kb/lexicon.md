@@ -11,11 +11,11 @@ updated: '2026-06-01'
 
 # Lexicon
 
-This file is the canonical vocabulary contract for CodeWiki. It should stay small and active: keep terms that humans, agents, source contracts, command help, tool schemas, generated views, and validation reports are expected to use. Remove unused or obsolete terms instead of preserving them as glossary clutter. Temporary compatibility terms may exist in source schemas or adapters during migration only when this file defines their replacement, allowed contexts, and deletion trigger. They are not canonical vocabulary.
+This file is CodeWiki's active vocabulary contract. Keep only terms used by humans, agents, source contracts, command help, tool schemas, generated views, and validation reports. Compatibility terms are non-canonical unless this file names their replacement, allowed contexts, and deletion trigger.
 
 ## Command
 
-A human-facing Pi slash command that renders or navigates CodeWiki state. The target user command surface is:
+Human-facing Pi slash command that renders or navigates CodeWiki state. Target commands:
 
 - `/wiki bootstrap` for greenfield or brownfield CodeWiki setup,
 - `/wiki status` for the most important developer-facing project state,
@@ -24,11 +24,11 @@ A human-facing Pi slash command that renders or navigates CodeWiki state. The ta
 - `/wiki system <diagram type>` for source-backed system diagram navigation,
 - `/wiki product` for product overview, users, and user-story navigation.
 
-Legacy hyphenated commands and standalone compatibility commands may remain as migration shims, but they are not the canonical command language.
+Legacy hyphenated or standalone compatibility commands may remain as shims, but are not canonical.
 
 ## Internal agent tool
 
-An adapter-exposed `wiki_*` tool intended for agents and automation. The target normal tool surface is exactly:
+Adapter-exposed `wiki_*` tool for agents and automation. Normal surface:
 
 - `wiki_state`,
 - `wiki_decide`,
@@ -37,23 +37,23 @@ An adapter-exposed `wiki_*` tool intended for agents and automation. The target 
 - `wiki_gate`,
 - `wiki_runtime`.
 
-Low-level build, roadmap, session, lease, linter, and report writers are implementation primitives or temporary compatibility tools, not normal agent vocabulary.
+Low-level build, roadmap, session, lease, linter, and report writers are primitives or compatibility tools, not normal vocabulary.
 
 ## State lens
 
-A focused graph/state query returned by `wiki_state`. A lens names a subset such as status, trace, system diagram, product navigation, task, sprint, validation, runtime, or automation readiness. Lenses reduce context noise by returning source refs, next actions, blockers, and compact graph neighborhoods instead of the whole state graph.
+Focused graph/state query returned by `wiki_state`, such as status, trace, system, product, task, sprint, validation, runtime, or automation readiness. Lenses return source refs, next actions, blockers, and compact graph neighborhoods instead of the whole graph.
 
 ## Roadmap task
 
-A tracked unit of active intended change with outcome, acceptance, non-goals, linked specs/builds/code paths, and closure evidence. Tasks are active work truth, not requirements briefs, chat to-dos, umbrellas, or long-term archives.
+Tracked unit of active change with outcome, acceptance, non-goals, linked refs, and closure evidence. Tasks are work truth, not requirements briefs, chat to-dos, umbrellas, or archives.
 
 ## Task done
 
-A roadmap task is done only when it is production-ready for its scope. Code-changing tasks require passing executable code tests, required linters, accepted implementation evidence, a passing task-close gate, and a task-scoped ship-ready validation for the exact changed content. If code derived from an approved decision is not production-ready, the task remains in progress or blocked.
+A roadmap task is done only when production-ready for its scope. Code-changing tasks require passing executable tests, required linters, implementation evidence, task-close, and task-scoped ship-ready validation for exact changed content. Otherwise the task remains in progress or blocked.
 
 ## Sprint
 
-A bounded work wave through the compiler pipeline. A sprint groups one or more roadmap tasks with a shared outcome, scope, budget, gates, and closure checkpoint. Sprints let agents and users scope execution at roadmap, sprint, or task level without creating umbrella tasks.
+Bounded work wave through the compiler pipeline. A sprint groups roadmap tasks by shared outcome, scope, budget, gates, and closure checkpoint without creating umbrella tasks.
 
 ## Ship-ready
 

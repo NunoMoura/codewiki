@@ -12,7 +12,7 @@ diagram_refs:
 
 # API vNext Tool Surface
 
-This focused companion to [CodeWiki API](api.md) keeps the reduced command and workflow-tool direction reachable without making `api.md` too large. Source-facing API facade code lives in `src/api/tools.ts`.
+This focused companion to [CodeWiki API](api.md) keeps the reduced command and workflow-tool direction reachable without making `api.md` too large. Source-facing API facade code lives in `src/api/tools.ts`; normal workflow-tool wrapper execution lives in `src/workflow/tool.ts`.
 
 ## Target user commands
 
@@ -33,7 +33,7 @@ Workflow verbs such as decide, plan, implement, gate, and runtime are agent/tool
 
 ## Target internal agent tools
 
-The normal internal agent tool surface is exactly six tools. The Pi adapter exposes these as normal workflow tools and marks low-level primitives as compatibility/expert aliases during migration:
+The normal internal agent tool surface is exactly six tools. The Pi adapter exposes these as normal workflow tools and marks low-level primitives as compatibility/expert aliases during migration. The shared wrapper implementation is owned by `src/workflow/**` so adapters can route normal tools through one orchestration layer:
 
 | Tool | Responsibility |
 | --- | --- |

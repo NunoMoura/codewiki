@@ -82,6 +82,7 @@ nodes:
       - src/shared/**
       - src/state/**
       - src/validation/**
+      - src/workflow/**
   - id: first_concept_root_pilot
     label: Agency concept-root pilot
     group: source_target
@@ -361,6 +362,15 @@ nodes:
     status: accepted_target
     paths:
       - src/api/**
+  - id: workflow_tool_wrappers
+    label: Normal workflow-tool wrappers
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/api-vnext-tools.md
+    status: accepted_target
+    paths:
+      - src/workflow/**
+    summary: Hosts six normal workflow-tool wrapper execution over lower-level compatibility primitives without changing product semantics.
   - id: shared_primitives
     label: Shared primitives only
     group: source_target
