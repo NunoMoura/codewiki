@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T00:04:54Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-084",
+  "verdict": "pass",
+  "rationale": "TASK-084 can close: superseding implementation validation and task-scoped ship-ready validation passed; TASK-085 closed the only concrete remediation gap; all targeted smoke/typecheck/package checks now pass; the inventory preserves historical closure evidence and creates no broad umbrella remediation tasks.",
+  "checks": [
+    "approval:user follow-up 2026-06-03: proceed after TASK-085 closure and retry TASK-084 close",
+    "implementation validation report .codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json: pass",
+    "ship-ready validation report .codewiki/validation/2026-06-03-ship-ready-pass-task-084-2026-06-03-superseding-.json: pass",
+    "TASK-085 task-close report .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json: pass",
+    "npm run typecheck: pass",
+    "all TASK-084 targeted smoke tests including package-smoke: pass",
+    "wiki_gate audit profiles alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference: warning only existing graph-health/file-structure/generated-view; required task-close refs present",
+    "npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Existing graph-health and src/workflow file-structure warnings remain outside TASK-084 scope; required task-close refs passed."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:file-structure"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75"
+  ],
+  "content_proof_refs": [
+    "70a9b3912770afaec2e148c3dc65b128a325c495",
+    "a3060697b97cd6da45d07d1dc6dd2b15e0481239",
+    "a474d304d68883cdf64942e430f2e97d99e1f771",
+    "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-084",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+    "validation_report": ".codewiki/validation/2026-06-03-task-close-pass-task-084-2026-06-03-superseding-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      ".codewiki/validation/2026-06-03-task-close-pass-task-084-2026-06-03-superseding-.json",
+      ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+      ".codewiki/roadmap/queue.json",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/project-resolution.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-084",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+    "validation_report": ".codewiki/validation/2026-06-03-task-close-pass-task-084-2026-06-03-superseding-.json",
+    "commit_title": "checkpoint(codewiki): TASK-084 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-084",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-task-close-pass-task-084-2026-06-03-superseding-.json",
+      "CodeWiki-Checks: approval:user follow-up 2026-06-03: proceed after TASK-085 closure and retry TASK-084 close; implementation validation report .codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json: pass; ship-ready validation report .codewiki/validation/2026-06-03-ship-ready-pass-task-084-2026-06-03-superseding-.json: pass; TASK-085 task-close report .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json: pass; npm run typecheck: pass; all TASK-084 targeted smoke tests including package-smoke: pass; wiki_gate audit profiles alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference: warning only existing graph-health/file-structure/generated-view; required task-close refs present; npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "a474d304d68883cdf64942e430f2e97d99e1f771"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-084",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [
+        "semantic_closure:TASK-084:risk:TASK-085 must fix package-smoke before package smoke can be claimed production-ready under TASK-082 policy.",
+        "semantic_closure:TASK-084:risk:File-structure audit still warns about src/workflow drift outside TASK-084 scope.",
+        "semantic_closure:TASK-084:risk:Inventory report is source-backed but does not substitute for remediation task implementation.",
+        "semantic_closure:TASK-084:risk:TASK-085 remains open for package-smoke remediation.",
+        "semantic_closure:TASK-084:risk:Pre-existing file-structure drift warnings remain outside TASK-084 scope.",
+        "semantic_closure:TASK-084:risk:Existing CodeWiki graph-health warnings remain unrelated to TASK-084.",
+        "semantic_closure:TASK-084:risk:No push, publication, release, or destructive action performed.",
+        "semantic_closure:TASK-084:risk:Existing graph-health warnings remain unrelated to TASK-084.",
+        "semantic_closure:TASK-084:risk:Existing src/workflow file-structure drift remains outside TASK-084 scope.",
+        "semantic_closure:TASK-084:risk:Alignment linter still reports two existing graph-health warnings unrelated to TASK-082.",
+        "semantic_closure:TASK-084:risk:Existing graph-health warnings remain.",
+        "semantic_closure:TASK-084:risk:Existing graph-health warning remains unrelated to TASK-082.",
+        "semantic_closure:TASK-084:risk:No push, publication, release, remote update, package publishing, or destructive action was performed.",
+        "semantic_closure:TASK-084:risk:Existing graph-health warning remains.",
+        "semantic_closure:TASK-084:risk:Fresh implementation validation still required before closing TASK-079.",
+        "semantic_closure:TASK-084:risk:Existing graph health reports 8 warnings outside this task; generated file changed warnings require validator/publication review.",
+        "semantic_closure:TASK-084:risk:Requires fresh validation before task close.",
+        "semantic_closure:TASK-084:risk:Pre-existing graph health warnings remain.",
+        "semantic_closure:TASK-084:risk:Fresh validation required before task close.",
+        "semantic_closure:TASK-084:risk:wiki_gate audit has warnings for generated-file changes and existing graph-health warnings; source-contract/generated-parity passed.",
+        "semantic_closure:TASK-084:risk:Fresh validation required."
+      ],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "evidence": [
+          "semantic_closure:TASK-084:risk:TASK-085 must fix package-smoke before package smoke can be claimed production-ready under TASK-082 policy.",
+          "semantic_closure:TASK-084:risk:File-structure audit still warns about src/workflow drift outside TASK-084 scope.",
+          "semantic_closure:TASK-084:risk:Inventory report is source-backed but does not substitute for remediation task implementation.",
+          "semantic_closure:TASK-084:risk:TASK-085 remains open for package-smoke remediation.",
+          "semantic_closure:TASK-084:risk:Pre-existing file-structure drift warnings remain outside TASK-084 scope.",
+          "semantic_closure:TASK-084:risk:Existing CodeWiki graph-health warnings remain unrelated to TASK-084.",
+          "semantic_closure:TASK-084:risk:No push, publication, release, or destructive action performed.",
+          "semantic_closure:TASK-084:risk:Existing graph-health warnings remain unrelated to TASK-084.",
+          "semantic_closure:TASK-084:risk:Existing src/workflow file-structure drift remains outside TASK-084 scope.",
+          "semantic_closure:TASK-084:risk:Alignment linter still reports two existing graph-health warnings unrelated to TASK-082.",
+          "semantic_closure:TASK-084:risk:Existing graph-health warnings remain.",
+          "semantic_closure:TASK-084:risk:Existing graph-health warning remains unrelated to TASK-082.",
+          "semantic_closure:TASK-084:risk:No push, publication, release, remote update, package publishing, or destructive action was performed.",
+          "semantic_closure:TASK-084:risk:Existing graph-health warning remains.",
+          "semantic_closure:TASK-084:risk:Fresh implementation validation still required before closing TASK-079.",
+          "semantic_closure:TASK-084:risk:Existing graph health reports 8 warnings outside this task; generated file changed warnings require validator/publication review.",
+          "semantic_closure:TASK-084:risk:Requires fresh validation before task close.",
+          "semantic_closure:TASK-084:risk:Pre-existing graph health warnings remain.",
+          "semantic_closure:TASK-084:risk:Fresh validation required before task close.",
+          "semantic_closure:TASK-084:risk:wiki_gate audit has warnings for generated-file changes and existing graph-health warnings; source-contract/generated-parity passed.",
+          "semantic_closure:TASK-084:risk:Fresh validation required."
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user follow-up 2026-06-03: proceed after TASK-085 closure and retry TASK-084 close"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "a3060697b97cd6da45d07d1dc6dd2b15e0481239",
+    "validated_sha": "70a9b3912770afaec2e148c3dc65b128a325c495",
+    "tree_sha": "a474d304d68883cdf64942e430f2e97d99e1f771",
+    "package_digest": "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validates TASK-084 inventory closure candidate after ship-ready. Current worktree clean; no publication/push/release.",
+    "role": "validator"
+  }
+}
