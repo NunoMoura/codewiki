@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-06-03T00:12:12Z",
+  "updated": "2026-06-03T00:29:48Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036",
-    "TASK-086"
+    "TASK-036"
   ],
   "tasks": {
     "TASK-012": {
@@ -531,56 +530,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
-    },
-    "TASK-086": {
-      "id": "TASK-086",
-      "title": "Cover workflow root in file-structure map",
-      "status": "todo",
-      "priority": "medium",
-      "kind": "docs",
-      "summary": "Update CodeWiki file-structure knowledge so the existing src/workflow wrapper root is an intended concept root and file-structure audit no longer reports it as unexpected.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/kb/system/api.md",
-        ".codewiki/kb/system/api-vnext-tools.md"
-      ],
-      "code_paths": [
-        "src/workflow/tool.ts"
-      ],
-      "research_ids": [],
-      "labels": [
-        "maintenance",
-        "file-structure",
-        "audit"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "The two remaining file-structure warnings for src/workflow are resolved without changing runtime behavior.",
-        "acceptance": [
-          "file-structure map includes src/workflow/** as an intended ownership root for normal workflow-tool wrappers.",
-          "System docs describe workflow-tool wrapper ownership consistently with API/tool-surface docs.",
-          "wiki_gate audit profiles alignment,file-structure,generated-parity,changed reports no actionable src/workflow warnings after refresh.",
-          "No package source behavior changes are made."
-        ],
-        "non_goals": [
-          "Do not refactor src/workflow/tool.ts.",
-          "Do not create new user commands or agent tools.",
-          "Do not change task-close, ship-ready, publication, or validation policy."
-        ],
-        "verification": [
-          "wiki_gate audit profiles=alignment,file-structure,generated-parity,changed",
-          "npm run typecheck",
-          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-06-03",
-      "updated": "2026-06-03"
     }
   },
   "sprints": {
