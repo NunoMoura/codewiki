@@ -14,14 +14,14 @@ Generated: 2026-06-03
 - Candidate legacy tasks inventoried: 71.
 - Classifications: not-applicable=6, production-ready=65.
 - Closed legacy sprints inventoried: 11 (SPRINT-001..SPRINT-011).
-- Concrete remediation tasks created/refined: TASK-085.
+- Concrete remediation tasks created/refined: TASK-085 (validated and closed after repairing the package-smoke task-close fixture).
 - No closed legacy task is reopened or reclassified as historically wrong.
 
 ## Current validation signals used
 
 - `npm run typecheck`
 - `node --experimental-strip-types ./tests/smoke/source-contract.test.mjs (pass)`
-- `node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs (fail: task-close pass fixture wrote task-close-block without ship-ready evidence)`
+- `node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs (pass after TASK-085 repaired the task-close fixture to seed task-scoped ship-ready evidence)`
 - `node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs (pass)`
 - `node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs (pass)`
 - `node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs (pass)`
@@ -45,7 +45,7 @@ Generated: 2026-06-03
 
 | Finding | Classification | Remediation | Source refs | Rationale |
 | --- | --- | --- | --- | --- |
-| Package smoke task-close pass fixture lacks ship-ready evidence | needs-remediation | TASK-085 | `tests/smoke/package-smoke.test.mjs`; `src/gateway/report.ts`; TASK-084 command output | Current package smoke expected `task-close-pass`, but current TASK-082 policy correctly returned `task-close-block` when no task-scoped ship-ready validation was cited. Inventory created TASK-085 instead of fixing it in this task. |
+| Package smoke task-close pass fixture lacks ship-ready evidence | remediated | TASK-085 | `tests/smoke/package-smoke.test.mjs`; `src/gateway/report.ts`; `.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json`; TASK-084/TASK-085 command output | TASK-084 found the current package smoke expected `task-close-pass` while TASK-082 policy correctly returned `task-close-block` without task-scoped ship-ready validation. TASK-085 repaired the fixture and task-close validation passed, so TASK-084 can now cite the remediated gap instead of remaining blocked. |
 
 ## Closed sprint inventory
 

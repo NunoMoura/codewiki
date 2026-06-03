@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-03T00:02:25Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+  "task_id": "TASK-084",
+  "task": {
+    "id": "TASK-084",
+    "title": "Inventory legacy closed work against production-ready gates",
+    "status": "blocked",
+    "priority": "medium",
+    "kind": "testing",
+    "summary": "Audit closed legacy CodeWiki runtime, daemon, agency, worktree, gateway, and tool-surface work against the new production-ready closure policy, then create remediation tasks only for concrete gaps.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json",
+      ".codewiki/roadmap/queue.json"
+    ],
+    "code_paths": [],
+    "goal": {
+      "outcome": "Closed legacy work is reconciled against the new production-ready policy without rewriting history, and only evidence-backed remediation work is added to the roadmap.",
+      "acceptance": [
+        "Inventory closed tasks/sprints that touched daemon/runtime, agency, worktree/session, gateway/policy, roadmap, state, command/tool surfaces, or other production-surface foundations before SPRINT-019.",
+        "For each candidate, assess whether current code has executable behavior tests, relevant linter/gateway evidence, validation reports, content evidence, and code/KB alignment sufficient under the new production-ready closure semantics.",
+        "Record each candidate as production-ready, needs-remediation, deferred-until-SPRINT-019-gate, or not-applicable with source refs and rationale.",
+        "Create or refine remediation tasks only for concrete gaps, grouped by capability and with direct acceptance criteria; do not reopen or mutate historical closed tasks as if their original closure status were wrong.",
+        "If the new SPRINT-019 gates are not implemented yet, record blocked/deferred evidence instead of pretending the legacy work can pass the future gate today.",
+        "Produce an implementation_build or planning/reconciliation build that summarizes inventory findings, remediation task ids, deferrals, and no-gap evidence.",
+        "Run planning/task-close validation for the inventory result using available linters and source refs."
+      ],
+      "non_goals": [
+        "Do not reopen closed tasks or rewrite their historical closure evidence.",
+        "Do not implement daemon/runtime/agency/gateway fixes in this inventory task.",
+        "Do not create broad umbrella remediation tasks without concrete evidence-backed gaps.",
+        "Do not treat absence of not-yet-implemented SPRINT-019 gates as a retroactive failure of old tasks.",
+        "Do not publish, release, push, or perform destructive actions."
+      ],
+      "verification": [
+        "wiki_state refresh=true",
+        "wiki_audit profiles=alignment,source-contract,file-structure,changed scoped to roadmap/build/validation refs",
+        "targeted existing smoke tests only if the inventory claims a capability is production-ready",
+        "wiki_gate task-close or planning gate for the inventory result with source refs and gap/remediation evidence"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-10T00:02:25.000Z",
+    "purge_after": "2026-06-17T00:02:25.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Superseding TASK-084 implementation evidence records TASK-085 remediation completion, passing package-smoke/current capability checks, and readiness for fresh task-close validation.",
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-084"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+      ".codewiki/roadmap/queue.json"
+    ],
+    "tests": [
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/project-resolution.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+      ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+      ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+      ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+      ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-084"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+      ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+      ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json",
+      ".codewiki/roadmap/queue.json"
+    ],
+    "code_paths": []
+  },
+  "test_files": [
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs",
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs"
+  ],
+  "code_files": [
+    ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+    ".codewiki/roadmap/queue.json"
+  ],
+  "files_changed": [
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs",
+    "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+    ".codewiki/roadmap/queue.json"
+  ],
+  "checks_run": [
+    "wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
+    "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass",
+    "npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+      "roadmap_task_id": "TASK-084",
+      "test_files": [
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/worktree-dispatcher.test.mjs",
+        "tests/smoke/artifact-wake-queue.test.mjs",
+        "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/project-resolution.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs"
+      ],
+      "evidence": [
+        "TASK-084 remains inventory/reconciliation work; tests are existing capability smokes proving current production-surface behavior, plus CodeWiki linters proving source/roadmap alignment.",
+        "TASK-085 follow-up converted the former package-smoke failure from unresolved remediation into passing gate evidence."
+      ],
+      "notes": [
+        "All targeted smoke tests from TASK-084 inventory now pass, including package-smoke.",
+        "Audit still warns on existing graph-health and src/workflow file-structure drift outside TASK-084 scope."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+      "roadmap_task_id": "TASK-084",
+      "code_files": [
+        ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+        ".codewiki/roadmap/queue.json"
+      ],
+      "evidence": [
+        "Updated .codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md to record TASK-085 as validated/closed and package-smoke as passing after remediation.",
+        "No package source code changed in this follow-up; package smoke fixture repair already lives in TASK-085 commit/validation refs."
+      ],
+      "notes": [
+        "Supersedes stale TASK-084 implementation evidence that listed package-smoke failure and open TASK-085 risk.",
+        "Validation should use this build plus TASK-085 validation refs, not the earlier blocked task-close report, for final close."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TASK-084 remains inventory/reconciliation work; tests are existing capability smokes proving current production-surface behavior, plus CodeWiki linters proving source/roadmap alignment.",
+    "TASK-085 follow-up converted the former package-smoke failure from unresolved remediation into passing gate evidence."
+  ],
+  "code_change_evidence": [
+    "Updated .codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md to record TASK-085 as validated/closed and package-smoke as passing after remediation.",
+    "No package source code changed in this follow-up; package smoke fixture repair already lives in TASK-085 commit/validation refs."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Inventory closed production-surface tasks/sprints before SPRINT-019.",
+      "evidence": "Inventory report records 71 legacy task candidates and 11 closed sprints with source refs and classification; no historical closure rewritten."
+    },
+    {
+      "criterion": "Assess tests, linter/gateway evidence, validation reports, content evidence, and code/KB alignment.",
+      "evidence": "Inventory report cites task-close/implementation validation refs and current smoke/linter reruns; TASK-085 follow-up fixed the only package-smoke gap."
+    },
+    {
+      "criterion": "Record each candidate classification and rationale.",
+      "evidence": "Candidate table records production-ready/not-applicable classifications with source refs and rationale; remediation finding table now records TASK-085 as remediated."
+    },
+    {
+      "criterion": "Create/refine remediation tasks only for concrete gaps.",
+      "evidence": "TASK-085 was the only concrete current gap and now has implementation, ship-ready, and task-close pass validation refs."
+    },
+    {
+      "criterion": "Do not treat missing future gates as retroactive failure.",
+      "evidence": "Inventory preserves historical closures and records no closed task/sprint reopening; TASK-082/TASK-083 baseline gates exist."
+    },
+    {
+      "criterion": "Produce build and run validation/task-close evidence.",
+      "evidence": "This superseding implementation build updates the inventory after TASK-085 and hands off fresh validation with passing checks."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+    ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+    ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+    ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+    ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Proceed after TASK-085 closure and finish TASK-084 legacy production-readiness reconciliation.",
+    "implemented_changes": [
+      "Updated TASK-084 inventory report to mark the package-smoke gap as remediated by TASK-085.",
+      "Reran all targeted TASK-084 smoke/typecheck checks; package-smoke now passes.",
+      "Compiled superseding implementation evidence for final validation/task-close."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        "TASK-084"
+      ],
+      "code": [
+        ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md"
+      ],
+      "tests": [],
+      "validation": [
+        ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+        ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+        ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+        ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+        ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+      ]
+    },
+    "acceptance_evidence": [
+      ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+      ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+      "current targeted smoke/typecheck/audit results"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "all targeted smoke tests listed in checks_run",
+      "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference",
+      "npm pack --dry-run --json"
+    ],
+    "non_goals_preserved": [
+      "No closed tasks or sprints reopened.",
+      "No historical closure evidence rewritten.",
+      "No daemon/runtime/agency/gateway remediation implemented inside TASK-084.",
+      "No publish, push, release, or destructive action performed."
+    ],
+    "remaining_risks": [
+      "Existing graph-health warnings remain unrelated to TASK-084.",
+      "Existing src/workflow file-structure drift remains outside TASK-084 scope."
+    ]
+  },
+  "risks": [
+    "Existing CodeWiki graph-health warnings remain unrelated to TASK-084.",
+    "File-structure audit still warns about src/workflow drift outside TASK-084 scope.",
+    "No push, publication, release, or destructive action performed."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-084",
+      "task_id": "TASK-084",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-084",
+        "title": "Inventory legacy closed work against production-ready gates",
+        "summary": "Superseding TASK-084 implementation evidence records TASK-085 remediation completion, passing package-smoke/current capability checks, and readiness for fresh task-close validation.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+          ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json",
+          ".codewiki/roadmap/queue.json"
+        ],
+        "code_paths": [
+          ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+          ".codewiki/roadmap/queue.json"
+        ],
+        "acceptance": [
+          "Inventory closed tasks/sprints that touched daemon/runtime, agency, worktree/session, gateway/policy, roadmap, state, command/tool surfaces, or other production-surface foundations before SPRINT-019.",
+          "For each candidate, assess whether current code has executable behavior tests, relevant linter/gateway evidence, validation reports, content evidence, and code/KB alignment sufficient under the new production-ready closure semantics.",
+          "Record each candidate as production-ready, needs-remediation, deferred-until-SPRINT-019-gate, or not-applicable with source refs and rationale.",
+          "Create or refine remediation tasks only for concrete gaps, grouped by capability and with direct acceptance criteria; do not reopen or mutate historical closed tasks as if their original closure status were wrong.",
+          "If the new SPRINT-019 gates are not implemented yet, record blocked/deferred evidence instead of pretending the legacy work can pass the future gate today.",
+          "Produce an implementation_build or planning/reconciliation build that summarizes inventory findings, remediation task ids, deferrals, and no-gap evidence.",
+          "Run planning/task-close validation for the inventory result using available linters and source refs."
+        ],
+        "verification": [
+          "wiki_state refresh=true",
+          "wiki_audit profiles=alignment,source-contract,file-structure,changed scoped to roadmap/build/validation refs",
+          "targeted existing smoke tests only if the inventory claims a capability is production-ready",
+          "wiki_gate task-close or planning gate for the inventory result with source refs and gap/remediation evidence"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+        "checks_run": [
+          "wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
+          "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass",
+          "npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+        ],
+        "test_design_evidence": [
+          "TASK-084 remains inventory/reconciliation work; tests are existing capability smokes proving current production-surface behavior, plus CodeWiki linters proving source/roadmap alignment.",
+          "TASK-085 follow-up converted the former package-smoke failure from unresolved remediation into passing gate evidence."
+        ],
+        "code_change_evidence": [
+          "Updated .codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md to record TASK-085 as validated/closed and package-smoke as passing after remediation.",
+          "No package source code changed in this follow-up; package smoke fixture repair already lives in TASK-085 commit/validation refs."
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+          ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+          ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+          ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+          ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-084",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-084",
+      "show_build": "git show refs/codewiki/archive/task/TASK-084:.codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+        ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+        ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json",
+        ".codewiki/roadmap/queue.json"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-084 Inventory legacy closed work against production-ready gates implementation evidence",
+      "body": "Superseding TASK-084 implementation evidence records TASK-085 remediation completion, passing package-smoke/current capability checks, and readiness for fresh task-close validation.\n\nChecks: wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass, npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==\nValidation: .codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json, .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json, .codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json, .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-084\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json\nCodeWiki-Checks: wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass, npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==\nCodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json, .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json, .codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json, .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json\nCodeWiki-Recover: /wiki-restore TASK-084\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-084\nCodeWiki-Digest: sha256:7b35a454c0b457eaee07f9a471b4582e0acf6b4976ab72522c38d2b8fde57262\nCodeWiki-Restore: /wiki-restore TASK-084",
+      "trailers": [
+        "CodeWiki-Task: TASK-084",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+        "CodeWiki-Checks: wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass, npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json, .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json, .codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json, .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+        "CodeWiki-Recover: /wiki-restore TASK-084",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-084",
+        "CodeWiki-Digest: sha256:7b35a454c0b457eaee07f9a471b4582e0acf6b4976ab72522c38d2b8fde57262",
+        "CodeWiki-Restore: /wiki-restore TASK-084"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-084 Inventory legacy closed work against production-ready gates implementation evidence",
+      "body": "Superseding TASK-084 implementation evidence records TASK-085 remediation completion, passing package-smoke/current capability checks, and readiness for fresh task-close validation.\n\nChecks: wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass, npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==\nValidation: .codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json, .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json, .codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json, .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-084\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json\nCodeWiki-Checks: wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass, node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass, node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass, npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg==\nCodeWiki-Validation: .codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json, .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, .codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json, .codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json, .codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json\nCodeWiki-Recover: /wiki-restore TASK-084\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-084\nCodeWiki-Digest: sha256:7b35a454c0b457eaee07f9a471b4582e0acf6b4976ab72522c38d2b8fde57262\nCodeWiki-Restore: /wiki-restore TASK-084"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-084",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-084"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-084",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-084",
+        "show_build": "git show refs/codewiki/archive/task/TASK-084:.codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+          ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+          ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+          ".codewiki/validation/2026-06-01-planning-pass-2026-06-01-production-surface-au.json",
+          ".codewiki/roadmap/queue.json"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-084",
+      "build_path": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-084",
+      "commit_sha": "",
+      "digest": "sha256:7b35a454c0b457eaee07f9a471b4582e0acf6b4976ab72522c38d2b8fde57262",
+      "restore_command": "/wiki-restore TASK-084"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:adf1a1462dc98b8a8a0f0a376ac87fa5227df1a3473271621dc3467a417ee702",
+          "bytes": 26462
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+          "role": "validation_ref",
+          "sha256": "sha256:c42f24a0197114636f95b3c87873bac27293bfc913b289280c87f2cfdcd9ad5f",
+          "bytes": 13288
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+          "role": "validation_ref",
+          "sha256": "sha256:a08057a7d45e359be67ad89e9eceed1ad6688b24fd334414fb56cf9dbbe2834d",
+          "bytes": 15859
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+          "role": "validation_ref",
+          "sha256": "sha256:3af73117adf39052cd6e62c3d1115f5bfddbc6c9217d812984fa5a53360ca9b1",
+          "bytes": 9862
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+          "role": "validation_ref",
+          "sha256": "sha256:b8aa5a5015055b4669c493bd2945c70705568c86461d08e2f91bed42477a7e0c",
+          "bytes": 10013
+        },
+        {
+          "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
+          "role": "validation_ref",
+          "sha256": "sha256:83023cc694d6d10a3676664c3add7dc5916a95c635100744cd4c8ae1a2ad7ba8",
+          "bytes": 10735
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cab206527925c288078b9774e50d58075e9dbac957939c13baf0940d5e1d4b5e",
+          "bytes": 117766
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:28dbe73d771c9625e5d6852d89eb7b578845edd4646e363d6ffdb373cf1033e8",
+          "bytes": 45028
+        },
+        {
+          "path": "tests/smoke/policy-gate.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f0606315486db19eee1e1cf346214ced632ec28e960f5081c4b4b25188b1c0da",
+          "bytes": 7151
+        },
+        {
+          "path": "tests/smoke/roadmap-task-boundary.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:204b62f0fb83704cb3b46f4c0b19b39a7fd23ca04397564fc3ffbf35ac15e870",
+          "bytes": 4992
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d705f168d9175464615fb6026851bb284989448c16c7453ca177a745d6cc9b6b",
+          "bytes": 17880
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7fa8a4b01c04bc7d1db60ccafddfa74f876ae2578172712d84ea2a4a3d9237f6",
+          "bytes": 16742
+        },
+        {
+          "path": "tests/smoke/runtime-job-state.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:07a95391edd4111adc8468eeee1b38838ce23d60b37e422aebed0395a9e8d65f",
+          "bytes": 9827
+        },
+        {
+          "path": "tests/smoke/agency-auto-pickup.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d91dd65da653329551c9db09c20b0465e053bdd92288bd01182a6be1887b0b43",
+          "bytes": 7674
+        },
+        {
+          "path": "tests/smoke/worktree-dispatcher.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d9b04201142e8722a3655a9dae7c1183bbf40088853e7969ad58561e92d7cee5",
+          "bytes": 7086
+        },
+        {
+          "path": "tests/smoke/artifact-wake-queue.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:258484a03cba0de0b63ac2abde68068ac83b38b4f0c49325c25f2fac54ac96a7",
+          "bytes": 6342
+        },
+        {
+          "path": "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f300c70a01ec3710106ba1497793841f9880379d61611286ae68f5596c8a9322",
+          "bytes": 5474
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:077bcdd5463fe6bec84dea8ff3a5538ef21122628bb5ccd6e700f9c85ad23756",
+          "bytes": 15690
+        },
+        {
+          "path": "tests/smoke/audit-drift.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9bb968a2fcad9de5601069dcb980c651add6d6bbb95bfed20ea9426979a1b65a",
+          "bytes": 9351
+        },
+        {
+          "path": "tests/smoke/lexicon-linter.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0dc646b9e711a808dc11d2d9e9ca95c22ab0eec24bad4fbc8920a8e4e32a7a64",
+          "bytes": 6909
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:5e630b5745e22fe32c454263ffdec492c2e1beef2e459226a3740fcc3ce6e83e",
+          "bytes": 13411
+        },
+        {
+          "path": "tests/smoke/project-resolution.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:bf41a8ab597cdd8989d660c9698aaaf671c65b02a7664bfb2b6c15c1bf19873c",
+          "bytes": 1153
+        },
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:18d4af2a0205ac5f7bb51baa27021c3772bb54ced13c4dac1ad5360694c62634",
+          "bytes": 15060
+        },
+        {
+          "path": "tests/smoke/resume-scheduler.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0b284b459734dcb70c56c81c5140b943f8cf2783c31adfc2abb84f38add2a5ef",
+          "bytes": 9764
+        },
+        {
+          "path": ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+          "role": "code_file",
+          "sha256": "sha256:e7a45877f987f1cb9d02bf42cd924d558b3847d91889df048a0b18748b8d527c",
+          "bytes": 39500
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "role": "code_file",
+          "sha256": "sha256:781b9f80e01093af5e9a7a4ae10bb6a9fd099735bc4f95249c6916d3d7231962",
+          "bytes": 75273
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-084",
+      "source_build": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/research/2026-06-03-task-084-legacy-production-readiness-inventory.md",
+          ".codewiki/roadmap/queue.json",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/policy-gate.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "tests/smoke/worktree-dispatcher.test.mjs",
+          "tests/smoke/artifact-wake-queue.test.mjs",
+          "tests/tasks/TASK-069/diff-table-batch.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs",
+          "tests/smoke/project-resolution.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+          ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+          ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+          ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+          ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-084",
+        "restore_command": "/wiki-restore TASK-084"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "wiki_state refresh=true view=task focus=TASK-084: health yellow, 0 errors/2 warnings, TASK-084 blocked pending TASK-085 follow-up",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass after TASK-085 fixture repair",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/artifact-wake-queue.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-069/diff-table-batch.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/project-resolution.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
+        "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084: warning only graph-health/file-structure/generated-view; source-contract/task/generated-parity/package/security/stale-reference pass",
+        "npm pack --dry-run --json: codewiki@0.1.2 integrity sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+        ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+        ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
+        ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
+        ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
