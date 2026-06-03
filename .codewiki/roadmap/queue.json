@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "updated": "2026-06-03T21:38:10Z",
+  "updated": "2026-06-03T21:58:06Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036"
+    "TASK-036",
+    "TASK-088",
+    "TASK-089",
+    "TASK-090",
+    "TASK-091"
   ],
   "tasks": {
     "TASK-012": {
@@ -530,6 +534,374 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-31T01:04:07Z"
+    },
+    "TASK-088": {
+      "id": "TASK-088",
+      "title": "Remove deprecated CodeWiki skill surfaces",
+      "status": "cancelled",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Cancel accidental aggregate TASK-088 before recreating atomic SPRINT-022 tasks.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
+        ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "code_paths": [
+        "skills/codewiki/**",
+        "skills/codewiki-validation/**",
+        "skills/codewiki-decision/**",
+        "skills/codewiki-planning/**",
+        "skills/codewiki-implementation/**",
+        "src/adapters/pi/prompt-contract.ts",
+        "src/checks/source-contract.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "package.json",
+        "src/validation/**",
+        "src/gateway/**",
+        "src/adapters/pi/**",
+        "src/api/**",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs",
+        "src/runtime/**",
+        "src/adapters/pi/commands/resume.ts",
+        "src/session/worktree-isolation.ts",
+        "src/session/worktree-dispatcher.ts",
+        "src/session/merge-publisher-queue.ts",
+        "src/session/artifact-status-tool.ts",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/worktree-dispatcher.test.mjs",
+        "src/state/**",
+        "src/telemetry/**",
+        "src/build/**",
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "src/gc/**",
+        ".gitignore"
+      ],
+      "research_ids": [],
+      "labels": [
+        "prompt-contract",
+        "skills",
+        "no-shims",
+        "package-surface",
+        "loop-first",
+        "validation-gateway",
+        "legacy-root-cleanup",
+        "source-layout",
+        "daemon",
+        "fresh-worker",
+        "pi-adapter",
+        "validation-handoff",
+        "dirty-content-proof",
+        "graph",
+        "telemetry",
+        "artifact-ref",
+        "automation-readiness",
+        "traceability",
+        "hot-state",
+        "gc",
+        "scratch-paths",
+        "dogfood-state",
+        "cleanup"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Only codewiki-decision, codewiki-planning, and codewiki-implementation remain discoverable package skills, with router/validation invariants owned by prompt contract and package docs instead of deprecated skill surfaces.",
+        "acceptance": [
+          "Package skill discovery and source-contract tests report exactly the three normal workflow skills: codewiki-decision, codewiki-planning, and codewiki-implementation.",
+          "`skills/codewiki/**` and `skills/codewiki-validation/**` no longer remain as package-discoverable skill folders, hidden aliases, or shim skills.",
+          "Any bootstrap/router/validation guidance still required by agents is moved to prompt contract, package docs, or non-skill docs with source refs.",
+          "Prompt contract describes three loops plus gates, not a four-loop validation workflow.",
+          "Package, source-contract, prompt-contract, and prompt-assets smoke tests pass.",
+          "No package source imports from `src/validation/**`; all references use `src/gateway/**` or public API contracts.",
+          "`src/validation/**` is removed rather than retained as a compatibility shim root.",
+          "File-structure docs/diagram/source-contract no longer treat `src/validation/**` as an active package source root except historical refs.",
+          "Gateway preflight/report semantics and pass/fail/block output remain unchanged.",
+          "Gateway, policy, source-contract, package, and smoke tests pass.",
+          "Runtime exposes a fresh-worker request/handoff contract with role, task/build refs, trace_refs, gate_refs, git_refs, and content proof requirements.",
+          "Pi adapter bridge uses command-context `ctx.newSession`/`withSession` where available and records platform-limited blockers when unavailable.",
+          "Dirty pre-commit implementation validation requires exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication require immutable commit/tree/package/archive/remote proof.",
+          "Daemon/agency stop reasons include exact platform/content/remediation diagnostics for unavailable spawn or unsafe dirty transfer.",
+          "Runtime/agency/gateway/worktree smoke tests cover spawn-available, spawn-unavailable, dirty-digest handoff, and promotion-proof-required cases.",
+          "Graph nodes/edges expose or preserve trace_refs, gate_refs, git_refs, and ArtifactRef-compatible refs for decision/planning/implementation/gate artifacts.",
+          "Automation-readiness and agency scheduling cite exact trace/gate/git blockers from graph state.",
+          "Legacy build/validation artifacts remain readable through compatibility normalization; no broad historical artifact migration is required.",
+          "Graph/status/task lenses remain compact and generated-parity passes.",
+          "Targeted graph/readiness/gateway smoke tests pass.",
+          "Docs and file-structure map distinguish package source from `.codewiki/**` dogfood truth, generated views, runtime/session scratch, validation/build evidence, `.pi`, `.vscode`, and `.tmp-worktrees` local scratch.",
+          "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
+          "Post-close GC dry-run identifies eligible tracked/runtime artifacts; any purge writes restore ledger with archive commit/tree proof or records deferral/block reason.",
+          "No validation/build evidence required for open/current policy is deleted.",
+          "Package/file-structure/generated-parity tests and audits pass."
+        ],
+        "non_goals": [
+          "Do not remove .codewiki dogfood state.",
+          "Do not remove public /wiki-bootstrap, /wiki-status, /wiki-config, /wiki-resume, or /linter commands.",
+          "Do not implement daemon fresh-worker spawning in this task.",
+          "Do not rename gateway concepts back to validation loop terminology.",
+          "Do not remove validation report artifacts under `.codewiki/validation/**`; those are dogfood evidence, not package source.",
+          "Do not change task-close/ship-ready policy except import/source-root cleanup.",
+          "Do not publish or push remote changes.",
+          "Do not run broad autonomous refactor work in this task.",
+          "Do not bypass independent fresh validation or task-close/ship-ready gates.",
+          "Do not migrate every historical `.codewiki/builds` or `.codewiki/validation` file.",
+          "Do not change the public gate verdict contract.",
+          "Do not remove hot-state artifacts in this task.",
+          "Do not delete `.codewiki/kb`, `.codewiki/roadmap`, `.codewiki/validation`, or `.codewiki/builds` wholesale.",
+          "Do not rewrite Git history or remove validation evidence needed for recent closes."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+          "npm run typecheck",
+          "wiki_gate audit profiles=source-contract,stale-reference,package,changed,generated-parity",
+          "grep/import scan for src/validation references",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+          "npm run test:smoke",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+          "wiki_gate audit profiles=alignment,generated-parity,source-contract,changed",
+          "git worktree list --porcelain and dirty-state checks",
+          "wiki_runtime gc dry-run with archive_sha/tree_sha after close checkpoint",
+          "wiki_gate audit profiles=file-structure,generated-parity,changed"
+        ]
+      },
+      "delta": {
+        "desired": "Normal package skill surface is three workflow skills only; no router/validation skill shims remain.\nRefinement: Additional outcome: Gateway owns validation code directly and the deprecated `src/validation/**` source root is removed without behavior loss.\nRefinement: No deprecated validation shim source root remains.\nRefinement: Additional outcome: Daemon/runtime can spawn or queue fresh worker/validator sessions from CodeWiki source refs when Pi command-context APIs are available, and block safely with exact reasons when they are not.\nRefinement: Daemon/runtime has command-context fresh-worker bridge and exact dirty-content proof policy.\nRefinement: Additional outcome: Graph and automation-readiness consume canonical trace/gate/git/artifact refs from build/gate artifacts instead of relying mainly on legacy path/name inference.\nRefinement: Graph/readiness uses canonical trace/gate/git/artifact refs for daemon-safe scheduling.\nRefinement: Additional outcome: Repo-local dogfood state, runtime scratch, and local worktree paths have clear production semantics and only eligible artifacts are purged through CodeWiki GC policy.\nRefinement: Stale-looking local/dogfood paths are either documented as intentional or safely purged through GC evidence.",
+        "current": "skills/codewiki and skills/codewiki-validation still exist as discoverable folders after accepted decision.\nRefinement: src/validation/** still exists as @deprecated re-export shims to gateway.\nRefinement: Runtime can model jobs/runs but cannot directly spawn fresh Pi sessions from agent tools; manual /wiki-resume --new remains the fallback.\nRefinement: TASK-087 added contracts and compatibility helpers; broader graph/lens migration remains in SPRINT-022.\nRefinement: User sees `.codewiki/**`, `.tmp-worktrees`, `.pi`, `.vscode`, and generated/runtime paths as stale/deprecated because production semantics are unclear after structure decisions.",
+        "closure": "Task closes after tests and source-contract/package audits prove only three normal skills remain.\nRefinement: Task closes after imports, tests, and file-structure/source-contract audits pass without src/validation source root.\nRefinement: Task closes after spawn bridge behavior and blockers are covered by tests and implementation validation.\nRefinement: Task closes after generated graph and readiness lenses expose exact refs and audits/tests pass.\nRefinement: Task closes with clear retention docs and GC dry-run/purge evidence without unsafe deletion."
+      },
+      "created": "2026-06-03",
+      "updated": "2026-06-03T21:56:21Z"
+    },
+    "TASK-089": {
+      "id": "TASK-089",
+      "title": "Remove deprecated CodeWiki skill surfaces",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Make package skill discovery expose only decision, planning, and implementation workflow skills by removing generic router/validation skill folders and moving required invariant prose to prompt/docs.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "skills/codewiki/**",
+        "skills/codewiki-validation/**",
+        "skills/codewiki-decision/**",
+        "skills/codewiki-planning/**",
+        "skills/codewiki-implementation/**",
+        "src/adapters/pi/prompt-contract.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "package.json",
+        "src/validation/**",
+        "src/gateway/**",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "prompt-contract",
+        "skill-surface-cleanup",
+        "no-shims",
+        "validation-shim-cleanup",
+        "gateway-source-root"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Only codewiki-decision, codewiki-planning, and codewiki-implementation remain discoverable package skills.",
+        "acceptance": [
+          "Package skill discovery and source-contract tests report exactly the three normal workflow skills.",
+          "`skills/codewiki/**` and `skills/codewiki-validation/**` no longer remain as package-discoverable folders, hidden aliases, or shim skills.",
+          "Bootstrap/router/validation guidance needed by agents is moved to prompt contract, package docs, or non-skill docs.",
+          "Prompt contract describes three loops plus gates, not a four-loop validation workflow.",
+          "No package source imports from `src/validation/**`; all references use `src/gateway/**` or public API contracts.",
+          "`src/validation/**` is removed rather than retained as a compatibility shim root.",
+          "File-structure/source-contract no longer treat `src/validation/**` as an active source root except historical refs.",
+          "Gateway preflight/report semantics and pass/fail/block output remain unchanged."
+        ],
+        "non_goals": [
+          "Do not remove .codewiki dogfood state.",
+          "Do not remove public /wiki-* commands.",
+          "Do not implement fresh-worker spawning.",
+          "Do not remove `.codewiki/validation/**` evidence artifacts.",
+          "Do not rename gateway back to validation-loop terminology.",
+          "Do not change task-close/ship-ready policy except import/root cleanup."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+          "npm run typecheck",
+          "grep/import scan for src/validation references",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+          "npm run test:smoke"
+        ]
+      },
+      "delta": {
+        "desired": "Three discoverable workflow skills only.\nRefinement: Additional outcome: Gateway owns validation code directly and the deprecated `src/validation/**` source root is removed without behavior loss.\nRefinement: No deprecated validation shim source root remains.",
+        "current": "skills/codewiki and skills/codewiki-validation still exist after accepted no-shim decision.\nRefinement: src/validation/** exists as @deprecated re-export shims to gateway.",
+        "closure": "Tests and source-contract/package audits prove only three workflow skills remain.\nRefinement: Imports, tests, file-structure, and source-contract audits pass without src/validation source root."
+      },
+      "created": "2026-06-03",
+      "updated": "2026-06-03"
+    },
+    "TASK-090": {
+      "id": "TASK-090",
+      "title": "Implement Pi fresh-worker spawn bridge",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Let daemon/runtime request fresh Pi worker or validator sessions through command-context APIs with exact platform/content blockers and dirty-content proof handoff policy.",
+      "spec_paths": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "code_paths": [
+        "src/runtime/**",
+        "src/adapters/pi/commands/resume.ts",
+        "src/session/worktree-isolation.ts",
+        "src/session/worktree-dispatcher.ts",
+        "src/session/merge-publisher-queue.ts",
+        "src/session/artifact-status-tool.ts",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/worktree-dispatcher.test.mjs",
+        "src/state/**",
+        "src/telemetry/**",
+        "src/build/**",
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "fresh-worker-spawn",
+        "pi-session-bridge",
+        "dirty-content-proof",
+        "graph-ref-migration",
+        "artifact-ref",
+        "automation-readiness"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Daemon/runtime can spawn or queue fresh worker/validator sessions from CodeWiki source refs when Pi command-context APIs are available, and block safely with exact reasons when unavailable.",
+        "acceptance": [
+          "Runtime exposes a fresh-worker request/handoff contract with role, task/build refs, trace_refs, gate_refs, git_refs, and content proof requirements.",
+          "Pi adapter bridge uses command-context `ctx.newSession`/`withSession` where available and records platform-limited blockers when unavailable.",
+          "Dirty pre-commit implementation validation requires exact working_tree_digest plus patch/worktree handoff evidence; promotion gates require immutable proof.",
+          "Daemon/agency stop reasons include exact platform/content/remediation diagnostics for unavailable spawn or unsafe dirty transfer.",
+          "Graph nodes/edges expose or preserve trace_refs, gate_refs, git_refs, and ArtifactRef-compatible refs for compiler/gate artifacts.",
+          "Automation-readiness and agency scheduling cite exact trace/gate/git blockers from graph state.",
+          "Legacy build/validation artifacts remain readable through compatibility normalization; no broad historical artifact migration is required.",
+          "Graph/status/task lenses remain compact and generated-parity passes."
+        ],
+        "non_goals": [
+          "Do not publish or push remote changes.",
+          "Do not run broad autonomous refactor work in this task.",
+          "Do not bypass independent fresh validation or task-close/ship-ready gates.",
+          "Do not migrate every historical `.codewiki/builds` or `.codewiki/validation` file.",
+          "Do not change public gate verdict contract.",
+          "Do not remove hot-state artifacts."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+          "npm run typecheck",
+          "npm run test:smoke",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "wiki_gate audit profiles=alignment,generated-parity,source-contract,changed"
+        ]
+      },
+      "delta": {
+        "desired": "Daemon/runtime has command-context fresh-worker bridge and exact dirty-content proof policy.\nRefinement: Additional outcome: Graph and automation-readiness consume canonical trace/gate/git/artifact refs from build/gate artifacts instead of relying mainly on legacy path/name inference.\nRefinement: Graph/readiness uses canonical trace/gate/git/artifact refs for daemon-safe scheduling.",
+        "current": "Runtime models jobs/runs but agent tools cannot spawn fresh Pi sessions; manual /wiki-resume --new remains fallback.\nRefinement: TASK-087 added contracts and compatibility helpers; broader graph/lens migration remains in SPRINT-022.",
+        "closure": "Spawn bridge behavior and blockers are covered by tests and implementation validation.\nRefinement: Generated graph and readiness lenses expose exact refs and audits/tests pass."
+      },
+      "created": "2026-06-03",
+      "updated": "2026-06-03"
+    },
+    "TASK-091": {
+      "id": "TASK-091",
+      "title": "Define CodeWiki hot-state retention cleanup",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "maintenance",
+      "summary": "Separate dogfood hot state from package source cleanup, document which `.codewiki/**`, `.tmp-worktrees`, `.pi`, and local scratch paths stay, and purge only eligible artifacts through GC with restore evidence.",
+      "spec_paths": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "code_paths": [
+        "src/gc/**",
+        ".gitignore",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "hot-state-retention",
+        "gc-cleanup",
+        "scratch-paths"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Repo-local dogfood state, runtime scratch, and local worktree paths have clear production semantics and only eligible artifacts are purged through CodeWiki GC policy.",
+        "acceptance": [
+          "Docs/file-structure map distinguish package source from `.codewiki/**` dogfood truth, generated views, runtime/session scratch, validation/build evidence, `.pi`, `.vscode`, and `.tmp-worktrees`.",
+          "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
+          "Post-close GC dry-run identifies eligible tracked/runtime artifacts; any purge writes restore ledger with archive commit/tree proof or records deferral/block reason.",
+          "No validation/build evidence required for open/current policy is deleted."
+        ],
+        "non_goals": [
+          "Do not delete `.codewiki/kb`, `.codewiki/roadmap`, `.codewiki/validation`, or `.codewiki/builds` wholesale.",
+          "Do not rewrite Git history or remove validation evidence needed for recent closes.",
+          "Do not publish or push remote changes."
+        ],
+        "verification": [
+          "git worktree list --porcelain and dirty-state checks",
+          "wiki_runtime gc dry-run with archive_sha/tree_sha after close checkpoint",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "npm run typecheck",
+          "wiki_gate audit profiles=file-structure,generated-parity,changed"
+        ]
+      },
+      "delta": {
+        "desired": "Stale-looking local/dogfood paths are either documented as intentional or safely purged through GC evidence.",
+        "current": "User sees `.codewiki/**`, `.tmp-worktrees`, `.pi`, `.vscode`, and generated/runtime paths as stale/deprecated because production semantics are unclear after structure decisions.",
+        "closure": "Task closes with clear retention docs and GC dry-run/purge evidence without unsafe deletion."
+      },
+      "created": "2026-06-03",
+      "updated": "2026-06-03"
     }
   },
   "sprints": {
@@ -1411,9 +1783,13 @@
     "SPRINT-022": {
       "id": "SPRINT-022",
       "title": "Post-daemon CodeWiki structure and telemetry migration",
-      "status": "planned",
-      "outcome": "After TASK-087 passes, split and execute loop-first source migration, telemetry hot-state migration, graph lens migration, Pi path migration, and legacy root cleanup into parallel-safe tasks.",
-      "task_ids": [],
+      "status": "active",
+      "outcome": "Execute the post-daemon CodeWiki structure cleanup and automation refactor safely: remove deprecated skill/validation surfaces, implement fresh-worker spawn bridge, migrate graph/ref readiness as needed, and clarify hot-state retention without deleting canonical dogfood evidence.",
+      "task_ids": [
+        "TASK-089",
+        "TASK-090",
+        "TASK-091"
+      ],
       "scope": {
         "knowledge": [
           ".codewiki/kb/system/file-structure.md",
@@ -1421,33 +1797,38 @@
           ".codewiki/kb/system/builds.md",
           ".codewiki/kb/system/validation-gateway.md",
           ".codewiki/kb/system/adapters.md",
-          ".codewiki/kb/system/extension.md"
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/worktree-isolation.md"
         ],
         "code": [
-          "src/decision/**",
-          "src/planning/**",
-          "src/implementation/**",
-          "src/telemetry/**",
-          "src/graph/**",
-          "src/pi/**",
-          "src/state/**",
-          "src/build/**",
+          "skills/codewiki/**",
+          "skills/codewiki-validation/**",
           "src/validation/**",
-          "src/adapters/pi/**"
+          "src/runtime/**",
+          "src/adapters/pi/**",
+          "src/session/**",
+          "src/state/**",
+          "src/telemetry/**",
+          "src/build/**",
+          "src/gc/**",
+          ".gitignore",
+          "tests/smoke/**"
         ]
       },
       "budget": {
         "maxCycles": 8,
-        "maxSessions": 8,
+        "maxSessions": 4,
         "maxWrites": 160,
         "risk": "medium"
       },
       "gates": [
         "planning",
-        "implementation"
+        "implementation",
+        "task-close"
       ],
       "created": "2026-06-03T05:32:26Z",
-      "updated": "2026-06-03T05:32:26Z"
+      "updated": "2026-06-03T21:58:06Z"
     }
   }
 }

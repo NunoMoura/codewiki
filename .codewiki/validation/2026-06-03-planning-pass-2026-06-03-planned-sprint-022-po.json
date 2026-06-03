@@ -1,0 +1,337 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T21:59:49Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "pass",
+  "rationale": "SPRINT-022 planning passed: accepted prompt/skill architecture recovery rows are mapped to TASK-089/TASK-090/TASK-091 and SPRINT-022, accidental aggregate TASK-088 is cancelled, task boundary lints pass, and required planning audits pass except non-blocking graph-health warnings.",
+  "checks": [
+    "wiki_gate audit alignment,generated-parity,task,source-contract,stale-reference TASK-089: pass except graph-health warnings",
+    "wiki_gate audit task TASK-090: pass",
+    "wiki_gate audit task TASK-091: pass",
+    "decision validation pass: .codewiki/validation/2026-06-03-decision-pass-2026-06-03-accepted-prompt-skill.json",
+    "explicit-approval:user confirmed reload done and asked to proceed from accepted repo-structure decision"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health reports 14 warnings after roadmap/build planning writes; generated-parity/source-contract/stale-reference/task audits pass, so this does not block planning but must be monitored during implementation/close."
+    },
+    {
+      "severity": "warning",
+      "summary": "TASK-089 and TASK-090 intentionally combine closely related sub-scopes after roadmap auto-reuse collapsed initial finer task proposal; implementation should stop if either scope expands beyond acceptance."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "planning:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Graph health reports 14 warnings after roadmap/build planning writes; generated-parity/source-contract/stale-reference/task audits pass, so this does not block planning but must be monitored during implementation/close.",
+      "refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "warning",
+      "summary": "TASK-089 and TASK-090 intentionally combine closely related sub-scopes after roadmap auto-reuse collapsed initial finer task proposal; implementation should stop if either scope expands beyond acceptance.",
+      "refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "planning:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Graph health reports 14 warnings after roadmap/build planning writes; generated-parity/source-contract/stale-reference/task audits pass, so this does not block planning but must be monitored during implementation/close.",
+      "ref_count": 0
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "warning",
+      "summary": "TASK-089 and TASK-090 intentionally combine closely related sub-scopes after roadmap auto-reuse collapsed initial finer task proposal; implementation should stop if either scope expands beyond acceptance.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+  "policy_profile": "planning",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment",
+    "generated-parity",
+    "task",
+    "source-contract",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:generated-parity",
+    "audit:task",
+    "audit:task:TASK-089",
+    "audit:task:TASK-090",
+    "audit:task:TASK-091",
+    "audit:source-contract",
+    "audit:stale-reference",
+    "explicit-approval:user:post-reload-proceed"
+  ],
+  "audit_reports": [
+    "wiki_gate:audit:profiles=alignment,generated-parity,task,source-contract,stale-reference:TASK-089:planning",
+    "wiki_gate:audit:profile=task:TASK-090:planning",
+    "wiki_gate:audit:profile=task:TASK-091:planning"
+  ],
+  "content_proof_refs": [
+    "2acca9d3b2ede7c8e78c496347f0f0f79dd95767",
+    "643fe98d26dd20419602c5c3caa7098889f3e16c",
+    "planning-build-roadmap-dirty-state"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-2026-06-03-planned-sprint-022-po.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+      ".codewiki/validation/2026-06-03-planning-pass-2026-06-03-planned-sprint-022-po.json",
+      "Cancelled accidental aggregate TASK-088 after roadmap create auto-collapsed separate work into one non-atomic task.",
+      "Created TASK-089 for deprecated skill and validation-surface cleanup.",
+      "Created TASK-090 for Pi fresh-worker spawn bridge plus graph/ref readiness migration.",
+      "Created TASK-091 for CodeWiki hot-state retention and GC cleanup semantics.",
+      "Updated SPRINT-022 to active with TASK-089, TASK-090, and TASK-091.",
+      "TASK-089",
+      "TASK-090",
+      "TASK-091",
+      "skills/codewiki/**",
+      "skills/codewiki-validation/**",
+      "src/validation/**",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/runtime/**",
+      "src/session/**",
+      "src/state/**",
+      "src/telemetry/**",
+      "src/build/**",
+      "src/gc/**",
+      ".gitignore",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-2026-06-03-planned-sprint-022-po.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-planning-pass-2026-06-03-planned-sprint-022-po.json",
+      "CodeWiki-Checks: wiki_gate audit alignment,generated-parity,task,source-contract,stale-reference TASK-089: pass except graph-health warnings; wiki_gate audit task TASK-090: pass; wiki_gate audit task TASK-091: pass; decision validation pass: .codewiki/validation/2026-06-03-decision-pass-2026-06-03-accepted-prompt-skill.json; explicit-approval:user confirmed reload done and asked to proceed from accepted repo-structure decision"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "skills/codewiki/**",
+      "skills/codewiki-validation/**",
+      "src/validation/**",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/runtime/**",
+      "src/session/**",
+      "src/state/**",
+      "src/telemetry/**",
+      "src/build/**",
+      "src/gc/**"
+    ],
+    "reasons": [
+      "packaged CodeWiki skill prompt changed",
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki runtime orchestration changed",
+      "CodeWiki session/runtime boundary code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "generated-parity",
+      "task",
+      "source-contract",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:task or profile:task",
+      "audit:source-contract or profile:source-contract",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "next_safe_actions": []
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "explicit-approval:user:post-reload-proceed",
+        "explicit-approval:user confirmed reload done and asked to proceed from accepted repo-structure decision"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "head_sha": "2acca9d3b2ede7c8e78c496347f0f0f79dd95767",
+    "tree_sha": "643fe98d26dd20419602c5c3caa7098889f3e16c",
+    "working_tree_digest": "planning-build-roadmap-dirty-state",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Planning validation after roadmap/build writes; no source implementation edits.",
+    "role": "validator"
+  }
+}

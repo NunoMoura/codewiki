@@ -1,0 +1,79 @@
+{
+  "id": "TASK-090",
+  "title": "Implement Pi fresh-worker spawn bridge",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Let daemon/runtime request fresh Pi worker or validator sessions through command-context APIs with exact platform/content blockers and dirty-content proof handoff policy.",
+  "spec_paths": [
+    ".codewiki/kb/system/runtime.md",
+    ".codewiki/kb/system/worktree-isolation.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/builds.md"
+  ],
+  "code_paths": [
+    "src/runtime/**",
+    "src/adapters/pi/commands/resume.ts",
+    "src/session/worktree-isolation.ts",
+    "src/session/worktree-dispatcher.ts",
+    "src/session/merge-publisher-queue.ts",
+    "src/session/artifact-status-tool.ts",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "src/state/**",
+    "src/telemetry/**",
+    "src/build/**",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/source-contract.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "fresh-worker-spawn",
+    "pi-session-bridge",
+    "dirty-content-proof",
+    "graph-ref-migration",
+    "artifact-ref",
+    "automation-readiness"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Daemon/runtime can spawn or queue fresh worker/validator sessions from CodeWiki source refs when Pi command-context APIs are available, and block safely with exact reasons when unavailable.",
+    "acceptance": [
+      "Runtime exposes a fresh-worker request/handoff contract with role, task/build refs, trace_refs, gate_refs, git_refs, and content proof requirements.",
+      "Pi adapter bridge uses command-context `ctx.newSession`/`withSession` where available and records platform-limited blockers when unavailable.",
+      "Dirty pre-commit implementation validation requires exact working_tree_digest plus patch/worktree handoff evidence; promotion gates require immutable proof.",
+      "Daemon/agency stop reasons include exact platform/content/remediation diagnostics for unavailable spawn or unsafe dirty transfer.",
+      "Graph nodes/edges expose or preserve trace_refs, gate_refs, git_refs, and ArtifactRef-compatible refs for compiler/gate artifacts.",
+      "Automation-readiness and agency scheduling cite exact trace/gate/git blockers from graph state.",
+      "Legacy build/validation artifacts remain readable through compatibility normalization; no broad historical artifact migration is required.",
+      "Graph/status/task lenses remain compact and generated-parity passes."
+    ],
+    "non_goals": [
+      "Do not publish or push remote changes.",
+      "Do not run broad autonomous refactor work in this task.",
+      "Do not bypass independent fresh validation or task-close/ship-ready gates.",
+      "Do not migrate every historical `.codewiki/builds` or `.codewiki/validation` file.",
+      "Do not change public gate verdict contract.",
+      "Do not remove hot-state artifacts."
+    ],
+    "verification": [
+      "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "wiki_gate audit profiles=alignment,generated-parity,source-contract,changed"
+    ]
+  },
+  "delta": {
+    "desired": "Daemon/runtime has command-context fresh-worker bridge and exact dirty-content proof policy.\nRefinement: Additional outcome: Graph and automation-readiness consume canonical trace/gate/git/artifact refs from build/gate artifacts instead of relying mainly on legacy path/name inference.\nRefinement: Graph/readiness uses canonical trace/gate/git/artifact refs for daemon-safe scheduling.",
+    "current": "Runtime models jobs/runs but agent tools cannot spawn fresh Pi sessions; manual /wiki-resume --new remains fallback.\nRefinement: TASK-087 added contracts and compatibility helpers; broader graph/lens migration remains in SPRINT-022.",
+    "closure": "Spawn bridge behavior and blockers are covered by tests and implementation validation.\nRefinement: Generated graph and readiness lenses expose exact refs and audits/tests pass."
+  },
+  "created": "2026-06-03",
+  "updated": "2026-06-03"
+}

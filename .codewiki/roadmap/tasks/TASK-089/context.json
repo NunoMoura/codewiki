@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03",
+  "context_path": ".codewiki/roadmap/tasks/TASK-089/context.json",
+  "task": {
+    "id": "TASK-089",
+    "title": "Remove deprecated CodeWiki skill surfaces",
+    "status": "todo",
+    "priority": "high",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Make package skill discovery expose only decision, planning, and implementation workflow skills by removing generic router/validation skill folders and moving required invariant prose to prompt/docs.",
+    "labels": [
+      "prompt-contract",
+      "skill-surface-cleanup",
+      "no-shims",
+      "validation-shim-cleanup",
+      "gateway-source-root"
+    ],
+    "goal": {
+      "outcome": "Only codewiki-decision, codewiki-planning, and codewiki-implementation remain discoverable package skills.",
+      "acceptance": [
+        "Package skill discovery and source-contract tests report exactly the three normal workflow skills.",
+        "`skills/codewiki/**` and `skills/codewiki-validation/**` no longer remain as package-discoverable folders, hidden aliases, or shim skills.",
+        "Bootstrap/router/validation guidance needed by agents is moved to prompt contract, package docs, or non-skill docs.",
+        "Prompt contract describes three loops plus gates, not a four-loop validation workflow.",
+        "No package source imports from `src/validation/**`; all references use `src/gateway/**` or public API contracts.",
+        "`src/validation/**` is removed rather than retained as a compatibility shim root.",
+        "File-structure/source-contract no longer treat `src/validation/**` as an active source root except historical refs.",
+        "Gateway preflight/report semantics and pass/fail/block output remain unchanged."
+      ],
+      "non_goals": [
+        "Do not remove .codewiki dogfood state.",
+        "Do not remove public /wiki-* commands.",
+        "Do not implement fresh-worker spawning.",
+        "Do not remove `.codewiki/validation/**` evidence artifacts.",
+        "Do not rename gateway back to validation-loop terminology.",
+        "Do not change task-close/ship-ready policy except import/root cleanup."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+        "npm run typecheck",
+        "grep/import scan for src/validation references",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+        "npm run test:smoke"
+      ]
+    },
+    "delta": {
+      "desired": "Three discoverable workflow skills only.\nRefinement: Additional outcome: Gateway owns validation code directly and the deprecated `src/validation/**` source root is removed without behavior loss.\nRefinement: No deprecated validation shim source root remains.",
+      "current": "skills/codewiki and skills/codewiki-validation still exist after accepted no-shim decision.\nRefinement: src/validation/** exists as @deprecated re-export shims to gateway.",
+      "closure": "Tests and source-contract/package audits prove only three workflow skills remain.\nRefinement: Imports, tests, file-structure, and source-contract audits pass without src/validation source root."
+    }
+  }
+}

@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-03T21:52:28Z",
+  "source": "User reported after reload that accepted prompt/skill architecture intent still leaves stale/deprecated codewiki and codewiki-validation skill folders, src/validation shims, and no open roadmap work; prior decision build .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json contains open questions and no roadmap_changes.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-03T21:52:28.000Z",
+    "purge_after": "2026-08-02T21:52:28.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-RECOVERY-PLAN",
+      "text": "Accepted prompt/skill architecture work must be materialized into executable roadmap tasks instead of remaining knowledge-only.",
+      "source_refs": [
+        "RECOVER-PROMPT-SKILL-PLAN"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-ONLY-THREE-SKILLS",
+      "text": "Only codewiki-decision, codewiki-planning, and codewiki-implementation remain discoverable package skills; codewiki and codewiki-validation are removed without shims or hidden aliases.",
+      "source_refs": [
+        "REMOVE-SKILL-SURFACES-NOW"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-FRESH-WORKER-PROOF",
+      "text": "Fresh worker spawn validates dirty content only with exact digest plus patch/worktree handoff evidence and uses commit/tree/package/archive/remote proof for promotion gates.",
+      "source_refs": [
+        "DIRTY-WORKER-CONTENT-PROOF"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Earlier accepted decision had open questions and no roadmap_changes.",
+      "evidence": "Direct reads of .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json and grep of planning/validation refs found no planning/validation consumer for that build.",
+      "requirement_ids": [
+        "REQ-RECOVERY-PLAN"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+      ]
+    },
+    {
+      "criterion": "User reaffirmed stale/deprecated skill/source surfaces should not remain.",
+      "evidence": "Current user follow-up lists stale repo folders after reload and asks to proceed from accepted/validated structure decision.",
+      "requirement_ids": [
+        "REQ-ONLY-THREE-SKILLS"
+      ],
+      "source_refs": [
+        "user-follow-up:2026-06-03"
+      ]
+    },
+    {
+      "criterion": "Dirty worker validation policy resolved for planning.",
+      "evidence": "Policy resolution keeps implementation validation dirty digest path but requires immutable proof for task-close/ship-ready/publication, matching existing gateway behavior from TASK-087 validation.",
+      "requirement_ids": [
+        "REQ-FRESH-WORKER-PROOF"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-06-03-implementation-pass-task-087-2026-06-03-implemen.json",
+        ".codewiki/validation/2026-06-03-task-close-pass-task-087-2026-06-03-implemented-.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted prompt/skill architecture planning recovery: close open questions from the earlier decision and route concrete cleanup/spawn work into roadmap planning.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "RECOVER-PROMPT-SKILL-PLAN",
+      "current_state": "Accepted prompt/skill architecture decision exists, but no planning build or active roadmap tasks reference it; repo still exposes deprecated codewiki/codewiki-validation skill surfaces and src/validation shim folder.",
+      "current_project_state": "Accepted prompt/skill architecture decision exists, but no planning build or active roadmap tasks reference it; repo still exposes deprecated codewiki/codewiki-validation skill surfaces and src/validation shim folder.",
+      "desired_state": "Treat this as planning propagation drift: create executable roadmap tasks/sprint for prompt/skill surface cleanup, validation-shim removal, and daemon fresh-worker spawning instead of leaving the accepted decision as knowledge-only.",
+      "agreed_change": "Treat this as planning propagation drift: create executable roadmap tasks/sprint for prompt/skill surface cleanup, validation-shim removal, and daemon fresh-worker spawning instead of leaving the accepted decision as knowledge-only.",
+      "expected_final_state": "Roadmap contains self-contained executable tasks with planning build evidence linked to the earlier decision and this recovery decision.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User confirmed the stale/deprecated files remain after reload and wants the accepted architecture direction executed.",
+      "affected_layers": [
+        "roadmap",
+        "skills",
+        "prompt",
+        "runtime",
+        "gateway"
+      ],
+      "risk": "Medium: broad cleanup crosses package skill discovery, validation gateway, prompt contract, and runtime session spawn.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "REMOVE-SKILL-SURFACES-NOW",
+      "current_state": "skills/codewiki and skills/codewiki-validation remain as package skill directories even though the accepted decision says normal skill surface should only expose decision/planning/implementation.",
+      "current_project_state": "skills/codewiki and skills/codewiki-validation remain as package skill directories even though the accepted decision says normal skill surface should only expose decision/planning/implementation.",
+      "desired_state": "Remove codewiki and codewiki-validation from package skill discovery with no shim/alias retention; preserve any needed bootstrap/router prose by moving it into prompt contract, package docs, or non-skill source docs before deletion.",
+      "agreed_change": "Remove codewiki and codewiki-validation from package skill discovery with no shim/alias retention; preserve any needed bootstrap/router prose by moving it into prompt contract, package docs, or non-skill source docs before deletion.",
+      "expected_final_state": "Only codewiki-decision, codewiki-planning, and codewiki-implementation are discoverable package skills; removed skill folders do not remain as hidden aliases or compatibility skills.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User explicitly rejected old commands, shims, aliases, or /skill:codewiki-validation in the earlier decision and now points at stale skill folders.",
+      "affected_layers": [
+        "skills",
+        "package",
+        "prompt",
+        "tests"
+      ],
+      "risk": "Medium: removing skills can break package smoke/source-contract tests unless prompt and docs carry required invariants.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "DIRTY-WORKER-CONTENT-PROOF",
+      "current_state": "Earlier decision left open whether spawned fresh validators validate dirty root content directly or require patch/checkpoint transfer proof.",
+      "current_project_state": "Earlier decision left open whether spawned fresh validators validate dirty root content directly or require patch/checkpoint transfer proof.",
+      "desired_state": "Fresh worker sessions may validate pre-commit dirty builder content only with exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication promotion requires immutable commit/tree/package/archive/remote proof. If Pi session APIs or content transfer proof are unavailable, daemon blocks with exact platform/content reason.",
+      "agreed_change": "Fresh worker sessions may validate pre-commit dirty builder content only with exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication promotion requires immutable commit/tree/package/archive/remote proof. If Pi session APIs or content transfer proof are unavailable, daemon blocks with exact platform/content reason.",
+      "expected_final_state": "Runtime spawn bridge and gateway handoff policy avoid self-approving unseen dirty content and produce deterministic stop reasons.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "This preserves fresh validator independence while still allowing pre-commit implementation validation when exact digest/patch evidence exists.",
+      "affected_layers": [
+        "runtime",
+        "gateway",
+        "worktree",
+        "publisher",
+        "validation"
+      ],
+      "risk": "Medium-high: unsafe content transfer could produce false validation passes if proof refs are incomplete.",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "RECOVER-PROMPT-SKILL-PLAN",
+    "REMOVE-SKILL-SURFACES-NOW",
+    "DIRTY-WORKER-CONTENT-PROOF"
+  ],
+  "approved_rows": [
+    {
+      "id": "RECOVER-PROMPT-SKILL-PLAN",
+      "current_state": "Accepted prompt/skill architecture decision exists, but no planning build or active roadmap tasks reference it; repo still exposes deprecated codewiki/codewiki-validation skill surfaces and src/validation shim folder.",
+      "current_project_state": "Accepted prompt/skill architecture decision exists, but no planning build or active roadmap tasks reference it; repo still exposes deprecated codewiki/codewiki-validation skill surfaces and src/validation shim folder.",
+      "desired_state": "Treat this as planning propagation drift: create executable roadmap tasks/sprint for prompt/skill surface cleanup, validation-shim removal, and daemon fresh-worker spawning instead of leaving the accepted decision as knowledge-only.",
+      "agreed_change": "Treat this as planning propagation drift: create executable roadmap tasks/sprint for prompt/skill surface cleanup, validation-shim removal, and daemon fresh-worker spawning instead of leaving the accepted decision as knowledge-only.",
+      "expected_final_state": "Roadmap contains self-contained executable tasks with planning build evidence linked to the earlier decision and this recovery decision.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User confirmed the stale/deprecated files remain after reload and wants the accepted architecture direction executed.",
+      "affected_layers": [
+        "roadmap",
+        "skills",
+        "prompt",
+        "runtime",
+        "gateway"
+      ],
+      "risk": "Medium: broad cleanup crosses package skill discovery, validation gateway, prompt contract, and runtime session spawn.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "REMOVE-SKILL-SURFACES-NOW",
+      "current_state": "skills/codewiki and skills/codewiki-validation remain as package skill directories even though the accepted decision says normal skill surface should only expose decision/planning/implementation.",
+      "current_project_state": "skills/codewiki and skills/codewiki-validation remain as package skill directories even though the accepted decision says normal skill surface should only expose decision/planning/implementation.",
+      "desired_state": "Remove codewiki and codewiki-validation from package skill discovery with no shim/alias retention; preserve any needed bootstrap/router prose by moving it into prompt contract, package docs, or non-skill source docs before deletion.",
+      "agreed_change": "Remove codewiki and codewiki-validation from package skill discovery with no shim/alias retention; preserve any needed bootstrap/router prose by moving it into prompt contract, package docs, or non-skill source docs before deletion.",
+      "expected_final_state": "Only codewiki-decision, codewiki-planning, and codewiki-implementation are discoverable package skills; removed skill folders do not remain as hidden aliases or compatibility skills.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "User explicitly rejected old commands, shims, aliases, or /skill:codewiki-validation in the earlier decision and now points at stale skill folders.",
+      "affected_layers": [
+        "skills",
+        "package",
+        "prompt",
+        "tests"
+      ],
+      "risk": "Medium: removing skills can break package smoke/source-contract tests unless prompt and docs carry required invariants.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "DIRTY-WORKER-CONTENT-PROOF",
+      "current_state": "Earlier decision left open whether spawned fresh validators validate dirty root content directly or require patch/checkpoint transfer proof.",
+      "current_project_state": "Earlier decision left open whether spawned fresh validators validate dirty root content directly or require patch/checkpoint transfer proof.",
+      "desired_state": "Fresh worker sessions may validate pre-commit dirty builder content only with exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication promotion requires immutable commit/tree/package/archive/remote proof. If Pi session APIs or content transfer proof are unavailable, daemon blocks with exact platform/content reason.",
+      "agreed_change": "Fresh worker sessions may validate pre-commit dirty builder content only with exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication promotion requires immutable commit/tree/package/archive/remote proof. If Pi session APIs or content transfer proof are unavailable, daemon blocks with exact platform/content reason.",
+      "expected_final_state": "Runtime spawn bridge and gateway handoff policy avoid self-approving unseen dirty content and produce deterministic stop reasons.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "This preserves fresh validator independence while still allowing pre-commit implementation validation when exact digest/patch evidence exists.",
+      "affected_layers": [
+        "runtime",
+        "gateway",
+        "worktree",
+        "publisher",
+        "validation"
+      ],
+      "risk": "Medium-high: unsafe content transfer could produce false validation passes if proof refs are incomplete.",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Treat this as planning propagation drift: create executable roadmap tasks/sprint for prompt/skill surface cleanup, validation-shim removal, and daemon fresh-worker spawning instead of leaving the accepted decision as knowledge-only."
+    },
+    {
+      "id": "D2",
+      "summary": "Remove codewiki and codewiki-validation from package skill discovery with no shim/alias retention; preserve any needed bootstrap/router prose by moving it into prompt contract, package docs, or non-skill source docs before deletion."
+    },
+    {
+      "id": "D3",
+      "summary": "Fresh worker sessions may validate pre-commit dirty builder content only with exact working_tree_digest plus patch/worktree handoff evidence; task-close/ship-ready/publication promotion requires immutable commit/tree/package/archive/remote proof. If Pi session APIs or content transfer proof are unavailable, daemon blocks with exact platform/content reason."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [
+    "Plan prompt/skill cleanup, validation shim removal, and daemon fresh-worker spawn as executable tasks."
+  ],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "RECOVER-PROMPT-SKILL-PLAN",
+      "knowledge_refs": [
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+      ],
+      "diagram_refs": [],
+      "evidence": "Existing accepted decision already owns semantic target; this recovery row routes missing executable propagation to planning.",
+      "deferred": false
+    },
+    {
+      "row_id": "REMOVE-SKILL-SURFACES-NOW",
+      "knowledge_refs": [
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Existing KB refs already state normal workflow skills are decision/planning/implementation only and removed codewiki/codewiki-validation skill surfaces should not remain as shims/aliases.",
+      "deferred": false
+    },
+    {
+      "row_id": "DIRTY-WORKER-CONTENT-PROOF",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/worktree-isolation.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Runtime/gateway/worktree refs define fresh worker, validation isolation, working_tree_digest, and commit/tree proof boundaries; implementation planning must encode exact policy in code/tests.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users should stop seeing deprecated codewiki/codewiki-validation workflow skills once cleanup lands.",
+      "Users can expect daemon/fresh-validator automation to block safely when Pi worker spawn or dirty content proof is unavailable."
+    ],
+    "system_impact": [
+      "Planning must create tasks for prompt/package skill surface cleanup, src/validation shim removal, and command-context fresh-worker spawn bridge.",
+      "Implementation must update tests/source-contract/package smoke to enforce no old skill shims/aliases."
+    ],
+    "downstream_planning_questions": [
+      "Create executable roadmap tasks and sprint metadata for prompt/skill cleanup, validation shim removal, and daemon fresh-worker spawn.",
+      "Validate planning propagation before implementation."
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "Create a sprint/cohort for prompt/skill architecture cleanup and worker spawn.",
+    "Create tasks with independent acceptance and validation evidence for each executable unit.",
+    "Create executable roadmap tasks and sprint metadata for prompt/skill cleanup, validation shim removal, and daemon fresh-worker spawn.",
+    "Validate planning propagation before implementation."
+  ],
+  "assumptions": [
+    "No-shim/no-alias rule applies to package skill discovery and source shims named in the accepted prompt/skill decision; broader public command compatibility requires explicit task acceptance before removal."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not remove .codewiki dogfood state as package source cleanup.",
+    "Do not publish or push remote changes.",
+    "Do not remove unrelated public commands unless a task acceptance explicitly covers them."
+  ],
+  "risks": [
+    "Package skill removal can break smoke/source-contract tests if prompt/docs discovery are not updated first.",
+    "Worker spawn bridge depends on Pi command-context APIs and must block if unavailable."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/worktree-isolation.md"
+    ],
+    "roadmap": [
+      "Plan prompt/skill cleanup, validation shim removal, and daemon fresh-worker spawn as executable tasks."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
