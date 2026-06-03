@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T00:23:48Z",
+  "profile": "planning",
+  "gate": "planning",
+  "task_id": "TASK-086",
+  "verdict": "pass",
+  "rationale": "Planning validation passes for TASK-086. The task is a bounded docs/map maintenance unit, accepted warning-cleanup decision rows are mapped to exact KB refs, validation criteria are deterministic, and no behavior-changing or umbrella scope is introduced.",
+  "checks": [
+    "decision validation .codewiki/validation/2026-06-03-decision-pass-task-086-2026-06-03-accepted-maint.json: pass",
+    "TASK-086 is a single atomic docs/map maintenance task, not umbrella work",
+    "planning maps WARN-001 and WARN-002 to TASK-086 knowledge refs and verification",
+    "acceptance covers workflow root drift, large-doc health warnings, and no behavior change",
+    "wiki_state refresh=true: health green"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:file-structure",
+    "audit:source-contract",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles alignment,file-structure,generated-parity,changed,source-contract,stale-reference task_id=TASK-086"
+  ],
+  "content_proof_refs": [
+    "9ac705fe5c5e14027ca7e171e1393c921fe85037",
+    "b8c51ec0c9a1c0fe5fc1b8edf69ac42f55f89dff",
+    "99d8e3575d8c3bdd5098bc558eccafd345f9b417077894193dbebb2ccb2249a0"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-086",
+    "source_build": ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+      ".codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json",
+      "TASK-086",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      "src/workflow/tool.ts",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-086",
+    "source_build": ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json",
+    "commit_title": "checkpoint(codewiki): TASK-086 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-086",
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json",
+      "CodeWiki-Checks: decision validation .codewiki/validation/2026-06-03-decision-pass-task-086-2026-06-03-accepted-maint.json: pass; TASK-086 is a single atomic docs/map maintenance task, not umbrella work; planning maps WARN-001 and WARN-002 to TASK-086 knowledge refs and verification; acceptance covers workflow root drift, large-doc health warnings, and no behavior change; wiki_state refresh=true: health green"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/workflow/tool.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "task_id": "TASK-086",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "9ac705fe5c5e14027ca7e171e1393c921fe85037",
+    "validated_sha": "9ac705fe5c5e14027ca7e171e1393c921fe85037",
+    "tree_sha": "b8c51ec0c9a1c0fe5fc1b8edf69ac42f55f89dff",
+    "working_tree_digest": "99d8e3575d8c3bdd5098bc558eccafd345f9b417077894193dbebb2ccb2249a0",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh planning validation for warning cleanup task.",
+    "role": "validator"
+  }
+}
