@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:02:26.426Z",
+  "generated_at": "2026-06-03T00:03:28.424Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -63177,6 +63177,83 @@
       "kind": "content_proof",
       "path": "549710d69b556d0179f9009273dca3b29ba79f47",
       "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+        "validated_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+        "tree_sha": "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+        "working_tree_digest": "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh validation from TASK-084 CodeWiki source refs; local clean content candidate. No push/publication/release.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:source-contract",
+          "audit:file-structure",
+          "audit:task",
+          "audit:generated-parity",
+          "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75"
+        ],
+        "content_proof_refs": [
+          "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+          "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+          "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75",
+      "kind": "audit_evidence",
+      "path": "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+      "kind": "content_proof",
+      "path": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+      "kind": "content_proof",
+      "path": "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
+      "kind": "content_proof",
+      "path": "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
+      "proof_kind": "content_proof",
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
@@ -160959,6 +161036,77 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
       "to": "task:TASK-085"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:source-contract",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "audit:wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "content_proof:f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "content_proof:aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "content_proof:137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+      "to": "task:TASK-084"
     }
   ],
   "views": {
@@ -161149,7 +161297,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 258
+                "count": 259
               },
               {
                 "id": "fail_or_block_validation",
@@ -161159,12 +161307,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 668
+                "count": 669
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1888
+                "count": 1891
               },
               {
                 "id": "traceability_gaps",
@@ -161193,11 +161341,11 @@
             "collapsed": 190
           },
           "validations": {
-            "total": 258,
-            "pass": 220,
+            "total": 259,
+            "pass": 221,
             "fail_or_block": 38,
             "hot": 9,
-            "collapsed": 258
+            "collapsed": 259
           }
         },
         "next_action": {
@@ -161253,11 +161401,11 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4957,
-          "edges": 16219,
+          "nodes": 4962,
+          "edges": 16231,
           "open_tasks": 0,
-          "validations": 250,
-          "source_refs": 1196
+          "validations": 251,
+          "source_refs": 1197
         },
         "next_action": {
           "kind": "implementation",
@@ -161288,7 +161436,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1228,
+          "source_ref_count": 1229,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -161310,7 +161458,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1220
+            "omitted_ref_count": 1221
           }
         ],
         "data": {
@@ -161324,11 +161472,11 @@
             "SPRINT-020"
           ],
           "latest_validation": {
-            "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
-            "task_id": "TASK-085",
-            "profile": "task-close",
+            "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+            "task_id": "TASK-084",
+            "profile": "implementation",
             "verdict": "pass",
-            "source": ".codewiki/builds/implementation/2026-06-02-repaired-package-smoke-task-close-fixture-to-sat.json"
+            "source": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
           },
           "families": [
             {
@@ -161512,7 +161660,7 @@
                 {
                   "id": "validation_reports",
                   "label": "validation reports",
-                  "count": 258
+                  "count": 259
                 },
                 {
                   "id": "fail_or_block_validation",
@@ -161522,12 +161670,12 @@
                 {
                   "id": "audit_refs",
                   "label": "audit refs",
-                  "count": 668
+                  "count": 669
                 },
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 1888
+                  "count": 1891
                 },
                 {
                   "id": "traceability_gaps",
@@ -162169,9 +162317,9 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "validation_reports": 250,
+          "validation_reports": 251,
           "reconciliation_items": 2,
-          "source_refs": 2765
+          "source_refs": 2770
         },
         "next_action": {
           "kind": "implementation",
@@ -162202,7 +162350,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2797,
+          "source_ref_count": 2802,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -162224,11 +162372,18 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2789
+            "omitted_ref_count": 2794
           }
         ],
         "data": {
           "validation_reports": [
+            {
+              "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+              "task_id": "TASK-084",
+              "profile": "implementation",
+              "verdict": "pass",
+              "source": ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+            },
             {
               "path": ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
               "task_id": "TASK-085",
@@ -162277,13 +162432,6 @@
               "profile": "task-close",
               "verdict": "pass",
               "source": ".codewiki/builds/implementation/2026-06-01-task-078-system-product-tui-navigation.json"
-            },
-            {
-              "path": ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
-              "task_id": "TASK-084",
-              "profile": "task-close",
-              "verdict": "block",
-              "source": ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json"
             }
           ],
           "validation_isolation": [
@@ -162741,7 +162889,7 @@
         ],
         "omitted_counts": {
           "ready_tasks": 1,
-          "source_refs": 2775
+          "source_refs": 2780
         },
         "next_action": {
           "kind": "stop",
@@ -162771,16 +162919,16 @@
             "summary": "Semantic execution closure still has gaps."
           },
           {
-            "kind": "retryable_validation_failure"
+            "kind": "active_lease"
           },
           {
-            "kind": "active_lease"
+            "kind": "roadmap_blocked"
           }
         ],
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2807,
+          "source_ref_count": 2812,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -162802,7 +162950,7 @@
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/index_graph.json"
             ],
-            "omitted_ref_count": 2799
+            "omitted_ref_count": 2804
           }
         ],
         "data": {
@@ -162819,8 +162967,8 @@
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
           "stop_reasons": [
-            "retryable_validation_failure",
-            "active_lease"
+            "active_lease",
+            "roadmap_blocked"
           ],
           "active_sprint_ids": [
             "SPRINT-017",
@@ -162832,27 +162980,15 @@
               "next_action": {
                 "kind": "wait",
                 "loop": "runtime",
-                "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
+                "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
                 "command": "wiki_artifact_status action=wait taskId=TASK-084",
                 "refs": [
-                  ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+                  "CLAIM-322",
+                  "codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660"
                 ],
                 "safe_to_schedule": false
               },
               "blockers": [
-                {
-                  "kind": "retryable_validation_failure",
-                  "severity": "medium",
-                  "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-                  "refs": [
-                    ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                  ],
-                  "next_safe_action": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
-                  "validation_refs": [
-                    ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                  ],
-                  "retryable": true
-                },
                 {
                   "kind": "active_lease",
                   "severity": "medium",
@@ -162886,6 +163022,15 @@
                   ],
                   "next_safe_action": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
                   "retryable": true
+                },
+                {
+                  "kind": "roadmap_blocked",
+                  "severity": "medium",
+                  "summary": "Roadmap status is blocked and no retryable validation evidence is attached.",
+                  "refs": [
+                    "TASK-084"
+                  ],
+                  "next_safe_action": "Inspect roadmap/task evidence and route to the recommended compiler before automation."
                 }
               ],
               "source_refs": [
@@ -163204,9 +163349,9 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 4957,
-          "edges": 16219,
-          "source_refs": 1196
+          "nodes": 4962,
+          "edges": 16231,
+          "source_refs": 1197
         },
         "next_action": {
           "kind": "implementation",
@@ -163237,7 +163382,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1228,
+          "source_ref_count": 1229,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -163259,7 +163404,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1220
+            "omitted_ref_count": 1221
           }
         ],
         "requirement_rows": [
@@ -163459,7 +163604,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -163842,7 +163988,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164225,7 +164372,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164608,7 +164756,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -164991,7 +165140,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -165374,7 +165524,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -165757,7 +165908,8 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+              ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -167466,6 +167618,25 @@
                   "isolation_status": "isolated"
                 },
                 {
+                  "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+                  "profile": "implementation",
+                  "verdict": "pass",
+                  "task_id": "TASK-084",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+                  ],
+                  "content_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                    "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+                  ],
+                  "isolation_status": "isolated"
+                },
+                {
                   "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   "profile": "implementation",
                   "verdict": "pass",
@@ -167636,6 +167807,9 @@
                 "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -167656,6 +167830,8 @@
                 "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -167916,6 +168092,25 @@
                   "isolation_status": "isolated"
                 },
                 {
+                  "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+                  "profile": "implementation",
+                  "verdict": "pass",
+                  "task_id": "TASK-084",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+                  ],
+                  "content_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                    "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+                  ],
+                  "isolation_status": "isolated"
+                },
+                {
                   "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   "profile": "implementation",
                   "verdict": "pass",
@@ -168156,6 +168351,9 @@
                 "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -168183,6 +168381,8 @@
                 "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -168332,6 +168532,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -168400,6 +168601,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -168642,6 +168846,7 @@
                   ".codewiki/validation/2026-06-02-task-close-pass-task-079-2026-06-02-finalized-ta.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -168764,6 +168969,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -169143,6 +169351,7 @@
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
@@ -169277,6 +169486,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -169323,6 +169535,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -169401,6 +169614,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -169507,6 +169723,7 @@
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -169695,6 +169912,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -169770,6 +169990,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -169838,6 +170059,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -169924,6 +170148,7 @@
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -176617,7 +176842,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 2765,
+          "source_refs": 2770,
           "validation_reports": 0
         },
         "next_action": {
@@ -176649,7 +176874,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2797,
+          "source_ref_count": 2802,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -176671,7 +176896,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2789
+            "omitted_ref_count": 2794
           }
         ],
         "validation_reports": [
@@ -182676,6 +182901,30 @@
               "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-084",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:source-contract",
+              "audit:file-structure",
+              "audit:task",
+              "audit:generated-parity",
+              "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75"
+            ],
+            "content_proof_refs": [
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -186751,6 +187000,26 @@
             "publisher_result_refs": [
               "0768a282996c11fc3c049d17c17428821312303c"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+            "task_id": "TASK-084",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "validated_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+            ],
+            "publisher_result_refs": [
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -187406,6 +187675,7 @@
           "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083",
           "wiki_gate audit profiles=alignment,source-contract,file-structure,changed task_id=TASK-084",
           "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity task_id=TASK-084",
+          "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75",
           "wiki_gate audit profiles=alignment,task task_id=TASK-085",
           "wiki_gate audit profiles=package,security,stale-reference,alignment,changed,generated-parity,source-contract task_id=TASK-083",
           "wiki_gate audit report after commit bd13364",
@@ -187726,6 +187996,7 @@
           "11b76ed63996785ba5fb12e77933963f075425ac",
           "11eb2c929c169835fa497a4376bdd53c8b1ca907",
           "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+          "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
           "1432ffd2816bd28f5e29ec2941271753574086e5",
           "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
@@ -187869,6 +188140,7 @@
           "a7519338938f5876d6e34e41990cf748ebdffbfc",
           "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
           "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+          "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
           "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
           "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
           "af9fa72cef338813a4d128375d4e8db15ad18c9e",
@@ -187950,6 +188222,7 @@
           "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
           "f84eb90f9c6496f0a453acb5455fa7bb03c65f12",
           "f921fda08ef35c66d1a2507efa326c4f0d907a97",
+          "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
           "f9bb1a58958ac5073a2ca72de1de1a4424f6362a",
           "fd387a6ae9936038f1a61abbc6ac2c69e7dd9126",
           "fd3f93e548bc1d239e35b70a659333b3df644b7a",
@@ -190863,6 +191136,25 @@
                   "isolation_status": "isolated"
                 },
                 {
+                  "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+                  "profile": "implementation",
+                  "verdict": "pass",
+                  "task_id": "TASK-084",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+                  ],
+                  "content_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                    "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+                  ],
+                  "isolation_status": "isolated"
+                },
+                {
                   "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   "profile": "implementation",
                   "verdict": "pass",
@@ -191033,6 +191325,9 @@
                 "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -191053,6 +191348,8 @@
                 "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -191313,6 +191610,25 @@
                   "isolation_status": "isolated"
                 },
                 {
+                  "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+                  "profile": "implementation",
+                  "verdict": "pass",
+                  "task_id": "TASK-084",
+                  "source_refs": [
+                    ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+                  ],
+                  "content_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                    "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+                  ],
+                  "commit_tree_proof_refs": [
+                    "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                    "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+                  ],
+                  "isolation_status": "isolated"
+                },
+                {
                   "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   "profile": "implementation",
                   "verdict": "pass",
@@ -191553,6 +191869,9 @@
                 "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -191580,6 +191899,8 @@
                 "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
                 "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                 "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
                 "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                 "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                 "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -191729,6 +192050,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -191797,6 +192119,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -192039,6 +192364,7 @@
                   ".codewiki/validation/2026-06-02-task-close-pass-task-079-2026-06-02-finalized-ta.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -192161,6 +192487,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -192540,6 +192869,7 @@
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
@@ -192674,6 +193004,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -192720,6 +193053,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -192798,6 +193132,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -192904,6 +193241,7 @@
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -193092,6 +193430,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -193167,6 +193508,7 @@
                 "validation_reports": [
                   ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
                   ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+                  ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
                   ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
                   ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
                   ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -193235,6 +193577,9 @@
                   "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
                   "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
                   "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+                  "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                  "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                  "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
                   "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
                   "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
                   "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -193321,6 +193666,7 @@
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
             ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -195978,6 +196324,25 @@
               "isolation_status": "isolated"
             },
             {
+              "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+              "profile": "implementation",
+              "verdict": "pass",
+              "task_id": "TASK-084",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+              ],
+              "content_proof_refs": [
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+              ],
+              "commit_tree_proof_refs": [
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+              ],
+              "isolation_status": "isolated"
+            },
+            {
               "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               "profile": "implementation",
               "verdict": "pass",
@@ -196148,6 +196513,9 @@
             "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
             "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
             "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+            "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
             "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
             "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
             "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -196168,6 +196536,8 @@
             "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
             "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
             "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
             "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
             "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
             "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -196428,6 +196798,25 @@
               "isolation_status": "isolated"
             },
             {
+              "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+              "profile": "implementation",
+              "verdict": "pass",
+              "task_id": "TASK-084",
+              "source_refs": [
+                ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+              ],
+              "content_proof_refs": [
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+                "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+              ],
+              "commit_tree_proof_refs": [
+                "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+                "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+              ],
+              "isolation_status": "isolated"
+            },
+            {
               "path": ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               "profile": "implementation",
               "verdict": "pass",
@@ -196668,6 +197057,9 @@
             "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
             "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
             "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+            "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
             "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
             "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
             "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -196695,6 +197087,8 @@
             "e4f0bafc1cb59e34f1e49c994071ca5a5f93d477",
             "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
             "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
             "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
             "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
             "bd6446a9b4b2013408db317d508ed3f4e1ad6e10",
@@ -196844,6 +197238,7 @@
             "validation_reports": [
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -196912,6 +197307,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -197154,6 +197552,7 @@
               ".codewiki/validation/2026-06-02-task-close-pass-task-079-2026-06-02-finalized-ta.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -197276,6 +197675,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -197655,6 +198057,7 @@
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json"
@@ -197789,6 +198192,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -197835,6 +198241,7 @@
             "validation_reports": [
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -197913,6 +198320,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -198019,6 +198429,7 @@
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -198207,6 +198618,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -198282,6 +198696,7 @@
             "validation_reports": [
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
               ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
               ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -198350,6 +198765,9 @@
               "sha256:3fbc093226758218ca4dce6623cf5d3f26c0b65cd5ca85f6d3306a4c43860ca6",
               "d66e73f27dbf335c22b3b20b0df20d4dfbb23fa5",
               "2db4b6a27aa974c40974c7e34d6a864fc8a48f22",
+              "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+              "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+              "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
               "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
               "d92c2871b4b05d3458dc18f74d85663d6e6c806f",
               "15f9be676481ac26c482a468a27c839dce6582c6ebe92c13bd37771c2717df19",
@@ -198436,6 +198854,7 @@
         ".codewiki/validation/2026-06-02-ship-ready-pass-task-082-2026-06-02-implemented-.json",
         ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
         ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json",
+        ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
         ".codewiki/validation/2026-06-02-implementation-pass-task-085-2026-06-02-repaired.json",
         ".codewiki/validation/2026-06-02-ship-ready-pass-task-085-2026-06-02-repaired-pac.json",
         ".codewiki/validation/2026-06-02-task-close-pass-task-085-2026-06-02-repaired-pac.json",
@@ -203934,6 +204353,26 @@
           "publisher_result_refs": [
             "0768a282996c11fc3c049d17c17428821312303c"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+          "task_id": "TASK-084",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+          "validated_sha": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+            "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+          ],
+          "publisher_result_refs": [
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4"
+          ]
         }
       ]
     },
@@ -205578,6 +206017,7 @@
         "wiki_gate audit profiles=alignment,changed,generated-parity,source-contract task_id=TASK-083",
         "wiki_gate audit profiles=alignment,source-contract,file-structure,changed task_id=TASK-084",
         "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity task_id=TASK-084",
+        "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75",
         "wiki_gate audit profiles=alignment,task task_id=TASK-085",
         "wiki_gate audit profiles=package,security,stale-reference,alignment,changed,generated-parity,source-contract task_id=TASK-083",
         "wiki_gate audit report after commit bd13364",
@@ -205898,6 +206338,7 @@
         "11b76ed63996785ba5fb12e77933963f075425ac",
         "11eb2c929c169835fa497a4376bdd53c8b1ca907",
         "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+        "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8",
         "1432ffd2816bd28f5e29ec2941271753574086e5",
         "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
@@ -206041,6 +206482,7 @@
         "a7519338938f5876d6e34e41990cf748ebdffbfc",
         "a7549c6c0cf383ce29ca57b347ea77b939f6f84b",
         "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+        "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
         "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
         "af9fa72cef338813a4d128375d4e8db15ad18c9e",
@@ -206122,6 +206564,7 @@
         "f7a4d4d861e603ca9ba02faf550add48bce0a7e1",
         "f84eb90f9c6496f0a453acb5455fa7bb03c65f12",
         "f921fda08ef35c66d1a2507efa326c4f0d907a97",
+        "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
         "f9bb1a58958ac5073a2ca72de1de1a4424f6362a",
         "fd387a6ae9936038f1a61abbc6ac2c69e7dd9126",
         "fd3f93e548bc1d239e35b70a659333b3df644b7a",
@@ -213487,6 +213930,30 @@
             "sha512-yT/akIIl4WXE6Z2t+ICyvyc9UMs3a/lOM7VVnI/R4V7WFmQQ859CQPcp/5R4zLv5XoGL7VZscl/nTV4Q1dQOhg=="
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-084",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:source-contract",
+            "audit:file-structure",
+            "audit:task",
+            "audit:generated-parity",
+            "wiki_gate audit profiles=alignment,source-contract,file-structure,changed,generated-parity,task,package,security,stale-reference task_id=TASK-084 after commit f96ed75"
+          ],
+          "content_proof_refs": [
+            "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
+            "aa59c87fa61a09f098282f7fe35fb4df31786cf4",
+            "137fed746c683fd44fe23d161cc29a85e1657a30dc984bba2612a3ac17b48dc8"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -215920,7 +216387,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -216303,7 +216771,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -216686,7 +217155,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -217069,7 +217539,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -217452,7 +217923,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -217835,7 +218307,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -218218,7 +218691,8 @@
             ".codewiki/validation/2026-06-02-task-close-pass-task-080-2026-06-02-expose-six-n.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-081-2026-06-02-codewiki-imp.json",
             ".codewiki/validation/2026-06-02-task-close-pass-task-082-2026-06-02-implemented-.json",
-            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json"
+            ".codewiki/validation/2026-06-02-task-close-pass-task-083-2026-06-02-task-083-aut.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -219870,19 +220344,6 @@
             "ambiguous_task_ids": [],
             "blockers": [
               {
-                "kind": "retryable_validation_failure",
-                "severity": "medium",
-                "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-                "refs": [
-                  ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                ],
-                "next_safe_action": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
-                "validation_refs": [
-                  ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                ],
-                "retryable": true
-              },
-              {
                 "kind": "active_lease",
                 "severity": "medium",
                 "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
@@ -219915,15 +220376,25 @@
                 ],
                 "next_safe_action": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
                 "retryable": true
+              },
+              {
+                "kind": "roadmap_blocked",
+                "severity": "medium",
+                "summary": "Roadmap status is blocked and no retryable validation evidence is attached.",
+                "refs": [
+                  "TASK-084"
+                ],
+                "next_safe_action": "Inspect roadmap/task evidence and route to the recommended compiler before automation."
               }
             ],
             "next_action": {
               "kind": "wait",
               "loop": "planning",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-              "command": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
+              "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
+              "command": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
               "refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+                "CLAIM-322",
+                "codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660"
               ],
               "safe_to_schedule": false
             },
@@ -219937,6 +220408,7 @@
               ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
               ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
             ]
           }
@@ -220169,8 +220641,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-03T00:02:26.283Z",
-            "expires_at": "2026-06-03T02:02:26.283Z",
+            "generated_at": "2026-06-03T00:03:28.298Z",
+            "expires_at": "2026-06-03T02:03:28.298Z",
             "sprint_ids": [
               "SPRINT-020"
             ],
@@ -220184,6 +220656,7 @@
               ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
               ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
               ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
               ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
             ],
             "candidate_files": {
@@ -220252,7 +220725,8 @@
             },
             "validation_refs": {
               "pass": [
-                ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json"
+                ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+                ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
               ],
               "fail": [],
               "block": [
@@ -220265,19 +220739,6 @@
               "notes": []
             },
             "blockers": [
-              {
-                "kind": "retryable_validation_failure",
-                "severity": "medium",
-                "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-                "refs": [
-                  ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                ],
-                "next_safe_action": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
-                "validation_refs": [
-                  ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-                ],
-                "retryable": true
-              },
               {
                 "kind": "active_lease",
                 "severity": "medium",
@@ -220311,15 +220772,25 @@
                 ],
                 "next_safe_action": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
                 "retryable": true
+              },
+              {
+                "kind": "roadmap_blocked",
+                "severity": "medium",
+                "summary": "Roadmap status is blocked and no retryable validation evidence is attached.",
+                "refs": [
+                  "TASK-084"
+                ],
+                "next_safe_action": "Inspect roadmap/task evidence and route to the recommended compiler before automation."
               }
             ],
             "next_action": {
               "kind": "wait",
               "loop": "runtime",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
+              "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
               "command": "wiki_artifact_status action=wait taskId=TASK-084",
               "refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+                "CLAIM-322",
+                "codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660"
               ],
               "safe_to_schedule": false
             }
@@ -220330,8 +220801,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-03T00:02:26.283Z",
-      "expires_at": "2026-06-03T02:02:26.283Z",
+      "generated_at": "2026-06-03T00:03:28.298Z",
+      "expires_at": "2026-06-03T02:03:28.298Z",
       "state": "waiting",
       "tasks": {
         "TASK-084": {
@@ -220346,8 +220817,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-03T00:02:26.283Z",
-          "expires_at": "2026-06-03T02:02:26.283Z",
+          "generated_at": "2026-06-03T00:03:28.298Z",
+          "expires_at": "2026-06-03T02:03:28.298Z",
           "sprint_ids": [
             "SPRINT-020"
           ],
@@ -220361,6 +220832,7 @@
             ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
             ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
           ],
           "candidate_files": {
@@ -220429,7 +220901,8 @@
           },
           "validation_refs": {
             "pass": [
-              ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json"
+              ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+              ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json"
             ],
             "fail": [],
             "block": [
@@ -220442,19 +220915,6 @@
             "notes": []
           },
           "blockers": [
-            {
-              "kind": "retryable_validation_failure",
-              "severity": "medium",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-              "refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-              ],
-              "next_safe_action": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
-              "validation_refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-              ],
-              "retryable": true
-            },
             {
               "kind": "active_lease",
               "severity": "medium",
@@ -220488,15 +220948,25 @@
               ],
               "next_safe_action": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
               "retryable": true
+            },
+            {
+              "kind": "roadmap_blocked",
+              "severity": "medium",
+              "summary": "Roadmap status is blocked and no retryable validation evidence is attached.",
+              "refs": [
+                "TASK-084"
+              ],
+              "next_safe_action": "Inspect roadmap/task evidence and route to the recommended compiler before automation."
             }
           ],
           "next_action": {
             "kind": "wait",
             "loop": "runtime",
-            "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
+            "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
             "command": "wiki_artifact_status action=wait taskId=TASK-084",
             "refs": [
-              ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+              "CLAIM-322",
+              "codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660"
             ],
             "safe_to_schedule": false
           }
@@ -221094,19 +221564,6 @@
           "ambiguous_task_ids": [],
           "blockers": [
             {
-              "kind": "retryable_validation_failure",
-              "severity": "medium",
-              "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-              "refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-              ],
-              "next_safe_action": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
-              "validation_refs": [
-                ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
-              ],
-              "retryable": true
-            },
-            {
               "kind": "active_lease",
               "severity": "medium",
               "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
@@ -221139,15 +221596,25 @@
               ],
               "next_safe_action": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
               "retryable": true
+            },
+            {
+              "kind": "roadmap_blocked",
+              "severity": "medium",
+              "summary": "Roadmap status is blocked and no retryable validation evidence is attached.",
+              "refs": [
+                "TASK-084"
+              ],
+              "next_safe_action": "Inspect roadmap/task evidence and route to the recommended compiler before automation."
             }
           ],
           "next_action": {
             "kind": "wait",
             "loop": "planning",
-            "summary": "Latest validation verdict is block; task can retry from exact validation evidence.",
-            "command": "Re-read .codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json, resume TASK-084, and rerun implementation validation after scoped fixes.",
+            "summary": "Scoped lease CLAIM-322 holds .codewiki/roadmap/queue.json.",
+            "command": "Wait for CLAIM-322 release or validated publisher/patch ref for codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660; then re-read CodeWiki state and mark scopes before writing.",
             "refs": [
-              ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
+              "CLAIM-322",
+              "codewiki/TASK-084/builder/019e8aba-693f-7de6-acf4-27c552672660"
             ],
             "safe_to_schedule": false
           },
@@ -221161,6 +221628,7 @@
             ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
             ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
             ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+            ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
             ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
           ]
         }
@@ -221175,8 +221643,8 @@
       "ambiguous_task_ids": [],
       "selected_task_id": null,
       "stop_reasons": [
-        "retryable_validation_failure",
-        "active_lease"
+        "active_lease",
+        "roadmap_blocked"
       ],
       "next_action": {
         "kind": "stop",
@@ -221196,6 +221664,7 @@
         ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
         ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
         ".codewiki/validation/2026-06-02-implementation-pass-task-084-2026-06-02-task-084.json",
+        ".codewiki/validation/2026-06-03-implementation-pass-task-084-2026-06-03-supersed.json",
         ".codewiki/validation/2026-06-02-task-close-block-task-084-2026-06-02-task-084-in.json"
       ]
     },
@@ -223246,7 +223715,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-03T00:02:25.766Z",
+      "generated_at": "2026-06-03T00:03:27.774Z",
       "counts": {
         "large-doc": 2
       },
@@ -223267,7 +223736,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-03T00:02:26Z",
+      "generated_at": "2026-06-03T00:03:28Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -224762,7 +225231,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-03T00:02:26Z",
+      "generated_at": "2026-06-03T00:03:28Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -229197,7 +229666,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-03T00:02:26Z",
+        "generated_at": "2026-06-03T00:03:28Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -229252,10 +229721,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T00:02:26Z",
+            "checked_at": "2026-06-03T00:03:28Z",
             "revision": {
               "git": {
-                "head": "7bce115f2157e8840dd8b90e24f3b2f20c5d7209",
+                "head": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -229511,12 +229980,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "8c9d3fe91ff59d4111b05d5e43d593c868aa5ab78af3d0ee3386222d50c8d1d7",
-              "digest": "70066422378ba5a2a43c3cfc5d30aa8230f4236d2c507523b3065d82f8a764f0"
+              "digest": "863d900a7da19e6d41dc0b8b91a7da1f2238af9aa2673201d2e2f73ca0d8052b"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:02:26Z",
+              "checked_at": "2026-06-03T00:03:28Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -230006,10 +230475,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-03T00:02:26Z",
+            "checked_at": "2026-06-03T00:03:28Z",
             "revision": {
               "git": {
-                "head": "7bce115f2157e8840dd8b90e24f3b2f20c5d7209",
+                "head": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -230248,12 +230717,12 @@
               "spec_digest": "3e045454a5d1286136c8b98960205c875a3a5d01945c6b4f29024abebca94583",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "a10b3f72fc464b8c7bb28db5f39ac779d6ac6005e3687325d8e6c81db6c295f6",
-              "digest": "f851d321531b0c881ef6f3e0a10dc64ed0fb7ea631a65ff6e1308a1fd96c7c9b"
+              "digest": "2aae4fd7889a33d1a23e6e23c459e445537fe1b372770a3879874c45a6449a53"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:02:26Z",
+              "checked_at": "2026-06-03T00:03:28Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -230720,10 +231189,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T00:02:26Z",
+            "checked_at": "2026-06-03T00:03:28Z",
             "revision": {
               "git": {
-                "head": "7bce115f2157e8840dd8b90e24f3b2f20c5d7209",
+                "head": "f96ed759a5f6a37dd7d04bf5debb437befc4dff5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -230979,12 +231448,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "8c9d3fe91ff59d4111b05d5e43d593c868aa5ab78af3d0ee3386222d50c8d1d7",
-              "digest": "70066422378ba5a2a43c3cfc5d30aa8230f4236d2c507523b3065d82f8a764f0"
+              "digest": "863d900a7da19e6d41dc0b8b91a7da1f2238af9aa2673201d2e2f73ca0d8052b"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:02:26Z",
+              "checked_at": "2026-06-03T00:03:28Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -231475,7 +231944,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-03T00:02:26Z",
+        "generated_at": "2026-06-03T00:03:28Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
