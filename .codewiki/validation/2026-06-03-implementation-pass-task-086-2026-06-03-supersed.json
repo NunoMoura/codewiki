@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T00:26:44Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-086",
+  "verdict": "pass",
+  "rationale": "TASK-086 implementation validation passes. File-structure map now owns src/workflow/**, API/file-structure/tool-surface docs agree, lexicon/file-structure are under the large-doc warning threshold, CodeWiki health is green, and no package source behavior changed.",
+  "checks": [
+    "decision validation .codewiki/validation/2026-06-03-decision-pass-task-086-2026-06-03-accepted-maint.json: pass",
+    "planning validation .codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json: pass",
+    "wiki_state refresh=true: health green, 0 errors/0 warnings",
+    "wiki_gate audit profiles alignment,file-structure,generated-parity,changed,source-contract,stale-reference,task: pass except generated changed warning before graph refresh; generated graph now committed",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:file-structure",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:source-contract",
+    "audit:stale-reference",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,file-structure,generated-parity,changed,source-contract,stale-reference,task task_id=TASK-086 after warning cleanup"
+  ],
+  "content_proof_refs": [
+    "00c597707444d189a8918fd285bf6520fb76948b",
+    "0add046219ca4f048cf04c8c4faf1f4f32f8208c",
+    "451bdc06fbc8284eb5abcd12aba53dc708be2f3ebb48538df56187ee2e45b45f"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-086",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
+    "validation_report": ".codewiki/validation/2026-06-03-implementation-pass-task-086-2026-06-03-supersed.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
+      ".codewiki/validation/2026-06-03-implementation-pass-task-086-2026-06-03-supersed.json",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-086",
+    "source_build": ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
+    "validation_report": ".codewiki/validation/2026-06-03-implementation-pass-task-086-2026-06-03-supersed.json",
+    "commit_title": "checkpoint(codewiki): TASK-086 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-086",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-implementation-pass-task-086-2026-06-03-supersed.json",
+      "CodeWiki-Checks: decision validation .codewiki/validation/2026-06-03-decision-pass-task-086-2026-06-03-accepted-maint.json: pass; planning validation .codewiki/validation/2026-06-03-planning-pass-task-086-2026-06-03-superseding-ta.json: pass; wiki_state refresh=true: health green, 0 errors/0 warnings; wiki_gate audit profiles alignment,file-structure,generated-parity,changed,source-contract,stale-reference,task: pass except generated changed warning before graph refresh; generated graph now committed; npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-086",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "00c597707444d189a8918fd285bf6520fb76948b",
+    "validated_sha": "00c597707444d189a8918fd285bf6520fb76948b",
+    "tree_sha": "0add046219ca4f048cf04c8c4faf1f4f32f8208c",
+    "working_tree_digest": "451bdc06fbc8284eb5abcd12aba53dc708be2f3ebb48538df56187ee2e45b45f",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh implementation validation for docs/map maintenance; worktree clean; no package source behavior changed.",
+    "role": "validator"
+  }
+}
