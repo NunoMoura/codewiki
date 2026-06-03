@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:06:11.418Z",
+  "generated_at": "2026-06-03T00:07:41.849Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -201996,8 +201996,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-03T00:06:11.319Z",
-      "expires_at": "2026-06-03T02:06:11.319Z",
+      "generated_at": "2026-06-03T00:07:41.707Z",
+      "expires_at": "2026-06-03T02:07:41.707Z",
       "state": "missing",
       "tasks": {},
       "sprints": {
@@ -204615,7 +204615,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-03T00:06:10.950Z",
+      "generated_at": "2026-06-03T00:07:41.298Z",
       "counts": {
         "large-doc": 2
       },
@@ -204636,7 +204636,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-03T00:06:11Z",
+      "generated_at": "2026-06-03T00:07:41Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -206058,7 +206058,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-03T00:06:11Z",
+      "generated_at": "2026-06-03T00:07:42Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -210474,7 +210474,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-03T00:06:11Z",
+        "generated_at": "2026-06-03T00:07:42Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -210529,10 +210529,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T00:06:11Z",
+            "checked_at": "2026-06-03T00:07:41Z",
             "revision": {
               "git": {
-                "head": "c974b8beb8e6c22447e26f0b771db72a75056909",
+                "head": "a686df384301bdfa4ed1a5c5343b04920c5e9d94",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -210788,12 +210788,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "50c31f38152b9168ea5924a8df68a6d9ac778577e9fa5dbf4b00a353d5d3ec42",
-              "digest": "804cfee3cdbf95afa3d46e0ecb6f083550cebd8ee53a05d6094588048562e86b"
+              "digest": "187d6ae7fa583db2a1c5bb822f6dd89911e0ab9b8a8c250e2e6abfd9207834d3"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:06:11Z",
+              "checked_at": "2026-06-03T00:07:41Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -211283,10 +211283,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-03T00:06:11Z",
+            "checked_at": "2026-06-03T00:07:42Z",
             "revision": {
               "git": {
-                "head": "c974b8beb8e6c22447e26f0b771db72a75056909",
+                "head": "a686df384301bdfa4ed1a5c5343b04920c5e9d94",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -211525,12 +211525,12 @@
               "spec_digest": "3e045454a5d1286136c8b98960205c875a3a5d01945c6b4f29024abebca94583",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "f0bd9168f1e6869cf22f45e5fcfd565ce8c0f65e876b7a616b5d3f240857e415",
-              "digest": "abda561b5ca265fb6cb141ddc8cd2746f74116a240212d5b4698a6c243c23a7c"
+              "digest": "88e1d85c29e12cf736a61d41b6ef94e2877d7ce26583cd6820a6fe4be3920ec2"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:06:11Z",
+              "checked_at": "2026-06-03T00:07:42Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -211997,10 +211997,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-03T00:06:11Z",
+            "checked_at": "2026-06-03T00:07:42Z",
             "revision": {
               "git": {
-                "head": "c974b8beb8e6c22447e26f0b771db72a75056909",
+                "head": "a686df384301bdfa4ed1a5c5343b04920c5e9d94",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -212256,12 +212256,12 @@
               "spec_digest": "3f2f119b807c8026e852f7ca7575567225442f35fab9450d47ab472c85a8eba8",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "50c31f38152b9168ea5924a8df68a6d9ac778577e9fa5dbf4b00a353d5d3ec42",
-              "digest": "804cfee3cdbf95afa3d46e0ecb6f083550cebd8ee53a05d6094588048562e86b"
+              "digest": "187d6ae7fa583db2a1c5bb822f6dd89911e0ab9b8a8c250e2e6abfd9207834d3"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-03T00:06:11Z",
+              "checked_at": "2026-06-03T00:07:42Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -212752,7 +212752,7 @@
         "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-06-03T00:06:11Z",
+        "generated_at": "2026-06-03T00:07:42Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
