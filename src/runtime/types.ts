@@ -1,5 +1,11 @@
 import type { AgencyBudget } from "../agency/types.ts";
 import type { ArtifactStatusRecord } from "../session/types.ts";
+import {
+	normalizeArtifactRefList,
+	normalizeArtifactRefSets,
+	type ArtifactRef,
+	type TelemetryTraceLoop,
+} from "../telemetry/artifact-ref.ts";
 
 export interface WorkflowEfficiencyEvidence {
 	user_interruptions_avoided: number;
@@ -50,14 +56,22 @@ export const CODEWIKI_DAEMON_JOB_STORE_PATH =
 	".codewiki/runtime/jobs.json" as const;
 export const CODEWIKI_DAEMON_JOB_STORE_VERSION = 1 as const;
 
-export const CODEWIKI_DAEMON_LOOP_VALUES = [
+export const CODEWIKI_DAEMON_CANONICAL_LOOP_VALUES = [
 	"decision",
 	"planning",
 	"implementation",
+	"observe",
+] as const;
+
+export const CODEWIKI_DAEMON_LEGACY_LOOP_VALUES = [
 	"validation",
 	"task-close",
 	"publication",
-	"observe",
+] as const;
+
+export const CODEWIKI_DAEMON_LOOP_VALUES = [
+	...CODEWIKI_DAEMON_CANONICAL_LOOP_VALUES,
+	...CODEWIKI_DAEMON_LEGACY_LOOP_VALUES,
 ] as const;
 
 export const CODEWIKI_DAEMON_JOB_STATUS_VALUES = [
@@ -116,7 +130,15 @@ export const CODEWIKI_DAEMON_BRAIN_LEASE_STATUS_VALUES = [
 	"released",
 ] as const;
 
-export type CodewikiDaemonLoop = (typeof CODEWIKI_DAEMON_LOOP_VALUES)[number];
+export type CodewikiDaemonTraceLoop = TelemetryTraceLoop;
+export type CodewikiDaemonCanonicalLoop =
+	(typeof CODEWIKI_DAEMON_CANONICAL_LOOP_VALUES)[number];
+export type CodewikiDaemonLegacyLoop =
+	(typeof CODEWIKI_DAEMON_LEGACY_LOOP_VALUES)[number];
+export type CodewikiDaemonLoop = CodewikiDaemonCanonicalLoop;
+export type CodewikiDaemonLoopInput =
+	| CodewikiDaemonCanonicalLoop
+	| CodewikiDaemonLegacyLoop;
 export type CodewikiDaemonJobStatus =
 	(typeof CODEWIKI_DAEMON_JOB_STATUS_VALUES)[number];
 export type CodewikiDaemonRunStatus =
@@ -219,6 +241,8 @@ export interface CodewikiDaemonBlockReason {
 	summary: string;
 	refs: string[];
 	recommended_next_loop?: CodewikiDaemonLoop;
+	gate_refs?: string[];
+	remediation?: string[];
 	retryable: boolean;
 }
 
@@ -227,6 +251,10 @@ export interface CodewikiDaemonHandoffMetadata {
 	build_refs: string[];
 	validation_refs: string[];
 	content_refs: string[];
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	artifact_refs: ArtifactRef[];
 	next_loop?: CodewikiDaemonLoop;
 	notes: string[];
 }
@@ -251,6 +279,10 @@ export interface CodewikiDaemonRunRecord {
 	build_refs: string[];
 	validation_refs: string[];
 	content_refs: string[];
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	artifact_refs: ArtifactRef[];
 	block_reason?: CodewikiDaemonBlockReason;
 	handoff?: CodewikiDaemonHandoffMetadata;
 	error?: string;
@@ -270,6 +302,10 @@ export interface CodewikiDaemonJobRecord {
 	max_attempts: number;
 	source_refs: string[];
 	canonical_refs: CodewikiDaemonCanonicalRefs;
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	artifact_refs: ArtifactRef[];
 	block_reason?: CodewikiDaemonBlockReason;
 	questions: CodewikiDaemonQuestionRecord[];
 	runs: CodewikiDaemonRunRecord[];
@@ -285,13 +321,16 @@ export interface CodewikiDaemonJobStore {
 export interface CreateCodewikiDaemonJobInput {
 	id: string;
 	task_id: string;
-	loop: CodewikiDaemonLoop;
+	loop: CodewikiDaemonLoopInput;
 	created_at: string;
 	sprint_id?: string;
 	priority?: string;
 	max_attempts?: number;
 	source_refs?: string[];
 	canonical_refs?: CodewikiDaemonCanonicalRefs;
+	trace_refs?: string[];
+	gate_refs?: string[];
+	git_refs?: string[];
 	worker_profile?: CodewikiDaemonWorkerProfile;
 	model_policy?: CodewikiDaemonModelPolicy;
 }
@@ -306,6 +345,9 @@ export interface StartCodewikiDaemonRunInput {
 	build_refs?: string[];
 	validation_refs?: string[];
 	content_refs?: string[];
+	trace_refs?: string[];
+	gate_refs?: string[];
+	git_refs?: string[];
 }
 
 export interface HeartbeatCodewikiDaemonRunInput {
@@ -321,6 +363,9 @@ export interface FinishCodewikiDaemonRunInput {
 	build_refs?: string[];
 	validation_refs?: string[];
 	content_refs?: string[];
+	trace_refs?: string[];
+	gate_refs?: string[];
+	git_refs?: string[];
 	block_reason?: CodewikiDaemonBlockReason;
 	error?: string;
 	handoff?: Partial<CodewikiDaemonHandoffMetadata>;
@@ -380,10 +425,7 @@ export interface UnblockCodewikiDaemonJobInput {
 }
 
 function uniqueStrings(values: unknown): string[] {
-	if (!Array.isArray(values)) return [];
-	return [
-		...new Set(values.map((value) => String(value).trim()).filter(Boolean)),
-	];
+	return normalizeArtifactRefList(values);
 }
 
 function isOneOf<T extends readonly string[]>(
@@ -394,7 +436,30 @@ function isOneOf<T extends readonly string[]>(
 }
 
 function normalizeLoop(value: unknown): CodewikiDaemonLoop {
-	return isOneOf(CODEWIKI_DAEMON_LOOP_VALUES, value) ? value : "observe";
+	const normalized = String(value || "")
+		.trim()
+		.toLowerCase()
+		.replace(/_/g, "-");
+	if (isOneOf(CODEWIKI_DAEMON_CANONICAL_LOOP_VALUES, normalized)) {
+		return normalized;
+	}
+	if (normalized === "validation" || normalized === "task-close") {
+		return "implementation";
+	}
+	if (normalized === "publication") return "implementation";
+	return "observe";
+}
+
+function normalizeLoopInput(
+	value: unknown,
+): CodewikiDaemonLoopInput | undefined {
+	const normalized = String(value || "")
+		.trim()
+		.toLowerCase()
+		.replace(/_/g, "-");
+	return isOneOf(CODEWIKI_DAEMON_LOOP_VALUES, normalized)
+		? normalized
+		: undefined;
 }
 
 function normalizeJobStatus(value: unknown): CodewikiDaemonJobStatus {
@@ -419,12 +484,15 @@ function normalizeBlockReason(
 		kind: normalizeBlockKind(value.kind),
 		summary,
 		refs: uniqueStrings(value.refs),
-		recommended_next_loop: isOneOf(
-			CODEWIKI_DAEMON_LOOP_VALUES,
-			value.recommended_next_loop,
-		)
-			? value.recommended_next_loop
-			: undefined,
+		...(normalizeLoopInput(value.recommended_next_loop)
+			? { recommended_next_loop: normalizeLoop(value.recommended_next_loop) }
+			: {}),
+		...(uniqueStrings(value.gate_refs).length
+			? { gate_refs: uniqueStrings(value.gate_refs) }
+			: {}),
+		...(uniqueStrings(value.remediation).length
+			? { remediation: uniqueStrings(value.remediation) }
+			: {}),
 		retryable: Boolean(value.retryable),
 	};
 }
@@ -613,14 +681,27 @@ function normalizeHandoff(
 ): CodewikiDaemonHandoffMetadata | undefined {
 	if (!value || typeof value !== "object") return undefined;
 	const summary = String(value.summary || "").trim();
+	const normalizedRefs = normalizeArtifactRefSets({
+		build_refs: value.build_refs,
+		validation_refs: value.validation_refs,
+		content_refs: value.content_refs,
+		trace_refs: value.trace_refs,
+		gate_refs: value.gate_refs,
+		git_refs: value.git_refs,
+		legacy_loop: value.next_loop,
+	});
 	return {
 		...(summary ? { summary } : {}),
 		build_refs: uniqueStrings(value.build_refs),
 		validation_refs: uniqueStrings(value.validation_refs),
 		content_refs: uniqueStrings(value.content_refs),
-		next_loop: isOneOf(CODEWIKI_DAEMON_LOOP_VALUES, value.next_loop)
-			? value.next_loop
-			: undefined,
+		trace_refs: normalizedRefs.trace_refs,
+		gate_refs: normalizedRefs.gate_refs,
+		git_refs: normalizedRefs.git_refs,
+		artifact_refs: normalizedRefs.artifact_refs,
+		...(normalizeLoopInput(value.next_loop)
+			? { next_loop: normalizeLoop(value.next_loop) }
+			: {}),
 		notes: uniqueStrings(value.notes),
 	};
 }
@@ -632,12 +713,23 @@ export function createCodewikiDaemonJob(
 	const taskId = input.task_id.trim();
 	if (!id) throw new Error("daemon job id is required");
 	if (!taskId) throw new Error("daemon job task_id is required");
+	const canonicalRefs = normalizeCanonicalRefs({
+		...(input.canonical_refs ?? {}),
+		roadmap_task: taskId,
+	});
+	const normalizedRefs = normalizeArtifactRefSets({
+		canonical_refs: canonicalRefs,
+		trace_refs: input.trace_refs,
+		gate_refs: input.gate_refs,
+		git_refs: input.git_refs,
+		legacy_loop: input.loop,
+	});
 	return {
 		id,
 		status: "queued",
 		task_id: taskId,
 		...(input.sprint_id?.trim() ? { sprint_id: input.sprint_id.trim() } : {}),
-		loop: input.loop,
+		loop: normalizeLoop(input.loop),
 		...(normalizeWorkerProfile(input.worker_profile)
 			? { worker_profile: normalizeWorkerProfile(input.worker_profile) }
 			: {}),
@@ -649,10 +741,11 @@ export function createCodewikiDaemonJob(
 		priority: input.priority?.trim() || "normal",
 		max_attempts: Math.max(1, Math.floor(Number(input.max_attempts ?? 1))),
 		source_refs: uniqueStrings(input.source_refs ?? []),
-		canonical_refs: normalizeCanonicalRefs({
-			...(input.canonical_refs ?? {}),
-			roadmap_task: taskId,
-		}),
+		canonical_refs: canonicalRefs,
+		trace_refs: normalizedRefs.trace_refs,
+		gate_refs: normalizedRefs.gate_refs,
+		git_refs: normalizedRefs.git_refs,
+		artifact_refs: normalizedRefs.artifact_refs,
 		questions: [],
 		runs: [],
 	};
@@ -686,6 +779,17 @@ export function normalizeCodewikiDaemonJobStore(
 						): run is CodewikiDaemonRunRecord => Boolean(run),
 					)
 			: [];
+		const canonicalRefs = normalizeCanonicalRefs({
+			...(raw.canonical_refs ?? {}),
+			roadmap_task: taskId,
+		});
+		const normalizedRefs = normalizeArtifactRefSets({
+			canonical_refs: canonicalRefs,
+			trace_refs: raw.trace_refs,
+			gate_refs: raw.gate_refs,
+			git_refs: raw.git_refs,
+			legacy_loop: raw.loop,
+		});
 		jobs[id] = {
 			id,
 			status: normalizeJobStatus(raw.status),
@@ -705,10 +809,11 @@ export function normalizeCodewikiDaemonJobStore(
 			priority: String(raw.priority || "normal").trim(),
 			max_attempts: Math.max(1, Math.floor(Number(raw.max_attempts ?? 1))),
 			source_refs: uniqueStrings(raw.source_refs),
-			canonical_refs: normalizeCanonicalRefs({
-				...(raw.canonical_refs ?? {}),
-				roadmap_task: taskId,
-			}),
+			canonical_refs: canonicalRefs,
+			trace_refs: normalizedRefs.trace_refs,
+			gate_refs: normalizedRefs.gate_refs,
+			git_refs: normalizedRefs.git_refs,
+			artifact_refs: normalizedRefs.artifact_refs,
 			...(normalizeBlockReason(raw.block_reason)
 				? { block_reason: normalizeBlockReason(raw.block_reason) }
 				: {}),
@@ -876,6 +981,15 @@ function normalizeCodewikiDaemonRun(
 					): item is CodewikiDaemonHeartbeatRecord => Boolean(item),
 				)
 		: [];
+	const normalizedRefs = normalizeArtifactRefSets({
+		build_refs: raw.build_refs,
+		validation_refs: raw.validation_refs,
+		content_refs: raw.content_refs,
+		trace_refs: raw.trace_refs,
+		gate_refs: raw.gate_refs,
+		git_refs: raw.git_refs,
+		legacy_loop: raw.loop || jobLoop,
+	});
 	return {
 		id,
 		job_id: String(raw.job_id || jobId).trim() || jobId,
@@ -913,6 +1027,10 @@ function normalizeCodewikiDaemonRun(
 		build_refs: uniqueStrings(raw.build_refs),
 		validation_refs: uniqueStrings(raw.validation_refs),
 		content_refs: uniqueStrings(raw.content_refs),
+		trace_refs: normalizedRefs.trace_refs,
+		gate_refs: normalizedRefs.gate_refs,
+		git_refs: normalizedRefs.git_refs,
+		artifact_refs: normalizedRefs.artifact_refs,
 		...(normalizeBlockReason(raw.block_reason)
 			? { block_reason: normalizeBlockReason(raw.block_reason) }
 			: {}),
@@ -1078,6 +1196,15 @@ export function startCodewikiDaemonRun(
 	assertCanStartRun(job);
 	const runId = input.run_id.trim();
 	if (!runId) throw new Error("daemon run id is required");
+	const normalizedRefs = normalizeArtifactRefSets({
+		build_refs: input.build_refs,
+		validation_refs: input.validation_refs,
+		content_refs: input.content_refs,
+		trace_refs: [...job.trace_refs, ...(input.trace_refs ?? [])],
+		gate_refs: [...job.gate_refs, ...(input.gate_refs ?? [])],
+		git_refs: [...job.git_refs, ...(input.git_refs ?? [])],
+		legacy_loop: job.loop,
+	});
 	const run: CodewikiDaemonRunRecord = {
 		id: runId,
 		job_id: job.id,
@@ -1110,6 +1237,10 @@ export function startCodewikiDaemonRun(
 		build_refs: uniqueStrings(input.build_refs ?? []),
 		validation_refs: uniqueStrings(input.validation_refs ?? []),
 		content_refs: uniqueStrings(input.content_refs ?? []),
+		trace_refs: normalizedRefs.trace_refs,
+		gate_refs: normalizedRefs.gate_refs,
+		git_refs: normalizedRefs.git_refs,
+		artifact_refs: normalizedRefs.artifact_refs,
 	};
 	return {
 		...job,
@@ -1188,7 +1319,7 @@ export function finishCodewikiDaemonRun(
 		if (run.status !== "running") {
 			throw new Error(`daemon run ${runId} is not running`);
 		}
-		const handoff: CodewikiDaemonHandoffMetadata = normalizeHandoff({
+		const handoff = normalizeHandoff({
 			...(input.handoff ?? {}),
 			summary: input.handoff?.summary ?? input.summary,
 			build_refs: [
@@ -1206,13 +1337,23 @@ export function finishCodewikiDaemonRun(
 				...(input.content_refs ?? []),
 				...(input.handoff?.content_refs ?? []),
 			],
-		}) ?? {
-			summary: input.summary,
-			build_refs: [],
-			validation_refs: [],
-			content_refs: [],
-			notes: [],
-		};
+			trace_refs: [
+				...run.trace_refs,
+				...(input.trace_refs ?? []),
+				...(input.handoff?.trace_refs ?? []),
+			],
+			gate_refs: [
+				...run.gate_refs,
+				...(input.gate_refs ?? []),
+				...(input.handoff?.gate_refs ?? []),
+			],
+			git_refs: [
+				...run.git_refs,
+				...(input.git_refs ?? []),
+				...(input.handoff?.git_refs ?? []),
+			],
+			next_loop: input.handoff?.next_loop ?? run.loop,
+		}) as CodewikiDaemonHandoffMetadata;
 		if (
 			!blockReason &&
 			input.outcome !== "pass" &&
@@ -1222,7 +1363,9 @@ export function finishCodewikiDaemonRun(
 				kind:
 					input.outcome === "block" ? "validation_block" : "validation_fail",
 				summary: input.error || input.summary || `daemon run ${input.outcome}`,
-				refs: [...handoff.build_refs, ...handoff.validation_refs],
+				refs: [...handoff.trace_refs, ...handoff.gate_refs],
+				gate_refs: handoff.gate_refs,
+				remediation: input.error ? [input.error] : [],
 				retryable: true,
 			};
 		}
@@ -1235,6 +1378,10 @@ export function finishCodewikiDaemonRun(
 			build_refs: handoff.build_refs,
 			validation_refs: handoff.validation_refs,
 			content_refs: handoff.content_refs,
+			trace_refs: handoff.trace_refs,
+			gate_refs: handoff.gate_refs,
+			git_refs: handoff.git_refs,
+			artifact_refs: handoff.artifact_refs,
 			...(blockReason ? { block_reason: blockReason } : {}),
 			...(handoff ? { handoff } : {}),
 			...(input.error?.trim() ? { error: input.error.trim() } : {}),

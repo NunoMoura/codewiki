@@ -68,9 +68,13 @@ const createdAt = "2026-05-30T00:00:00.000Z";
 	assert.equal(store.jobs["JOB-001"].max_attempts, 1);
 	assert.deepEqual(store.jobs["JOB-001"].source_refs, ["src/runtime/types.ts"]);
 	assert.equal(store.jobs["JOB-001"].canonical_refs.roadmap_task, "TASK-063");
+	assert.deepEqual(store.jobs["JOB-001"].trace_refs, [
+		".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+	]);
 	assert.equal(store.jobs["JOB-001"].runs[0].status, "running");
 	assert.equal(store.jobs["JOB-001"].runs[0].heartbeat_count, 1);
 	assert.deepEqual(store.jobs["JOB-001"].runs[0].build_refs, ["build.json"]);
+	assert.deepEqual(store.jobs["JOB-001"].runs[0].trace_refs, ["build.json"]);
 }
 
 {
@@ -117,9 +121,13 @@ const createdAt = "2026-05-30T00:00:00.000Z";
 	assert.equal(job.status, "completed");
 	assert.equal(job.runs[0].status, "completed");
 	assert.equal(job.runs[0].handoff?.summary, "daemon schema accepted");
-	assert.deepEqual(job.runs[0].handoff?.validation_refs, [
+	assert.deepEqual(job.runs[0].handoff?.trace_refs, [
+		".codewiki/builds/implementation/2026-05-30-task-063.json",
+	]);
+	assert.deepEqual(job.runs[0].handoff?.gate_refs, [
 		".codewiki/validation/2026-05-30-implementation-pass-task-063.json",
 	]);
+	assert.deepEqual(job.runs[0].handoff?.git_refs, ["tree:abc123"]);
 }
 
 {
@@ -130,6 +138,8 @@ const createdAt = "2026-05-30T00:00:00.000Z";
 		created_at: createdAt,
 		max_attempts: 2,
 	});
+	assert.equal(job.loop, "implementation");
+	assert.deepEqual(job.gate_refs, ["gate:validation"]);
 
 	job = startCodewikiDaemonRun(job, {
 		run_id: "RUN-BLOCK-1",

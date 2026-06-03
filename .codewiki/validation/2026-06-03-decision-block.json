@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T05:22:23Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "block",
+  "rationale": "Decision build source refs compile accepted system-first semantic rows; graph health has no blocking errors after diagram fixes. Policy blocks decision gate validation until audit:alignment, audit:stale-reference are recorded.",
+  "checks": [
+    "wiki_state refresh=true view=status -> health yellow: 0 errors, 2 large-doc warnings"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, stale-reference."
+    }
+  ],
+  "policy_profile": "decision",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "validation_report": ".codewiki/validation/2026-06-03-decision-block.json",
+    "source_refs": [
+      ".codewiki/validation/2026-06-03-decision-block.json"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "validation_report": ".codewiki/validation/2026-06-03-decision-block.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-decision-block.json",
+      "CodeWiki-Checks: wiki_state refresh=true view=status -> health yellow: 0 errors, 2 large-doc warnings"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite linter evidence for required profiles: alignment, stale-reference."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "stale-reference"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:stale-reference"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:stale-reference"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "code-local",
+      "reason": "Code-local change; gateway linters and content evidence still required.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

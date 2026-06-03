@@ -39,14 +39,14 @@ nodes:
     kind: ui
     source: .codewiki/kb/system/terminal-ui.md
   - id: extension
-    label: Extension
+    label: Pi package integration
     group: adapter_layer
-    kind: adapter
+    kind: runtime_surface
     source: .codewiki/kb/system/extension.md
   - id: adapters
-    label: Adapters
+    label: Adapter compatibility
     group: adapter_layer
-    kind: adapter
+    kind: compatibility_adapter
     source: .codewiki/kb/system/adapters.md
   - id: api
     label: Application tools API
@@ -59,7 +59,7 @@ nodes:
     kind: domain
     source: .codewiki/kb/system/file-structure.md
   - id: state_engine
-    label: State engine
+    label: Graph engine
     group: app_layer
     kind: application
     source: .codewiki/kb/system/graph.md
@@ -94,12 +94,12 @@ nodes:
     kind: workflow
     source: .codewiki/kb/system/compilers.md
   - id: validation_gateway
-    label: Validation gateway
+    label: Gateway
     group: app_layer
     kind: workflow
     source: .codewiki/kb/system/validation-gateway.md
   - id: checks
-    label: Deterministic checks
+    label: Gate criteria and linters
     group: app_layer
     kind: application
     source: .codewiki/kb/system/audits.md
@@ -114,9 +114,9 @@ nodes:
     kind: durable_truth
     source: .codewiki/kb/system/roadmap.md
   - id: builds
-    label: Builds
+    label: Telemetry traces and compiler output
     group: truth_layer
-    kind: handoff_truth
+    kind: traceability_truth
     source: .codewiki/kb/system/builds.md
   - id: graph
     label: Generated state graph
@@ -188,10 +188,10 @@ edges:
     label: submits gateway preflight and routes pass/fail/block
   - from: runtime_jobs
     to: builds
-    label: carries build refs for loop attempts
+    label: carries trace and compiler output refs for loop attempts
   - from: runtime_jobs
     to: validation_gateway
-    label: carries validation refs and pass/fail/block outcomes
+    label: carries gate refs and pass/fail/block outcomes
   - from: runtime_jobs
     to: roadmap
     label: references tasks without replacing truth
@@ -203,13 +203,13 @@ edges:
     label: starts compiler loops
   - from: api
     to: validation_gateway
-    label: records/reads validation
+    label: records/reads gate verdicts and diagnostics
   - from: api
     to: checks
-    label: exposes deterministic audit evidence
+    label: exposes deterministic gate evidence
   - from: validation_gateway
     to: checks
-    label: requires audit/check evidence
+    label: requires gate criteria evidence
   - from: checks
     to: code_tests
     label: inspects source/API contracts
@@ -221,10 +221,10 @@ edges:
     label: mutates work truth
   - from: api
     to: builds
-    label: writes handoff briefs
+    label: writes trace entries
   - from: compilers
     to: builds
-    label: produce handoffs
+    label: emit compiler output into traces
   - from: compilers
     to: knowledge
     label: update intended truth
@@ -236,7 +236,7 @@ edges:
     label: implement executable truth
   - from: validation_gateway
     to: builds
-    label: validates handoffs
+    label: records gate verdicts in traces
   - from: validation_gateway
     to: state_engine
     label: uses generated-state context

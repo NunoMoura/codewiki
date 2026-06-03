@@ -6,7 +6,7 @@ summary: CodeWiki should let agents advance roadmap work automatically inside ex
   user-visible gates.
 owners:
 - product
-updated: '2026-05-27'
+updated: '2026-06-03'
 code_paths:
 - skills/codewiki-implementation/SKILL.md
 - skills/codewiki-decision/SKILL.md
@@ -22,12 +22,12 @@ As a user, I want an agent to advance roadmap work automatically while staying b
 - Agents can move through roadmap work automatically when the user allows it.
 - Users can choose the agency level: `task` stops for approval after one task, `sprint` continues through the active sprint, and `roadmap` continues through active roadmap work.
 - Context resets reduce context bloat and let the agent automatically pick up from CodeWiki source truth when the selected agency level still allows continuation.
-- Automation is gated by token budget, time budget, cost budget, write/session budget, risk level, approval requirements, validation results, and policy boundaries.
-- The agent stops on ambiguity, unsafe work, failed checks, policy gates, budget exhaustion, or missing approval.
+- Automation is gated by token budget, time budget, cost budget, write/session budget, risk level, model limits, approval requirements, gate verdicts, and policy boundaries.
+- The agent stops on ambiguity, unsafe work, failed gate criteria, budget exhaustion, or missing approval.
 - Users can see what the agent plans to do next, why it is safe, and which gate would stop it.
 - Parallel sessions can lease narrow change scopes, and automation can warn or stop when overlapping leases make work unsafe.
 - Context-heavy validation and research can run in isolated fresh contexts and return compact findings.
-- Durable truth remains separated by role: knowledge, builds, roadmap, graph state, validation reports, code, and tests.
+- Durable truth remains separated by role: KB truth, telemetry traces, graph state, gate verdicts, Git proof, code, and tests.
 
 ## Related docs
 

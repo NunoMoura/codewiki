@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T05:38:56Z",
+  "profile": "planning",
+  "gate": "planning",
+  "task_id": "TASK-087",
+  "verdict": "pass",
+  "rationale": "Superseding planning build v2 maps all accepted rows and all downstream planning questions to TASK-087, SPRINT-021, or SPRINT-022. User explicitly approved proceeding with the high-risk migration planning. Required linter evidence recorded with only non-blocking graph warnings.",
+  "checks": [
+    "explicit user approval: user said 'OK, proceed' on 2026-06-03 for planning continuation after accepted decisions",
+    "wiki_audit profiles=alignment,stale-reference,task task_id=TASK-087 -> warning only; task pass; stale-reference pass",
+    "wiki_state refresh=true view=status -> yellow, no blockers"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "TASK-087 is intentionally broad as one enabling foundation task; implementation must stop if scope expands beyond daemon/agency readiness."
+    },
+    {
+      "severity": "warning",
+      "summary": "Graph warnings are non-blocking large-doc/compatibility cleanup to handle in later planning."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:task",
+    "profile:task:TASK-087",
+    "explicit-user-approval:2026-06-03:OK-proceed"
+  ],
+  "audit_reports": [
+    "wiki_audit:profiles=alignment,stale-reference,task:TASK-087:2026-06-03"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-087",
+    "source_build": ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-task-087-2026-06-03-daemon-agency-.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+      ".codewiki/validation/2026-06-03-planning-pass-task-087-2026-06-03-daemon-agency-.json",
+      "TASK-087 is the first enabling implementation task for daemon/agency readiness.",
+      "SPRINT-021 groups TASK-087 as daemon/agency foundation.",
+      "SPRINT-022 records post-daemon structure/telemetry migration scope for broad follow-up work after TASK-087 passes.",
+      "TASK-087",
+      "src/telemetry/**",
+      "src/runtime/**",
+      "src/agency/**",
+      "src/gateway/**",
+      "src/policy/**",
+      "src/session/**",
+      "src/state/automation-readiness.ts",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/merge-publisher-queue.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-087",
+    "source_build": ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+    "validation_report": ".codewiki/validation/2026-06-03-planning-pass-task-087-2026-06-03-daemon-agency-.json",
+    "commit_title": "checkpoint(codewiki): TASK-087 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-087",
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-planning-pass-task-087-2026-06-03-daemon-agency-.json",
+      "CodeWiki-Checks: explicit user approval: user said 'OK, proceed' on 2026-06-03 for planning continuation after accepted decisions; wiki_audit profiles=alignment,stale-reference,task task_id=TASK-087 -> warning only; task pass; stale-reference pass; wiki_state refresh=true view=status -> yellow, no blockers"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/telemetry/**",
+      "src/runtime/**",
+      "src/agency/**",
+      "src/gateway/**",
+      "src/policy/**",
+      "src/session/**",
+      "src/state/automation-readiness.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed",
+      "CodeWiki session/runtime boundary code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "task_id": "TASK-087",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "explicit-user-approval:2026-06-03:OK-proceed",
+        "explicit user approval: user said 'OK, proceed' on 2026-06-03 for planning continuation after accepted decisions"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

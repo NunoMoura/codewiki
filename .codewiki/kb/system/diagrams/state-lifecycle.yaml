@@ -1,8 +1,8 @@
 schema_version: 1
 id: spec.system.diagrams.state-lifecycle
-title: CodeWiki Task and Compiler Lifecycle
+title: CodeWiki Three-Loop Trace Lifecycle
 kind: state_lifecycle
-purpose: Show how intent, decision builds, roadmap tasks, validation, implementation evidence, and publication readiness move through CodeWiki.
+purpose: Show how intent, loop trace files, gate verdicts, implementation evidence, and Git proof move through CodeWiki.
 source_docs:
   - .codewiki/kb/system/compilers.md
   - .codewiki/kb/system/builds.md
@@ -18,7 +18,7 @@ renderer:
   fallback: custom_state
 transition_policy:
   operational_source: graph-backed state machine
-  analytics_projection: Markov/MDP-style transition metrics are derived from graph snapshots, builds, validation reports, source fingerprints, and Git history; they do not replace the graph.
+  analytics_projection: Markov/MDP-style transition metrics are derived from graph snapshots, telemetry traces, gate verdicts, source fingerprints, and Git history; they do not replace the graph.
   route_fields:
     - failure_class
     - recommended_next_loop
@@ -30,14 +30,14 @@ states:
     label: Decision rows proposed
     kind: decision_gate
   - id: decision_build_accepted
-    label: Decision build accepted and gateway passed
-    kind: build
+    label: Decision trace passed decision gate
+    kind: loop_trace
   - id: knowledge_updated
     label: Knowledge updated
     kind: durable_truth
   - id: planning_build_accepted
-    label: Planning build accepted and gateway passed
-    kind: build
+    label: Planning trace passed planning gate
+    kind: loop_trace
   - id: task_todo
     label: Roadmap task todo
     kind: work
@@ -63,8 +63,8 @@ states:
     label: Task verify
     kind: gate
   - id: implementation_build_accepted
-    label: Implementation build accepted and gateway passed
-    kind: evidence
+    label: Implementation trace passed gate with Git proof
+    kind: loop_trace
   - id: task_done
     label: Task done
     kind: closed
@@ -84,22 +84,22 @@ transitions:
     gate: user decision
   - from: knowledge_updated
     to: decision_build_accepted
-    trigger: decision build records row-to-KB and propagation evidence
-    gate: decision validation
+    trigger: decision.json records row-to-KB and propagation evidence
+    gate: decision gate
   - from: knowledge_updated
     to: decision_rows_proposed
-    trigger: decision validation fails or blocks with decision ambiguity, missing approval, or incomplete semantic mapping
+    trigger: decision gate fails or blocks with decision ambiguity, missing approval, or incomplete semantic mapping
     gate: failure_class and recommended_next_loop
   - from: decision_build_accepted
     to: planning_build_accepted
-    trigger: planning compiler creates/refines roadmap work and planning validation passes
+    trigger: planning compiler creates/refines work and planning gate passes
   - from: planning_build_accepted
     to: planning_build_accepted
-    trigger: planning validation fails locally and planner emits a superseding planning build
+    trigger: planning gate fails locally and planner emits superseding planning trace evidence
     gate: failure_class and recommended_next_loop
   - from: planning_build_accepted
     to: decision_rows_proposed
-    trigger: planning validation reveals ambiguous intent, unapproved semantics, or missing risk approval
+    trigger: planning gate reveals ambiguous intent, unapproved semantics, or missing risk approval
     gate: failure_class and recommended_next_loop
   - from: planning_build_accepted
     to: task_todo
@@ -122,8 +122,8 @@ transitions:
     trigger: worker claims artifact-status scopes and starts run
   - from: daemon_run_active
     to: daemon_job_completed
-    trigger: run outcome pass records build, validation, content, and handoff refs
-    gate: compiler/gateway pass evidence
+    trigger: run outcome pass records trace, gate, content, and handoff refs
+    gate: compiler output and gate pass evidence
   - from: daemon_run_active
     to: daemon_job_blocked
     trigger: run outcome fail, block, error, stale heartbeat, budget stop, conflict, or missing proof
@@ -139,29 +139,29 @@ transitions:
     trigger: handoff resumes compiler loop from source refs; roadmap remains canonical task truth
   - from: task_in_progress
     to: task_verify
-    trigger: checks and acceptance evidence ready
+    trigger: acceptance evidence, linters, and tests are ready
   - from: task_verify
     to: implementation_build_accepted
-    trigger: implementation validation passes
-    gate: implementation validation
+    trigger: implementation gate passes and Git proof is recorded
+    gate: implementation gate
   - from: task_verify
     to: task_in_progress
-    trigger: implementation validation fails locally and builder emits a superseding implementation build
+    trigger: implementation gate fails locally and compiler emits superseding implementation trace evidence
     gate: failure_class and recommended_next_loop
   - from: task_verify
     to: planning_build_accepted
-    trigger: implementation validation reveals a planning gap
+    trigger: implementation gate reveals a planning gap
     gate: failure_class and recommended_next_loop
   - from: task_verify
     to: decision_rows_proposed
-    trigger: implementation validation reveals ambiguous intent, unapproved semantics, or missing risk approval
+    trigger: implementation gate reveals ambiguous intent, unapproved semantics, or missing risk approval
     gate: failure_class and recommended_next_loop
   - from: implementation_build_accepted
     to: task_done
     trigger: task closure evidence recorded
   - from: task_verify
     to: task_blocked
-    trigger: validation fails, blocks, policy requires stop, content proof is missing, or runtime conflict cannot proceed
+    trigger: gate fails, blocks, policy requires stop, content proof is missing, or runtime conflict cannot proceed
     gate: verifier or policy
   - from: task_done
     to: follow_up_opened

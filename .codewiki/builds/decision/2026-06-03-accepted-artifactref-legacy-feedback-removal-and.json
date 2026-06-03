@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-03T05:21:58Z",
+  "source": "Accepted rows CW-FINAL-015 through CW-FINAL-017.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-03T05:21:58.000Z",
+    "purge_after": "2026-08-02T05:21:58.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-CW-DIAG-001",
+      "text": "Feedback is retired; gate output uses diagnostics/findings/remediation.",
+      "source_refs": [
+        "CW-FINAL-015"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-CW-REF-001",
+      "text": "New schemas use <artifact_type>_refs normalized to ArtifactRef.",
+      "source_refs": [
+        "CW-FINAL-016"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-CW-DAEMON-001",
+      "text": "Daemon/agency completion is the first enabling sprint.",
+      "source_refs": [
+        "CW-FINAL-017"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Graph/lexicon/runtime decisions mapped to specs.",
+      "evidence": "Lexicon, graph, runtime, and agency docs updated.",
+      "requirement_ids": [
+        "REQ-CW-DIAG-001",
+        "REQ-CW-REF-001",
+        "REQ-CW-DAEMON-001"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted ArtifactRef, legacy feedback removal, and daemon agency first decisions",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "CW-FINAL-015",
+      "current_state": "Feedback terminology remains from older loop naming.",
+      "current_project_state": "Feedback terminology remains from older loop naming.",
+      "desired_state": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "agreed_change": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "expected_final_state": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Avoid legacy terminology drift.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-016",
+      "current_state": "Refs use many inconsistent names.",
+      "current_project_state": "Refs use many inconsistent names.",
+      "desired_state": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "agreed_change": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "expected_final_state": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Reduce schema and graph terminology sprawl.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-017",
+      "current_state": "Daemon/agency is partial and still carries legacy concepts.",
+      "current_project_state": "Daemon/agency is partial and still carries legacy concepts.",
+      "desired_state": "Finish daemon/agency first before broad refactor sprints.",
+      "agreed_change": "Finish daemon/agency first before broad refactor sprints.",
+      "expected_final_state": "Finish daemon/agency first before broad refactor sprints.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improve productivity and safe parallelization.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "CW-FINAL-015",
+    "CW-FINAL-016",
+    "CW-FINAL-017"
+  ],
+  "approved_rows": [
+    {
+      "id": "CW-FINAL-015",
+      "current_state": "Feedback terminology remains from older loop naming.",
+      "current_project_state": "Feedback terminology remains from older loop naming.",
+      "desired_state": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "agreed_change": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "expected_final_state": "Remove feedback from canonical lexicon; use gate diagnostics/findings/remediation.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Avoid legacy terminology drift.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-016",
+      "current_state": "Refs use many inconsistent names.",
+      "current_project_state": "Refs use many inconsistent names.",
+      "desired_state": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "agreed_change": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "expected_final_state": "Standardize <artifact_type>_refs fields normalized to ArtifactRef.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Reduce schema and graph terminology sprawl.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-017",
+      "current_state": "Daemon/agency is partial and still carries legacy concepts.",
+      "current_project_state": "Daemon/agency is partial and still carries legacy concepts.",
+      "desired_state": "Finish daemon/agency first before broad refactor sprints.",
+      "agreed_change": "Finish daemon/agency first before broad refactor sprints.",
+      "expected_final_state": "Finish daemon/agency first before broad refactor sprints.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improve productivity and safe parallelization.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Feedback is not canonical; use gate diagnostics, gate findings, and remediation items."
+    },
+    {
+      "id": "D2",
+      "summary": "Use <artifact_type>_refs and ArtifactRef across trace, graph, gate, and API schemas."
+    },
+    {
+      "id": "D3",
+      "summary": "Daemon/agency completion is first enabling sprint before broad source/state refactor sprints."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/lexicon.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/system-truth-and-compilers.md",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "CW-FINAL-015",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        "data-model:gate_verdict"
+      ],
+      "evidence": "Feedback removed from canonical lexicon and replaced by diagnostics/findings/remediation.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-016",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/system-truth-and-compilers.md"
+      ],
+      "diagram_refs": [
+        "data-model:loop_trace_file"
+      ],
+      "evidence": "ArtifactRef and <artifact_type>_refs standard documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-017",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [
+        "component-map:agency",
+        "component-map:runtime"
+      ],
+      "evidence": "Daemon/agency first enabling sprint documented.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "Lexicon, graph, gateway, runtime, and agency specs updated."
+    ],
+    "no_product_impact": "Terminology and runtime sequencing clarify internal architecture; existing product automation story already reflects gate/telemetry/Git behavior.",
+    "downstream_planning_questions": [
+      "Create daemon/agency completion sprint before other refactor sprints.",
+      "Plan ArtifactRef schema migration and legacy field normalization.",
+      "Plan removal of feedback wording from source/UI compatibility surfaces."
+    ]
+  },
+  "diagram_refs": [
+    "data-model:gate_verdict",
+    "data-model:loop_trace_file",
+    "component-map:agency",
+    "component-map:runtime"
+  ],
+  "downstream_planning_questions": [
+    "Create daemon/agency completion sprint before other refactor sprints.",
+    "Plan ArtifactRef schema migration and legacy field normalization.",
+    "Plan removal of feedback wording from source/UI compatibility surfaces."
+  ],
+  "assumptions": [
+    "Some source/UI compatibility wording may remain until implementation tasks migrate it."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No daemon/source implementation in decision loop."
+  ],
+  "risks": [
+    "Daemon-first sequencing delays visible cleanup but improves later parallel productivity."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/system-truth-and-compilers.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

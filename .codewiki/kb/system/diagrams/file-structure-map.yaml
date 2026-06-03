@@ -15,7 +15,7 @@ groups:
   - id: source_current
     label: Current source layout
   - id: source_target
-    label: Concept-root target
+    label: Loop-first source target
   - id: exposure
     label: Exposure layers
   - id: codewiki_state
@@ -58,7 +58,7 @@ nodes:
     source: .codewiki/kb/system/terminal-ui.md
     note: Pi-hosted status/config panels live inside the Pi adapter path and are owned by current_adapters for strict file-structure purposes.
   - id: concept_root_target
-    label: Concept-root source ownership target
+    label: Loop-first source ownership target
     group: source_target
     kind: policy
     source: .codewiki/kb/system/file-structure.md
@@ -66,20 +66,29 @@ nodes:
     status: accepted_target
     paths:
       - src/api/**
+      - src/decision/**
+      - src/planning/**
+      - src/implementation/**
+      - src/telemetry/**
+      - src/graph/**
+      - src/knowledge/**
+      - src/git/**
+      - src/pi/**
+      - src/project/**
+      - src/runtime/**
       - src/agency/**
+      - src/shared/**
+    compatibility_paths:
+      - src/adapters/pi/**
       - src/audit/**
       - src/build/**
       - src/change/**
       - src/checks/**
       - src/gc/**
       - src/gateway/**
-      - src/knowledge/**
       - src/policy/**
-      - src/project/**
       - src/roadmap/**
-      - src/runtime/**
       - src/session/**
-      - src/shared/**
       - src/state/**
       - src/validation/**
       - src/workflow/**
@@ -155,6 +164,7 @@ nodes:
     paths:
       - src/build/**
       - src/gateway/**
+      - src/validation/**
       - tests/tasks/TASK-022/**
       - tests/smoke/gateway-preflight.test.mjs
     compatibility_paths:
@@ -387,25 +397,29 @@ nodes:
     paths:
       - .codewiki/kb/**
   - id: dogfood_roadmap
-    label: Roadmap work truth
+    label: Roadmap work truth compatibility
     group: codewiki_state
-    kind: durable_truth
+    kind: compatibility_truth
     source: .codewiki/kb/system/roadmap.md
     paths:
       - .codewiki/roadmap/queue.json
   - id: dogfood_builds
-    label: Compiler builds
+    label: Telemetry traces and compiler output
     group: codewiki_state
-    kind: artifact
+    kind: traceability_truth
     source: .codewiki/kb/system/builds.md
-    paths:
+    target_paths:
+      - .codewiki/telemetry/**
+    compatibility_paths:
       - .codewiki/builds/**
   - id: dogfood_validation
-    label: Validation reports
+    label: Gate verdict compatibility reports
     group: proof
-    kind: evidence
+    kind: compatibility_evidence
     source: .codewiki/kb/system/validation-gateway.md
-    paths:
+    target_paths:
+      - .codewiki/telemetry/**
+    compatibility_paths:
       - .codewiki/validation/**
   - id: generated_graph
     label: Generated graph/state views
@@ -416,10 +430,10 @@ nodes:
       - .codewiki/index_graph.json
       - .codewiki/roadmap/tasks/**
   - id: runtime_session
-    label: Dogfood runtime/session coordination
+    label: Runtime/session coordination compatibility
     group: generated_runtime
     kind: artifact
-    source: .codewiki/kb/system/api.md
+    source: .codewiki/kb/system/runtime.md
     paths:
       - .codewiki/session/**
       - .codewiki/runtime/**
@@ -434,6 +448,8 @@ nodes:
       - skills/codewiki-planning/**
       - skills/codewiki-implementation/**
       - skills/codewiki-validation/**
+    target_paths:
+      - skills/codewiki-gateway/**
   - id: tests_and_smoke
     label: Tests and smoke baselines
     group: assets_tests
@@ -450,14 +466,14 @@ nodes:
       - scripts/**
     rule: removable_without_product_semantic_change
   - id: publication_proof
-    label: Publication proof
+    label: Git and publication proof
     group: proof
     kind: publication
     source: .codewiki/kb/system/overview.md
     paths:
       - git commits and tree SHAs
       - package digests
-      - archive refs
+      - restore refs when explicitly needed
       - remote refs
   - id: structure_drift_lens
     label: Intended vs current structure drift lens
@@ -630,15 +646,15 @@ edges:
   - id: builds_record_handoffs
     from: dogfood_builds
     to: concept_root_target
-    label: compile handoffs for migration
+    label: records loop trace evidence for migration
   - id: validation_checks_migration
     from: dogfood_validation
     to: structure_drift_lens
-    label: validates evidence and drift policy
+    label: records gate verdicts and drift policy findings
   - id: graph_indexes_structure
     from: generated_graph
     to: structure_drift_lens
-    label: indexes refs and audit results
+    label: indexes refs and gate findings
   - id: runtime_not_truth
     from: runtime_session
     to: intended_file_structure

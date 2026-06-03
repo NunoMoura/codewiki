@@ -274,7 +274,16 @@ function implementationBuild(taskId) {
 	assert.equal(index.tasks["TASK-103"].blockers[0].lease_ids[0], "CLAIM-WAIT");
 	assert.match(index.tasks["TASK-103"].next_action.summary, /CLAIM-WAIT/);
 	assert.equal(index.tasks["TASK-104"].state, "retryable");
+	assert.deepEqual(index.tasks["TASK-104"].next_action.gate_refs, [
+		".codewiki/validation/retry.json",
+	]);
 	assert.equal(index.tasks["TASK-105"].state, "promotable");
+	assert.equal(index.tasks["TASK-105"].gate_policy.next_loop, "implementation");
+	assert.equal(index.tasks["TASK-105"].gate_policy.next_gate, "task-close");
+	assert.equal(index.tasks["TASK-105"].next_action.loop, "implementation");
+	assert.ok(
+		index.tasks["TASK-105"].next_action.gate_refs.includes("gate:task-close"),
+	);
 	assert.deepEqual(index.sprints["SPRINT-READY"].runnable_task_ids, [
 		"TASK-101",
 	]);

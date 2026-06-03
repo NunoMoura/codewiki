@@ -2,7 +2,7 @@
 id: spec.system.api
 title: CodeWiki API
 state: active
-summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, runtime, and publication support.
+summary: API facade and tool contract for CodeWiki graph lenses, three loops, telemetry traces, gateway gates, runtime, and publication support.
 owners:
   - architecture
 updated: "2026-06-02"
@@ -12,7 +12,7 @@ updated: "2026-06-02"
 
 ## Responsibility
 
-The CodeWiki API is the stable semantic facade for CodeWiki operations. Adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations call the facade or explicit concept contracts instead of editing `.codewiki/` internals directly. Pi tools are one adapter over this API, not the only access path.
+The CodeWiki API is the stable semantic facade for CodeWiki operations. Adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations call the facade or explicit concept contracts instead of editing `.codewiki/` internals directly. Pi tools are the foundation interactive path over this API; future adapters may call the same semantics for non-Pi surfaces.
 
 Interactive distribution is Pi-first: CodeWiki is a Pi-based software-development distribution where `/wiki ...` commands, six normal `wiki_*` agent tools, Pi-hosted status/config panels, skills, and a small prompt contract expose the API to agents and users. Direct CLI access may call API capabilities for bootstrap, CI, linter, or admin automation, but it is optional and must not duplicate CodeWiki semantics.
 
@@ -24,12 +24,12 @@ The target normal internal agent tool surface is `wiki_state`, `wiki_decide`, `w
 
 | Capability | Owner detail |
 | --- | --- |
-| State and graph lenses | [State engine](components/state-engine.md), [Resume context boundary](flows/resume-context-boundary.md) |
+| Graph lenses and generated state | [State/graph engine](components/state-engine.md), [Resume context boundary](flows/resume-context-boundary.md) |
 | Decision, planning, implementation | [Compiler loops](components/compilers.md), [Decision to planning](flows/decision-to-planning.md), [Planning to implementation](flows/planning-to-implementation.md) |
 | Roadmap and sprint work truth | [Roadmap work truth](components/roadmap-work-truth.md) |
-| Gateway, gates, linters, tests, and validation | [Validation gateway](components/validation-gateway.md) |
-| Session queue, leases, runtime, and daemon dispatch | [Session coordination](components/session-coordination.md), [Runtime and daemon](components/runtime-daemon.md), [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) |
-| Builds, content evidence, publication, and retention | [Builds and content evidence](components/builds-and-proof.md), [Publication and GC](flows/publication-gc.md) |
+| Gateway gates, criteria, linters, tests, and verdicts | [Gateway](components/validation-gateway.md) |
+| Runtime, leases, agency, and daemon dispatch | [Session coordination](components/session-coordination.md), [Runtime and daemon](components/runtime-daemon.md), [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md) |
+| Telemetry traces, compiler output, Git proof, publication, and retention | [Compiler output and content evidence](components/builds-and-proof.md), [Publication and retention](flows/publication-gc.md) |
 | Adapters and user surfaces | [Adapters and UI](components/adapters-and-ui.md) |
 | Knowledge parsing and truth | [Knowledge base](components/knowledge-base.md) |
 
@@ -43,16 +43,16 @@ Pi chat with CodeWiki commands, tools, status panels, skills, and prompt contrac
 
 - Product/system changes flow through decision approval.
 - Code/test/doc execution flows through implementation tasks.
-- Roadmap mutation uses CodeWiki roadmap tools; roadmap tasks track work truth rather than full requirements briefs.
+- Planning mutation uses CodeWiki planning tools; roadmap tasks remain compatibility work truth during migration.
 - Parallel sessions mark affected scopes through artifact status before overlapping writes.
-- Validation, task-close, ship-ready, publish, and release callers provide required fresh-context and immutable content evidence.
-- Runtime/daemon job records are execution attempts, not roadmap truth.
-- Generated graph and task views are never hand-edited.
-- Tracked CodeWiki GC runs only after archive/close/publication content evidence exists.
+- Gate, publish, and release callers provide required fresh-context and immutable content evidence.
+- Runtime/daemon job records are execution attempts, not KB or telemetry truth.
+- Generated graph views are never hand-edited.
+- Hot telemetry retention runs only after Git content evidence preserves recoverable history.
 
 ## API boundary
 
-`src/api/**` re-exports stable package/tool entrypoints from concept roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/runtime/**`, and `src/gc/**`. `src/workflow/**` owns the normal workflow-tool wrapper layer that coordinates those concept primitives into `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and `wiki_runtime` without adding a new user-facing command surface. The facade stays stable while adapter protocols and UI surfaces evolve.
+`src/api/**` re-exports stable package/tool entrypoints from target roots such as `src/decision/**`, `src/planning/**`, `src/implementation/**`, `src/telemetry/**`, `src/graph/**`, `src/runtime/**`, `src/agency/**`, `src/pi/**`, and `src/project/**`. Compatibility roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/workflow/**`, and `src/gc/**` remain temporary until migration tasks remove or alias them. The facade stays stable while Pi integration, future adapters, and UI surfaces evolve.
 
 ## Related docs
 

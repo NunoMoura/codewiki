@@ -2,161 +2,141 @@
 id: spec.system.graph
 title: Graph
 state: active
-summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
+summary: Generated query/index projection over KB truth, telemetry traces, source/test facts, runtime coordination, and Git proof.
 owners:
   - architecture
-updated: "2026-06-01"
+updated: "2026-06-03"
 ---
 
 # Graph
 
 ## Responsibility
 
-The graph is the generated representation of CodeWiki state. The domain concept is state; `index_graph.json` is a rebuildable graph-shaped projection over canonical inputs, compiler builds, validation attestations, immutable content evidence, and discoverable code/test facts.
+The graph is the generated representation of CodeWiki state. It is the agent entrypoint for status, routing, traceability, drift, automation readiness, and focused source refs. The graph does not own truth and must not be hand-edited.
 
-The state engine routes agents to the smallest useful next context, detects drift, reports freshness, exposes scoped roadmap/sprint/task views, and selects the next loop: decision, planning, implementation, validation, or observe. It also supplies the agency controller and CodeWiki UI with safe next-action, context-boundary, isolation, and stop-reason signals.
+Canonical truth and evidence live in:
 
-The graph does not decide intended behavior and does not replace source-of-truth reads. It points to the relevant cycle builds, knowledge docs, planning builds, roadmap items, validation reports, and code/test paths; agents must read those sources directly before making semantic changes.
+- `.codewiki/kb/**` for current product/system truth;
+- `.codewiki/telemetry/**` for compact workflow traces;
+- source and test files for implementation truth;
+- Git commits, trees, tags, package digests, and remote refs for cold historical/content truth.
 
-The graph is the operational state machine for CodeWiki and the generated linker between docs, roadmap, builds, validation, code, tests, and immutable content evidence. Markov-chain or Markov Decision Process language is an analytical lens over graph-derived transitions, not a replacement for the graph, because the graph must retain source refs, traceability, evidence ownership, and content-attestation relationships.
+The graph makes these sources searchable and routable. Tools read graph lenses first, then read or write exact source refs through the proper loop, gate, runtime, or Git operation.
 
-Alignment is sourced from cycle builds, KB docs, planning builds, roadmap tasks, tests/code, implementation builds, validation attestations, linter evidence, commits, and publication content evidence. The graph reports alignment gaps; it does not own requirements or solve alignment by itself.
-
-Agent access is graph-centered for reads and routing. Agents ask `wiki_state` first for current project map, next safe action, relevant refs, drift, blockers, daemon context, context boundaries, and focused lenses. Agents then read or edit canonical source refs directly through the proper decision, planning, implementation, gate, runtime, or lifecycle operation. The graph is the project's fresh index and state machine, not the owner of semantic truth.
-
-## Inputs
+## Target inputs
 
 The graph is generated from:
 
 ```text
 .codewiki/config.json
-.codewiki/kb/** semantic frontmatter, diagram_refs, optional explicit overrides, paths, explicit refs, and curated Markdown links
-.codewiki/builds/**, including decision, planning, and implementation builds
-.codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, and policy boundaries
-.codewiki/roadmap/**
-.codewiki/validation/**
-.codewiki/session/queue.json session queue focus, waits, scoped leases, and isolation metadata
-.codewiki/runtime/diff-tables.json pending decision change rows
-code/test manifests
-Git/source fingerprints, tree SHAs, commit SHAs, package digests, and archive ledgers
-linter evidence required by gateway policy
+.codewiki/kb/** semantic frontmatter, diagram_refs, links, and explicit refs
+.codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, file-structure refs, and policy boundaries
+.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json
+code/test manifests and source fingerprints
+Git commit SHAs, tree SHAs, package digests, tags, branches, and remote refs
+runtime leases/jobs/questions when active
+pending decision diff tables during decision UI interaction
 ```
 
-Curated Markdown links are one input. The graph computes backlinks, stale refs, traceability, freshness, and routing relationships. Routine knowledge-frontmatter `code_paths` are deprecated as required doc-code edges; the graph should derive doc-code links from file-structure and diagram mappings, roadmap task paths, builds, validation evidence, source facts, and explicit refs. If a doc still declares `code_paths`, the graph treats them as optional explicit overrides and applies linter rules for staleness.
+During migration the graph also reads legacy roots and normalizes them into target concepts:
 
-## Output
+| Legacy input | Target graph concept |
+| --- | --- |
+| `.codewiki/builds/**` | `LoopRun.compiler_output` and `compiler_output_refs` |
+| `.codewiki/validation/**` | `GateVerdict`, `GateFinding`, and `gate_refs` |
+| `.codewiki/roadmap/**` | `WorkItem` / `task_refs` until work state moves into traces or compatibility ends |
+| `.codewiki/session/**` | runtime coordination refs only |
+| `.codewiki/runtime/**` | runtime/daemon coordination refs only |
 
-The primary graph output is:
+## Refresh vs promotion
+
+Graph refresh and loop promotion are separate:
+
+- compiler output written: graph refreshes pending loop evidence;
+- gate fail/block written: graph refreshes gate findings and remediation items;
+- gate pass written: graph refreshes and promotes to the next loop;
+- implementation pass plus Git proof: graph marks the trace production-ready/closed for its scope.
+
+Build/compiler output is not a promotion boundary. Gate pass is the promotion boundary.
+
+## Target node types
+
+The graph should keep high-signal nodes and refs, not full artifact payloads:
+
+| Node | Purpose |
+| --- | --- |
+| `Trace` | One change journey from decision to implementation completion. |
+| `LoopRun` | Decision, planning, or implementation loop file within a trace. |
+| `GateVerdict` | Verdict and status for a loop exit gate. |
+| `GateFinding` | Missing/wrong/stale/weak finding emitted by a gate. |
+| `RemediationItem` | Actionable next repair instruction. |
+| `ArtifactRef` | Typed normalized reference to KB, diagram, trace, gate, compiler output, task, source, test, Git, package, or remote artifact. |
+| `Requirement` | Accepted requirement or acceptance criterion with stable id. |
+| `WorkItem` | Executable planned unit, currently roadmap task/sprint during migration. |
+| `SourceFile` | Source, test, doc, package, or script path. |
+| `GitProof` | Commit/tree/package/remote content proof. |
+
+Historic `Build`, `ValidationReport`, `Audit`, `Check`, and `Policy` graph nodes should collapse into compiler output refs, gate refs, gate findings, or criteria metadata where possible.
+
+## Target edge types
+
+Core edges:
 
 ```text
-.codewiki/index_graph.json
+Trace --has_loop--> LoopRun
+LoopRun --uses_ref--> ArtifactRef
+LoopRun --produces_ref--> ArtifactRef
+LoopRun --has_gate--> GateVerdict
+GateVerdict --has_finding--> GateFinding
+GateFinding --has_remediation--> RemediationItem
+GateVerdict --promotes_to--> LoopRun
+GateVerdict --blocks_on--> GateFinding
+LoopRun --maps_to--> Requirement
+LoopRun --changes--> SourceFile
+LoopRun --tests--> SourceFile
+ImplementationLoop --attests--> GitProof
+GitProof --attests_content--> SourceFile
 ```
 
-The CodeWiki UI graph view reads this file through CodeWiki API or local UI transport and renders it visually. The visual graph is a generated-state projection; it must not become separate truth.
+Edges should preserve source refs and JSON pointers so tools can open exact trace, KB, diagram, code, or Git evidence.
 
-The graph serves status, queue-order, and session-queue coordination reads directly. Extra queue files are generated caches only when a future adapter proves a concrete performance need.
+## Artifact refs
 
-## vNext graph lenses
+Graph schemas should normalize refs to `ArtifactRef` and prefer `<artifact_type>_refs` field names: `knowledge_refs`, `diagram_refs`, `trace_refs`, `loop_refs`, `gate_refs`, `compiler_output_refs`, `task_refs`, `source_refs`, `test_refs`, `git_refs`, `package_refs`, and `remote_refs`.
 
-Default vNext graph reads should show five families:
+The graph may expose compatibility aliases, but lens output should prefer target names.
 
-```text
-Decision -> Knowledge -> Work -> Execution -> Validation
-```
+## Lenses
 
-Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning, roadmap, sprint membership, and unmapped accepted-decision gaps. Execution covers code, executable tests, linters, and implementation evidence. Validation covers gates, verdicts, commits, publication, archive, and immutable content evidence. Default views collapse non-next-action build/validation internals into badges.
+`wiki_state` is the canonical read/query entrypoint for graph subsets. Initial lenses include `status`, `resume`, `trace`, `system`, `product`, `runtime`, and `automation-readiness`. Compatibility lenses such as `task`, `sprint`, or `validation` may remain while legacy roots exist.
 
-`wiki_state` is the canonical read/query entrypoint for graph subsets. It should accept `view` or `lens` plus optional focus/ref/include filters. Initial lens families include `status`, `resume`, `trace`, `system`, `product`, `task`, `sprint`, `validation`, `runtime`, and `automation-readiness`. A lens result should return omitted-count metadata and source refs for expansion instead of dumping the full graph.
+Lens output should return:
 
-Generated graph projections live under `views.lenses`: `default` serves status, `trace` expands requirement and source refs, `validation` expands gates, isolation, linters, reconciliation, and traceability gaps, and `execution` exposes planning-owned dependency/order/conflict/model-policy metadata plus runtime job state for daemon scheduling. These lenses are generated read models only.
+- current loop and trace status;
+- next safe action;
+- blockers and gate findings;
+- source refs and JSON pointers;
+- omitted-count metadata when output is compacted;
+- freshness and stale-ref findings;
+- automation-readiness contracts for daemon/agency scheduling.
 
-The execution graph is a lens over planning and runtime state, not a separate truth store. Planning owns sprint/task dependencies, parallel waves, conflict scopes, validation gates, and model-policy intent. Runtime owns jobs, runs, leases, worker questions, heartbeats, retries, and block/unblock state. The generated graph indexes both so agents can schedule work without creating a second competing graph.
+Graph output should not duplicate whole KB docs, full loop trace files, raw test logs, raw diffs, or full Git history.
 
 ## System diagram nodes
 
-System diagrams are first-class inputs. The graph parses diagram data into refs for components, adapters, flows, domain entities, lifecycles, policies, artifacts, actors, and external systems. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias. System docs may declare `diagram_refs`; the graph links docs to resolved diagram refs and exposes `views.system_diagrams` with refs grouped by category. Diagram-ref linters report missing refs, missing target nodes, and missing docs for nodes marked `requires_doc` according to migration mode.
+System diagrams are first-class KB inputs. The graph parses diagram data into refs for components, foundation runtime, flows, entities, lifecycle states, policies, artifacts, actors, and external systems. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias.
 
-## Product/system propagation
+Diagram-ref linters report missing refs, missing target nodes, and required-doc gaps according to migration mode. Semantic file-structure changes should update both system docs and diagram YAML or provide explicit no-diagram-impact rationale.
 
-The graph should model abstraction propagation separately from compiler sequence with edges such as `product_drives_system`, `system_constrains_product`, `product_requires_system`, `system_impacts_product`, `no_product_impact`, and `no_system_impact`.
+## Agency and daemon use
 
-## Operational state, hot state, and traceability
-
-Transition analytics, hot-state routing, and requirement traceability details live in [Graph Transition and Traceability](graph-transition-traceability.md). This document keeps graph inputs, outputs, edges, freshness, and invariants compact.
-
-## Edges
-
-Graph edges should explain why context is relevant. Useful edge kinds include:
-
-- `captures_intent`,
-- `captures_decision`,
-- `maps_row_to_kb`,
-- `diagram_ref`,
-- `product_drives_system`,
-- `system_constrains_product`,
-- `documents`,
-- `specifies`,
-- `plans`,
-- `implements`,
-- `tests`,
-- `validates`,
-- `attests`,
-- `attests_content`,
-- `blocks`,
-- `depends_on`,
-- `drifts_from`,
-- `derives_from`,
-- `session_lease_task`,
-- `session_lease_build`,
-- `session_lease_scope`,
-- `sprint_task`,
-- `sprint_knowledge_scope`,
-- `sprint_code_scope`,
-- `build_consumes_*`,
-- `build_produces_*`,
-- `requirement_*` traceability edges.
-
-## Drift categories
-
-Graph reconciliation should classify drift in the same state machine used by status, resume, gates, and runtime scheduling:
-
-- `vertical_propagation_drift`: accepted intent has not propagated through the expected decision, knowledge, roadmap, implementation, validation, or content-evidence layer.
-- `horizontal_contradiction`: product, system, diagrams, roadmap, code, tests, or validation disagree at the same abstraction level.
-- `generated_state_stale`: generated graph/view output does not match canonical input fingerprints.
-- `content_evidence_mismatch`: validation, commit, tree, package, archive, or remote evidence does not attest to the content it claims.
-- `runtime_coordination_conflict`: leases, jobs, waits, worktrees, or publisher state conflict with the selected action.
-
-Hard drift blocks lower-layer execution until the correct loop or runtime operation resolves it. Accepted executable decision rows without durable task/sprint mapping are hard planning drift: generated graph, status, resume context, and validation preflight must surface them before unrelated implementation or close routing. Validators still decide pass, fail, or block; the graph supplies the shared routing and evidence map.
-
-## Freshness
-
-Generated state is valid only when it matches source fingerprints. If generated state and canonical inputs disagree, canonical inputs win and the graph is stale or broken. If a validation report asserts content that the checked tree, commit, package digest, or canonical files do not contain, immutable content evidence wins and the validation report is stale or invalid.
-
-Freshness anchors must ignore generated graph/view artifacts such as `.codewiki/index_graph.json`; otherwise a no-op rebuild would make the graph stale against itself. Source files, knowledge files, roadmap truth, builds, validation reports, and mapped non-generated code remain valid freshness inputs.
-
-Freshness should use deterministic input fingerprints rather than volatile generated timestamps or a final commit SHA that cannot be known before publication. Spec/doc freshness must include source content or a reliable source digest; otherwise docs changes can avoid stale detection.
-
-Status, `wiki_state`, and CodeWiki UI views must consume the generated-state reconciliation next action when it is non-observe. They may summarize lint or spec drift, but they must not report a separate unresolved drift action while generated-state reconciliation reports the system is aligned. Actionable deterministic lint drift should enter state reconciliation unless an open roadmap task already covers that spec path. Advisory lint signals, such as large-document token-budget warnings, may keep health yellow without forcing a compiler route.
-
-## Invariants
-
-- `.codewiki/index_graph.json` is generated and must not be hand-edited.
-- The graph is reproducible from canonical inputs and source fingerprints.
-- Default graph/status reads show hot working-set context only; archives, closed task bodies, old pass validation, and restore indexes need explicit archive/restore/validation requests.
-- Generated state points to source files; it does not replace builds, knowledge, roadmap work, validation reports, commits, package digests, or code/tests.
-- Graph reconciliation flags deterministic file-contract drift, including deprecated `.codewiki/index/**`, deprecated `.codewiki/evidence/**`, and legacy dot-wiki refs.
-- Freshness ignores generated graph/view artifacts as inputs, but evaluates source, knowledge, roadmap, builds, validation, code, tests, and immutable content evidence.
-- Markov/MDP analytics are generated views over graph-backed transitions, not requirements.
-- Gated agency and UI stop reasons must be explicit for stale state, blockers, unsafe actions, missing approval, missing isolation, or overlapping write leases.
-- Session lease and wait metadata is temporary coordination evidence, not source-of-truth behavior.
-- Machine backlinks and routine doc-code links belong in the graph; knowledge docs keep intentional human-facing links and only rare explicit code-path overrides.
+Daemon/agency scheduling consumes graph-derived automation-readiness contracts. It may schedule only work whose trace/task refs, gate status, scopes, budgets, risk approval, worktree strategy, and next safe action are fresh and unambiguous. Runtime state is coordination evidence, not product truth.
 
 ## Related docs
 
 - [Knowledge](knowledge.md)
-- [Roadmap](roadmap.md)
-- [Builds](builds.md)
+- [Compiler Output Artifacts](builds.md)
 - [Compilers](compilers.md)
-- [Validation Gateway](validation-gateway.md)
-- [Alignment Model](alignment-model.md)
-- [Linter engine migration](audits.md)
+- [Gateway](validation-gateway.md)
+- [Runtime](runtime.md)
+- [File Structure](file-structure.md)

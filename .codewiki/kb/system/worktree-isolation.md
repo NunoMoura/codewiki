@@ -5,11 +5,13 @@ state: active
 summary: Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.
 owners:
   - architecture
-updated: "2026-05-31"
+updated: "2026-06-03"
 code_paths:
   - src/session/claims.ts
   - src/session/artifact-status-tool.ts
   - src/session/worktree-isolation.ts
+  - src/session/worktree-dispatcher.ts
+  - src/session/merge-publisher-queue.ts
   - src/state/resume-context.ts
   - src/adapters/pi/commands/resume.ts
   - src/validation/report.ts
@@ -65,6 +67,13 @@ Worker handoff packets are source-backed resume packets, not shared chat. Each d
 ## Cleanup sequencing
 
 Compatibility cleanup removes legacy session-handoff surfaces from normal user-facing recovery flow after role worktree/publisher orchestration is validated. Any future compatibility/debug behavior must be explicitly scoped to a migration task and must not replace `wiki_resume_context`, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh-context starts.
+
+`.tmp-worktrees/` is ignored local scratch only. It has no CodeWiki production semantics and must not be used as a durable artifact, publisher surface, validation proof, or resume source. Before deleting any local scratch or role worktree, a maintainer or cleanup worker should:
+
+1. run `git worktree list --porcelain` and identify the exact worktree path/branch,
+2. run `git -C <worktree_path> status --porcelain` and stop if it is dirty unless a patch/archive/ref proof already exists,
+3. inspect artifact-status holders/waiters for the task or branch and release/cancel only stale or completed claims,
+4. remove the worktree with `git worktree remove <worktree_path>` and then `git worktree prune`.
 
 ## Related docs
 

@@ -6,7 +6,7 @@ summary: System mechanism for bounded roadmap automation through agency cycles a
 owners:
   - architecture
   - engineering
-updated: "2026-06-01"
+updated: "2026-06-03"
 code_paths:
   - src/agency
   - src/runtime
@@ -20,9 +20,11 @@ code_paths_mode: explicit_override
 
 ## Responsibility
 
-The agency controller is the system mechanism behind the product need for gated agency. It decides whether CodeWiki may continue automatically while enforcing explicit token, time, cost, write, session, risk, validation, policy, and approval gates.
+The agency controller is the system mechanism behind the product need for gated agency. It decides whether CodeWiki may continue automatically while enforcing explicit token, time, cost, write, session, risk, gate, model, and approval boundaries.
 
-The product concept is gated agency. The agency controller owns autonomy level, approval cadence, scope selection, planning, and budget/risk policy. The CodeWiki runtime owns bounded execution mechanics after an agency plan is authorized: acquiring scoped leases, running one compiler or gateway preparation step, requesting context boundaries, recording workflow-efficiency evidence, and stopping or routing to the next loop. Agency may route backward to decision or planning when missing semantics or task-boundary doubts appear, but it should not absorb runtime orchestration concerns.
+The product concept is gated agency. The agency controller owns autonomy level, approval cadence, scope selection, planning, and budget/risk policy. The CodeWiki runtime owns bounded execution mechanics after an agency plan is authorized: acquiring scoped leases, running one compiler or gate-preparation step, requesting context boundaries, recording workflow-efficiency evidence, and stopping or routing to the next loop. Agency may route backward to decision or planning when missing semantics or task-boundary doubts appear, but it should not absorb runtime orchestration concerns.
+
+Daemon/agency completion should happen before broad CodeWiki source refactor sprints. That enabling sprint must align agency/runtime with three loops, telemetry traces, gate diagnostics/remediation, graph automation-readiness, safe worktree leasing, and publisher/merge safety so later refactor tasks can parallelize productively.
 
 ## Inputs
 
@@ -31,8 +33,8 @@ The controller reads:
 - graph state and recommended next actions,
 - roadmap active sprints, active tasks, blockers, and closure state,
 - graph-derived automation-readiness contracts for tasks and sprints,
-- accepted builds and linked knowledge,
-- validation requirements and policy gates,
+- accepted loop trace entries and linked knowledge,
+- gate criteria, gate findings, remediation items, and policy requirements,
 - user-provided budgets such as token limit, time limit, cost limit, cycle limit, write limit, session limit, and risk limit,
 - configured agency scope such as roadmap, sprint, or task,
 - configured agency autonomy level and approval cadence such as task, sprint, or roadmap,
@@ -51,7 +53,7 @@ Agency can run at three scopes:
 
 Sprint scope is the default target for parallel work when a sprint is active. If the harness can spawn sessions or fresh worker processes, CodeWiki may create one isolated execution per sprint or bounded sprint workstream through adapter session-boundary capability. Otherwise it emits a plan-only `session_spawn_plan` with task ids, required scoped leases, and stop reasons for manual or external orchestration.
 
-Automation-readiness is the deterministic scheduling predicate. Generated graph state evaluates each open task and sprint as `runnable`, `blocked`, `waiting`, `retryable`, `promotable`, or `ambiguous` from source refs rather than chat. The predicate checks executable task boundary, accepted planning/decision refs or an approved exemption, gate policy, risk/model approval, scoped leases and worktree strategy, declared candidate files, validation/pass/fail evidence, source-backed context-boundary plan, and the exact next safe action. Agency work plans may schedule only `runnable`, `retryable`, or `promotable` task records with a fresh readiness contract; missing, stale, waiting, blocked, or ambiguous contracts are hard stop reasons.
+Automation-readiness is the deterministic scheduling predicate. Generated graph state evaluates each open trace/task/sprint as `runnable`, `blocked`, `waiting`, `retryable`, `promotable`, or `ambiguous` from source refs rather than chat. The predicate checks executable task boundary, accepted planning/decision refs or an approved exemption, gate policy, risk/model approval, scoped leases and worktree strategy, declared candidate files, gate verdicts/findings, source-backed context-boundary plan, and the exact next safe action. Readiness records and next actions expose `trace_refs`, `gate_refs`, and `git_refs` so daemon scheduling can stop or resume from source contracts instead of legacy loop labels. Agency work plans may schedule only `runnable`, `retryable`, or `promotable` records with a fresh readiness contract; missing, stale, waiting, blocked, or ambiguous contracts are hard stop reasons.
 
 ## Autonomy levels
 
@@ -103,7 +105,7 @@ The controller must stop when any gate fails:
 - risk exceeds the configured limit,
 - user approval is required,
 - intent is ambiguous,
-- validation fails or blocks,
+- a gate fails or blocks,
 - required linters or executable tests fail,
 - policy forbids the next action,
 - the configured approval cadence boundary is reached,
@@ -112,16 +114,16 @@ The controller must stop when any gate fails:
 
 ## Routing
 
-The controller does not replace the graph, runtime, compilers, roadmap, or validation gateway. It coordinates permission and selection; the CodeWiki runtime coordinates execution:
+The controller does not replace the graph, runtime, compilers, roadmap compatibility state, telemetry traces, or gateway. It coordinates permission and selection; the CodeWiki runtime coordinates execution:
 
 ```text
-graph state -> agency scope/policy -> CodeWiki runtime step -> compiler/gateway preparation -> build/evidence -> next graph state
+graph state -> agency scope/policy -> CodeWiki runtime step -> compiler/gate preparation -> loop trace evidence -> next graph state
                        ^                         |                         |
                        |                         v                         v
                 decision/planning <- ambiguity, failed gate, or blocked validation
 ```
 
-When intent is unclear, a requirement is not unequivocally represented in the accepted decision build, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When roadmap/task boundaries are incomplete, it routes to planning. When code/tests must change and planning evidence is valid, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually. If the adapter cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
+When intent is unclear, a requirement is not unequivocally represented in the passed decision trace, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When task boundaries are incomplete, it routes to planning. When code/tests must change and planning evidence is valid, it routes to implementation. When implementation evidence is ready, it routes to the implementation gate and closure Git proof. When context is noisy or policy requires a boundary and the session budget allows it, agency should call Pi session-boundary capability instead of asking the user to run a host command manually. If Pi cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
 
 ## Context reset and auto-pickup
 
@@ -135,9 +137,9 @@ If the adapter cannot guarantee a valid next-turn boundary, agency must block or
 
 - Agency is always gated; unbounded autonomous editing is not allowed.
 - Agency level grants continuation permission only; it never bypasses budgets, validation, risk, policy, publication, or semantic approval gates.
-- Agency cycles authorize bounded runtime steps, not a fourth compiler; the runtime may invoke decision, planning, implementation, and validation tools but must not fabricate compiler outputs.
+- Agency cycles authorize bounded runtime steps, not a fourth compiler; the runtime may invoke decision, planning, implementation, and gate tools but must not fabricate compiler outputs.
 - The controller must not mutate generated graph state directly.
-- The controller must not bypass validation gateway or policy decisions.
+- The controller must not bypass gateway verdicts or policy decisions.
 - Commit, push, release, and remote updates require explicit publication policy approval.
 - Parallel sprint execution must mark narrow artifact scopes in use and stop on write/write conflicts unless policy explicitly permits override.
 - Parallel write execution should allocate task/role worktrees through the worktree factory when the adapter or local runtime can provide them. Shared-root writes are a solo-mode fallback, not the default for overlapping builder, validator, publisher, or cleanup roles.

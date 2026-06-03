@@ -5,6 +5,7 @@ import type {
 	ArtifactStatusRecord,
 } from "../session/types.ts";
 import { unique } from "../shared/utils.ts";
+import { normalizeArtifactRefSets } from "../telemetry/artifact-ref.ts";
 
 export const AUTOMATION_READINESS_CONTRACT_VERSION = 1 as const;
 export const AUTOMATION_READINESS_RUNNABLE_STATES = [
@@ -43,6 +44,9 @@ export interface AutomationReadinessNextAction {
 	summary: string;
 	command: string | null;
 	refs: string[];
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
 	safe_to_schedule: boolean;
 }
 
@@ -76,6 +80,7 @@ export interface AutomationReadinessTaskRecord {
 		required_checks: string[];
 		required_audits: string[];
 		next_loop: string;
+		next_gate: string;
 		risk: string;
 		risk_approval_refs: string[];
 	};
@@ -101,6 +106,9 @@ export interface AutomationReadinessTaskRecord {
 		fail: string[];
 		block: string[];
 	};
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
 	model_policy: {
 		risk: string;
 		approval_refs: string[];
@@ -298,6 +306,40 @@ function validationSourceRefs(
 			...stringList(data.sources),
 			...stringList(data.source_ref),
 			...stringList(data.source_refs),
+		]
+			.map(normalizeRef)
+			.filter(Boolean),
+	);
+}
+
+function validationGitRefs(
+	validation: AutomationReadinessValidationInput,
+): string[] {
+	const data = isRecord(validation.data) ? validation.data : {};
+	const isolation = recordField(data, "isolation");
+	const publication = recordField(data, "publication");
+	return unique(
+		[
+			...stringList(isolation.git_commit).map((ref) => `git_commit:${ref}`),
+			...stringList(isolation.head_sha).map((ref) => `head_sha:${ref}`),
+			...stringList(isolation.validated_sha).map(
+				(ref) => `validated_sha:${ref}`,
+			),
+			...stringList(isolation.tree_sha).map((ref) => `git_tree:${ref}`),
+			...stringList(isolation.working_tree_digest).map(
+				(ref) => `worktree_digest:${ref}`,
+			),
+			...stringList(isolation.worktree_digest).map(
+				(ref) => `worktree_digest:${ref}`,
+			),
+			...stringList(isolation.package_digest).map(
+				(ref) => `package_digest:${ref}`,
+			),
+			...stringList(isolation.archive_ref),
+			...stringList(isolation.remote_ref),
+			...stringList(publication.commit_sha).map((ref) => `git_commit:${ref}`),
+			...stringList(publication.archive_ref),
+			...stringList(publication.remote_ref),
 		]
 			.map(normalizeRef)
 			.filter(Boolean),
@@ -506,6 +548,28 @@ function latestValidation(
 	);
 }
 
+function emptyNextActionRefs(): Pick<
+	AutomationReadinessNextAction,
+	"trace_refs" | "gate_refs" | "git_refs"
+> {
+	return { trace_refs: [], gate_refs: [], git_refs: [] };
+}
+
+function withNextActionRefs(
+	action: AutomationReadinessNextAction,
+	refs: Pick<
+		AutomationReadinessNextAction,
+		"trace_refs" | "gate_refs" | "git_refs"
+	>,
+): AutomationReadinessNextAction {
+	return {
+		...action,
+		trace_refs: refs.trace_refs,
+		gate_refs: refs.gate_refs,
+		git_refs: refs.git_refs,
+	};
+}
+
 function stateNextAction(
 	state: AutomationReadinessState,
 	taskId: string,
@@ -513,25 +577,30 @@ function stateNextAction(
 	validationRefs: string[],
 ): AutomationReadinessNextAction {
 	const first = blockers[0];
+	const emptyRefs = emptyNextActionRefs();
 	if (state === "waiting") {
 		return {
 			kind: "wait",
-			loop: "runtime",
+			loop: "observe",
 			summary:
 				first?.summary ||
 				`Wait for scoped lease release before scheduling ${taskId}.`,
 			command: `wiki_artifact_status action=wait taskId=${taskId}`,
 			refs: first?.refs || [],
+			...emptyRefs,
 			safe_to_schedule: false,
 		};
 	}
 	if (state === "promotable") {
 		return {
 			kind: "promote",
-			loop: "task-close",
+			loop: "implementation",
 			summary: `${taskId} has validation evidence and can be promoted through task-close gates.`,
 			command: `wiki_gate profile=task-close task_id=${taskId}`,
 			refs: validationRefs,
+			trace_refs: [],
+			gate_refs: ["gate:task-close", ...validationRefs],
+			git_refs: [],
 			safe_to_schedule: true,
 		};
 	}
@@ -542,6 +611,9 @@ function stateNextAction(
 			summary: `${taskId} has retryable failure/block evidence; resume from validation refs and fix scoped issues.`,
 			command: `wiki_resume_context taskId=${taskId}`,
 			refs: validationRefs,
+			trace_refs: [],
+			gate_refs: validationRefs,
+			git_refs: [],
 			safe_to_schedule: true,
 		};
 	}
@@ -552,6 +624,7 @@ function stateNextAction(
 			summary: `${taskId} is runnable from accepted source refs and scoped leases are available.`,
 			command: `wiki_resume_context taskId=${taskId}`,
 			refs: [taskContextPath(taskId)],
+			...emptyRefs,
 			safe_to_schedule: true,
 		};
 	}
@@ -563,6 +636,7 @@ function stateNextAction(
 			`Automation-readiness blocks ${taskId}; inspect source refs before scheduling.`,
 		command: first?.next_safe_action || null,
 		refs: first?.refs || [],
+		...emptyRefs,
 		safe_to_schedule: false,
 	};
 }
@@ -762,18 +836,41 @@ function buildTaskReadiness(
 		...failValidationRefs,
 		...blockValidationRefs,
 	]);
+	const refSets = normalizeArtifactRefSets({
+		trace_refs: [
+			...acceptedDecisionBuildRefs,
+			...acceptedPlanningRefs,
+			...implementationRefs,
+		],
+		gate_refs: validationRefs,
+		git_refs: relatedValidations.flatMap(validationGitRefs),
+	});
 	const pendingValidation =
 		acceptedImplementationBuilds.length > 0 && validationRefs.length === 0;
-	const nextAction = pendingValidation
-		? {
-				kind: "validate",
-				loop: "implementation-validation",
-				summary: `${task.id} has implementation build evidence and needs fresh implementation validation.`,
-				command: `wiki_gate profile=implementation task_id=${task.id} source=${implementationRefs.at(-1) || taskContextPath(task.id)}`,
-				refs: implementationRefs.slice(-1),
-				safe_to_schedule: true,
-			}
-		: stateNextAction(state, task.id, blockers, validationRefs);
+	const nextAction = withNextActionRefs(
+		pendingValidation
+			? {
+					kind: "validate",
+					loop: "implementation",
+					summary: `${task.id} has implementation build evidence and needs fresh implementation validation.`,
+					command: `wiki_gate profile=implementation task_id=${task.id} source=${implementationRefs.at(-1) || taskContextPath(task.id)}`,
+					refs: implementationRefs.slice(-1),
+					trace_refs: [],
+					gate_refs: ["gate:implementation"],
+					git_refs: [],
+					safe_to_schedule: true,
+				}
+			: stateNextAction(state, task.id, blockers, validationRefs),
+		{
+			trace_refs: refSets.trace_refs,
+			gate_refs: unique([
+				...refSets.gate_refs,
+				...(pendingValidation ? ["gate:implementation"] : []),
+				...(state === "promotable" ? ["gate:task-close"] : []),
+			]),
+			git_refs: refSets.git_refs,
+		},
+	);
 	return {
 		version: 1,
 		contract_version: AUTOMATION_READINESS_CONTRACT_VERSION,
@@ -812,7 +909,8 @@ function buildTaskReadiness(
 		gate_policy: {
 			required_checks: task.goal?.verification || [],
 			required_audits: requiredAudits(acceptedPlanningBuilds),
-			next_loop: state === "promotable" ? "task-close" : "implementation",
+			next_loop: "implementation",
+			next_gate: state === "promotable" ? "task-close" : "implementation",
 			risk,
 			risk_approval_refs: unique([
 				...acceptedDecisionBuildRefs,
@@ -844,6 +942,9 @@ function buildTaskReadiness(
 			fail: failValidationRefs,
 			block: blockValidationRefs,
 		},
+		trace_refs: refSets.trace_refs,
+		gate_refs: refSets.gate_refs,
+		git_refs: refSets.git_refs,
 		model_policy: policyModel,
 		blockers,
 		next_action: nextAction,
@@ -865,21 +966,27 @@ function sprintNextAction(
 					: state === "retryable"
 						? "retry"
 						: "run",
-			loop: state === "promotable" ? "task-close" : "implementation",
+			loop: "implementation",
 			summary: `Sprint ${sprintId} has automation-ready task ${taskId}.`,
 			command: taskId ? `wiki_resume_context taskId=${taskId}` : null,
 			refs: taskId ? [taskContextPath(taskId)] : [],
+			trace_refs: [],
+			gate_refs: state === "promotable" ? ["gate:task-close"] : [],
+			git_refs: [],
 			safe_to_schedule: true,
 		};
 	}
 	const first = blockers[0];
 	return {
 		kind: state === "waiting" ? "wait" : "stop",
-		loop: "planning",
+		loop: state === "waiting" ? "observe" : "planning",
 		summary:
 			first?.summary || `Sprint ${sprintId} has no automation-ready tasks.`,
 		command: first?.next_safe_action || null,
 		refs: first?.refs || [],
+		trace_refs: [],
+		gate_refs: [],
+		git_refs: [],
 		safe_to_schedule: false,
 	};
 }
@@ -1045,6 +1152,9 @@ export function buildAutomationReadinessIndex(
 					summary: "No automation-ready task is available.",
 					command: null,
 					refs: [],
+					trace_refs: [],
+					gate_refs: [],
+					git_refs: [],
 					safe_to_schedule: false,
 				},
 		source_refs: unique(taskRecords.flatMap((record) => record.source_refs)),

@@ -2,50 +2,66 @@
 id: spec.system.compilers
 title: Compilers
 state: active
-summary: Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.
+summary: Three CodeWiki loop engines that emit compact telemetry trace output for decision, planning, and implementation gates.
 owners:
   - architecture
   - product
-updated: "2026-06-01"
+updated: "2026-06-03"
 ---
 
 # Compilers
 
 ## Responsibility
 
-CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Compilers produce handoffs; gateways validate them; durable truth remains in knowledge, roadmap, tests/code, validation reports, and Git proof.
+CodeWiki compilers are the engines for the three workflow loops. They move user intent through decision, planning, and implementation boundaries while keeping durable truth in KB docs, source/tests, telemetry traces, and Git.
 
 ```text
-decision -> decision_build -> decision gate
-  -> planning -> planning_build -> planning gate
-    -> implementation -> implementation_build -> implementation gate
-      -> task-close gate -> sprint-close gate when closing a cohort
-        -> ship-ready gate when promoting exact content
+Decision Loop -> decision gate
+  -> Planning Loop -> planning gate
+    -> Implementation Loop -> implementation gate -> Git content proof
 ```
+
+There is no validation loop. Gateway gates are exit conditions for loops.
 
 ## Loop index
 
-| Loop | Detail |
-| --- | --- |
-| Decision | Captures user-approved semantic rows, KB mappings, risks, non-goals, and downstream planning questions. See [Decision to planning](flows/decision-to-planning.md). |
-| Planning | Maps accepted executable rows to roadmap task ids or sprint ids and records implementation handoff evidence. See [Planning to implementation](flows/planning-to-implementation.md). |
-| Implementation | Changes scoped docs/code/tests, runs checks, and writes an implementation build. See [Implementation, validation, and close](flows/implementation-validation-close.md). |
-| Runtime/agency continuation | May select bounded compiler steps only through policy gates. See [Runtime daemon dispatch](flows/runtime-daemon-dispatch.md). |
+| Loop | Compiler responsibility | Exit gate |
+| --- | --- | --- |
+| Decision | Convert user input, grounded reads, and approved diff rows into KB/diagram truth and decision compiler output in `decision.json`. | Decision gate verifies approved semantics, KB/diagram propagation, no-impact rationales, and risk approval. |
+| Planning | Convert passed decision output into executable task/sprint alignment, acceptance criteria, verification strategy, candidate refs, and planning compiler output in `planning.json`. | Planning gate verifies every accepted row/question is mapped to knowledge-only, roadmap task, sprint, or deferred disposition with evidence. |
+| Implementation | Convert passed planning output into code/docs/tests, required evidence, implementation compiler output, and Git content proof in `implementation.json`. | Implementation gate verifies acceptance evidence, tests/linters, KB/diagram freshness, clean or digest-backed content, and commit/tree/package refs when required. |
 
-## Build contract
+## Compiler output vs build compatibility
 
-Cycle builds carry loop identity, source refs, consumes/produces edges, policy/isolation requirements, requirement ids, evidence mappings, assumptions, non-goals, risks, open questions, assessment, and produced refs. Build-writing code lives in `src/build/**`; loop instructions live in `skills/codewiki-*`.
+The compiler is source code. The build is emitted trace data.
 
-A build by itself is pre-gateway. Gateway-pass boundaries are the normal safe context-refresh point because the passed build and validation report become seed refs for the next loop. Failed or blocked gateway verdicts do not mutate lower layers; they classify the failure and route to local retry, planning, decision, validation/proof, or runtime coordination.
+Target source layout uses loop-owned engines:
+
+```text
+src/decision/compiler.ts
+src/planning/compiler.ts
+src/implementation/compiler.ts
+```
+
+Historic `decision_build`, `planning_build`, and `implementation_build` names remain compatibility names for compiler output sections. They should migrate into `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json` rather than stay as separate hot `.codewiki/builds/**` piles or a top-level product-source `src/build/**` concept.
+
+## Graph and promotion boundaries
+
+Graph refresh and loop promotion are separate:
+
+- writing compiler output refreshes the graph as pending loop evidence;
+- writing a fail/block gate verdict refreshes the graph with gate findings and remediation items;
+- only a passing gate promotes to the next loop or closes implementation;
+- implementation is not complete until required Git proof is recorded.
 
 ## Rules
 
 - Compilers do not validate their own outputs.
-- Planning is not implementation and should not change code.
-- Planning must classify approved decision rows as executable task/sprint mapped, durable knowledge-only/non-executable disposition, rejected/not-applicable disposition, or unplanned gap; build-only deferred evidence is not a valid disposition for executable work.
+- A compiler output is pre-gateway and cannot promote work by itself.
+- Any compiler may route back to decision when intent is unclear or KB truth is stale.
+- Planning is not implementation and should not change source code.
 - Implementation is TDD-aligned where practical and records justified exceptions for docs-only, config-only, or non-testable work.
-- Any compiler may escalate to decision when intent is unclear.
-- Normal loop continuation uses CodeWiki source refs and `wiki_resume_context`, not VCC recall or generic chat summaries.
+- Normal loop continuation uses CodeWiki source refs, telemetry traces, and `wiki_resume_context`, not chat summaries.
 - Automated compiler execution runs through gated agency controls and stops on hard gates.
 
 ## Related docs
@@ -53,5 +69,5 @@ A build by itself is pre-gateway. Gateway-pass boundaries are the normal safe co
 - [Compiler loop component](components/compilers.md)
 - [Builds](builds.md)
 - [Validation Gateway](validation-gateway.md)
-- [Roadmap](roadmap.md)
 - [Graph](graph.md)
+- [File Structure](file-structure.md)

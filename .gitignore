@@ -4,3 +4,4 @@ node_modules/
 .pi-lens/
 .codewiki/runtime/
 .codewiki/session/queue.json
+.tmp-worktrees/

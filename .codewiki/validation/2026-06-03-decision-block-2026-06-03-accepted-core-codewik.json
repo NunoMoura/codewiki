@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-03T05:24:56Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "block",
+  "rationale": "Accepted decision builds compiled from approved rows. KB and diagrams updated; wiki_state health has 0 errors. Required alignment and stale-reference linter evidence recorded with only non-blocking large-doc warnings. Policy blocks decision gate validation until decision_mapping:decision_row:CW-FINAL-001:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-002:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-003:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-004:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-005:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-006:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-007:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-008:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-009:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-010:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-011:user_action_not_approved, decision_mapping:decision_row:CW-FINAL-012:user_action_not_approved are recorded.",
+  "checks": [
+    "wiki_audit profiles=alignment,stale-reference -> warning: alignment graph health reports 2 warnings; stale-reference pass",
+    "wiki_state refresh=true view=status -> yellow, 0 errors, 2 warnings"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Remaining warnings are large-doc drift and will be handled in planning/implementation cleanup."
+    },
+    {
+      "severity": "high",
+      "summary": "Approved decision rows lack KB/defer mapping evidence: decision_row:CW-FINAL-001:user_action_not_approved, decision_row:CW-FINAL-002:user_action_not_approved, decision_row:CW-FINAL-003:user_action_not_approved, decision_row:CW-FINAL-004:user_action_not_approved, decision_row:CW-FINAL-005:user_action_not_approved, decision_row:CW-FINAL-006:user_action_not_approved, decision_row:CW-FINAL-007:user_action_not_approved, decision_row:CW-FINAL-008:user_action_not_approved, decision_row:CW-FINAL-009:user_action_not_approved, decision_row:CW-FINAL-010:user_action_not_approved, decision_row:CW-FINAL-011:user_action_not_approved, decision_row:CW-FINAL-012:user_action_not_approved."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+  "policy_profile": "decision",
+  "failure_class": "decision_ambiguity",
+  "recommended_next_loop": "decision",
+  "routing": {
+    "failure_class": "decision_ambiguity",
+    "recommended_next_loop": "decision"
+  },
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:stale-reference"
+  ],
+  "audit_reports": [
+    "wiki_audit:profiles=alignment,stale-reference:2026-06-03"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+    "validation_report": ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+      ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/components/state-engine.md"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+    "validation_report": ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
+      "CodeWiki-Checks: wiki_audit profiles=alignment,stale-reference -> warning: alignment graph health reports 2 warnings; stale-reference pass; wiki_state refresh=true view=status -> yellow, 0 errors, 2 warnings"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [
+    "decision_mapping"
+  ],
+  "blocking_questions": [
+    "Update the decision build with approved row actions plus KB, diagram, or explicit deferred/no-op mapping evidence."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [
+        "decision_row:CW-FINAL-001:user_action_not_approved",
+        "decision_row:CW-FINAL-002:user_action_not_approved",
+        "decision_row:CW-FINAL-003:user_action_not_approved",
+        "decision_row:CW-FINAL-004:user_action_not_approved",
+        "decision_row:CW-FINAL-005:user_action_not_approved",
+        "decision_row:CW-FINAL-006:user_action_not_approved",
+        "decision_row:CW-FINAL-007:user_action_not_approved",
+        "decision_row:CW-FINAL-008:user_action_not_approved",
+        "decision_row:CW-FINAL-009:user_action_not_approved",
+        "decision_row:CW-FINAL-010:user_action_not_approved",
+        "decision_row:CW-FINAL-011:user_action_not_approved",
+        "decision_row:CW-FINAL-012:user_action_not_approved"
+      ],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "decision-mappings",
+        "severity": "high",
+        "summary": "Approved decision rows are not backed by explicit KB/diagram/defer mapping evidence.",
+        "evidence": [
+          "decision_row:CW-FINAL-001:user_action_not_approved",
+          "decision_row:CW-FINAL-002:user_action_not_approved",
+          "decision_row:CW-FINAL-003:user_action_not_approved",
+          "decision_row:CW-FINAL-004:user_action_not_approved",
+          "decision_row:CW-FINAL-005:user_action_not_approved",
+          "decision_row:CW-FINAL-006:user_action_not_approved",
+          "decision_row:CW-FINAL-007:user_action_not_approved",
+          "decision_row:CW-FINAL-008:user_action_not_approved",
+          "decision_row:CW-FINAL-009:user_action_not_approved",
+          "decision_row:CW-FINAL-010:user_action_not_approved",
+          "decision_row:CW-FINAL-011:user_action_not_approved",
+          "decision_row:CW-FINAL-012:user_action_not_approved"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "decision_ambiguity",
+      "recommended_next_loop": "decision"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

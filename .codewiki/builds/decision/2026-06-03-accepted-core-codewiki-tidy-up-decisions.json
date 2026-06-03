@@ -1,0 +1,763 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-03T05:20:36Z",
+  "source": "Accepted rows CW-FINAL-001 through CW-FINAL-012; KB/diagram updates applied 2026-06-03.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-03T05:20:36.000Z",
+    "purge_after": "2026-08-02T05:20:36.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-CW-CORE-001",
+      "text": "CodeWiki uses three loops, loop gates, telemetry traces, Git proof, and loop-first source target.",
+      "source_refs": [
+        "CW-FINAL-001",
+        "CW-FINAL-003",
+        "CW-FINAL-005",
+        "CW-FINAL-007"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Rows mapped to KB and diagrams.",
+      "evidence": "row_to_kb_mappings, knowledge_changes, and diagram_refs in build.",
+      "requirement_ids": [
+        "REQ-CW-CORE-001"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted core CodeWiki tidy-up decisions",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "CW-FINAL-001",
+      "current_state": "Workflow terminology exposes extra loops/profiles.",
+      "current_project_state": "Workflow terminology exposes extra loops/profiles.",
+      "desired_state": "Exactly three loops with gates as exit conditions.",
+      "agreed_change": "Exactly three loops with gates as exit conditions.",
+      "expected_final_state": "Exactly three loops with gates as exit conditions.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify routing and lexicon.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-002",
+      "current_state": "Gate reports lack consistent diagnostics.",
+      "current_project_state": "Gate reports lack consistent diagnostics.",
+      "desired_state": "Harder gates with structured diagnostics, findings, and remediation.",
+      "agreed_change": "Harder gates with structured diagnostics, findings, and remediation.",
+      "expected_final_state": "Harder gates with structured diagnostics, findings, and remediation.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improve loop output quality.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-003",
+      "current_state": "Source roots preserve migration concepts.",
+      "current_project_state": "Source roots preserve migration concepts.",
+      "desired_state": "Move toward loop-first decision/planning/implementation source roots.",
+      "agreed_change": "Move toward loop-first decision/planning/implementation source roots.",
+      "expected_final_state": "Move toward loop-first decision/planning/implementation source roots.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Align source with mental model.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-004",
+      "current_state": "Build appears as source workflow concept.",
+      "current_project_state": "Build appears as source workflow concept.",
+      "desired_state": "Compiler is source engine; build/compiler output is trace data.",
+      "agreed_change": "Compiler is source engine; build/compiler output is trace data.",
+      "expected_final_state": "Compiler is source engine; build/compiler output is trace data.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Avoid duplicate concepts.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-005",
+      "current_state": ".codewiki has many hot artifact roots.",
+      "current_project_state": ".codewiki has many hot artifact roots.",
+      "desired_state": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "agreed_change": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "expected_final_state": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify project state.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-006",
+      "current_state": "Builds and gate reports are separate piles.",
+      "current_project_state": "Builds and gate reports are separate piles.",
+      "desired_state": "Trace has decision.json, planning.json, implementation.json.",
+      "agreed_change": "Trace has decision.json, planning.json, implementation.json.",
+      "expected_final_state": "Trace has decision.json, planning.json, implementation.json.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Make gates discoverable through traces.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-007",
+      "current_state": "Git role is not top-level hot/cold truth.",
+      "current_project_state": "Git role is not top-level hot/cold truth.",
+      "desired_state": "Git is cold truth; implementation trace stores proof refs.",
+      "agreed_change": "Git is cold truth; implementation trace stores proof refs.",
+      "expected_final_state": "Git is cold truth; implementation trace stores proof refs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Use Git for history/content proof.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-008",
+      "current_state": "KB/diagram freshness is not hard enough.",
+      "current_project_state": "KB/diagram freshness is not hard enough.",
+      "desired_state": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "agreed_change": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "expected_final_state": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keep KB as current truth.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-009",
+      "current_state": "Pi still described as adapter/extension.",
+      "current_project_state": "Pi still described as adapter/extension.",
+      "desired_state": "Pi is foundation/distribution path.",
+      "agreed_change": "Pi is foundation/distribution path.",
+      "expected_final_state": "Pi is foundation/distribution path.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Align product direction.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-010",
+      "current_state": "State root mixes concerns and thin roots linger.",
+      "current_project_state": "State root mixes concerns and thin roots linger.",
+      "desired_state": "State becomes graph; thin compatibility roots retire.",
+      "agreed_change": "State becomes graph; thin compatibility roots retire.",
+      "expected_final_state": "State becomes graph; thin compatibility roots retire.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Clean source ownership.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-011",
+      "current_state": "Audit/checks/policy/validation multiply concepts.",
+      "current_project_state": "Audit/checks/policy/validation multiply concepts.",
+      "desired_state": "Scope them as gate criteria/evidence compatibility terms.",
+      "agreed_change": "Scope them as gate criteria/evidence compatibility terms.",
+      "expected_final_state": "Scope them as gate criteria/evidence compatibility terms.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify gate vocabulary.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-012",
+      "current_state": ".tmp-worktrees exists as local registered worktree.",
+      "current_project_state": ".tmp-worktrees exists as local registered worktree.",
+      "desired_state": "Treat as legacy local scratch and clean safely.",
+      "agreed_change": "Treat as legacy local scratch and clean safely.",
+      "expected_final_state": "Treat as legacy local scratch and clean safely.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Remove non-production workaround state.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "CW-FINAL-001",
+    "CW-FINAL-002",
+    "CW-FINAL-003",
+    "CW-FINAL-004",
+    "CW-FINAL-005",
+    "CW-FINAL-006",
+    "CW-FINAL-007",
+    "CW-FINAL-008",
+    "CW-FINAL-009",
+    "CW-FINAL-010",
+    "CW-FINAL-011",
+    "CW-FINAL-012"
+  ],
+  "approved_rows": [
+    {
+      "id": "CW-FINAL-001",
+      "current_state": "Workflow terminology exposes extra loops/profiles.",
+      "current_project_state": "Workflow terminology exposes extra loops/profiles.",
+      "desired_state": "Exactly three loops with gates as exit conditions.",
+      "agreed_change": "Exactly three loops with gates as exit conditions.",
+      "expected_final_state": "Exactly three loops with gates as exit conditions.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify routing and lexicon.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-002",
+      "current_state": "Gate reports lack consistent diagnostics.",
+      "current_project_state": "Gate reports lack consistent diagnostics.",
+      "desired_state": "Harder gates with structured diagnostics, findings, and remediation.",
+      "agreed_change": "Harder gates with structured diagnostics, findings, and remediation.",
+      "expected_final_state": "Harder gates with structured diagnostics, findings, and remediation.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improve loop output quality.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-003",
+      "current_state": "Source roots preserve migration concepts.",
+      "current_project_state": "Source roots preserve migration concepts.",
+      "desired_state": "Move toward loop-first decision/planning/implementation source roots.",
+      "agreed_change": "Move toward loop-first decision/planning/implementation source roots.",
+      "expected_final_state": "Move toward loop-first decision/planning/implementation source roots.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Align source with mental model.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-004",
+      "current_state": "Build appears as source workflow concept.",
+      "current_project_state": "Build appears as source workflow concept.",
+      "desired_state": "Compiler is source engine; build/compiler output is trace data.",
+      "agreed_change": "Compiler is source engine; build/compiler output is trace data.",
+      "expected_final_state": "Compiler is source engine; build/compiler output is trace data.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Avoid duplicate concepts.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-005",
+      "current_state": ".codewiki has many hot artifact roots.",
+      "current_project_state": ".codewiki has many hot artifact roots.",
+      "desired_state": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "agreed_change": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "expected_final_state": ".codewiki target uses kb and telemetry plus generated graph/config.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify project state.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-006",
+      "current_state": "Builds and gate reports are separate piles.",
+      "current_project_state": "Builds and gate reports are separate piles.",
+      "desired_state": "Trace has decision.json, planning.json, implementation.json.",
+      "agreed_change": "Trace has decision.json, planning.json, implementation.json.",
+      "expected_final_state": "Trace has decision.json, planning.json, implementation.json.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Make gates discoverable through traces.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-007",
+      "current_state": "Git role is not top-level hot/cold truth.",
+      "current_project_state": "Git role is not top-level hot/cold truth.",
+      "desired_state": "Git is cold truth; implementation trace stores proof refs.",
+      "agreed_change": "Git is cold truth; implementation trace stores proof refs.",
+      "expected_final_state": "Git is cold truth; implementation trace stores proof refs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Use Git for history/content proof.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-008",
+      "current_state": "KB/diagram freshness is not hard enough.",
+      "current_project_state": "KB/diagram freshness is not hard enough.",
+      "desired_state": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "agreed_change": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "expected_final_state": "Gates block semantic pass without KB/diagram propagation or no-impact rationale.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keep KB as current truth.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-009",
+      "current_state": "Pi still described as adapter/extension.",
+      "current_project_state": "Pi still described as adapter/extension.",
+      "desired_state": "Pi is foundation/distribution path.",
+      "agreed_change": "Pi is foundation/distribution path.",
+      "expected_final_state": "Pi is foundation/distribution path.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Align product direction.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-010",
+      "current_state": "State root mixes concerns and thin roots linger.",
+      "current_project_state": "State root mixes concerns and thin roots linger.",
+      "desired_state": "State becomes graph; thin compatibility roots retire.",
+      "agreed_change": "State becomes graph; thin compatibility roots retire.",
+      "expected_final_state": "State becomes graph; thin compatibility roots retire.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Clean source ownership.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-011",
+      "current_state": "Audit/checks/policy/validation multiply concepts.",
+      "current_project_state": "Audit/checks/policy/validation multiply concepts.",
+      "desired_state": "Scope them as gate criteria/evidence compatibility terms.",
+      "agreed_change": "Scope them as gate criteria/evidence compatibility terms.",
+      "expected_final_state": "Scope them as gate criteria/evidence compatibility terms.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Simplify gate vocabulary.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-012",
+      "current_state": ".tmp-worktrees exists as local registered worktree.",
+      "current_project_state": ".tmp-worktrees exists as local registered worktree.",
+      "desired_state": "Treat as legacy local scratch and clean safely.",
+      "agreed_change": "Treat as legacy local scratch and clean safely.",
+      "expected_final_state": "Treat as legacy local scratch and clean safely.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Remove non-production workaround state.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Adopt three-loop/gate-exit model."
+    },
+    {
+      "id": "D2",
+      "summary": "Adopt loop-first source target and kb/telemetry CodeWiki state target."
+    },
+    {
+      "id": "D3",
+      "summary": "Treat compiler output/build as trace data."
+    },
+    {
+      "id": "D4",
+      "summary": "Use Git as cold truth and Pi as foundation."
+    },
+    {
+      "id": "D5",
+      "summary": "Retire legacy audit/checks/policy/validation/source roots through compatibility migration."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/lexicon.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/alignment-model.md",
+    ".codewiki/kb/system/api.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "CW-FINAL-001",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        "state-lifecycle:decision_build_accepted"
+      ],
+      "evidence": "Three-loop and gate-exit terminology documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-002",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        "data-model:gate_verdict"
+      ],
+      "evidence": "Gate diagnostics/remediation documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/overview.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:concept_root_target"
+      ],
+      "evidence": "Loop-first source target documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-004",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "diagram_refs": [
+        "data-model:loop_trace_file"
+      ],
+      "evidence": "Compiler vs compiler-output distinction documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:dogfood_builds"
+      ],
+      "evidence": "kb/telemetry target documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-006",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [
+        "data-model:telemetry_trace"
+      ],
+      "evidence": "Trace shape documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-007",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "diagram_refs": [
+        "data-model:git_proof"
+      ],
+      "evidence": "Git cold truth documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-008",
+      "knowledge_refs": [
+        ".codewiki/kb/system/alignment-model.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        "component-map:validation_gateway"
+      ],
+      "evidence": "KB/diagram gate freshness documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-009",
+      "knowledge_refs": [
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "diagram_refs": [
+        "component-map:extension"
+      ],
+      "evidence": "Pi foundation wording documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-010",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/components/state-engine.md"
+      ],
+      "diagram_refs": [
+        "component-map:state_engine"
+      ],
+      "evidence": "Graph engine target documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-011",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        "component-map:checks"
+      ],
+      "evidence": "Gate criteria/evidence compatibility documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-012",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:intended_file_structure"
+      ],
+      "evidence": "Local worktree cleanup policy documented.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Gated-agency story updated for telemetry/gate/Git model."
+    ],
+    "system_impact": [
+      "Lexicon, system specs, components, and diagrams updated."
+    ],
+    "downstream_planning_questions": [
+      "Plan daemon/agency completion first.",
+      "Plan telemetry/graph/gateway/source migration sprints.",
+      "Plan safe .tmp-worktrees cleanup."
+    ]
+  },
+  "diagram_refs": [
+    "component-map:compilers",
+    "component-map:validation_gateway",
+    "component-map:state_engine",
+    "component-map:builds",
+    "data-model:telemetry_trace",
+    "data-model:loop_trace_file",
+    "data-model:gate_verdict",
+    "data-model:git_proof",
+    "state-lifecycle:decision_build_accepted",
+    "state-lifecycle:planning_build_accepted",
+    "state-lifecycle:implementation_build_accepted",
+    "file-structure-map:concept_root_target",
+    "file-structure-map:dogfood_builds",
+    "component-map:extension",
+    "component-map:checks",
+    "file-structure-map:intended_file_structure"
+  ],
+  "downstream_planning_questions": [
+    "Plan daemon/agency completion first.",
+    "Plan telemetry/graph/gateway/source migration sprints.",
+    "Plan safe .tmp-worktrees cleanup."
+  ],
+  "assumptions": [
+    "Compatibility aliases remain during migration."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No source migration or deletion in decision loop."
+  ],
+  "risks": [
+    "High-risk structural migration requires staged planning and gates."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/components/state-engine.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

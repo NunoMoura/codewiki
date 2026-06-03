@@ -1,103 +1,97 @@
 ---
 id: spec.system.builds
-title: Builds
+title: Compiler Output Artifacts
 state: active
-summary: High-signal build contracts for decisions, knowledge, planning, implementation evidence, and state reconciliation.
+summary: Compatibility contract for historic build artifacts and their target representation inside telemetry loop traces.
 owners:
   - architecture
-updated: "2026-05-31"
+updated: "2026-06-03"
 code_paths:
   - src/build
-  - src/validation/report.ts
-  - src/state/graph.ts
-  - src/shared/ports.ts
   - src/adapters/pi/schemas.ts
+  - src/gateway/report.ts
+  - src/state/graph.ts
 code_paths_mode: explicit_override
 ---
 
-# Builds
+# Compiler Output Artifacts
 
 ## Responsibility
 
-Builds are temporary handoff contracts between alignment loops. They compact validated intent, knowledge updates, planning decisions, or implementation evidence so the next loop can work from artifacts instead of chat memory.
+This document defines how historic build artifacts migrate into the target telemetry trace model. In canonical vocabulary, a compiler is the source engine and compiler output is emitted trace data. The word build remains a compatibility name for `decision_build`, `planning_build`, and `implementation_build` until schemas, tools, and artifact readers migrate.
 
-Every semantic change must trace to accepted build evidence before it closes, validates, or publishes. Builds should carry the smallest useful downstream contract plus enough evidence to prove intent was preserved across layers.
+Compiler output should carry the smallest useful downstream contract plus enough refs to prove intent was preserved across layers. It should not become a permanent archive or a source architecture layer.
 
-Builds are not permanent archives. After downstream truth absorbs them, validation confirms alignment, and Git publication preserves recoverable history, builds can become cold or purgeable. Commits, tree SHAs, package digests, archive ledgers, and remote refs are stronger content proof than build files.
+## Target storage
 
-Tracked build files must not be deleted from the working tree until a reachable archive commit contains the full revive context. Garbage collection runs after that archive commit, writes compact restore evidence that names the archive commit/tree and removed paths, then deletes eligible tracked build artifacts in a separate GC commit. The GC commit must not amend or squash away the archive commit it depends on.
-
-## Build kinds
-
-| Build | Produced by | Consumed by | Role |
-| --- | --- | --- | --- |
-| `decision_build` | Decision loop | Planning loop | Intent-and-knowledge handoff with approved rows, KB diffs, product/system propagation, and diagram/doc evidence. |
-| `planning_build` | Planning loop | Implementation loop | Roadmap alignment, acceptance, TDD plan, and candidate paths. |
-| `implementation_build` | Implementation loop | Validation/publication/closure | Evidence that code, tests, docs, or roadmap changes were implemented. |
-
-## Cycle contract
-
-Loop-level builds should include:
-
-- loop kind, sequence, attempt id, supersedes refs, and status;
-- validation profile, exit criteria, and isolation policy;
-- stable requirement ids, source refs, and evidence mapping;
-- consumed and produced refs for builds, knowledge, roadmap, validation, code, tests, publication, and closure;
-- audit refs, assumptions, open questions, non-goals, risks, and agent assessment;
-- content proof when required, such as working-tree digest, tree SHA, commit SHA, package digest, archive ledger, or remote ref.
-
-Build policy may recommend `wiki_resume_context` plus CodeWiki-owned compaction, context_refresh, or hard new_session at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
-
-## Loop-specific contracts
-
-A decision build contains the user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. Rows should come from a machine-readable decision surface such as `wiki_diff_table`; interactive adapters should expose row-level approve, edit, reject, and defer actions instead of relying on prose-only approval. Workflow decision tools should support batched row approvals so a single user approval can be applied in one phase call.
-
-A planning build contains source decision refs, decision-gateway proof, task ids or task changes, accepted decision row/question resolutions, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping. Row/question resolutions use `decision_row_resolutions` and `downstream_question_resolutions` with `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` states. If planning discovers an undecided requirement, the build should block or route back to decision rather than encoding a guess.
-
-An implementation build contains source planning refs, planning-gateway proof, task ids, files changed, checks, tester/builder evidence, acceptance mapping, validation/audit refs, unresolved risks, a closure brief, and recommended commit/PR/release text when useful. The closure brief is the user-facing proof that accepted intent was satisfied. If implementation uncovers ambiguous semantics, the implementation build or validation report routes back to decision or planning instead of closing over an assumption.
-
-Implementation builds may recommend publication, but validation and policy decide whether commit, push, release, or remote updates are allowed. Publication gates require immutable content proof and explicit handling for secret scanning, remote visibility, fail/block evidence, and private evidence.
-
-## Contract fields
-
-New builds should expose explicit DAG fields:
-
-- `consumes` and `produces`;
-- `change_type`: `product`, `system`, `task`, or `code`;
-- `traceability`: semantic flag, optional `exemption` (`generated`, `runtime`, or `mechanical`), upstream refs, and accepted build refs;
-- `policy.isolation`: loop-start, validation, and next-loop context requirements;
-- `propagation`: product-first, system-first, mixed, or no-op evidence for cross-abstraction impact;
-- `diagram_refs`: system diagram node, flow, entity, lifecycle, policy boundary, artifact, adapter, actor, or external system refs when system knowledge changes.
-
-Graph reconciliation should prefer explicit edges. Semantic changes in knowledge, roadmap, code, tests, package metadata, or publication claims need accepted upstream build refs before implementation validation or task closure can pass. Generated, runtime, and mechanical-only changes may set `traceability.exemption` and `semantic=false` when policy allows. New builds write `change_type`.
-
-## Lifecycle and consumption
+Target CodeWiki state stores compiler output inside loop trace files:
 
 ```text
-proposed -> accepted -> consumed -> validated -> archived -> purged
+.codewiki/telemetry/<trace_id>/
+  decision.json
+  planning.json
+  implementation.json
 ```
 
-A later cycle build may supersede a failed or blocked build. Superseded builds remain audit evidence but should not route hot work unless policy keeps them active.
+Each loop file contains:
 
-A build is consumed when lower-layer truth or validation evidence references it:
+- metadata: schema version, trace id, loop name, status, timestamps, and superseded refs;
+- input refs and fingerprints;
+- compact compiler output summary;
+- requirement refs and requirement state;
+- `<artifact_type>_refs` arrays normalized to `ArtifactRef`;
+- KB and diagram refs or explicit no-impact rationale;
+- gate criteria, gate verdict, gate findings, remediation items, and next action;
+- retention hints for hot/cold lifecycle.
 
-- decision: planning, passing validation, or knowledge-only policy references it;
-- planning: roadmap refinement plus implementation evidence or passing validation references it;
-- implementation: passing validation, a passing validation verdict, or safe publication/archive proof references it.
+`implementation.json` also contains Git proof refs such as commit SHA, tree SHA, package digest, branch, remote ref, or working-tree digest when policy permits dirty validation.
 
-Accepted implementation evidence without validation or publication safety still routes to the validation gateway.
+## Historic compatibility
 
-## Post-commit garbage collection
+Current repositories may still contain:
 
-Build garbage collection is a post-commit maintenance step, not a pre-commit cleanup. A close or publication commit first captures the builds, validation reports, roadmap archive state, graph state, and recovery context needed to revive or reinterpret the work. Only after that commit exists may GC classify tracked builds as cold or purgeable.
+```text
+.codewiki/builds/decision/**
+.codewiki/builds/planning/**
+.codewiki/builds/implementation/**
+```
 
-A GC run must use an exact archive commit SHA and tree SHA as input, emit a restore ledger with `git restore --source=<archive-sha> -- <path>` commands for deleted tracked files, and commit the deletion plus ledger separately. Runtime-only handoff files may be cleaned under runtime policy, but tracked builds require archive proof.
+Graph readers and tools should normalize these files into loop trace concepts during migration:
+
+| Historic artifact | Target concept |
+| --- | --- |
+| `decision_build` | `decision.json#/compiler_output` |
+| `planning_build` | `planning.json#/compiler_output` |
+| `implementation_build` | `implementation.json#/compiler_output` |
+| `build_refs` | `compiler_output_refs` |
+| validation refs attached to builds | `gate_refs` |
+
+`src/build/**` is compatibility infrastructure, not target source structure. Target source engines live under loop roots such as `src/decision/compiler.ts`, `src/planning/compiler.ts`, and `src/implementation/compiler.ts`.
+
+## Size and structure rules
+
+Compiler output must be ref-first and compact:
+
+- include short summaries and stable refs;
+- avoid duplicating whole KB docs, full task bodies, raw test logs, raw diffs, or repeated policy boilerplate;
+- preserve enough rationale for gate routing and fresh-session continuation;
+- store detailed history in Git, source files, and referenced artifacts rather than hot trace payloads;
+- use explicit no-impact rationale when KB, diagram, source, test, or Git refs are intentionally absent.
+
+## Lifecycle
+
+Compiler output alone is pending evidence. A passing gate is the promotion boundary. Failed or blocked gates keep the trace in the current loop or route to the smallest safe earlier loop.
+
+Hot compiler output can be compacted or purged only when:
+
+1. the relevant gate pass/fail/block state is represented in the trace;
+2. required Git commit/tree/package refs preserve recoverable history;
+3. graph lenses can still find the gate outcome and remediation history through the trace.
 
 ## Related docs
 
+- [Lexicon](../lexicon.md)
 - [Compilers](compilers.md)
 - [Validation Gateway](validation-gateway.md)
-- [Alignment Model](alignment-model.md)
-- [Audits](audits.md)
-- [Roadmap](roadmap.md)
 - [Graph](graph.md)
+- [File Structure](file-structure.md)

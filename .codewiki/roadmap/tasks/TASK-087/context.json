@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T08:15:48Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-087/context.json",
+  "task": {
+    "id": "TASK-087",
+    "title": "Complete daemon/agency foundation for parallel refactor",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Make CodeWiki daemon/agency safe to use for later parallel refactor work by aligning traces, runtime scheduling, gate diagnostics, and worktree/publisher coordination.",
+    "labels": [
+      "daemon-foundation",
+      "agency",
+      "runtime",
+      "telemetry",
+      "gateway",
+      "parallel-worktrees"
+    ],
+    "goal": {
+      "outcome": "Daemon/agency can safely schedule bounded, non-overlapping refactor work from graph/trace/gate refs after this task passes.",
+      "acceptance": [
+        "Telemetry trace and ArtifactRef source contracts exist or compatibility helpers normalize legacy build/gate refs for daemon use.",
+        "Runtime job/run types and automation-readiness use canonical loops plus trace_refs/gate_refs/git_refs while preserving legacy job compatibility.",
+        "Gate preflight/verdict output exposes structured diagnostics/findings/remediation usable by daemon stop reasons.",
+        "Worktree, artifact-status, and publisher paths block unsafe overlapping writes and record exact branch/head/tree/digest refs.",
+        ".tmp-worktrees is safely removed after dirty/claim checks or documented/ignored as local scratch with no production semantics.",
+        "Targeted runtime, agency, gateway, worktree, publisher, and package smoke tests pass."
+      ],
+      "non_goals": [
+        "Do not run broad autonomous refactor work before this task closes.",
+        "Do not migrate all source roots to loop-first layout in this task.",
+        "Do not migrate every existing .codewiki/builds or .codewiki/validation artifact in this task.",
+        "Do not publish or push remote changes."
+      ],
+      "verification": [
+        "git worktree list --porcelain and dirty-state checks",
+        "npm run typecheck",
+        "runtime/agency/gateway/worktree targeted smoke tests",
+        "npm run test:smoke"
+      ]
+    },
+    "delta": {
+      "desired": "Additional outcome: Daemon/runtime work selection uses the three-loop trace model and stops with exact gate/remediation blockers instead of legacy loop states.\nRefinement: Additional outcome: Gate reports and preflight results use canonical diagnostics/findings/remediation structure for the three loop exit gates.\nRefinement: Additional outcome: Parallel write work has safe scoped leases, role worktrees, publisher serialization, and cleanup guidance before broad refactor automation starts.",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

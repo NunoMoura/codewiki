@@ -1,61 +1,82 @@
 ---
 id: spec.system.validation-gateway
-title: Validation Gateway
+title: Gateway
 state: active
-summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, sprint close, or ship-ready promotion.
+summary: Three loop exit gates for decision, planning, and implementation, with structured diagnostics and remediation.
 owners:
   - architecture
-updated: "2026-06-01"
+updated: "2026-06-03"
 ---
 
-# Validation Gateway
+# Gateway
 
 ## Responsibility
 
-The validation gateway validates submitted cycle evidence against policy, source refs, exit criteria, required linters, executable tests when code behavior changes, and immutable content evidence. It returns `pass`, `fail`, or `block`. It does not define requirements, write canonical truth, create plans, compile handoffs, or own content by itself.
+The CodeWiki gateway evaluates loop evidence against exit criteria and returns a gate verdict: `pass`, `fail`, or `block`. It does not define requirements, write canonical truth, create plans, compile loop output, or own content by itself.
 
-Policy lives under `src/policy/**`. Gateway report, preflight, transaction, and tool behavior lives under `src/gateway/**`. Compatibility glue lives under `src/validation/**`. Deterministic legacy linter profiles should migrate conceptually to gateway-required linters.
+There is no validation loop. The gateway owns the exit gates for the three loops:
 
-## Gate index
+| Gate | Loop exited | Purpose |
+| --- | --- | --- |
+| `decision` | Decision Loop | Verifies approved semantic rows, KB and diagram propagation, no-impact rationales, risk approvals, and planning questions. |
+| `planning` | Planning Loop | Verifies decision-to-work propagation, task/sprint boundaries, acceptance criteria, verification strategy, candidate refs, and implementation readiness. |
+| `implementation` | Implementation Loop | Verifies changed code/docs/tests, required linters/tests, acceptance evidence, KB/diagram freshness, and Git content proof for production-ready completion. |
 
-Gateway terminology uses named gates. The tool still accepts the legacy `profile` field for compatibility; preferred gate names are `decision`, `planning`, `implementation`, `task-close`, `sprint-close`, and `ship-ready`. Legacy `publication`, `publish`, and `release` inputs are treated as ship-ready aliases.
+Former `task-close`, `sprint-close`, `ship-ready`, `publication`, `policy`, `audit`, and `checks` names are compatibility aliases or criteria suites inside the three canonical gates during migration.
 
-| Gate | Purpose |
-| --- | --- |
-| `decision` | Approved semantic decisions, KB mappings, risk approval, and no unapproved semantics. |
-| `planning` | Decision-to-roadmap propagation, task/sprint mappings, and implementation-ready handoff. |
-| `implementation` | Code/doc/test evidence against one planned task, including required linters and executable code tests when relevant. |
-| `task-close` | Full production-ready task closure chain from decision through implementation, tests, linters, validation, semantic closure evidence, and task-scoped ship-ready quality. |
-| `sprint-close` | Cohort closure with shared outcome, cross-task rows, risks, generated-state closure, and ship-ready quality when the sprint changes shippable code or package behavior. |
-| `ship-ready` | Exact content candidate is safe to promote; publication, release, push, remote update, and destructive actions still require separate explicit approval when policy requires it. |
+## Gate diagnostics and remediation
 
-See [Implementation, validation, and close](flows/implementation-validation-close.md) and [Publication and GC](flows/publication-gc.md) for content-evidence flow detail.
+Gate output must be actionable. Every gate result should include:
 
-## Preflight and routing
+- verdict: `pass`, `fail`, or `block`;
+- criteria evaluated;
+- missing refs or missing evidence;
+- wrong, stale, or mismatched refs;
+- weak quality items that block pass when policy requires;
+- gate findings with severity, criterion, refs, and rationale;
+- remediation items with exact next action;
+- recommended loop route: same loop, decision, planning, implementation, observe/wait, or user approval.
 
-Preflight reports missing upstream builds, required linters, task ids, decision-propagation gaps, content evidence, stale refs, close/ship-ready blockers, and risk approval gaps before expensive validation. Accepted executable decision rows without durable task/sprint mapping block planning, implementation, and close as `planning_gap`. Fail/block verdicts classify the failure and recommend the smallest safe next loop: same compiler loop, planning, decision, validation/content-evidence, observe/wait, or user approval.
-
-Risk tiers are mechanical-docs, code-local, semantic-system, security/migration/publication, and destructive. Low-risk paths still validate; high-risk tiers escalate before lower-layer promotion. A `ship-ready` gate validates the exact content candidate; publication, release, push, remote update, and destructive actions remain separate approval boundaries.
+A passing gate promotes the trace to the next loop or closes implementation when required Git proof exists. A fail/block gate refreshes graph state with findings and remediation but does not promote lower-layer work.
 
 ## Alignment and content evidence
 
-Vertical alignment traces intent through decision builds, knowledge/diagrams, planning builds, roadmap tasks, implementation builds, validation reports, and immutable content evidence. Horizontal alignment validates coherence inside one layer. Graph context helps routing but is not final authority.
+Vertical alignment traces intent through:
 
-Implementation validation requires fresh-context isolation, explicit clean-state value, checked content evidence, and a commit-ready implementation build. Dirty implementation validation may use a working-tree digest. Task-close, sprint-close, and ship-ready require clean immutable evidence such as commit SHA, tree SHA, package digest, archive ref, or remote ref.
+```text
+user input -> decision.json -> planning.json -> implementation.json -> Git proof
+```
+
+Horizontal alignment validates coherence inside one layer: KB docs, diagrams, trace refs, source, tests, gate criteria, and generated graph state.
+
+Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git proof such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty validation may use a working-tree digest only when the gate allows it and implementation remains unclosed.
+
+## Compatibility paths
+
+Current repositories may still persist gate reports under `.codewiki/validation/**` and expose compatibility source under `src/validation/**`. Target traces embed gate verdicts, findings, and remediation inside loop trace files:
+
+```text
+.codewiki/telemetry/<trace_id>/decision.json#/gate
+.codewiki/telemetry/<trace_id>/planning.json#/gate
+.codewiki/telemetry/<trace_id>/implementation.json#/gate
+```
+
+Graph readers normalize `validation_refs` and legacy report paths into `gate_refs` during migration.
 
 ## Rules
 
-- The gateway validates builds; it does not mutate canonical truth.
-- Validation reports attest evidence; commits, tree SHAs, package digests, canonical files, archives, and remote refs identify the exact content evaluated or promoted.
-- Planning, implementation, and task-close validation block on umbrella/container tasks or unsafe overlapping ownership.
-- Passing reports are hot only while active work, ship-ready, or linter/gateway policy needs them; fail/block/policy-kept reports persist until resolved or archived.
-- Tracked report GC is safe only after a reachable archive commit and restore ledger exist.
+- The gateway validates loop evidence; it does not mutate canonical truth.
+- Gate pass is the semantic promotion boundary.
+- Compiler output alone cannot promote a loop.
+- Decision, planning, and implementation gates block on stale KB/diagram truth unless an explicit no-impact rationale exists.
+- Implementation gate blocks on missing Git proof when the work claims production-ready completion.
+- Gate reports and findings are hot only while active routing needs them; long-term history lives in telemetry trace summaries and Git.
 
 ## Related docs
 
 - [Validation gateway component](components/validation-gateway.md)
 - [Alignment Model](alignment-model.md)
-- Linter engine migration document
-- [Builds](builds.md)
+- [Compiler Output Artifacts](builds.md)
 - [Compilers](compilers.md)
-- [Roadmap](roadmap.md)
+- [Graph](graph.md)
+- [File Structure](file-structure.md)

@@ -6,7 +6,7 @@ summary: Source concept root for CodeWiki daemon-capable software-development ru
 owners:
   - architecture
   - engineering
-updated: "2026-06-01"
+updated: "2026-06-03"
 diagram_refs:
   - component-map:runtime
   - file-structure-map:runtime_orchestration_boundary
@@ -25,7 +25,11 @@ The CodeWiki runtime executes and, after the daemon refactor, dispatches CodeWik
 
 The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures Pi Code with CodeWiki defaults, prompt contract, tools, skills, and workflow policy instead of forking Pi internals. Forking is reserved for a future blocker where Pi SDK/runtime hooks cannot enforce required CodeWiki behavior. Optional CLI entrypoints may support bootstrap, CI, linter, or admin workflows, but interactive development happens through Pi-hosted CodeWiki surfaces.
 
-Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence. Before claiming scopes or requesting a context boundary, runtime verifies the selected task's automation-readiness contract. Missing, expired, ambiguous, blocked, or waiting contracts stop the runner with exact blockers and next safe actions; only `runnable`, `retryable`, or `promotable` contracts may proceed to implementation, validation, or task-close preparation.
+Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence. Before claiming scopes or requesting a context boundary, runtime verifies the selected trace/task automation-readiness contract. Missing, expired, ambiguous, blocked, or waiting contracts stop the runner with exact blockers and next safe actions; only `runnable`, `retryable`, or `promotable` contracts may proceed to a decision, planning, implementation, or gate-preparation step.
+
+The daemon should be able to request fresh Pi worker sessions when the Pi command context exposes replacement-session APIs. Fresh validator workers start from CodeWiki source refs, implementation compiler output, task context, and required gate criteria; they must not inherit builder chat context. If the adapter cannot spawn the worker or cannot transfer dirty builder content safely, runtime records a precise platform/content-evidence blocker instead of self-approving.
+
+Daemon/agency completion is the enabling sprint for the broader structure refactor. Until runtime aligns with the three-loop model, telemetry traces, gate diagnostics/remediation, graph readiness queries, fresh worker session spawning, and safe worktree publishing, daemon automation is pilot-capable for observe/maintain or narrow bounded steps rather than broad autonomous refactor execution.
 
 ## Component and flow detail
 
@@ -43,21 +47,23 @@ src/runtime/
   types.ts    # runtime result, daemon job/run, budget, and workflow evidence
 ```
 
-Runtime coordinates `src/agency/**`, `src/session/**`, `src/state/**`, `src/build/**`, and `src/gateway/**` without absorbing their durable truth.
+Runtime coordinates `src/agency/**`, current compatibility `src/session/**`, current compatibility `src/state/**`, current compatibility `src/build/**`, and gateway behavior without absorbing their durable truth. Target source moves generated state to `src/graph/**`, compiler engines to loop roots, and trace persistence to `src/telemetry/**`.
 
 ## Daemon job model
 
 Daemon jobs live at `.codewiki/runtime/jobs.json`. This repo-local runtime state records execution requests and attempts, not roadmap truth. Jobs can be `queued`, `running`, `blocked`, `completed`, or `cancelled`. Runs can be `running`, `completed`, `blocked`, `failed`, `stale`, or `cancelled`.
 
-A pass boundary emits or references required handoff/build/validation/content refs. Fail/block boundaries keep the same loop or job blocked until evidence, policy, retry limits, or user input resolves the issue. Daemon and runner scheduling consume the same graph/runtime readiness predicate so retryable failure, lease wait, and promotion states are source-backed and do not rely on chat inference.
+A pass boundary emits or references required loop trace, gate, compiler output, and content refs. Daemon jobs and runs store canonical `loop` values from the decision/planning/implementation model, with `observe` reserved for read-only runtime waiting. Legacy `validation`, `task-close`, and `publication` loop inputs are compatibility hints only: runtime normalizes them to implementation work and preserves the original gate intent in `gate_refs`. `trace_refs`, `gate_refs`, and `git_refs` are the daemon-safe source contract for later scheduling; legacy `build_refs`, `validation_refs`, and `content_refs` remain compatibility aliases during migration.
+
+Fail/block boundaries keep the same canonical loop or job blocked until evidence, structured gate diagnostics/remediation, policy, retry limits, or user input resolves the issue. Daemon and runner scheduling consume the same graph/runtime readiness predicate so retryable failure, lease wait, and promotion states are source-backed and do not rely on chat inference.
 
 ## Invariants
 
-- Runtime does not bypass decision, planning, implementation, validation, task-close, ship-ready, publish, release, or destructive gates.
+- Runtime does not bypass decision, planning, implementation, publication, release, or destructive gate criteria.
 - Runtime treats artifact status as temporary coordination evidence.
 - Runtime releases leases it acquires before returning unless the adapter/process fails and records that failure.
 - Runtime requests host capabilities through explicit adapter ports and records platform-limited evidence instead of fabricating behavior.
-- Dogfood operational state under `.codewiki/runtime/**` is repo-local state, not package source.
+- Dogfood operational state under `.codewiki/runtime/**` is compatibility coordination state, not package source or target truth root.
 
 ## Related docs
 

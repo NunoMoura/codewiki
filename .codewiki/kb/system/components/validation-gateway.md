@@ -1,6 +1,6 @@
 ---
 id: spec.system.components.validation-gateway
-title: Validation Gateway Component
+title: Gateway Component
 state: active
 component_id: validation_gateway
 diagram_refs:
@@ -12,28 +12,30 @@ source_roots:
   - src/validation/**
 owners:
   - architecture
-updated: "2026-06-01"
-summary: Independent gateway that attests cycle builds, closure readiness, and proof evidence.
+updated: "2026-06-03"
+summary: Independent gateway that evaluates loop exit gates and emits verdicts, findings, and remediation.
 ---
 
-# Validation Gateway Component
+# Gateway Component
 
 ## Responsibility
 
-The validation gateway reviews named evidence and records `pass`, `fail`, or `block`. It does not define requirements, compile handoffs, mutate roadmap or knowledge truth, or prove content by itself. Policy modules define gate requirements, audit profiles, risk tiers, approval requirements, and proof requirements.
+The gateway reviews named evidence and records `pass`, `fail`, or `block` for the decision, planning, and implementation gates. It does not define requirements, compile output, mutate work/KB truth, or prove content by itself. Gate criteria define requirements, linter profiles, risk tiers, approval requirements, and Git proof requirements.
 
 ## Owned paths
 
-- `src/gateway/**` owns report, preflight, transaction, and tool behavior.
-- `src/policy/**` owns gate policy.
+- `src/gateway/**` currently owns report, preflight, transaction, and tool behavior.
+- `src/policy/**` currently owns gate policy compatibility behavior.
 - `src/validation/**` is compatibility-oriented gateway glue.
-- `.codewiki/validation/**` stores hot validation reports.
+- Target loop gates move toward `src/decision/gate.ts`, `src/planning/gate.ts`, and `src/implementation/gate.ts`, with only truly shared gateway primitives kept under `src/gateway/**`.
+- Target state embeds gate verdicts/findings/remediation in `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json`; `.codewiki/validation/**` is compatibility storage.
 
 ## Contracts
 
 - Graph context helps routing; canonical sources and content proof remain authoritative.
-- Fail/block reports must classify the failure and recommend the smallest safe next loop.
-- Implementation validation may use a dirty working-tree digest; task-close, ship-ready, publish, and release require clean immutable proof.
+- Fail/block verdicts must classify findings and recommend the smallest safe next loop.
+- Gate diagnostics use findings/remediation items, not legacy wording.
+- Implementation completion requires immutable Git proof when claiming production-ready code.
 
 ## Flow links
 
@@ -43,5 +45,6 @@ The validation gateway reviews named evidence and records `pass`, `fail`, or `bl
 ## Related docs
 
 - [System overview](../overview.md)
+- [Gateway](../validation-gateway.md)
 - [File structure](../file-structure.md)
 - [Component map](../diagrams/component-map.yaml)

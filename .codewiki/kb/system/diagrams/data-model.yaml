@@ -49,39 +49,51 @@ entities:
       - goal
       - spec_paths
       - code_paths
-  - id: decision_build
-    label: Decision build
-    storage: .codewiki/builds/decision/**
-    role: accepted intent and knowledge handoff
+  - id: telemetry_trace
+    label: Telemetry trace
+    storage: .codewiki/telemetry/<trace_id>/**
+    role: compact workflow traceability from decision to production-ready implementation
     key_fields:
-      - diff_table
-      - approved_diff_rows
-      - row_to_kb_mappings
-      - propagation
-      - knowledge_changes
-      - downstream_planning_questions
-      - lifecycle
-  - id: implementation_build
-    label: Implementation build
-    storage: .codewiki/builds/implementation/**
-    role: implementation evidence and closure brief
+      - trace_id
+      - status
+      - decision.json
+      - planning.json
+      - implementation.json
+      - trace_refs
+  - id: loop_trace_file
+    label: Loop trace file
+    storage: .codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json
+    role: loop compiler output, gate verdict, gate diagnostics, refs, and next action
     key_fields:
-      - task_id
-      - code_files
-      - test_files
-      - checks_run
-      - acceptance_mapping
-      - closure_brief
-  - id: validation_report
-    label: Validation report
-    storage: .codewiki/validation/**
-    role: pass/fail/block gateway evidence when persisted
+      - loop
+      - compiler_output
+      - gate
+      - knowledge_refs
+      - diagram_refs
+      - source_refs
+      - test_refs
+      - gate_refs
+      - compiler_output_refs
+  - id: gate_verdict
+    label: Gate verdict
+    storage: embedded in loop trace files
+    role: pass/fail/block exit decision plus findings and remediation
     key_fields:
-      - profile
+      - gate
       - verdict
-      - rationale
-      - checks
-      - issues
+      - criteria
+      - findings
+      - remediation_items
+      - next_action
+  - id: git_proof
+    label: Git proof
+    storage: Git history and refs indexed from implementation.json
+    role: cold source of truth for historical content and production-ready content proof
+    key_fields:
+      - commit_sha
+      - tree_sha
+      - package_digest
+      - remote_ref
   - id: state_index
     label: State index / graph
     storage: .codewiki/index_graph.json
@@ -123,7 +135,7 @@ entities:
   - id: daemon_job_store
     label: Daemon job/run store
     storage: .codewiki/runtime/jobs.json
-    role: durable execution-attempt state; references roadmap/build/validation/Git proof without replacing canonical truth
+    role: durable execution-attempt state; references trace, task, gate, and Git proof without replacing canonical truth
     key_fields:
       - job_id
       - task_id
@@ -135,20 +147,27 @@ entities:
       - worker/session/claim refs
       - last_heartbeat_at
       - block_reason
-      - build_refs
-      - validation_refs
+      - trace_refs
+      - gate_refs
+      - git_refs
       - handoff
   - id: executable_truth
     label: Code and tests
     storage: repository code/test paths
     role: implemented behavior and automated proof
 relationships:
-  - from: decision_build
+  - from: telemetry_trace
+    to: loop_trace_file
+    type: contains
+  - from: loop_trace_file
+    to: gate_verdict
+    type: embeds_exit_gate
+  - from: loop_trace_file
     to: knowledge_doc
     type: records_changes
-  - from: decision_build
+  - from: loop_trace_file
     to: roadmap_task
-    type: plans_needed_work
+    type: plans_or_closes_work
   - from: roadmap_task
     to: knowledge_doc
     type: references
@@ -167,17 +186,17 @@ relationships:
   - from: roadmap_task
     to: resume_context_packet
     type: seeds
-  - from: implementation_build
-    to: roadmap_task
-    type: closes_or_updates
-  - from: implementation_build
+  - from: loop_trace_file
     to: executable_truth
     type: evidences
-  - from: validation_report
+  - from: loop_trace_file
+    to: git_proof
+    type: indexes_content_proof
+  - from: gate_verdict
     to: roadmap_task
-    type: validates
-  - from: validation_report
-    to: implementation_build
+    type: evaluates
+  - from: gate_verdict
+    to: loop_trace_file
     type: supports
   - from: state_index
     to: knowledge_doc
@@ -186,13 +205,16 @@ relationships:
     to: roadmap_task
     type: derives_from
   - from: state_index
-    to: decision_build
+    to: telemetry_trace
     type: derives_from
   - from: state_index
-    to: implementation_build
+    to: loop_trace_file
     type: derives_from
   - from: state_index
-    to: validation_report
+    to: gate_verdict
+    type: derives_from
+  - from: state_index
+    to: git_proof
     type: derives_from
   - from: state_index
     to: scoped_lease
@@ -204,11 +226,11 @@ relationships:
     to: scoped_lease
     type: records_claim_refs
   - from: daemon_job_store
-    to: implementation_build
-    type: carries_build_refs
+    to: loop_trace_file
+    type: carries_trace_refs
   - from: daemon_job_store
-    to: validation_report
-    type: carries_validation_refs
+    to: gate_verdict
+    type: carries_gate_refs
   - from: state_index
     to: daemon_job_store
     type: may_derive_runtime_status_from
@@ -219,6 +241,6 @@ ui_hints:
   default_entities:
     - knowledge_doc
     - roadmap_task
-    - implementation_build
+    - telemetry_trace
     - state_index
   show_storage_paths: true

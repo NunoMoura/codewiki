@@ -477,35 +477,38 @@ try {
 	);
 	assert.deepEqual(shipReadyCandidate.missing.user_approval, []);
 
-	const localOnlyShipReadyImplementation = await writeImplementationBuild(project, {
-		kind: "implementation",
-		summary: "Local-only ship-ready fixture.",
-		source_planning_build: planning.path,
-		task_id: "TASK-777",
-		change_type: "code",
-		test_files: ["tests/smoke/gateway-preflight.test.mjs"],
-		code_files: ["src/local-only-ship-ready.ts"],
-		checks_run: ["npm run typecheck: pass"],
-		acceptance_mapping: [
-			{
-				criterion: "Ship-ready validates local content quality",
-				evidence:
-					"npm run typecheck passes without implying package publication.",
+	const localOnlyShipReadyImplementation = await writeImplementationBuild(
+		project,
+		{
+			kind: "implementation",
+			summary: "Local-only ship-ready fixture.",
+			source_planning_build: planning.path,
+			task_id: "TASK-777",
+			change_type: "code",
+			test_files: ["tests/smoke/gateway-preflight.test.mjs"],
+			code_files: ["src/local-only-ship-ready.ts"],
+			checks_run: ["npm run typecheck: pass"],
+			acceptance_mapping: [
+				{
+					criterion: "Ship-ready validates local content quality",
+					evidence:
+						"npm run typecheck passes without implying package publication.",
+				},
+			],
+			closure_brief: {
+				user_intent: "Validate local content without publication approval.",
+				implemented_changes: ["Changed local-only package source."],
+				acceptance_evidence: ["Ship-ready preflight is ready."],
+				checks: ["npm run typecheck: pass"],
 			},
-		],
-		closure_brief: {
-			user_intent: "Validate local content without publication approval.",
-			implemented_changes: ["Changed local-only package source."],
-			acceptance_evidence: ["Ship-ready preflight is ready."],
-			checks: ["npm run typecheck: pass"],
-		},
-		publication: {
-			push_readiness: {
-				safe_to_push: false,
-				blocked_reasons: ["remote approval not requested"],
+			publication: {
+				push_readiness: {
+					safe_to_push: false,
+					blocked_reasons: ["remote approval not requested"],
+				},
 			},
 		},
-	});
+	);
 	const localOnlyShipReady = buildGatewayPreflight(project, {
 		profile: "ship-ready",
 		task_id: "TASK-777",
@@ -589,6 +592,17 @@ try {
 		),
 	);
 	assert.equal(semanticClosureBlocked.routing.failure_class, "planning_gap");
+	assert.ok(semanticClosureBlocked.diagnostics.length > 0);
+	assert.ok(
+		semanticClosureBlocked.findings.some(
+			(finding) => finding.category === "semantic-closure",
+		),
+	);
+	assert.ok(
+		semanticClosureBlocked.remediation.next_safe_actions.some((action) =>
+			action.includes("planning"),
+		),
+	);
 
 	await writeFile(
 		join(root, project.graphPath),

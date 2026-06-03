@@ -1,0 +1,508 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-03T05:30:54Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-17T05:30:54.000Z",
+    "purge_after": "2026-07-01T05:30:54.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-PLAN-087",
+      "text": "Complete daemon/agency foundation before broad refactor automation.",
+      "source_refs": [
+        "CW-FINAL-017",
+        "TASK-087",
+        "SPRINT-021"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "All accepted decision rows are resolved to TASK-087, SPRINT-021, knowledge-only updates, or deferred future sprint triggers.",
+      "evidence": "decision_row_resolutions in this planning build cover CW-FINAL-001 through CW-FINAL-017.",
+      "requirement_ids": [
+        "REQ-PLAN-087"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Daemon/agency foundation planning from accepted CodeWiki tidy architecture decision",
+  "task_ids": [
+    "TASK-087"
+  ],
+  "task_changes": [
+    "Created SPRINT-021 with TASK-087 as first enabling implementation task.",
+    "Refined TASK-087 into direct daemon/agency foundation outcome covering telemetry refs, runtime scheduling, gate diagnostics, and worktree/publisher safety."
+  ],
+  "roadmap_changes": [
+    "Created SPRINT-021 with TASK-087 as first enabling implementation task.",
+    "Refined TASK-087 into direct daemon/agency foundation outcome covering telemetry refs, runtime scheduling, gate diagnostics, and worktree/publisher safety."
+  ],
+  "tdd_plan": [
+    "Add/adjust telemetry ref normalization tests before implementation if missing.",
+    "Add runtime/agency tests for canonical loop and trace/gate readiness routing before changing dispatcher behavior.",
+    "Add gateway diagnostics tests for findings/remediation shape before changing reports.",
+    "Run existing worktree/publisher smoke tests before and after safety changes."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/worktree-dispatcher.test.mjs",
+    "tests/smoke/merge-publisher-queue.test.mjs",
+    "tests/smoke/artifact-wake-queue.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/telemetry/**",
+    "src/runtime/**",
+    "src/agency/**",
+    "src/gateway/**",
+    "src/policy/**",
+    "src/session/**",
+    "src/state/automation-readiness.ts"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "CW-FINAL-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires canonical loop/gate refs for daemon scheduling.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-002",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires gate diagnostics/findings/remediation output.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-003",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning",
+      "trigger": "after TASK-087 passes implementation gate",
+      "trigger_state": "daemon/agency can safely parallelize later refactor tasks",
+      "rationale": "Loop-first source migration is broad and should wait for daemon/agency foundation.",
+      "evidence": "Deferred into downstream planning question for later structure refactor sprint.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-004",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires telemetry compiler-output/ArtifactRef source contracts.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-005",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning",
+      "trigger": "after TASK-087 passes implementation gate",
+      "trigger_state": "telemetry trace compatibility exists",
+      "rationale": "Full .codewiki hot-state migration should be planned after trace/runtime foundation.",
+      "evidence": "Deferred into downstream telemetry migration sprint.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-006",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires telemetry trace and legacy ref normalization used by daemon.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-007",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires git_refs for runtime/worktree/publisher proof.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-008",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires gate preflight/verdict diagnostics for missing KB/diagram/Git evidence.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-009",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning",
+      "trigger": "after TASK-087 passes implementation gate",
+      "trigger_state": "parallel refactor safety available",
+      "rationale": "Pi source path migration should wait for daemon/publisher safety.",
+      "evidence": "Deferred into source-layout refactor sprint.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-010",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning",
+      "trigger": "after TASK-087 passes implementation gate",
+      "trigger_state": "graph automation-readiness and trace refs aligned",
+      "rationale": "State-to-graph source migration is broad and should be planned after daemon foundation.",
+      "evidence": "Deferred into graph/source-layout refactor sprint.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-011",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires gate criteria terminology usable by runtime/gateway.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-012",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance includes .tmp-worktrees dirty/claim check and cleanup or local-scratch documentation.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-013",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires automation-readiness based on trace/gate refs and gate promotion state.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-014",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires compact trace/ref contracts for daemon use.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-015",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires legacy feedback wording removed or compatibility-scoped in gate/runtime surfaces.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-016",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 acceptance requires ArtifactRef normalization and target ref fields.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-FINAL-017",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "TASK-087 and SPRINT-021 are the daemon/agency foundation work.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Plan daemon/agency completion sprint first.",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-087"
+      ],
+      "sprint_ids": [
+        "SPRINT-021"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "evidence": "SPRINT-021 created with daemon/agency foundation outcome.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Plan telemetry/graph/gateway/source migration sprints after daemon foundation.",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning",
+      "trigger": "TASK-087 implementation gate pass",
+      "trigger_state": "daemon foundation complete",
+      "rationale": "Later broad refactor can be parallelized safely only after TASK-087.",
+      "evidence": "Deferred rows CW-FINAL-003/005/009/010 identify future sprint scope.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "All accepted decision rows are resolved to TASK-087, SPRINT-021, knowledge-only updates, or deferred future sprint triggers.",
+      "evidence": "decision_row_resolutions in this planning build cover CW-FINAL-001 through CW-FINAL-017.",
+      "requirement_ids": [
+        "REQ-PLAN-087"
+      ],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "One enabling task is acceptable here because its direct outcome is daemon/agency readiness for later parallel work, not coordination-only closure of other tasks."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not start loop-first source migration until TASK-087 passes.",
+    "Do not run broad daemon automation before TASK-087 closes."
+  ],
+  "risks": [
+    "TASK-087 is wider than ideal because daemon readiness spans telemetry, runtime, gates, and worktree safety; implementation should keep changes minimal and stop if scope expands."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-087"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-087"
+    ],
+    "code": [
+      "src/telemetry/**",
+      "src/runtime/**",
+      "src/agency/**",
+      "src/gateway/**",
+      "src/policy/**",
+      "src/session/**",
+      "src/state/automation-readiness.ts"
+    ],
+    "tests": [
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/merge-publisher-queue.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

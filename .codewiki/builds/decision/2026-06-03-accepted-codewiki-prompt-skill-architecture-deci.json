@@ -1,0 +1,465 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-03T09:26:40Z",
+  "source": "user approved DT-2026-06-03-52 rows and clarified no old commands, shims, aliases, or /skill:codewiki-validation",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-03T09:26:40.000Z",
+    "purge_after": "2026-08-02T09:26:40.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-PROMPT-OS",
+      "text": "Injected CodeWiki system prompt owns always-on CodeWiki OS contract and describes three loops with gates, not a validation loop.",
+      "source_refs": [
+        "PROMPT-OS-CONTRACT"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-THREE-SKILLS",
+      "text": "Normal package skill surface contains only codewiki-decision, codewiki-planning, and codewiki-implementation.",
+      "source_refs": [
+        "THREE-SKILLS-ONLY",
+        "REMOVE-ROUTER-SKILL"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-NO-SHIMS",
+      "text": "Removed codewiki/codewiki-validation skill surfaces are not kept as old commands, shims, aliases, hidden compatibility skills, or /skill:codewiki-validation.",
+      "source_refs": [
+        "THREE-SKILLS-ONLY",
+        "REMOVE-ROUTER-SKILL"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-FRESH-WORKER",
+      "text": "Daemon/runtime can spawn or queue fresh Pi worker sessions for validator handoffs through command-context session APIs, or block with exact platform/content-evidence reason.",
+      "source_refs": [
+        "DAEMON-FRESH-WORKER"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "User approved all refined rows and clarified no old command/shim/alias retention.",
+      "evidence": "Chat approval on 2026-06-03; row approvals recorded in DT-2026-06-03-52.",
+      "requirement_ids": [
+        "REQ-PROMPT-OS",
+        "REQ-THREE-SKILLS",
+        "REQ-NO-SHIMS",
+        "REQ-FRESH-WORKER"
+      ],
+      "source_refs": [
+        "DT-2026-06-03-52"
+      ]
+    },
+    {
+      "criterion": "Knowledge updated for system-level design.",
+      "evidence": "Updated adapters, file-structure, extension, and runtime specs to encode three-skill/no-shim/fresh-worker direction.",
+      "requirement_ids": [
+        "REQ-PROMPT-OS",
+        "REQ-THREE-SKILLS",
+        "REQ-NO-SHIMS",
+        "REQ-FRESH-WORKER"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/runtime.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted CodeWiki prompt/skill architecture decision: CodeWiki OS prompt plus three workflow skills only, no router/validation skill shims, and daemon fresh-worker spawn bridge.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "PROMPT-OS-CONTRACT",
+      "current_state": "CodeWiki has a small injected system contract, but it still references decision -> planning -> implementation -> validation and delegates core routing/invariants to the general codewiki skill.",
+      "current_project_state": "CodeWiki has a small injected system contract, but it still references decision -> planning -> implementation -> validation and delegates core routing/invariants to the general codewiki skill.",
+      "desired_state": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "agreed_change": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "expected_final_state": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Pi docs show before_agent_start can inject system prompt and skills are progressive disclosure. Since CodeWiki is a Pi distribution, always-on invariants belong in the system prompt; detailed loop procedure should not be always loaded.",
+      "affected_layers": [
+        "system",
+        "pi-adapter",
+        "prompt",
+        "skills",
+        "tests"
+      ],
+      "risk": "Medium: too much prompt content can bloat every turn; keep prompt concise and test idempotent injection.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "THREE-SKILLS-ONLY",
+      "current_state": "Normal skill surface includes codewiki, codewiki-decision, codewiki-planning, codewiki-implementation, and codewiki-validation.",
+      "current_project_state": "Normal skill surface includes codewiki, codewiki-decision, codewiki-planning, codewiki-implementation, and codewiki-validation.",
+      "desired_state": "Normal skill surface exposes only codewiki-decision, codewiki-planning, and codewiki-implementation. Gateway/validation behavior becomes tool/gate contract plus generated fresh-validator kickoff, not a normal workflow skill. Do not retain /skill:codewiki-validation or hidden compatibility skill aliases.",
+      "agreed_change": "Normal skill surface exposes only codewiki-decision, codewiki-planning, and codewiki-implementation. Gateway/validation behavior becomes tool/gate contract plus generated fresh-validator kickoff, not a normal workflow skill. Do not retain /skill:codewiki-validation or hidden compatibility skill aliases.",
+      "expected_final_state": "Only decision/planning/implementation skills remain normal package skills; codewiki-validation is removed rather than hidden or shimmed.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "The mental model and target source layout are three loops. Skills should match that model and load full procedures only when that loop is active. User clarified that old commands, shims, and aliases should not remain.",
+      "affected_layers": [
+        "skills",
+        "gateway",
+        "runtime",
+        "agency"
+      ],
+      "risk": "Medium: validator independence must remain explicit in prompt contract and gateway/runtime handoff after codewiki-validation is removed.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "REMOVE-ROUTER-SKILL",
+      "current_state": "The codewiki skill acts as main router/invariant holder and contains detailed routing, package surface, task/sprint, compiler routing, coordination, and agency policy.",
+      "current_project_state": "The codewiki skill acts as main router/invariant holder and contains detailed routing, package surface, task/sprint, compiler routing, coordination, and agency policy.",
+      "desired_state": "Move router/invariant content into the injected CodeWiki system prompt and package docs; remove codewiki from the normal skill surface. Bootstrap/status/resume remain commands/tools, not a skill workflow, and no old router skill command/shim/alias should be kept.",
+      "agreed_change": "Move router/invariant content into the injected CodeWiki system prompt and package docs; remove codewiki from the normal skill surface. Bootstrap/status/resume remain commands/tools, not a skill workflow, and no old router skill command/shim/alias should be kept.",
+      "expected_final_state": "The generic codewiki skill no longer appears as a normal or hidden skill command; its invariant/routing content lives in prompt contract and docs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "A CodeWiki Pi distribution should boot with CodeWiki as the operating contract. A separate general router skill adds routing ambiguity and duplicates system prompt duties. User clarified that old commands, shims, and aliases should not remain.",
+      "affected_layers": [
+        "skills",
+        "prompt",
+        "package",
+        "product"
+      ],
+      "risk": "Low-to-medium: removing visible codewiki skill can reduce discoverability for package users unless commands/status docs and prompt contract cover first contact.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "DAEMON-FRESH-WORKER",
+      "current_state": "Fresh validation can be requested manually through /wiki-resume --new, while runtime worker_execution remains platform_limited and tools cannot call Pi command-only ctx.newSession directly.",
+      "current_project_state": "Fresh validation can be requested manually through /wiki-resume --new, while runtime worker_execution remains platform_limited and tools cannot call Pi command-only ctx.newSession directly.",
+      "desired_state": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "agreed_change": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "expected_final_state": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Automation should preserve builder/validator separation without asking the user to manually start every fresh session. Pi docs confirm ctx.newSession is command-context only, so runtime needs an adapter bridge rather than LLM tool self-spawn.",
+      "affected_layers": [
+        "runtime",
+        "agency",
+        "pi-adapter",
+        "gateway",
+        "worktree"
+      ],
+      "risk": "Medium-high: dirty-tree validation needs patch/checkpoint/worktree transfer proof before parallel validator can see builder changes safely.",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "PROMPT-OS-CONTRACT",
+    "THREE-SKILLS-ONLY",
+    "REMOVE-ROUTER-SKILL",
+    "DAEMON-FRESH-WORKER"
+  ],
+  "approved_rows": [
+    {
+      "id": "PROMPT-OS-CONTRACT",
+      "current_state": "CodeWiki has a small injected system contract, but it still references decision -> planning -> implementation -> validation and delegates core routing/invariants to the general codewiki skill.",
+      "current_project_state": "CodeWiki has a small injected system contract, but it still references decision -> planning -> implementation -> validation and delegates core routing/invariants to the general codewiki skill.",
+      "desired_state": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "agreed_change": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "expected_final_state": "CodeWiki distribution system prompt becomes the always-on OS contract: source-of-truth layers, three-loop routing, normal wiki_* tools, generated/runtime boundaries, gate semantics, and daemon freshness rules. It should say gates validate loop exits, not form a validation loop.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Pi docs show before_agent_start can inject system prompt and skills are progressive disclosure. Since CodeWiki is a Pi distribution, always-on invariants belong in the system prompt; detailed loop procedure should not be always loaded.",
+      "affected_layers": [
+        "system",
+        "pi-adapter",
+        "prompt",
+        "skills",
+        "tests"
+      ],
+      "risk": "Medium: too much prompt content can bloat every turn; keep prompt concise and test idempotent injection.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "THREE-SKILLS-ONLY",
+      "current_state": "Normal skill surface includes codewiki, codewiki-decision, codewiki-planning, codewiki-implementation, and codewiki-validation.",
+      "current_project_state": "Normal skill surface includes codewiki, codewiki-decision, codewiki-planning, codewiki-implementation, and codewiki-validation.",
+      "desired_state": "Normal skill surface exposes only codewiki-decision, codewiki-planning, and codewiki-implementation. Gateway/validation behavior becomes tool/gate contract plus generated fresh-validator kickoff, not a normal workflow skill. Do not retain /skill:codewiki-validation or hidden compatibility skill aliases.",
+      "agreed_change": "Normal skill surface exposes only codewiki-decision, codewiki-planning, and codewiki-implementation. Gateway/validation behavior becomes tool/gate contract plus generated fresh-validator kickoff, not a normal workflow skill. Do not retain /skill:codewiki-validation or hidden compatibility skill aliases.",
+      "expected_final_state": "Only decision/planning/implementation skills remain normal package skills; codewiki-validation is removed rather than hidden or shimmed.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "The mental model and target source layout are three loops. Skills should match that model and load full procedures only when that loop is active. User clarified that old commands, shims, and aliases should not remain.",
+      "affected_layers": [
+        "skills",
+        "gateway",
+        "runtime",
+        "agency"
+      ],
+      "risk": "Medium: validator independence must remain explicit in prompt contract and gateway/runtime handoff after codewiki-validation is removed.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "REMOVE-ROUTER-SKILL",
+      "current_state": "The codewiki skill acts as main router/invariant holder and contains detailed routing, package surface, task/sprint, compiler routing, coordination, and agency policy.",
+      "current_project_state": "The codewiki skill acts as main router/invariant holder and contains detailed routing, package surface, task/sprint, compiler routing, coordination, and agency policy.",
+      "desired_state": "Move router/invariant content into the injected CodeWiki system prompt and package docs; remove codewiki from the normal skill surface. Bootstrap/status/resume remain commands/tools, not a skill workflow, and no old router skill command/shim/alias should be kept.",
+      "agreed_change": "Move router/invariant content into the injected CodeWiki system prompt and package docs; remove codewiki from the normal skill surface. Bootstrap/status/resume remain commands/tools, not a skill workflow, and no old router skill command/shim/alias should be kept.",
+      "expected_final_state": "The generic codewiki skill no longer appears as a normal or hidden skill command; its invariant/routing content lives in prompt contract and docs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "A CodeWiki Pi distribution should boot with CodeWiki as the operating contract. A separate general router skill adds routing ambiguity and duplicates system prompt duties. User clarified that old commands, shims, and aliases should not remain.",
+      "affected_layers": [
+        "skills",
+        "prompt",
+        "package",
+        "product"
+      ],
+      "risk": "Low-to-medium: removing visible codewiki skill can reduce discoverability for package users unless commands/status docs and prompt contract cover first contact.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "DAEMON-FRESH-WORKER",
+      "current_state": "Fresh validation can be requested manually through /wiki-resume --new, while runtime worker_execution remains platform_limited and tools cannot call Pi command-only ctx.newSession directly.",
+      "current_project_state": "Fresh validation can be requested manually through /wiki-resume --new, while runtime worker_execution remains platform_limited and tools cannot call Pi command-only ctx.newSession directly.",
+      "desired_state": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "agreed_change": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "expected_final_state": "Daemon/runtime gets a Pi command-context worker spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and role handoff packets. It uses Pi ctx.newSession/withSession where available and blocks with exact content/platform reason otherwise.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Automation should preserve builder/validator separation without asking the user to manually start every fresh session. Pi docs confirm ctx.newSession is command-context only, so runtime needs an adapter bridge rather than LLM tool self-spawn.",
+      "affected_layers": [
+        "runtime",
+        "agency",
+        "pi-adapter",
+        "gateway",
+        "worktree"
+      ],
+      "risk": "Medium-high: dirty-tree validation needs patch/checkpoint/worktree transfer proof before parallel validator can see builder changes safely.",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "CodeWiki distribution system prompt becomes the always-on OS contract for source truth, three-loop routing, gate semantics, generated/runtime boundaries, and daemon freshness rules."
+    },
+    {
+      "id": "D2",
+      "summary": "The normal skill surface is exactly codewiki-decision, codewiki-planning, and codewiki-implementation."
+    },
+    {
+      "id": "D3",
+      "summary": "Gateway/validation behavior is a gate/tool/runtime handoff contract, not a normal workflow skill or validation loop."
+    },
+    {
+      "id": "D4",
+      "summary": "The generic codewiki router skill is removed from the normal skill surface; its invariant/routing content moves into the injected system prompt and package docs."
+    },
+    {
+      "id": "D5",
+      "summary": "Removed skill surfaces should not be preserved as old commands, shims, aliases, hidden compatibility skills, or /skill:codewiki-validation."
+    },
+    {
+      "id": "D6",
+      "summary": "Daemon/runtime should gain a Pi command-context worker-spawn bridge that launches fresh validator/worker sessions from CodeWiki source refs and blocks with exact content/platform reasons when unavailable."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/extension.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "PROMPT-OS-CONTRACT",
+      "knowledge_refs": [
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Extension and runtime docs now describe CodeWiki system-prompt/OS contract and fresh-worker boundary.",
+      "deferred": false
+    },
+    {
+      "row_id": "THREE-SKILLS-ONLY",
+      "knowledge_refs": [
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Adapter and file-structure docs now state normal workflow skills are decision/planning/implementation only and validation is gate/tool handoff, not a fourth skill.",
+      "deferred": false
+    },
+    {
+      "row_id": "REMOVE-ROUTER-SKILL",
+      "knowledge_refs": [
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Docs now route generic codewiki skill content to injected prompt/package docs and state removed skill surfaces should not be preserved as shims or aliases.",
+      "deferred": false
+    },
+    {
+      "row_id": "DAEMON-FRESH-WORKER",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Runtime docs now require daemon to request fresh Pi worker sessions via command-context APIs and block on platform/content-evidence limits instead of self-approving.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users experience CodeWiki as a Pi software-development distribution with an always-on CodeWiki operating contract instead of loading a generic router skill.",
+      "User-facing skill discovery narrows to decision/planning/implementation; gateway validation runs through tools/fresh worker kickoff."
+    ],
+    "system_impact": [
+      "Prompt contract must be expanded and corrected to three loops with gates, not a validation loop.",
+      "Package skill list and resource discovery must remove codewiki and codewiki-validation normal skill surfaces without compatibility shims.",
+      "Daemon/runtime needs a worker-spawn bridge through Pi command-context session APIs."
+    ],
+    "downstream_planning_questions": [
+      "Plan a task to update prompt-contract code/tests and package skill discovery to remove codewiki/codewiki-validation normal skill surfaces with no aliases.",
+      "Plan a task to implement daemon/runtime Pi command-context fresh worker spawn for validator handoffs and dirty-content transfer policy."
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "How should package resource discovery remove generic router/validation skills without leaving stale skill commands?",
+    "What exact worker-spawn API should bridge runtime daemon decisions into Pi command-context ctx.newSession/withSession?",
+    "How should dirty builder content be transferred or proven for a spawned fresh validator session?",
+    "Plan a task to update prompt-contract code/tests and package skill discovery to remove codewiki/codewiki-validation normal skill surfaces with no aliases.",
+    "Plan a task to implement daemon/runtime Pi command-context fresh worker spawn for validator handoffs and dirty-content transfer policy."
+  ],
+  "assumptions": [
+    "No-shim clarification applies to removed skill surfaces; broader deprecated public command removal should be planned explicitly if it expands beyond skills."
+  ],
+  "open_questions": [
+    "Whether to remove generic codewiki skill folder immediately or move bootstrap/prompt assets first.",
+    "Whether worker spawn validates same dirty root with working_tree_digest or requires builder patch/checkpoint before role-worktree validation."
+  ],
+  "non_goals": [
+    "Do not implement prompt/skill removal in this decision build.",
+    "Do not remove unrelated public commands without a planning boundary.",
+    "Do not bypass fresh validator independence."
+  ],
+  "risks": [
+    "Prompt bloat if OS contract becomes too large.",
+    "Discoverability loss if package docs/commands do not replace generic router skill affordance.",
+    "Fresh worker spawn can misvalidate if dirty builder content is not transferred or digest-proven."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/runtime.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

@@ -1362,14 +1362,98 @@ function routeForFailureClass(
 	failureClass: CodewikiValidationFailureClass,
 ): WorkflowLoop {
 	if (failureClass === "planning_gap") return "planning";
-	if (failureClass === "compiler_incomplete") return "implementation";
 	if (
+		failureClass === "compiler_incomplete" ||
 		failureClass === "content_proof_missing" ||
-		failureClass === "evidence_missing"
+		failureClass === "evidence_missing" ||
+		failureClass === "runtime_conflict"
 	)
-		return "validation";
-	if (failureClass === "runtime_conflict") return "observe";
+		return "implementation";
 	return "decision";
+}
+
+function gatewayDiagnosticRefSet(issue: { evidence?: unknown }): string[] {
+	return unique(
+		trimList(Array.isArray(issue.evidence) ? issue.evidence : [issue.evidence]),
+	);
+}
+
+function gatewayIssueRemediation(
+	kind: string,
+	routing: {
+		recommended_next_loop?: WorkflowLoop;
+		stop_reason?: string;
+	},
+): string[] {
+	const loop = routing.recommended_next_loop || "implementation";
+	if (kind.includes("audit"))
+		return ["Run or cite the required CodeWiki audit evidence."];
+	if (kind.includes("task_id"))
+		return ["Provide the canonical task_id for this gate."];
+	if (kind.includes("content") || kind.includes("isolation")) {
+		return [
+			"Re-run validation from fresh context with clean worktree and immutable content refs.",
+		];
+	}
+	if (kind.includes("runtime") || kind.includes("lease")) {
+		return [
+			"Wait for or release the overlapping runtime/artifact lease before retrying.",
+		];
+	}
+	return [
+		routing.stop_reason ||
+			`Route the blocker to the ${loop} loop with the cited refs.`,
+	];
+}
+
+function buildGatewayDiagnostics(input: {
+	profile: string;
+	gate?: string;
+	status: string;
+	issues: Array<{
+		kind: string;
+		severity: string;
+		summary: string;
+		evidence?: unknown;
+	}>;
+	routing: {
+		failure_class?: CodewikiValidationFailureClass;
+		recommended_next_loop?: WorkflowLoop;
+		stop_reason?: string;
+	};
+}) {
+	const diagnostics = input.issues.map((issue, index) => ({
+		id: `${input.profile}:${issue.kind}:${index + 1}`,
+		kind: issue.kind,
+		severity: issue.severity,
+		summary: issue.summary,
+		refs: gatewayDiagnosticRefSet(issue),
+		gate_refs: [input.gate || input.profile].filter(Boolean),
+		failure_class: input.routing.failure_class,
+		recommended_next_loop: input.routing.recommended_next_loop,
+		remediation: gatewayIssueRemediation(issue.kind, input.routing),
+	}));
+	const findings = diagnostics.map((diagnostic) => ({
+		id: diagnostic.id,
+		category: diagnostic.kind,
+		severity: diagnostic.severity,
+		summary: diagnostic.summary,
+		ref_count: diagnostic.refs.length,
+	}));
+	const remediation = unique(
+		diagnostics.flatMap((diagnostic) => diagnostic.remediation),
+	);
+	return {
+		diagnostics,
+		findings,
+		remediation: {
+			status: input.status,
+			failure_class: input.routing.failure_class,
+			recommended_next_loop: input.routing.recommended_next_loop,
+			stop_reason: input.routing.stop_reason,
+			next_safe_actions: remediation,
+		},
+	};
 }
 
 function inferValidationRouting(
@@ -1761,6 +1845,13 @@ export function buildGatewayPreflight(
 		...productionPolicyGaps,
 	];
 	const routing = inferValidationRouting(input, routingSignals);
+	const structured = buildGatewayDiagnostics({
+		profile,
+		gate: profile,
+		status,
+		issues,
+		routing,
+	});
 	return {
 		version: 1,
 		status,
@@ -1790,6 +1881,9 @@ export function buildGatewayPreflight(
 		],
 		missing,
 		issues,
+		diagnostics: structured.diagnostics,
+		findings: structured.findings,
+		remediation: structured.remediation,
 		routing,
 		risk: {
 			...risk,
@@ -2128,6 +2222,37 @@ export async function writeGatewayReport(
 					summary,
 				}));
 	const contentProofRefs = validationContentProofRefs(isolation);
+	const reportIssues = [
+		...inputIssues,
+		...upstreamIssue,
+		...decisionMappingIssue,
+		...ambiguityIssue,
+		...taskIdIssue,
+		...staleRefsIssue,
+		...isolationIssue,
+		...publisherResultIssue,
+		...commitReadinessIssue,
+		...traceabilityIssue,
+		...decisionPropagationIssue,
+		...sprintCloseIssue,
+		...shipReadyIssue,
+		...auditIssue,
+		...riskApprovalIssue,
+		...productionPolicyIssue,
+		...publicationReadinessIssue,
+	];
+	const structured = buildGatewayDiagnostics({
+		profile,
+		gate: profile,
+		status: verdict,
+		issues: reportIssues.map((issue, index) => ({
+			kind: `report-issue-${index + 1}`,
+			severity: String(issue.severity || "medium"),
+			summary: issue.summary,
+			evidence: [],
+		})),
+		routing,
+	});
 	const data = {
 		version: 1,
 		kind: "validation_report",
@@ -2142,25 +2267,10 @@ export async function writeGatewayReport(
 			? `${input.rationale.trim()} Policy blocks ${profile} gate validation until ${policyGaps.join(", ")} are recorded.`
 			: input.rationale.trim(),
 		checks: (input.checks ?? []).map((v) => v.trim()).filter(Boolean),
-		issues: [
-			...inputIssues,
-			...upstreamIssue,
-			...decisionMappingIssue,
-			...ambiguityIssue,
-			...taskIdIssue,
-			...staleRefsIssue,
-			...isolationIssue,
-			...publisherResultIssue,
-			...commitReadinessIssue,
-			...traceabilityIssue,
-			...decisionPropagationIssue,
-			...sprintCloseIssue,
-			...shipReadyIssue,
-			...auditIssue,
-			...riskApprovalIssue,
-			...productionPolicyIssue,
-			...publicationReadinessIssue,
-		],
+		issues: reportIssues,
+		diagnostics: structured.diagnostics,
+		findings: structured.findings,
+		remediation: structured.remediation,
 		source: (input.source ?? "").trim() || undefined,
 		policy_profile: policyProfile,
 		failure_class: routing.failure_class,
