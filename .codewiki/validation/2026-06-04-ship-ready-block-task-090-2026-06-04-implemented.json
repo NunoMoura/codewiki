@@ -1,0 +1,416 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T23:44:22Z",
+  "profile": "ship-ready",
+  "gate": "ship-ready",
+  "task_id": "TASK-090",
+  "verdict": "block",
+  "rationale": "TASK-090 checkpoint commit is safe for local task-close validation: exact implementation content is immutable in commit/tree 459ef5336465a4ab85bbed499deaca09b934bfc9 / 3ce7c997a21fc9e2e80d82f592904a3965e315de, required tests/typecheck passed, package/security/stale-reference audits passed, and CodeWiki no longer has active pi-lens coupling. This is not remote publication approval; pre-existing graph health alignment debt remains a known project-level risk. Policy blocks ship-ready gate validation until ship_ready:package_digest, risk_approval:user_approval:security-migration-publication are recorded.",
+  "checks": [
+    "git status --short — clean",
+    "git rev-parse HEAD — 459ef5336465a4ab85bbed499deaca09b934bfc9",
+    "git rev-parse HEAD^{tree} — 3ce7c997a21fc9e2e80d82f592904a3965e315de",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+    "npm run typecheck — pass",
+    "wiki_gate audit profiles=package,security,stale-reference task_id=TASK-090 — pass",
+    "wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090 — changed pass; task pass; generated-parity pass; alignment fail pre-existing graph health"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Ship-ready blockers remain: package_digest."
+    },
+    {
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "high",
+      "summary": "Ship-ready blockers remain: package_digest.",
+      "refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
+      "remediation": [
+        "Route the blocker to the decision loop with the cited refs."
+      ]
+    },
+    {
+      "id": "ship-ready:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication.",
+      "refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
+      "remediation": [
+        "Route the blocker to the decision loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "high",
+      "summary": "Ship-ready blockers remain: package_digest.",
+      "ref_count": 0
+    },
+    {
+      "id": "ship-ready:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "block",
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision",
+    "next_safe_actions": [
+      "Route the blocker to the decision loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+  "policy_profile": "ship-ready",
+  "failure_class": "risk_approval_missing",
+  "recommended_next_loop": "decision",
+  "routing": {
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision"
+  },
+  "required_audits": [
+    "alignment",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=package,security,stale-reference task_id=TASK-090: pass",
+    "wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090: alignment fail due pre-existing graph-health 88 errors/23 warnings; changed pass; task pass; generated-parity pass"
+  ],
+  "content_proof_refs": [
+    "459ef5336465a4ab85bbed499deaca09b934bfc9",
+    "3ce7c997a21fc9e2e80d82f592904a3965e315de"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-090",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+    "validation_report": ".codewiki/validation/2026-06-04-ship-ready-block-task-090-2026-06-04-implemented.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+      ".codewiki/validation/2026-06-04-ship-ready-block-task-090-2026-06-04-implemented.json",
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/state/automation-readiness.ts",
+      "src/policy/production-profile.ts",
+      "src/knowledge/diagram-parser.ts",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/graph.md",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-090",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+    "validation_report": ".codewiki/validation/2026-06-04-ship-ready-block-task-090-2026-06-04-implemented.json",
+    "commit_title": "checkpoint(codewiki): TASK-090 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-090",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-ship-ready-block-task-090-2026-06-04-implemented.json",
+      "CodeWiki-Checks: git status --short — clean; git rev-parse HEAD — 459ef5336465a4ab85bbed499deaca09b934bfc9; git rev-parse HEAD^{tree} — 3ce7c997a21fc9e2e80d82f592904a3965e315de; node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass; node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs — pass; node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs — pass; node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs — pass; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass; npm run typecheck — pass; wiki_gate audit profiles=package,security,stale-reference task_id=TASK-090 — pass; wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090 — changed pass; task pass; generated-parity pass; alignment fail pre-existing graph health"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/state/automation-readiness.ts",
+      "src/policy/production-profile.ts",
+      "src/knowledge/diagram-parser.ts"
+    ],
+    "reasons": [
+      "CodeWiki runtime orchestration changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki session/runtime boundary code changed",
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "ship_ready",
+    "risk_approval"
+  ],
+  "blocking_questions": [
+    "Record exact ship-ready target evidence such as commit/tree, package digest, archive ref, remote ref, or release approval before promotion.",
+    "Record explicit user approval for risk tier security-migration-publication before lower-layer promotion."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "ship-ready validation",
+    "profiles": [
+      "ship-ready"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "3ce7c997a21fc9e2e80d82f592904a3965e315de"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "ship-ready",
+    "gate": "ship-ready",
+    "task_id": "TASK-090",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [
+        "package_digest"
+      ],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [
+        "user_approval:security-migration-publication"
+      ],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "ship-ready",
+        "severity": "high",
+        "summary": "Ship-ready gate requires exact content-candidate evidence.",
+        "evidence": [
+          "package_digest"
+        ]
+      },
+      {
+        "kind": "risk-approval",
+        "severity": "high",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "evidence": [
+          "user_approval:security-migration-publication"
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "ship-ready:ship-ready:1",
+        "kind": "ship-ready",
+        "severity": "high",
+        "summary": "Ship-ready gate requires exact content-candidate evidence.",
+        "refs": [
+          "package_digest"
+        ],
+        "gate_refs": [
+          "ship-ready"
+        ],
+        "failure_class": "risk_approval_missing",
+        "recommended_next_loop": "decision",
+        "remediation": [
+          "Route the blocker to the decision loop with the cited refs."
+        ]
+      },
+      {
+        "id": "ship-ready:risk-approval:2",
+        "kind": "risk-approval",
+        "severity": "high",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "refs": [
+          "user_approval:security-migration-publication"
+        ],
+        "gate_refs": [
+          "ship-ready"
+        ],
+        "failure_class": "risk_approval_missing",
+        "recommended_next_loop": "decision",
+        "remediation": [
+          "Route the blocker to the decision loop with the cited refs."
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "ship-ready:ship-ready:1",
+        "category": "ship-ready",
+        "severity": "high",
+        "summary": "Ship-ready gate requires exact content-candidate evidence.",
+        "ref_count": 1
+      },
+      {
+        "id": "ship-ready:risk-approval:2",
+        "category": "risk-approval",
+        "severity": "high",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "ref_count": 1
+      }
+    ],
+    "remediation": {
+      "status": "blocked",
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
+      "next_safe_actions": [
+        "Route the blocker to the decision loop with the cited refs."
+      ]
+    },
+    "routing": {
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [],
+      "approval_missing": [
+        "user_approval:security-migration-publication"
+      ],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "459ef5336465a4ab85bbed499deaca09b934bfc9",
+    "validated_sha": "459ef5336465a4ab85bbed499deaca09b934bfc9",
+    "tree_sha": "3ce7c997a21fc9e2e80d82f592904a3965e315de",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Ship-ready target is local commit/tree only; no remote/package/archive publication approval.",
+    "role": "validator"
+  }
+}
