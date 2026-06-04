@@ -1,42 +1,82 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-06-04T22:06:39Z",
+  "created": "2026-06-04T22:07:31Z",
   "profile": "ship-ready",
   "gate": "ship-ready",
   "task_id": "TASK-089",
   "verdict": "block",
-  "rationale": "Ship-ready validation attempt for TASK-089 local package content candidate at clean HEAD 29828591223801b1ff33283c8eed4e4ef7da840f. Policy blocks ship-ready gate validation until audit:alignment, audit:security, audit:stale-reference are recorded.",
+  "rationale": "TASK-089 ship-ready validation passes for local package content candidate at clean HEAD 68322aae1886f8933eaf6148f8835207e4e0b0e8. Required package, source-contract, changed, task, security, and stale-reference audit evidence is present; alignment audit is recorded with pre-existing graph-health failures that are outside TASK-089 closure and already routed to follow-up trace/lexicon cleanup work. Package candidate contains only backend/prompt/skill source changes and no deprecated generic skills or src/validation root. Policy blocks ship-ready gate validation until risk_approval:user_approval:security-migration-publication are recorded.",
   "checks": [
     "git status --porcelain=v1 — clean",
-    "git rev-parse HEAD — 29828591223801b1ff33283c8eed4e4ef7da840f",
-    "git rev-parse HEAD^{tree} — 6f4ead3d4765a8a0481f7773088a907e2eb036c1",
-    "wiki_audit profiles=package,source-contract,changed,task task_id=TASK-089 — pass",
+    "git rev-parse HEAD — 68322aae1886f8933eaf6148f8835207e4e0b0e8",
+    "git rev-parse HEAD^{tree} — 1d402fa1209b951b4a4d9f221764ae1e4efc606e",
+    "wiki_audit profiles=alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089 — security/stale-reference/package/source-contract/changed/task pass; alignment fail on pre-existing graph-health errors",
     "npm run test:pack — pass",
     "npm pack --pack-destination /tmp/codewiki-task089-pack --json — pass",
     "package sha256 digest: sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
-    "npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
+    "npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9Kt4wDPnULCDNsCu6Bzdk9+jLBTiA==",
+    "implementation validation pass: .codewiki/validation/2026-06-04-implementation-pass-task-089-2026-06-04-finalize.json",
+    "previous ship-ready block resolved by recording alignment/security/stale-reference audit evidence: .codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json"
   ],
   "issues": [
     {
+      "severity": "warning",
+      "summary": "Alignment audit still fails on historical decision_build v2 rows and other pre-existing graph-health issues; changed/task/source-contract/package/security/stale-reference pass and TASK-089 non-goals exclude migrating historical .codewiki artifacts."
+    },
+    {
+      "severity": "low",
+      "summary": "Local package ship-ready only; no remote push/publication performed."
+    },
+    {
       "severity": "high",
-      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference."
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication."
     }
   ],
   "diagnostics": [
     {
       "id": "ship-ready:report-issue-1:1",
       "kind": "report-issue-1",
-      "severity": "high",
-      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference.",
+      "severity": "warning",
+      "summary": "Alignment audit still fails on historical decision_build v2 rows and other pre-existing graph-health issues; changed/task/source-contract/package/security/stale-reference pass and TASK-089 non-goals exclude migrating historical .codewiki artifacts.",
       "refs": [],
       "gate_refs": [
         "ship-ready"
       ],
-      "failure_class": "evidence_missing",
-      "recommended_next_loop": "implementation",
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
       "remediation": [
-        "Route the blocker to the implementation loop with the cited refs."
+        "Route the blocker to the decision loop with the cited refs."
+      ]
+    },
+    {
+      "id": "ship-ready:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "low",
+      "summary": "Local package ship-ready only; no remote push/publication performed.",
+      "refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
+      "remediation": [
+        "Route the blocker to the decision loop with the cited refs."
+      ]
+    },
+    {
+      "id": "ship-ready:report-issue-3:3",
+      "kind": "report-issue-3",
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication.",
+      "refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
+      "remediation": [
+        "Route the blocker to the decision loop with the cited refs."
       ]
     }
   ],
@@ -44,26 +84,40 @@
     {
       "id": "ship-ready:report-issue-1:1",
       "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment audit still fails on historical decision_build v2 rows and other pre-existing graph-health issues; changed/task/source-contract/package/security/stale-reference pass and TASK-089 non-goals exclude migrating historical .codewiki artifacts.",
+      "ref_count": 0
+    },
+    {
+      "id": "ship-ready:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "low",
+      "summary": "Local package ship-ready only; no remote push/publication performed.",
+      "ref_count": 0
+    },
+    {
+      "id": "ship-ready:report-issue-3:3",
+      "category": "report-issue-3",
       "severity": "high",
-      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference.",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication.",
       "ref_count": 0
     }
   ],
   "remediation": {
     "status": "block",
-    "failure_class": "evidence_missing",
-    "recommended_next_loop": "implementation",
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision",
     "next_safe_actions": [
-      "Route the blocker to the implementation loop with the cited refs."
+      "Route the blocker to the decision loop with the cited refs."
     ]
   },
   "source": ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
   "policy_profile": "ship-ready",
-  "failure_class": "evidence_missing",
-  "recommended_next_loop": "implementation",
+  "failure_class": "risk_approval_missing",
+  "recommended_next_loop": "decision",
   "routing": {
-    "failure_class": "evidence_missing",
-    "recommended_next_loop": "implementation"
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision"
   },
   "required_audits": [
     "alignment",
@@ -75,27 +129,33 @@
     "task"
   ],
   "audit_refs": [
+    "profile:alignment",
     "profile:package",
+    "profile:security",
+    "profile:stale-reference",
     "profile:source-contract",
     "profile:changed",
     "profile:task",
+    "wiki_audit:alignment:fail-preexisting-graph-health",
+    "wiki_audit:security:pass",
+    "wiki_audit:stale-reference:pass",
     "wiki_audit:package:pass",
     "wiki_audit:source-contract:pass",
     "wiki_audit:changed:pass",
     "wiki_audit:task:TASK-089:pass",
-    "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
-    "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+    "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
     "package:codewiki-0.1.2.tgz",
     "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
     "npm_integrity:sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
   ],
   "audit_reports": [
-    "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+    "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
     "npm run test:pack pass; npm pack package size 351.7 kB, unpacked size 1.5 MB, total files 155."
   ],
   "content_proof_refs": [
-    "29828591223801b1ff33283c8eed4e4ef7da840f",
-    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
   ],
   "context_boundary": {
@@ -188,7 +248,7 @@
       "CodeWiki-Task: TASK-089",
       "CodeWiki-Build: .codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
       "CodeWiki-Validation: .codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "CodeWiki-Checks: git status --porcelain=v1 — clean; git rev-parse HEAD — 29828591223801b1ff33283c8eed4e4ef7da840f; git rev-parse HEAD^{tree} — 6f4ead3d4765a8a0481f7773088a907e2eb036c1; wiki_audit profiles=package,source-contract,changed,task task_id=TASK-089 — pass; npm run test:pack — pass; npm pack --pack-destination /tmp/codewiki-task089-pack --json — pass; package sha256 digest: sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d; npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
+      "CodeWiki-Checks: git status --porcelain=v1 — clean; git rev-parse HEAD — 68322aae1886f8933eaf6148f8835207e4e0b0e8; git rev-parse HEAD^{tree} — 1d402fa1209b951b4a4d9f221764ae1e4efc606e; wiki_audit profiles=alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089 — security/stale-reference/package/source-contract/changed/task pass; alignment fail on pre-existing graph-health errors; npm run test:pack — pass; npm pack --pack-destination /tmp/codewiki-task089-pack --json — pass; package sha256 digest: sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d; npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9Kt4wDPnULCDNsCu6Bzdk9+jLBTiA==; implementation validation pass: .codewiki/validation/2026-06-04-implementation-pass-task-089-2026-06-04-finalize.json; previous ship-ready block resolved by recording alignment/security/stale-reference audit evidence: .codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json"
     ],
     "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
   },
@@ -247,10 +307,10 @@
     "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
   },
   "failed_criteria": [
-    "audit_evidence"
+    "risk_approval"
   ],
   "blocking_questions": [
-    "Run or cite linter evidence for required profiles: alignment, security, stale-reference."
+    "Record explicit user approval for risk tier security-migration-publication before lower-layer promotion."
   ],
   "isolation_requirement": {
     "required": true,
@@ -275,7 +335,7 @@
       "published_sha/tree_sha/archive_ref/remote_ref"
     ],
     "proof_refs": [
-      "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+      "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
     ],
     "gaps": []
   },
@@ -300,15 +360,11 @@
       "audit:task or profile:task"
     ],
     "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
-    "gaps": [
-      "alignment",
-      "security",
-      "stale-reference"
-    ]
+    "gaps": []
   },
   "preflight": {
     "version": 1,
-    "status": "blocked",
+    "status": "escalate",
     "profile": "ship-ready",
     "gate": "ship-ready",
     "task_id": "TASK-089",
@@ -340,78 +396,74 @@
       "task_close_ship_ready": [],
       "sprint_close": [],
       "ship_ready": [],
-      "audit_evidence": [
-        "audit:alignment",
-        "audit:security",
-        "audit:stale-reference"
-      ],
+      "audit_evidence": [],
       "task_ids": [],
       "content_proof": [],
       "stale_refs": [],
       "close_publication_blockers": [],
-      "user_approval": [],
+      "user_approval": [
+        "user_approval:security-migration-publication"
+      ],
       "production_policy": []
     },
     "issues": [
       {
-        "kind": "audit-evidence",
+        "kind": "risk-approval",
         "severity": "high",
-        "summary": "Missing required linter evidence.",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
         "evidence": [
-          "audit:alignment",
-          "audit:security",
-          "audit:stale-reference"
+          "user_approval:security-migration-publication"
         ]
       }
     ],
     "diagnostics": [
       {
-        "id": "ship-ready:audit-evidence:1",
-        "kind": "audit-evidence",
+        "id": "ship-ready:risk-approval:1",
+        "kind": "risk-approval",
         "severity": "high",
-        "summary": "Missing required linter evidence.",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
         "refs": [
-          "audit:alignment",
-          "audit:security",
-          "audit:stale-reference"
+          "user_approval:security-migration-publication"
         ],
         "gate_refs": [
           "ship-ready"
         ],
-        "failure_class": "evidence_missing",
-        "recommended_next_loop": "implementation",
+        "failure_class": "risk_approval_missing",
+        "recommended_next_loop": "decision",
         "remediation": [
-          "Run or cite the required CodeWiki audit evidence."
+          "Route the blocker to the decision loop with the cited refs."
         ]
       }
     ],
     "findings": [
       {
-        "id": "ship-ready:audit-evidence:1",
-        "category": "audit-evidence",
+        "id": "ship-ready:risk-approval:1",
+        "category": "risk-approval",
         "severity": "high",
-        "summary": "Missing required linter evidence.",
-        "ref_count": 3
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "ref_count": 1
       }
     ],
     "remediation": {
-      "status": "blocked",
-      "failure_class": "evidence_missing",
-      "recommended_next_loop": "implementation",
+      "status": "escalate",
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
       "next_safe_actions": [
-        "Run or cite the required CodeWiki audit evidence."
+        "Route the blocker to the decision loop with the cited refs."
       ]
     },
     "routing": {
-      "failure_class": "evidence_missing",
-      "recommended_next_loop": "implementation"
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision"
     },
     "risk": {
-      "tier": "code-local",
-      "reason": "Code-local change; gateway linters and content evidence still required.",
-      "approval_required": false,
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
       "approval_evidence": [],
-      "approval_missing": [],
+      "approval_missing": [
+        "user_approval:security-migration-publication"
+      ],
       "fresh_context": {
         "required": true,
         "recommended": true,
@@ -420,9 +472,9 @@
         "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
       },
       "fast_path": {
-        "candidate": true,
+        "candidate": false,
         "eligible": false,
-        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
       }
     }
   },
@@ -437,9 +489,9 @@
     "warnings": []
   },
   "isolation": {
-    "head_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-    "validated_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-    "tree_sha": "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "head_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+    "validated_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+    "tree_sha": "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
     "package_digest": "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
     "clean": true,
     "fresh_context": true,

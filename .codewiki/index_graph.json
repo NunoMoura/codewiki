@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T22:06:40.345Z",
+  "generated_at": "2026-06-04T22:07:32.143Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -68451,13 +68451,13 @@
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
       "verdict": "block",
-      "failure_class": "evidence_missing",
-      "recommended_next_loop": "implementation",
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision",
       "isolation_status": "isolated",
       "isolation": {
-        "head_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-        "validated_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-        "tree_sha": "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+        "head_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+        "validated_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+        "tree_sha": "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
         "package_digest": "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
         "clean": true,
         "fresh_context": true,
@@ -68469,25 +68469,31 @@
           ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
         ],
         "audit_evidence_refs": [
+          "profile:alignment",
           "profile:package",
+          "profile:security",
+          "profile:stale-reference",
           "profile:source-contract",
           "profile:changed",
           "profile:task",
+          "wiki_audit:alignment:fail-preexisting-graph-health",
+          "wiki_audit:security:pass",
+          "wiki_audit:stale-reference:pass",
           "wiki_audit:package:pass",
           "wiki_audit:source-contract:pass",
           "wiki_audit:changed:pass",
           "wiki_audit:task:TASK-089:pass",
-          "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
-          "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+          "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+          "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
           "package:codewiki-0.1.2.tgz",
           "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
           "npm_integrity:sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA==",
-          "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+          "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
           "npm run test:pack pass; npm pack package size 351.7 kB, unpacked size 1.5 MB, total files 155."
         ],
         "content_proof_refs": [
-          "29828591223801b1ff33283c8eed4e4ef7da840f",
-          "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+          "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+          "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
           "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
         ]
       },
@@ -68495,6 +68501,30 @@
       "default_hidden": true,
       "default_collapsed": true,
       "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_audit:alignment:fail-preexisting-graph-health",
+      "kind": "audit_evidence",
+      "path": "wiki_audit:alignment:fail-preexisting-graph-health",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:wiki_audit:security:pass",
+      "kind": "audit_evidence",
+      "path": "wiki_audit:security:pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:wiki_audit:stale-reference:pass",
+      "kind": "audit_evidence",
+      "path": "wiki_audit:stale-reference:pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
     },
     {
       "id": "audit:wiki_audit:package:pass",
@@ -68529,17 +68559,17 @@
       "lens_family": "proof"
     },
     {
-      "id": "audit:commit:29828591223801b1ff33283c8eed4e4ef7da840f",
+      "id": "audit:commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "kind": "audit_evidence",
-      "path": "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
+      "path": "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
     },
     {
-      "id": "audit:tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "id": "audit:tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "kind": "audit_evidence",
-      "path": "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "path": "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
@@ -68569,9 +68599,9 @@
       "lens_family": "proof"
     },
     {
-      "id": "audit:wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+      "id": "audit:wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
       "kind": "audit_evidence",
-      "path": "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+      "path": "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
@@ -68585,18 +68615,18 @@
       "lens_family": "proof"
     },
     {
-      "id": "content_proof:29828591223801b1ff33283c8eed4e4ef7da840f",
+      "id": "content_proof:68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "kind": "content_proof",
-      "path": "29828591223801b1ff33283c8eed4e4ef7da840f",
+      "path": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
     },
     {
-      "id": "content_proof:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "id": "content_proof:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "kind": "content_proof",
-      "path": "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "path": "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
@@ -179267,7 +179297,25 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
       "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:profile:stale-reference",
       "default_hidden": true
     },
     {
@@ -179286,6 +179334,24 @@
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
       "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:wiki_audit:alignment:fail-preexisting-graph-health",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:wiki_audit:security:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "to": "audit:wiki_audit:stale-reference:pass",
       "default_hidden": true
     },
     {
@@ -179315,13 +179381,13 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "to": "audit:commit:29828591223801b1ff33283c8eed4e4ef7da840f",
+      "to": "audit:commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "default_hidden": true
     },
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "to": "audit:tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "to": "audit:tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "default_hidden": true
     },
     {
@@ -179345,7 +179411,7 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "to": "audit:wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+      "to": "audit:wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
       "default_hidden": true
     },
     {
@@ -179357,13 +179423,13 @@
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "to": "content_proof:29828591223801b1ff33283c8eed4e4ef7da840f",
+      "to": "content_proof:68322aae1886f8933eaf6148f8835207e4e0b0e8",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
-      "to": "content_proof:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+      "to": "content_proof:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
       "default_hidden": true
     },
     {
@@ -179897,7 +179963,7 @@
             "id": "decision",
             "label": "Decision",
             "summary": "Approved intent, requirement rows, risk state, and semantic direction.",
-            "state": "drift",
+            "state": "blocked",
             "item_count": 0,
             "badges": [
               {
@@ -180040,7 +180106,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "blocked",
+            "state": "drift",
             "item_count": 586,
             "badges": [
               {
@@ -180098,7 +180164,7 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 725
+                "count": 728
               },
               {
                 "id": "content_proofs",
@@ -180201,8 +180267,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5460,
-          "edges": 18304,
+          "nodes": 5463,
+          "edges": 18310,
           "open_tasks": 0,
           "validations": 279,
           "source_refs": 1294
@@ -180288,7 +180354,7 @@
               "id": "decision",
               "label": "Decision",
               "summary": "Approved intent, requirement rows, risk state, and semantic direction.",
-              "state": "drift",
+              "state": "blocked",
               "item_count": 0,
               "badges": [
                 {
@@ -180431,7 +180497,7 @@
               "id": "execution",
               "label": "Execution",
               "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-              "state": "blocked",
+              "state": "drift",
               "item_count": 586,
               "badges": [
                 {
@@ -180489,7 +180555,7 @@
                 {
                   "id": "audit_refs",
                   "label": "audit refs",
-                  "count": 725
+                  "count": 728
                 },
                 {
                   "id": "content_proofs",
@@ -181403,7 +181469,7 @@
         "omitted_counts": {
           "validation_reports": 279,
           "reconciliation_items": 125,
-          "source_refs": 2962
+          "source_refs": 2965
         },
         "next_action": {
           "kind": "decision",
@@ -181434,7 +181500,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2994,
+          "source_ref_count": 2997,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -181456,7 +181522,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2986
+            "omitted_ref_count": 2989
           }
         ],
         "data": {
@@ -182419,7 +182485,7 @@
         ],
         "omitted_counts": {
           "ready_tasks": 6,
-          "source_refs": 3034
+          "source_refs": 3037
         },
         "next_action": {
           "kind": "stop",
@@ -182464,7 +182530,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3066,
+          "source_ref_count": 3069,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -182486,7 +182552,7 @@
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/api-vnext-tools.md"
             ],
-            "omitted_ref_count": 3058
+            "omitted_ref_count": 3061
           }
         ],
         "data": {
@@ -182544,9 +182610,9 @@
                 ],
                 "git_refs": [
                   "worktree_digest:sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "head_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "validated_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "git_tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "head_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "validated_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "git_tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "head_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "validated_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
@@ -183355,8 +183421,8 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5460,
-          "edges": 18304,
+          "nodes": 5463,
+          "edges": 18310,
           "source_refs": 1294
         },
         "next_action": {
@@ -184799,13 +184865,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -184883,16 +184949,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -185021,13 +185087,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -185105,16 +185171,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -185242,13 +185308,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -185326,16 +185392,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -185459,13 +185525,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -185543,16 +185609,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -185701,8 +185767,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -185825,8 +185891,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -185912,8 +185978,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -193355,7 +193421,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 2962,
+          "source_refs": 2965,
           "validation_reports": 0
         },
         "next_action": {
@@ -193387,7 +193453,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 2994,
+          "source_ref_count": 2997,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -193409,7 +193475,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 2986
+            "omitted_ref_count": 2989
           }
         ],
         "validation_reports": [
@@ -199960,25 +200026,31 @@
               ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
             ],
             "audit_evidence_refs": [
+              "profile:alignment",
               "profile:package",
+              "profile:security",
+              "profile:stale-reference",
               "profile:source-contract",
               "profile:changed",
               "profile:task",
+              "wiki_audit:alignment:fail-preexisting-graph-health",
+              "wiki_audit:security:pass",
+              "wiki_audit:stale-reference:pass",
               "wiki_audit:package:pass",
               "wiki_audit:source-contract:pass",
               "wiki_audit:changed:pass",
               "wiki_audit:task:TASK-089:pass",
-              "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
-              "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "package:codewiki-0.1.2.tgz",
               "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "npm_integrity:sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA==",
-              "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+              "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
               "npm run test:pack pass; npm pack package size 351.7 kB, unpacked size 1.5 MB, total files 155."
             ],
             "content_proof_refs": [
-              "29828591223801b1ff33283c8eed4e4ef7da840f",
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
             ],
             "isolation_status": "isolated"
@@ -204476,18 +204548,18 @@
             "verdict": "block",
             "status": "isolated",
             "role": "validator",
-            "head_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "validated_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
+            "head_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "validated_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
             "clean": true,
             "fresh_context": true,
             "related_claim_ids": [],
             "content_proof_refs": [
-              "29828591223801b1ff33283c8eed4e4ef7da840f",
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
             ],
             "publisher_result_refs": [
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
             ]
           },
           {
@@ -204890,12 +204962,12 @@
           "commit:1672fd537b791e2193c9cda9edec1b11fb457fbc",
           "commit:1d55123ed90e2c892ef44d03710192c4653139d5",
           "commit:280342c5ed31c376db33af53187b336ed710e441",
-          "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
           "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
           "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
           "commit:45a25184f228998e6ced17cbeeadfed5109ba0ca",
           "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
           "commit:6169cf254e3ef39fffd2e3932df85cbc4c6631b0",
+          "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
           "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
           "commit:8266b38028d7317de640668dce0bb4697e1b8674",
           "commit:95ad03ed84658d96692a015d293d1f12bc4d11c4",
@@ -205095,13 +205167,13 @@
           "tree:0e1f40791668d5953e6e2106c9fdd475337d601f",
           "tree:1432ffd2816bd28f5e29ec2941271753574086e5",
           "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+          "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
           "tree:22e8efd86255595b390d412655c3ae80fcea1cfb",
           "tree:30bb7407237bfc0f06009ed391e69117bbfdd45e",
           "tree:325e55f39c5124ea08c04f9cc3c531ca805dcd75",
           "tree:3bfdeddb1f152bcc81d80cbe187020c72def12ac",
           "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
           "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
-          "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
           "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
           "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
           "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
@@ -205146,6 +205218,7 @@
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
           "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
           "wiki_audit alignment,changed,task,generated-parity,source-contract task_id=TASK-089: changed pass with 0 changed files; task pass; generated-parity pass; source-contract pass; alignment warning graph-health 14 warnings.",
+          "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
           "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068",
           "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; alignment warning limited to existing graph health; changed warning limited to generated state",
           "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings limited to graph-health and generated state",
@@ -205155,7 +205228,6 @@
           "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
           "wiki_audit alignment/task/generated-parity/changed: TASK-066 task pass; TASK-068 task pass; TASK-069 task pass; TASK-067 task pass; generated-parity pass; alignment warning only current large-doc warnings that TASK-068 targets; changed warning only generated graph/task views.",
           "wiki_audit changed,source-contract 2026-05-31 warning: source-contract pass; changed warnings limited to generated CodeWiki state",
-          "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
           "wiki_audit profiles=alignment,changed,source-contract,stale-reference,generated-parity,task task_id=TASK-071 — warning only for generated graph/view changed files",
           "wiki_audit profiles=alignment,changed,source-contract,stale-reference,generated-parity,task task_id=TASK-071 — warning only generated graph/new build and pre-existing graph-health",
           "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-071 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
@@ -205187,13 +205259,16 @@
           "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+          "wiki_audit:alignment:fail-preexisting-graph-health",
           "wiki_audit:changed:pass",
           "wiki_audit:file-structure+alignment+source-contract:warning:2026-06-04",
           "wiki_audit:lexicon:fail-preexisting-proof-checks-drift:2026-06-04",
           "wiki_audit:package:pass",
           "wiki_audit:profiles=alignment,stale-reference,task:TASK-087:2026-06-03",
           "wiki_audit:profiles=alignment,stale-reference:2026-06-03",
+          "wiki_audit:security:pass",
           "wiki_audit:source-contract:pass",
+          "wiki_audit:stale-reference:pass",
           "wiki_audit:task+alignment+file-structure+source-contract:fail-alignment-pass-task-source-contract:2026-06-04",
           "wiki_audit:task:TASK-089:pass",
           "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
@@ -205569,6 +205644,7 @@
           "1672fd537b791e2193c9cda9edec1b11fb457fbc",
           "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
           "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+          "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
           "1d55123ed90e2c892ef44d03710192c4653139d5",
           "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
           "1df6a55687bf95dfcfbab7240abba7a6f0e00046",
@@ -205582,7 +205658,6 @@
           "2717bb81e689b82ca9564d1cf625906216dd022f",
           "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
           "280342c5ed31c376db33af53187b336ed710e441",
-          "29828591223801b1ff33283c8eed4e4ef7da840f",
           "29fa4d712229e29e1a7d531994beacb8ffde3332",
           "2a70d6ced1647a12b0d488002bda3516932135d7",
           "2acca9d3b2ede7c8e78c496347f0f0f79dd95767",
@@ -205645,6 +205720,7 @@
           "665e2ba3defdd8e4b404806b79ffa429b7a6ef4f",
           "66ebf120f458f38aea2112301dd148de4cb7190b",
           "67c98fefe1ba30317eb5eb7fd6ec767383a40559",
+          "68322aae1886f8933eaf6148f8835207e4e0b0e8",
           "691a296cc9cc9a32c069d7d23a914d6e95506f80",
           "69712aff518616df973986bde4e51acca93a99e2",
           "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
@@ -205654,7 +205730,6 @@
           "6d5e597c53b29934405d7b9584a57ba10be7aba9",
           "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
           "6e45080f3243238803783a573d3cac5ce2f3ac7a",
-          "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
           "70a9b3912770afaec2e148c3dc65b128a325c495",
           "70d19220015b16e169d5290ae358b779951352be",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -207358,12 +207433,12 @@
             "state": "blocked",
             "direction": "gateway",
             "from_layer": "validation",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "failure_class": "evidence_missing",
-            "recommended_next_loop": "implementation",
+            "to_layer": "decision",
+            "next_loop": "decision",
+            "failure_class": "risk_approval_missing",
+            "recommended_next_loop": "decision",
             "task_id": "TASK-089",
-            "reason": "Validation block (evidence_missing); route to implementation."
+            "reason": "Validation block (risk_approval_missing); route to decision."
           },
           {
             "id": "reconcile:validation:.codewiki/validation/2026-06-04-task-close-block-task-089-2026-06-04-finalized-t.json",
@@ -209661,13 +209736,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -209745,16 +209820,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -209883,13 +209958,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -209967,16 +210042,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -210104,13 +210179,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -210188,16 +210263,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -210321,13 +210396,13 @@
                     ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
                   ],
                   "content_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                     "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
                   ],
                   "commit_tree_proof_refs": [
-                    "29828591223801b1ff33283c8eed4e4ef7da840f",
-                    "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                    "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                    "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
                   ],
                   "isolation_status": "isolated"
                 },
@@ -210405,16 +210480,16 @@
                 "refs/codewiki/archive/task/TASK-089",
                 "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                 "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
               "commit_tree_proof_refs": [
                 "refs/codewiki/archive/task/TASK-089",
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "c8e3d44d94487f1e84b957cfa711757904379a87"
               ],
@@ -210563,8 +210638,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -210687,8 +210762,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -210774,8 +210849,8 @@
                   "refs/codewiki/archive/task/TASK-089",
                   "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
                   "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                  "29828591223801b1ff33283c8eed4e4ef7da840f",
-                  "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                  "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                  "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                   "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                   "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                   "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -213164,13 +213239,13 @@
                 ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
               ],
               "content_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
               ],
               "commit_tree_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
               ],
               "isolation_status": "isolated"
             },
@@ -213248,16 +213323,16 @@
             "refs/codewiki/archive/task/TASK-089",
             "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
             "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
           "commit_tree_proof_refs": [
             "refs/codewiki/archive/task/TASK-089",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
@@ -213386,13 +213461,13 @@
                 ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
               ],
               "content_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
               ],
               "commit_tree_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
               ],
               "isolation_status": "isolated"
             },
@@ -213470,16 +213545,16 @@
             "refs/codewiki/archive/task/TASK-089",
             "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
             "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
           "commit_tree_proof_refs": [
             "refs/codewiki/archive/task/TASK-089",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
@@ -213607,13 +213682,13 @@
                 ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
               ],
               "content_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
               ],
               "commit_tree_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
               ],
               "isolation_status": "isolated"
             },
@@ -213691,16 +213766,16 @@
             "refs/codewiki/archive/task/TASK-089",
             "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
             "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
           "commit_tree_proof_refs": [
             "refs/codewiki/archive/task/TASK-089",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
@@ -213824,13 +213899,13 @@
                 ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
               ],
               "content_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
               ],
               "commit_tree_proof_refs": [
-                "29828591223801b1ff33283c8eed4e4ef7da840f",
-                "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+                "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
               ],
               "isolation_status": "isolated"
             },
@@ -213908,16 +213983,16 @@
             "refs/codewiki/archive/task/TASK-089",
             "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
             "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
           "commit_tree_proof_refs": [
             "refs/codewiki/archive/task/TASK-089",
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "c8e3d44d94487f1e84b957cfa711757904379a87"
           ],
@@ -214066,8 +214141,8 @@
               "refs/codewiki/archive/task/TASK-089",
               "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
               "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-              "29828591223801b1ff33283c8eed4e4ef7da840f",
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
               "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -214190,8 +214265,8 @@
               "refs/codewiki/archive/task/TASK-089",
               "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
               "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-              "29828591223801b1ff33283c8eed4e4ef7da840f",
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
               "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -214277,8 +214352,8 @@
               "refs/codewiki/archive/task/TASK-089",
               "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
               "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-              "29828591223801b1ff33283c8eed4e4ef7da840f",
-              "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "05f5abab885a56d08aeeb2be62ce4974a886a4d8",
               "c8e3d44d94487f1e84b957cfa711757904379a87"
@@ -220861,18 +220936,18 @@
           "verdict": "block",
           "status": "isolated",
           "role": "validator",
-          "head_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
-          "validated_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
+          "head_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+          "validated_sha": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
           "clean": true,
           "fresh_context": true,
           "related_claim_ids": [],
           "content_proof_refs": [
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
           ],
           "publisher_result_refs": [
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e"
           ]
         },
         {
@@ -222333,12 +222408,12 @@
         "commit:1672fd537b791e2193c9cda9edec1b11fb457fbc",
         "commit:1d55123ed90e2c892ef44d03710192c4653139d5",
         "commit:280342c5ed31c376db33af53187b336ed710e441",
-        "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
         "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
         "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
         "commit:45a25184f228998e6ced17cbeeadfed5109ba0ca",
         "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
         "commit:6169cf254e3ef39fffd2e3932df85cbc4c6631b0",
+        "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
         "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
         "commit:8266b38028d7317de640668dce0bb4697e1b8674",
         "commit:95ad03ed84658d96692a015d293d1f12bc4d11c4",
@@ -222538,13 +222613,13 @@
         "tree:0e1f40791668d5953e6e2106c9fdd475337d601f",
         "tree:1432ffd2816bd28f5e29ec2941271753574086e5",
         "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+        "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
         "tree:22e8efd86255595b390d412655c3ae80fcea1cfb",
         "tree:30bb7407237bfc0f06009ed391e69117bbfdd45e",
         "tree:325e55f39c5124ea08c04f9cc3c531ca805dcd75",
         "tree:3bfdeddb1f152bcc81d80cbe187020c72def12ac",
         "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
         "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
-        "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
         "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
         "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
         "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
@@ -222589,6 +222664,7 @@
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
         "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
         "wiki_audit alignment,changed,task,generated-parity,source-contract task_id=TASK-089: changed pass with 0 changed files; task pass; generated-parity pass; source-contract pass; alignment warning graph-health 14 warnings.",
+        "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
         "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068",
         "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; alignment warning limited to existing graph health; changed warning limited to generated state",
         "wiki_audit alignment,stale-reference,generated-parity,changed task_id=TASK-068 — stale-reference pass; generated-parity pass; task pass; warnings limited to graph-health and generated state",
@@ -222598,7 +222674,6 @@
         "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
         "wiki_audit alignment/task/generated-parity/changed: TASK-066 task pass; TASK-068 task pass; TASK-069 task pass; TASK-067 task pass; generated-parity pass; alignment warning only current large-doc warnings that TASK-068 targets; changed warning only generated graph/task views.",
         "wiki_audit changed,source-contract 2026-05-31 warning: source-contract pass; changed warnings limited to generated CodeWiki state",
-        "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
         "wiki_audit profiles=alignment,changed,source-contract,stale-reference,generated-parity,task task_id=TASK-071 — warning only for generated graph/view changed files",
         "wiki_audit profiles=alignment,changed,source-contract,stale-reference,generated-parity,task task_id=TASK-071 — warning only generated graph/new build and pre-existing graph-health",
         "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-071 — changed/task/generated-parity pass; alignment warning only graph-health pre-existing warnings",
@@ -222630,13 +222705,16 @@
         "wiki_audit source-contract,stale-reference,generated-parity,changed task_id=TASK-071 — warning only for changed generated files",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
+        "wiki_audit:alignment:fail-preexisting-graph-health",
         "wiki_audit:changed:pass",
         "wiki_audit:file-structure+alignment+source-contract:warning:2026-06-04",
         "wiki_audit:lexicon:fail-preexisting-proof-checks-drift:2026-06-04",
         "wiki_audit:package:pass",
         "wiki_audit:profiles=alignment,stale-reference,task:TASK-087:2026-06-03",
         "wiki_audit:profiles=alignment,stale-reference:2026-06-03",
+        "wiki_audit:security:pass",
         "wiki_audit:source-contract:pass",
+        "wiki_audit:stale-reference:pass",
         "wiki_audit:task+alignment+file-structure+source-contract:fail-alignment-pass-task-source-contract:2026-06-04",
         "wiki_audit:task:TASK-089:pass",
         "wiki_gate audit profiles alignment,changed,task,generated-parity,package,security,stale-reference after commit 549710d",
@@ -223012,6 +223090,7 @@
         "1672fd537b791e2193c9cda9edec1b11fb457fbc",
         "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
         "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+        "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
         "1d55123ed90e2c892ef44d03710192c4653139d5",
         "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
         "1df6a55687bf95dfcfbab7240abba7a6f0e00046",
@@ -223025,7 +223104,6 @@
         "2717bb81e689b82ca9564d1cf625906216dd022f",
         "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
         "280342c5ed31c376db33af53187b336ed710e441",
-        "29828591223801b1ff33283c8eed4e4ef7da840f",
         "29fa4d712229e29e1a7d531994beacb8ffde3332",
         "2a70d6ced1647a12b0d488002bda3516932135d7",
         "2acca9d3b2ede7c8e78c496347f0f0f79dd95767",
@@ -223088,6 +223166,7 @@
         "665e2ba3defdd8e4b404806b79ffa429b7a6ef4f",
         "66ebf120f458f38aea2112301dd148de4cb7190b",
         "67c98fefe1ba30317eb5eb7fd6ec767383a40559",
+        "68322aae1886f8933eaf6148f8835207e4e0b0e8",
         "691a296cc9cc9a32c069d7d23a914d6e95506f80",
         "69712aff518616df973986bde4e51acca93a99e2",
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
@@ -223097,7 +223176,6 @@
         "6d5e597c53b29934405d7b9584a57ba10be7aba9",
         "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
         "6e45080f3243238803783a573d3cac5ce2f3ac7a",
-        "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
         "70a9b3912770afaec2e148c3dc65b128a325c495",
         "70d19220015b16e169d5290ae358b779951352be",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -231230,25 +231308,31 @@
             ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json"
           ],
           "audit_evidence_refs": [
+            "profile:alignment",
             "profile:package",
+            "profile:security",
+            "profile:stale-reference",
             "profile:source-contract",
             "profile:changed",
             "profile:task",
+            "wiki_audit:alignment:fail-preexisting-graph-health",
+            "wiki_audit:security:pass",
+            "wiki_audit:stale-reference:pass",
             "wiki_audit:package:pass",
             "wiki_audit:source-contract:pass",
             "wiki_audit:changed:pass",
             "wiki_audit:task:TASK-089:pass",
-            "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
-            "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "commit:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "package:codewiki-0.1.2.tgz",
             "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "npm_integrity:sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA==",
-            "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+            "wiki_audit alignment,security,stale-reference,package,source-contract,changed,task task_id=TASK-089: security/stale-reference/package/source-contract/changed/task pass; alignment fail with graph-health 88 errors/36 warnings from historical/non-task graph issues.",
             "npm run test:pack pass; npm pack package size 351.7 kB, unpacked size 1.5 MB, total files 155."
           ],
           "content_proof_refs": [
-            "29828591223801b1ff33283c8eed4e4ef7da840f",
-            "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
           ],
           "isolation_status": "isolated"
@@ -237506,8 +237590,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -237696,9 +237780,9 @@
             ],
             "git_refs": [
               "worktree_digest:sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-              "head_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-              "validated_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-              "git_tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "head_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "validated_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "git_tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "head_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
               "validated_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
@@ -237920,9 +238004,9 @@
               ],
               "git_refs": [
                 "worktree_digest:sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-                "head_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-                "validated_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-                "git_tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+                "head_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "validated_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+                "git_tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
                 "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
                 "head_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
                 "validated_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
@@ -237979,8 +238063,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -238224,8 +238308,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -238439,8 +238523,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -238679,8 +238763,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -238936,8 +239020,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-04T22:06:40.270Z",
-            "expires_at": "2026-06-05T00:06:40.270Z",
+            "generated_at": "2026-06-04T22:07:32.068Z",
+            "expires_at": "2026-06-05T00:07:32.068Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -239105,8 +239189,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-04T22:06:40.270Z",
-      "expires_at": "2026-06-05T00:06:40.270Z",
+      "generated_at": "2026-06-04T22:07:32.068Z",
+      "expires_at": "2026-06-05T00:07:32.068Z",
       "state": "waiting",
       "tasks": {
         "TASK-089": {
@@ -239121,8 +239205,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -239311,9 +239395,9 @@
           ],
           "git_refs": [
             "worktree_digest:sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-            "head_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-            "validated_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-            "git_tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+            "head_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "validated_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+            "git_tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
             "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
             "head_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
             "validated_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
@@ -239535,9 +239619,9 @@
             ],
             "git_refs": [
               "worktree_digest:sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
-              "head_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-              "validated_sha:29828591223801b1ff33283c8eed4e4ef7da840f",
-              "git_tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+              "head_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "validated_sha:68322aae1886f8933eaf6148f8835207e4e0b0e8",
+              "git_tree:1d402fa1209b951b4a4d9f221764ae1e4efc606e",
               "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
               "head_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
               "validated_sha:05f5abab885a56d08aeeb2be62ce4974a886a4d8",
@@ -239558,8 +239642,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -239774,8 +239858,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -239959,8 +240043,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -240169,8 +240253,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -240396,8 +240480,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-04T22:06:40.270Z",
-          "expires_at": "2026-06-05T00:06:40.270Z",
+          "generated_at": "2026-06-04T22:07:32.068Z",
+          "expires_at": "2026-06-05T00:07:32.068Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -243904,12 +243988,12 @@
           "state": "blocked",
           "direction": "gateway",
           "from_layer": "validation",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "failure_class": "evidence_missing",
-          "recommended_next_loop": "implementation",
+          "to_layer": "decision",
+          "next_loop": "decision",
+          "failure_class": "risk_approval_missing",
+          "recommended_next_loop": "decision",
           "task_id": "TASK-089",
-          "reason": "Validation block (evidence_missing); route to implementation."
+          "reason": "Validation block (risk_approval_missing); route to decision."
         },
         {
           "id": "reconcile:validation:.codewiki/validation/2026-06-04-task-close-block-task-089-2026-06-04-finalized-t.json",
@@ -245409,9 +245493,9 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 15,
-        "planning": 1,
-        "decision": 109
+        "implementation": 14,
+        "decision": 110,
+        "planning": 1
       },
       "next_action": {
         "loop": "decision",
@@ -245446,7 +245530,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-04T22:06:40.071Z",
+      "generated_at": "2026-06-04T22:07:31.848Z",
       "counts": {
         "large-doc": 2,
         "missing-code-path": 4,
@@ -246205,7 +246289,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-04T22:06:40Z",
+      "generated_at": "2026-06-04T22:07:32Z",
       "health": {
         "color": "red",
         "errors": 88,
@@ -248385,7 +248469,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-04T22:06:40Z",
+      "generated_at": "2026-06-04T22:07:32Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -253964,7 +254048,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-04T22:06:40Z",
+        "generated_at": "2026-06-04T22:07:32Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -254019,10 +254103,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-04T22:06:40Z",
+            "checked_at": "2026-06-04T22:07:32Z",
             "revision": {
               "git": {
-                "head": "29828591223801b1ff33283c8eed4e4ef7da840f",
+                "head": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -254276,12 +254360,12 @@
               "spec_digest": "5d72aaf9bba4192306ba459238ecc398abd6a6264bea08476b327f09cc198dff",
               "task_digest": "47e7a08ec53cb884712e560f9e7455efcfdeef338b28a4a13ce1f02dc2eaf8bc",
               "code_digest": "26e81e12128014370a1a553e9dee551957bfd761a5372fd78e9317ad0fbf345a",
-              "digest": "af523147c08f20f5981be3794fbdd8dd89064cc9283b68f1855a86d722347492"
+              "digest": "e779abe6f1959211c88aee3e5e51c72769efdfae1ad3ba453817a48aff0d1e60"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-04T22:06:40Z",
+              "checked_at": "2026-06-04T22:07:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -254818,10 +254902,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-04T22:06:40Z",
+            "checked_at": "2026-06-04T22:07:32Z",
             "revision": {
               "git": {
-                "head": "29828591223801b1ff33283c8eed4e4ef7da840f",
+                "head": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -255059,12 +255143,12 @@
               "spec_digest": "87b97d7d5bdc32f17abb51cacec8f9fc31d4812b180a0d93122d6a26a2d5d773",
               "task_digest": "47e7a08ec53cb884712e560f9e7455efcfdeef338b28a4a13ce1f02dc2eaf8bc",
               "code_digest": "26e81e12128014370a1a553e9dee551957bfd761a5372fd78e9317ad0fbf345a",
-              "digest": "3955a63cabee3aa131a962a8856f2f1baa8e2552148a5ee3d45f8a59989523ba"
+              "digest": "187150f2d59e82bcfe711f1831885df497823e2d45c430b61310930d4b9c16e0"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-04T22:06:40Z",
+              "checked_at": "2026-06-04T22:07:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -255572,10 +255656,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-04T22:06:40Z",
+            "checked_at": "2026-06-04T22:07:32Z",
             "revision": {
               "git": {
-                "head": "29828591223801b1ff33283c8eed4e4ef7da840f",
+                "head": "68322aae1886f8933eaf6148f8835207e4e0b0e8",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -255829,12 +255913,12 @@
               "spec_digest": "5d72aaf9bba4192306ba459238ecc398abd6a6264bea08476b327f09cc198dff",
               "task_digest": "47e7a08ec53cb884712e560f9e7455efcfdeef338b28a4a13ce1f02dc2eaf8bc",
               "code_digest": "26e81e12128014370a1a553e9dee551957bfd761a5372fd78e9317ad0fbf345a",
-              "digest": "af523147c08f20f5981be3794fbdd8dd89064cc9283b68f1855a86d722347492"
+              "digest": "e779abe6f1959211c88aee3e5e51c72769efdfae1ad3ba453817a48aff0d1e60"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-04T22:06:40Z",
+              "checked_at": "2026-06-04T22:07:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -256372,7 +256456,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-04T22:06:40Z",
+        "generated_at": "2026-06-04T22:07:32Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
