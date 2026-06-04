@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-04T06:48:06Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-092/context.json",
+  "task": {
+    "id": "TASK-092",
+    "title": "Add trace-aware resume handoff bootstrap",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "implementation",
+    "change_type": "system",
+    "summary": "Make the current resume/context-boundary tooling preserve the accepted trace-primary decision handoff before deeper refactor work or session refreshes.",
+    "labels": [
+      "trace-primary",
+      "resume",
+      "context-boundary",
+      "bootstrap",
+      "reload-boundary"
+    ],
+    "goal": {
+      "outcome": "Agents can safely refresh or start a new session from a compact source-backed trace-primary handoff before the full trace storage refactor lands.",
+      "acceptance": [
+        "Resume/context packets include approved decision build refs, decision gateway refs, approved row ids, KB/diagram refs, risk/impact summary, downstream planning questions, blockers, and next safe actions.",
+        "The packet explicitly records bootstrap mode: current Pi extension/tools remain authoritative until an agent requests `/reload` after source/prompt/skill changes.",
+        "A fresh session can recover the planning/implementation handoff from CodeWiki source refs without relying on chat history or the future lifecycle trace implementation.",
+        "Existing resume/compaction smoke tests are updated or extended to prove no approved decision context is lost across a refresh boundary.",
+        "No package skill removal or source-root migration is performed in this task."
+      ],
+      "non_goals": [
+        "Do not implement full lifecycle trace storage or catalog.",
+        "Do not change public /wiki command semantics beyond resume packet content.",
+        "Do not require `/reload` until source/prompt/skill behavior actually changes."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
+        "npm run typecheck"
+      ]
+    },
+    "delta": {
+      "desired": "Resume/context tooling preserves the approved trace-primary architecture handoff compactly before deep refactor work.",
+      "current": "Decision pass recommends context boundary, but resume tooling is not yet trace-primary and may omit new semantic gate/trace refs.",
+      "closure": "Task closes when fresh-session recovery can start from build/gateway/KB refs and no approved decision context is lost."
+    }
+  }
+}

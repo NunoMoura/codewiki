@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-04T06:15:13Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-094/context.json",
+  "task": {
+    "id": "TASK-094",
+    "title": "Project lifecycle traces into graph views",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "implementation",
+    "change_type": "system",
+    "summary": "Make generated graph/status/resume views consume lifecycle traces and catalog refs as trace-DAG projections with compact pointer-based expansion.",
+    "labels": [
+      "trace-primary",
+      "graph",
+      "views",
+      "resume",
+      "status"
+    ],
+    "goal": {
+      "outcome": "Generated graph views expose trace-DAG lifecycle status, blockers, decision queue, task/path indexes, and exact JSON pointers for token-efficient agents.",
+      "acceptance": [
+        "Graph primary records represent traces without redundant artifact node identity in the trace-primary views.",
+        "Views include at least status/resume/decision-queue/lineage/task/path/blockers compatibility outputs or explicit deferred evidence for any view not implemented in this slice.",
+        "Cold trace catalog refs can appear as `git:<commit_sha>:<path>#<pointer>` without forcing full hydration.",
+        "Runtime state remains a hot coordination input and is projected into runtime/readiness views without becoming durable trace truth.",
+        "Existing graph lens tests pass or are updated to assert trace-primary behavior."
+      ],
+      "non_goals": [
+        "Do not implement optional SQLite cache unless needed for tests.",
+        "Do not migrate all source roots to decision/planning/implementation.",
+        "Do not delete legacy graph fields before compatibility consumers are updated."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "npm run typecheck"
+      ]
+    },
+    "delta": {
+      "desired": "Graph views give compact trace lifecycle and pointer refs for agents.",
+      "current": "Graph indexes many artifact nodes and current resume/status lenses are not lifecycle-trace native.",
+      "closure": "Task closes when graph/status/resume views can drive trace-primary continuation without noisy artifact inventory."
+    }
+  }
+}

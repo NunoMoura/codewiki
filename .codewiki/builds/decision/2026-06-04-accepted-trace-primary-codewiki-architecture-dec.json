@@ -1,0 +1,839 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-04T05:26:32Z",
+  "source": "wiki_build tool",
+  "status": "active",
+  "lifecycle": {
+    "state": "active",
+    "ttl_days": 14,
+    "archive_after": "2026-06-18T05:26:32.000Z",
+    "purge_after": "2026-07-02T05:26:32.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "active"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-TRACE-LIFECYCLE",
+      "text": "One lifecycle trace contains decision, planning, and implementation evidence for one accountable change journey.",
+      "source_refs": [
+        "CW-FINAL-002-LIFECYCLE-TRACE-SCHEMA"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-TRACE-DAG",
+      "text": "Generated graph primary records are traces and edges are semantic relationships between traces.",
+      "source_refs": [
+        "CW-FINAL-004-TRACE-DAG-GRAPH-WITH-VIEWS"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-DECISION-GATE-SEMANTIC",
+      "text": "Decision gateway blocks planning unless semantic impact, risk/benefit/alternatives, trace impact, KB/diagram mappings, propagation, downstream questions, and required approvals are present.",
+      "source_refs": [
+        "CW-FINAL-009-DECISION-TO-PLANNING-GATE"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-BOOTSTRAP-RELOAD",
+      "text": "Use current Pi extension/tools during migration; use new behavior only after agent asks user to run /reload and reload completes.",
+      "source_refs": [
+        "user-followup-2026-06-04-reload-constraint"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-RESUME-FIRST",
+      "text": "Make trace-aware safe resume/context refresh one of the first planning priorities.",
+      "source_refs": [
+        "user-followup-2026-06-04-resume-first"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Approved rows externalized",
+      "evidence": "DT-2026-06-04-62 rows CW-FINAL-001 through CW-FINAL-012 accepted.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "KB updates applied",
+      "evidence": "knowledge_changes list updated with trace-primary architecture docs.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Diagram mappings applied",
+      "evidence": "architecture.yaml, data-model.yaml, key-flow.yaml, file-structure-map.yaml, and state-lifecycle.yaml updated.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Semantic gate documented",
+      "evidence": "validation-gateway.md and flows/decision-to-planning.md define hardened decision-to-planning criteria.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Transition constraints captured",
+      "evidence": "runtime.md, trace-graph.md, and file-structure.md document old-tool bootstrap, /reload, and resume-first constraints.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [
+    "wiki_audit:file-structure+alignment+source-contract:warning:2026-06-04",
+    "wiki_audit:lexicon:fail-preexisting-proof-checks-drift:2026-06-04"
+  ],
+  "audit_reports": [
+    "file-structure/alignment/source-contract audit returned warning with source-contract pass and expected migration drift.",
+    "lexicon audit fails on pre-existing proof/checks temporary compatibility usage and should be planned as cleanup."
+  ],
+  "agent_assessment": "Approved decision is high-risk system architecture work. KB and diagram updates are applied. Gateway should validate semantic completeness before planning. First planning priority should protect session refresh/resume, then plan progressive migration while current Pi extension bootstraps the work and /reload checkpoints switch behavior.",
+  "summary": "Accepted trace-primary CodeWiki architecture decisions and KB propagation for planning handoff.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "CW-FINAL-001-THREE-LOOP-ARCHITECTURE",
+      "current_state": "Legacy roots and surfaces imply router/validation/artifact-oriented architecture.",
+      "current_project_state": "Legacy roots and surfaces imply router/validation/artifact-oriented architecture.",
+      "desired_state": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "agreed_change": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "expected_final_state": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Aligns TASK-089, package skills, and source structure.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-002-LIFECYCLE-TRACE-SCHEMA",
+      "current_state": "Per-loop traces and artifact roots fragment accountability.",
+      "current_project_state": "Per-loop traces and artifact roots fragment accountability.",
+      "desired_state": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "agreed_change": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "expected_final_state": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Gives agents one high-signal source for change context.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-003-PUBLICATION-AS-IMPLEMENTATION-STAGE",
+      "current_state": "Publication could become a fourth loop.",
+      "current_project_state": "Publication could become a fourth loop.",
+      "desired_state": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "agreed_change": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "expected_final_state": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps three-loop architecture stable.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-004-TRACE-DAG-GRAPH-WITH-VIEWS",
+      "current_state": "Graph indexes many artifact node kinds.",
+      "current_project_state": "Graph indexes many artifact node kinds.",
+      "desired_state": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "agreed_change": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "expected_final_state": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Edges represent project decision relationships instead of workflow plumbing.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-005-JSON-TRACE-TRUTH-SQLITE-CACHE",
+      "current_state": "Storage backend for trace graph is undecided.",
+      "current_project_state": "Storage backend for trace graph is undecided.",
+      "desired_state": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "agreed_change": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "expected_final_state": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps truth Git-reviewable while allowing efficient query cache.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-006-HOT-COLD-TELEMETRY",
+      "current_state": "All traces hot forever would grow telemetry.",
+      "current_project_state": "All traces hot forever would grow telemetry.",
+      "desired_state": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "agreed_change": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "expected_final_state": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps working tree and agent reads small without losing recovery.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-007-TRACE-FIRST-CODEWIKI-STRUCTURE",
+      "current_state": ".codewiki has many evidence roots.",
+      "current_project_state": ".codewiki has many evidence roots.",
+      "desired_state": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "agreed_change": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "expected_final_state": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "File structure mirrors truth, traces, coordination, and projections.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-008-DECISION-RECOVERY-QUEUE",
+      "current_state": "Decision intent can be lost before KB/gate completion.",
+      "current_project_state": "Decision intent can be lost before KB/gate completion.",
+      "desired_state": "Decision queue is derived from open decision lifecycle traces.",
+      "agreed_change": "Decision queue is derived from open decision lifecycle traces.",
+      "expected_final_state": "Decision queue is derived from open decision lifecycle traces.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps approved-but-not-applied intent recoverable.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-009-DECISION-TO-PLANNING-GATE",
+      "current_state": "Decision-to-planning can be treated as a shallow KB/build handoff.",
+      "current_project_state": "Decision-to-planning can be treated as a shallow KB/build handoff.",
+      "desired_state": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "agreed_change": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "expected_final_state": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Prevents lost or weak decisions before planning.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-010-PLANNING-PARALLELIZATION-CONTRACT",
+      "current_state": "Planning may omit parallel boundaries.",
+      "current_project_state": "Planning may omit parallel boundaries.",
+      "desired_state": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "agreed_change": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "expected_final_state": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Supports safe daemon/work session scheduling.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-011-TEST-AND-GATE-OWNERSHIP",
+      "current_state": "Tests/gate checks are scattered through smoke/task/shared folders.",
+      "current_project_state": "Tests/gate checks are scattered through smoke/task/shared folders.",
+      "desired_state": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "agreed_change": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "expected_final_state": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improves evidence ownership and reduces stale smoke noise.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-012-SESSION-ORCHESTRATION-AND-PI-FEASIBILITY",
+      "current_state": "Pi extension exists but worker-spawn feasibility is unproven; ctx.newSession replaces active session.",
+      "current_project_state": "Pi extension exists but worker-spawn feasibility is unproven; ctx.newSession replaces active session.",
+      "desired_state": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "agreed_change": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "expected_final_state": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps distribution strategy honest and migration safe.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "CW-FINAL-001-THREE-LOOP-ARCHITECTURE",
+    "CW-FINAL-002-LIFECYCLE-TRACE-SCHEMA",
+    "CW-FINAL-003-PUBLICATION-AS-IMPLEMENTATION-STAGE",
+    "CW-FINAL-004-TRACE-DAG-GRAPH-WITH-VIEWS",
+    "CW-FINAL-005-JSON-TRACE-TRUTH-SQLITE-CACHE",
+    "CW-FINAL-006-HOT-COLD-TELEMETRY",
+    "CW-FINAL-007-TRACE-FIRST-CODEWIKI-STRUCTURE",
+    "CW-FINAL-008-DECISION-RECOVERY-QUEUE",
+    "CW-FINAL-009-DECISION-TO-PLANNING-GATE",
+    "CW-FINAL-010-PLANNING-PARALLELIZATION-CONTRACT",
+    "CW-FINAL-011-TEST-AND-GATE-OWNERSHIP",
+    "CW-FINAL-012-SESSION-ORCHESTRATION-AND-PI-FEASIBILITY"
+  ],
+  "approved_rows": [
+    {
+      "id": "CW-FINAL-001-THREE-LOOP-ARCHITECTURE",
+      "current_state": "Legacy roots and surfaces imply router/validation/artifact-oriented architecture.",
+      "current_project_state": "Legacy roots and surfaces imply router/validation/artifact-oriented architecture.",
+      "desired_state": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "agreed_change": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "expected_final_state": "Exactly three canonical loops and roots: decision, planning, implementation; gates are loop exits.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Aligns TASK-089, package skills, and source structure.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-002-LIFECYCLE-TRACE-SCHEMA",
+      "current_state": "Per-loop traces and artifact roots fragment accountability.",
+      "current_project_state": "Per-loop traces and artifact roots fragment accountability.",
+      "desired_state": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "agreed_change": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "expected_final_state": "One lifecycle trace records decision, planning, implementation, gates, recovery, and production-ready/published state for one change journey.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Gives agents one high-signal source for change context.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-003-PUBLICATION-AS-IMPLEMENTATION-STAGE",
+      "current_state": "Publication could become a fourth loop.",
+      "current_project_state": "Publication could become a fourth loop.",
+      "desired_state": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "agreed_change": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "expected_final_state": "Publication lives under implementation.publication unless future decision creates publish loop.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps three-loop architecture stable.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-004-TRACE-DAG-GRAPH-WITH-VIEWS",
+      "current_state": "Graph indexes many artifact node kinds.",
+      "current_project_state": "Graph indexes many artifact node kinds.",
+      "desired_state": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "agreed_change": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "expected_final_state": "Generated graph is a trace DAG with semantic relationships and compact views.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Edges represent project decision relationships instead of workflow plumbing.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-005-JSON-TRACE-TRUTH-SQLITE-CACHE",
+      "current_state": "Storage backend for trace graph is undecided.",
+      "current_project_state": "Storage backend for trace graph is undecided.",
+      "desired_state": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "agreed_change": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "expected_final_state": "JSON trace/catalog truth with generated JSON graph and optional gitignored SQLite cache.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps truth Git-reviewable while allowing efficient query cache.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-006-HOT-COLD-TELEMETRY",
+      "current_state": "All traces hot forever would grow telemetry.",
+      "current_project_state": "All traces hot forever would grow telemetry.",
+      "desired_state": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "agreed_change": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "expected_final_state": "Keep hot traces only; catalog cold traces with Git restore refs.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps working tree and agent reads small without losing recovery.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-007-TRACE-FIRST-CODEWIKI-STRUCTURE",
+      "current_state": ".codewiki has many evidence roots.",
+      "current_project_state": ".codewiki has many evidence roots.",
+      "desired_state": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "agreed_change": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "expected_final_state": "Target kb, roadmap.json, telemetry traces/catalog, runtime/state.json, generated graph/views/cache.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "File structure mirrors truth, traces, coordination, and projections.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-008-DECISION-RECOVERY-QUEUE",
+      "current_state": "Decision intent can be lost before KB/gate completion.",
+      "current_project_state": "Decision intent can be lost before KB/gate completion.",
+      "desired_state": "Decision queue is derived from open decision lifecycle traces.",
+      "agreed_change": "Decision queue is derived from open decision lifecycle traces.",
+      "expected_final_state": "Decision queue is derived from open decision lifecycle traces.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps approved-but-not-applied intent recoverable.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-009-DECISION-TO-PLANNING-GATE",
+      "current_state": "Decision-to-planning can be treated as a shallow KB/build handoff.",
+      "current_project_state": "Decision-to-planning can be treated as a shallow KB/build handoff.",
+      "desired_state": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "agreed_change": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "expected_final_state": "Harden boundary as semantic quality gate with impact, risk, benefit, alternative, trace-lineage, mapping, propagation, and approval proof.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Prevents lost or weak decisions before planning.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-010-PLANNING-PARALLELIZATION-CONTRACT",
+      "current_state": "Planning may omit parallel boundaries.",
+      "current_project_state": "Planning may omit parallel boundaries.",
+      "desired_state": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "agreed_change": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "expected_final_state": "Planning output includes work partition, conflict matrix, waves, leases, route-back triggers, and publisher serialization.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Supports safe daemon/work session scheduling.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-011-TEST-AND-GATE-OWNERSHIP",
+      "current_state": "Tests/gate checks are scattered through smoke/task/shared folders.",
+      "current_project_state": "Tests/gate checks are scattered through smoke/task/shared folders.",
+      "desired_state": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "agreed_change": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "expected_final_state": "Task-linked tests, shared helpers/contracts, and shared gate/loop contract ownership.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Improves evidence ownership and reduces stale smoke noise.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-FINAL-012-SESSION-ORCHESTRATION-AND-PI-FEASIBILITY",
+      "current_state": "Pi extension exists but worker-spawn feasibility is unproven; ctx.newSession replaces active session.",
+      "current_project_state": "Pi extension exists but worker-spawn feasibility is unproven; ctx.newSession replaces active session.",
+      "desired_state": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "agreed_change": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "expected_final_state": "Use session orchestration terminology and require Pi worker-spawn feasibility proof; old tools bootstrap until /reload.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [],
+      "rationale": "Keeps distribution strategy honest and migration safe.",
+      "affected_layers": [],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Trace-primary lifecycle architecture approved."
+    },
+    {
+      "id": "D2",
+      "summary": "Decision-to-planning gate hardened as semantic quality gate."
+    },
+    {
+      "id": "D3",
+      "summary": "Bootstrap constraint approved: use current Pi extension/tools until /reload exposes new behavior."
+    },
+    {
+      "id": "D4",
+      "summary": "Resume-first planning priority approved: solve safe context refresh before deep refactor work."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/runtime.md",
+    ".codewiki/kb/system/flows/decision-to-planning.md",
+    ".codewiki/kb/system/alignment-model.md",
+    ".codewiki/kb/system/system-truth-and-compilers.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/components/compilers.md",
+    ".codewiki/kb/system/components/validation-gateway.md",
+    ".codewiki/kb/lexicon.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "CW-FINAL-001-THREE-LOOP-ARCHITECTURE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Three-loop architecture and compatibility boundaries documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-002-LIFECYCLE-TRACE-SCHEMA",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/data-model.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Lifecycle trace schema documented with lifecycle control plane and loop sections.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-003-PUBLICATION-AS-IMPLEMENTATION-STAGE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/architecture.yaml"
+      ],
+      "evidence": "Publication documented as implementation stage.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-004-TRACE-DAG-GRAPH-WITH-VIEWS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ],
+      "evidence": "Trace DAG and graph views documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-005-JSON-TRACE-TRUTH-SQLITE-CACHE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ],
+      "evidence": "JSON truth and optional SQLite cache documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-006-HOT-COLD-TELEMETRY",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/data-model.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": "Hot/cold trace catalog and Git restore refs documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-007-TRACE-FIRST-CODEWIKI-STRUCTURE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": "Target .codewiki and package source structures documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-008-DECISION-RECOVERY-QUEUE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Decision queue as open decision lifecycle traces documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-009-DECISION-TO-PLANNING-GATE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Semantic gate criteria documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-010-PLANNING-PARALLELIZATION-CONTRACT",
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Parallelization contract documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-011-TEST-AND-GATE-OWNERSHIP",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": "Task-linked/shared test ownership documented.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-FINAL-012-SESSION-ORCHESTRATION-AND-PI-FEASIBILITY",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": "Session orchestration, Pi feasibility, /reload, and resume-first constraints documented.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users get clearer decision validation because rows show current state, impact, risks, benefits, and alternatives before planning.",
+      "Agents get safer resume/status by reading trace lifecycle views and exact refs.",
+      "Package users keep current Pi extension behavior during migration and get explicit /reload prompts before new behavior is used."
+    ],
+    "system_impact": [
+      "Source architecture targets decision/planning/implementation loops plus graph/telemetry/runtime support.",
+      ".codewiki state targets lifecycle traces, trace catalog, runtime/state.json, and generated trace-DAG views.",
+      "Gateway becomes semantic quality guard across loop boundaries.",
+      "Runtime shifts to session orchestration with Pi worker-spawn feasibility gate."
+    ],
+    "downstream_planning_questions": [
+      "Plan trace-aware resume/context refresh first.",
+      "Plan compatibility readers/writers from build/validation roots to lifecycle traces.",
+      "Plan /reload checkpoints and old-tool bootstrap boundaries.",
+      "Plan package skill/source cleanup for TASK-089 without depending on unimplemented trace tooling.",
+      "Plan lexicon cleanup for proof/checks/build/validation compatibility drift."
+    ]
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/architecture.yaml",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/diagrams/key-flow.yaml",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+  ],
+  "downstream_planning_questions": [
+    "What smallest first task updates resume/context handoff to preserve decisions across session refresh?",
+    "Which compatibility readers/writers bridge current build/validation roots to lifecycle traces?",
+    "Where are /reload checkpoints placed so the agent can safely switch to new prompt/tool behavior?",
+    "How should planning split trace schema, graph views, telemetry catalog, runtime state, source-root migration, skill cleanup, and lexicon cleanup into safe waves?",
+    "Plan trace-aware resume/context refresh first.",
+    "Plan compatibility readers/writers from build/validation roots to lifecycle traces.",
+    "Plan /reload checkpoints and old-tool bootstrap boundaries.",
+    "Plan package skill/source cleanup for TASK-089 without depending on unimplemented trace tooling.",
+    "Plan lexicon cleanup for proof/checks/build/validation compatibility drift."
+  ],
+  "assumptions": [
+    "Current CodeWiki tools are the bootstrap implementation while the refactor is planned and implemented.",
+    "Decision build compatibility artifacts remain valid until lifecycle traces are implemented.",
+    "Lexicon linter still reports pre-existing proof/checks compatibility drift; planning must route cleanup or no-impact evidence."
+  ],
+  "open_questions": [
+    "What v1 lifecycle trace JSON schema should be implemented first?",
+    "Should telemetry/catalog.json land before full trace writers?",
+    "What proof demonstrates Pi worker spawning feasibility?",
+    "How early should TASK-089 deprecated skill removal happen relative to trace-aware resume?"
+  ],
+  "non_goals": [
+    "Do not implement the refactor in this decision loop.",
+    "Do not rely on new trace-aware tools before /reload exposes them.",
+    "Do not create a standalone publish loop now.",
+    "Do not remove public /wiki-* commands."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/system-truth-and-compilers.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/components/compilers.md",
+      ".codewiki/kb/system/components/validation-gateway.md",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

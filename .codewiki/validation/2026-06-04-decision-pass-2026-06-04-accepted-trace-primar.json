@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T06:23:40Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Accepted-state rebuild of the trace-primary architecture decision build is semantically equivalent to v2, sets lifecycle accepted for downstream planning gateway consumption, and preserves explicit user approval from DT-2026-06-04-62.",
+  "checks": [
+    "DT-2026-06-04-62 all rows accepted by user",
+    "v3 decision build lifecycle.state accepted",
+    "KB/system docs and diagrams already updated by v2 decision loop",
+    "semantic decision-to-planning gate criteria documented",
+    "explicit approval:user:DT-2026-06-04-62 cited"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "audit:source-contract",
+    "audit:alignment",
+    "audit:stale-reference",
+    "approval:user:DT-2026-06-04-62"
+  ],
+  "audit_reports": [
+    "wiki_audit:file-structure+alignment+source-contract:warning:2026-06-04",
+    "wiki_audit:lexicon:fail-preexisting-proof-checks-drift:2026-06-04"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+      ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/data-model.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+      "CodeWiki-Checks: DT-2026-06-04-62 all rows accepted by user; v3 decision build lifecycle.state accepted; KB/system docs and diagrams already updated by v2 decision loop; semantic decision-to-planning gate criteria documented; explicit approval:user:DT-2026-06-04-62 cited"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user:DT-2026-06-04-62",
+        "explicit approval:user:DT-2026-06-04-62 cited"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}
