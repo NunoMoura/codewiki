@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T23:47:03Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-090",
+  "verdict": "pass",
+  "rationale": "TASK-090 is ready to close: implementation validation passed, local ship-ready validation passed, exact immutable content evidence is commit fe8b7b0030211c66b86f3b09f40bb715944993d0 / tree 7101ab1bab415ae27a346e2248e8aa77ed5462a2 plus package digest sha256:e2812c771fa8a8f6dc33b5ff22954752a4546d8d0215112ab82aeeaa9c863ea6, generated parity/task/changed audits pass, and remaining alignment graph-health red is pre-existing project debt outside TASK-090 scope.",
+  "checks": [
+    "git status --short — clean",
+    "git rev-parse HEAD — fe8b7b0030211c66b86f3b09f40bb715944993d0",
+    "git rev-parse HEAD^{tree} — 7101ab1bab415ae27a346e2248e8aa77ed5462a2",
+    "wiki_gateway implementation pass: .codewiki/validation/2026-06-04-implementation-pass-task-090-2026-06-04-implemen.json",
+    "wiki_gateway ship-ready pass: .codewiki/validation/2026-06-04-ship-ready-pass-task-090-2026-06-04-implemented-.json",
+    "npm pack --json --pack-destination <tmp> — pass; package_digest=sha256:e2812c771fa8a8f6dc33b5ff22954752a4546d8d0215112ab82aeeaa9c863ea6",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass",
+    "npm run typecheck — pass",
+    "wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090 — changed pass; task pass; generated-parity pass; alignment fail pre-existing graph health",
+    "approval:user:2026-06-04-proceed-local-ship-ready-task-close"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "approval:user:2026-06-04-proceed-local-ship-ready-task-close"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090: alignment fail due pre-existing graph-health 88 errors/23 warnings; changed pass; task pass; generated-parity pass"
+  ],
+  "content_proof_refs": [
+    "fe8b7b0030211c66b86f3b09f40bb715944993d0",
+    "7101ab1bab415ae27a346e2248e8aa77ed5462a2",
+    "sha256:e2812c771fa8a8f6dc33b5ff22954752a4546d8d0215112ab82aeeaa9c863ea6"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-090",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+    "validation_report": ".codewiki/validation/2026-06-04-task-close-pass-task-090-2026-06-04-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+      ".codewiki/validation/2026-06-04-task-close-pass-task-090-2026-06-04-implemented-.json",
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/state/automation-readiness.ts",
+      "src/policy/production-profile.ts",
+      "src/knowledge/diagram-parser.ts",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/graph.md",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-090",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+    "validation_report": ".codewiki/validation/2026-06-04-task-close-pass-task-090-2026-06-04-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-090 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-090",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-04-implemented-task-090-pi-fresh-worker-spawn-bridg.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-task-close-pass-task-090-2026-06-04-implemented-.json",
+      "CodeWiki-Checks: git status --short — clean; git rev-parse HEAD — fe8b7b0030211c66b86f3b09f40bb715944993d0; git rev-parse HEAD^{tree} — 7101ab1bab415ae27a346e2248e8aa77ed5462a2; wiki_gateway implementation pass: .codewiki/validation/2026-06-04-implementation-pass-task-090-2026-06-04-implemen.json; wiki_gateway ship-ready pass: .codewiki/validation/2026-06-04-ship-ready-pass-task-090-2026-06-04-implemented-.json; npm pack --json --pack-destination <tmp> — pass; package_digest=sha256:e2812c771fa8a8f6dc33b5ff22954752a4546d8d0215112ab82aeeaa9c863ea6; node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass; node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs — pass; node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs — pass; node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs — pass; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs — pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs — pass; npm run typecheck — pass; wiki_gate audit profiles=alignment,changed,task,generated-parity task_id=TASK-090 — changed pass; task pass; generated-parity pass; alignment fail pre-existing graph health; approval:user:2026-06-04-proceed-local-ship-ready-task-close"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/state/automation-readiness.ts",
+      "src/policy/production-profile.ts",
+      "src/knowledge/diagram-parser.ts"
+    ],
+    "reasons": [
+      "CodeWiki runtime orchestration changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki session/runtime boundary code changed",
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "7101ab1bab415ae27a346e2248e8aa77ed5462a2"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-090",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user:2026-06-04-proceed-local-ship-ready-task-close"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "fe8b7b0030211c66b86f3b09f40bb715944993d0",
+    "validated_sha": "fe8b7b0030211c66b86f3b09f40bb715944993d0",
+    "tree_sha": "7101ab1bab415ae27a346e2248e8aa77ed5462a2",
+    "package_digest": "sha256:e2812c771fa8a8f6dc33b5ff22954752a4546d8d0215112ab82aeeaa9c863ea6",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation uses local immutable commit/tree/package evidence. Remote publication not approved or performed.",
+    "role": "validator"
+  }
+}

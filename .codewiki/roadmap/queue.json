@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-06-04T23:36:56Z",
+  "updated": "2026-06-04T23:47:16Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
     "TASK-088",
-    "TASK-090",
     "TASK-091",
     "TASK-092",
     "TASK-093",
@@ -694,80 +693,6 @@
       },
       "created": "2026-06-03",
       "updated": "2026-06-03T21:56:21Z"
-    },
-    "TASK-090": {
-      "id": "TASK-090",
-      "title": "Implement Pi fresh-worker spawn bridge",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "implementation",
-      "summary": "Let runtime request fresh Pi worker or gate sessions through supported Pi package/SDK primitives with exact platform/content blockers and dirty-content handoff policy.",
-      "spec_paths": [
-        ".codewiki/kb/system/runtime.md",
-        ".codewiki/kb/system/worktree-isolation.md",
-        ".codewiki/kb/system/adapters.md",
-        ".codewiki/kb/system/graph.md",
-        ".codewiki/kb/system/builds.md",
-        ".codewiki/kb/system/trace-graph.md",
-        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-      ],
-      "code_paths": [
-        "src/runtime/**",
-        "src/adapters/pi/commands/resume.ts",
-        "src/session/worktree-isolation.ts",
-        "src/session/worktree-dispatcher.ts",
-        "src/session/merge-publisher-queue.ts",
-        "src/session/artifact-status-tool.ts",
-        "src/state/**",
-        "tests/smoke/runtime-runner.test.mjs",
-        "tests/smoke/runtime-job-state.test.mjs",
-        "tests/smoke/worktree-dispatcher.test.mjs",
-        "tests/smoke/agency-auto-pickup.test.mjs",
-        "tests/smoke/source-contract.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "fresh-worker-spawn",
-        "pi-session-bridge",
-        "dirty-content-proof",
-        "graph-ref-migration",
-        "artifact-ref",
-        "automation-readiness",
-        "session-orchestration"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Runtime can request linked fresh Pi worker/gate sessions or return exact platform blockers without pretending ctx.newSession is parallel spawning.",
-        "acceptance": [
-          "Runtime exposes a fresh-worker request/handoff contract with role, task/build refs, trace refs, gate refs, Git refs, and content evidence requirements.",
-          "Pi bridge uses supported subprocess/RPC/SDK worker primitives where available and records platform-limited blockers when unavailable.",
-          "Dirty pre-commit implementation gate checks require exact working_tree_digest plus patch/worktree handoff evidence; promotion gates require immutable content evidence.",
-          "Daemon/agency stop reasons include exact platform/content/remediation diagnostics for unavailable spawn or unsafe dirty transfer.",
-          "Graph/readiness views consume exact trace/gate/Git/artifact refs for daemon-safe scheduling.",
-          "Automation-readiness and agency scheduling cite exact trace/gate/git blockers from graph state.",
-          "Legacy build/gate artifacts remain readable through compatibility normalization; no broad historical artifact migration is required.",
-          "Runtime tests prove fresh-worker request, blocker, dirty handoff, and readiness behavior."
-        ],
-        "non_goals": [
-          "Do not implement full lifecycle trace schema/catalog in this task.",
-          "Do not remove deprecated skill folders in this task.",
-          "Do not claim ctx.newSession spawns parallel sessions."
-        ],
-        "verification": [
-          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/worktree-dispatcher.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
-          "npm run typecheck"
-        ]
-      },
-      "delta": {
-        "desired": "Runtime has a supported worker bridge or exact blockers, with trace/gate/Git refs available for safe scheduling.",
-        "current": "Runtime models jobs/runs but CodeWiki has not proved linked fresh Pi worker/gate session spawning; manual /wiki-resume --new remains fallback.",
-        "closure": "Task closes when spawn bridge behavior, blockers, dirty handoff, and readiness refs are covered by tests and implementation validation."
-      },
-      "created": "2026-06-03",
-      "updated": "2026-06-04T23:36:56Z"
     },
     "TASK-091": {
       "id": "TASK-091",
