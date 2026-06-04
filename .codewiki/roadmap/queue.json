@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-04T22:09:43Z",
+  "updated": "2026-06-04T23:36:56Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -767,7 +767,7 @@
         "closure": "Task closes when spawn bridge behavior, blockers, dirty handoff, and readiness refs are covered by tests and implementation validation."
       },
       "created": "2026-06-03",
-      "updated": "2026-06-04T06:13:45Z"
+      "updated": "2026-06-04T23:36:56Z"
     },
     "TASK-091": {
       "id": "TASK-091",

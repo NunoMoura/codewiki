@@ -220,7 +220,7 @@ const REPOSITORY_WALK_IGNORES = new Set([".git", "node_modules"]);
 const DEFAULT_ROOT_ALLOWED_PATHS = [
 	".gitignore",
 	".pi/**",
-	".pi-lens/**",
+	".pi-*/**",
 	"AGENTS.md",
 	"LICENSE",
 	"README.md",

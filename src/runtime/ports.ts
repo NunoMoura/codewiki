@@ -1,6 +1,10 @@
 import type { SessionStore } from "../shared/ports.ts";
 import type { buildCodewikiResumeContext } from "../state/resume-context.ts";
 import type { buildGatewayPreflight } from "../gateway/report.ts";
+import type {
+	CodewikiFreshWorkerRequest,
+	CodewikiFreshWorkerResult,
+} from "./types.ts";
 
 export const CODEWIKI_RUNTIME_CAPABILITIES = [
 	"model_loop",
@@ -70,9 +74,16 @@ export interface RuntimeSessionBoundaryPort {
 	}) => void | Promise<void>;
 }
 
+export interface RuntimeFreshWorkerBridgePort {
+	requestFreshWorker: (
+		request: CodewikiFreshWorkerRequest,
+	) => Promise<CodewikiFreshWorkerResult> | CodewikiFreshWorkerResult;
+}
+
 export interface CodewikiRuntimePorts {
 	sessionStore?: SessionStore;
 	sessionBoundary?: RuntimeSessionBoundaryPort;
+	freshWorkerBridge?: RuntimeFreshWorkerBridgePort;
 	runtimeFoundation?: CodewikiRuntimeFoundationContract;
 	resumeContextBuilder?: typeof buildCodewikiResumeContext;
 	gatewayPreflightBuilder?: typeof buildGatewayPreflight;
@@ -96,7 +107,10 @@ function capability(
 }
 
 export function createPiCodeRuntimeFoundationContract(
-	overrides: Partial<CodewikiRuntimeFoundationContract> & {
+	overrides: Omit<
+		Partial<CodewikiRuntimeFoundationContract>,
+		"capabilities"
+	> & {
 		capabilities?: Partial<
 			Record<
 				CodewikiRuntimeCapabilityName,
@@ -180,14 +194,15 @@ export function createPiCodeRuntimeFoundationContract(
 		worker_execution: capability(
 			"worker_execution",
 			"codewiki",
-			"CodeWiki owns daemon job semantics; Pi Code will be the first supported worker foundation when spawning is explicitly implemented.",
+			"CodeWiki owns daemon job semantics; Pi subprocess/RPC/SDK bridges are supported only when an adapter supplies an explicit freshWorkerBridge port.",
 			[
-				"Current daemon dispatcher skeleton records attempts only and intentionally does not spawn Pi sessions.",
+				"Pi command-context newSession is replacement-session support, not parallel worker spawning.",
+				"A RuntimeFreshWorkerBridgePort must provide subprocess/RPC/SDK worker execution before daemon jobs may spawn fresh workers.",
 			],
 			{
 				support: "platform_limited",
 				limitations: [
-					"TASK-064 defines the contract only; daemon session spawning remains a later task.",
+					"Without freshWorkerBridge, runtime must return exact platform blockers and manual /wiki-resume --new remains fallback.",
 				],
 				...overrides.capabilities?.worker_execution,
 			},
@@ -221,10 +236,7 @@ export function createUnsupportedRuntimeFoundationContract(
 				],
 			},
 		]),
-	) as Record<
-		CodewikiRuntimeCapabilityName,
-		CodewikiRuntimeCapabilityContract
-	>;
+	) as Record<CodewikiRuntimeCapabilityName, CodewikiRuntimeCapabilityContract>;
 	return {
 		id,
 		label,

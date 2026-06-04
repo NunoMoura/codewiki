@@ -16,7 +16,10 @@ import {
 	CODEWIKI_DAEMON_JOB_STORE_VERSION,
 	createCodewikiDaemonJob,
 } from "../../src/runtime/types.ts";
-import { piCodeRuntimeFoundation } from "../../src/adapters/pi/tools/ports.ts";
+import {
+	piCodeRuntimeFoundation,
+	piFreshWorkerBridge,
+} from "../../src/adapters/pi/tools/ports.ts";
 import {
 	mutateArtifactStatuses,
 	readChangeClaimsFile,
@@ -147,10 +150,13 @@ function planFor(taskId, overrides = {}) {
 		cycles: [
 			{
 				cycle: 1,
-				action: "task_advance",
+				action: overrides.fresh_worker ? "fresh_worker" : "task_advance",
 				next_task: taskId,
 				summary: `Next task: ${taskId}`,
 				...(readiness ? { automation_readiness: readiness } : {}),
+				...(overrides.fresh_worker
+					? { fresh_worker: overrides.fresh_worker }
+					: {}),
 			},
 		],
 		stop: { next_task: taskId, reason: "Ready for execution." },
@@ -207,7 +213,61 @@ async function readQueue(project) {
 		"platform_limited",
 		"daemon worker execution should remain contract-only until session spawning exists",
 	);
-	assert.equal(piCodeRuntimeFoundation().foundation, "pi_code");
+	const adapterFoundation = piCodeRuntimeFoundation();
+	assert.equal(adapterFoundation.foundation, "pi_code");
+	assert.equal(
+		adapterFoundation.capabilities.worker_execution.support,
+		"supported",
+	);
+	assert.match(
+		adapterFoundation.capabilities.worker_execution.evidence.join("\n"),
+		/subprocess/,
+	);
+}
+
+{
+	const bridge = piFreshWorkerBridge(
+		{ cwd: process.cwd() },
+		{
+			invocation: {
+				command: "/definitely/missing/pi-worker",
+				evidence: ["subprocess:test-missing-pi"],
+			},
+		},
+	);
+	const result = await bridge.requestFreshWorker({
+		role: "builder",
+		task_id: "TASK-001",
+		reason: "test unavailable bridge",
+		requested_at: now(),
+		prompt: "Implement TASK-001 from CodeWiki refs.",
+		build_refs: [".codewiki/builds/implementation/fixture.json"],
+		validation_refs: [".codewiki/validation/fixture.json"],
+		content_refs: ["working_tree_digest:abc123"],
+		trace_refs: ["trace:TASK-001"],
+		gate_refs: ["gate:implementation"],
+		git_refs: ["git:tree:abc123"],
+		artifact_refs: ["artifact:TASK-001"],
+		content_evidence: {
+			mode: "dirty",
+			working_tree_digest: "abc123",
+			patch_refs: ["patch:fixture.diff"],
+			worktree_refs: ["worktree:fixture"],
+			immutable_refs: [],
+			content_refs: ["working_tree_digest:abc123", "patch:fixture.diff"],
+			required: ["working_tree_digest", "patch_refs", "worktree_refs"],
+			missing: [],
+			safe_to_transfer: true,
+			notes: ["dirty handoff fixture"],
+		},
+	});
+	assert.equal(result.status, "unsupported");
+	assert.equal(result.blockers[0].kind, "platform_limited");
+	assert.ok(result.blockers[0].refs.includes("trace:TASK-001"));
+	assert.ok(result.blockers[0].refs.includes("gate:implementation"));
+	assert.ok(result.blockers[0].refs.includes("git:tree:abc123"));
+	assert.match(result.blockers[0].summary, /not executable/);
+	assert.match(result.blockers[0].remediation.join("\n"), /wiki-resume --new/);
 }
 
 {
@@ -286,6 +346,164 @@ async function readQueue(project) {
 	const queue = await readQueue(project);
 	const claim = queue.claims.find((item) => item.id === result.claim_id);
 	assert.equal(claim.status, "released");
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const bridgeRequests = [];
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			fresh_worker: {
+				required: true,
+				role: "builder",
+				gate: "implementation",
+				content_mode: "dirty",
+				working_tree_digest: "sha256:dirty",
+				patch_refs: ["patch:task-001.diff"],
+				trace_refs: ["trace:TASK-001"],
+				gate_refs: ["gate:implementation"],
+			},
+		}),
+		{
+			sessionStore: {
+				getCurrentSessionId: () => "fresh-parent",
+				getSessionBranch: () => [],
+			},
+			resumeContextBuilder: fakeResumeBuilder(task),
+			freshWorkerBridge: {
+				requestFreshWorker: (request) => {
+					bridgeRequests.push(request);
+					return {
+						status: "requested",
+						summary: "fresh worker requested by fixture bridge",
+						request,
+						worker: { session_id: "worker-session" },
+						blockers: [],
+						handoff: {
+							summary: "handoff",
+							build_refs: request.build_refs,
+							validation_refs: request.validation_refs,
+							content_refs: request.content_evidence.content_refs,
+							trace_refs: request.trace_refs,
+							gate_refs: request.gate_refs,
+							git_refs: request.git_refs,
+							artifact_refs: request.artifact_refs,
+							notes: request.content_evidence.notes,
+						},
+						platform: {
+							kind: "subprocess",
+							summary: "fixture",
+							evidence: ["fixture"],
+						},
+					};
+				},
+			},
+		},
+	);
+	assert.equal(result.executed, true);
+	assert.equal(result.action, "fresh_worker_request");
+	assert.equal(result.fresh_worker.status, "requested");
+	assert.equal(bridgeRequests.length, 1);
+	assert.equal(bridgeRequests[0].content_evidence.mode, "dirty");
+	assert.equal(bridgeRequests[0].content_evidence.safe_to_transfer, true);
+	assert.ok(
+		bridgeRequests[0].content_evidence.content_refs.includes(
+			"working_tree_digest:sha256:dirty",
+		),
+	);
+	assert.equal(result.workflow_efficiency.session_boundaries_used, 1);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			fresh_worker: {
+				required: true,
+				role: "validator",
+				gate: "implementation",
+				content_mode: "dirty",
+				patch_refs: ["patch:task-001.diff"],
+			},
+		}),
+		{
+			sessionStore: {
+				getCurrentSessionId: () => "fresh-parent",
+				getSessionBranch: () => [],
+			},
+			resumeContextBuilder: fakeResumeBuilder(task),
+		},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.action, "fresh_worker_request");
+	assert.equal(result.stop_reason, "content_proof_missing");
+	assert.deepEqual(result.fresh_worker.request.content_evidence.missing, [
+		"working_tree_digest",
+	]);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			fresh_worker: {
+				required: true,
+				role: "publisher",
+				gate: "ship-ready",
+			},
+		}),
+		{
+			sessionStore: {
+				getCurrentSessionId: () => "fresh-parent",
+				getSessionBranch: () => [],
+			},
+			resumeContextBuilder: fakeResumeBuilder(task),
+		},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.stop_reason, "content_proof_missing");
+	assert.deepEqual(result.fresh_worker.request.content_evidence.missing, [
+		"immutable_content_ref",
+	]);
+}
+
+{
+	const { project, task } = await fixtureProject();
+	const result = await runCodewikiRuntimeStep(
+		project,
+		planFor(task.id, {
+			fresh_worker: {
+				required: true,
+				role: "builder",
+				content_mode: "dirty",
+				working_tree_digest: "sha256:dirty",
+				worktree_refs: ["worktree:/tmp/task-001"],
+			},
+		}),
+		{
+			sessionStore: {
+				getCurrentSessionId: () => "fresh-parent",
+				getSessionBranch: () => [],
+			},
+			resumeContextBuilder: fakeResumeBuilder(task),
+		},
+	);
+	assert.equal(result.executed, false);
+	assert.equal(result.status, "blocked");
+	assert.equal(result.stop_reason, "platform_limited");
+	assert.match(
+		result.fresh_worker.blockers[0].summary,
+		/no RuntimeFreshWorkerBridgePort/,
+	);
+	assert.match(
+		result.fresh_worker.blockers[0].remediation[0],
+		/RuntimeFreshWorkerBridgePort/,
+	);
 }
 
 {
@@ -502,6 +720,30 @@ function daemonJob(overrides = {}) {
 	assert.equal(job.runs[0].worker_profile?.role, "builder");
 	assert.equal(job.runs[0].model_policy?.fallback_model, "fast-model");
 	assert.equal(job.runs[0].handoff?.summary, "dispatcher skeleton pass");
+}
+
+{
+	const job = daemonJob({ id: "JOB-FRESH-BLOCK" });
+	job.trace_refs = ["trace:TASK-065"];
+	job.gate_refs = ["gate:implementation"];
+	job.git_refs = ["worktree_digest:sha256:dirty"];
+	const result = await runCodewikiDaemonDispatcherTick({
+		store: daemonStore(job),
+		now: "2026-05-30T00:03:00.000Z",
+		freshWorker: {
+			required: true,
+			bridge_available: false,
+			summary: "worker bridge unavailable in fixture",
+			remediation: ["Use manual /wiki-resume --new fallback."],
+		},
+	});
+	assert.equal(result.status, "blocked");
+	assert.equal(result.outcome, "block");
+	const blocked = result.store.jobs["JOB-FRESH-BLOCK"];
+	assert.equal(blocked.block_reason?.kind, "platform_limited");
+	assert.ok(blocked.block_reason?.refs.includes("trace:TASK-065"));
+	assert.deepEqual(blocked.block_reason?.gate_refs, ["gate:implementation"]);
+	assert.match(blocked.block_reason?.remediation[0], /wiki-resume/);
 }
 
 {

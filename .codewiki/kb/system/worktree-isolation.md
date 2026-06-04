@@ -5,7 +5,7 @@ state: active
 summary: Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.
 owners:
   - architecture
-updated: "2026-06-03"
+updated: "2026-06-05"
 code_paths:
   - src/session/claims.ts
   - src/session/artifact-status-tool.ts
@@ -14,7 +14,7 @@ code_paths:
   - src/session/merge-publisher-queue.ts
   - src/state/resume-context.ts
   - src/adapters/pi/commands/resume.ts
-  - src/validation/report.ts
+  - src/gateway/report.ts
   - src/build/writer.ts
   - src/adapters/pi/tools
 code_paths_mode: explicit_override
@@ -62,7 +62,7 @@ Wait/wake records must name the real blocker and the next safe action. Good bloc
 
 Wake notifications are durable session-queue records, not direct inter-agent chat. Release and expiry events enqueue pending wake notifications with waiter id, task/build refs, source refs, and next-action intent. Heartbeats extend holder or waiter leases; stale holders expire with queue evidence and can wake blocked waiters. Wake delivery marks notifications delivered so repeat watchers do not spam the same session.
 
-Worker handoff packets are source-backed resume packets, not shared chat. Each dispatched worker receives task/context refs, source refs, follow-up intent, role worktree plan, and artifact claim scope. Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `wiki_resume_context`, and re-mark scopes before writing.
+Worker handoff packets are source-backed resume packets, not shared chat. Each dispatched worker receives task/context refs, source refs, follow-up intent, role worktree plan, artifact claim scope, and a fresh-worker request contract with `chat_context_shared=false`. The request names role, trace refs, gate refs, Git refs, and content requirements so the runtime can either call a subprocess/RPC/SDK bridge or return exact platform/content blockers. Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `wiki_resume_context`, and re-mark scopes before writing.
 
 ## Cleanup sequencing
 

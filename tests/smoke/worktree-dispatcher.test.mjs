@@ -3,7 +3,10 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { mutateChangeClaims, claimsFilePath } from "../../src/session/claims.ts";
+import {
+	mutateChangeClaims,
+	claimsFilePath,
+} from "../../src/session/claims.ts";
 import { planParallelWorktreeDispatch } from "../../src/session/worktree-dispatcher.ts";
 import { selectRoadmapDispatchCandidates } from "../../src/roadmap/selection.ts";
 
@@ -116,27 +119,72 @@ await withProject(async (proj) => {
 	assert.equal(plan.assignments[0].sprint_ids[0], "SPRINT-100");
 	assert.equal(plan.assignments[0].artifact_claim.action, "mark");
 	assert.equal(plan.assignments[0].artifact_claim.role, "builder");
-	assert.ok(plan.assignments[0].artifact_claim.scopes.some((scope) => scope.task_id === "TASK-101"));
-	assert.match(plan.assignments[0].worktrees.builder.branch, /TASK-101\/builder/);
-	assert.equal(plan.assignments[0].worktrees.builder.metadata.base_sha, "abc1234");
+	assert.ok(
+		plan.assignments[0].artifact_claim.scopes.some(
+			(scope) => scope.task_id === "TASK-101",
+		),
+	);
+	assert.match(
+		plan.assignments[0].worktrees.builder.branch,
+		/TASK-101\/builder/,
+	);
+	assert.equal(
+		plan.assignments[0].worktrees.builder.metadata.base_sha,
+		"abc1234",
+	);
 	assert.equal(plan.assignments[0].resume_packet.chat_context_shared, false);
-	assert.ok(plan.assignments[0].resume_packet.source_refs.includes(".codewiki/roadmap/tasks/TASK-101/task.json"));
-	assert.match(plan.assignments[0].resume_packet.follow_up_intent, /do not use parent chat context/i);
+	assert.ok(
+		plan.assignments[0].resume_packet.source_refs.includes(
+			".codewiki/roadmap/tasks/TASK-101/task.json",
+		),
+	);
+	assert.match(
+		plan.assignments[0].resume_packet.follow_up_intent,
+		/do not use parent chat context/i,
+	);
+	assert.equal(plan.assignments[0].fresh_worker_request.role, "builder");
+	assert.equal(
+		plan.assignments[0].fresh_worker_request.chat_context_shared,
+		false,
+	);
+	assert.ok(
+		plan.assignments[0].fresh_worker_request.trace_refs.includes(
+			".codewiki/roadmap/tasks/TASK-101/task.json",
+		),
+	);
+	assert.deepEqual(plan.assignments[0].fresh_worker_request.gate_refs, [
+		"gate:implementation",
+	]);
+	assert.match(
+		plan.assignments[0].fresh_worker_request.content_requirements[0],
+		/working_tree_digest/,
+	);
 	assert.deepEqual(
 		plan.blocked.map((item) => [item.task_id, item.reason]),
-		[["TASK-103", "partition_conflict"], ["TASK-104", "max_sessions"]],
+		[
+			["TASK-103", "partition_conflict"],
+			["TASK-104", "max_sessions"],
+		],
 	);
 	assert.deepEqual(plan.blocked[0].blocked_by_task_ids, ["TASK-101"]);
 	assert.ok(plan.evidence.dispatch_id.startsWith("dispatch-"));
 	assert.deepEqual(plan.evidence.selected_task_ids, ["TASK-101", "TASK-102"]);
-	assert.ok(plan.evidence.pause_reasons.some((reason) => reason.includes("TASK-103: partition_conflict")));
+	assert.ok(
+		plan.evidence.pause_reasons.some((reason) =>
+			reason.includes("TASK-103: partition_conflict"),
+		),
+	);
 	const repeat = await planParallelWorktreeDispatch(proj, {
 		roadmap: file,
 		max_workers: 2,
 		session_id_prefix: "dispatch-smoke",
 		base_sha: "abc1234",
 	});
-	assert.equal(repeat.evidence.dispatch_id, plan.evidence.dispatch_id, "dispatch evidence should be deterministic");
+	assert.equal(
+		repeat.evidence.dispatch_id,
+		plan.evidence.dispatch_id,
+		"dispatch evidence should be deterministic",
+	);
 });
 
 await withProject(async (proj) => {
@@ -185,7 +233,10 @@ await withProject(async (proj) => {
 		max_workers: 1,
 	});
 	assert.equal(plan.status, "ready");
-	assert.deepEqual(plan.assignments.map((assignment) => assignment.task_id), ["TASK-301"]);
+	assert.deepEqual(
+		plan.assignments.map((assignment) => assignment.task_id),
+		["TASK-301"],
+	);
 	assert.equal(plan.blocked.length, 0);
 });
 
@@ -198,8 +249,15 @@ await withProject(async (proj) => {
 		budget: { maxSubagents: 1, maxSessions: 3 },
 	});
 	assert.equal(plan.evidence.budget.max_workers, 1);
-	assert.deepEqual(plan.assignments.map((assignment) => assignment.task_id), ["TASK-402"]);
-	assert.ok(plan.evidence.skipped.some((skip) => skip.task_id === "TASK-401" && skip.reason === "blocked"));
+	assert.deepEqual(
+		plan.assignments.map((assignment) => assignment.task_id),
+		["TASK-402"],
+	);
+	assert.ok(
+		plan.evidence.skipped.some(
+			(skip) => skip.task_id === "TASK-401" && skip.reason === "blocked",
+		),
+	);
 });
 
 console.log("✓ worktree dispatcher smoke passed");

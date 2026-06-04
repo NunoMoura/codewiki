@@ -6,7 +6,7 @@ summary: Source concept root for CodeWiki daemon-capable software-development ru
 owners:
   - architecture
   - engineering
-updated: "2026-06-03"
+updated: "2026-06-05"
 diagram_refs:
   - component-map:runtime
   - file-structure-map:runtime_orchestration_boundary
@@ -27,7 +27,9 @@ The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures 
 
 Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence. Before claiming scopes or requesting a context boundary, runtime verifies the selected trace/task automation-readiness contract. Missing, expired, ambiguous, blocked, or waiting contracts stop the runner with exact blockers and next safe actions; only `runnable`, `retryable`, or `promotable` contracts may proceed to a decision, planning, implementation, or gate-preparation step.
 
-The daemon should be able to request fresh Pi worker sessions when the Pi command context exposes replacement-session APIs. Fresh validator workers start from CodeWiki source refs, implementation compiler output, task context, and required gate criteria; they must not inherit builder chat context. If the adapter cannot spawn the worker or cannot transfer dirty builder content safely, runtime records a precise platform/content-evidence blocker instead of self-approving.
+The daemon can request fresh Pi worker or gate sessions only through an explicit runtime `freshWorkerBridge` adapter port. Command-context `newSession`/`withSession` remains replacement-session support for `/wiki-resume --new`; it is not evidence of parallel worker spawning. The Pi adapter’s supported bridge is subprocess-backed (`pi --mode json -p --no-session`) and marks `chat_context_shared=false`. If the bridge is unavailable, runtime records a precise `platform_limited` blocker with trace/gate/Git refs and manual `/wiki-resume --new` remediation.
+
+Fresh worker requests carry role, task id, context path, build refs, validation refs, trace refs, gate refs, Git refs, artifact refs, and content-evidence requirements. Dirty implementation handoff requires exact `working_tree_digest` plus patch or worktree handoff refs. Promotion gates such as task-close, sprint-close, ship-ready, publication, and release require immutable content evidence such as commit/tree/package/archive/remote refs. Missing content proof blocks before spawning.
 
 Daemon/agency completion is the enabling sprint for the broader structure refactor. Until runtime aligns with the three-loop model, telemetry traces, gate diagnostics/remediation, graph readiness queries, fresh worker session spawning, and safe worktree publishing, daemon automation is pilot-capable for observe/maintain or narrow bounded steps rather than broad autonomous refactor execution.
 
@@ -43,8 +45,8 @@ Daemon/agency completion is the enabling sprint for the broader structure refact
 ```text
 src/runtime/
   runner.ts   # bounded runtime step implementation and dispatcher migration target
-  ports.ts    # Pi Code foundation and future runtime capability ports
-  types.ts    # runtime result, daemon job/run, budget, and workflow evidence
+  ports.ts    # Pi Code foundation, fresh-worker bridge, and future runtime capability ports
+  types.ts    # runtime result, fresh-worker request, daemon job/run, budget, and workflow evidence
 ```
 
 Runtime coordinates `src/agency/**`, current compatibility `src/session/**`, current compatibility `src/state/**`, current compatibility `src/build/**`, and gateway behavior without absorbing their durable truth. Target source moves generated state to `src/graph/**`, compiler engines to loop roots, and trace persistence to `src/telemetry/**`.

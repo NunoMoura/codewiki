@@ -408,7 +408,7 @@ function requirementSatisfied(
 				Boolean(evidence.review_findings) ||
 				hasEvidence(
 					evidence.checks,
-					/\b(pi-lens|review-tool|review findings|dispatch review)\b/i,
+					/\b(review-tool|review findings|dispatch review)\b/i,
 				)
 			);
 		case "threshold:review-findings":

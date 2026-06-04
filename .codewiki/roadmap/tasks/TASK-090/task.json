@@ -70,5 +70,5 @@
     "closure": "Task closes when spawn bridge behavior, blockers, dirty handoff, and readiness refs are covered by tests and implementation validation."
   },
   "created": "2026-06-03",
-  "updated": "2026-06-04T06:13:45Z"
+  "updated": "2026-06-04T23:36:56Z"
 }

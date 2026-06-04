@@ -23,7 +23,7 @@ function baseBuild(overrides = {}) {
 		checks_run: [
 			"npm run typecheck: pass",
 			"npm run test:smoke: pass",
-			"pi-lens review: 0 blockers, 2 warnings",
+			"review-tool findings: 0 blockers, 2 warnings",
 		],
 		audit_refs: ["alignment", "changed"],
 		acceptance_mapping: [
@@ -197,7 +197,7 @@ const source = await writeBuild(
 	baseBuild({
 		checks_run: [
 			"npm run test:smoke: pass",
-			"pi-lens review: 0 blockers, 0 warnings",
+			"review-tool findings: 0 blockers, 0 warnings",
 		],
 		closure_brief: {
 			user_intent: "policy test",
@@ -233,7 +233,7 @@ const waivedSource = await writeBuild(
 	baseBuild({
 		checks_run: [
 			"npm run test:smoke: pass",
-			"pi-lens review: 0 blockers, 0 warnings",
+			"review-tool findings: 0 blockers, 0 warnings",
 		],
 		closure_brief: {
 			user_intent: "policy test",

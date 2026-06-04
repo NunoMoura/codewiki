@@ -11,7 +11,11 @@ import {
 import type { RoadmapFile } from "../roadmap/types.ts";
 import { unique } from "../shared/utils.ts";
 import { buildChangeClaimState, readChangeClaimsFile } from "./claims.ts";
-import type { ArtifactBlocker, ParallelSchedulerPlan, SchedulerTaskInput } from "./worktree-isolation.ts";
+import type {
+	ArtifactBlocker,
+	ParallelSchedulerPlan,
+	SchedulerTaskInput,
+} from "./worktree-isolation.ts";
 import { computeParallelSchedulerPlan } from "./worktree-isolation.ts";
 import type { ArtifactStatusRecord, ChangeClaimScope } from "./types.ts";
 
@@ -32,6 +36,18 @@ export interface WorktreeDispatchResumePacket {
 	source_refs: string[];
 	follow_up_intent: string;
 	prompt: string;
+	command: string;
+	chat_context_shared: false;
+}
+
+export interface WorktreeDispatchFreshWorkerRequest {
+	role: "builder";
+	task_id: string;
+	context_path: string;
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	content_requirements: string[];
 	command: string;
 	chat_context_shared: false;
 }
@@ -57,6 +73,7 @@ export interface WorktreeDispatchAssignment {
 		worktree: ParallelSchedulerPlan["allocations"][number]["roles"]["builder"]["metadata"];
 	};
 	resume_packet: WorktreeDispatchResumePacket;
+	fresh_worker_request: WorktreeDispatchFreshWorkerRequest;
 }
 
 export interface WorktreeDispatchBlockedTask {
@@ -94,12 +111,16 @@ export interface WorktreeDispatchPlan {
 }
 
 function stableHash(value: unknown): string {
-	return createHash("sha256").update(JSON.stringify(value)).digest("hex").slice(0, 16);
+	return createHash("sha256")
+		.update(JSON.stringify(value))
+		.digest("hex")
+		.slice(0, 16);
 }
 
 function maxWorkers(input: WorktreeDispatcherInput): number {
 	const budget = input.budget || {};
-	const configured = input.max_workers ?? budget.maxSubagents ?? budget.maxSessions ?? 1;
+	const configured =
+		input.max_workers ?? budget.maxSubagents ?? budget.maxSessions ?? 1;
 	return Math.max(1, Math.floor(Number(configured || 1)));
 }
 
@@ -117,7 +138,9 @@ function taskSourceRefs(candidate: RoadmapDispatchCandidate): string[] {
 	]);
 }
 
-function resumePacket(candidate: RoadmapDispatchCandidate): WorktreeDispatchResumePacket {
+function resumePacket(
+	candidate: RoadmapDispatchCandidate,
+): WorktreeDispatchResumePacket {
 	const sourceRefs = taskSourceRefs(candidate);
 	const intent = `Implement ${candidate.task.id} from CodeWiki source refs in an isolated worktree; do not use parent chat context.`;
 	return {
@@ -135,7 +158,9 @@ function resumePacket(candidate: RoadmapDispatchCandidate): WorktreeDispatchResu
 	};
 }
 
-function schedulerTask(candidate: RoadmapDispatchCandidate): SchedulerTaskInput {
+function schedulerTask(
+	candidate: RoadmapDispatchCandidate,
+): SchedulerTaskInput {
 	return {
 		task_id: candidate.task.id,
 		title: candidate.task.title,
@@ -143,6 +168,25 @@ function schedulerTask(candidate: RoadmapDispatchCandidate): SchedulerTaskInput 
 		code_paths: candidate.task.code_paths,
 		spec_paths: candidate.task.spec_paths,
 		source_refs: taskSourceRefs(candidate),
+	};
+}
+
+function freshWorkerRequest(
+	candidate: RoadmapDispatchCandidate,
+): WorktreeDispatchFreshWorkerRequest {
+	const contextPath = taskContextPath(candidate.task.id);
+	return {
+		role: "builder",
+		task_id: candidate.task.id,
+		context_path: contextPath,
+		trace_refs: taskSourceRefs(candidate),
+		gate_refs: ["gate:implementation"],
+		git_refs: [],
+		content_requirements: [
+			"clean worktree or working_tree_digest+patch/worktree handoff before validation",
+		],
+		command: `pi --mode json -p --no-session "$(cat ${contextPath})"`,
+		chat_context_shared: false,
 	};
 }
 
@@ -170,36 +214,46 @@ function blockedCandidate(
 	candidates: RoadmapDispatchCandidate[],
 	taskId: string,
 ): RoadmapDispatchCandidate {
-	return candidates.find((candidate) => candidate.task.id === taskId) || {
-		task: {
-			id: taskId,
-			title: taskId,
-			status: "todo",
-			priority: "low",
-			kind: "task",
-			summary: "",
-			spec_paths: [],
-			code_paths: [],
-			research_ids: [],
-			labels: [],
-			goal: { outcome: "", acceptance: [], non_goals: [], verification: [] },
-			delta: { desired: "", current: "", closure: "" },
-			created: "",
-			updated: "",
-		},
-		order_index: 9999,
-		priority_rank: 99,
-		sprint_ids: [],
-	};
+	return (
+		candidates.find((candidate) => candidate.task.id === taskId) || {
+			task: {
+				id: taskId,
+				title: taskId,
+				status: "todo",
+				priority: "low",
+				kind: "task",
+				summary: "",
+				spec_paths: [],
+				code_paths: [],
+				research_ids: [],
+				labels: [],
+				goal: { outcome: "", acceptance: [], non_goals: [], verification: [] },
+				delta: { desired: "", current: "", closure: "" },
+				created: "",
+				updated: "",
+			},
+			order_index: 9999,
+			priority_rank: 99,
+			sprint_ids: [],
+		}
+	);
 }
 
 export async function planParallelWorktreeDispatch(
 	project: WikiProject,
 	input: WorktreeDispatcherInput = {},
 ): Promise<WorktreeDispatchPlan> {
-	const roadmap = input.roadmap || await readRoadmapFile(resolve(project.root, project.roadmapPath));
-	const artifactStatuses = input.artifact_statuses || buildChangeClaimState(await readChangeClaimsFile(project)).artifact_statuses || [];
-	const selection = selectRoadmapDispatchCandidates(roadmap, { includeBlocked: input.include_blocked });
+	const roadmap =
+		input.roadmap ||
+		(await readRoadmapFile(resolve(project.root, project.roadmapPath)));
+	const artifactStatuses =
+		input.artifact_statuses ||
+		buildChangeClaimState(await readChangeClaimsFile(project))
+			.artifact_statuses ||
+		[];
+	const selection = selectRoadmapDispatchCandidates(roadmap, {
+		includeBlocked: input.include_blocked,
+	});
 	const candidateTasks = selection.candidates.map(schedulerTask);
 	const workerLimit = maxWorkers(input);
 	const scheduler = computeParallelSchedulerPlan(project, {
@@ -209,32 +263,39 @@ export async function planParallelWorktreeDispatch(
 		session_id_prefix: input.session_id_prefix || "dispatch",
 		base_sha: input.base_sha,
 	});
-	const candidateById = new Map(selection.candidates.map((candidate) => [candidate.task.id, candidate]));
-	const assignments: WorktreeDispatchAssignment[] = scheduler.allocations.map((allocation, index) => {
-		const candidate = candidateById.get(allocation.task_id) || blockedCandidate(selection.candidates, allocation.task_id);
-		return {
-			worker_id: `worker-${String(index + 1).padStart(2, "0")}`,
-			partition_id: allocation.partition_id,
-			task_id: allocation.task_id,
-			title: candidate.task.title,
-			priority: candidate.task.priority,
-			order_index: candidate.order_index,
-			sprint_ids: allocation.sprint_ids,
-			scopes: allocation.scopes,
-			worktrees: allocation.roles,
-			artifact_claim: {
-				action: "mark",
-				mode: "write",
-				role: "builder",
+	const candidateById = new Map(
+		selection.candidates.map((candidate) => [candidate.task.id, candidate]),
+	);
+	const assignments: WorktreeDispatchAssignment[] = scheduler.allocations.map(
+		(allocation, index) => {
+			const candidate =
+				candidateById.get(allocation.task_id) ||
+				blockedCandidate(selection.candidates, allocation.task_id);
+			return {
+				worker_id: `worker-${String(index + 1).padStart(2, "0")}`,
+				partition_id: allocation.partition_id,
 				task_id: allocation.task_id,
+				title: candidate.task.title,
+				priority: candidate.task.priority,
+				order_index: candidate.order_index,
+				sprint_ids: allocation.sprint_ids,
 				scopes: allocation.scopes,
-				ttl_minutes: input.claim_ttl_minutes || allocation.claim.ttl_minutes,
-				summary: `Dispatch isolated builder for ${allocation.task_id}.`,
-				worktree: allocation.roles.builder.metadata,
-			},
-			resume_packet: resumePacket(candidate),
-		};
-	});
+				worktrees: allocation.roles,
+				artifact_claim: {
+					action: "mark",
+					mode: "write",
+					role: "builder",
+					task_id: allocation.task_id,
+					scopes: allocation.scopes,
+					ttl_minutes: input.claim_ttl_minutes || allocation.claim.ttl_minutes,
+					summary: `Dispatch isolated builder for ${allocation.task_id}.`,
+					worktree: allocation.roles.builder.metadata,
+				},
+				resume_packet: resumePacket(candidate),
+				fresh_worker_request: freshWorkerRequest(candidate),
+			};
+		},
+	);
 	const blocked = scheduler.blocked.map((item) => {
 		const candidate = blockedCandidate(selection.candidates, item.task_id);
 		return {
@@ -250,7 +311,9 @@ export async function planParallelWorktreeDispatch(
 	const evidenceBasis = {
 		selected_task_ids: assignments.map((assignment) => assignment.task_id),
 		blocked_task_ids: blocked.map((item) => item.task_id),
-		candidate_task_ids: selection.candidates.map((candidate) => candidate.task.id),
+		candidate_task_ids: selection.candidates.map(
+			(candidate) => candidate.task.id,
+		),
 		max_workers: workerLimit,
 	};
 	const evidence: WorktreeDispatchEvidence = {
@@ -259,15 +322,29 @@ export async function planParallelWorktreeDispatch(
 		blocked_task_ids: evidenceBasis.blocked_task_ids,
 		candidate_task_ids: evidenceBasis.candidate_task_ids,
 		skipped: selection.skipped,
-		pause_reasons: pauseReasons({ assignments, blocked, candidates: selection.candidates, scheduler }),
+		pause_reasons: pauseReasons({
+			assignments,
+			blocked,
+			candidates: selection.candidates,
+			scheduler,
+		}),
 		budget: {
 			max_workers: workerLimit,
-			...(input.budget?.maxSessions ? { max_sessions: input.budget.maxSessions } : {}),
-			...(input.budget?.maxSubagents ? { max_subagents: input.budget.maxSubagents } : {}),
+			...(input.budget?.maxSessions
+				? { max_sessions: input.budget.maxSessions }
+				: {}),
+			...(input.budget?.maxSubagents
+				? { max_subagents: input.budget.maxSubagents }
+				: {}),
 		},
 	};
 	return {
-		status: assignments.length === 0 && blocked.length > 0 ? "blocked" : blocked.length > 0 ? "partial" : "ready",
+		status:
+			assignments.length === 0 && blocked.length > 0
+				? "blocked"
+				: blocked.length > 0
+					? "partial"
+					: "ready",
 		assignments,
 		blocked,
 		wait_queue: scheduler.wait_queue,

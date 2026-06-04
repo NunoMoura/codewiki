@@ -237,7 +237,13 @@ function implementationBuild(taskId) {
 				path: ".codewiki/validation/retry.json",
 				taskId: "TASK-104",
 				verdict: "fail",
-				data: { task_id: "TASK-104" },
+				data: {
+					task_id: "TASK-104",
+					isolation: {
+						working_tree_digest: "sha256:dirty104",
+						tree_sha: "tree104",
+					},
+				},
 			},
 			{
 				path: ".codewiki/validation/promote.json",
@@ -276,6 +282,10 @@ function implementationBuild(taskId) {
 	assert.equal(index.tasks["TASK-104"].state, "retryable");
 	assert.deepEqual(index.tasks["TASK-104"].next_action.gate_refs, [
 		".codewiki/validation/retry.json",
+	]);
+	assert.deepEqual(index.tasks["TASK-104"].next_action.git_refs, [
+		"git_tree:tree104",
+		"worktree_digest:sha256:dirty104",
 	]);
 	assert.equal(index.tasks["TASK-105"].state, "promotable");
 	assert.equal(index.tasks["TASK-105"].gate_policy.next_loop, "implementation");

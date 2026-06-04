@@ -8,7 +8,6 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import type { AgencyBudget } from "../agency/types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { readRoadmapFile, resolveRoadmapTask } from "../roadmap/store.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
@@ -36,7 +35,8 @@ import {
 import { taskArtifactScopes } from "../state/resume-selection.ts";
 import { buildCodewikiResumeKickoff } from "../state/resume-kickoff.ts";
 import { buildGatewayPreflight } from "../gateway/report.ts";
-import { formatError, nowIso } from "../shared/utils.ts";
+import { formatError, nowIso, unique } from "../shared/utils.ts";
+import { normalizeArtifactRefSets } from "../telemetry/artifact-ref.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";
 import { planAgencyAutoPickup } from "../agency/auto-pickup.ts";
 import {
@@ -56,6 +56,10 @@ import {
 	type CodewikiDaemonWorkerProfile,
 	type CodewikiDaemonWorkerRef,
 	type CodewikiDaemonModelPolicy,
+	type CodewikiFreshWorkerContentEvidence,
+	type CodewikiFreshWorkerRequest,
+	type CodewikiFreshWorkerResult,
+	type CodewikiFreshWorkerRole,
 	type CodewikiRuntimeBudgetUsage,
 	type CodewikiRuntimePlan,
 	type CodewikiRuntimeResult,
@@ -79,6 +83,259 @@ interface LatestImplementationBuild {
 	path: string;
 	data: any;
 	created: string;
+}
+
+interface FreshWorkerRuntimeIntent {
+	required: boolean;
+	role: CodewikiFreshWorkerRole;
+	reason: string;
+	gate?: string;
+	content_mode?: CodewikiFreshWorkerContentEvidence["mode"];
+	working_tree_digest?: string;
+	worktree_digest?: string;
+	patch_refs: string[];
+	worktree_refs: string[];
+	immutable_refs: string[];
+	content_refs: string[];
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	validation_refs: string[];
+	build_refs: string[];
+}
+
+function recordValue(value: unknown, key: string): unknown {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)[key]
+		: undefined;
+}
+
+function stringValues(...values: unknown[]): string[] {
+	return unique(
+		values
+			.flatMap((value) => {
+				if (Array.isArray(value)) return value;
+				return value === undefined || value === null ? [] : [value];
+			})
+			.map((value) => String(value || "").trim())
+			.filter(Boolean),
+	);
+}
+
+function firstRecord(...values: unknown[]): Record<string, unknown> {
+	for (const value of values) {
+		if (value && typeof value === "object" && !Array.isArray(value)) {
+			return value as Record<string, unknown>;
+		}
+	}
+	return {};
+}
+
+function freshWorkerIntent(
+	plan: CodewikiRuntimePlan,
+): FreshWorkerRuntimeIntent {
+	const cycle = firstCycle(plan);
+	const policy = firstRecord(recordValue(plan.policy, "fresh_worker"));
+	const raw = firstRecord(recordValue(cycle, "fresh_worker"), policy);
+	const required = Boolean(
+		raw.required ||
+			policy.required ||
+			recordValue(plan.policy, "freshWorkerRequired") ||
+			cycle.action === "fresh_worker",
+	);
+	const role = String(
+		raw.role || recordValue(cycle, "worker_role") || "builder",
+	)
+		.trim()
+		.toLowerCase() as CodewikiFreshWorkerRole;
+	const gate = String(raw.gate || recordValue(cycle, "gate") || "").trim();
+	const contentMode = String(
+		raw.content_mode ||
+			raw.contentMode ||
+			recordValue(cycle, "content_mode") ||
+			"",
+	)
+		.trim()
+		.toLowerCase() as CodewikiFreshWorkerContentEvidence["mode"];
+	return {
+		required,
+		role: ["builder", "validator", "publisher", "observer"].includes(role)
+			? role
+			: "builder",
+		reason: String(
+			raw.reason ||
+				recordValue(cycle, "summary") ||
+				"runtime fresh-worker request",
+		).trim(),
+		...(gate ? { gate } : {}),
+		...(contentMode ? { content_mode: contentMode } : {}),
+		working_tree_digest:
+			String(raw.working_tree_digest || raw.worktree_digest || "").trim() ||
+			undefined,
+		worktree_digest: String(raw.worktree_digest || "").trim() || undefined,
+		patch_refs: stringValues(
+			raw.patch_ref,
+			raw.patch_refs,
+			recordValue(cycle, "patch_refs"),
+		),
+		worktree_refs: stringValues(
+			raw.worktree_ref,
+			raw.worktree_refs,
+			raw.worktree_path,
+			recordValue(cycle, "worktree_refs"),
+		),
+		immutable_refs: stringValues(
+			raw.head_sha,
+			raw.validated_sha,
+			raw.published_sha,
+			raw.tree_sha,
+			raw.package_digest,
+			raw.archive_ref,
+			raw.remote_ref,
+			raw.immutable_refs,
+			recordValue(cycle, "git_refs"),
+		),
+		content_refs: stringValues(
+			raw.content_ref,
+			raw.content_refs,
+			recordValue(cycle, "content_refs"),
+		),
+		trace_refs: stringValues(
+			raw.trace_ref,
+			raw.trace_refs,
+			recordValue(cycle, "trace_refs"),
+		),
+		gate_refs: stringValues(
+			raw.gate_ref,
+			raw.gate_refs,
+			recordValue(cycle, "gate_refs"),
+		),
+		git_refs: stringValues(
+			raw.git_ref,
+			raw.git_refs,
+			recordValue(cycle, "git_refs"),
+		),
+		validation_refs: stringValues(
+			raw.validation_ref,
+			raw.validation_refs,
+			recordValue(cycle, "validation_refs"),
+		),
+		build_refs: stringValues(
+			raw.build_ref,
+			raw.build_refs,
+			recordValue(cycle, "build_refs"),
+		),
+	};
+}
+
+function isPromotionGate(intent: FreshWorkerRuntimeIntent): boolean {
+	const gate = String(intent.gate || "").toLowerCase();
+	return (
+		intent.role === "publisher" ||
+		gate === "task-close" ||
+		gate === "sprint-close" ||
+		gate === "ship-ready" ||
+		gate === "publication"
+	);
+}
+
+function freshWorkerContentEvidence(
+	intent: FreshWorkerRuntimeIntent,
+): CodewikiFreshWorkerContentEvidence {
+	const mode =
+		intent.content_mode || (isPromotionGate(intent) ? "immutable" : "clean");
+	const requiresImmutable = mode === "immutable" || isPromotionGate(intent);
+	const requiresDirty = mode === "dirty";
+	const required = requiresImmutable
+		? ["immutable_content_ref"]
+		: requiresDirty
+			? ["working_tree_digest", "patch_or_worktree_handoff"]
+			: [];
+	const missing: string[] = [];
+	if (requiresImmutable && intent.immutable_refs.length === 0) {
+		missing.push("immutable_content_ref");
+	}
+	if (requiresDirty && !intent.working_tree_digest && !intent.worktree_digest) {
+		missing.push("working_tree_digest");
+	}
+	if (
+		requiresDirty &&
+		intent.patch_refs.length === 0 &&
+		intent.worktree_refs.length === 0
+	) {
+		missing.push("patch_or_worktree_handoff");
+	}
+	const contentRefs = unique([
+		...intent.content_refs,
+		...intent.patch_refs,
+		...intent.worktree_refs,
+		...intent.immutable_refs,
+		...(intent.working_tree_digest
+			? [`working_tree_digest:${intent.working_tree_digest}`]
+			: []),
+		...(intent.worktree_digest
+			? [`worktree_digest:${intent.worktree_digest}`]
+			: []),
+	]);
+	return {
+		mode,
+		...(intent.working_tree_digest
+			? { working_tree_digest: intent.working_tree_digest }
+			: {}),
+		...(intent.worktree_digest
+			? { worktree_digest: intent.worktree_digest }
+			: {}),
+		patch_refs: intent.patch_refs,
+		worktree_refs: intent.worktree_refs,
+		immutable_refs: intent.immutable_refs,
+		content_refs: contentRefs,
+		required,
+		missing,
+		safe_to_transfer: missing.length === 0,
+		notes: requiresDirty
+			? [
+					"dirty implementation handoff requires exact digest plus patch/worktree evidence",
+				]
+			: requiresImmutable
+				? [
+						"promotion gates require immutable commit/tree/package/archive/remote evidence",
+					]
+				: [],
+	};
+}
+
+function freshWorkerBlocker(
+	kind: CodewikiDaemonBlockReason["kind"],
+	summary: string,
+	refs: string[],
+	remediation: string[],
+): CodewikiDaemonBlockReason {
+	return {
+		kind,
+		summary,
+		refs: unique(refs),
+		gate_refs: refs.filter((ref) => ref.startsWith("gate:")),
+		remediation,
+		retryable: true,
+	};
+}
+
+function freshWorkerHandoff(
+	request: CodewikiFreshWorkerRequest,
+	summary: string,
+): CodewikiFreshWorkerResult["handoff"] {
+	return {
+		summary,
+		build_refs: request.build_refs,
+		validation_refs: request.validation_refs,
+		content_refs: request.content_evidence.content_refs,
+		trace_refs: request.trace_refs,
+		gate_refs: request.gate_refs,
+		git_refs: request.git_refs,
+		artifact_refs: request.artifact_refs,
+		next_loop: "implementation",
+		notes: request.content_evidence.notes,
+	};
 }
 
 function emptyRuntimeState(): RuntimeState {
@@ -412,6 +669,130 @@ async function maybeRequestContextBoundary(
 	};
 }
 
+async function maybeRequestFreshWorker(
+	state: RuntimeState,
+	ports: CodewikiRuntimePorts,
+	input: {
+		plan: CodewikiRuntimePlan;
+		task: RoadmapTaskRecord;
+		resume: CodewikiResumeContextResult;
+		sessionId: string;
+		followUpIntent: string;
+	},
+): Promise<CodewikiFreshWorkerResult | null> {
+	const intent = freshWorkerIntent(input.plan);
+	if (!intent.required) return null;
+	const contentEvidence = freshWorkerContentEvidence(intent);
+	const artifactRefs = normalizeArtifactRefSets({
+		trace_refs: intent.trace_refs,
+		gate_refs: intent.gate_refs,
+		git_refs: intent.git_refs,
+	}).artifact_refs;
+	const request: CodewikiFreshWorkerRequest = {
+		role: intent.role,
+		task_id: input.task.id,
+		reason: intent.reason,
+		requested_at: nowIso(),
+		prompt: input.resume.prompt,
+		follow_up_intent: input.followUpIntent,
+		...(input.resume.context_path
+			? { context_path: input.resume.context_path }
+			: {}),
+		command: `pi --mode json -p --no-session ${input.task.id}`,
+		parent_session_id: input.sessionId,
+		worker_profile: {
+			role: intent.role,
+			mode: intent.gate || "implementation",
+			reason: intent.reason,
+			capabilities: ["fresh-worker", "source-backed-resume"],
+			notes: ["chat_context_shared=false"],
+		},
+		build_refs: intent.build_refs,
+		validation_refs: intent.validation_refs,
+		content_refs: contentEvidence.content_refs,
+		trace_refs: unique([
+			...intent.trace_refs,
+			...input.resume.source_refs.filter((ref) => ref.includes("/builds/")),
+		]),
+		gate_refs: unique([
+			...intent.gate_refs,
+			...(intent.gate ? [`gate:${intent.gate}`] : []),
+		]),
+		git_refs: intent.git_refs,
+		artifact_refs: artifactRefs,
+		content_evidence: contentEvidence,
+	};
+	if (!contentEvidence.safe_to_transfer) {
+		const blocker = freshWorkerBlocker(
+			"content_proof_missing",
+			`Fresh ${intent.role} worker for ${input.task.id} lacks required content proof: ${contentEvidence.missing.join(", ")}.`,
+			[input.task.id, ...contentEvidence.content_refs, ...request.gate_refs],
+			[
+				contentEvidence.mode === "dirty"
+					? "Compute working_tree_digest from git status, git diff --binary, and untracked content; include patch_refs or worktree_refs before dirty transfer."
+					: "Provide immutable commit/tree/package/archive/remote content evidence before promotion worker transfer.",
+			],
+		);
+		return {
+			status: "blocked",
+			summary: blocker.summary,
+			request,
+			blockers: [blocker],
+			handoff: freshWorkerHandoff(request, blocker.summary),
+			platform: {
+				kind: "unsupported",
+				summary: "fresh-worker content transfer blocked before platform spawn",
+				evidence: contentEvidence.missing,
+			},
+		};
+	}
+	if (!ports.freshWorkerBridge) {
+		const capability = requireRuntimeCapability(
+			ports.runtimeFoundation,
+			"worker_execution",
+		);
+		const blocker = freshWorkerBlocker(
+			"platform_limited",
+			`Fresh ${intent.role} worker for ${input.task.id} unavailable: no RuntimeFreshWorkerBridgePort supplied; ctx.newSession is replacement-session only, not parallel worker spawning.`,
+			[
+				input.task.id,
+				...capability.evidence,
+				...request.trace_refs,
+				...request.gate_refs,
+			],
+			[
+				"Use manual /wiki-resume --new fallback, or supply a subprocess/RPC/SDK RuntimeFreshWorkerBridgePort from the Pi adapter.",
+			],
+		);
+		state.efficiency.user_interruptions_required += 1;
+		state.efficiency.manual_commands_required += 1;
+		state.efficiency.platform_limited_steps.push(blocker.summary);
+		return {
+			status: "unsupported",
+			summary: blocker.summary,
+			request,
+			blockers: [blocker],
+			handoff: freshWorkerHandoff(request, blocker.summary),
+			platform: {
+				kind: "unsupported",
+				summary: capability.summary,
+				evidence: capability.evidence,
+			},
+		};
+	}
+	const worker = await ports.freshWorkerBridge.requestFreshWorker(request);
+	if (worker.status === "requested") {
+		state.budgetUsed.sessions += 1;
+		state.efficiency.session_boundaries_used += 1;
+		state.efficiency.user_interruptions_avoided += 1;
+		state.efficiency.manual_commands_avoided += 1;
+		state.events.push(
+			`fresh-worker requested for ${input.task.id}:${intent.role}`,
+		);
+	}
+	return worker;
+}
+
 async function runValidationPreflight(
 	project: WikiProject,
 	state: RuntimeState,
@@ -483,8 +864,9 @@ async function runImplementationKickoff(
 	ports: CodewikiRuntimePorts,
 	task: RoadmapTaskRecord,
 	sessionId: string,
-	budget: AgencyBudget,
+	plan: CodewikiRuntimePlan,
 ): Promise<CodewikiRuntimeResult> {
+	const budget = plan.budget;
 	const contextCapability = requireRuntimeCapability(
 		ports.runtimeFoundation,
 		"context_assembly",
@@ -531,6 +913,33 @@ async function runImplementationKickoff(
 			context_boundary: {
 				requested: false,
 				reason: resume.evidence || "resume context unavailable",
+			},
+		});
+	}
+	const freshWorker = await maybeRequestFreshWorker(state, ports, {
+		plan,
+		task,
+		resume,
+		sessionId,
+		followUpIntent,
+	});
+	if (freshWorker) {
+		return result(state, {
+			executed: freshWorker.status === "requested",
+			status: freshWorker.status === "requested" ? "completed" : "blocked",
+			action: "fresh_worker_request",
+			summary: freshWorker.summary,
+			task_id: task.id,
+			stop_reason: freshWorker.blockers[0]?.kind,
+			scopes: claimScopeLabels(taskArtifactScopes(task)),
+			fresh_worker: freshWorker,
+			context_boundary: {
+				requested: freshWorker.status === "requested",
+				reason: freshWorker.summary,
+				trace_refs: freshWorker.handoff.trace_refs,
+				gate_refs: freshWorker.handoff.gate_refs,
+				git_refs: freshWorker.handoff.git_refs,
+				content_refs: freshWorker.handoff.content_refs,
 			},
 		});
 	}
@@ -582,6 +991,13 @@ export interface CodewikiDaemonDispatcherTickInput {
 	staleAfterMs?: number;
 	heartbeatNote?: string;
 	runId?: string | ((job: CodewikiDaemonJobRecord, attempt: number) => string);
+	freshWorker?: {
+		required?: boolean;
+		bridge_available?: boolean;
+		summary?: string;
+		refs?: string[];
+		remediation?: string[];
+	};
 	executeAttempt?: (
 		attempt: CodewikiDaemonDispatcherAttemptContext,
 	) =>
@@ -787,6 +1203,50 @@ export async function runCodewikiDaemonDispatcherTick(
 		store,
 	});
 	if (!finish) {
+		if (
+			input.freshWorker?.required &&
+			input.freshWorker.bridge_available !== true
+		) {
+			const refs = unique([
+				runId,
+				job.id,
+				job.task_id,
+				...job.source_refs,
+				...job.trace_refs,
+				...job.gate_refs,
+				...job.git_refs,
+				...(input.freshWorker.refs || []),
+			]);
+			const blockReason: CodewikiDaemonBlockReason = {
+				kind: "platform_limited",
+				summary:
+					input.freshWorker.summary ||
+					`daemon job ${job.id} requires fresh-worker spawn, but no subprocess/RPC/SDK bridge is available`,
+				refs,
+				gate_refs: unique(job.gate_refs),
+				remediation: input.freshWorker.remediation || [
+					"Supply a RuntimeFreshWorkerBridgePort or reroute to manual /wiki-resume --new fallback.",
+				],
+				retryable: true,
+			};
+			const blockedJob = finishCodewikiDaemonRun(runningJob, runId, {
+				ended_at: input.now,
+				outcome: "block",
+				summary: blockReason.summary,
+				block_reason: blockReason,
+			});
+			store = withDaemonJob(store, blockedJob);
+			events.push(`daemon run blocked: ${runId}:platform_limited`);
+			return {
+				status: "blocked",
+				summary: blockReason.summary,
+				store,
+				job_id: job.id,
+				run_id: runId,
+				outcome: "block",
+				events,
+			};
+		}
 		return {
 			status: "claimed",
 			summary: `Claimed daemon job ${job.id} for one attempt.`,
@@ -882,6 +1342,9 @@ export async function runCodewikiRuntimeStep(
 					state: readinessGate.state,
 					blockers: readinessGate.blockers,
 					next_safe_action: readinessGate.next_action,
+					trace_refs: readinessGate.next_action?.trace_refs || [],
+					gate_refs: readinessGate.next_action?.gate_refs || [],
+					git_refs: readinessGate.next_action?.git_refs || [],
 				},
 			},
 		);
@@ -938,7 +1401,7 @@ export async function runCodewikiRuntimeStep(
 					ports,
 					task,
 					sessionId,
-					plan.budget,
+					plan,
 				);
 	} catch (error) {
 		const message = formatError(error);

@@ -37,6 +37,7 @@ export interface CodewikiRuntimeResult {
 	artifact_statuses?: ArtifactStatusRecord[];
 	context_boundary?: Record<string, unknown>;
 	gateway?: Record<string, unknown>;
+	fresh_worker?: CodewikiFreshWorkerResult;
 	budget_used: CodewikiRuntimeBudgetUsage;
 	workflow_efficiency: WorkflowEfficiencyEvidence;
 	events: string[];
@@ -257,6 +258,68 @@ export interface CodewikiDaemonHandoffMetadata {
 	artifact_refs: ArtifactRef[];
 	next_loop?: CodewikiDaemonLoop;
 	notes: string[];
+}
+
+export type CodewikiFreshWorkerRole =
+	| "builder"
+	| "validator"
+	| "publisher"
+	| "observer";
+
+export type CodewikiFreshWorkerContentMode = "clean" | "dirty" | "immutable";
+
+export interface CodewikiFreshWorkerContentEvidence {
+	mode: CodewikiFreshWorkerContentMode;
+	working_tree_digest?: string;
+	worktree_digest?: string;
+	patch_refs: string[];
+	worktree_refs: string[];
+	immutable_refs: string[];
+	content_refs: string[];
+	required: string[];
+	missing: string[];
+	safe_to_transfer: boolean;
+	notes: string[];
+}
+
+export interface CodewikiFreshWorkerRequest {
+	role: CodewikiFreshWorkerRole;
+	task_id: string;
+	reason: string;
+	requested_at: string;
+	prompt: string;
+	follow_up_intent: string;
+	context_path?: string;
+	command?: string;
+	cwd?: string;
+	parent_session_id?: string;
+	worker_profile?: CodewikiDaemonWorkerProfile;
+	model_policy?: CodewikiDaemonModelPolicy;
+	build_refs: string[];
+	validation_refs: string[];
+	content_refs: string[];
+	trace_refs: string[];
+	gate_refs: string[];
+	git_refs: string[];
+	artifact_refs: ArtifactRef[];
+	content_evidence: CodewikiFreshWorkerContentEvidence;
+}
+
+export interface CodewikiFreshWorkerResult {
+	status: "requested" | "blocked" | "unsupported";
+	summary: string;
+	request: CodewikiFreshWorkerRequest;
+	worker?: CodewikiDaemonWorkerRef & {
+		pid?: number;
+		invocation?: string[];
+	};
+	blockers: CodewikiDaemonBlockReason[];
+	handoff: CodewikiDaemonHandoffMetadata;
+	platform: {
+		kind: "subprocess" | "rpc" | "sdk" | "command-context" | "unsupported";
+		summary: string;
+		evidence: string[];
+	};
 }
 
 export interface CodewikiDaemonRunRecord {

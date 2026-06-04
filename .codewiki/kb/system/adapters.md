@@ -5,7 +5,7 @@ state: active
 summary: Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.
 owners:
   - architecture
-updated: "2026-06-03"
+updated: "2026-06-05"
 ---
 
 # Adapters
@@ -47,6 +47,8 @@ Session boundary control is an adapter capability, not a Pi-only semantic. CodeW
 Pi-facing extension, skill, runtime, or API source changes must surface explicit `/reload` guidance in final tool summaries and validation metadata. CodeWiki compaction, context refresh, and reset boundaries do not reload live Pi integration code and must never restart Pi automatically.
 
 Artifact-status wait/release coordination is also an adapter capability. The application queue computes pending and ready waits, but an interactive adapter must give waiting sessions a wake path. Pi sessions watch the CodeWiki session queue and inject a bounded wake message when a wait owned by the current session becomes ready; the agent must still re-read current state and claim/mark scopes before writing. Other adapters can implement the same semantics through filesystem watches, RPC events, web sockets, MCP notifications, or worker orchestration.
+
+Fresh worker orchestration is an adapter/local-runtime capability over shared CodeWiki semantics. Runtime may request a fresh worker through `RuntimeFreshWorkerBridgePort`; Pi supports this with a subprocess bridge that invokes `pi --mode json -p --no-session` and records `chat_context_shared=false`. Command-context `ctx.newSession({ withSession })` is still only replacement-session support for `/wiki-resume --new`; it must not be described as parallel spawning. If no subprocess/RPC/SDK bridge is available, the adapter returns a `platform_limited` blocker with source refs and manual `/wiki-resume --new` remediation.
 
 Role worktree orchestration is an adapter/local-runtime capability over shared CodeWiki semantics. For parallel write work, adapters should ask the application worktree factory for a task/role worktree instead of letting multiple builders, validators, publishers, or cleanup agents edit the same root working tree. The adapter may translate that request into Git worktree commands, bounded worker processes, branch checkout, or a plan-only instruction when the host cannot create a separate filesystem workspace. The resulting path, branch, base/head/tree SHA, clean state, and digest metadata must flow back into artifact status and validation reports.
 
