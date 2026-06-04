@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T22:06:39Z",
+  "profile": "ship-ready",
+  "gate": "ship-ready",
+  "task_id": "TASK-089",
+  "verdict": "block",
+  "rationale": "Ship-ready validation attempt for TASK-089 local package content candidate at clean HEAD 29828591223801b1ff33283c8eed4e4ef7da840f. Policy blocks ship-ready gate validation until audit:alignment, audit:security, audit:stale-reference are recorded.",
+  "checks": [
+    "git status --porcelain=v1 — clean",
+    "git rev-parse HEAD — 29828591223801b1ff33283c8eed4e4ef7da840f",
+    "git rev-parse HEAD^{tree} — 6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "wiki_audit profiles=package,source-contract,changed,task task_id=TASK-089 — pass",
+    "npm run test:pack — pass",
+    "npm pack --pack-destination /tmp/codewiki-task089-pack --json — pass",
+    "package sha256 digest: sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
+    "npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference.",
+      "refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, security, stale-reference.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "block",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+  "policy_profile": "ship-ready",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment",
+    "package",
+    "security",
+    "stale-reference",
+    "source-contract",
+    "changed",
+    "task"
+  ],
+  "audit_refs": [
+    "profile:package",
+    "profile:source-contract",
+    "profile:changed",
+    "profile:task",
+    "wiki_audit:package:pass",
+    "wiki_audit:source-contract:pass",
+    "wiki_audit:changed:pass",
+    "wiki_audit:task:TASK-089:pass",
+    "commit:29828591223801b1ff33283c8eed4e4ef7da840f",
+    "tree:6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "package:codewiki-0.1.2.tgz",
+    "package_digest:sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
+    "npm_integrity:sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
+  ],
+  "audit_reports": [
+    "wiki_audit package,source-contract,changed,task task_id=TASK-089: pass with 0 issues.",
+    "npm run test:pack pass; npm pack package size 351.7 kB, unpacked size 1.5 MB, total files 155."
+  ],
+  "content_proof_refs": [
+    "29828591223801b1ff33283c8eed4e4ef7da840f",
+    "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-089",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+    "validation_report": ".codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+      ".codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "README.md",
+      "package.json",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-decision/references/tools.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      "skills/codewiki/** (deleted)",
+      "skills/codewiki-validation/** (deleted)",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/prompt-assets.ts",
+      "src/adapters/pi/prompt-assets/**",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/decide.ts",
+      "src/adapters/pi/tools/surface.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/build/decision-propagation.ts",
+      "src/build/shared.ts",
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/change/decision-table.ts",
+      "src/change/diff-table.ts (deleted)",
+      "src/change/tool.ts",
+      "src/change/types.ts",
+      "src/gateway/report.ts",
+      "src/project/bootstrap.ts",
+      "src/project/templates.ts",
+      "src/state/builders.ts",
+      "src/state/graph.ts",
+      "src/state/lint.ts",
+      "src/state/prompt.ts",
+      "src/state/resume-context.ts",
+      "src/state/types.ts",
+      "src/state/skill-assets.ts (deleted)",
+      "src/validation/** (deleted)",
+      "src/workflow/tool.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/efficiency-ui.test.mjs",
+      "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+      "tests/tasks/TASK-026/change-decision-table-source-root.test.mjs",
+      "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+      "tests/tasks/TASK-069/decision-table-batch.test.mjs",
+      "tests/tasks/TASK-076/restructure.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-089",
+    "source_build": ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+    "validation_report": ".codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+    "commit_title": "checkpoint(codewiki): TASK-089 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-089",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-ship-ready-block-task-089-2026-06-04-finalized-t.json",
+      "CodeWiki-Checks: git status --porcelain=v1 — clean; git rev-parse HEAD — 29828591223801b1ff33283c8eed4e4ef7da840f; git rev-parse HEAD^{tree} — 6f4ead3d4765a8a0481f7773088a907e2eb036c1; wiki_audit profiles=package,source-contract,changed,task task_id=TASK-089 — pass; npm run test:pack — pass; npm pack --pack-destination /tmp/codewiki-task089-pack --json — pass; package sha256 digest: sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d; npm package integrity: sha512-S1rX2LHd9jboxgRhcl3++1HRbLwC3ligJLTxLCkfHhx8N4xu7Vo6dVVak9+jLBTiA=="
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "package.json",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-decision/references/tools.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      "skills/codewiki/** (deleted)",
+      "skills/codewiki-validation/** (deleted)",
+      "src/adapters/pi/prompt-contract.ts",
+      "src/adapters/pi/prompt-assets.ts",
+      "src/adapters/pi/prompt-assets/**",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/decide.ts",
+      "src/adapters/pi/tools/surface.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/build/decision-propagation.ts",
+      "src/build/shared.ts",
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/change/decision-table.ts",
+      "src/change/diff-table.ts (deleted)",
+      "src/change/tool.ts",
+      "src/change/types.ts",
+      "src/gateway/report.ts",
+      "src/project/bootstrap.ts",
+      "src/project/templates.ts",
+      "src/state/builders.ts",
+      "src/state/graph.ts",
+      "src/state/lint.ts",
+      "src/state/prompt.ts",
+      "src/state/resume-context.ts",
+      "src/state/types.ts",
+      "src/state/skill-assets.ts (deleted)",
+      "src/validation/** (deleted)",
+      "src/workflow/tool.ts"
+    ],
+    "reasons": [
+      "Pi package extension or skill metadata changed",
+      "packaged CodeWiki skill prompt changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite linter evidence for required profiles: alignment, security, stale-reference."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "ship-ready validation",
+    "profiles": [
+      "ship-ready"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "6f4ead3d4765a8a0481f7773088a907e2eb036c1"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "package",
+      "security",
+      "stale-reference",
+      "source-contract",
+      "changed",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:source-contract or profile:source-contract",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "security",
+      "stale-reference"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "ship-ready",
+    "gate": "ship-ready",
+    "task_id": "TASK-089",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:security",
+        "audit:stale-reference"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:security",
+          "audit:stale-reference"
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "ship-ready:audit-evidence:1",
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "refs": [
+          "audit:alignment",
+          "audit:security",
+          "audit:stale-reference"
+        ],
+        "gate_refs": [
+          "ship-ready"
+        ],
+        "failure_class": "evidence_missing",
+        "recommended_next_loop": "implementation",
+        "remediation": [
+          "Run or cite the required CodeWiki audit evidence."
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "ship-ready:audit-evidence:1",
+        "category": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "ref_count": 3
+      }
+    ],
+    "remediation": {
+      "status": "blocked",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "next_safe_actions": [
+        "Run or cite the required CodeWiki audit evidence."
+      ]
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "code-local",
+      "reason": "Code-local change; gateway linters and content evidence still required.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
+    "validated_sha": "29828591223801b1ff33283c8eed4e4ef7da840f",
+    "tree_sha": "6f4ead3d4765a8a0481f7773088a907e2eb036c1",
+    "package_digest": "sha256:7fb9a45d1f3965272549f4a1b4a53f4ff45d99a0a28ccc4024f70b747850d96d",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Local package ship-ready check only; no remote publication/push performed.",
+    "role": "validator"
+  }
+}
