@@ -6,7 +6,7 @@ summary: Durable product and system knowledge structure for CodeWiki projects.
 owners:
   - architecture
   - product
-updated: "2026-05-27"
+updated: "2026-06-04"
 ---
 
 # Knowledge
@@ -61,7 +61,7 @@ Knowledge docs should use minimal curated Markdown links for human navigation an
 
 The generated graph derives machine relationships from frontmatter, explicit references, curated Markdown links, build metadata, roadmap links, validation reports, code/test facts, and source fingerprints. If a relationship is mainly needed for routing, drift detection, freshness, or backlinks, it belongs in generated graph state rather than in hand-maintained prose links.
 
-Routine `code_paths` in knowledge frontmatter are deprecated as a required mapping mechanism. They duplicate graph responsibility and drift during source-root migrations. Knowledge docs should keep minimal semantic metadata and use `diagram_refs` when a system diagram node is the intended anchor. Exact code paths belong primarily in roadmap tasks, builds, validation evidence, file-structure/diagram mappings, or generated graph facts. A knowledge doc may still use frontmatter `code_paths` as an explicit override when it intentionally owns a precise code surface; when present, audits should verify the paths instead of treating them as generated truth.
+Routine `code_paths` in knowledge frontmatter are deprecated as a required mapping mechanism. They duplicate graph responsibility and drift during source-root migrations. Knowledge docs should keep minimal semantic metadata and use `diagram_refs` when a system diagram node is the intended anchor. Exact code paths belong primarily in roadmap tasks, compiler output, gate evidence, file-structure/diagram mappings, or generated graph facts. A knowledge doc may still use frontmatter `code_paths` as an explicit override when it intentionally owns a precise code surface; when present, linters should verify the paths instead of treating them as generated truth.
 
 ## Rules
 
@@ -86,7 +86,7 @@ The decision compiler routes by abstraction entrypoint:
 - system-first changes update system diagrams and system truth, then preflight user-visible product impact;
 - mixed changes must name both owning docs and the propagation direction for each requirement.
 
-The decision loop should expose change proposals with diff tables before canonical knowledge edits are applied. Accepted decision rows and knowledge edits compile together into a decision build with row-to-KB and diagram-ref evidence. Decision builds are the semantic intent-to-knowledge handoff.
+The decision loop should expose change proposals with Decision Tables before canonical knowledge edits are applied. Accepted Decision Table rows and knowledge edits compile together into trace decision evidence with row-to-KB and diagram-ref evidence. The lifecycle trace decision section is the semantic intent-to-knowledge handoff.
 
 ## Related docs
 

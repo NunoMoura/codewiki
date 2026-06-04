@@ -15,6 +15,10 @@ assert.match(buildCodewikiSystemPromptContract(), /wiki_decide/);
 assert.match(buildCodewikiSystemPromptContract(), /wiki_runtime/);
 assert.match(
 	buildCodewikiSystemPromptContract(),
+	/decision -> planning -> implementation, with gateway pass\/fail\/block evidence/,
+);
+assert.doesNotMatch(
+	buildCodewikiSystemPromptContract(),
 	/decision -> planning -> implementation -> validation/,
 );
 assert.match(

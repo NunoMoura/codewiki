@@ -173,7 +173,7 @@ export function validationApprovalEvidence(
 		const acceptedRefs = trimList(build?.traceability?.accepted_build_refs);
 		if (acceptedRefs.length > 0)
 			return acceptedRefs.map((ref) => `accepted_semantics:${ref}`);
-		const rows = trimList(build?.approved_diff_rows);
+		const rows = trimList(build?.approved_decision_rows);
 		if (rows.length > 0) return rows.map((row) => `approved_diff_row:${row}`);
 	}
 	return [];

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -441,7 +442,7 @@ async function main() {
 				"wiki_gateway",
 				"wiki_gc",
 				"wiki_roadmap",
-				"wiki_diff_table",
+				"wiki_decision_table",
 				"wiki_session",
 				"wiki_agency",
 			],
@@ -489,8 +490,16 @@ async function main() {
 			!extension.tools.has(removedRoadmapToolAlias),
 			"Removed roadmap tool alias should not be registered",
 		);
-		const skillToolCatalog = readFileSync(
-			resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
+		const toolCatalog = readFileSync(
+			resolve(
+				repoRoot,
+				"src",
+				"adapters",
+				"pi",
+				"prompt-assets",
+				"references",
+				"tool-catalog.md",
+			),
 			"utf8",
 		);
 		for (const removedTool of [
@@ -504,7 +513,7 @@ async function main() {
 			"validation",
 			"gc",
 			"roadmap",
-			"diff_table",
+			"decision_table",
 			"session",
 			"agency",
 		].map(legacyToolName)) {
@@ -522,13 +531,13 @@ async function main() {
 			name.startsWith("wiki_"),
 		)) {
 			assert.match(
-				skillToolCatalog,
+				toolCatalog,
 				new RegExp(`\\\`${toolName}\\\``),
 				`Skill-facing tool catalog missing ${toolName}`,
 			);
 		}
 		assert.match(
-			skillToolCatalog,
+			toolCatalog,
 			/action="sprint"/,
 			"Skill-facing tool catalog should document safe sprint metadata path",
 		);
@@ -552,13 +561,13 @@ async function main() {
 		);
 		assert.match(
 			piIndexSource,
-			/executeCodewikiDiffTableTool/,
-			"Pi diff-table registration should delegate to source-root tool executor",
+			/executeCodewikiDecisionTableTool/,
+			"Pi decision-table registration should delegate to source-root tool executor",
 		);
 		assert.match(
 			piIndexSource,
 			/api\/tools/,
-			"Pi diff-table registration should delegate through the API facade",
+			"Pi decision-table registration should delegate through the API facade",
 		);
 		assert.match(
 			piIndexSource,
@@ -688,8 +697,8 @@ async function main() {
 		}
 		assert.doesNotMatch(
 			piIndexSource,
-			/application\/tools\/diff-table|application\/diff-table|domain\/change/,
-			"Diff-table package paths should not delegate through old change/diff-table shims",
+			/application\/tools\/decision-table|application\/decision-table|domain\/change/,
+			"Decision-table package paths should not delegate through old change/decision-table shims",
 		);
 		assert.doesNotMatch(
 			schemaSource,
@@ -876,8 +885,8 @@ async function main() {
 		);
 		assert.match(
 			statusCommandSource,
-			/state\/artifacts/,
-			"Pi status command should read generated artifacts from state source root",
+			/deprecated status UI/i,
+			"Pi status command should be a deprecation shim, not a state-rendering UI",
 		);
 		assert.match(
 			resumeCommandSource,
@@ -949,11 +958,9 @@ async function main() {
 			skill.filePath.startsWith(repoRoot),
 		);
 		const expectedSkillNames = [
-			"codewiki",
 			"codewiki-decision",
 			"codewiki-implementation",
 			"codewiki-planning",
-			"codewiki-validation",
 		];
 		assert.deepEqual(
 			skills.map((skill) => skill.name).sort(),
@@ -1159,7 +1166,7 @@ async function main() {
 				kind: "decision",
 				summary: "Resume context proof decision.",
 				slug: "resume-proof-decision",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "RESUME-PROOF",
 						current_state: "TASK-001 lacks planning proof.",
@@ -1169,7 +1176,7 @@ async function main() {
 						affected_layers: ["roadmap"],
 						user_action: "approved",
 					},
-				],
+				]),
 				row_to_kb_mappings: [
 					{
 						row_id: "RESUME-PROOF",
@@ -1316,18 +1323,19 @@ async function main() {
 			"Agency should expose native fallback context steps",
 		);
 
-		const diffTableTool = extension.tools.get("wiki_diff_table");
+		const decisionTableTool = extension.tools.get("wiki_decision_table");
 		assert.ok(
-			diffTableTool && typeof diffTableTool.definition?.execute === "function",
-			"Diff table tool missing execute function",
+			decisionTableTool &&
+				typeof decisionTableTool.definition?.execute === "function",
+			"Decision Table tool missing execute function",
 		);
-		const diffResult = await diffTableTool.definition.execute(
-			"diff-table-smoke",
+		const decisionTableResult = await decisionTableTool.definition.execute(
+			"decision-table-smoke",
 			{
 				repoPath: projectDir,
 				action: "propose",
 				table_id: "DT-SMOKE",
-				summary: "Smoke diff rows",
+				summary: "Smoke decision rows",
 				rows: [
 					{
 						id: "DTR-001",
@@ -1344,7 +1352,7 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.equal(diffResult.details.table.rows[0].id, "DTR-001");
+		assert.equal(decisionTableResult.details.table.rows[0].id, "DTR-001");
 
 		const buildTool = extension.tools.get("wiki_build");
 		assert.ok(
@@ -1359,11 +1367,11 @@ async function main() {
 				summary: "Accepted decision smoke build.",
 				slug: "decision-smoke",
 				source: "smoke-test",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-001",
 						current_state:
-							"Decision intent is not persisted as approved diff rows.",
+							"Decision intent is not persisted as approved decision rows.",
 						desired_state:
 							"Decision builds persist approved rows and KB mappings as durable handoff payloads.",
 						rationale:
@@ -1372,7 +1380,7 @@ async function main() {
 						risk: "low",
 						user_action: "approved",
 					},
-				],
+				]),
 				assumptions: ["Smoke fixture can create build artifacts."],
 				knowledge_changes: [".codewiki/kb/system/overview.md"],
 				roadmap_changes: ["TASK-001"],
@@ -1409,7 +1417,10 @@ async function main() {
 		assert.equal(decisionBuild.status, "accepted");
 		assert.equal(decisionBuild.lifecycle.ttl_days, 7);
 		assert.equal(decisionBuild.schema_version, 2);
-		assert.equal(decisionBuild.diff_table[0].user_action, "approved");
+		assert.equal(
+			decisionBuild.decision_table.rows[0].approval.status,
+			"approved",
+		);
 		assert.equal(decisionBuild.accepted_decisions[0].id, "D1");
 		assert.equal(decisionBuild.propagation.direction, "system-first");
 
@@ -2378,7 +2389,7 @@ async function main() {
 		const channelInputQueue = [];
 		let configIdle = true;
 		let configAbortCount = 0;
-		let panelIdle = true;
+		const panelIdle = true;
 		let panelAbortCount = 0;
 		const widgetState = { key: null, content: null, options: null };
 		const panelState = { renderedLines: null, terminalInput: null };
@@ -2407,13 +2418,13 @@ async function main() {
 		);
 		assert.deepEqual(
 			wikiCommand.getArgumentCompletions?.("s")?.map((item) => item.value),
-			["status", "system"],
-			"wiki router should complete canonical subcommands",
+			["system"],
+			"wiki router should omit deprecated status UI from canonical completions",
 		);
 		assert.deepEqual(
 			wikiCommand.getArgumentCompletions?.("p")?.map((item) => item.value),
-			["product"],
-			"wiki router should complete product navigation",
+			[],
+			"wiki router should omit deprecated product UI navigation",
 		);
 		assert.ok(
 			configCommand && typeof configCommand.handler === "function",
@@ -2443,9 +2454,9 @@ async function main() {
 				(entry) =>
 					entry.level === "warning" &&
 					/wiki-ui is deprecated/.test(String(entry.message)) &&
-					/\/wiki status/.test(String(entry.message)),
+					/wiki_state/.test(String(entry.message)),
 			),
-			"wiki-ui should be a deprecation shim that points to Pi-hosted commands",
+			"wiki-ui should be a deprecation shim that points to backend tools",
 		);
 
 		await configCommand.handler("", {
@@ -2487,7 +2498,7 @@ async function main() {
 		assert.deepEqual(
 			configPanelState.options,
 			{ placement: "aboveEditor" },
-			"wiki-config should render as a top widget like status panel",
+			"wiki-config should render as a top widget like status dock",
 		);
 		assert.equal(
 			configPanelState.error,
@@ -2692,7 +2703,7 @@ async function main() {
 				kind: "decision",
 				summary: "TASK-002 resume proof decision.",
 				slug: "task-002-resume-proof-decision",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "TASK-002-RESUME",
 						current_state: "TASK-002 lacks planning proof.",
@@ -2703,7 +2714,7 @@ async function main() {
 						affected_layers: ["roadmap"],
 						user_action: "approved",
 					},
-				],
+				]),
 				row_to_kb_mappings: [
 					{
 						row_id: "TASK-002-RESUME",
@@ -2970,7 +2981,6 @@ async function main() {
 		const statusState = graph.lenses.status;
 		const roadmapFolderIndex = roadmapState;
 		const statusView = statusState;
-		let panelLines = panelState.renderedLines ?? [];
 		assert.ok(
 			!existsSync(resolve(nestedDir, "wiki")),
 			"Bootstrap should anchor wiki at the existing wiki root, not nested cwd",
@@ -3267,7 +3277,7 @@ async function main() {
 			"product/users/agents.md",
 			"product/stories/intent.md",
 			"product/stories/navigation.md",
-			"product/uis/status-panel.md",
+			"product/uis/terminal.md",
 			"product/uis/board.md",
 			"system/adapters.md",
 		]) {
@@ -3507,9 +3517,9 @@ async function main() {
 			statusState.agency.lanes.some(
 				(lane) =>
 					lane.id === "product_system" &&
-					lane.recommendation.command === "/wiki-status",
+					lane.recommendation.command === "wiki_state",
 			),
-			"Status state should expose agency lane recommendations through wiki-status",
+			"Status state should expose agency lane recommendations through backend state",
 		);
 		assert.ok(
 			statusState.agency.lanes.some(
@@ -3568,183 +3578,20 @@ async function main() {
 			"Roadmap JSON should not persist session linkage metadata",
 		);
 		assert.ok(
-			statusNotifications.every(
-				(entry) => !/Wiki: Smoke Wiki/.test(String(entry.message)),
+			statusNotifications.some((entry) =>
+				/Status UI commands are deprecated/.test(String(entry.message)),
 			),
-			"wiki-status should prefer opening the panel over posting a long notify when custom UI is available",
+			"wiki-status should warn that status UI commands are deprecated",
 		);
 		assert.equal(
-			typeof widgetState.content,
-			"function",
-			"status panel should render as a live top widget",
-		);
-		assert.ok(
-			statusSummaries.some(
-				(entry) =>
-					entry.key === "codewiki-status" &&
-					/[🟢🟡🔴]/u.test(String(entry.value)) &&
-					/Smoke Wiki/.test(String(entry.value)),
-			),
-			"wiki-status should refresh the one-line status summary with repo name and traffic-light circle",
-		);
-		const widgetInstance = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		panelState.renderedLines = widgetInstance?.render(100) ?? [];
-		panelLines = panelState.renderedLines ?? [];
-		assert.match(
-			panelLines[0] ?? "",
-			/^┌/,
-			"Status panel should render as a framed container",
-		);
-		assert.match(
-			panelLines.join("\n"),
-			/Smoke Wiki/,
-			"Status panel header should contain the repo name",
-		);
-		assert.doesNotMatch(
-			panelLines.join("\n"),
-			/Smoke Wiki \|/,
-			"Status panel header should not append traffic lights or extra metadata to the repo name",
-		);
-		assert.match(
-			panelLines.join("\n"),
-			/\[Status\].*Product.*System.*Board.*Graph/i,
-			"Status panel should show simplified Status, Product, System, Board, and Graph tabs",
-		);
-		assert.doesNotMatch(
-			panelLines.join("\n"),
-			/Agents|Channels/i,
-			"Status panel should not expose Agents or Channels tabs",
-		);
-		assert.match(
-			panelLines.join("\n"),
-			/Status[\s\S]*(🟢|🟡|🔴)[\s\S]*(GREEN|YELLOW|RED)[\s\S]*(Checks|Linters):[\s\S]*Tasks:[\s\S]*Claims:[\s\S]*Next action/i,
-			"Status tab should show compact metrics and next action",
-		);
-		panelIdle = false;
-		assert.deepEqual(
-			panelState.terminalInput?.("\x1b"),
-			{ consume: true },
-			"Esc in status panel should be consumed after aborting active agent response",
+			widgetState.content,
+			null,
+			"wiki-status should not render a status UI widget",
 		);
 		assert.equal(
-			panelAbortCount,
-			1,
-			"Esc in status panel should abort active agent response instead of only closing the panel",
-		);
-		panelIdle = true;
-		panelState.terminalInput?.("\t");
-		const widgetInstanceAfterProductTab = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		const productPanelLines = widgetInstanceAfterProductTab?.render(100) ?? [];
-		assert.match(
-			productPanelLines.join("\n"),
-			/\[Product\]/i,
-			"Tab should advance to Product",
-		);
-		assert.match(
-			productPanelLines.join("\n"),
-			/Views:[\s\S]*overview[\s\S]*users[\s\S]*source refs[\s\S]*Product/i,
-			"Product tab should offer overview/users with source refs",
-		);
-		panelState.terminalInput?.("\x1b[C");
-		const widgetInstanceAfterProductUsers = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		const productUsersPanelLines =
-			widgetInstanceAfterProductUsers?.render(100) ?? [];
-		assert.match(
-			productUsersPanelLines.join("\n"),
-			/Maintainers[\s\S]*stories:[\s\S]*Agents/i,
-			"Product users view should show selectable users and story previews",
-		);
-		assert.doesNotMatch(
-			productPanelLines.join("\n"),
-			/(?<!Pi Extension |Agent Skills )Client/i,
-			"Product tab should not show system client columns",
-		);
-		panelState.terminalInput?.("\t");
-		const widgetInstanceAfterSystemTab = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		const systemPanelLines = widgetInstanceAfterSystemTab?.render(100) ?? [];
-		assert.match(
-			systemPanelLines.join("\n"),
-			/\[System\][\s\S]*System diagrams[\s\S]*Source truth/i,
-			"System tab should render source-backed diagram navigation",
-		);
-		panelState.terminalInput?.("\t");
-		const widgetInstanceAfterBoardTab = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		const roadmapPanelLines = widgetInstanceAfterBoardTab?.render(100) ?? [];
-		assert.match(
-			roadmapPanelLines.join("\n"),
-			/\[Board\]/i,
-			"Roadmap tab should be labelled Board in the status panel UI",
-		);
-		assert.match(
-			roadmapPanelLines.join("\n"),
-			/Todo[\s\S]*Implement[\s\S]*Done/i,
-			"Board tab should render canonical kanban task-state columns",
-		);
-		assert.doesNotMatch(
-			roadmapPanelLines.join("\n"),
-			/Research[\s\S]*Verify/i,
-			"Board tab should not render deprecated workflow columns",
-		);
-		assert.match(
-			roadmapPanelLines.join("\n"),
-			/Smoke|Map code|Keep road/i,
-			"Board tab should render task cards inside the kanban columns",
-		);
-		panelState.terminalInput?.("\r");
-		const widgetInstanceAfterRoadmapDetail = widgetState.content?.(
-			{ terminal: { columns: 120, rows: 32 } },
-			{
-				fg: (_color, text) => text,
-				bg: (_color, text) => text,
-				bold: (text) => text,
-			},
-		);
-		const roadmapDetailLines =
-			widgetInstanceAfterRoadmapDetail?.render(100) ?? [];
-		assert.match(
-			roadmapDetailLines.join("\n"),
-			/Status: |Priority: /i,
-			"Enter on a selected board task should open the reusable detail window",
-		);
-		assert.match(
-			roadmapDetailLines.join("\n"),
-			/Resume[\s\S]*Block/i,
-			"Board detail window should expose task actions",
+			panelState.terminalInput,
+			null,
+			"wiki-status should not register status UI keyboard handlers",
 		);
 		assert.ok(
 			resumeNotifications.some((entry) =>

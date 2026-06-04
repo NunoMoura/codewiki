@@ -1097,8 +1097,10 @@ function validationTaskIdGaps(
 function validationDecisionMappingGaps(build: any, profile: string): string[] {
 	if (normalizeValidationGate(profile) !== "decision") return [];
 	if (String(build?.kind || "").trim() !== "decision_build") return [];
-	const approvedIds = new Set(trimList(build?.approved_diff_rows));
-	const rows = Array.isArray(build?.diff_table) ? build.diff_table : [];
+	const approvedIds = new Set(trimList(build?.approved_decision_rows));
+	const rows = Array.isArray(build?.decision_table?.rows)
+		? build.decision_table.rows
+		: [];
 	const mappings = Array.isArray(build?.row_to_kb_mappings)
 		? build.row_to_kb_mappings
 		: [];
@@ -1109,11 +1111,11 @@ function validationDecisionMappingGaps(build: any, profile: string): string[] {
 		);
 		if (
 			row &&
-			String(row?.user_action || "")
+			String(row?.approval?.status || "")
 				.trim()
 				.toLowerCase() !== "approved"
 		)
-			gaps.push(`decision_row:${rowId}:user_action_not_approved`);
+			gaps.push(`decision_row:${rowId}:approval_not_approved`);
 		const mapping = mappings.find(
 			(candidate: any) => String(candidate?.row_id || "").trim() === rowId,
 		);

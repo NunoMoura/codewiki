@@ -28,7 +28,7 @@ The gateway reviews named evidence and records `pass`, `fail`, or `block` for th
 - `src/policy/**` currently owns gate policy compatibility behavior.
 - `src/validation/**` is compatibility-oriented gateway glue.
 - Target loop gates move toward `src/decision/gate.ts`, `src/planning/gate.ts`, and `src/implementation/gate.ts`, with only truly shared gateway primitives kept under `src/gateway/**`.
-- Target state embeds gate verdicts/findings/remediation in `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json`; `.codewiki/validation/**` is compatibility storage.
+- Target state embeds gate verdicts/findings/remediation in `.codewiki/telemetry/TRACE-*.json` under `decision.gate_history`, `planning.gate_history`, and `implementation.gate_history`; `.codewiki/validation/**` is compatibility storage.
 
 ## Contracts
 

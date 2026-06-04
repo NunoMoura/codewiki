@@ -9,17 +9,17 @@ export type LegacyChangeClass = ChangeType | TraceabilityExemption | "code-bugfi
 /** @deprecated Use ChangeType. */
 export type ChangeClass = LegacyChangeClass;
 
-export type CodewikiDiffTableUserAction =
+export type CodewikiDecisionTableUserAction =
 	| "pending"
 	| "approved"
 	| "rejected"
 	| "deferred"
 	| "edited";
 
-export function normalizeDiffTableUserAction(
+export function normalizeDecisionTableUserAction(
 	value: unknown,
-	fallback: CodewikiDiffTableUserAction | string = "pending",
-): CodewikiDiffTableUserAction | string {
+	fallback: CodewikiDecisionTableUserAction | string = "pending",
+): CodewikiDecisionTableUserAction | string {
 	const normalized = String(value || "")
 		.trim()
 		.toLowerCase();
@@ -33,7 +33,7 @@ export function normalizeDiffTableUserAction(
 	return normalized;
 }
 
-export interface CodewikiDiffTableRowInput {
+export interface CodewikiDecisionTableRowInput {
 	id?: string;
 	current_state: string;
 	/** Optional explicit alias for current_state when callers track row lifecycle. */

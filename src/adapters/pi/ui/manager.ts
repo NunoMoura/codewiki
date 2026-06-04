@@ -89,7 +89,7 @@ export let activeStatusPanelInputUnsubscribe: (() => void) | null = null;
 export let activeConfigPanelClose: (() => void) | null = null;
 
 /**
- * Set the global active status panel.
+ * Set the global active status dock.
  */
 export function setActiveStatusPanelGlobal(
 	panel: ActiveStatusPanel | null,
@@ -1490,7 +1490,7 @@ export function readGraphPanelData(project: WikiProject): {
 	};
 }
 
-export function readDiffTablePanelData(project: WikiProject): {
+export function readDecisionTablePanelData(project: WikiProject): {
 	rows: Array<{
 		tableId: string;
 		rowId: string;
@@ -1518,14 +1518,14 @@ export function readDiffTablePanelData(project: WikiProject): {
 	};
 }
 
-export function updateRuntimeDiffRow(
+export function updateRuntimeDecisionTableRow(
 	project: WikiProject,
 	tableId: string,
 	rowId: string,
 	action: "approved" | "rejected" | "deferred" | "edited",
 	alternative?: string,
 ): boolean {
-	const path = resolve(project.root, ".codewiki/runtime/diff-tables.json");
+	const path = resolve(project.root, ".codewiki/runtime/decision-tables.json");
 	const data = maybeReadJsonSync<any>(path) || { version: 1, tables: [] };
 	const table = Array.isArray(data.tables)
 		? data.tables.find((item: any) => String(item.id) === tableId)
@@ -2194,12 +2194,12 @@ export function renderStatusPanelLines(
 	}
 
 	if (section === "diff") {
-		const diff = readDiffTablePanelData(project);
-		panelState.diffRowIndex = Math.min(
-			Math.max(0, panelState.diffRowIndex ?? 0),
+		const diff = readDecisionTablePanelData(project);
+		panelState.decisionTableRowIndex = Math.min(
+			Math.max(0, panelState.decisionTableRowIndex ?? 0),
 			Math.max(0, diff.rows.length - 1),
 		);
-		body.push(theme.bold(theme.fg("accent", "Feedback diff table")));
+		body.push(theme.bold(theme.fg("accent", "Feedback decision table")));
 		body.push(theme.fg("muted", diff.summary));
 		body.push(
 			theme.fg(
@@ -2215,7 +2215,7 @@ export function renderStatusPanelLines(
 		);
 		body.push("");
 		for (const [index, row] of diff.rows.slice(0, 12).entries()) {
-			const selected = index === panelState.diffRowIndex;
+			const selected = index === panelState.decisionTableRowIndex;
 			const mode = row.readOnly ? "ro" : "edit";
 			body.push(
 				highlightSelectable(
@@ -2245,7 +2245,9 @@ export function renderStatusPanelLines(
 				);
 		}
 		if (!diff.rows.length)
-			body.push(theme.fg("muted", "No pending or accepted diff rows found."));
+			body.push(
+				theme.fg("muted", "No pending or accepted decision rows found."),
+			);
 	}
 
 	return renderPinnedTopPanel(
@@ -2292,7 +2294,7 @@ export async function openStatusPanel(
 		roadmapColumnIndex: 0,
 		roadmapRowIndex: 0,
 		graphRowIndex: 0,
-		diffRowIndex: 0,
+		decisionTableRowIndex: 0,
 		agentRowIndex: 0,
 		channelRowIndex: 0,
 		detail: null,
@@ -2506,12 +2508,13 @@ export async function openStatusPanel(
 						panelState.graphRowIndex = (panelState.graphRowIndex ?? 0) + 1;
 				} else if (panelState.section === "diff") {
 					if (matchesKey(data, "up") || matchesKey(data, "left"))
-						panelState.diffRowIndex = Math.max(
+						panelState.decisionTableRowIndex = Math.max(
 							0,
-							(panelState.diffRowIndex ?? 0) - 1,
+							(panelState.decisionTableRowIndex ?? 0) - 1,
 						);
 					if (matchesKey(data, "down") || matchesKey(data, "right"))
-						panelState.diffRowIndex = (panelState.diffRowIndex ?? 0) + 1;
+						panelState.decisionTableRowIndex =
+							(panelState.decisionTableRowIndex ?? 0) + 1;
 				}
 				renderWidget();
 				return { consume: true };
@@ -2521,10 +2524,10 @@ export async function openStatusPanel(
 				panelState.section === "diff" &&
 				["a", "x", "d", "p"].includes(data.toLowerCase())
 			) {
-				const diff = readDiffTablePanelData(panelState.project);
-				const row = diff.rows[panelState.diffRowIndex ?? 0];
+				const diff = readDecisionTablePanelData(panelState.project);
+				const row = diff.rows[panelState.decisionTableRowIndex ?? 0];
 				if (!row || row.readOnly) {
-					ui.notify?.("No editable pending diff row selected.", "warning");
+					ui.notify?.("No editable pending decision row selected.", "warning");
 					return { consume: true };
 				}
 				if (data.toLowerCase() === "p") {
@@ -2739,8 +2742,8 @@ export async function openStatusPanel(
 							],
 						});
 				} else if (panelState.section === "diff") {
-					const diff = readDiffTablePanelData(panelState.project);
-					const row = diff.rows[panelState.diffRowIndex ?? 0];
+					const diff = readDecisionTablePanelData(panelState.project);
+					const row = diff.rows[panelState.decisionTableRowIndex ?? 0];
 					if (row)
 						openStatusPanelDetail(panelState, {
 							kind: "diff",

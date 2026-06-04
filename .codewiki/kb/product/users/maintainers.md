@@ -39,4 +39,4 @@ They need CodeWiki to answer:
 - [Product](../overview.md)
 - [Maintain Fresh Intent](../stories/intent.md)
 - [Use Gated Agency](../stories/automation.md)
-- [Status Panel UI](../uis/status-panel.md)
+- [Pi TUI Diagram Rendering](../uis/terminal.md)

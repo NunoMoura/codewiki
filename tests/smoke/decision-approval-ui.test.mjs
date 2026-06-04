@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { executeDiffTableAction } from "../../src/change/diff-table.ts";
+import { executeDecisionTableAction } from "../../src/change/decision-table.ts";
 import {
 	applyDecisionApprovalAction,
 	buildTaskCandidateApprovalModel,
@@ -11,7 +11,7 @@ import {
 	renderDecisionApprovalCards,
 	renderTaskCandidateApprovalCards,
 } from "../../src/adapters/pi/ui/decision-approval.ts";
-import { readDiffTablePanelData } from "../../src/adapters/pi/ui/manager.ts";
+import { readDecisionTablePanelData } from "../../src/adapters/pi/ui/manager.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-decision-approval-"));
 const project = {
@@ -23,7 +23,7 @@ const project = {
 };
 
 try {
-	await executeDiffTableAction(project, {
+	await executeDecisionTableAction(project, {
 		action: "propose",
 		table_id: "DT-APPROVAL",
 		summary: "Approve decision rows",
@@ -103,7 +103,7 @@ try {
 		rowId: "ROW-APPROVE",
 		action: "approve",
 	});
-	assert.equal(approve.evidence.capability, "codewiki.diff_table");
+	assert.equal(approve.evidence.capability, "codewiki.decision_table");
 	assert.equal(approve.evidence.action, "accept");
 	await applyDecisionApprovalAction(project, {
 		tableId: "DT-APPROVAL",
@@ -146,7 +146,7 @@ try {
 		"edited rows must block full-table build eligibility until resolved",
 	);
 
-	const panel = readDiffTablePanelData(project);
+	const panel = readDecisionTablePanelData(project);
 	assert.equal(
 		panel.rows.find((row) => row.rowId === "ROW-APPROVE")?.buildEligible,
 		true,
@@ -158,7 +158,7 @@ try {
 	assert.match(panel.fallbackInstruction, /EDIT DT-APPROVAL\/ROW-EDIT/);
 
 	const stored = JSON.parse(
-		await readFile(join(root, ".codewiki/runtime/diff-tables.json"), "utf8"),
+		await readFile(join(root, ".codewiki/runtime/decision-tables.json"), "utf8"),
 	);
 	assert.equal(
 		stored.tables[0].rows.find((row) => row.id === "ROW-APPROVE").user_action,

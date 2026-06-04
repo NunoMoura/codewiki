@@ -635,13 +635,26 @@ function recordList(value: unknown): UnknownRecord[] {
 
 function hasDurablePlanningResolutionEvidence(entry: UnknownRecord): boolean {
 	if (!String(entry.evidence || "").trim()) return false;
-	const resolution = String(entry.resolution || "").trim().toLowerCase();
+	const resolution = String(entry.resolution || "")
+		.trim()
+		.toLowerCase();
 	if (["roadmap-task", "task", "tasks"].includes(resolution)) {
 		return list(entry.task_ids).length > 0;
 	}
 	if (resolution === "sprint") return list(entry.sprint_ids).length > 0;
-	if (["knowledge-only", "non-executable", "not-applicable", "rejected", "blocked"].includes(resolution)) {
-		return list(entry.knowledge_refs).length > 0 || list(entry.source_refs).length > 0;
+	if (
+		[
+			"knowledge-only",
+			"non-executable",
+			"not-applicable",
+			"rejected",
+			"blocked",
+		].includes(resolution)
+	) {
+		return (
+			list(entry.knowledge_refs).length > 0 ||
+			list(entry.source_refs).length > 0
+		);
 	}
 	if (resolution === "deferred") {
 		return Boolean(
@@ -650,7 +663,9 @@ function hasDurablePlanningResolutionEvidence(entry: UnknownRecord): boolean {
 				String(entry.rationale || "").trim(),
 		);
 	}
-	return Boolean(list(entry.source_refs).length || list(entry.knowledge_refs).length);
+	return Boolean(
+		list(entry.source_refs).length || list(entry.knowledge_refs).length,
+	);
 }
 
 function planningBuildHasTestStrategy(buildData: UnknownRecord): boolean {
@@ -659,7 +674,9 @@ function planningBuildHasTestStrategy(buildData: UnknownRecord): boolean {
 	if (list(buildData.evidence_mapping).length > 0) return true;
 	if (list(buildData.acceptance_mapping).length > 0) return true;
 	const decisionRows = recordList(buildData.decision_row_resolutions);
-	const downstreamQuestions = recordList(buildData.downstream_question_resolutions);
+	const downstreamQuestions = recordList(
+		buildData.downstream_question_resolutions,
+	);
 	return [...decisionRows, ...downstreamQuestions].some(
 		hasDurablePlanningResolutionEvidence,
 	);
@@ -673,13 +690,16 @@ function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 	const issues: LintIssue[] = [];
 	const buildData = recordValue(data);
 	const lifecycle = recordValue(buildData.lifecycle);
-	const rows = recordList(buildData.diff_table);
-	const approvedRows = list(buildData.approved_diff_rows);
-	const approved = rows.filter(
-		(row) =>
-			String(row.user_action || "").trim() === "approved" ||
-			approvedRows.includes(row.id),
-	);
+	const decisionTable = recordValue(buildData.decision_table);
+	const rows = recordList(decisionTable.rows);
+	const approvedRows = list(buildData.approved_decision_rows);
+	const approved = rows.filter((row) => {
+		const approval = recordValue(row.approval);
+		return (
+			String(approval.status || "").trim() === "approved" ||
+			approvedRows.includes(row.id)
+		);
+	});
 	const mappings = recordList(buildData.row_to_kb_mappings);
 	let fallbackMode = "accepted";
 	if (String(buildData.status || lifecycle.state || "") === "proposed") {
@@ -690,9 +710,9 @@ function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 		issues.push(
 			createIssue(
 				"error",
-				"decision-build-missing-diff-table",
+				"decision-build-missing-decision-table",
 				buildPath,
-				"Decision build v2 requires diff_table rows.",
+				"Decision build v2 requires decision_table rows.",
 			),
 		);
 	}
@@ -717,9 +737,9 @@ function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 		issues.push(
 			createIssue(
 				"error",
-				"decision-build-missing-approved-diff-row",
+				"decision-build-missing-approved-decision-row",
 				buildPath,
-				"Accepted decision build v2 requires at least one approved diff_table row.",
+				"Accepted decision build v2 requires at least one approved decision_table row.",
 			),
 		);
 	}

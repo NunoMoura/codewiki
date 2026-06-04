@@ -16,16 +16,16 @@ This focused companion to [CodeWiki API](api.md) keeps the reduced command and w
 
 ## Target user commands
 
-The vNext user command surface is small and TUI-oriented. User commands render or navigate source-backed state; they do not define workflow semantics by themselves.
+The vNext user command surface is backend-first. User commands trigger backend actions or future Pi TUI diagram rendering; they do not define workflow semantics by themselves.
 
 | Command | Responsibility |
 | --- | --- |
 | `/wiki bootstrap` | Start CodeWiki in a greenfield or brownfield repository. The command adapter calls bootstrap/setup backend functions directly; this does not require a dedicated normal agent tool. |
-| `/wiki status` | Show the most important developer-facing project state: health, active focus, next action, blockers, latest validation signal, automation readiness, and relevant source refs. |
 | `/wiki resume` | Let the agent continue from the last known stable state using CodeWiki source refs, not chat history. |
-| `/wiki config` | Render user CodeWiki preferences/configuration choices in the TUI and apply selected settings through command-adapter backend calls. |
-| `/wiki system <diagram type>` | Render a canonical system diagram in the TUI. Users can toggle components or flows, see the selected item highlighted in ASCII/Unicode, and open the corresponding component/flow Markdown source on Enter. |
-| `/wiki product` | Navigate product knowledge. Users can choose overview or users; overview opens the product overview source, while users can be selected and their stories toggled before opening the corresponding KB Markdown source. |
+| `/wiki config` | Apply user CodeWiki preferences/configuration through command-adapter backend calls. |
+| `/wiki system <diagram type>` | Future Pi TUI rendering of canonical system diagram YAML as ASCII/Unicode. |
+
+Status UI commands such as `/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated. Product/Board/Map navigation commands are not active target surfaces. Backend state is read through `wiki_state`, graph lenses, roadmap state, lifecycle traces, validation reports, and source refs.
 
 Legacy `/wiki-*` hyphen commands and standalone compatibility commands such as `/audit` may remain during migration as shims with deprecation metadata. They are not canonical user vocabulary.
 
@@ -44,7 +44,7 @@ The normal internal agent tool surface is exactly six tools. The Pi adapter expo
 | `wiki_gate` | Gateway preflight and validation for named gates, including required linters, executable code tests when relevant, isolation, content evidence, and pass/fail/block verdicts. |
 | `wiki_runtime` | Session focus, leases, daemon jobs/runs, block/unblock state, context boundaries, agency scheduling, lifecycle/archive coordination, and platform-limited runtime evidence. |
 
-Existing low-level primitives such as raw diff-table mutation, raw build writing, validation report writing, roadmap mutation, session focus, lease mutation, linter execution, generated-state refresh, and archive ledger writes are compatibility/expert aliases or internal implementation details of these six workflow tools. Compatibility aliases must carry deprecation metadata and a normal-tool replacement so source-contract validation can prevent accidental normal use.
+Existing low-level primitives such as raw decision-table mutation, raw build writing, validation report writing, roadmap mutation, session focus, lease mutation, linter execution, generated-state refresh, and archive ledger writes are compatibility/expert aliases or internal implementation details of these six workflow tools. Compatibility aliases must carry deprecation metadata and a normal-tool replacement so source-contract validation can prevent accidental normal use.
 
 Each workflow tool owns one phase boundary, supports batched common operations, exposes source refs, validation outcomes, and recovery steps, and avoids becoming an opaque do-everything API.
 

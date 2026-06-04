@@ -12,7 +12,7 @@ import { executeCodewikiAudit, formatAuditReport } from "../audit/tool.ts";
 import { executeCodewikiBuildTool } from "../build/tool.ts";
 import {
 	executeCodewikiDecisionTool,
-	executeCodewikiDiffTableTool,
+	executeCodewikiDecisionTableTool,
 } from "../change/tool.ts";
 import { executeCodewikiValidationTool } from "../gateway/tool.ts";
 import { executeCodewikiRoadmapTool } from "../roadmap/tool.ts";
@@ -85,8 +85,8 @@ const BUILD_KEYS = [
 	"propagation",
 	"diagram_refs",
 	"downstream_planning_questions",
-	"diff_table",
-	"approved_diff_rows",
+	"decision_table",
+	"approved_decision_rows",
 	"decisions",
 	"assumptions",
 	"open_questions",
@@ -117,7 +117,7 @@ const BUILD_KEYS = [
 	"publication",
 ] as const;
 
-const DIFF_TABLE_ACTIONS = new Set([
+const DECISION_TABLE_ACTIONS = new Set([
 	"propose",
 	"revise",
 	"accept",
@@ -194,11 +194,11 @@ function materializeBuildInput(
 	} as CodewikiBuildToolInput;
 }
 
-function materializeDiffInput(
+function materializeDecisionTableInput(
 	input: JsonRecord,
 	action: string,
 ): JsonRecord | null {
-	const nested = nestedInput(input, ["diff_table", "decision_rows"]);
+	const nested = nestedInput(input, ["decision_table", "decision_rows"]);
 	const base =
 		nested ??
 		pickKnown(input, [
@@ -360,28 +360,36 @@ export async function executeCodewikiDecideTool(
 						: "decide"),
 	);
 	const operations: CodewikiWorkflowOperation[] = [];
-	const diffAction =
+	const decisionTableAction =
 		action === "decide" && input.row_actions
 			? "rows"
 			: action === "decide" && input.rows
 				? "propose"
-				: DIFF_TABLE_ACTIONS.has(action) || action === "rows"
+				: DECISION_TABLE_ACTIONS.has(action) || action === "rows"
 					? action
 					: null;
-	if (diffAction) {
-		const diffInput = materializeDiffInput(input, diffAction);
-		if (diffInput) {
+	if (decisionTableAction) {
+		const decisionTableInput = materializeDecisionTableInput(
+			input,
+			decisionTableAction,
+		);
+		if (decisionTableInput) {
 			const result =
-				diffAction === "rows"
+				decisionTableAction === "rows"
 					? await executeCodewikiDecisionTool(project, {
 							action: "rows",
-							table_id: String(diffInput.table_id || ""),
-							row_actions: diffInput.row_actions || [],
-							summary: diffInput.summary,
-							source: diffInput.source,
+							table_id: String(decisionTableInput.table_id || ""),
+							row_actions: decisionTableInput.row_actions || [],
+							summary: decisionTableInput.summary,
+							source: decisionTableInput.source,
 						} as any)
-					: await executeCodewikiDiffTableTool(project, diffInput as any);
-			operations.push(operation("wiki_diff_table", diffAction, result));
+					: await executeCodewikiDecisionTableTool(
+							project,
+							decisionTableInput as any,
+						);
+			operations.push(
+				operation("wiki_decision_table", decisionTableAction, result),
+			);
 		}
 	}
 	const buildInput = materializeBuildInput(
@@ -401,7 +409,7 @@ export async function executeCodewikiDecideTool(
 		operations.push(operation("wiki_build", "decision", result));
 	}
 	return workflowResult("wiki_decide", action, operations, [
-		"wiki_diff_table",
+		"wiki_decision_table",
 		"wiki_build(kind=decision)",
 	]);
 }

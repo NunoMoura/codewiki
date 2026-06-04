@@ -12,20 +12,20 @@ updated: "2026-06-03"
 
 ## Main boundaries
 
-CodeWiki is a Pi-based software-development distribution that maintains the repository-local `.codewiki/` contract and exposes it through Pi-hosted commands, compact status views, internal agent tools, and focused `/wiki-*` command surfaces. Pi is the runtime foundation, not a mere adapter. Adapter language is reserved for future/non-Pi protocol translation or compatibility paths.
+CodeWiki is a Pi-based software-development distribution that maintains the repository-local `.codewiki/` contract and exposes it through backend API calls, internal agent tools, and minimal command surfaces. Pi is the runtime foundation, not a mere adapter. Adapter language is reserved for future/non-Pi protocol translation or compatibility paths.
 
 - **Knowledge base semantics** own product specs, visual UI specs, system access-surface specs, system specs, architecture rules, and workflow vocabulary under `.codewiki/kb/**`.
 - **Agency controller** owns bounded automation through agency cycles and explicit token, time, risk, gate, model, and approval boundaries.
 - **Three compiler loops** own decision, planning, and implementation engines. Compiler output is emitted into loop trace files, not a standalone source architecture layer.
-- **Telemetry traces** own compact workflow traceability under `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json`.
+- **Telemetry traces** own compact lifecycle traceability under `.codewiki/telemetry/TRACE-*.json`, with cold trace metadata in `.codewiki/telemetry/catalog.json`.
 - **Gateway gates** validate loop outputs against criteria, source refs, gate evidence, generated graph context, KB/diagram freshness, and content proof. Gate pass is the promotion boundary.
 - **Graph engine** owns generated reconciliation state in `.codewiki/index_graph.json`: drift detection, routing, traceability, status, and freshness checks. The graph is required gate context but never overrides canonical sources or immutable content proof.
 - **File-structure ownership map** owns human-readable intended source/tree ownership, current implementation shape, approved migration deltas, and drift categories through [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
 - **Linters/gate criteria** produce deterministic alignment, file-structure, stale-reference, package, security, generated-parity, and source-contract evidence for users and gateways.
-- **Terminal UI** owns Pi chat-native visual explanations, compact Pi-hosted panels, and focused command-triggered views while delegating all semantics to the CodeWiki API. The browser Control Room source has been removed; `/wiki-ui` remains only as a deprecation shim.
+- **Pi TUI diagram rendering** is the only retained future UI direction: source-backed system diagram YAML may render as ASCII/Unicode while delegating all semantics to the CodeWiki API. The browser Control Room and status/board/map/product/system UI surfaces are deprecated.
 - **API facade** owns stable package/tool use-case entrypoints under `src/api/**` so adapters, scripts, UI, CLI/MCP wrappers, and future harnesses do not depend on old layer-first internals.
 - **Loop-first source roots** own pure CodeWiki loop engines, gates, tools, schemas, transitions, and invariants for decision, planning, implementation, telemetry, graph, knowledge, Git proof, Pi integration, project contracts, runtime, agency, and shared primitives.
-- **Pi integration** owns current commands, tools, status panel, session integration, packaged skills, and resource discovery. Future adapters may translate other protocol surfaces, but adapters do not own CodeWiki semantics.
+- **Pi integration** owns backend commands, tools, session integration, packaged skills, and resource discovery. Future adapters may translate other protocol surfaces, but adapters do not own CodeWiki semantics.
 - **Shared** owns minimal cross-cutting helpers and types that are truly common; it must not become a dumping ground for domain or application behavior.
 
 ## Truth boundaries and compiler model

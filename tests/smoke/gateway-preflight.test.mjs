@@ -8,6 +8,7 @@ import {
 	writeImplementationBuild,
 	writePlanningBuild,
 } from "../../src/build/writer.ts";
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 import {
 	buildGatewayPreflight,
 	writeGatewayReport,
@@ -79,7 +80,7 @@ try {
 	const decision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept gateway preflight risk policy.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "VAL-PREFLIGHT",
 				current_state: "Gateway preflight is weaker.",
@@ -88,7 +89,7 @@ try {
 				affected_layers: ["system", "roadmap", "code"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "VAL-PREFLIGHT",
@@ -807,7 +808,7 @@ try {
 	const unresolvedDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept unresolved propagation fixture.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "UNMAPPED-ROW",
 				current_state: "Question-only planning can pass.",
@@ -816,7 +817,7 @@ try {
 				affected_layers: ["roadmap", "code"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "UNMAPPED-ROW",
@@ -883,7 +884,7 @@ try {
 	const pendingApprovedDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept pending approved id fixture.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "PENDING-APPROVED",
 				current_state: "Pending rows can be promoted.",
@@ -892,8 +893,8 @@ try {
 				affected_layers: ["system"],
 				user_action: "pending",
 			},
-		],
-		approved_diff_rows: ["PENDING-APPROVED"],
+		]),
+		approved_decision_rows: ["PENDING-APPROVED"],
 		row_to_kb_mappings: [
 			{
 				row_id: "PENDING-APPROVED",
@@ -917,7 +918,7 @@ try {
 	assert.equal(pendingApprovedPreflight.status, "blocked");
 	assert.ok(
 		pendingApprovedPreflight.missing.decision_mappings.some((entry) =>
-			entry.includes("user_action_not_approved"),
+			entry.includes("approval_not_approved"),
 		),
 	);
 	assert.equal(
@@ -928,7 +929,7 @@ try {
 	const deferredDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept knowledge-only and deferred propagation fixture.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "KNOWLEDGE-ONLY",
 				current_state: "Docs are unclear.",
@@ -946,7 +947,7 @@ try {
 				affected_layers: ["knowledge"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "KNOWLEDGE-ONLY",
@@ -1015,7 +1016,7 @@ try {
 	const executableDeferredDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept daemon worker scheduling follow-up fixture.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "DAEMON-WORKER-FOLLOWUP",
 				current_state:
@@ -1026,7 +1027,7 @@ try {
 				affected_layers: ["runtime", "graph", "code"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "DAEMON-WORKER-FOLLOWUP",
@@ -1137,7 +1138,7 @@ try {
 	const triggerSatisfiedDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept trigger-satisfied deferred propagation fixture.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "TRIGGER-DEFER",
 				current_state: "Deferred work can remain hidden after trigger.",
@@ -1146,7 +1147,7 @@ try {
 				affected_layers: ["knowledge"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "TRIGGER-DEFER",

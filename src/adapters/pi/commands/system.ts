@@ -1,16 +1,9 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
-import {
-	resolveCommandProject,
-	resolveStatusDockProject,
-	rememberStatusDockProject,
-} from "../../../project/context.ts";
+import { resolveCommandProject } from "../../../project/context.ts";
 import { splitCommandArgs } from "../../../shared/utils.ts";
-import { currentTaskLink } from "../session.ts";
 import {
-	openStatusPanel,
 	readSystemDiagramCatalog,
-	refreshStatusDock,
 	renderSystemDiagramDetailLines,
 } from "../ui/manager.ts";
 
@@ -49,38 +42,19 @@ function selectedSystemDiagramIndex(
 }
 
 export async function runSystemCommand(
-	pi: ExtensionAPI,
+	_pi: ExtensionAPI,
 	args: string,
 	ctx: any,
 	commandName = "wiki system",
 ): Promise<void> {
 	const [selector] = splitCommandArgs(args);
-	const resolved = await resolveStatusDockProject(ctx, { allowWhenOff: true });
-	const project =
-		resolved?.project ?? (await resolveCommandProject(ctx, null, commandName));
-	const source = resolved?.source ?? "cwd";
-	await rememberStatusDockProject(project);
-	await refreshStatusDock(project, ctx, currentTaskLink(ctx));
+	const project = await resolveCommandProject(ctx, null, commandName);
 	const rowIndex = selectedSystemDiagramIndex(project, selector || null);
-	const opened = await openStatusPanel(
-		pi,
-		project,
-		ctx,
-		"both",
-		currentTaskLink(ctx),
-		source,
-		() => undefined,
-		"system",
-		rowIndex,
-		0,
+	const diagram = readSystemDiagramCatalog(project)[rowIndex];
+	ctx.ui.notify(
+		diagram
+			? renderSystemDiagramDetailLines(diagram, 12).join("\n")
+			: "No system diagram YAML found under .codewiki/kb/system/diagrams.",
+		"info",
 	);
-	if (!opened) {
-		const diagram = readSystemDiagramCatalog(project)[rowIndex];
-		ctx.ui.notify(
-			diagram
-				? renderSystemDiagramDetailLines(diagram, 8).join("\n")
-				: "No system diagram YAML found under .codewiki/kb/system/diagrams.",
-			"info",
-		);
-	}
 }

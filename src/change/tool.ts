@@ -1,25 +1,25 @@
 import type { WikiProject } from "../project/types.ts";
 import {
-	executeDiffTableAction,
-	type CodewikiDiffTableRowActionInput,
-	type CodewikiDiffTableToolInput,
-} from "./diff-table.ts";
+	executeDecisionTableAction,
+	type CodewikiDecisionTableRowActionInput,
+	type CodewikiDecisionTableToolInput,
+} from "./decision-table.ts";
 
 export interface CodewikiDecisionWorkflowToolInput {
 	action: "rows";
 	table_id: string;
-	row_actions: CodewikiDiffTableRowActionInput[];
+	row_actions: CodewikiDecisionTableRowActionInput[];
 	summary?: string;
 	source?: string;
 }
 
-export async function executeCodewikiDiffTableTool(
+export async function executeCodewikiDecisionTableTool(
 	project: WikiProject,
-	input: CodewikiDiffTableToolInput,
+	input: CodewikiDecisionTableToolInput,
 ) {
-	const result = await executeDiffTableAction(project, input);
+	const result = await executeDecisionTableAction(project, input);
 	return {
-		summary: `codewiki diff_table: ${input.action}`,
+		summary: `codewiki decision_table: ${input.action}`,
 		result,
 	};
 }
@@ -28,7 +28,7 @@ export async function executeCodewikiDecisionTool(
 	project: WikiProject,
 	input: CodewikiDecisionWorkflowToolInput,
 ) {
-	const result = await executeDiffTableAction(project, {
+	const result = await executeDecisionTableAction(project, {
 		action: "accept",
 		table_id: input.table_id,
 		row_actions: input.row_actions,

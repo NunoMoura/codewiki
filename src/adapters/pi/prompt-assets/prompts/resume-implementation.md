@@ -33,7 +33,7 @@ Rules:
 - Request fresh validation from CodeWiki source refs when policy requires independent context. Validation gateway judges alignment/coherence and must start from artifacts, not builder chat.
 - Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal implementation memory; use CodeWiki resume context, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh continuation.
 - Do not close the task from builder context when policy requires fresh validation/content evidence. Use `wiki_implement` for builder evidence; use `wiki_plan action="close"` only after required pass evidence exists.
-- Keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, wiki-resume, and /linter; `/wiki-ui` is only a deprecation shim.
+- Treat status/product/board/map UI surfaces as deprecated for now; backend status comes from `wiki_state` and graph lenses, while future UI direction is only Pi TUI ASCII/Unicode system diagram rendering.
 - Do not create a separate user-facing wiki-edit command; update roadmap/wiki artifacts automatically when user intent requires it.
 - Rebuild generated outputs before finishing.
 - Rerun deterministic status before summarizing.

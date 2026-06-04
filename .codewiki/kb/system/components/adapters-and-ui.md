@@ -20,7 +20,7 @@ summary: Host adapters and user interfaces that delegate CodeWiki semantics to t
 
 ## Responsibility
 
-Adapters and UI surfaces translate host commands, panels, tools, and local views into CodeWiki API calls. They do not own canonical semantics; they preserve the same behavior across Pi chat/status panels, optional CLI/MCP wrappers, and future harnesses.
+Adapters and UI surfaces translate host commands, panels, tools, and local views into CodeWiki API calls. They do not own canonical semantics; they preserve the same behavior across Pi chat/status docks, optional CLI/MCP wrappers, and future harnesses.
 
 ## Owned paths
 

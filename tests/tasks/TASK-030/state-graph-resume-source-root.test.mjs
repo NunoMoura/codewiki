@@ -8,6 +8,7 @@ import {
 	writeDecisionBuild,
 	writePlanningBuild,
 } from "../../../src/build/writer.ts";
+import { decisionTableFixture } from "../../decision-table-fixture.mjs";
 import { writeGatewayReport } from "../../../src/gateway/report.ts";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -23,7 +24,7 @@ const requiredStateOwners = [
 	"src/state/resume-context.ts",
 	"src/state/resume-selection.ts",
 	"src/state/prompt.ts",
-	"src/state/skill-assets.ts",
+	"src/adapters/pi/prompt-assets.ts",
 	"src/state/local/rebuild-runner.ts",
 	"src/state/local/status-dock-prefs.ts",
 	"src/state/tool.ts",
@@ -83,6 +84,14 @@ const stateResumeSelection = await import(
 	resolve(repoRoot, "src/state/resume-selection.ts")
 );
 const statePrompt = await import(resolve(repoRoot, "src/state/prompt.ts"));
+const piPromptAssets = await import(
+	resolve(repoRoot, "src/adapters/pi/prompt-assets.ts")
+);
+assert.equal(
+	typeof piPromptAssets.readPromptAsset,
+	"function",
+	"Pi prompt assets helper should expose prompt asset reads",
+);
 const statePrefs = await import(
 	resolve(repoRoot, "src/state/local/status-dock-prefs.ts")
 );
@@ -213,9 +222,7 @@ try {
 		change_type: "system",
 		goal: {
 			outcome: "State ownership lives under src/state/**.",
-			acceptance: [
-				"wiki_state and wiki_resume_context behavior is preserved.",
-			],
+			acceptance: ["wiki_state and wiki_resume_context behavior is preserved."],
 			non_goals: ["Do not create src/resume/**."],
 			verification: [
 				"node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
@@ -424,7 +431,7 @@ try {
 	const decision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "State resume source-root proof decision.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "TASK-030-RESUME",
 				current_state: "TASK-900 lacks planning proof.",
@@ -433,7 +440,7 @@ try {
 				affected_layers: ["roadmap"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "TASK-030-RESUME",

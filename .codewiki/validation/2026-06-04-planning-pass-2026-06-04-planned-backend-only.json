@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T11:29:39Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "pass",
+  "rationale": "Backend-only UI deprecation planning passed. Accepted rows and downstream questions are resolved to TASK-089, with backend status preserved through wiki_state and only future Pi TUI ASCII system diagram rendering retained.",
+  "checks": [
+    "decision gate pass: .codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json",
+    "decision_row_resolutions complete",
+    "downstream_question_resolutions complete",
+    "npm run typecheck",
+    "npm run test:smoke"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment"
+  ],
+  "audit_reports": [
+    "Planning build maps accepted rows/questions to TASK-089; broader graph health warnings are pre-existing."
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+    "validation_report": ".codewiki/validation/2026-06-04-planning-pass-2026-06-04-planned-backend-only.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+      ".codewiki/validation/2026-06-04-planning-pass-2026-06-04-planned-backend-only.json",
+      "Refined TASK-089 to deprecate product/status UI surfaces, deprecate /wiki status variants, keep backend status through wiki_state/graph lenses, and retain only future Pi TUI ASCII system diagram rendering.",
+      "TASK-089",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/index.ts",
+      "src/state/builders.ts",
+      "src/project/templates.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+    "validation_report": ".codewiki/validation/2026-06-04-planning-pass-2026-06-04-planned-backend-only.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-planning-pass-2026-06-04-planned-backend-only.json",
+      "CodeWiki-Checks: decision gate pass: .codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json; decision_row_resolutions complete; downstream_question_resolutions complete; npm run typecheck; npm run test:smoke"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/index.ts",
+      "src/state/builders.ts",
+      "src/project/templates.ts"
+    ],
+    "reasons": [
+      "Pi or harness adapter code changed",
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

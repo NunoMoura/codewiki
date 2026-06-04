@@ -1,4 +1,4 @@
-import { renderSkillAsset } from "./skill-assets.ts";
+import { renderPromptAsset } from "../adapters/pi/prompt-assets.ts";
 import { unique } from "../shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
@@ -315,7 +315,7 @@ export function codePrompt(
 				]
 			: []),
 	];
-	return renderSkillAsset("prompts/resume-implementation.md", {
+	return renderPromptAsset("prompts/resume-implementation.md", {
 		"project.label": project.label,
 		"task.id": task.id,
 		"task.summary_block": renderBlock(taskSummaryLines),

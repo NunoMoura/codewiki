@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { buildGraph } from "../../src/state/graph.ts";
 import { readCodewikiState } from "../../src/state/reader.ts";
 import { loadProject } from "../../src/project/context.ts";
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-graph-lenses-"));
 const decisionPath =
@@ -112,7 +113,7 @@ try {
 					text: "Default graph state groups evidence into five compact families.",
 				},
 			],
-			diff_table: [
+			decision_table: decisionTableFixture([
 				{
 					id: "ROW-LENS",
 					current_state: "Raw graph nodes dominate status.",
@@ -134,8 +135,8 @@ try {
 					user_action: "rejected",
 					affected_layers: ["task"],
 				},
-			],
-			approved_diff_rows: ["ROW-LENS", "ROW-MISSING"],
+			]),
+			approved_decision_rows: ["ROW-LENS", "ROW-MISSING"],
 			row_to_kb_mappings: [
 				{
 					row_id: "ROW-LENS",

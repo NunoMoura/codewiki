@@ -125,7 +125,7 @@ export function formatStatusConfigSummary(
 		`Agency level: ${agencyPolicy?.level ?? "—"}`,
 		`Approval cadence: ${agencyPolicy?.approval_cadence ?? "—"}`,
 		`Reset auto-pickup: ${agencyPolicy ? (agencyPolicy.context_reset.enabled && agencyPolicy.context_reset.auto_pickup ? "on" : "off") : "—"}`,
-		"Status panel: /wiki-status",
+		"Backend state: wiki_state",
 	].join("\n");
 }
 

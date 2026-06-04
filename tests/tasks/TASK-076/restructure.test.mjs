@@ -57,8 +57,8 @@ assert.ok(
 	"Build writer should live under source-root build/",
 );
 assert.ok(
-	existsSync(resolve(repoRoot, "src", "validation", "report.ts")),
-	"Validation reports should live under source-root validation/",
+	!existsSync(resolve(repoRoot, "src", "validation")),
+	"Deprecated validation shim root should not remain after TASK-089",
 );
 assert.ok(
 	existsSync(resolve(repoRoot, "src", "state", "graph", "rebuilder.ts")),
@@ -73,24 +73,22 @@ const skillEntries = readdirSync(resolve(repoRoot, "skills"), {
 	.sort();
 assert.deepEqual(
 	skillEntries,
-	[
-		"codewiki",
-		"codewiki-decision",
-		"codewiki-implementation",
-		"codewiki-planning",
-		"codewiki-validation",
-	],
-	"Public CodeWiki skills should include the main entry skill and focused compiler skills completed so far",
-);
-assert.ok(
-	!existsSync(resolve(repoRoot, "skills", "codewiki", "loops")),
-	"Legacy loop docs should be removed once focused compiler skills own loop contracts",
+	["codewiki-decision", "codewiki-implementation", "codewiki-planning"],
+	"Public CodeWiki skills should expose only the three normal workflow skills",
 );
 assert.ok(
 	existsSync(
-		resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
+		resolve(
+			repoRoot,
+			"src",
+			"adapters",
+			"pi",
+			"prompt-assets",
+			"references",
+			"tool-catalog.md",
+		),
 	),
-	"Main skill should expose package-local tool catalog",
+	"Package prompt assets should expose package-local tool catalog outside discoverable skills",
 );
 assert.ok(
 	existsSync(resolve(repoRoot, "skills", "codewiki-decision", "SKILL.md")),
@@ -131,26 +129,22 @@ assert.ok(
 	"Implementation compiler should document exact tool usage",
 );
 assert.ok(
-	existsSync(resolve(repoRoot, "skills", "codewiki-validation", "SKILL.md")),
-	"Validation gateway should have a focused public skill",
+	!existsSync(resolve(repoRoot, "skills", "codewiki-validation")),
+	"Validation gateway should not remain as a discoverable public skill",
 );
 assert.ok(
 	existsSync(
 		resolve(
 			repoRoot,
-			"skills",
-			"codewiki-validation",
-			"references",
-			"tools.md",
+			"src",
+			"adapters",
+			"pi",
+			"prompt-assets",
+			"playbooks",
+			"research.md",
 		),
 	),
-	"Validation gateway should document exact tool usage",
-);
-assert.ok(
-	existsSync(
-		resolve(repoRoot, "skills", "codewiki", "playbooks", "research.md"),
-	),
-	"Playbooks should live under the codewiki skill",
+	"Package playbooks should live under prompt assets, not the generic codewiki skill",
 );
 
 const appendSystem = readFileSync(

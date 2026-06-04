@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -409,7 +410,7 @@ async function createCompactionFixture({ openTask = true } = {}) {
 		const decision = await writeDecisionBuild(project, {
 			kind: "decision",
 			summary: "Compaction resume proof decision.",
-			diff_table: [
+			decision_table: decisionTableFixture([
 				{
 					id: "COMPACTION-RESUME",
 					current_state: "TASK-001 lacks planning proof.",
@@ -420,7 +421,7 @@ async function createCompactionFixture({ openTask = true } = {}) {
 					affected_layers: ["roadmap"],
 					user_action: "approved",
 				},
-			],
+			]),
 			row_to_kb_mappings: [
 				{
 					row_id: "COMPACTION-RESUME",
@@ -494,6 +495,42 @@ async function createCompactionFixture({ openTask = true } = {}) {
 			summary?.details.taskId,
 			"TASK-001",
 			"stale active session task should not become explicit resume request",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/Trace-primary handoff:/,
+			"context refresh summary should include trace-primary handoff evidence",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/Source decision build: \.codewiki\/builds\/decision\//,
+			"context refresh summary should preserve source decision build refs",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/Approved rows: COMPACTION-RESUME/,
+			"context refresh summary should preserve approved row ids",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/KB\/diagram refs: \.codewiki\/kb\/system\/graph\.md/,
+			"context refresh summary should preserve KB refs from row mappings",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/Downstream planning resolutions:/,
+			"context refresh summary should preserve downstream planning resolution evidence",
+		);
+		assert.match(
+			summary?.summary ?? "",
+			/Bootstrap mode: current Pi extension\/tools remain authoritative/,
+			"context refresh summary should record old-tool bootstrap mode",
+		);
+		assert.ok(
+			summary?.details.sourceRefs.some((ref) =>
+				ref.startsWith(".codewiki/builds/decision/"),
+			),
+			"context refresh source refs should include source decision build",
 		);
 		const explicitStale = await buildCodewikiCompactionSummary(
 			project,

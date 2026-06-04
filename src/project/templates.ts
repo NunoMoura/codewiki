@@ -1,5 +1,5 @@
 import { basename, posix } from "node:path";
-import { renderSkillAsset } from "../state/skill-assets.ts";
+import { renderPromptAsset } from "../adapters/pi/prompt-assets.ts";
 
 export interface StarterBoundary {
 	codePath: string;
@@ -95,19 +95,21 @@ export function starterFiles(
 			summary:
 				"Start from compact graph-backed state and expand only to exact needed context.",
 		}),
-		".codewiki/kb/product/uis/status-panel.md": productUiDoc({
+		".codewiki/kb/product/uis/terminal.md": productUiDoc({
 			projectName,
 			date,
-			slug: "status-panel",
-			title: "Status Panel UI",
-			summary: "Panel-first status experience for humans and agents.",
+			slug: "terminal",
+			title: "Pi TUI Diagram Rendering",
+			summary:
+				"Future Pi TUI ASCII/Unicode rendering for source-backed system diagrams.",
 		}),
 		".codewiki/kb/product/uis/board.md": productUiDoc({
 			projectName,
 			date,
 			slug: "board",
 			title: "Board UI",
-			summary: "Roadmap, inferred-delta, approvals, and next-action visibility.",
+			summary:
+				"Roadmap, inferred-delta, approvals, and next-action visibility.",
 		}),
 		".codewiki/kb/product/uis/agent-tools.md": productUiDoc({
 			projectName,
@@ -143,7 +145,7 @@ export function starterFiles(
 			slug: "extension",
 			title: "CodeWiki Extension",
 			summary:
-				"Pi package extension surface for commands, status panel, skills, and agent tools.",
+				"Pi package extension surface for backend commands, skills, and agent tools.",
 			codePaths: [],
 		}),
 		".codewiki/kb/system/knowledge.md": architectureComponentDoc({
@@ -167,7 +169,8 @@ export function starterFiles(
 			date,
 			slug: "roadmap",
 			title: "Roadmap Queue",
-			summary: "Queue and task truth for active work ordering and closure state.",
+			summary:
+				"Queue and task truth for active work ordering and closure state.",
 			codePaths: [".codewiki/roadmap/queue.json"],
 		}),
 		".codewiki/kb/system/compilers.md": architectureFlowDoc({
@@ -212,11 +215,10 @@ function configJson(
 	date: string,
 	brownfieldHints: StarterBrownfieldHints,
 ): string {
-	const repoMarkdown = defaultedUniqueStrings(brownfieldHints.repoMarkdownGlobs, [
-		"README.md",
-		"src/**/README.md",
-		"backend/**/README.md",
-	]);
+	const repoMarkdown = defaultedUniqueStrings(
+		brownfieldHints.repoMarkdownGlobs,
+		["README.md", "src/**/README.md", "backend/**/README.md"],
+	);
 	const codeGlobs = defaultedUniqueStrings(brownfieldHints.codeGlobs, [
 		"src/**",
 		"app/**",
@@ -402,7 +404,10 @@ function configJson(
 	);
 }
 
-function defaultedUniqueStrings(values: string[], defaults: string[]): string[] {
+function defaultedUniqueStrings(
+	values: string[],
+	defaults: string[],
+): string[] {
 	if (values.length > 0) return uniqueStrings(values);
 	return uniqueStrings(defaults);
 }
@@ -461,7 +466,7 @@ function lexiconDoc(projectName: string, date: string): string {
 		"",
 		"## Surface",
 		"",
-		"A way humans or AI users interact with the project, such as Pi tools, commands, status panels, CLI, TUI, MCP, or package APIs.",
+		"A way humans or AI users interact with the project, such as Pi tools, commands, CLI, TUI, MCP, or package APIs.",
 		"",
 		"## Related docs",
 		"",
@@ -513,8 +518,7 @@ function productSpecDoc(projectName: string, date: string): string {
 		"- [Agents](users/agents.md)",
 		"- [Maintain Fresh Intent](stories/intent.md)",
 		"- [Low-Token Navigation](stories/navigation.md)",
-		"- [Status Panel UI](uis/status-panel.md)",
-		"- [Board UI](uis/board.md)",
+		"- [Pi TUI Diagram Rendering](uis/terminal.md)",
 		"- [Lexicon](../lexicon.md)",
 		"",
 	].join("\n");
@@ -544,7 +548,6 @@ function productUserDoc(input: BasicDocTemplateInput): string {
 		"## Related docs",
 		"",
 		"- [Product](../overview.md)",
-		"- [Status Panel UI](../uis/status-panel.md)",
 		"",
 	].join("\n");
 }
@@ -750,7 +753,7 @@ function systemSpecDoc(
 		"",
 		"## Path taxonomy",
 		"",
-		renderSkillAsset("bootstrap/starter-taxonomy.md", { projectName }),
+		renderPromptAsset("bootstrap/starter-taxonomy.md", { projectName }),
 		"",
 		"## Related docs",
 		"",
@@ -841,10 +844,7 @@ function boundarySpecDoc(
 		docDir,
 		".codewiki/kb/product/overview.md",
 	);
-	const uiLink = posix.relative(
-		docDir,
-		".codewiki/kb/product/uis/status-panel.md",
-	);
+	const uiLink = posix.relative(docDir, ".codewiki/kb/product/uis/terminal.md");
 	const systemLink = posix.relative(docDir, ".codewiki/kb/system/overview.md");
 	const boundaryId = boundary.slug.split("/").join(".");
 
@@ -928,7 +928,7 @@ function roadmapJson(projectName: string, date: string): string {
 							".codewiki/kb/product/users/maintainers.md",
 							".codewiki/kb/product/users/agents.md",
 							".codewiki/kb/product/stories/intent.md",
-							".codewiki/kb/product/uis/status-panel.md",
+							".codewiki/kb/product/uis/terminal.md",
 							".codewiki/kb/system/overview.md",
 						],
 						code_paths: [],

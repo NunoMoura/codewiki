@@ -553,7 +553,7 @@ export interface ActiveStatusPanel {
 	roadmapColumnIndex: number;
 	roadmapRowIndex: number;
 	graphRowIndex?: number;
-	diffRowIndex?: number;
+	decisionTableRowIndex?: number;
 	agentRowIndex: number;
 	channelRowIndex: number;
 	animationTimer?: ReturnType<typeof setInterval> | null;

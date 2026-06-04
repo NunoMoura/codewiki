@@ -1,4 +1,5 @@
 import "../setup-env.mjs";
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 /**
  * tests/smoke/builds.mjs
  *
@@ -99,7 +100,7 @@ async function run() {
 						priority: "medium",
 						kind: "feature",
 						summary: "Make graph navigation readable.",
-						spec_paths: [".codewiki/kb/product/uis/status-panel.md"],
+						spec_paths: [".codewiki/kb/product/uis/status-dock.md"],
 						code_paths: ["src/adapters/pi/ui/manager.ts"],
 						labels: ["graph", "ui"],
 						goal: {
@@ -128,7 +129,7 @@ async function run() {
 						priority: "high",
 						kind: "feature",
 						summary: "Add graph spacing refinements.",
-						spec_paths: [".codewiki/kb/product/uis/status-panel.md"],
+						spec_paths: [".codewiki/kb/product/uis/status-dock.md"],
 						code_paths: ["tests/smoke/package-smoke.test.mjs"],
 						labels: ["graph", "readability"],
 						goal: {
@@ -162,7 +163,9 @@ async function run() {
 		const taskOne = roadmapAfterRefine.tasks[firstTask.details.created[0].id];
 		assert.equal(taskOne.priority, "high");
 		assert.ok(taskOne.code_paths.includes("src/adapters/pi/ui/manager.ts"));
-		assert.ok(taskOne.code_paths.includes("tests/smoke/package-smoke.test.mjs"));
+		assert.ok(
+			taskOne.code_paths.includes("tests/smoke/package-smoke.test.mjs"),
+		);
 		assert.ok(taskOne.labels.includes("readability"));
 		assert.ok(taskOne.goal.acceptance.includes("Graph renders nodes."));
 		assert.ok(taskOne.goal.acceptance.includes("Nodes have minimum spacing."));
@@ -209,7 +212,7 @@ async function run() {
 					{
 						repoPath: projectDir,
 						kind: "decision",
-						summary: "Missing diff rows.",
+						summary: "Missing decision rows.",
 						decisions: ["Do X."],
 						lifecycle: { ttl_days: 7 },
 					},
@@ -217,7 +220,7 @@ async function run() {
 					undefined,
 					ctx,
 				),
-			/approved diff_table row|diff_table/,
+			/approved decision_table row|decision_table/,
 		);
 
 		const decisionResult = await buildTool.definition.execute(
@@ -226,7 +229,7 @@ async function run() {
 				repoPath: projectDir,
 				kind: "decision",
 				summary: "Smoke decision.",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-001",
 						current_state: "X is undocumented.",
@@ -242,7 +245,7 @@ async function run() {
 						risk: "low",
 						user_action: "approved",
 					},
-				],
+				]),
 				knowledge_changes: [".codewiki/kb/system/overview.md"],
 				roadmap_changes: ["TASK-001 created/updated"],
 				row_to_kb_mappings: [
@@ -274,26 +277,28 @@ async function run() {
 		);
 		assert.equal(decision.kind, "decision_build");
 		assert.equal(decision.schema_version, 2);
-		assert.equal(decision.diff_table[0].user_action, "approved");
+		assert.equal(decision.decision_table.rows[0].approval.status, "approved");
 		assert.equal(
-			decision.diff_table[0].current_project_state,
-			"X lacks durable row lifecycle proof.",
+			decision.decision_table.rows[0].state_delta.current,
+			"X is undocumented.",
 		);
 		assert.equal(
-			decision.diff_table[0].agreed_change,
+			decision.decision_table.rows[0].proposed_change,
 			"Document X and create implementation task.",
 		);
 		assert.equal(
-			decision.diff_table[0].expected_final_state,
+			decision.decision_table.rows[0].expected_outcome,
 			"X docs and task evidence exist.",
 		);
 		assert.equal(
-			decision.diff_table[0].validated_final_state,
+			decision.decision_table.rows[0].validated_outcome,
 			"X docs and task evidence validated.",
 		);
-		assert.equal(decision.diff_table[0].status, "approved");
-		assert.deepEqual(decision.diff_table[0].proof_refs, ["approval:smoke"]);
-		assert.deepEqual(decision.approved_diff_rows, ["DTR-001"]);
+		assert.equal(decision.decision_table.status, "approved");
+		assert.deepEqual(decision.decision_table.rows[0].evidence_refs, [
+			{ ref: "approval:smoke" },
+		]);
+		assert.deepEqual(decision.approved_decision_rows, ["DTR-001"]);
 		assert.deepEqual(decision.produces.knowledge, [
 			".codewiki/kb/system/overview.md",
 		]);
@@ -765,7 +770,7 @@ async function run() {
 				repoPath: projectDir,
 				kind: "decision",
 				summary: "Needs planning.",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-002",
 						current_state: "Y missing docs.",
@@ -775,7 +780,7 @@ async function run() {
 						risk: "low",
 						user_action: "approved",
 					},
-				],
+				]),
 				knowledge_changes: [".codewiki/kb/system/api.md"],
 				row_to_kb_mappings: [
 					{
@@ -800,7 +805,7 @@ async function run() {
 				repoPath: projectDir,
 				kind: "decision",
 				summary: "Needs downstream work.",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-003",
 						current_state: "Z not built.",
@@ -810,7 +815,7 @@ async function run() {
 						risk: "medium",
 						user_action: "approved",
 					},
-				],
+				]),
 				knowledge_changes: [".codewiki/kb/system/api.md"],
 				row_to_kb_mappings: [
 					{
@@ -835,7 +840,7 @@ async function run() {
 				repoPath: projectDir,
 				kind: "decision",
 				summary: "Superseded intent.",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-004",
 						current_state: "Old intent pending.",
@@ -845,7 +850,7 @@ async function run() {
 						risk: "low",
 						user_action: "pending",
 					},
-				],
+				]),
 				decisions: ["Old intent."],
 				lifecycle: { state: "proposed", ttl_days: 7 },
 			},
@@ -859,7 +864,7 @@ async function run() {
 				repoPath: projectDir,
 				kind: "decision",
 				summary: "Replacement intent.",
-				diff_table: [
+				decision_table: decisionTableFixture([
 					{
 						id: "DTR-005",
 						current_state: "Old intent pending.",
@@ -869,7 +874,7 @@ async function run() {
 						risk: "low",
 						user_action: "approved",
 					},
-				],
+				]),
 				knowledge_changes: [".codewiki/kb/system/api.md"],
 				row_to_kb_mappings: [
 					{

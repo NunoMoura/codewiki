@@ -736,7 +736,7 @@ export function buildGraphLensViews(input: {
 	]);
 	const runtimeSourceRefs = unique([
 		".codewiki/session/queue.json",
-		".codewiki/runtime/diff-tables.json",
+		".codewiki/runtime/decision-tables.json",
 		".codewiki/index_graph.json",
 	]);
 	const commonBlockers: ReadModelRecord[] = [

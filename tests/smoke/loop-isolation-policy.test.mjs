@@ -8,6 +8,7 @@ import {
 	writeImplementationBuild,
 	writePlanningBuild,
 } from "../../src/build/writer.ts";
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 import { writeGatewayReport } from "../../src/gateway/report.ts";
 import { buildGraph } from "../../src/state/graph.ts";
 
@@ -59,7 +60,7 @@ try {
 	const decision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept isolated implementation policy.",
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "ISOLATION-POLICY",
 				current_state: "Isolation policy is not covered.",
@@ -69,7 +70,7 @@ try {
 				affected_layers: ["system", "code"],
 				user_action: "approved",
 			},
-		],
+		]),
 		row_to_kb_mappings: [
 			{
 				row_id: "ISOLATION-POLICY",
@@ -513,14 +514,14 @@ try {
 				data: {
 					kind: "decision_build",
 					lifecycle: { state: "accepted" },
-					diff_table: [
+					decision_table: decisionTableFixture([
 						{
 							id: "DTR-001",
 							desired_state: "Change builds.",
 							user_action: "approved",
 						},
-					],
-					approved_diff_rows: ["DTR-001"],
+					]),
+					approved_decision_rows: ["DTR-001"],
 					knowledge_changes: [".codewiki/kb/system/builds.md"],
 					row_to_kb_mappings: [
 						{

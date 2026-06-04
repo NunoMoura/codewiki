@@ -17,6 +17,6 @@ Output format:
 - Inferred project shape
 - Confident assumptions
 - Questions for the user (only if truly needed)
-- Suggested next step using /wiki-status or /wiki-resume
+- Suggested next step using wiki_state or /wiki-resume
 
 Do not dump large file listings. Be concise and evidence-backed.

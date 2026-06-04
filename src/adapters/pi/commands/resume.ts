@@ -106,7 +106,7 @@ export async function runResumeCommand(
 	);
 	if (!selection.task) {
 		ctx.ui.notify(
-			`${project.label}: no artifact-available roadmap task for /${commandName}. ${selection.skipped.length > 0 ? `Skipped: ${selection.skipped.slice(0, 3).join("; ")}. ` : ""}Open /wiki-status if you need a different direction.`,
+			`${project.label}: no artifact-available roadmap task for /${commandName}. ${selection.skipped.length > 0 ? `Skipped: ${selection.skipped.slice(0, 3).join("; ")}. ` : ""}Use wiki_state if you need a different backend direction.`,
 			"warning",
 		);
 		await refreshStatusDock(project, ctx, currentTaskLink(ctx));

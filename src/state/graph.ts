@@ -300,7 +300,8 @@ function classifySemanticPath(
 	if (normalized === "package.json" || normalized === "package-lock.json")
 		return "system";
 	if (
-		normalized.startsWith("skills/codewiki/") ||
+		normalized.startsWith("skills/codewiki-") ||
+		normalized.startsWith("src/adapters/pi/prompt-assets/") ||
 		normalized.startsWith("src/audit/") ||
 		normalized.startsWith("scripts/check-architecture")
 	)
@@ -765,15 +766,15 @@ function buildSemanticExecutionClosureView(input: {
 		typeof row === "string"
 			? row.trim() || `ROW-${index + 1}`
 			: String(row?.id || `ROW-${index + 1}`).trim();
-	const diffRows = (data: any): any[] =>
-		Array.isArray(data?.diff_table)
-			? data.diff_table
+	const decisionRows = (data: any): any[] =>
+		Array.isArray(data?.decision_table?.rows)
+			? data.decision_table.rows
 			: Array.isArray(data?.approved_rows)
 				? data.approved_rows
 				: [];
 	const approvedRowIds = (data: any) =>
 		new Set([
-			...stringList(data?.approved_diff_rows),
+			...stringList(data?.approved_decision_rows),
 			...(Array.isArray(data?.approved_rows)
 				? data.approved_rows.map((row: any, index: number) =>
 						decisionRowId(row, index),
@@ -782,7 +783,7 @@ function buildSemanticExecutionClosureView(input: {
 		]);
 	const rowAction = (row: any, rowId: string, approvedIds: Set<string>) =>
 		String(
-			row?.user_action ||
+			row?.approval?.status ||
 				row?.status ||
 				(approvedIds.has(rowId) ? "approved" : "pending"),
 		)
@@ -976,7 +977,7 @@ function buildSemanticExecutionClosureView(input: {
 		);
 		const assessmentRows = new Map(assessment.rows.map((row) => [row.id, row]));
 		const approvedIds = approvedRowIds(decision.data);
-		const sourceRows = diffRows(decision.data);
+		const sourceRows = decisionRows(decision.data);
 		for (const [index, row] of sourceRows.entries()) {
 			const rowId = decisionRowId(row, index);
 			const action = rowAction(row, rowId, approvedIds);
@@ -987,7 +988,12 @@ function buildSemanticExecutionClosureView(input: {
 					row_id: rowId,
 					row_action: action,
 					status: action || "not_approved",
-					text: String(row?.desired_state || row?.text || rowId).trim(),
+					text: String(
+						row?.state_delta?.desired ||
+							row?.proposed_change ||
+							row?.text ||
+							rowId,
+					).trim(),
 					reason: "not_approved_for_execution",
 				});
 				continue;
@@ -2306,10 +2312,14 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		const explicitRequirements = Array.isArray(decision.data?.requirements)
 			? decision.data.requirements
 			: [];
-		const approvedDiffRows = (decision.data?.diff_table || []).filter(
+		const approvedDecisionRows = (
+			Array.isArray(decision.data?.decision_table?.rows)
+				? decision.data.decision_table.rows
+				: []
+		).filter(
 			(row: any) =>
-				String(row?.user_action || "") === "approved" ||
-				stringList(decision.data?.approved_diff_rows).includes(
+				String(row?.approval?.status || "") === "approved" ||
+				stringList(decision.data?.approved_decision_rows).includes(
 					String(row?.id || ""),
 				),
 		);
@@ -2320,10 +2330,12 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 						id: String(req.id || "").trim(),
 						text: String(req.text || "").trim(),
 					}))
-				: approvedDiffRows.length > 0
-					? approvedDiffRows.map((row: any) => ({
+				: approvedDecisionRows.length > 0
+					? approvedDecisionRows.map((row: any) => ({
 							id: String(row.id || "").trim(),
-							text: String(row.desired_state || "").trim(),
+							text: String(
+								row.proposed_change || row.state_delta?.desired || "",
+							).trim(),
 						}))
 					: acceptedDecisions.map((entry: any) => ({
 							id: String(entry.id || "").trim(),
@@ -3132,7 +3144,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			"mark consumed builds cold after downstream evidence exists",
 			"move pass validation reports to warm/cold evidence",
 			"checkpoint closed task shards",
-			"purge expired runtime claims and pending diff tables",
+			"purge expired runtime claims and pending decision tables",
 		],
 	};
 	const cursorScope: WorkflowCursor["scope"] = activeSprintIds[0]

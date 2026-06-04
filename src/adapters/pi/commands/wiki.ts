@@ -1,7 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { runBootstrapCommand } from "../bootstrap.ts";
 import { runConfigCommand } from "./config.ts";
-import { runProductCommand } from "./product.ts";
 import { runResumeCommand } from "./resume.ts";
 import { runStatusCommand } from "./status.ts";
 import { runSystemCommand } from "./system.ts";
@@ -16,6 +15,7 @@ const WIKI_SUBCOMMANDS = [
 	"system",
 	"product",
 ] as const;
+const ACTIVE_WIKI_SUBCOMMANDS = ["bootstrap", "resume", "config", "system"];
 
 type WikiSubcommand = (typeof WIKI_SUBCOMMANDS)[number];
 
@@ -40,7 +40,7 @@ export function parseWikiCommandInput(args: string): WikiCommandInput {
 export function completeWikiCommand(prefix: string) {
 	const tokens = splitCommandArgs(prefix);
 	if (tokens.length > 1 || /\s$/.test(prefix)) return null;
-	return WIKI_SUBCOMMANDS.filter((item) =>
+	return ACTIVE_WIKI_SUBCOMMANDS.filter((item) =>
 		item.startsWith(tokens[0] || ""),
 	).map((value) => ({ value, label: value }));
 }
@@ -48,7 +48,7 @@ export function completeWikiCommand(prefix: string) {
 export function registerWikiCommand(pi: ExtensionAPI): void {
 	pi.registerCommand("wiki", {
 		description:
-			"CodeWiki command router. Usage: /wiki <bootstrap|status|resume|config|system|product> [...args]",
+			"CodeWiki command router. Usage: /wiki <bootstrap|resume|config|system> [...args]. Status/product UI subcommands are deprecated.",
 		getArgumentCompletions: completeWikiCommand,
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
@@ -70,11 +70,14 @@ export function registerWikiCommand(pi: ExtensionAPI): void {
 						await runSystemCommand(pi, input.rest, ctx, "wiki system");
 						return;
 					case "product":
-						await runProductCommand(pi, input.rest, ctx, "wiki product");
+						ctx.ui.notify(
+							"Product UI command is deprecated. Use backend source refs and wiki_state instead.",
+							"warning",
+						);
 						return;
 					default:
 						ctx.ui.notify(
-							"Usage: /wiki <bootstrap|status|resume|config|system|product> [...args].",
+							"Usage: /wiki <bootstrap|resume|config|system> [...args].",
 							"warning",
 						);
 				}

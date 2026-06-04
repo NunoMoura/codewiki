@@ -3,102 +3,37 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { codePrompt } from "../../src/state/prompt.ts";
-import { readSkillAsset } from "../../src/state/skill-assets.ts";
+import { readPromptAsset } from "../../src/adapters/pi/prompt-assets.ts";
 import { renderOnboardingPrompt } from "../../src/project/bootstrap.ts";
 import { normalizeCodeArgs } from "../../src/adapters/pi/commands/resume.ts";
 
 const repoRoot = resolve(import.meta.dirname, "..", "..");
 for (const asset of [
-	"skills/codewiki/SKILL.md",
-	"skills/codewiki/prompts/resume-implementation.md",
-	"skills/codewiki/bootstrap/onboarding.md",
-	"skills/codewiki/bootstrap/starter-taxonomy.md",
-	"skills/codewiki/references/tool-catalog.md",
+	"src/adapters/pi/prompt-assets/prompts/resume-implementation.md",
+	"src/adapters/pi/prompt-assets/bootstrap/onboarding.md",
+	"src/adapters/pi/prompt-assets/bootstrap/starter-taxonomy.md",
+	"src/adapters/pi/prompt-assets/references/tool-catalog.md",
 	"skills/codewiki-decision/SKILL.md",
 	"skills/codewiki-decision/references/tools.md",
 	"skills/codewiki-planning/SKILL.md",
 	"skills/codewiki-planning/references/tools.md",
 	"skills/codewiki-implementation/SKILL.md",
 	"skills/codewiki-implementation/references/tools.md",
-	"skills/codewiki-validation/SKILL.md",
-	"skills/codewiki-validation/references/tools.md",
 ]) {
 	assert.ok(
 		existsSync(resolve(repoRoot, asset)),
-		`missing skill asset ${asset}`,
+		`missing package asset ${asset}`,
 	);
 }
 
-const mainSkill = readFileSync(
-	resolve(repoRoot, "skills", "codewiki", "SKILL.md"),
-	"utf8",
-);
-assert.match(
-	mainSkill,
-	/name: codewiki/,
-	"main skill should define public skill frontmatter",
-);
-assert.match(
-	mainSkill,
-	/First read and bootstrap/,
-	"main skill should own bootstrap and status flow",
-);
-assert.match(
-	mainSkill,
-	/wiki_decide/,
-	"main skill should list normal decision workflow tool",
-);
-assert.match(mainSkill, /wiki_state/, "main skill should center state routing");
-assert.match(
-	mainSkill,
-	/CodeWiki-owned compaction/,
-	"main skill should define CodeWiki-owned soft context refresh",
-);
-assert.match(
-	mainSkill,
-	/wiki_runtime/,
-	"main skill should expose runtime workflow tool",
-);
-assert.match(
-	mainSkill,
-	/post-commit/i,
-	"main skill should enforce post-commit GC boundary",
-);
-assert.match(
-	mainSkill,
-	/codewiki-decision/,
-	"main skill should route to focused loop skills",
-);
-assert.match(
-	mainSkill,
-	/Task and sprint routing/,
-	"main skill should define task and sprint routing rules",
-);
-assert.match(
-	mainSkill,
-	/three or more related executable tasks/,
-	"main skill should define sprint creation threshold",
-);
-assert.match(
-	mainSkill,
-	/Do not hand-edit sprint metadata/,
-	"main skill should prohibit manual sprint metadata edits",
-);
-assert.match(
-	mainSkill,
-	/references\/tool-catalog\.md/,
-	"main skill should route agents to the tool catalog",
-);
-assert.doesNotMatch(
-	mainSkill,
-	/(?:\.\.\/)+\.codewiki/,
-	"main skill should not rely on package-relative .codewiki links",
-);
+for (const removedSkill of ["skills/codewiki", "skills/codewiki-validation"]) {
+	assert.ok(
+		!existsSync(resolve(repoRoot, removedSkill)),
+		`deprecated package skill surface should be removed: ${removedSkill}`,
+	);
+}
 
-const toolCatalog = readFileSync(
-	resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
-	"utf8",
-);
+const toolCatalog = readPromptAsset("references/tool-catalog.md");
 assert.doesNotMatch(
 	toolCatalog,
 	/src\/application\/tools\/catalog\.ts/,
@@ -167,7 +102,7 @@ const decisionTools = readFileSync(
 assert.match(
 	decisionTools,
 	/action="propose"/,
-	"decision tool reference should document diff-table proposal",
+	"decision tool reference should document decision-table proposal",
 );
 assert.match(
 	decisionTools,
@@ -286,86 +221,16 @@ assert.match(
 	"implementation tool reference should forbid validation-before-build ordering",
 );
 
-const validationSkill = readFileSync(
-	resolve(repoRoot, "skills", "codewiki-validation", "SKILL.md"),
-	"utf8",
-);
-assert.match(
-	validationSkill,
-	/name: codewiki-validation/,
-	"validation skill should define public skill frontmatter",
-);
-assert.match(
-	validationSkill,
-	/decision, planning, or implementation builds/,
-	"validation skill should trigger on all compiler build kinds",
-);
-assert.match(
-	validationSkill,
-	/wiki_state/,
-	"validation skill should define state tool usage",
-);
-assert.match(
-	validationSkill,
-	/wiki_gate/,
-	"validation skill should define audit evidence usage",
-);
-assert.match(
-	validationSkill,
-	/action="preflight"/,
-	"validation skill should define validation report tool usage",
-);
-assert.match(
-	validationSkill,
-	/Do not call compiler tools/,
-	"validation skill should forbid compiler work",
-);
-assert.match(
-	validationSkill,
-	/fresh_context=true/,
-	"validation skill should require fresh-context proof where applicable",
-);
-assert.match(
-	validationSkill,
-	/GC restore ledger/,
-	"validation skill should distinguish GC ledger from validation proof",
-);
-
-const validationTools = readFileSync(
-	resolve(repoRoot, "skills", "codewiki-validation", "references", "tools.md"),
-	"utf8",
-);
-assert.match(
-	validationTools,
-	/restart validation from the source\/build refs/,
-	"validation tool reference should cover fresh validator restart",
-);
-assert.match(
-	validationTools,
-	/Do not call `wiki_implement`/,
-	"validation tool reference should forbid build compilation",
-);
-assert.match(
-	validationTools,
-	/Return `block` when/,
-	"validation tool reference should define block criteria",
-);
-assert.match(
-	validationTools,
-	/Task-close, sprint-close, and ship-ready pass require/,
-	"validation tool reference should define stronger close/ship-ready proof",
-);
-
 const task = {
 	id: "TASK-083",
 	title: "Move prompt assets into skill boundary",
 	status: "in_progress",
 	priority: "high",
 	kind: "agent-workflow",
-	summary: "Prompt prose should live under skills/codewiki.",
+	summary: "Prompt prose should live under package-owned CodeWiki assets.",
 	spec_paths: [".codewiki/kb/system/extension.md"],
 	code_paths: [
-		"skills/codewiki/prompts/resume-implementation.md",
+		"src/adapters/pi/prompt-assets/prompts/resume-implementation.md",
 		"src/state/prompt.ts",
 	],
 	research_ids: [],
@@ -377,9 +242,9 @@ const task = {
 		verification: ["Run prompt asset smoke test."],
 	},
 	delta: {
-		desired: "Skill owns prompt text.",
-		current: "Source owns prompt text.",
-		closure: "Source renders skill templates with runtime data.",
+		desired: "Package assets own prompt text.",
+		current: "Source renders prompt text through package assets.",
+		closure: "Source renders package asset templates with runtime data.",
 	},
 };
 
@@ -448,7 +313,7 @@ const onboardingPrompt = renderOnboardingPrompt({
 	projectName: "SmokeProject",
 	root: "/tmp/smoke-project",
 	inferredProjectState: "brownfield",
-	inferredBoundaries: ["src", "skills/codewiki"],
+	inferredBoundaries: ["src", "skills/codewiki-decision"],
 });
 assert.match(
 	onboardingPrompt,
@@ -466,7 +331,7 @@ assert.doesNotMatch(
 	"onboarding prompt should not leak unresolved placeholders",
 );
 
-const taxonomy = readSkillAsset("bootstrap/starter-taxonomy.md");
+const taxonomy = readPromptAsset("bootstrap/starter-taxonomy.md");
 assert.match(
 	taxonomy,
 	/Generated state\/views/,

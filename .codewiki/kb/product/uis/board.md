@@ -1,12 +1,12 @@
 ---
 id: spec.product.uis.board
-title: Board UI
-state: active
-summary: Product expectations for visual roadmap work, gated agency, approvals, and next-action visibility.
+title: Deprecated Board UI
+state: deprecated
+summary: Deprecated Board UI expectations retained only as historical context during backend-first migration.
 owners:
 - product
 - design
-updated: '2026-05-16'
+updated: '2026-06-04'
 code_paths:
 - src/adapters/pi/ui/manager.ts
 - src/adapters/pi/commands
@@ -15,9 +15,12 @@ code_paths_mode: explicit_override
 
 # Board UI
 
-The Board UI should make roadmap work, inferred delta, approvals, gates, blockers, and next actions visible before users inspect raw machine state files. In terminal-first CodeWiki it is a Pi TUI or command-triggered roadmap/work view; in compact status panels it may remain a summary.
+This UI surface is deprecated for now. CodeWiki is backend-first in the current architecture wave. The only retained UI direction is future Pi TUI ASCII/Unicode rendering of source-backed system diagrams. Do not add implementation or tests for this UI surface unless a new accepted decision reactivates it.
 
-The standalone Board should feel like a Trello-like retro terminal Kanban board, not a backend task dump. The default workspace should group work into a small set of readable lanes such as `Now`, `Ready`, `Blocked`, and `Gate/Done recent`. Lane membership must be derived from roadmap truth, active focus, blockers, validation/content-proof gates, and recent closure evidence. The UI must not create hidden Kanban state.
+
+The Board UI should make roadmap work, inferred delta, approvals, gates, blockers, and next actions visible before users inspect raw machine state files. In terminal-first CodeWiki it is a Pi TUI or command-triggered roadmap/work view; in compact status docks it may remain a summary.
+
+The standalone Board should feel like a Trello-like retro terminal Kanban board, not a backend task dump. The default workspace should group work into a small set of readable lanes such as `Now`, `Ready`, `Blocked`, and `Gate/Done recent`. Lane membership must be derived from roadmap truth, active focus, blockers, gate/content evidence, and recent closure evidence. The UI must not create hidden Kanban state.
 
 Board should be available as a focused terminal view, for example `/wiki board`, rather than as browser header navigation. Its visual style should use clear monospace cards, terminal borders, compact cues, and inline details.
 
@@ -40,6 +43,6 @@ Cards should surface the user's decision-relevant information first: outcome, cu
 
 - [Use Gated Agency](../stories/automation.md)
 - [Terminal UI](terminal.md)
-- [Status Panel UI](status-panel.md)
+- [Pi TUI Diagram Rendering](terminal.md)
 - [Roadmap](../../system/roadmap.md)
 - [Builds](../../system/builds.md)

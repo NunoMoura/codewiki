@@ -5,7 +5,7 @@ export { executeCodewikiAudit, formatAuditReport } from "../audit/tool.ts";
 export { executeCodewikiBuildTool } from "../build/tool.ts";
 export {
 	executeCodewikiDecisionTool,
-	executeCodewikiDiffTableTool,
+	executeCodewikiDecisionTableTool,
 } from "../change/tool.ts";
 export { executeCodewikiGcTool } from "../gc/tool.ts";
 export {

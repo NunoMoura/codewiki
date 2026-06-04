@@ -1,6 +1,6 @@
 import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, resolve } from "node:path";
-import { renderSkillAsset } from "../state/skill-assets.ts";
+import { renderPromptAsset } from "../adapters/pi/prompt-assets.ts";
 import { withLockedPaths } from "../shared/lock.ts";
 import { resolveSetupRoot } from "./root.ts";
 import {
@@ -275,7 +275,7 @@ function formatInferredBoundaries(paths: string[]): string {
 }
 
 export function renderOnboardingPrompt(result: BootstrapResult): string {
-	return renderSkillAsset("bootstrap/onboarding.md", {
+	return renderPromptAsset("bootstrap/onboarding.md", {
 		projectName: result.projectName,
 		root: result.root,
 		inferredProjectState: result.inferredProjectState,

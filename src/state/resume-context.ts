@@ -158,9 +158,14 @@ export async function buildResumeContextForTask(
 	const usageSummary =
 		input.usageSummary ||
 		"read-only resume context build; no artifact-status claim marked";
+	const tracePrimaryHandoff = await taskTracePrimaryHandoffEvidence(
+		project,
+		input.task,
+	);
 	const evidence = [
 		taskLoopEvidenceLine(runtimeTask),
 		await taskBuildEvidence(project, input.task.id),
+		tracePrimaryHandoff.evidence,
 		describeArtifactPromptContext(
 			input.selection.artifact_statuses,
 			usageSummary,
@@ -193,6 +198,7 @@ export async function buildResumeContextForTask(
 			input.graph,
 			input.task,
 			taskContext,
+			tracePrimaryHandoff.refs,
 		),
 	};
 }
@@ -215,6 +221,11 @@ export function renderResumePrompt(
 		taskContext,
 		followUpIntent,
 	);
+}
+
+interface TracePrimaryHandoffEvidence {
+	evidence: string;
+	refs: string[];
 }
 
 async function taskBuildEvidence(
@@ -279,6 +290,218 @@ async function taskBuildEvidence(
 			return `- ${item.path} (${item.kind})${summary}${checks}`;
 		}),
 	].join("\n");
+}
+
+async function taskTracePrimaryHandoffEvidence(
+	project: WikiProject,
+	task: RoadmapTaskRecord,
+): Promise<TracePrimaryHandoffEvidence> {
+	const planningBuilds = await taskPlanningBuilds(project, task.id);
+	const latest = planningBuilds.at(-1);
+	if (!latest) return { evidence: "", refs: [] };
+	const sourceDecisionBuild = String(
+		latest.data?.source_decision_build || "",
+	).trim();
+	const decisionBuild = sourceDecisionBuild
+		? await readJsonRef(project, sourceDecisionBuild)
+		: null;
+	const decisionGateRefs = sourceDecisionBuild
+		? await validationRefsForSource(project, sourceDecisionBuild, "decision")
+		: [];
+	const planningGateRefs = await validationRefsForSource(
+		project,
+		latest.path,
+		"planning",
+	);
+	const approvedRows = unique([
+		...stringArray(decisionBuild?.approved_decision_rows),
+		...recordArray(asRecord(decisionBuild?.decision_table).rows)
+			.filter((item) => {
+				const approval = asRecord(asRecord(item).approval);
+				return String(approval.status || "") === "approved";
+			})
+			.map((item) => String(item.id || "").trim())
+			.filter(Boolean),
+	]);
+	const knowledgeRefs = unique([
+		...stringArray(decisionBuild?.knowledge_changes),
+		...nestedStringRefs(decisionBuild?.row_to_kb_mappings, "knowledge_refs"),
+		...nestedStringRefs(decisionBuild?.row_to_kb_mappings, "diagram_refs"),
+	]);
+	const decisionPropagation = asRecord(decisionBuild?.propagation);
+	const downstreamQuestions = unique([
+		...stringArray(decisionBuild?.downstream_planning_questions),
+		...stringArray(decisionPropagation.downstream_planning_questions),
+	]);
+	const downstreamResolutions: string[] = Array.isArray(
+		latest.data?.downstream_question_resolutions,
+	)
+		? recordArray(latest.data.downstream_question_resolutions)
+				.map((item) => {
+					const question = String(
+						item.question || item.question_id || "",
+					).trim();
+					const resolution = String(item.resolution || "").trim();
+					const taskIds = stringArray(item.task_ids).join(", ");
+					return [question, resolution, taskIds ? `tasks=${taskIds}` : ""]
+						.filter(Boolean)
+						.join(" -> ");
+				})
+				.filter(Boolean)
+		: [];
+	const risks = unique([
+		...stringArray(latest.data?.risks),
+		...stringArray(decisionBuild?.risks),
+		...stringArray(decisionBuild?.audit_reports),
+	]);
+	const requirements: string[] = Array.isArray(latest.data?.requirements)
+		? recordArray(latest.data.requirements)
+				.map((item) =>
+					`${String(item.id || "").trim()}: ${String(item.text || "").trim()}`.trim(),
+				)
+				.filter((item: string) => item && !item.endsWith(":"))
+		: [];
+	const impact = [
+		...stringArray(decisionPropagation.product_impact),
+		...stringArray(decisionPropagation.system_impact),
+	]
+		.slice(0, 6)
+		.join("; ");
+	const refs = unique(
+		[
+			latest.path,
+			sourceDecisionBuild,
+			...decisionGateRefs,
+			...planningGateRefs,
+			...knowledgeRefs,
+		].filter(Boolean),
+	);
+	const evidenceLines = [
+		"Trace-primary handoff:",
+		`- Planning build: ${latest.path}`,
+		...(sourceDecisionBuild
+			? [`- Source decision build: ${sourceDecisionBuild}`]
+			: []),
+		...(decisionGateRefs.length > 0
+			? [`- Decision gate refs: ${decisionGateRefs.slice(0, 3).join(", ")}`]
+			: []),
+		...(planningGateRefs.length > 0
+			? [`- Planning gate refs: ${planningGateRefs.slice(0, 3).join(", ")}`]
+			: []),
+		...(approvedRows.length > 0
+			? [`- Approved rows: ${approvedRows.slice(0, 12).join(", ")}`]
+			: []),
+		...(knowledgeRefs.length > 0
+			? [`- KB/diagram refs: ${knowledgeRefs.slice(0, 12).join(", ")}`]
+			: []),
+		...(impact ? [`- Risk/impact summary: ${impact}`] : []),
+		...(downstreamResolutions.length > 0
+			? [
+					"- Downstream planning resolutions:",
+					...downstreamResolutions.slice(0, 8).map((item) => `  - ${item}`),
+				]
+			: downstreamQuestions.length > 0
+				? [
+						"- Downstream planning questions:",
+						...downstreamQuestions.slice(0, 8).map((item) => `  - ${item}`),
+					]
+				: []),
+		...(risks.length > 0
+			? ["- Blockers/risks:", ...risks.slice(0, 6).map((item) => `  - ${item}`)]
+			: ["- Blockers/risks: none recorded in source handoff"]),
+		...(requirements.length > 0
+			? [
+					"- Next safe actions:",
+					...requirements.slice(0, 5).map((item) => `  - ${item}`),
+				]
+			: [`- Next safe actions: implement ${task.id} — ${task.title}`]),
+		"- Bootstrap mode: current Pi extension/tools remain authoritative until source/prompt/skill changes land and the agent asks the user to run /reload.",
+	];
+	return { evidence: evidenceLines.join("\n"), refs };
+}
+
+async function taskPlanningBuilds(
+	project: WikiProject,
+	taskId: string,
+): Promise<Array<{ path: string; data: Record<string, unknown> }>> {
+	const absDir = resolve(project.root, ".codewiki/builds/planning");
+	let names: string[] = [];
+	try {
+		names = await readdir(absDir);
+	} catch {
+		return [];
+	}
+	const builds: Array<{ path: string; data: Record<string, unknown> }> = [];
+	for (const name of names.filter((item) => item.endsWith(".json")).sort()) {
+		const path = `.codewiki/builds/planning/${name}`;
+		const data = await readJsonRef(project, path);
+		if (!data) continue;
+		const consumes = asRecord(data.consumes);
+		const produces = asRecord(data.produces);
+		const taskIds = [
+			String(data.task_id || ""),
+			...stringArray(data.task_ids),
+			...stringArray(consumes.roadmap),
+			...stringArray(produces.roadmap),
+		];
+		if (taskIds.includes(taskId)) builds.push({ path, data });
+	}
+	return builds;
+}
+
+async function validationRefsForSource(
+	project: WikiProject,
+	source: string,
+	profile?: string,
+): Promise<string[]> {
+	const absDir = resolve(project.root, ".codewiki/validation");
+	let names: string[] = [];
+	try {
+		names = await readdir(absDir);
+	} catch {
+		return [];
+	}
+	const refs: string[] = [];
+	for (const name of names.filter((item) => item.endsWith(".json")).sort()) {
+		const path = `.codewiki/validation/${name}`;
+		const data = await readJsonRef(project, path);
+		if (!data) continue;
+		if (String(data?.source || "").trim() !== source) continue;
+		if (profile && String(data?.profile || data?.gate || "").trim() !== profile)
+			continue;
+		refs.push(path);
+	}
+	return refs;
+}
+
+async function readJsonRef(
+	project: WikiProject,
+	ref: string,
+): Promise<Record<string, unknown> | null> {
+	try {
+		const parsed = JSON.parse(
+			await readFile(resolve(project.root, ref), "utf8"),
+		);
+		return isRecord(parsed) ? parsed : null;
+	} catch {
+		return null;
+	}
+}
+
+function nestedStringRefs(value: unknown, field: string): string[] {
+	return recordArray(value).flatMap((item) => stringArray(item[field]));
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+	return isRecord(value) ? value : {};
+}
+
+function recordArray(value: unknown): Array<Record<string, unknown>> {
+	return Array.isArray(value) ? value.filter(isRecord) : [];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 function stringArray(value: unknown): string[] {
@@ -380,6 +603,7 @@ function resumeContextSourceRefs(
 	graph: GraphFile | null,
 	task: RoadmapTaskRecord,
 	taskContext: RoadmapTaskContextPacket | null,
+	handoffRefs: string[] = [],
 ): string[] {
 	return unique([
 		project.roadmapPath,
@@ -388,6 +612,7 @@ function resumeContextSourceRefs(
 		taskContext?.context_path ||
 			`.codewiki/roadmap/tasks/${task.id}/context.json`,
 		...resumeLensSourceRefs(graph),
+		...handoffRefs,
 		...task.spec_paths,
 		...task.code_paths,
 	]);

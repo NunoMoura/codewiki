@@ -232,8 +232,8 @@ nodes:
     removed_paths:
       - src/application/knowledge/doc-parser.ts
       - src/application/knowledge/diagram-parser.ts
-  - id: change_diff_table_concept_root_boundary
-    label: Change and diff-table concept-root migration
+  - id: change_decision_table_concept_root_boundary
+    label: Change and decision-table concept-root migration
     group: source_target
     kind: component
     source: .codewiki/kb/system/file-structure.md
@@ -241,18 +241,18 @@ nodes:
     status: task_close_validated_by_task_026
     task_id: TASK-026
     validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-026.json
-    cleanup_state: old_change_diff_table_paths_removed
+    cleanup_state: old_change_decision_table_paths_removed
     paths:
       - src/change/**
-      - tests/tasks/TASK-026/change-diff-table-source-root.test.mjs
+      - tests/tasks/TASK-026/change-decision-table-source-root.test.mjs
       - tests/smoke/builds.test.mjs
       - tests/smoke/efficiency-ui.test.mjs
       - tests/smoke/package-smoke.test.mjs
     removed_paths:
       - src/domain/change/types.ts
       - src/domain/change/traceability.ts
-      - src/application/diff-table.ts
-      - src/application/tools/diff-table.ts
+      - src/application/decision-table.ts
+      - src/application/tools/decision-table.ts
   - id: gc_concept_root_boundary
     label: GC concept-root migration
     group: source_target
@@ -397,66 +397,82 @@ nodes:
     paths:
       - .codewiki/kb/**
   - id: dogfood_roadmap
-    label: Roadmap work truth compatibility
+    label: Active roadmap truth
     group: codewiki_state
-    kind: compatibility_truth
+    kind: durable_truth
     source: .codewiki/kb/system/roadmap.md
-    paths:
+    target_paths:
+      - .codewiki/roadmap.json
+    compatibility_paths:
       - .codewiki/roadmap/queue.json
-  - id: dogfood_builds
-    label: Telemetry traces and compiler output
+      - .codewiki/roadmap/tasks/**
+      - .codewiki/roadmap/archive.jsonl
+  - id: dogfood_telemetry
+    label: Lifecycle trace truth
     group: codewiki_state
     kind: traceability_truth
-    source: .codewiki/kb/system/builds.md
+    source: .codewiki/kb/system/trace-graph.md
+    paths:
+      - .codewiki/builds/**
+      - .codewiki/validation/**
+      - .codewiki/research/**
+      - .codewiki/gc/**
     target_paths:
-      - .codewiki/telemetry/**
+      - .codewiki/telemetry/TRACE-*.json
+      - .codewiki/telemetry/catalog.json
     compatibility_paths:
       - .codewiki/builds/**
-  - id: dogfood_validation
-    label: Gate verdict compatibility reports
-    group: proof
-    kind: compatibility_evidence
-    source: .codewiki/kb/system/validation-gateway.md
-    target_paths:
-      - .codewiki/telemetry/**
-    compatibility_paths:
       - .codewiki/validation/**
+      - .codewiki/research/**
+      - .codewiki/gc/**
   - id: generated_graph
-    label: Generated graph/state views
+    label: Generated trace graph/views/cache
     group: generated_runtime
     kind: generated_state
     source: .codewiki/kb/system/graph.md
     paths:
       - .codewiki/index_graph.json
-      - .codewiki/roadmap/tasks/**
+    target_paths:
+      - .codewiki/views/**
+      - .codewiki/cache/graph.sqlite
   - id: runtime_session
     label: Runtime/session coordination compatibility
     group: generated_runtime
-    kind: artifact
+    kind: runtime_coordination
     source: .codewiki/kb/system/runtime.md
-    paths:
+    target_paths:
+      - .codewiki/runtime/state.json
+    compatibility_paths:
       - .codewiki/session/**
-      - .codewiki/runtime/**
+      - .codewiki/runtime/jobs.json
   - id: skills_assets
-    label: Skill workflow assets
+    label: Three workflow skill assets and Pi prompt assets
     group: assets_tests
     kind: component
     source: .codewiki/kb/system/extension.md
     paths:
-      - skills/codewiki/**
       - skills/codewiki-decision/**
       - skills/codewiki-planning/**
       - skills/codewiki-implementation/**
-      - skills/codewiki-validation/**
+      - src/adapters/pi/prompt-assets/**
     target_paths:
-      - skills/codewiki-gateway/**
+      - skills/codewiki-decision/**
+      - skills/codewiki-planning/**
+      - skills/codewiki-implementation/**
+      - src/adapters/pi/prompt-assets/**
+    deprecated_paths:
+      - skills/codewiki/**
+      - skills/codewiki-validation/**
   - id: tests_and_smoke
-    label: Tests and smoke baselines
+    label: Task-linked and shared test evidence
     group: assets_tests
     kind: executable_truth
     source: .codewiki/kb/system/file-structure.md
-    paths:
-      - tests/**
+    target_paths:
+      - tests/tasks/**
+      - tests/shared/**
+    compatibility_paths:
+      - tests/smoke/**
   - id: optional_scripts
     label: Optional developer helper scripts
     group: assets_tests
@@ -527,7 +543,7 @@ nodes:
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated
-      - TASK-026_change_diff_table_migration_task_close_validated
+      - TASK-026_change_decision_table_migration_task_close_validated
       - TASK-027_gc_migration_task_close_validated
       - TASK-028_session_migration_task_close_validated
       - TASK-029_roadmap_migration_task_close_validated

@@ -3,6 +3,7 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildGraph } from "../../src/state/graph.ts";
 import { buildLintReport } from "../../src/state/lint.ts";
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 
 const project = {
 	root: "/tmp/codewiki-alignment-graph",
@@ -74,8 +75,8 @@ const decisionBuild = {
 	data: {
 		kind: "decision_build",
 		lifecycle: { state: "accepted" },
-		diff_table: [{ id: "CHANGE-001", desired_state: "Align all layers.", user_action: "approved" }],
-		approved_diff_rows: ["CHANGE-001"],
+		decision_table: decisionTableFixture([{ id: "CHANGE-001", desired_state: "Align all layers.", user_action: "approved" }]),
+		approved_decision_rows: ["CHANGE-001"],
 		knowledge_changes: [".codewiki/kb/system/alignment.md"],
 		row_to_kb_mappings: [{ row_id: "CHANGE-001", knowledge_refs: [".codewiki/kb/system/alignment.md"], evidence: "Alignment doc captures change." }],
 		propagation: { direction: "system-first", product_impact: ["User-visible alignment behavior changes."] },
@@ -255,11 +256,11 @@ const validationReport = {
 		data: {
 			kind: "decision_build",
 			lifecycle: { state: "accepted" },
-			diff_table: [
+			decision_table: decisionTableFixture([
 				{ id: "FS-HUMAN-DRIVEN-SURFACE", desired_state: "Humans need a file-structure review surface.", affected_layers: ["roadmap", "ui"], user_action: "approved" },
 				{ id: "FS-ROOT-CONCEPTS", desired_state: "Concept-root migration needs a first boundary.", affected_layers: ["roadmap", "source"], user_action: "approved" },
-			],
-			approved_diff_rows: ["FS-HUMAN-DRIVEN-SURFACE", "FS-ROOT-CONCEPTS"],
+			]),
+			approved_decision_rows: ["FS-HUMAN-DRIVEN-SURFACE", "FS-ROOT-CONCEPTS"],
 			row_to_kb_mappings: [
 				{ row_id: "FS-HUMAN-DRIVEN-SURFACE", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures review surface." },
 				{ row_id: "FS-ROOT-CONCEPTS", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures migration direction." },
@@ -300,8 +301,8 @@ const validationReport = {
 		data: {
 			kind: "decision_build",
 			lifecycle: { state: "accepted" },
-			diff_table: [{ id: "TRIGGER-DEFER", desired_state: "Satisfied deferred roots route to planning.", affected_layers: ["roadmap"], user_action: "approved" }],
-			approved_diff_rows: ["TRIGGER-DEFER"],
+			decision_table: decisionTableFixture([{ id: "TRIGGER-DEFER", desired_state: "Satisfied deferred roots route to planning.", affected_layers: ["roadmap"], user_action: "approved" }]),
+			approved_decision_rows: ["TRIGGER-DEFER"],
 			row_to_kb_mappings: [{ row_id: "TRIGGER-DEFER", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures deferral." }],
 			propagation: { direction: "system-first", product_impact: ["Deferred trigger is visible."], downstream_planning_questions: ["When should TRIGGER-DEFER resume?"] },
 		},

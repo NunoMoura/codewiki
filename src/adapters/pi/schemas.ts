@@ -622,7 +622,7 @@ export const codewikiBuildLifecycleSchema = Type.Object({
 	archive_after: Type.Optional(Type.String()),
 	purge_after: Type.Optional(Type.String()),
 });
-export const codewikiDiffTableRowSchema = Type.Object({
+export const codewikiDecisionTableRowSchema = Type.Object({
 	id: Type.Optional(Type.String({ minLength: 1 })),
 	current_state: Type.String({ minLength: 1 }),
 	current_project_state: Type.Optional(Type.String({ minLength: 1 })),
@@ -885,8 +885,8 @@ export const codewikiBuildToolInputSchema = Type.Object({
 		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
 	),
 	// Decision row table
-	diff_table: Type.Optional(Type.Array(codewikiDiffTableRowSchema)),
-	approved_diff_rows: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	decision_table: Type.Optional(Type.Array(codewikiDecisionTableRowSchema)),
+	approved_decision_rows: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	decisions: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	assumptions: Type.Optional(Type.Array(Type.String(), { default: [] })),
 	open_questions: Type.Optional(Type.Array(Type.String(), { default: [] })),
@@ -998,7 +998,7 @@ export const codewikiValidationReportSchema = Type.Object({
 	),
 	refresh: Type.Optional(Type.Boolean({ default: true })),
 });
-const codewikiDiffTableRowActionSchema = Type.Object({
+const codewikiDecisionTableRowActionSchema = Type.Object({
 	row_id: Type.String({ minLength: 1 }),
 	action: Type.Union([
 		Type.Literal("accept"),
@@ -1007,10 +1007,10 @@ const codewikiDiffTableRowActionSchema = Type.Object({
 		Type.Literal("alternative"),
 		Type.Literal("edit"),
 	]),
-	row: Type.Optional(codewikiDiffTableRowSchema),
+	row: Type.Optional(codewikiDecisionTableRowSchema),
 	alternative: Type.Optional(Type.String({ minLength: 1 })),
 });
-export const codewikiDiffTableToolInputSchema = Type.Object({
+export const codewikiDecisionTableToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	action: Type.Union([
 		Type.Literal("propose"),
@@ -1025,11 +1025,11 @@ export const codewikiDiffTableToolInputSchema = Type.Object({
 	table_id: Type.Optional(Type.String({ minLength: 1 })),
 	row_id: Type.Optional(Type.String({ minLength: 1 })),
 	row_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
-	row_actions: Type.Optional(Type.Array(codewikiDiffTableRowActionSchema)),
+	row_actions: Type.Optional(Type.Array(codewikiDecisionTableRowActionSchema)),
 	summary: Type.Optional(Type.String({ minLength: 1 })),
 	source: Type.Optional(Type.String({ minLength: 1 })),
 	scope: Type.Optional(agencyScopeSchema),
-	rows: Type.Optional(Type.Array(codewikiDiffTableRowSchema)),
+	rows: Type.Optional(Type.Array(codewikiDecisionTableRowSchema)),
 	alternative: Type.Optional(Type.String({ minLength: 1 })),
 });
 
@@ -1058,8 +1058,8 @@ export const codewikiDecideToolInputSchema = Type.Object(
 		table_id: Type.Optional(Type.String({ minLength: 1 })),
 		row_id: Type.Optional(Type.String({ minLength: 1 })),
 		row_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
-		row_actions: Type.Optional(Type.Array(codewikiDiffTableRowActionSchema)),
-		rows: Type.Optional(Type.Array(codewikiDiffTableRowSchema)),
+		row_actions: Type.Optional(Type.Array(codewikiDecisionTableRowActionSchema)),
+		rows: Type.Optional(Type.Array(codewikiDecisionTableRowSchema)),
 		decision_build: Type.Optional(looseWorkflowObjectSchema),
 		build: Type.Optional(looseWorkflowObjectSchema),
 		summary: Type.Optional(Type.String({ minLength: 1 })),

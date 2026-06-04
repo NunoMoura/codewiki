@@ -11,6 +11,7 @@ import {
 	buildRoadmapState,
 	buildStatusState,
 } from "../../../src/state/builders.ts";
+import { decisionTableFixture } from "../../decision-table-fixture.mjs";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-task-072-propagation-"));
 
@@ -59,7 +60,7 @@ const decision = {
 	kind: "decision_build",
 	status: "accepted",
 	lifecycle: { state: "accepted" },
-	diff_table: [
+	decision_table: decisionTableFixture([
 		{
 			id: "TASK-MAPPED",
 			current_state: "Executable work may be planned.",
@@ -102,8 +103,8 @@ const decision = {
 			affected_layers: ["runtime", "graph", "code"],
 			user_action: "approved",
 		},
-	],
-	approved_diff_rows: [
+	]),
+	approved_decision_rows: [
 		"TASK-MAPPED",
 		"SPRINT-MAPPED",
 		"KNOWLEDGE-ONLY",

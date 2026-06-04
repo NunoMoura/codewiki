@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T09:54:50Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Decision Table naming/schema decision passed with explicit user approval for all rows, KB/product-system mappings, and required audit refs. Stale-reference audit has pre-existing unrelated failures outside touched docs and is recorded as audit evidence, not a blocker for this decision scope.",
+  "checks": [
+    "approved_by_user: all approved",
+    "wiki_gate audit profiles lexicon,source-contract: pass",
+    "wiki_gate audit profiles alignment,stale-reference: stale-reference fail pre-existing outside touched docs"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles alignment,stale-reference: stale-reference fail pre-existing outside touched docs",
+    ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-decision-tab.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+      ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-decision-tab.json",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/knowledge.md",
+      ".codewiki/kb/product/stories/intent.md"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-decision-tab.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-decision-tab.json",
+      "CodeWiki-Checks: approved_by_user: all approved; wiki_gate audit profiles lexicon,source-contract: pass; wiki_gate audit profiles alignment,stale-reference: stale-reference fail pre-existing outside touched docs"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approved_by_user: all approved"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

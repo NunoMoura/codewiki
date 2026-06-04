@@ -2,10 +2,10 @@
 id: spec.product
 title: Product
 state: active
-summary: Product intent and navigation for CodeWiki's users, stories, and visual UIs.
+summary: Product intent for a backend-first CodeWiki package.
 owners:
 - product
-updated: '2026-06-01'
+updated: '2026-06-04'
 code_paths:
 - .codewiki/kb/product
 code_paths_mode: explicit_override
@@ -13,38 +13,30 @@ code_paths_mode: explicit_override
 
 # Product
 
-CodeWiki exists to keep repository intent fresh, explicit, and actionable for humans and agents. It captures who the product serves, what jobs those users need done, and which visual interfaces make that work understandable.
+CodeWiki exists to keep repository intent fresh, explicit, and actionable for humans and agents. For the current architecture wave, CodeWiki is backend-first: durable knowledge, roadmap truth, lifecycle traces, compiler outputs, gateway evidence, graph lenses, runtime coordination, and package APIs are the active product focus.
 
-The product tower owns user-facing intent:
+Product docs own user definitions, user stories, value, workflows, and non-goals. They do not define active visual UI surfaces for this wave.
 
-- `users/**` describes who CodeWiki serves.
-- `stories/**` describes jobs, outcomes, and acceptance signals.
-- `uis/**` describes visual user interfaces: screens, panels, boards, graph views, and other human-visible surfaces.
-- [Lexicon](../lexicon.md) defines shared project vocabulary.
+## UI position
 
-Folders do not need `overview.md` files by default. Add a navigation page only when the folder becomes hard to scan or needs explicit ownership rules.
+All previous product UI surfaces are deprecated for now, including status panels, status docks, Board, Map, Product, System navigation panels, and browser Control Room concepts.
+
+The only retained UI direction is future Pi TUI support. That direction is intentionally narrow: Pi TUI may render source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
+
+Backend status and continuation remain available through tools and APIs such as `wiki_state`, graph lenses, roadmap state, lifecycle traces, and validation reports. `/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated UI command surfaces and should not be promoted as product entrypoints.
 
 ## Product boundaries
 
-Product docs own user definitions, user stories, visual UI expectations, value, workflows, and non-goals. They should not own source layout, module boundaries, adapter protocols, runtime packaging, compiler implementation, graph storage mechanics, or distribution details. Human-visible structure review is product-relevant when it helps maintainers understand intended structure, current structure, drift, approved migration deltas, and next decisions; the authoritative source-layout rules still belong in system docs.
+Tools, commands, skills, CLI access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [Adapters](../system/adapters.md), and [Extension](../system/extension.md).
 
-Product-oriented decisions should update product meaning first, then preflight system impact. Technical/system decisions should update system truth first, then update product docs only when architecture constraints, workflows, or tool surfaces change user-visible behavior or expectations.
-
-Tools, commands, skills, CLI access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe the outcome those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [Adapters](../system/adapters.md), and [Extension](../system/extension.md).
-
-CodeWiki is terminal-first from the user perspective and Pi-based at the product boundary. The primary user experience is a CodeWiki-enabled Pi distribution for software development: Pi provides the terminal harness, chat/TUI session, commands, tools, skills, and prompt hooks; CodeWiki provides the repo contract, workflow policy, and API-backed semantics. Direct CLI access may exist for bootstrap, CI, linter, or admin use, but it is not the primary interactive product UX.
-
-The target user command surface is intentionally small: `/wiki bootstrap`, `/wiki status`, `/wiki resume`, `/wiki config`, `/wiki system <diagram type>`, and `/wiki product`. These commands focus on setup, developer state, stable continuation, preferences, and source-backed product/system navigation. Decide/plan/implement/gate/runtime remain agent workflow phases that users can request in chat; they are not primary slash-command names.
-
-Visual UI docs should describe what users see and understand. System docs should describe how the product is delivered.
+CodeWiki is Pi-based at the product boundary because Pi supplies the agent harness, chat session, TUI host, tools, skills, and prompt hooks. CodeWiki supplies the repo contract, workflow policy, backend APIs, lifecycle traces, and source-owned semantics.
 
 ## Success signals
 
 - User intent is captured before implementation expands.
 - Product stories map to system components and roadmap work without duplicating technical design.
-- Visual UI expectations stay separate from adapter, API, and distribution mechanics.
-- Agents and humans can understand current state through trustworthy Pi-hosted terminal surfaces: chat, Pi TUI panels, compact host status, and focused `/wiki ...` command output.
-- Maintainers can review intended file structure, actual file structure, drift, and approved migration deltas before agents reshape source layout.
+- Backend state is inspectable through source-backed tools and graph lenses.
+- System diagrams can be rendered in Pi TUI as ASCII/Unicode from canonical YAML.
 - Historical recovery relies on git, harness session storage, compact semantic summaries, and generated graph context rather than product doc event logs.
 
 ## Related docs
@@ -56,9 +48,5 @@ Visual UI docs should describe what users see and understand. System docs should
 - [Maintain Fresh Intent](stories/intent.md)
 - [Use Gated Agency](stories/automation.md)
 - [Low-Token Navigation](stories/navigation.md)
-- [Terminal UI](uis/terminal.md)
-- [Status Panel UI](uis/status-panel.md)
-- [Board UI](uis/board.md)
-- [Graph Navigation UI](uis/graph-navigation.md)
 - [Lexicon](../lexicon.md)
 - [System Overview](../system/overview.md)

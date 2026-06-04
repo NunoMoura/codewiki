@@ -245,11 +245,12 @@ export function normalizeDecisionQuestionResolutions(
 }
 
 export function acceptedDecisionRows(decision: any): DecisionPropagationRow[] {
-	const approvedIds = new Set(stringList(decision?.approved_diff_rows));
-	const rows = list(decision?.diff_table).filter((row) => {
+	const approvedIds = new Set(stringList(decision?.approved_decision_rows));
+	const rows = list(decision?.decision_table?.rows).filter((row) => {
 		const id = text(row?.id);
 		return (
-			text(row?.user_action).toLowerCase() === "approved" || approvedIds.has(id)
+			text(row?.approval?.status).toLowerCase() === "approved" ||
+			approvedIds.has(id)
 		);
 	});
 	const sourceRows = rows.length ? rows : list(decision?.approved_rows);
@@ -265,9 +266,20 @@ export function acceptedDecisionRows(decision: any): DecisionPropagationRow[] {
 		return {
 			id,
 			text: text(
-				row?.desired_state || row?.text || row?.summary || row?.rationale || id,
+				row?.proposed_change ||
+					row?.state_delta?.desired ||
+					row?.text ||
+					row?.summary ||
+					row?.rationale ||
+					id,
 			),
-			affected_layers: stringList(row?.affected_layers),
+			affected_layers: [
+				...stringList(row?.impact?.product),
+				...stringList(row?.impact?.system),
+				...stringList(row?.impact?.source),
+				...stringList(row?.impact?.tests),
+				...stringList(row?.impact?.docs),
+			],
 		};
 	});
 }

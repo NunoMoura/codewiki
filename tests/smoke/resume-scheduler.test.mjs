@@ -71,7 +71,7 @@ const delegatedContainer = task(
 		"TASK-079 is closed with passing checks and evidence.",
 	],
 );
-const firstChild = task("TASK-083", "todo", [], ["skills/codewiki"]);
+const firstChild = task("TASK-083", "todo", [], ["skills/codewiki-decision"]);
 const secondChild = task("TASK-085", "todo", [], ["tests/fixtures"]);
 const board = roadmap([umbrella, delegatedContainer, firstChild, secondChild]);
 
@@ -199,7 +199,7 @@ const conflicting = state([
 		mode: "write",
 		summary: "Other session using skill artifacts.",
 		task_id: "TASK-083",
-		scopes: [{ layer: "code", path: "skills/codewiki/**" }],
+		scopes: [{ layer: "code", path: "skills/codewiki-decision/**" }],
 		created_at: "2026-05-16T00:00:00Z",
 		updated_at: "2026-05-16T00:00:00Z",
 		expires_at: "2099-01-01T00:00:00Z",

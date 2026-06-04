@@ -7,12 +7,12 @@ Inspired by Karpathy's [LLM Wiki pattern](https://gist.github.com/karpathy/442a6
 This package now ships:
 
 - **one Pi extension**: `codewiki`
-- **focused Pi skills**: `codewiki` plus workflow skills for planning, task execution, research, verification, and architecture review
+- **three focused Pi workflow skills**: `codewiki-decision`, `codewiki-planning`, and `codewiki-implementation`
 
 That is the right shape for this package:
 
 - the **extension** provides commands, tools, and runtime behavior
-- the **skills** teach the agent the minimum workflow needed for each CodeWiki job
+- the **skills** teach the agent the minimum workflow needed for the decision, planning, and implementation loops
 
 ## What you get
 
@@ -22,26 +22,26 @@ Public command surface is intentionally small. Canonical command router:
 
 - `/wiki bootstrap [project name] [--force]`
   - starts CodeWiki in greenfield or brownfield projects through command-adapter backend setup/bootstrap calls
-- `/wiki status [repo-path] [status|product|system|board|graph]`
-  - opens the developer-facing CodeWiki status panel with health, focus, next action, blockers, validation signal, automation-readiness summary, and source refs
 - `/wiki resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
   - queues agent continuation from CodeWiki source refs and the last known stable task state
 - `/wiki config [show|auto|pin|off|minimal|standard|full] [repo-path]`
   - opens interactive CodeWiki configuration with option lists and toggles
 - `/wiki system [diagram-kind-or-name]`
-  - opens source-backed system diagram navigation from `.codewiki/kb/system/diagrams/*.yaml`, with focused lanes, ordered steps, state transitions, tree views, source refs, and Markdown detail preview
-- `/wiki product [overview|users]`
-  - opens source-backed product navigation for the product overview and user documents, including user-story previews and source refs
+  - opens source-backed system diagram navigation from `.codewiki/kb/system/diagrams/*.yaml`; future UI work is limited to Pi TUI ASCII/Unicode rendering from canonical diagram YAML
 
 Compatibility shims remain available during migration:
 
 - `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--source-contract|--package|--lexicon|--changed|--task TASK-###|--layer product,system|--json]`
 - `/wiki-bootstrap [project name] [--force]`
-- `/wiki-status [repo-path]`
+- `/wiki status [repo-path] [status|product|system|board|graph]` (deprecated status UI route; use `wiki_state` / graph lenses for backend status)
+- `/wiki-status [repo-path]` (deprecated status UI shim)
+- `/wiki_status` (deprecated status UI naming only; no new alias is promoted)
 - `/wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]`
 - `/wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
+- `/wiki product [overview|users]`
+  - deprecated product UI route; use backend source refs and `wiki_state` instead
 - `/wiki-ui`
-  - deprecated shim; use `/wiki status`, `/wiki resume`, `/wiki config`, and `/audit` instead
+  - deprecated UI shim; use backend tools and source refs instead
 
 ### Internal agent tools
 
@@ -56,7 +56,7 @@ Compatibility shims remain available during migration:
 
 #### Compatibility/expert aliases
 
-During migration the low-level primitives remain registered with compatibility/deprecation metadata: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_diff_table`, `wiki_gc`, `wiki_gateway`, `wiki_roadmap`, `wiki_session`, and `wiki_agency`. They are for wrapper parity, debugging, and old-agent compatibility, not the normal agent surface.
+During migration the low-level primitives remain registered with compatibility/deprecation metadata: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_decision_table`, `wiki_gc`, `wiki_gateway`, `wiki_roadmap`, `wiki_session`, and `wiki_agency`. They are for wrapper parity, debugging, and old-agent compatibility, not the normal agent surface.
 
 All internal `wiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on the six normal workflow tools: `wiki_state` for state and source-backed continuation, `wiki_decide` for decisions and decision builds, `wiki_plan` for roadmap/sprint alignment and planning builds, `wiki_implement` for implementation evidence and implementation builds, `wiki_gate` for linter/preflight/validation, and `wiki_runtime` for leases, session focus, wait/wake, agency scheduling, context boundaries, and lifecycle/archive coordination. Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
 
@@ -66,32 +66,25 @@ The `knip` metadata in `package.json` is intentionally part of the package maint
 
 - `src/index.ts` as the Pi extension and package facade
 - `src/api/index.ts` and `src/api/tools.ts` as stable public API facades for adapters and scripts
-- `src/build/index.ts` and `src/gateway/index.ts` as package-facing subsystem facades; validation gateway compatibility shims under `src/validation/**` do not own implementation behavior
+- `src/build/index.ts` and `src/gateway/index.ts` as package-facing subsystem facades; deprecated `src/validation/**` compatibility shims are not part of the active source root set
 - `scripts/*.mjs` as maintained CLI/script surfaces, including `scripts/codewiki-gateway.mjs`
 - `tests/**/*.mjs` as the repository smoke and task regression suite
 
 
 ### Skills
 
-- `/skill:codewiki`
 - `/skill:codewiki-decision`
 - `/skill:codewiki-planning`
 - `/skill:codewiki-implementation`
-- `/skill:codewiki-validation`
 
-The main CodeWiki skill covers package invariants, bootstrap/status flow, sprint-aware routing, and loop selection. Focused compiler/gateway skills provide loop-specific guidance as they are split out:
+CodeWiki exposes only the three normal workflow skills. Bootstrap/status routing, package invariants, gateway criteria, tool catalog prose, and prompt templates live in the injected prompt contract, package docs, or package-owned assets under `src/adapters/pi/prompt-assets/**` rather than discoverable generic/router/validation skill folders.
 
-- intelligent bootstrap/onboarding of a repo-local wiki
-- sprint-aware routing for related executable cohorts without creating umbrella tasks
-- tool catalog mapping normal `wiki_*` workflow tools to API/concept contracts, including `wiki_plan action="sprint"`
-- skill-owned bootstrap/resume prompt templates consumed by source-owned command orchestration
-- decision compiler guidance with semantic diff-table approval, KB edits, product/system propagation, and accepted `decision_build` handoffs
-- planning compiler guidance for atomic roadmap tasks, `planning_build` evidence, validation, and implementation handoff
-- implementation compiler guidance for one-task execution, TDD/test-design evidence, `implementation_build` before validation, and fresh validation handoff
-- validation gateway guidance for build/task-close/drift/publication linter/test runs with no-mutation rules, linter evidence refs, pass/fail/block semantics, and required content evidence
-- research evidence that supports `.codewiki/kb`
-- fresh-context task validation
-- architecture review grounded in CodeWiki specs and roadmap tasks
+Focused workflow skills provide loop-specific guidance:
+
+- decision compiler guidance with semantic decision-table approval, KB edits, product/system propagation, and accepted `decision_build` handoffs
+- planning compiler guidance for atomic roadmap tasks, `planning_build` evidence, gateway criteria, and implementation handoff
+- implementation compiler guidance for one-task execution, TDD/test-design evidence, `implementation_build` before gateway validation, and fresh validation handoff
+- gateway behavior remains available through `wiki_gate` and `wiki_gateway` pass/fail/block reports, not a fourth workflow skill
 
 ## Simplified model
 
@@ -226,7 +219,6 @@ npm run test:pack
 ```text
 /audit --file-structure
 /wiki config
-/wiki status
 /wiki resume
 ```
 
@@ -279,11 +271,7 @@ Recommended loop:
 /wiki-config pin /home/nunoc/projects/codewiki
 ```
 
-3. If status comes back yellow or red, inspect it through:
-
-```text
-/wiki-status
-```
+3. Inspect backend state through `wiki_state`, graph lenses, or source refs when status is yellow or red.
 
 4. When roadmap work is ready to continue, run:
 
@@ -348,19 +336,15 @@ Starter bootstrap includes:
 - `.codewiki/roadmap/tasks/`
 - generated `.codewiki/index_graph.json`
 
-### Status, fix, and review
+### Backend state, fix, and review
 
-`/wiki-ui` is deprecated and returns a warning that points to Pi-hosted CodeWiki commands. Browser Control Room source is no longer the active product direction.
+`/wiki-ui`, `/wiki status`, `/wiki-status`, and `/wiki_status` status UI surfaces are deprecated. Browser Control Room, status panels, status docks, Board, Map, Product, and System UI panels are not active product direction.
 
-`/wiki status` opens the current compact status surface when custom UI is available and falls back to command output when it is not. The `/wiki-status` shim remains available for compatibility.
-
-The always-on status summary is optional. When enabled it uses Pi's status area for a one-line summary instead of a tall above-editor dock. `/wiki-config` owns summary visibility, pinning, and panel density through an interactive settings panel.
-
-`/wiki status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
+Backend status remains available through `wiki_state`, graph lenses, roadmap/task state, lifecycle traces, validation reports, and source refs. Future UI work is limited to Pi TUI rendering of source-backed system diagrams as ASCII/Unicode.
 
 `/audit` is the deterministic linter evidence command retained as a compatibility command name. It runs the same source-owned linter engine used by gateways and tools; omit flags for the default linter run, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--lexicon`, `--changed`, `--task TASK-###`, and `--layer product,system`.
 
-`/wiki config`, `/wiki status`, `/wiki resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
+`/wiki config`, `/wiki resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly.
 
 `/wiki resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
 
@@ -370,15 +354,9 @@ For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, c
 
 The Pi adapter customizes compaction after the agent loop ends. Loop-boundary tools such as `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_gate`, and task close/cancel request a soft context refresh after their visible result, while high context-window usage can trigger the same refresh automatically. The compaction summary is not chat-memory truth; it is a regenerated CodeWiki resume packet from graph, roadmap, task context, and recent build evidence.
 
-### Status summary and panel
+### Deprecated status UI
 
-The extension renders an optional one-line status summary plus a compact status panel opened through `/wiki status`. These surfaces read `.codewiki/index_graph.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
-
-- `minimal`
-- `standard`
-- `full`
-
-Use `/wiki config` to open the interactive configuration panel. Direct args like `/wiki-config pin /path/to/repo` remain available as fallback for scripting or non-UI flows.
+Status summary, status panel, and status dock surfaces are deprecated for now. Use backend tools and source refs instead. Direct args like `/wiki-config pin /path/to/repo` remain available as fallback for scripting or non-UI flows.
 
 ### Runtime operations
 
@@ -387,9 +365,8 @@ Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.js
 Runtime rule:
 
 - first resolve the nearest ancestor containing `.codewiki/config.json` from current cwd
-- if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-config`, and `/wiki-resume` may target an explicit repo path instead
-- in UI mode, those commands may offer a picker across candidate repos discovered below current cwd
-- summary visibility and pinned-repo fallback are user-owned UI preferences, not repo-owned wiki files
+- if no repo-local wiki exists from current cwd, `/wiki-config` and `/wiki-resume` may target an explicit repo path instead
+- pinned-repo fallback is a user-owned preference, not repo-owned wiki files
 - if no wiki exists yet, `/wiki bootstrap` targets the enclosing git repo root when present, else the current working directory
 
 It then uses that repo config to:
@@ -478,14 +455,6 @@ src/
   ui/
     web/
 skills/
-  codewiki/
-    SKILL.md
-    playbooks/
-      architecture.md
-      research.md
-      view-audit.md
-    references/
-      tool-catalog.md
   codewiki-decision/
     SKILL.md
     references/
@@ -498,10 +467,11 @@ skills/
     SKILL.md
     references/
       tools.md
-  codewiki-validation/
-    SKILL.md
-    references/
-      tools.md
+src/adapters/pi/prompt-assets/
+  bootstrap/
+  prompts/
+  references/
+    tool-catalog.md
 tests/
   smoke/
     package-smoke.test.mjs

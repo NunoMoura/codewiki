@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { decisionTableFixture } from "../../decision-table-fixture.mjs";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -6,11 +7,15 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const repoRoot = resolve(import.meta.dirname, "..", "..", "..");
-const { executeCodewikiBuildTool, executeCodewikiDecisionTool, executeCodewikiDiffTableTool } = await import(
+const {
+	executeCodewikiBuildTool,
+	executeCodewikiDecisionTool,
+	executeCodewikiDecisionTableTool,
+} = await import(
 	pathToFileURL(resolve(repoRoot, "src", "api", "tools.ts")).href
 );
-const { readRuntimeDiffTables } = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "diff-table.ts")).href
+const { readRuntimeDecisionTables } = await import(
+	pathToFileURL(resolve(repoRoot, "src", "change", "decision-table.ts")).href
 );
 
 const runtimeRoot = mkdtempSync(resolve(tmpdir(), "codewiki-task-069-"));
@@ -31,7 +36,7 @@ const row = (id, current, desired) => ({
 });
 
 try {
-	await executeCodewikiDiffTableTool(project, {
+	await executeCodewikiDecisionTableTool(project, {
 		action: "propose",
 		table_id: "DT-TASK-069",
 		summary: "Batch decision test",
@@ -64,31 +69,41 @@ try {
 	});
 	assert.equal(batch.summary, "codewiki decide: rows");
 	assert.equal(batch.result.changed, true);
-	assert.deepEqual(batch.result.changed_row_ids, ["ROW-A", "ROW-B", "ROW-C", "ROW-D"]);
+	assert.deepEqual(batch.result.changed_row_ids, [
+		"ROW-A",
+		"ROW-B",
+		"ROW-C",
+		"ROW-D",
+	]);
 	assert.deepEqual(batch.result.failed_row_ids, []);
-	let runtime = await readRuntimeDiffTables(project);
+	let runtime = await readRuntimeDecisionTables(project);
 	let table = runtime.tables.find((item) => item.id === "DT-TASK-069");
 	assert.ok(table, "batch table should exist");
-	const rowsById = Object.fromEntries(table.rows.map((item) => [item.id, item]));
+	const rowsById = Object.fromEntries(
+		table.rows.map((item) => [item.id, item]),
+	);
 	assert.equal(rowsById["ROW-A"].user_action, "approved");
 	assert.equal(rowsById["ROW-B"].user_action, "rejected");
 	assert.equal(rowsById["ROW-C"].user_action, "deferred");
 	assert.equal(rowsById["ROW-D"].user_action, "approved");
 	assert.equal(rowsById["ROW-D"].desired_state, "D approved after edit");
 
-	await executeCodewikiDiffTableTool(project, {
+	await executeCodewikiDecisionTableTool(project, {
 		action: "propose",
 		table_id: "DT-TASK-069-ROW-IDS",
 		summary: "Batch row_ids test",
-		rows: [row("RID-A", "RID A", "Approved"), row("RID-B", "RID B", "Approved")],
+		rows: [
+			row("RID-A", "RID A", "Approved"),
+			row("RID-B", "RID B", "Approved"),
+		],
 	});
-	const rowIds = await executeCodewikiDiffTableTool(project, {
+	const rowIds = await executeCodewikiDecisionTableTool(project, {
 		action: "accept",
 		table_id: "DT-TASK-069-ROW-IDS",
 		row_ids: ["RID-A", "RID-B"],
 	});
 	assert.equal(rowIds.result.changed, true);
-	runtime = await readRuntimeDiffTables(project);
+	runtime = await readRuntimeDecisionTables(project);
 	table = runtime.tables.find((item) => item.id === "DT-TASK-069-ROW-IDS");
 	assert.ok(table, "row_ids table should exist");
 	assert.deepEqual(
@@ -96,13 +111,15 @@ try {
 		["approved", "approved"],
 	);
 
-	await executeCodewikiDiffTableTool(project, {
+	await executeCodewikiDecisionTableTool(project, {
 		action: "propose",
 		table_id: "DT-TASK-069-FAIL",
 		summary: "Batch failure test",
 		rows: [row("FAIL-A", "A pending", "A should stay pending")],
 	});
-	const beforeFailure = JSON.stringify(await readRuntimeDiffTables(project));
+	const beforeFailure = JSON.stringify(
+		await readRuntimeDecisionTables(project),
+	);
 	const failed = await executeCodewikiDecisionTool(project, {
 		action: "rows",
 		table_id: "DT-TASK-069-FAIL",
@@ -115,8 +132,12 @@ try {
 	assert.deepEqual(failed.result.changed_row_ids, []);
 	assert.deepEqual(failed.result.failed_row_ids, ["MISSING"]);
 	assert.match(failed.result.recovery, /No batch row actions were applied/);
-	const afterFailure = JSON.stringify(await readRuntimeDiffTables(project));
-	assert.equal(afterFailure, beforeFailure, "failed batch must not partially write");
+	const afterFailure = JSON.stringify(await readRuntimeDecisionTables(project));
+	assert.equal(
+		afterFailure,
+		beforeFailure,
+		"failed batch must not partially write",
+	);
 
 	const build = await executeCodewikiBuildTool(project, {
 		kind: "decision",
@@ -125,7 +146,7 @@ try {
 		change_type: "system",
 		decision_mode: "accepted",
 		produces: { knowledge: [".codewiki/kb/system/api.md"] },
-		diff_table: [
+		decision_table: decisionTableFixture([
 			{
 				id: "ROW-APPROVE",
 				current_state: "Approval alias",
@@ -133,8 +154,8 @@ try {
 				rationale: "Gateway expects user_action=approved",
 				user_action: "approve",
 			},
-		],
-		approved_diff_rows: ["ROW-APPROVE"],
+		]),
+		approved_decision_rows: ["ROW-APPROVE"],
 		row_to_kb_mappings: [
 			{
 				row_id: "ROW-APPROVE",
@@ -145,13 +166,16 @@ try {
 		propagation: {
 			direction: "system-first",
 			system_impact: ["Gateway-compatible approval normalization"],
-			no_product_impact: "Approval normalization is an internal workflow-tool concern.",
+			no_product_impact:
+				"Approval normalization is an internal workflow-tool concern.",
 		},
 		refresh: false,
 	});
-	const writtenBuild = JSON.parse(readFileSync(resolve(runtimeRoot, build.result.path), "utf8"));
-	assert.equal(writtenBuild.diff_table[0].user_action, "approved");
-	assert.deepEqual(writtenBuild.approved_diff_rows, ["ROW-APPROVE"]);
+	const writtenBuild = JSON.parse(
+		readFileSync(resolve(runtimeRoot, build.result.path), "utf8"),
+	);
+	assert.equal(writtenBuild.decision_table.rows[0].approval.status, "approved");
+	assert.deepEqual(writtenBuild.approved_decision_rows, ["ROW-APPROVE"]);
 } finally {
 	rmSync(runtimeRoot, { recursive: true, force: true });
 }

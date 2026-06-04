@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { decisionTableFixture } from "../decision-table-fixture.mjs";
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, readFileSync, writeFileSync } from "node:fs";
@@ -50,8 +51,8 @@ const decisionBuild = {
 		change_type: "system",
 		traceability: { change_type: "system", semantic: true, requires_accepted_build: false },
 		requirements: [{ id: "REQ-001", text: "Alignment proof exists", state: "accepted" }],
-		diff_table: [{ id: "REQ-001", desired_state: "Alignment proof exists", user_action: "approved" }],
-		approved_diff_rows: ["REQ-001"],
+		decision_table: decisionTableFixture([{ id: "REQ-001", desired_state: "Alignment proof exists", user_action: "approved" }]),
+		approved_decision_rows: ["REQ-001"],
 		knowledge_changes: [".codewiki/kb/system/alignment.md"],
 		row_to_kb_mappings: [{ row_id: "REQ-001", knowledge_refs: [".codewiki/kb/system/alignment.md"], evidence: "Alignment doc captures requirement." }],
 		propagation: { direction: "system-first", product_impact: ["User-visible alignment semantics change."] },

@@ -20,14 +20,14 @@ const thisTest = relative(repoRoot, fileURLToPath(import.meta.url)).replaceAll(
 const requiredChangeFiles = [
 	"src/change/types.ts",
 	"src/change/traceability.ts",
-	"src/change/diff-table.ts",
+	"src/change/decision-table.ts",
 	"src/change/tool.ts",
 ];
 const removedChangeOwnerPaths = [
 	"src/domain/change/types.ts",
 	"src/domain/change/traceability.ts",
-	"src/application/diff-table.ts",
-	"src/application/tools/diff-table.ts",
+	"src/application/decision-table.ts",
+	"src/application/tools/decision-table.ts",
 ];
 const removedChangeOwnerAbsPaths = removedChangeOwnerPaths.map((path) =>
 	resolve(repoRoot, path),
@@ -43,7 +43,7 @@ for (const path of removedChangeOwnerPaths) {
 	assert.equal(
 		existsSync(resolve(repoRoot, path)),
 		false,
-		`Legacy change/diff-table owner path remains: ${path}`,
+		`Legacy change/decision-table owner path remains: ${path}`,
 	);
 }
 
@@ -53,10 +53,10 @@ const changeTypes = await import(
 const traceability = await import(
 	pathToFileURL(resolve(repoRoot, "src", "change", "traceability.ts")).href
 );
-const diffTable = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "diff-table.ts")).href
+const decisionTable = await import(
+	pathToFileURL(resolve(repoRoot, "src", "change", "decision-table.ts")).href
 );
-const diffTool = await import(
+const decisionTableTool = await import(
 	pathToFileURL(resolve(repoRoot, "src", "change", "tool.ts")).href
 );
 
@@ -94,34 +94,34 @@ const changeTypesSource = readFileSync(
 	resolve(repoRoot, "src", "change", "types.ts"),
 	"utf8",
 );
-const diffTableSource = readFileSync(
-	resolve(repoRoot, "src", "change", "diff-table.ts"),
+const decisionTableSource = readFileSync(
+	resolve(repoRoot, "src", "change", "decision-table.ts"),
 	"utf8",
 );
 assert.match(
 	changeTypesSource,
-	/interface CodewikiDiffTableRowInput/,
-	"Decision diff-table row type should be owned by src/change/types.ts",
+	/interface CodewikiDecisionTableRowInput/,
+	"Decision decision-table row type should be owned by src/change/types.ts",
 );
 assert.doesNotMatch(
-	diffTableSource,
+	decisionTableSource,
 	/\.\.\/build\/types\.ts/,
-	"Runtime diff-table use case should not depend on build-owned types",
+	"Runtime decision-table use case should not depend on build-owned types",
 );
 assert.equal(
-	typeof diffTable.executeDiffTableAction,
+	typeof decisionTable.executeDecisionTableAction,
 	"function",
-	"Diff-table mutation use case should be owned by src/change/diff-table.ts",
+	"Decision-table mutation use case should be owned by src/change/decision-table.ts",
 );
 assert.equal(
-	typeof diffTable.readRuntimeDiffTables,
+	typeof decisionTable.readRuntimeDecisionTables,
 	"function",
-	"Diff-table storage read helper should be owned by src/change/diff-table.ts",
+	"Decision-table storage read helper should be owned by src/change/decision-table.ts",
 );
 assert.equal(
-	typeof diffTool.executeCodewikiDiffTableTool,
+	typeof decisionTableTool.executeCodewikiDecisionTableTool,
 	"function",
-	"wiki_diff_table tool execution should be owned by src/change/tool.ts",
+	"wiki_decision_table tool execution should be owned by src/change/tool.ts",
 );
 
 const runtimeRoot = mkdtempSync(resolve(tmpdir(), "codewiki-task-026-"));
@@ -132,7 +132,7 @@ try {
 		config: {},
 		roadmapPath: ".codewiki/roadmap/queue.json",
 	};
-	const proposed = await diffTable.executeDiffTableAction(project, {
+	const proposed = await decisionTable.executeDecisionTableAction(project, {
 		action: "propose",
 		table_id: "DT-TASK-026",
 		summary: "Approve migration guard",
@@ -151,21 +151,24 @@ try {
 	assert.equal(
 		proposed.changed,
 		true,
-		"Diff-table propose should still report changed=true",
+		"Decision-table propose should still report changed=true",
 	);
 	assert.equal(
 		proposed.table.rows[0].user_action,
 		"pending",
-		"Diff-table propose should preserve pending action",
+		"Decision-table propose should preserve pending action",
 	);
-	const accepted = await diffTool.executeCodewikiDiffTableTool(project, {
-		action: "accept",
-		table_id: "DT-TASK-026",
-		row_id: "DTR-001",
-	});
+	const accepted = await decisionTableTool.executeCodewikiDecisionTableTool(
+		project,
+		{
+			action: "accept",
+			table_id: "DT-TASK-026",
+			row_id: "DTR-001",
+		},
+	);
 	assert.equal(
 		accepted.summary,
-		"codewiki diff_table: accept",
+		"codewiki decision_table: accept",
 		"Tool summary should stay stable",
 	);
 	assert.equal(
@@ -173,11 +176,11 @@ try {
 		"approved",
 		"Tool execution should preserve accept semantics",
 	);
-	const runtime = await diffTable.readRuntimeDiffTables(project);
+	const runtime = await decisionTable.readRuntimeDecisionTables(project);
 	assert.equal(
 		runtime.tables[0].rows[0].user_action,
 		"approved",
-		"Runtime diff-table storage should persist approved row",
+		"Runtime decision-table storage should persist approved row",
 	);
 } finally {
 	rmSync(runtimeRoot, { recursive: true, force: true });
@@ -199,20 +202,20 @@ for (const filePath of walkCodeFiles(["src", "scripts", "tests"])) {
 		`${rel} still references legacy change type path text`,
 	);
 	assert.equal(
-		source.includes("src/application/diff-table"),
+		source.includes("src/application/decision-table"),
 		false,
-		`${rel} still references legacy diff-table path text`,
+		`${rel} still references legacy decision-table path text`,
 	);
 	assert.equal(
-		source.includes("src/application/tools/diff-table"),
+		source.includes("src/application/tools/decision-table"),
 		false,
-		`${rel} still references legacy diff-table tool path text`,
+		`${rel} still references legacy decision-table tool path text`,
 	);
 }
 assert.deepEqual(
 	importViolations,
 	[],
-	"Source, tests, and scripts should not import removed change/diff-table owner paths",
+	"Source, tests, and scripts should not import removed change/decision-table owner paths",
 );
 
 const piIndexSource = readFileSync(
@@ -239,13 +242,16 @@ const gatewayReportSource = readFileSync(
 assert.match(
 	piIndexSource,
 	/from "\.\.\/\.\.\/api\/tools\.ts"/,
-	"Pi adapter should route wiki_diff_table through src/api/tools.ts",
+	"Pi adapter should route wiki_decision_table through src/api/tools.ts",
 );
-const apiFacadeSource = readFileSync(resolve(repoRoot, "src", "api", "tools.ts"), "utf8");
+const apiFacadeSource = readFileSync(
+	resolve(repoRoot, "src", "api", "tools.ts"),
+	"utf8",
+);
 assert.match(
 	apiFacadeSource,
 	/from "\.\.\/change\/tool\.ts"/,
-	"API facade should expose wiki_diff_table from src/change/tool.ts",
+	"API facade should expose wiki_decision_table from src/change/tool.ts",
 );
 assert.match(
 	schemaSource,

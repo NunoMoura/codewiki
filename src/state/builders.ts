@@ -1265,10 +1265,10 @@ export function buildStatusState(
 			specRowsByPath,
 			roadmapEntries,
 			{
-				kind: "status",
-				command: "/wiki-status",
+				kind: "state",
+				command: "wiki_state",
 				reason:
-					"Strategic intent drift should first be inspected through the canonical status surface.",
+					"Strategic intent drift should be inspected through backend state lenses.",
 			},
 			previousStatus,
 			generatedPaths,
@@ -1319,10 +1319,10 @@ export function buildStatusState(
 			specRowsByPath,
 			roadmapEntries,
 			{
-				kind: "status",
-				command: "/wiki-status",
+				kind: "state",
+				command: "wiki_state",
 				reason:
-					"User-visible drift should first be inspected through the canonical status surface.",
+					"User-facing drift should be inspected through backend state lenses.",
 			},
 			previousStatus,
 			generatedPaths,
@@ -1355,16 +1355,16 @@ export function buildStatusState(
 		};
 	} else if (counts.untracked > 0) {
 		nextStep = {
-			kind: "status",
-			command: "/wiki-status",
-			reason: `${counts.untracked} untracked spec drift needs inspection through the canonical status surface.`,
+			kind: "state",
+			command: "wiki_state",
+			reason: `${counts.untracked} untracked spec drift needs inspection through backend state lenses.`,
 		};
 	} else if (counts.blocked > 0 || (taskStatusCounts.blocked || 0) > 0) {
 		nextStep = {
-			kind: "status",
-			command: "/wiki-status",
+			kind: "state",
+			command: "wiki_state",
 			reason:
-				"Blocked drift exists; inspect constraints in status before resuming implementation.",
+				"Blocked drift exists; inspect constraints in backend state before resuming implementation.",
 		};
 	} else if (
 		(

@@ -108,7 +108,7 @@ export async function runConfigCommand(
 				resolved,
 			);
 		else clearStatusDock(ctx);
-		ctx.ui.notify(`Status panel density set to ${input.density}.`, "info");
+		ctx.ui.notify(`Status dock density set to ${input.density}.`, "info");
 		return;
 	}
 	if (input.mode === "off") {

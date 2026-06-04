@@ -1,12 +1,13 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import { normalizeDiffTableUserAction } from "../change/types.ts";
+import { normalizeDecisionTableUserAction } from "../change/types.ts";
+import type { CodewikiDecisionTableV1 } from "../telemetry/types.ts";
 import type {
 	CodewikiBuildProducesInput,
 	CodewikiBuildRefsInput,
 	CodewikiBuildToolInput,
 	CodewikiClosureBriefInput,
-	CodewikiDiffTableRowInput,
+	CodewikiDecisionTableRowInput,
 } from "./types.ts";
 import {
 	normalizeDecisionQuestionResolutions,
@@ -253,11 +254,13 @@ function buildCycleFields(
 	};
 }
 
-function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
+function normalizeDecisionTableRows(rows?: CodewikiDecisionTableRowInput[]) {
 	return (rows ?? [])
 		.map((row, index) => {
 			const currentState = String(
-				row.current_state || row.current_project_state || "",
+				row.current_state ||
+					row.current_project_state ||
+					"Current state not specified.",
 			).trim();
 			const desiredState = String(
 				row.desired_state ||
@@ -265,40 +268,78 @@ function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
 					row.agreed_change ||
 					"",
 			).trim();
-			const userAction = normalizeDiffTableUserAction(row.user_action);
+			const userAction = normalizeDecisionTableUserAction(row.user_action);
+			const approvalStatus = normalizeDecisionTableUserAction(
+				row.status,
+				userAction,
+			);
+			const risk = String(row.risk || "medium").trim();
 			return {
 				id: String(
 					row.id || `DTR-${String(index + 1).padStart(3, "0")}`,
 				).trim(),
-				current_state: currentState,
-				current_project_state: String(
-					row.current_project_state || currentState,
+				question: String(
+					(row as any).question || row.id || `Decision row ${index + 1}`,
 				).trim(),
-				desired_state: desiredState,
-				agreed_change: String(row.agreed_change || desiredState).trim(),
-				expected_final_state: String(
+				state_delta: {
+					current: currentState,
+					desired: desiredState,
+				},
+				proposed_change: String(row.agreed_change || desiredState).trim(),
+				rationale: String(row.rationale || "Decision row accepted.").trim(),
+				impact: { system: trimList(row.affected_layers) },
+				risk: ["low", "medium", "high"].includes(risk)
+					? { level: risk as "low" | "medium" | "high" }
+					: { level: "medium" as const, notes: risk },
+				options: trimList(row.alternatives).map((alternative, optionIndex) => ({
+					id: `ALT-${optionIndex + 1}`,
+					label: alternative,
+				})),
+				approval: { status: approvalStatus as any },
+				evidence_refs: trimList(row.proof_refs).map((ref) => ({ ref })),
+				expected_outcome: String(
 					row.expected_final_state || desiredState,
 				).trim(),
-				validated_final_state: String(row.validated_final_state || "").trim(),
-				status: normalizeDiffTableUserAction(row.status, userAction),
-				proof_refs: trimList(row.proof_refs),
-				rationale: String(row.rationale || "").trim(),
-				affected_layers: trimList(row.affected_layers),
-				risk: String(row.risk || "medium").trim(),
-				user_action: userAction,
-				alternatives: trimList(row.alternatives),
+				validated_outcome: String(row.validated_final_state || "").trim(),
 			};
 		})
-		.filter((row) => row.current_state && row.desired_state && row.rationale);
+		.filter((row) => row.state_delta.current && row.state_delta.desired);
 }
 
-function approvedDiffRows(
-	rows: ReturnType<typeof normalizeDiffTable>,
+function normalizeDecisionTable(
+	input: CodewikiBuildToolInput,
+	created: string,
+): CodewikiDecisionTableV1 {
+	const raw = input.decision_table as any;
+	const rows = Array.isArray(raw)
+		? normalizeDecisionTableRows(raw)
+		: Array.isArray(raw?.rows)
+			? raw.rows
+			: [];
+	return {
+		schema_version: 1,
+		id: String(
+			raw?.id || buildSlug(input.slug || input.summary, "decision-table"),
+		).toUpperCase(),
+		title: String(raw?.title || input.summary).trim(),
+		status: raw?.status ||
+			(rows.some((row: any) => row.approval?.status === "approved")
+				? "approved"
+				: "pending"),
+		rows,
+		created_at: String(raw?.created_at || created),
+		updated_at: String(raw?.updated_at || created),
+	};
+}
+
+function approvedDecisionRows(
+	table: CodewikiDecisionTableV1,
 	approvedIds?: string[],
 ) {
 	const explicitApproved = new Set(trimList(approvedIds));
-	return rows.filter(
-		(row) => row.user_action === "approved" || explicitApproved.has(row.id),
+	return table.rows.filter(
+		(row) =>
+			row.approval?.status === "approved" || explicitApproved.has(row.id),
 	);
 }
 
@@ -583,12 +624,15 @@ export async function writeDecisionBuild(
 	if (!input.summary?.trim())
 		throw new Error("Decision build requires summary.");
 
-	const diffTable = normalizeDiffTable(input.diff_table);
-	const approvedRows = approvedDiffRows(diffTable, input.approved_diff_rows);
+	const created = nowIso();
+	const decisionTable = normalizeDecisionTable(input, created);
+	const approvedRows = approvedDecisionRows(
+		decisionTable,
+		input.approved_decision_rows,
+	);
 	const decisions = trimList(input.decisions).length
 		? trimList(input.decisions)
-		: approvedRows.map((row) => row.desired_state);
-	const created = nowIso();
+		: approvedRows.map((row) => row.proposed_change);
 	const slug = buildSlug(input.slug || input.summary, "decision-build");
 	const day = created.slice(0, 10);
 	const absPath = buildBuildPath(project, "decision", slug, day);
@@ -636,11 +680,11 @@ export async function writeDecisionBuild(
 	} else {
 		if (approvedRows.length === 0)
 			throw new Error(
-				"Accepted decision build requires at least one approved diff_table row.",
+				"Accepted decision build requires at least one approved decision_table row.",
 			);
 		if (!decisions.length)
 			throw new Error(
-				"Decision build requires at least one accepted decision or approved diff_table row.",
+				"Decision build requires at least one accepted decision or approved decision_table row.",
 			);
 		if (rowToKbMappings.length === 0)
 			throw new Error("Accepted decision build requires row_to_kb_mappings.");
@@ -701,8 +745,8 @@ export async function writeDecisionBuild(
 		...buildCycleFields(input, "decision", "decision"),
 		summary: input.summary.trim(),
 		decision_mode: mode,
-		diff_table: diffTable,
-		approved_diff_rows: approvedRows.map((row) => row.id),
+		decision_table: decisionTable,
+		approved_decision_rows: approvedRows.map((row) => row.id),
 		approved_rows: approvedRows,
 		accepted_decisions: decisions.map((summary, index) => ({
 			id: `D${index + 1}`,

@@ -2,9 +2,9 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import type { WikiProject } from "../../../project/types.ts";
 import {
-	executeDiffTableAction,
-	type CodewikiDiffTableToolInput,
-} from "../../../change/diff-table.ts";
+	executeDecisionTableAction,
+	type CodewikiDecisionTableToolInput,
+} from "../../../change/decision-table.ts";
 import { truncatePlain } from "./text.ts";
 
 export type DecisionApprovalAction = "approve" | "reject" | "defer" | "edit";
@@ -48,8 +48,8 @@ export interface DecisionApprovalActionResult {
 	rowId: string;
 	userAction: string;
 	evidence: {
-		capability: "codewiki.diff_table";
-		action: CodewikiDiffTableToolInput["action"];
+		capability: "codewiki.decision_table";
+		action: CodewikiDecisionTableToolInput["action"];
 		table_id: string;
 		row_id: string;
 		alternative?: string;
@@ -113,13 +113,13 @@ export async function applyDecisionApprovalAction(
 		alternative?: string;
 	},
 ): Promise<DecisionApprovalActionResult> {
-	const toolAction = diffTableActionForApproval(input.action);
+	const toolAction = decisionTableActionForApproval(input.action);
 	if (toolAction === "alternative" && !input.alternative?.trim()) {
 		throw new Error(
 			"Decision row edit requires alternative desired state text.",
 		);
 	}
-	await executeDiffTableAction(project, {
+	await executeDecisionTableAction(project, {
 		action: toolAction,
 		table_id: input.tableId,
 		row_id: input.rowId,
@@ -133,7 +133,7 @@ export async function applyDecisionApprovalAction(
 		rowId: input.rowId,
 		userAction: userActionForApproval(input.action),
 		evidence: {
-			capability: "codewiki.diff_table",
+			capability: "codewiki.decision_table",
 			action: toolAction,
 			table_id: input.tableId,
 			row_id: input.rowId,
@@ -230,7 +230,7 @@ export function renderTaskCandidateApprovalCards(
 
 function readRuntimeApprovalRows(project: WikiProject): DecisionApprovalRow[] {
 	const runtime = readJson(
-		resolve(project.root, ".codewiki/runtime/diff-tables.json"),
+		resolve(project.root, ".codewiki/runtime/decision-tables.json"),
 	);
 	const rows: DecisionApprovalRow[] = [];
 	for (const table of Array.isArray(runtime?.tables) ? runtime.tables : []) {
@@ -252,8 +252,8 @@ function readDecisionBuildRows(project: WikiProject): DecisionApprovalRow[] {
 		.reverse()
 		.slice(0, 3)) {
 		const build = readJson(resolve(decisionDir, file));
-		for (const row of Array.isArray(build?.diff_table)
-			? build.diff_table
+		for (const row of Array.isArray(build?.decision_table?.rows)
+			? build.decision_table.rows
 			: []) {
 			rows.push(
 				toApprovalRow({ id: file, summary: build?.summary || file }, row, true),
@@ -268,7 +268,9 @@ function toApprovalRow(
 	row: any,
 	readOnly: boolean,
 ): DecisionApprovalRow {
-	const status = String(row.user_action || "pending").trim() || "pending";
+	const status =
+		String(row.approval?.status || row.user_action || "pending").trim() ||
+		"pending";
 	const tableId = String(table.id || "").trim();
 	const rowId = String(row.id || "").trim();
 	return {
@@ -278,28 +280,59 @@ function toApprovalRow(
 		status,
 		lifecycleStatus: String(row.status || status).trim() || status,
 		current: String(
-			row.current_state || row.current_project_state || "",
+			row.state_delta?.current ||
+				row.current_state ||
+				row.current_project_state ||
+				"",
 		).trim(),
 		currentProjectState: String(
-			row.current_project_state || row.current_state || "",
+			row.state_delta?.current ||
+				row.current_project_state ||
+				row.current_state ||
+				"",
 		).trim(),
 		desired: String(
-			row.desired_state || row.expected_final_state || row.agreed_change || "",
+			row.state_delta?.desired ||
+				row.desired_state ||
+				row.expected_final_state ||
+				row.agreed_change ||
+				"",
 		).trim(),
-		agreedChange: String(row.agreed_change || row.desired_state || "").trim(),
+		agreedChange: String(
+			row.proposed_change || row.agreed_change || row.desired_state || "",
+		).trim(),
 		expectedFinalState: String(
-			row.expected_final_state || row.desired_state || "",
+			row.expected_outcome ||
+				row.expected_final_state ||
+				row.desired_state ||
+				"",
 		).trim(),
-		validatedFinalState: String(row.validated_final_state || "").trim(),
+		validatedFinalState: String(
+			row.validated_outcome || row.validated_final_state || "",
+		).trim(),
 		rationale: String(row.rationale || "").trim(),
-		affectedLayers: stringList(row.affected_layers),
-		risk: String(row.risk || "medium").trim(),
+		affectedLayers: [
+			...stringList(row.impact?.product),
+			...stringList(row.impact?.system),
+			...stringList(row.impact?.source),
+			...stringList(row.impact?.tests),
+			...stringList(row.impact?.docs),
+		],
+		risk: String(row.risk?.level || row.risk || "medium").trim(),
 		source: String(table.summary || table.id || "pending").trim(),
-		alternatives: stringList(row.alternatives),
-		proofRefs: stringList(row.proof_refs),
+		alternatives: Array.isArray(row.options)
+			? row.options
+					.map((option: any) => String(option.label || "").trim())
+					.filter(Boolean)
+			: stringList(row.alternatives),
+		proofRefs: Array.isArray(row.evidence_refs)
+			? row.evidence_refs
+					.map((ref: any) => String(ref.ref || ref || "").trim())
+					.filter(Boolean)
+			: stringList(row.proof_refs),
 		readOnly,
 		buildEligible: !readOnly && status === "approved",
-		actionEvidence: `wiki_diff_table ${status} ${tableId}/${rowId}`,
+		actionEvidence: `wiki_decision_table ${status} ${tableId}/${rowId}`,
 	};
 }
 
@@ -316,9 +349,9 @@ function stringList(values: unknown): string[] {
 		: [];
 }
 
-function diffTableActionForApproval(
+function decisionTableActionForApproval(
 	action: DecisionApprovalAction,
-): CodewikiDiffTableToolInput["action"] {
+): CodewikiDecisionTableToolInput["action"] {
 	if (action === "approve") return "accept";
 	if (action === "reject") return "reject";
 	if (action === "defer") return "defer";

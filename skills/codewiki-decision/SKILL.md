@@ -28,7 +28,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Compile the decision build through `wiki_decide` after approved rows and KB edits are complete.
 - The `decision_build` must include approved rows, changed KB refs, row-to-KB mappings, propagation evidence, assumptions, open questions, non-goals, risks, and downstream planning questions.
 - Do not compact or reset while important intent only exists in chat. Decision-loop compaction is safe only after intent is externalized into pending/approved rows, KB/build/session evidence, or explicit blocking questions.
-- If no semantic delta exists, answer normally and do not create a diff table or build.
+- If no semantic delta exists, answer normally and do not create a decision table or build.
 
 ## Product/system routing
 
@@ -58,7 +58,7 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
    - Read relevant product/system KB, roadmap/build refs, validations, or source files only when needed.
    - Surface drift between product and system truth instead of silently choosing one.
 
-2. **Prepare semantic diff rows**
+2. **Prepare semantic decision rows**
    - For each independent decision, define current state, desired state, rationale, affected layers, risk, and requested action.
    - Include alternatives when tradeoffs matter.
    - Prefer 3-7 high-signal rows.
@@ -74,7 +74,7 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
 
 5. **Compile decision build**
    - Call `wiki_decide action="build"` with `decision_build` payload.
-   - Include `decision_mode="accepted"`, `diff_table`, `approved_diff_rows`, `knowledge_changes`, `row_to_kb_mappings`, `propagation`, `diagram_refs`, `downstream_planning_questions`, requirements, assumptions, open questions, non-goals, and risks.
+   - Include `decision_mode="accepted"`, `decision_table`, `approved_decision_rows`, `knowledge_changes`, `row_to_kb_mappings`, `propagation`, `diagram_refs`, `downstream_planning_questions`, requirements, assumptions, open questions, non-goals, and risks.
 
 6. **Validate or route**
    - Run linter profiles when policy/risk requires.

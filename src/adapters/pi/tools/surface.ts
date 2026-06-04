@@ -90,12 +90,12 @@ export const CODEWIKI_TOOL_SURFACE: Record<
 		deprecation_message:
 			"Use wiki_plan for normal roadmap and sprint alignment; reserve wiki_roadmap for expert compatibility.",
 	},
-	wiki_diff_table: {
+	wiki_decision_table: {
 		surface: "compatibility",
 		compatibility_alias_for: "wiki_decide",
 		deprecated: true,
 		deprecation_message:
-			"Use wiki_decide for normal decision row work; reserve wiki_diff_table for expert compatibility.",
+			"Use wiki_decide for normal decision row work; reserve wiki_decision_table for expert compatibility.",
 	},
 	wiki_session: {
 		surface: "compatibility",

@@ -26,7 +26,7 @@ Use for pending decision rows, approvals, KB mappings, propagation evidence, and
 ```text
 wiki_decide action="propose" table_id="DT-..." rows=[...]
 wiki_decide action="rows" table_id="DT-..." row_actions=[{ row_id="ROW-001", action="accept" }]
-wiki_decide action="build" decision_build={ decision_mode="accepted", diff_table=[...], approved_diff_rows=[...] }
+wiki_decide action="build" decision_build={ decision_mode="accepted", decision_table=[...], approved_decision_rows=[...] }
 ```
 
 Rows must include current state, desired state, rationale, affected layers, risk, and requested user action.
@@ -45,8 +45,8 @@ Compile after approved rows and KB edits through `wiki_decide action="build"`:
 ```text
 wiki_decide action="build" decision_build={
   decision_mode="accepted",
-  diff_table=[...],
-  approved_diff_rows=["ROW-001"],
+  decision_table=[...],
+  approved_decision_rows=["ROW-001"],
   knowledge_changes=[".codewiki/kb/system/compilers.md"],
   row_to_kb_mappings=[{ row_id, knowledge_refs, diagram_refs, evidence }],
   propagation={ direction, product_impact, system_impact, no_product_impact, no_system_impact },
@@ -56,7 +56,7 @@ wiki_decide action="build" decision_build={
 
 Accepted decision builds require:
 
-- at least one approved diff row;
+- at least one approved decision row;
 - row-to-KB mapping for every approved row;
 - propagation direction;
 - product-first: `system_impact` or `no_system_impact`;
@@ -77,7 +77,7 @@ Validation linters/tests approved-row coverage, KB mappings, product/system prop
 
 ## Compatibility aliases
 
-`wiki_diff_table`, `wiki_build`, `wiki_audit`, and `wiki_gateway` remain expert compatibility aliases during migration. Do not use them as the normal decision surface.
+`wiki_decision_table`, `wiki_build`, `wiki_audit`, and `wiki_gateway` remain expert compatibility aliases during migration. Do not use them as the normal decision surface.
 
 ## Routing
 

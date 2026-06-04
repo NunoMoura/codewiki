@@ -3,7 +3,7 @@ import { registerBootstrapFeatures } from "./bootstrap.ts";
 import {
 	codewikiBuildToolInputSchema,
 	codewikiAgencyToolInputSchema,
-	codewikiDiffTableToolInputSchema,
+	codewikiDecisionTableToolInputSchema,
 	codewikiGcToolInputSchema,
 	codewikiSessionToolInputSchema,
 	codewikiRoadmapToolInputSchema,
@@ -15,15 +15,13 @@ import { registerResumeCommand } from "./commands/resume.ts";
 import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
 import { registerWikiCommand } from "./commands/wiki.ts";
-import { currentTaskLink } from "./session.ts";
-import { readRoadmapTask } from "../../roadmap/store.ts";
 import {
 	resolveStatusDockProject,
 	resolveToolProject,
 } from "../../project/context.ts";
 import { executeCodewikiBuildTool } from "../../api/tools.ts";
 import { executeCodewikiValidationTool } from "../../api/tools.ts";
-import { executeCodewikiDiffTableTool } from "../../api/tools.ts";
+import { executeCodewikiDecisionTableTool } from "../../api/tools.ts";
 import { executeCodewikiGcTool } from "../../api/tools.ts";
 import { executeCodewikiAgency } from "./tools/agency.ts";
 import { registerCodewikiArtifactStatusTool } from "./tools/artifact-status.ts";
@@ -45,12 +43,6 @@ import { registerCodewikiGateTool } from "./tools/gate.ts";
 import { registerCodewikiRuntimeTool } from "./tools/runtime.ts";
 import { codewikiToolMetadata } from "./tools/surface.ts";
 import { executeCodewikiRoadmap } from "./tools/task.ts";
-import {
-	clearStatusDock,
-	refreshStatusDock,
-	setTaskSessionStatus,
-	withUiErrorHandling,
-} from "./ui/manager.ts";
 
 interface ProjectToolRegistration {
 	name: string;
@@ -96,8 +88,7 @@ function registerProjectTool(
 			);
 			const result = await registration.execute(project, params, ctx);
 			await registration.after?.({ project, params, result, ctx });
-			if (registration.refreshStatus !== false)
-				await refreshStatusDock(project, ctx, currentTaskLink(ctx));
+			void registration.refreshStatus;
 			return {
 				content: [{ type: "text", text: String(result.summary || "") }],
 				details: registration.details ? registration.details(result) : result,
@@ -121,44 +112,16 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		disposeArtifactWake = null;
 	});
 
-	pi.on("turn_start", async (_event, ctx) => {
-		const resolved = await resolveStatusDockProject(ctx);
-		if (!resolved) {
-			clearStatusDock(ctx);
-			return;
-		}
-		await withUiErrorHandling(ctx, async () => {
-			await refreshStatusDock(
-				resolved.project,
-				ctx,
-				currentTaskLink(ctx),
-				resolved,
-			);
-		});
+	pi.on("turn_start", async () => {
+		// Status UI is deprecated; backend state stays available through wiki_state.
 	});
 
 	pi.on("session_start", async (_event, ctx) => {
 		disposeArtifactWake?.();
 		disposeArtifactWake = null;
 		const resolved = await resolveStatusDockProject(ctx);
-		if (!resolved) {
-			ctx.ui.setStatus("codewiki-focus", undefined);
-			clearStatusDock(ctx);
-			return;
-		}
+		if (!resolved) return;
 		disposeArtifactWake = installArtifactWaiterWake(pi, resolved.project, ctx);
-
-		await withUiErrorHandling(ctx, async () => {
-			const active = currentTaskLink(ctx);
-			if (!active) {
-				ctx.ui.setStatus("codewiki-focus", undefined);
-				await refreshStatusDock(resolved.project, ctx, active, resolved);
-				return;
-			}
-			const task = await readRoadmapTask(resolved.project, active.taskId);
-			if (task) setTaskSessionStatus(ctx, task.id, task.title, active.action);
-			await refreshStatusDock(resolved.project, ctx, active, resolved);
-		});
 	});
 
 	registerWikiCommand(pi);
@@ -277,14 +240,15 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "wiki_diff_table",
-		label: "Codewiki Diff Table",
+		name: "wiki_decision_table",
+		label: "Codewiki Decision Table",
 		description:
-			"Create or update pending decision diff tables before accepted decision builds are compiled.",
+			"Create or update pending decision decision tables before accepted decision builds are compiled.",
 		promptSnippet:
-			"Use pending diff tables for interactive decision approval before writing accepted decision builds.",
-		parameters: codewikiDiffTableToolInputSchema,
-		execute: (project, params) => executeCodewikiDiffTableTool(project, params),
+			"Use pending decision tables for interactive decision approval before writing accepted decision builds.",
+		parameters: codewikiDecisionTableToolInputSchema,
+		execute: (project, params) =>
+			executeCodewikiDecisionTableTool(project, params),
 		details: resultPayload,
 		refreshStatus: false,
 	});

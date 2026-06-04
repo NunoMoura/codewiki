@@ -1,7 +1,7 @@
-import type { ChangeType, CodewikiDiffTableRowInput, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
+import type { ChangeType, CodewikiDecisionTableRowInput, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
 import type { CodewikiIsolationRequirementInput } from "../session/types.ts";
 
-export type { CodewikiDiffTableRowInput } from "../change/types.ts";
+export type { CodewikiDecisionTableRowInput } from "../change/types.ts";
 
 export interface CodewikiBuildIsolationPolicyInput {
 	loop_start?: CodewikiIsolationRequirementInput;
@@ -154,8 +154,8 @@ export interface CodewikiBuildToolInput {
 	diagram_refs?: string[];
 	downstream_planning_questions?: string[];
 	/** Decision row table */
-	diff_table?: CodewikiDiffTableRowInput[];
-	approved_diff_rows?: string[];
+	decision_table?: CodewikiDecisionTableRowInput[];
+	approved_decision_rows?: string[];
 	decisions?: string[];
 	assumptions?: string[];
 	open_questions?: string[];

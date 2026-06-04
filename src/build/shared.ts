@@ -118,7 +118,8 @@ export function inferChangeTypeForBuild(
 			refs.some(
 				(ref) =>
 					ref.startsWith(".codewiki/kb/system/") ||
-					ref.startsWith("skills/codewiki/"),
+					ref.startsWith("skills/codewiki-") ||
+					ref.startsWith("src/adapters/pi/prompt-assets/"),
 			)
 		)
 			return "system";

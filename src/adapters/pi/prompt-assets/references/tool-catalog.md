@@ -1,13 +1,13 @@
 # CodeWiki tool catalog
 
-Use this catalog as the skill-facing map for normal internal `wiki_*` tools. Source-owned contracts live in package roots; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
+Use this catalog as the package-facing map for normal internal `wiki_*` tools. Source-owned contracts live in package roots; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
 
 ## Normal workflow tools
 
 | Tool | Application contract | Purpose | Safe mutation path |
 | --- | --- | --- | --- |
 | `wiki_state` | `src/state/tool.ts`, `src/state/resume-tool.ts` | Read graph-first state, focused lenses, task context, and source-backed continuation refs. | Read-only except optional generated-state rebuild through ports. |
-| `wiki_decide` | `src/workflow/tool.ts`, `src/change/tool.ts`, `src/build/tool.ts` | Manage decision rows, approvals, KB mappings, propagation evidence, and decision-build creation. | Pending diff rows plus transient `decision_build` writes; canonical KB edits happen with normal file tools after approved rows. |
+| `wiki_decide` | `src/workflow/tool.ts`, `src/change/tool.ts`, `src/build/tool.ts` | Manage decision rows, approvals, KB mappings, propagation evidence, and decision-build creation. | Pending decision rows plus transient `decision_build` writes; canonical KB edits happen with normal file tools after approved rows. |
 | `wiki_plan` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Mutate roadmap task truth, sprint metadata, durable roadmap lifecycle, and planning-build handoffs. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"`; planning builds are transient handoffs. |
 | `wiki_implement` | `src/workflow/tool.ts`, `src/roadmap/tool.ts`, `src/build/tool.ts` | Record task-scoped TDD/code evidence and implementation-build creation without replacing file/code edit tools. | Appends builder evidence and writes transient `implementation_build`; task closure still needs validation evidence. |
 | `wiki_gate` | `src/workflow/tool.ts`, `src/audit/tool.ts`, `src/gateway/tool.ts` | Run deterministic linter profiles, gateway preflight, validation reports, and linter/test evidence routing. | `action="preflight"` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
@@ -15,13 +15,13 @@ Use this catalog as the skill-facing map for normal internal `wiki_*` tools. Sou
 
 ## Compatibility/expert aliases
 
-Low-level primitives remain registered during migration with compatibility/deprecation metadata so expert flows and older agents do not break: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_gateway`, `wiki_gc`, `wiki_roadmap`, `wiki_diff_table`, `wiki_session`, and `wiki_agency`.
+Low-level primitives remain registered during migration with compatibility/deprecation metadata so expert flows and older agents do not break: `wiki_setup`, `wiki_bootstrap`, `wiki_resume_context`, `wiki_artifact_status`, `wiki_audit`, `wiki_build`, `wiki_gateway`, `wiki_gc`, `wiki_roadmap`, `wiki_decision_table`, `wiki_session`, and `wiki_agency`.
 
 Do not use these aliases as the normal agent surface. Prefer the six workflow tools above unless validating wrapper parity, debugging a primitive, or maintaining backwards compatibility.
 
 ## Post-commit GC path
 
-Do not manually delete tracked `.codewiki` builds, validation reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` with a GC dry-run. If tracked artifacts are eligible, purge only with the archive commit/tree evidence:
+Do not manually delete tracked `.codewiki` compiler output, gateway reports, or roadmap truth. After a task-close, sprint-close, publication, or roadmap-end commit exists, use `wiki_runtime` with a GC dry-run. If tracked artifacts are eligible, purge only with the archive commit/tree evidence:
 
 ```json
 {
@@ -49,7 +49,7 @@ Do not create umbrella tasks for related work. When accepted intent forms a rela
     "outcome": "Focused loop skills and tool contracts stay aligned.",
     "task_ids": ["TASK-093", "TASK-094", "TASK-095"],
     "scope": {
-      "knowledge": ["skills/codewiki/**"],
+      "knowledge": ["skills/codewiki-decision/**", "skills/codewiki-planning/**", "skills/codewiki-implementation/**"],
       "code": ["src/workflow/**", "src/adapters/pi/tools/**", "tests/**"]
     },
     "gates": ["implementation-validation", "package-smoke"]

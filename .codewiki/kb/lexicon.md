@@ -6,7 +6,7 @@ summary: Canonical CodeWiki vocabulary for commands, tools, loops, compiler outp
 owners:
 - product
 - architecture
-updated: '2026-06-03'
+updated: '2026-06-04'
 ---
 
 # Lexicon
@@ -15,16 +15,14 @@ This file is CodeWiki's active vocabulary contract. Keep only terms used by huma
 
 ## Command
 
-Human-facing Pi slash command that renders or navigates CodeWiki state. Target commands:
+Human-facing Pi slash command that triggers backend CodeWiki actions or future Pi TUI diagram rendering. Active target commands:
 
 - `/wiki bootstrap` for greenfield or brownfield CodeWiki setup;
-- `/wiki status` for the most important developer-facing project state;
 - `/wiki resume` for agent continuation from the last known stable state;
 - `/wiki config` for user preferences and configuration selection;
-- `/wiki system <diagram type>` for source-backed system diagram navigation;
-- `/wiki product` for product overview, users, and user-story navigation.
+- future `/wiki system <diagram type>` for source-backed system diagram rendering in Pi TUI ASCII/Unicode.
 
-Legacy hyphenated or standalone compatibility commands may remain as shims, but are not canonical.
+Status UI commands such as `/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated. Product/system navigation UI commands are not active target surfaces.
 
 ## Internal agent tool
 
@@ -67,11 +65,11 @@ Loop engine in CodeWiki product source. Each loop source root owns a `compiler.t
 
 ## Compiler output
 
-The compact artifact emitted by a loop compiler. Historic `decision_build`, `planning_build`, and `implementation_build` are compatibility names for compiler output sections inside `decision.json`, `planning.json`, and `implementation.json` trace files.
+The compact artifact emitted by a loop compiler into a lifecycle trace section such as `.codewiki/telemetry/TRACE-*.json#/decision`, `#/planning`, or `#/implementation`. Historic `decision_build`, `planning_build`, and `implementation_build` are old artifact names to retire, not trace shims.
 
-## Diff table
+## Decision Table
 
-Decision-loop surface that compares current state to desired state before canonical edits. Pending rows can live in runtime UI state and be approved, rejected, deferred, or edited with alternatives. Approved rows compile into decision compiler output and KB/diagram updates.
+Decision-loop approval surface for semantic changes before canonical edits. A Decision Table is not a textual diff. It records the decision question, current and desired project state, proposed change, rationale, impacts, risk, options, approval status, evidence refs, expected outcome, validated outcome, and follow-up routing. Pending rows can live in runtime UI state. Approved rows compile into trace decision evidence and KB/diagram updates.
 
 ## Gateway
 
@@ -79,7 +77,7 @@ Gate engine that evaluates loop evidence against exit criteria, source refs, req
 
 ## Gate
 
-A loop exit condition. Canonical gates are `decision`, `planning`, and `implementation`. Former `task-close`, `sprint-close`, `ship-ready`, `policy`, `audit`, and `checks` concepts are compatibility names or criteria suites inside these three gates during migration.
+A loop exit condition. Canonical gates are `decision`, `planning`, and `implementation`. Former `task-close`, `sprint-close`, `ship-ready`, `policy`, `audit`, and `checks` concepts are old criteria names to retire or fold directly into these three gates.
 
 ## Gate verdict
 
@@ -107,23 +105,19 @@ Executable code behavior verification that lives in code/test directories and is
 
 ## Validation
 
-Compatibility term for gate judgment or verdict evidence. Validation is not a loop, source root, or hot artifact folder in the target model.
+Legacy term for gate judgment or verdict evidence. Validation is not a loop, source root, or hot artifact folder in the target model.
 
 ## Telemetry trace
 
-Structured workflow evidence under `.codewiki/telemetry/<trace_id>/`. A trace tells the story of one change from decision through planning and implementation. A trace contains loop files, not separate hot build/gate/report folders.
+Structured lifecycle evidence under `.codewiki/telemetry/TRACE-*.json`. A trace tells the story of one accountable change from user intent through decision, planning, implementation, gates, and production-ready or published content evidence. A trace contains a top-level lifecycle control plane plus `decision`, `planning`, and `implementation` sections.
 
-## Loop trace file
+## Lifecycle
 
-One of the three files under a trace:
+Trace control plane that owns aggregate status, active loops, active gates, blockers, route-backs, next safe actions, risk, recovery cursor, and production/publication state. Agents route from lifecycle before expanding loop evidence sections.
 
-```text
-decision.json
-planning.json
-implementation.json
-```
+## Loop section
 
-Each loop trace file contains metadata, input refs, compiler output, gate criteria, gate verdict, gate diagnostics, evidence refs, next action, and retention hints. `implementation.json` also carries Git proof refs required to close implementation.
+One of the three evidence sections inside a lifecycle trace: `decision`, `planning`, or `implementation`. Loop sections contain compiler output, gate criteria, gate verdict, gate diagnostics, evidence refs, next action, and retention hints. `implementation.publication` carries configured publication evidence.
 
 ## ArtifactRef
 
@@ -160,7 +154,7 @@ Compact generated view that connects requirement ids to decision rows, knowledge
 Traceability across layers:
 
 ```text
-user intent -> decision.json -> planning.json -> implementation.json -> Git proof
+user intent -> trace.decision -> trace.planning -> trace.implementation -> Git/content evidence
 ```
 
 ## Horizontal alignment
@@ -197,7 +191,7 @@ User-approved continuation contract for gated agency. `task` stops after one tas
 
 ## Pi foundation
 
-Pi is the runtime foundation for the CodeWiki software-development distribution. Pi is not a mere adapter in the target architecture. Adapter language is reserved for future/non-Pi protocol translation or compatibility source paths.
+Pi is the runtime foundation for the CodeWiki software-development distribution. Pi is not a mere adapter in the target architecture. Adapter language is reserved for future/non-Pi protocol translation paths.
 
 ## Context window
 
@@ -233,28 +227,32 @@ A non-canonical project expression that still has a project-specific meaning bec
 - Canonical replacement: evidence, Git refs, or content evidence.
 - Removed expression pattern: `\bproofs?\b`
 - Allowed compatibility tokens: `proof_refs`, `publisher-proof`.
-- Allowed migration docs: `.codewiki/kb/system/audits.md`.
-- Deletion trigger: remove after schemas, gate reports, publisher worktree records, and migration docs use evidence or Git refs only.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
+- Deletion trigger: remove after schemas, gate reports, publisher worktree records, and migration docs use evidence, Git refs, or content evidence only.
 
 ### checks
 
 - Canonical replacement: gate evidence, linters, or tests depending on context.
 - Removed expression pattern: `\bchecks\b`
 - Allowed compatibility tokens: `checks_run`, `gateway.checks`, `CodeWiki-Checks`.
-- Allowed migration docs: `.codewiki/kb/system/audits.md`.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
 - Deletion trigger: remove after trace schemas, gate reports, commit trailers, and command/test summaries use gate evidence, linter, or test wording only.
 
 ### build
 
 - Canonical replacement: compiler output when referring to emitted loop data; product source should use compiler terminology.
+- Removed expression pattern: `(decision_build|planning_build|implementation_build|\.codewiki/builds/|src/build/)`
 - Allowed compatibility tokens: `decision_build`, `planning_build`, `implementation_build`, `.codewiki/builds/**`, `src/build/**`, `build_refs`.
-- Deletion trigger: remove top-level source/state build wording after telemetry trace migration and compatibility readers are complete.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
+- Deletion trigger: remove top-level source/state build wording after direct telemetry trace readers/writers replace old artifact roots.
 
 ### validation
 
 - Canonical replacement: gate verdict or gate report.
+- Removed expression pattern: `(\.codewiki/validation/|src/validation/|validation_refs|validation loop|codewiki-validation)`
 - Allowed compatibility tokens: `.codewiki/validation/**`, `src/validation/**`, `validation_refs`, `validation-gateway.md`, `codewiki-validation` skill.
-- Deletion trigger: remove folder/root/loop wording after gate traces and compatibility aliases are complete.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
+- Deletion trigger: remove folder/root/loop wording after gate traces and direct gate APIs replace old validation roots.
 
 ## Related docs
 

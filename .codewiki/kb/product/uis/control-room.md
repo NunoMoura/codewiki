@@ -41,7 +41,5 @@ The implementation target changes from browser pages to terminal panels and comm
 ## Related docs
 
 - [Terminal UI](terminal.md)
-- [Status Panel](status-panel.md)
-- [Board](board.md)
-- [Map Navigation](graph-navigation.md)
+- [Pi TUI Diagram Rendering](terminal.md)
 - [Terminal UI System Contract](../../system/terminal-ui.md)

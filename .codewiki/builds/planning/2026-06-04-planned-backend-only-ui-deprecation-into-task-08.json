@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-04T11:28:24Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-18T11:28:24.000Z",
+    "purge_after": "2026-07-02T11:28:24.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-UI-BACKEND-ONLY",
+      "text": "All product UI surfaces are deprecated for current wave; backend status uses wiki_state/graph lenses.",
+      "source_refs": [
+        "CW-UI-DEP-001-BACKEND-ONLY",
+        "CW-UI-DEP-005-DEPRECATE-STATUS-COMMANDS"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "REQ-PI-TUI-ASCII-DIAGRAMS",
+      "text": "Only future UI direction is Pi TUI ASCII/Unicode rendering of canonical system diagram YAML.",
+      "source_refs": [
+        "CW-UI-DEP-002-PI-TUI-ONLY",
+        "CW-UI-DEP-003-ASCII-DIAGRAMS"
+      ],
+      "state": "implemented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Accepted UI deprecation rows mapped to TASK-089.",
+      "evidence": "decision_row_resolutions and downstream_question_resolutions all resolve to TASK-089 with knowledge/source refs.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Implementation can validate against updated planning context.",
+      "evidence": "TASK-089 implementation build cites tests and source refs updated after accepted UI decision.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Planned backend-only UI deprecation into TASK-089 implementation after accepted UI decision.",
+  "task_ids": [
+    "TASK-089"
+  ],
+  "task_changes": [
+    "Refined TASK-089 to deprecate product/status UI surfaces, deprecate /wiki status variants, keep backend status through wiki_state/graph lenses, and retain only future Pi TUI ASCII system diagram rendering."
+  ],
+  "roadmap_changes": [
+    "Refined TASK-089 to deprecate product/status UI surfaces, deprecate /wiki status variants, keep backend status through wiki_state/graph lenses, and retain only future Pi TUI ASCII system diagram rendering."
+  ],
+  "tdd_plan": [
+    "Update package smoke to fail on status UI rendering expectations, then replace with status deprecation/backend-state assertions.",
+    "Update docs/source and rerun source-contract, lexicon, package-smoke, full smoke, and typecheck."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/wiki.ts",
+    "src/adapters/pi/commands/system.ts",
+    "src/adapters/pi/commands/product.ts",
+    "src/adapters/pi/index.ts",
+    "src/state/builders.ts",
+    "src/project/templates.ts",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "CW-UI-DEP-001-BACKEND-ONLY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/product/uis/terminal.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-089/task.json"
+      ],
+      "evidence": "TASK-089 now includes backend-only UI deprecation acceptance and implementation touched docs/source.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-UI-DEP-002-PI-TUI-ONLY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/product/uis/terminal.md",
+        ".codewiki/kb/system/terminal-ui.md"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/system.ts"
+      ],
+      "evidence": "TASK-089 keeps future Pi TUI diagram rendering and rewrites system command to direct diagram rendering rather than status UI.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-UI-DEP-003-ASCII-DIAGRAMS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/terminal-ui.md"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/system.ts",
+        "src/adapters/pi/ui/manager.ts"
+      ],
+      "evidence": "System command now renders source-backed diagram detail lines; docs constrain rendering to canonical YAML ASCII/Unicode output.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-UI-DEP-004-TASK-089-RESET",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/roadmap/tasks/TASK-089/task.json"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-089/task.json"
+      ],
+      "evidence": "TASK-089 roadmap was reset away from Status Dock-as-product-UI and toward backend-only UI deprecation cleanup.",
+      "inferred": false
+    },
+    {
+      "row_id": "CW-UI-DEP-005-DEPRECATE-STATUS-COMMANDS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/lexicon.md",
+        "README.md"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/wiki.ts",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "evidence": "Status command is now a deprecation shim, wiki router omits status from canonical completions, and package smoke asserts backend-only status behavior.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "Q1",
+      "question": "Update TASK-089 implementation to remove Status Dock product UI docs/tests and status UI rendering expectations.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/product/uis/terminal.md"
+      ],
+      "source_refs": [
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "evidence": "Package smoke no longer expects status UI rendering and docs mark UI surfaces deprecated.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q2",
+      "question": "Deprecate /wiki status and /wiki-status command behavior without promoting them as product surfaces.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "source_refs": [
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/wiki.ts"
+      ],
+      "evidence": "Status command returns deprecation warning; wiki status is not a canonical completion.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q3",
+      "question": "Keep backend status available through wiki_state and graph lenses.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-089"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/api.md"
+      ],
+      "source_refs": [
+        "src/state/builders.ts",
+        "src/adapters/pi/tools/state.ts"
+      ],
+      "evidence": "State builders recommend wiki_state, and backend graph/status lenses remain available.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Accepted UI deprecation rows mapped to TASK-089.",
+      "evidence": "decision_row_resolutions and downstream_question_resolutions all resolve to TASK-089 with knowledge/source refs.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Implementation can validate against updated planning context.",
+      "evidence": "TASK-089 implementation build cites tests and source refs updated after accepted UI decision.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "Deprecated command shims may still exist as warning-only compatibility surfaces until a future removal task deletes them."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not remove wiki_state or graph lenses.",
+    "Do not implement product UI surfaces now."
+  ],
+  "risks": [
+    "Status-dock internal preference naming remains as technical debt but no product UI behavior is promoted."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-089"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-089"
+    ],
+    "code": [
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/wiki.ts",
+      "src/adapters/pi/commands/system.ts",
+      "src/adapters/pi/commands/product.ts",
+      "src/adapters/pi/index.ts",
+      "src/state/builders.ts",
+      "src/project/templates.ts",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

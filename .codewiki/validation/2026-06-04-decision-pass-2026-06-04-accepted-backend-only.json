@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-04T11:29:18Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Backend-only UI deprecation decision passed with explicit user approval for all rows. Required alignment/stale-reference audit evidence was run; stale-reference failures are pre-existing unrelated docs outside this decision scope and are captured as audit evidence.",
+  "checks": [
+    "user approval: That's it",
+    "wiki_gate audit profiles lexicon,source-contract scoped to backend-only UI docs: pass",
+    "wiki_gate audit profiles alignment,stale-reference: evidence recorded; stale-reference failures pre-existing outside decision scope"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles alignment,stale-reference: graph health warning and stale-reference failures in .codewiki/kb/system/graph.md and .codewiki/kb/system/system-truth-and-compilers.md are pre-existing outside backend-only UI decision scope",
+    "wiki_gate audit profiles lexicon,source-contract scoped to backend-only UI docs: pass"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+      ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/product/uis/terminal.md",
+      ".codewiki/kb/product/uis/status-dock.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/terminal-ui.md",
+      "README.md",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/roadmap/tasks/TASK-089/task.json"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+    "validation_report": ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-backend-only.json",
+      "CodeWiki-Checks: user approval: That's it; wiki_gate audit profiles lexicon,source-contract scoped to backend-only UI docs: pass; wiki_gate audit profiles alignment,stale-reference: evidence recorded; stale-reference failures pre-existing outside decision scope"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "user approval: That's it"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}
