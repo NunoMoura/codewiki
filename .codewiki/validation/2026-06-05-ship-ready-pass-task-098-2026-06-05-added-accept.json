@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T23:43:31Z",
+  "profile": "ship-ready",
+  "gate": "ship-ready",
+  "task_id": "TASK-098",
+  "verdict": "pass",
+  "rationale": "TASK-098 ship-ready validation passes on clean commit 2bf92f0e46f8008f213f354e07a7cc23f88eac81/tree 81c7496ff8acec560c77d313b7f81009b8239520. The single TASK-095 build now has acceptance_mapping and the implementation-build-missing-acceptance warning is gone; graph warning count is 52. Package/security/stale-reference/generated-parity/source-contract/lexicon/task profiles pass. User proceed approval is recorded for the ship-ready risk gate.",
+  "checks": [
+    "user_approval:security-migration-publication:user said reloaded and proceed on 2026-06-06",
+    "npm pack --dry-run --json",
+    "wiki_audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task warning-only",
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+    "npm run typecheck",
+    "implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-098-2026-06-05-added-ac.json"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "52 warning-level graph items remain outside TASK-098 scope."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "52 warning-level graph items remain outside TASK-098 scope.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "52 warning-level graph items remain outside TASK-098 scope.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-added-acceptance-mapping-to-task-095-implementat.json",
+  "policy_profile": "ship-ready",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "package",
+    "security",
+    "stale-reference",
+    "generated-parity",
+    "source-contract",
+    "lexicon",
+    "task"
+  ],
+  "audit_refs": [
+    "user_approval:security-migration-publication",
+    "audit:alignment",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:lexicon",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "alignment:warning graph health 52 warnings",
+    "package:pass",
+    "security:pass",
+    "stale-reference:pass",
+    "generated-parity:pass",
+    "source-contract:pass",
+    "lexicon:pass",
+    "task:pass TASK-098"
+  ],
+  "content_proof_refs": [
+    "2bf92f0e46f8008f213f354e07a7cc23f88eac81",
+    "81c7496ff8acec560c77d313b7f81009b8239520",
+    "sha512-EnkLznOGGBsaOIFFyxN0x1NPKmF086S5LnFvuvsB1lehOHsoBHP9n62retULd00+NU60fKzmaEflGp1pJbrNxg=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-098",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-added-acceptance-mapping-to-task-095-implementat.json",
+    "validation_report": ".codewiki/validation/2026-06-05-ship-ready-pass-task-098-2026-06-05-added-accept.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-added-acceptance-mapping-to-task-095-implementat.json",
+      ".codewiki/validation/2026-06-05-ship-ready-pass-task-098-2026-06-05-added-accept.json",
+      ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-098",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-added-acceptance-mapping-to-task-095-implementat.json",
+    "validation_report": ".codewiki/validation/2026-06-05-ship-ready-pass-task-098-2026-06-05-added-accept.json",
+    "commit_title": "checkpoint(codewiki): TASK-098 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-098",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-added-acceptance-mapping-to-task-095-implementat.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-ship-ready-pass-task-098-2026-06-05-added-accept.json",
+      "CodeWiki-Checks: user_approval:security-migration-publication:user said reloaded and proceed on 2026-06-06; npm pack --dry-run --json; wiki_audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task warning-only; node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs; npm run typecheck; implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-098-2026-06-05-added-ac.json"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "ship-ready validation",
+    "profiles": [
+      "ship-ready"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "81c7496ff8acec560c77d313b7f81009b8239520"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "package",
+      "security",
+      "stale-reference",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "ship-ready",
+    "gate": "ship-ready",
+    "task_id": "TASK-098",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "user_approval:security-migration-publication",
+        "user_approval:security-migration-publication:user said reloaded and proceed on 2026-06-06"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "2bf92f0e46f8008f213f354e07a7cc23f88eac81",
+    "validated_sha": "2bf92f0e46f8008f213f354e07a7cc23f88eac81",
+    "tree_sha": "81c7496ff8acec560c77d313b7f81009b8239520",
+    "package_digest": "sha512-EnkLznOGGBsaOIFFyxN0x1NPKmF086S5LnFvuvsB1lehOHsoBHP9n62retULd00+NU60fKzmaEflGp1pJbrNxg==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean candidate commit validated with package dry run, audits, and targeted checks.",
+    "role": "validator"
+  }
+}
