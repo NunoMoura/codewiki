@@ -1,0 +1,360 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T18:59:13Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-093",
+  "verdict": "pass",
+  "rationale": "TASK-093 closes successfully. The validated implementation introduces the v1 lifecycle trace/cold catalog schema model, DecisionTableV1 under trace.decision.decision_table, telemetry/catalog.json cold metadata with Git restore refs, telemetry-only trace/catalog readers and writers, ref-first validation that rejects raw transcripts/diffs/KB/source snapshots, starter telemetry catalog support, and TASK-093 tests. Implementation and ship-ready gates passed. Source content validated at commit 18820c8f51c3bdb04432292b9a4e316ac823a72f; current clean head 4b852ef6e07b9e64ebffdb07ed48a652b1c67f18 adds ship-ready validation evidence and generated graph refresh. Pre-existing graph health/file-structure drift remains outside TASK-093 scope.",
+  "checks": [
+    "explicit_approval:user:proceed TASK-093 on 2026-06-05",
+    "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+    "npm run typecheck",
+    "npm pack --dry-run --json",
+    "implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-093-2026-06-05-finalize.json",
+    "ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-093-2026-06-05-finalized-ta.json",
+    "code commit 18820c8f51c3bdb04432292b9a4e316ac823a72f",
+    "current evidence commit 4b852ef6e07b9e64ebffdb07ed48a652b1c67f18"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-093 scope."
+    },
+    {
+      "severity": "warning",
+      "summary": "File-structure audit reports pre-existing migration drift outside TASK-093 scope."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-093 scope.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "task-close:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "warning",
+      "summary": "File-structure audit reports pre-existing migration drift outside TASK-093 scope.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-093 scope.",
+      "ref_count": 0
+    },
+    {
+      "id": "task-close:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "warning",
+      "summary": "File-structure audit reports pre-existing migration drift outside TASK-093 scope.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract",
+    "lexicon",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "explicit_approval:user:proceed TASK-093 on 2026-06-05",
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:lexicon",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "alignment:fail pre-existing graph-health 88 errors/19 warnings",
+    "changed:warning generated files changed before commit; clean commits now record candidate/evidence",
+    "task:pass TASK-093",
+    "generated-parity:pass",
+    "source-contract:pass",
+    "lexicon:pass",
+    "package:pass",
+    "security:pass",
+    "stale-reference:pass"
+  ],
+  "content_proof_refs": [
+    "18820c8f51c3bdb04432292b9a4e316ac823a72f",
+    "4b852ef6e07b9e64ebffdb07ed48a652b1c67f18",
+    "bf4324d6b875215728cc798de13a1bf698275cbb",
+    "sha512-Zfh0bxcEEEzrDE5TyFwLad+uBjV9To26awnVIrEINHMMIlRjtccOTCFwnHrJYnPPGJvRNVsm6+XIEVmoizLE6Q=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-093",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-093-2026-06-05-finalized-ta.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+      ".codewiki/validation/2026-06-05-task-close-pass-task-093-2026-06-05-finalized-ta.json",
+      "src/telemetry/types.ts",
+      "src/telemetry/lifecycle-trace.ts",
+      "src/project/templates.ts",
+      "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-093",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-093-2026-06-05-finalized-ta.json",
+    "commit_title": "checkpoint(codewiki): TASK-093 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-093",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-task-close-pass-task-093-2026-06-05-finalized-ta.json",
+      "CodeWiki-Checks: explicit_approval:user:proceed TASK-093 on 2026-06-05; node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs; node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs; npm run typecheck; npm pack --dry-run --json; implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-093-2026-06-05-finalize.json; ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-093-2026-06-05-finalized-ta.json; code commit 18820c8f51c3bdb04432292b9a4e316ac823a72f; current evidence commit 4b852ef6e07b9e64ebffdb07ed48a652b1c67f18"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/telemetry/types.ts",
+      "src/telemetry/lifecycle-trace.ts",
+      "src/project/templates.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "bf4324d6b875215728cc798de13a1bf698275cbb"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-093",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "code-local",
+      "reason": "Code-local change; gateway linters and content evidence still required.",
+      "approval_required": false,
+      "approval_evidence": [
+        "explicit_approval:user:proceed TASK-093 on 2026-06-05"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "4b852ef6e07b9e64ebffdb07ed48a652b1c67f18",
+    "validated_sha": "18820c8f51c3bdb04432292b9a4e316ac823a72f",
+    "tree_sha": "bf4324d6b875215728cc798de13a1bf698275cbb",
+    "package_digest": "sha512-Zfh0bxcEEEzrDE5TyFwLad+uBjV9To26awnVIrEINHMMIlRjtccOTCFwnHrJYnPPGJvRNVsm6+XIEVmoizLE6Q==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Working tree clean before task-close report. Source content validated at 18820c8; current head adds validation evidence and generated graph refresh only.",
+    "role": "validator"
+  }
+}
