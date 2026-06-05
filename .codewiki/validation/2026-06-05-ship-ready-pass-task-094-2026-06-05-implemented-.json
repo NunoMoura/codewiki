@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T22:33:58Z",
+  "profile": "ship-ready",
+  "gate": "ship-ready",
+  "task_id": "TASK-094",
+  "verdict": "pass",
+  "rationale": "TASK-094 ship-ready validation passes on clean commit 6d5b77073270a8614bbc1802d7cc42556068f0f9/tree 30bedf82fd8c4b5d67467d4a95d4d2b7015cf5d8. Package dry run includes the trace-DAG projection module and graph changes. Package, security, stale-reference, generated-parity, source-contract, lexicon, and task audits pass. Alignment graph-health remains pre-existing red outside TASK-094 scope. User explicitly approved proceeding.",
+  "checks": [
+    "explicit_approval:user:proceed TASK-094 on 2026-06-05",
+    "npm pack --dry-run --json",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "npm run typecheck",
+    "git diff --check",
+    "wiki_audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-094 scope."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-094 scope.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "ship-ready"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "ship-ready:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Pre-existing graph health remains red outside TASK-094 scope.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-implemented-trace-dag-lifecycle-projection-in-ge.json",
+  "policy_profile": "ship-ready",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "package",
+    "security",
+    "stale-reference",
+    "generated-parity",
+    "source-contract",
+    "lexicon",
+    "task"
+  ],
+  "audit_refs": [
+    "explicit_approval:user:proceed TASK-094 on 2026-06-05",
+    "audit:alignment",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:lexicon",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "alignment:fail pre-existing graph-health 88 errors/15 warnings",
+    "package:pass",
+    "security:pass",
+    "stale-reference:pass",
+    "generated-parity:pass",
+    "source-contract:pass",
+    "lexicon:pass",
+    "task:pass TASK-094"
+  ],
+  "content_proof_refs": [
+    "6d5b77073270a8614bbc1802d7cc42556068f0f9",
+    "30bedf82fd8c4b5d67467d4a95d4d2b7015cf5d8",
+    "sha512-LzB1pnF9J2xaY2uomuvpcNVX2JgSzgMrI8W4V5EBpg+B7gmaciME0XBteeNm2rLLJTXMFUeWUjDaq/Hy1+CN2A=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-094",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-implemented-trace-dag-lifecycle-projection-in-ge.json",
+    "validation_report": ".codewiki/validation/2026-06-05-ship-ready-pass-task-094-2026-06-05-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-implemented-trace-dag-lifecycle-projection-in-ge.json",
+      ".codewiki/validation/2026-06-05-ship-ready-pass-task-094-2026-06-05-implemented-.json",
+      "src/state/graph/trace-projection.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/graph/rebuilder.ts",
+      "src/build/decision-propagation.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-094",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-implemented-trace-dag-lifecycle-projection-in-ge.json",
+    "validation_report": ".codewiki/validation/2026-06-05-ship-ready-pass-task-094-2026-06-05-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-094 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-094",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-implemented-trace-dag-lifecycle-projection-in-ge.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-ship-ready-pass-task-094-2026-06-05-implemented-.json",
+      "CodeWiki-Checks: explicit_approval:user:proceed TASK-094 on 2026-06-05; npm pack --dry-run --json; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs; node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs; npm run typecheck; git diff --check; wiki_audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/graph/trace-projection.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/graph/rebuilder.ts",
+      "src/build/decision-propagation.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "ship-ready validation",
+    "profiles": [
+      "ship-ready"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "30bedf82fd8c4b5d67467d4a95d4d2b7015cf5d8"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "package",
+      "security",
+      "stale-reference",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "ship-ready",
+    "gate": "ship-ready",
+    "task_id": "TASK-094",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "explicit_approval:user:proceed TASK-094 on 2026-06-05"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "6d5b77073270a8614bbc1802d7cc42556068f0f9",
+    "validated_sha": "6d5b77073270a8614bbc1802d7cc42556068f0f9",
+    "tree_sha": "30bedf82fd8c4b5d67467d4a95d4d2b7015cf5d8",
+    "package_digest": "sha512-LzB1pnF9J2xaY2uomuvpcNVX2JgSzgMrI8W4V5EBpg+B7gmaciME0XBteeNm2rLLJTXMFUeWUjDaq/Hy1+CN2A==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean candidate commit validated with package dry run and source/test/audit checks.",
+    "role": "validator"
+  }
+}
