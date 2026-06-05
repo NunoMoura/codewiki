@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T23:40:27Z",
+  "profile": "decision",
+  "gate": "decision",
+  "task_id": "TASK-098",
+  "verdict": "pass",
+  "rationale": "Decision validation passes for scoped TASK-095 acceptance_mapping reconciliation: user approved continuing after reload; graph warning names a single implementation build; scope is limited to adding acceptance_mapping from existing TASK-095 evidence; no source/package behavior changes are intended.",
+  "checks": [
+    "user approval: reloaded, proceed",
+    "wiki_audit alignment+stale-reference+source-contract+lexicon warning-only",
+    "decision build .codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Remaining graph warnings outside the one TASK-095 acceptance_mapping issue are out of scope."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "decision:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Remaining graph warnings outside the one TASK-095 acceptance_mapping issue are out of scope.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "decision"
+      ],
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "decision:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Remaining graph warnings outside the one TASK-095 acceptance_mapping issue are out of scope.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "decision",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "source-contract",
+    "lexicon"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:source-contract",
+    "audit:lexicon"
+  ],
+  "audit_reports": [
+    "alignment:warning graph health 53 warnings",
+    "stale-reference:pass",
+    "source-contract:pass",
+    "lexicon:pass"
+  ],
+  "content_proof_refs": [
+    "decision-dirty-state:TASK-098"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-098",
+    "source_build": ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json",
+    "validation_report": ".codewiki/validation/2026-06-05-decision-pass-task-098-2026-06-05-accepted-scope.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json",
+      ".codewiki/validation/2026-06-05-decision-pass-task-098-2026-06-05-accepted-scope.json",
+      "Create one scoped task for TASK-095 acceptance_mapping remediation.",
+      ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-098",
+    "source_build": ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json",
+    "validation_report": ".codewiki/validation/2026-06-05-decision-pass-task-098-2026-06-05-accepted-scope.json",
+    "commit_title": "checkpoint(codewiki): TASK-098 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-098",
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-decision-pass-task-098-2026-06-05-accepted-scope.json",
+      "CodeWiki-Checks: user approval: reloaded, proceed; wiki_audit alignment+stale-reference+source-contract+lexicon warning-only; decision build .codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-task-095-impl.json"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "source-contract",
+      "lexicon"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "task_id": "TASK-098",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "user approval: reloaded, proceed"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "decision-dirty-state:TASK-098",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Decision gate validates bounded build-evidence remediation scope.",
+    "role": "validator"
+  }
+}

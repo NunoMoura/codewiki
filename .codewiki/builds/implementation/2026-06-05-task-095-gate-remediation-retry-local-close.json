@@ -221,7 +221,8 @@
     "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs -> pass",
     "npm run typecheck -> pass",
     "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-    "wiki_audit package/security/stale-reference/generated-parity/source-contract/task/changed -> pass/warning as recorded; alignment pre-existing fail"
+    "wiki_audit package/security/stale-reference/generated-parity/source-contract/task/changed -> pass/warning as recorded; alignment pre-existing fail",
+    "TASK-098 added acceptance_mapping reconciliation evidence for TASK-095"
   ],
   "role_evidence": {
     "tester": {
@@ -257,7 +258,28 @@
   },
   "test_design_evidence": [],
   "code_change_evidence": [],
-  "acceptance_mapping": [],
+  "acceptance_mapping": [
+    {
+      "criterion": "Gateway fail/block reports expose high-signal remediation payloads including exact refs, route, retry class, and stop reason when automation must stop.",
+      "evidence": "Validated by src/gateway/report.ts changes and policy/gateway smoke checks listed in checks_run, with implementation pass .codewiki/validation/2026-06-05-implementation-pass-task-095-2026-06-05-codewiki.json."
+    },
+    {
+      "criterion": "Agency planning distinguishes retryable gate remediation from hard stop gates and schedules same-loop remediation only when scoped, safe, and within budget.",
+      "evidence": "Validated by src/agency/planning.ts changes plus tests/smoke/agency-auto-pickup.test.mjs in checks_run and implementation validation pass."
+    },
+    {
+      "criterion": "A blocked implementation/planning gate can lead to a superseding compiler/build recommendation without bypassing gateway promotion.",
+      "evidence": "Validated by tests/smoke/gateway-preflight.test.mjs, tests/smoke/policy-gate.test.mjs, and implementation validation refs in this build."
+    },
+    {
+      "criterion": "Mid-roadmap semantic decisions are modeled as parallel decision workstreams: dependent tasks are fenced, independent tasks remain schedulable.",
+      "evidence": "Validated by src/state/automation-readiness.ts and agency planning changes with tests/smoke/agency-auto-pickup.test.mjs."
+    },
+    {
+      "criterion": "Stop conditions still block non-actionable diagnostics, missing approval, artifact conflict, risk escalation, destructive/publication action, isolation policy failures, and budget exhaustion.",
+      "evidence": "Validated by policy-gate/gateway-preflight/package-smoke checks and implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-095-2026-06-05-codewiki.json."
+    }
+  ],
   "validation_refs": [
     ".codewiki/validation/2026-06-05-implementation-pass-task-095-2026-06-05-codewiki.json"
   ],
