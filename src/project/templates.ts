@@ -37,6 +37,7 @@ export function starterDirectories(): string[] {
 		".codewiki/sources",
 		".codewiki/builds",
 		".codewiki/validation",
+		".codewiki/telemetry",
 		".codewiki/roadmap/tasks",
 		".codewiki/session",
 		".codewiki/kb/product/users",
@@ -60,6 +61,7 @@ export function starterFiles(
 		".codewiki/config.json": configJson(projectName, date, brownfieldHints),
 		".codewiki/sources/.gitkeep": "",
 		".codewiki/research/.gitkeep": "",
+		".codewiki/telemetry/catalog.json": traceCatalogJson(date),
 
 		".codewiki/kb/lexicon.md": lexiconDoc(projectName, date),
 		".codewiki/kb/product/overview.md": productSpecDoc(projectName, date),
@@ -210,6 +212,20 @@ function boundarySpecFiles(
 	);
 }
 
+function traceCatalogJson(date: string): string {
+	return (
+		JSON.stringify(
+			{
+				schema_version: 1,
+				updated_at: `${date}T00:00:00Z`,
+				entries: [],
+			},
+			null,
+			2,
+		) + "\n"
+	);
+}
+
 function configJson(
 	projectName: string,
 	date: string,
@@ -353,12 +369,14 @@ function configJson(
 							".codewiki/sources/**",
 							".codewiki/research/**",
 							".codewiki/session/queue.json",
+							".codewiki/telemetry/**",
 							".codewiki/index_graph.json",
 						],
 						write_paths: [
 							".codewiki/kb/**",
 							".codewiki/sources/**",
 							".codewiki/research/**",
+							".codewiki/telemetry/**",
 						],
 						generated_readonly_paths: [
 							".codewiki/index_graph.json",
@@ -388,6 +406,7 @@ function configJson(
 							".codewiki/roadmap/tasks/**",
 							".codewiki/sources/**",
 							".codewiki/research/**",
+							".codewiki/telemetry/**",
 						],
 						exclude: [],
 					},
@@ -458,7 +477,7 @@ function lexiconDoc(projectName: string, date: string): string {
 		"",
 		"## Evidence",
 		"",
-		"Compact proof or support for a claim, check, research result, or task closure.",
+		"Compact evidence for a claim, linter finding, research result, or task closure.",
 		"",
 		"## Context window",
 		"",

@@ -1,0 +1,631 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-05T18:54:36Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+  "task_id": "TASK-093",
+  "task": {
+    "id": "TASK-093",
+    "title": "Introduce lifecycle trace schema and cold catalog model",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Add the canonical lifecycle trace and cold catalog model as clean-cut v1 source truth, without legacy compatibility shims.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "code_paths": [
+      "src/telemetry/**",
+      "src/build/**",
+      "src/gateway/**",
+      "src/state/**",
+      "src/project/templates.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ],
+    "goal": {
+      "outcome": "CodeWiki can read, write, and validate v1 lifecycle trace files and a cold-trace catalog as primary trace artifacts.",
+      "acceptance": [
+        "A v1 JSON lifecycle trace schema/type captures lifecycle, relations, scope, decision, planning, implementation, and accountability sections.",
+        "DecisionTableV1 is the canonical structured approval surface under trace.decision.decision_table with table metadata and normalized row fields.",
+        "telemetry/catalog.json schema/type records compact cold trace metadata and Git restore refs.",
+        "Legacy decision_build, planning_build, implementation_build, and gate report roots are not normalized through compatibility shims in the new telemetry model.",
+        "Trace files stay ref-first and do not embed raw Pi transcripts, raw diffs, whole KB docs, or full source snapshots.",
+        "Lexicon/source-contract tests either pass or report only explicitly deferred legacy wording with deletion triggers."
+      ],
+      "non_goals": [
+        "Do not migrate all existing historical artifacts in one sweep.",
+        "Do not add SQLite cache yet.",
+        "Do not add compatibility shims for legacy build/gate roots."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+        "npm run typecheck"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-12T18:54:36.000Z",
+    "purge_after": "2026-06-19T18:54:36.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 2,
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-06-05-implemented-clean-v1-lifecycle-trace-and-cold-ca.json"
+    ],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Finalized TASK-093 lifecycle trace/catalog v1 schema after validator field-alignment repair.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-093"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/telemetry/types.ts",
+      "src/telemetry/lifecycle-trace.ts",
+      "src/project/templates.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-093"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "code_paths": [
+      "src/telemetry/**",
+      "src/build/**",
+      "src/gateway/**",
+      "src/state/**",
+      "src/project/templates.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs"
+  ],
+  "code_files": [
+    "src/telemetry/types.ts",
+    "src/telemetry/lifecycle-trace.ts",
+    "src/project/templates.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "src/telemetry/types.ts",
+    "src/telemetry/lifecycle-trace.ts",
+    "src/project/templates.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+    "npm run typecheck",
+    "wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+      "roadmap_task_id": "TASK-093",
+      "test_files": [
+        "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs"
+      ],
+      "evidence": [
+        "TASK-093 lifecycle-trace smoke covers valid trace/catalog fixtures, DecisionTableV1 row requirements, catalog restore evidence, ref-first rejection, and legacy path rejection."
+      ],
+      "notes": [
+        "Required checks passed after validator field alignment.",
+        "LSP diagnostics found no issues in changed TypeScript/test files.",
+        "wiki_audit alignment remains red due pre-existing graph health; source-contract, lexicon, generated-parity, task pass."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+      "roadmap_task_id": "TASK-093",
+      "code_files": [
+        "src/telemetry/types.ts",
+        "src/telemetry/lifecycle-trace.ts",
+        "src/project/templates.ts"
+      ],
+      "evidence": [
+        "Added src/telemetry/lifecycle-trace.ts validator/assert/read/write module for trace and catalog files.",
+        "Updated src/telemetry/types.ts to v1 lifecycle/cold catalog/DecisionTableV1 schema, including implementation.code_refs per trace spec.",
+        "Updated src/project/templates.ts starter files/config with telemetry/catalog.json support."
+      ],
+      "notes": [
+        "No historical artifact migration performed.",
+        "No SQLite cache added.",
+        "No compatibility shim from legacy build/gate roots added."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TASK-093 lifecycle-trace smoke covers valid trace/catalog fixtures, DecisionTableV1 row requirements, catalog restore evidence, ref-first rejection, and legacy path rejection."
+  ],
+  "code_change_evidence": [
+    "Added src/telemetry/lifecycle-trace.ts validator/assert/read/write module for trace and catalog files.",
+    "Updated src/telemetry/types.ts to v1 lifecycle/cold catalog/DecisionTableV1 schema, including implementation.code_refs per trace spec.",
+    "Updated src/project/templates.ts starter files/config with telemetry/catalog.json support."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "A v1 JSON lifecycle trace schema/type captures lifecycle, relations, scope, decision, planning, implementation, and accountability sections.",
+      "evidence": "src/telemetry/types.ts defines CodewikiLifecycleTraceV1 with lifecycle.active_loops[], relations target_trace/rel, scope, decision, planning, implementation.code_refs/test_refs/gate evidence/publication, and accountability sections; src/telemetry/lifecycle-trace.ts validates them."
+    },
+    {
+      "criterion": "DecisionTableV1 is the canonical structured approval surface under trace.decision.decision_table with table metadata and normalized row fields.",
+      "evidence": "CodewikiDecisionTableV1 and CodewikiDecisionTableRowV1 live in src/telemetry/types.ts; TASK-093 test validates decision_table row state_delta, proposed_change, rationale, impact, risk, options, approval, evidence_refs, and outcomes."
+    },
+    {
+      "criterion": "telemetry/catalog.json schema/type records compact cold trace metadata and Git restore refs.",
+      "evidence": "CodewikiTraceCatalogV1 and CodewikiColdTraceCatalogEntryV1 capture cold trace metadata, path/source/test/task indexes, relations, restore original_path, commit/tree/archive/content digest refs, and ledger refs; TASK-093 test validates missing restore evidence fails."
+    },
+    {
+      "criterion": "Legacy decision_build, planning_build, implementation_build, and gate report roots are not normalized through compatibility shims in the new telemetry model.",
+      "evidence": "src/telemetry/lifecycle-trace.ts rejects lifecycle trace/catalog reads outside .codewiki/telemetry/TRACE-*.json and .codewiki/telemetry/catalog.json; TASK-093 test asserts .codewiki/builds paths fail."
+    },
+    {
+      "criterion": "Trace files stay ref-first and do not embed raw Pi transcripts, raw diffs, whole KB docs, or full source snapshots.",
+      "evidence": "Validator rejects forbidden embedded payload keys including raw_transcript, raw_diff, kb_doc(s), and source_snapshot(s); TASK-093 test asserts raw_transcript rejection."
+    },
+    {
+      "criterion": "Lexicon/source-contract tests either pass or report only explicitly deferred legacy wording with deletion triggers.",
+      "evidence": "Source-contract and lexicon smoke tests passed; wiki_audit source-contract and lexicon profiles passed."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with TASK-093 validation/closure after implementation handoff.",
+    "implemented_changes": [
+      "Introduced v1 lifecycle trace and cold catalog schema types.",
+      "Added validator/read/write helpers constrained to telemetry trace/catalog paths.",
+      "Added TASK-093 schema/read-write/ref-first/no-shim tests.",
+      "Updated starter templates to create telemetry catalog and permit telemetry paths.",
+      "Aligned implementation section field with trace spec using code_refs."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        "TASK-093 evidence"
+      ],
+      "code": [
+        "src/telemetry/types.ts",
+        "src/telemetry/lifecycle-trace.ts",
+        "src/project/templates.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-093/lifecycle-trace.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "TASK-093 lifecycle trace smoke passed.",
+      "Graph lenses smoke passed.",
+      "Source-contract smoke passed.",
+      "Lexicon linter smoke passed.",
+      "Typecheck passed."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+      "npm run typecheck"
+    ],
+    "non_goals_preserved": [
+      "Did not migrate all existing historical artifacts.",
+      "Did not add SQLite cache.",
+      "Did not add compatibility shims for legacy build/gate roots."
+    ],
+    "remaining_risks": [
+      "Pre-existing graph/file-structure audit drift remains.",
+      "TASK-094 remains needed for graph views/consumers."
+    ]
+  },
+  "risks": [
+    "Pre-existing graph health/file-structure warnings remain outside TASK-093 scope.",
+    "TASK-094 still needed for graph projection/consumers."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-093",
+      "task_id": "TASK-093",
+      "next_focus_task_id": "TASK-094",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-093",
+        "title": "Introduce lifecycle trace schema and cold catalog model",
+        "summary": "Finalized TASK-093 lifecycle trace/catalog v1 schema after validator field-alignment repair.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md"
+        ],
+        "code_paths": [
+          "src/telemetry/**",
+          "src/build/**",
+          "src/gateway/**",
+          "src/state/**",
+          "src/project/templates.ts",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          "src/telemetry/types.ts",
+          "src/telemetry/lifecycle-trace.ts"
+        ],
+        "acceptance": [
+          "A v1 JSON lifecycle trace schema/type captures lifecycle, relations, scope, decision, planning, implementation, and accountability sections.",
+          "DecisionTableV1 is the canonical structured approval surface under trace.decision.decision_table with table metadata and normalized row fields.",
+          "telemetry/catalog.json schema/type records compact cold trace metadata and Git restore refs.",
+          "Legacy decision_build, planning_build, implementation_build, and gate report roots are not normalized through compatibility shims in the new telemetry model.",
+          "Trace files stay ref-first and do not embed raw Pi transcripts, raw diffs, whole KB docs, or full source snapshots.",
+          "Lexicon/source-contract tests either pass or report only explicitly deferred legacy wording with deletion triggers."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+          "npm run typecheck"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+          "npm run typecheck",
+          "wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)"
+        ],
+        "test_design_evidence": [
+          "TASK-093 lifecycle-trace smoke covers valid trace/catalog fixtures, DecisionTableV1 row requirements, catalog restore evidence, ref-first rejection, and legacy path rejection."
+        ],
+        "code_change_evidence": [
+          "Added src/telemetry/lifecycle-trace.ts validator/assert/read/write module for trace and catalog files.",
+          "Updated src/telemetry/types.ts to v1 lifecycle/cold catalog/DecisionTableV1 schema, including implementation.code_refs per trace spec.",
+          "Updated src/project/templates.ts starter files/config with telemetry/catalog.json support."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-093",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-093",
+      "show_build": "git show refs/codewiki/archive/task/TASK-093:.codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/lexicon.md",
+        "src/telemetry/**",
+        "src/build/**",
+        "src/gateway/**",
+        "src/state/**",
+        "src/project/templates.ts",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-093 Introduce lifecycle trace schema and cold catalog model implementation evidence",
+      "body": "Finalized TASK-093 lifecycle trace/catalog v1 schema after validator field-alignment repair.\n\nChecks: node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, npm run typecheck, wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-093\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, npm run typecheck, wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-093\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-093\nCodeWiki-Digest: sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b\nCodeWiki-Restore: /wiki-restore TASK-093",
+      "trailers": [
+        "CodeWiki-Task: TASK-093",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, npm run typecheck, wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-093",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-093",
+        "CodeWiki-Digest: sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b",
+        "CodeWiki-Restore: /wiki-restore TASK-093"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-093 Introduce lifecycle trace schema and cold catalog model implementation evidence",
+      "body": "Finalized TASK-093 lifecycle trace/catalog v1 schema after validator field-alignment repair.\n\nChecks: node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, npm run typecheck, wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-093\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, npm run typecheck, wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-093\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-093\nCodeWiki-Digest: sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b\nCodeWiki-Restore: /wiki-restore TASK-093"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-093",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-093"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-093",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-093",
+        "show_build": "git show refs/codewiki/archive/task/TASK-093:.codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md",
+          "src/telemetry/**",
+          "src/build/**",
+          "src/gateway/**",
+          "src/state/**",
+          "src/project/templates.ts",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-093",
+      "build_path": ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-093",
+      "commit_sha": "",
+      "digest": "sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b",
+      "restore_command": "/wiki-restore TASK-093"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:b06a01e04023ee1c0fc8ae801f2eec6e46eb99e7df36ce158203c4250182cebd",
+          "bytes": 25571
+        },
+        {
+          "path": "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1e069f1e46b4709f251a29e4c8528fafa0493d5ec76a9597078da1bc9a8f2771",
+          "bytes": 9406
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:e05e2191e0f7362d032ff0a5d6f40bfef6f1da8251830e08d4b87a943c212780",
+          "bytes": 17980
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "tests/smoke/lexicon-linter.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:362576b514f5d7e91927ecac4e01e5b8f04499ee568881c0b7953642d86fa2ce",
+          "bytes": 6888
+        },
+        {
+          "path": "src/telemetry/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:b661d4d1652f04fa74780793cf226eb3a53933ebeb3fe291a20fc62243117d06",
+          "bytes": 9626
+        },
+        {
+          "path": "src/telemetry/lifecycle-trace.ts",
+          "role": "code_file",
+          "sha256": "sha256:0b7edbd4dec78413aaa33f239180d20315a7950a85b9c3c1bf1a9a88631d4833",
+          "bytes": 18320
+        },
+        {
+          "path": "src/project/templates.ts",
+          "role": "code_file",
+          "sha256": "sha256:57d96c5a68a3c56f915ce0f85daf3ae6302622b4453c4c86e696f6c85156b87b",
+          "bytes": 30133
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-093",
+      "source_build": ".codewiki/builds/implementation/2026-06-05-finalized-task-093-lifecycle-trace-catalog-v1-sc.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/telemetry/types.ts",
+          "src/telemetry/lifecycle-trace.ts",
+          "src/project/templates.ts",
+          "tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-093",
+        "restore_command": "/wiki-restore TASK-093"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/tasks/TASK-093/lifecycle-trace.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+        "npm run typecheck",
+        "wiki_audit alignment+changed+source-contract+lexicon+file-structure+generated-parity+task (alignment fail/file-structure warnings are pre-existing graph/file-structure drift; source-contract/lexicon/generated-parity/task passed)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

@@ -47,7 +47,7 @@ export const CODEWIKI_TRACE_DECISION_STATUS_VALUES = [
 	"not_started",
 	"proposed",
 	"approved",
-	"knowledge_applied",
+	"kb_applied",
 	"gate_passed",
 	"blocked",
 ] as const;
@@ -61,17 +61,21 @@ export const CODEWIKI_TRACE_PLANNING_STATUS_VALUES = [
 
 export const CODEWIKI_TRACE_IMPLEMENTATION_STATUS_VALUES = [
 	"not_started",
-	"in_progress",
-	"code_complete",
-	"validation_passed",
-	"production_ready_unpublished",
-	"published",
+	"active",
+	"gate_passed",
+	"production_ready",
 	"blocked",
 ] as const;
 
+export const CODEWIKI_TRACE_PUBLICATION_MODE_VALUES = [
+	"off",
+	"manual",
+	"auto",
+	"dry-run",
+] as const;
+
 export const CODEWIKI_TRACE_PUBLICATION_STATUS_VALUES = [
-	"not_applicable",
-	"not_started",
+	"not_configured",
 	"ready",
 	"blocked",
 	"published",
@@ -84,8 +88,9 @@ export const CODEWIKI_TRACE_REF_KIND_VALUES = [
 	"implementation_output",
 	"gate_attestation",
 	"knowledge",
+	"diagram",
 	"roadmap",
-	"code",
+	"source",
 	"test",
 	"content_digest",
 	"git_commit",
@@ -93,7 +98,6 @@ export const CODEWIKI_TRACE_REF_KIND_VALUES = [
 	"archive_ref",
 	"remote_ref",
 	"package_digest",
-	"source",
 ] as const;
 
 export const CODEWIKI_DECISION_TABLE_STATUS_VALUES = [
@@ -139,6 +143,8 @@ export type CodewikiTracePlanningStatus =
 	(typeof CODEWIKI_TRACE_PLANNING_STATUS_VALUES)[number];
 export type CodewikiTraceImplementationStatus =
 	(typeof CODEWIKI_TRACE_IMPLEMENTATION_STATUS_VALUES)[number];
+export type CodewikiTracePublicationMode =
+	(typeof CODEWIKI_TRACE_PUBLICATION_MODE_VALUES)[number];
 export type CodewikiTracePublicationStatus =
 	(typeof CODEWIKI_TRACE_PUBLICATION_STATUS_VALUES)[number];
 export type CodewikiTraceRefKind =
@@ -150,10 +156,47 @@ export type CodewikiDecisionTableRowApprovalStatus =
 export type CodewikiTraceSection =
 	(typeof CODEWIKI_TRACE_SECTION_VALUES)[number];
 
+export interface CodewikiTraceRef {
+	ref: string;
+	kind?: CodewikiTraceRefKind;
+	section?: CodewikiTraceSection;
+	path?: string;
+	json_pointer?: string;
+	sha?: string;
+	fingerprint?: string;
+	summary?: string;
+}
+
+export interface CodewikiTraceActiveLoopV1 {
+	loop: CodewikiTraceLoop;
+	run_id: string;
+	state: CodewikiTraceLoopRunState;
+	cursor?: string;
+	next_action?: string;
+}
+
+export interface CodewikiTraceBlockerV1 {
+	id?: string;
+	severity?: CodewikiTraceRisk;
+	summary: string;
+	refs?: CodewikiTraceRef[];
+}
+
+export interface CodewikiTraceRouteBackV1 {
+	to_loop: CodewikiTraceLoop;
+	reason: string;
+	refs?: CodewikiTraceRef[];
+}
+
 export interface CodewikiTraceLifecycleSection {
 	status: CodewikiTraceLifecycleStatus;
-	active_loop: CodewikiTraceLoop;
-	loop_state: CodewikiTraceLoopRunState;
+	active_loops: CodewikiTraceActiveLoopV1[];
+	active_gates?: CodewikiTraceRef[];
+	blockers?: CodewikiTraceBlockerV1[];
+	route_back?: CodewikiTraceRouteBackV1[];
+	next_safe_actions?: string[];
+	risk?: CodewikiTraceRisk;
+	recovery_cursor?: string;
 	created_at?: string;
 	updated_at?: string;
 	closed_at?: string;
@@ -161,28 +204,21 @@ export interface CodewikiTraceLifecycleSection {
 }
 
 export interface CodewikiTraceRelation {
-	kind: CodewikiTraceRelationKind;
-	ref: string;
+	target_trace: string;
+	rel: CodewikiTraceRelationKind;
 	state?: CodewikiTraceRelationState;
-	summary?: string;
+	rationale?: string;
 }
 
 export interface CodewikiTraceScopeSection {
-	task_ids?: string[];
-	sprint_ids?: string[];
+	task_refs?: string[];
+	sprint_refs?: string[];
 	knowledge_refs?: string[];
-	code_refs?: string[];
+	diagram_refs?: string[];
+	source_refs?: string[];
 	test_refs?: string[];
 	gate_refs?: string[];
 	path_scopes?: string[];
-}
-
-export interface CodewikiTraceRef {
-	ref: string;
-	kind?: CodewikiTraceRefKind;
-	section?: CodewikiTraceSection;
-	pointer?: string;
-	summary?: string;
 }
 
 export interface CodewikiDecisionTableOptionV1 {
@@ -244,50 +280,60 @@ export interface CodewikiDecisionTableV1 {
 export interface CodewikiTraceDecisionSection {
 	status: CodewikiTraceDecisionStatus;
 	decision_table?: CodewikiDecisionTableV1;
+	approvals?: CodewikiTraceRef[];
 	compiler_output_refs?: CodewikiTraceRef[];
-	row_refs?: CodewikiTraceRef[];
-	knowledge_refs?: string[];
-	gate_refs?: CodewikiTraceRef[];
-	risk?: CodewikiTraceRisk;
-	open_questions?: string[];
+	kb_patch_refs?: CodewikiTraceRef[];
+	row_to_kb_mappings?: CodewikiTraceRef[];
+	propagation?: Record<string, unknown>;
+	risk_assessment?: string[];
+	benefits?: string[];
+	alternatives?: string[];
+	downstream_planning_questions?: string[];
+	gate_history?: CodewikiTraceRef[];
 }
 
 export interface CodewikiTracePlanningSection {
 	status: CodewikiTracePlanningStatus;
 	compiler_output_refs?: CodewikiTraceRef[];
-	roadmap_task_refs?: string[];
-	sprint_refs?: string[];
-	parallelization_refs?: string[];
-	gate_refs?: CodewikiTraceRef[];
-	open_questions?: string[];
+	work_units?: Record<string, unknown>[];
+	parallelization?: {
+		path_conflicts?: Record<string, unknown>[];
+		waves?: Record<string, unknown>[];
+		session_count?: number;
+		lease_plan?: Record<string, unknown>[];
+		route_back_triggers?: string[];
+		publisher_serialization?: string[];
+	};
+	verification_strategy?: string[];
+	gate_history?: CodewikiTraceRef[];
 }
 
 export interface CodewikiTracePublicationSection {
+	mode: CodewikiTracePublicationMode;
 	status: CodewikiTracePublicationStatus;
-	commit_refs?: string[];
-	archive_refs?: string[];
-	remote_refs?: string[];
+	gate_history?: CodewikiTraceRef[];
+	git_refs?: Record<string, string>;
 	package_refs?: string[];
+	remote_refs?: string[];
 	restore_refs?: string[];
 }
 
 export interface CodewikiTraceImplementationSection {
 	status: CodewikiTraceImplementationStatus;
 	compiler_output_refs?: CodewikiTraceRef[];
+	work_units?: Record<string, unknown>[];
 	code_refs?: string[];
 	test_refs?: string[];
-	gate_refs?: CodewikiTraceRef[];
+	gate_evidence?: CodewikiTraceRef[];
+	gate_history?: CodewikiTraceRef[];
 	publication?: CodewikiTracePublicationSection;
-	remaining_risks?: string[];
 }
 
 export interface CodewikiTraceAccountabilitySection {
-	canonical_source_refs?: string[];
-	audit_evidence_refs?: string[];
-	content_evidence_refs?: string[];
-	gate_attestation_refs?: string[];
-	isolation_refs?: string[];
-	owner?: string;
+	user_approval_refs?: CodewikiTraceRef[];
+	pi_session_refs?: CodewikiTraceRef[];
+	agent_summaries?: string[];
+	content_proofs?: CodewikiTraceRef[];
 }
 
 export interface CodewikiLifecycleTraceV1 {
@@ -320,15 +366,18 @@ export interface CodewikiColdTraceCatalogEntryV1 {
 	title?: string;
 	summary?: string;
 	lifecycle_status: CodewikiTraceLifecycleStatus;
-	active_loop?: CodewikiTraceLoop;
-	task_ids?: string[];
-	sprint_ids?: string[];
+	active_loops?: CodewikiTraceActiveLoopV1[];
+	task_refs?: string[];
+	sprint_refs?: string[];
 	knowledge_refs?: string[];
-	code_refs?: string[];
+	source_refs?: string[];
 	test_refs?: string[];
+	path_scopes?: string[];
 	gate_refs?: string[];
 	relations?: CodewikiTraceRelation[];
 	restore: CodewikiTraceRestoreRef;
+	cold_archive_reason?: string;
+	deletion_ledger_ref?: string;
 	archived_at?: string;
 	last_seen_at?: string;
 }

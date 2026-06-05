@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-05T10:45:27Z",
+  "updated": "2026-06-05T18:54:35Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -754,7 +754,7 @@
         "closure": "Task closes when tests prove trace/catalog schema and ref-first validation can support primary trace consumers without compatibility normalization."
       },
       "created": "2026-06-04",
-      "updated": "2026-06-04T09:52:06Z"
+      "updated": "2026-06-05T18:54:35Z"
     },
     "TASK-094": {
       "id": "TASK-094",

@@ -60,5 +60,5 @@
     "closure": "Task closes when tests prove trace/catalog schema and ref-first validation can support primary trace consumers without compatibility normalization."
   },
   "created": "2026-06-04",
-  "updated": "2026-06-04T09:52:06Z"
+  "updated": "2026-06-05T18:54:35Z"
 }
