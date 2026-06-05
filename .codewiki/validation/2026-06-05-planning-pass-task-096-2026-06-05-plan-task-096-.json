@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T22:48:39Z",
+  "profile": "planning",
+  "gate": "planning",
+  "task_id": "TASK-096",
+  "verdict": "pass",
+  "rationale": "Planning validation passes for TASK-096: accepted decision row maps to one scoped roadmap task; downstream questions are routed to TASK-096; non-goals preserve no bulk migration/deletion; implementation has bounded inspection/remediation/defer plan.",
+  "checks": [
+    "decision validation .codewiki/validation/2026-06-05-decision-pass-task-096-2026-06-05-accepted-scope.json",
+    "planning build .codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+    "wiki_audit alignment+stale-reference+source-contract+lexicon+task"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red and is the object of TASK-096 reconciliation."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "planning:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red and is the object of TASK-096 reconciliation.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "planning:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red and is the object of TASK-096 reconciliation.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "planning",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "source-contract",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:source-contract",
+    "audit:generated-parity"
+  ],
+  "audit_reports": [
+    "alignment:fail pre-existing graph-health blocker scoped to TASK-096",
+    "source-contract:pass",
+    "generated-parity:pass"
+  ],
+  "content_proof_refs": [
+    "planning-dirty-state:TASK-096"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+    "validation_report": ".codewiki/validation/2026-06-05-planning-pass-task-096-2026-06-05-plan-task-096-.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+      ".codewiki/validation/2026-06-05-planning-pass-task-096-2026-06-05-plan-task-096-.json",
+      "TASK-096 covers agency-selected graph-health reconciliation blocker.",
+      "TASK-096",
+      ".codewiki/builds/decision/**",
+      ".codewiki/validation/**",
+      "src/state/graph.ts",
+      "src/build/**",
+      "src/checks/**",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+    "validation_report": ".codewiki/validation/2026-06-05-planning-pass-task-096-2026-06-05-plan-task-096-.json",
+    "commit_title": "checkpoint(codewiki): TASK-096 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-096",
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-planning-pass-task-096-2026-06-05-plan-task-096-.json",
+      "CodeWiki-Checks: decision validation .codewiki/validation/2026-06-05-decision-pass-task-096-2026-06-05-accepted-scope.json; planning build .codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json; wiki_audit alignment+stale-reference+source-contract+lexicon+task"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/graph.ts",
+      "src/build/**",
+      "src/checks/**"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "source-contract",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:source-contract or profile:source-contract",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "task_id": "TASK-096",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "planning-dirty-state:TASK-096",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Planning gate validates decision-backed task mapping; implementation validation will require checked content evidence.",
+    "role": "validator"
+  }
+}

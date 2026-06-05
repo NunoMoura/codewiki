@@ -686,6 +686,17 @@ function isBuildV2(build: { data?: UnknownRecord }): boolean {
 	return Number(build.data?.schema_version || 0) >= 2;
 }
 
+const DECISION_TABLE_REQUIRED_FROM = Date.parse("2026-06-05T00:00:00Z");
+
+function isLegacyDecisionBuildBeforeDecisionTableRequirement(
+	buildData: UnknownRecord,
+	rows: UnknownRecord[],
+): boolean {
+	if (rows.length > 0) return false;
+	const createdAt = Date.parse(String(buildData.created || ""));
+	return Number.isFinite(createdAt) && createdAt < DECISION_TABLE_REQUIRED_FROM;
+}
+
 function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 	const issues: LintIssue[] = [];
 	const buildData = recordValue(data);
@@ -706,6 +717,17 @@ function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 		fallbackMode = "proposal";
 	}
 	const mode = String(buildData.decision_mode || fallbackMode);
+	if (isLegacyDecisionBuildBeforeDecisionTableRequirement(buildData, rows)) {
+		issues.push(
+			createIssue(
+				"warning",
+				"legacy-decision-build-decision-table-deferred",
+				buildPath,
+				"Legacy decision build predates the DecisionTableV1 requirement. TASK-096 explicitly defers row backfill until lifecycle-trace migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+			),
+		);
+		return issues;
+	}
 	if (rows.length === 0) {
 		issues.push(
 			createIssue(

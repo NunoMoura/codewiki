@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-05T22:48:09Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-19T22:48:09.000Z",
+    "purge_after": "2026-07-03T22:48:09.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan TASK-096 reconciliation from accepted scoped decision build.",
+  "task_ids": [
+    "TASK-096"
+  ],
+  "task_changes": [
+    "TASK-096 covers agency-selected graph-health reconciliation blocker."
+  ],
+  "roadmap_changes": [
+    "TASK-096 covers agency-selected graph-health reconciliation blocker."
+  ],
+  "tdd_plan": [
+    "Inspect graph-health lint issue inventory.",
+    "Add or adjust focused tests if policy/projection changes are needed.",
+    "Run wiki_audit alignment/generated-parity/source-contract/lexicon plus alignment-graph and typecheck."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/source-contract.test.mjs"
+  ],
+  "candidate_code_paths": [
+    ".codewiki/builds/decision/**",
+    ".codewiki/validation/**",
+    "src/state/graph.ts",
+    "src/build/**",
+    "src/checks/**",
+    "tests/smoke/alignment-graph.test.mjs"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "ROW-TASK-096-SCOPE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-096"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json",
+        ".codewiki/validation/2026-06-05-decision-pass-task-096-2026-06-05-accepted-scope.json"
+      ],
+      "owner": "agent",
+      "rationale": "Accepted decision explicitly scopes legacy decision-build lint reconciliation to TASK-096.",
+      "evidence": "Decision gate passed for TASK-096 scoped reconciliation.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which specific legacy decision-build lint errors can be fixed safely in a bounded slice?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-096"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "agent",
+      "rationale": "Implementation will inspect inventory and either remediate a bounded safe slice or record deferral/follow-up evidence.",
+      "evidence": "TASK-096 acceptance includes bounded remediation/defer coverage.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which legacy decision-build lint errors require explicit deferral/deletion triggers?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-096"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "agent",
+      "rationale": "Implementation will classify broad historical migration risk and avoid bulk mutation/deletion without archive evidence.",
+      "evidence": "TASK-096 non-goals prohibit bulk migration/deletion without validation evidence.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [],
+  "assumptions": [
+    "Decision gate pass authorizes bounded reconciliation but not bulk deletion/migration of historical artifacts."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not migrate all historical artifacts in one sweep unless audit proves it is safe and bounded.",
+    "Do not delete legacy build artifacts without archive/restore evidence.",
+    "Do not change the v1 lifecycle trace schema from TASK-093."
+  ],
+  "risks": [
+    "May require follow-up tasks if legacy lint inventory is too broad for one bounded slice."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-decision-for-task.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-096"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-096"
+    ],
+    "code": [
+      ".codewiki/builds/decision/**",
+      ".codewiki/validation/**",
+      "src/state/graph.ts",
+      "src/build/**",
+      "src/checks/**",
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "tests": [
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

@@ -1,0 +1,594 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-05T23:22:55Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+  "task_id": "TASK-096",
+  "task": {
+    "id": "TASK-096",
+    "title": "Reconcile legacy decision-build lint errors",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "maintenance",
+    "summary": "Reconcile pre-trace legacy decision builds that fail decision-table lint rules, or document/defer them with explicit migration triggers.",
+    "spec_paths": [
+      ".codewiki/index_graph.json",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "code_paths": [
+      ".codewiki/builds/decision/**",
+      ".codewiki/validation/**",
+      "src/state/graph.ts",
+      "src/build/**",
+      "src/checks/**",
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Graph health has explicit roadmap coverage for legacy decision-build lint errors and a bounded path to clear or defer them.",
+      "acceptance": [
+        "Active graph-health blockers from legacy decision builds are mapped to scoped remediation evidence or explicitly deferred with deletion triggers.",
+        "No historical build artifacts are hand-mutated without validation evidence or approved compatibility policy.",
+        "Alignment/generated-parity audits show either fewer uncovered errors or explicit task coverage for remaining legacy drift."
+      ],
+      "non_goals": [
+        "Do not migrate all historical artifacts in one sweep unless audit proves it is safe and bounded.",
+        "Do not delete legacy build artifacts without archive/restore evidence.",
+        "Do not change the v1 lifecycle trace schema from TASK-093."
+      ],
+      "verification": [
+        "wiki_audit alignment+generated-parity+source-contract+lexicon",
+        "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+        "npm run typecheck"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-12T23:22:55.000Z",
+    "purge_after": "2026-06-19T23:22:55.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Reconciled legacy decision-build lint errors by deferring pre-DecisionTableV1 artifacts with explicit TASK-096 deletion trigger.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-096"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/state/lint.ts",
+      ".codewiki/kb/system/builds.md"
+    ],
+    "tests": [
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-096"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+    "spec_paths": [
+      ".codewiki/index_graph.json",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "code_paths": [
+      ".codewiki/builds/decision/**",
+      ".codewiki/validation/**",
+      "src/state/graph.ts",
+      "src/build/**",
+      "src/checks/**",
+      "tests/smoke/alignment-graph.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs"
+  ],
+  "code_files": [
+    "src/state/lint.ts",
+    ".codewiki/kb/system/builds.md"
+  ],
+  "files_changed": [
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "src/state/lint.ts",
+    ".codewiki/kb/system/builds.md"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "npm run typecheck",
+    "source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll()",
+    "source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings)",
+    "LSP diagnostics src/state/lint.ts clean"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+      "roadmap_task_id": "TASK-096",
+      "test_files": [
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs"
+      ],
+      "evidence": [
+        "Used source-owned graph rebuild and audit from changed TS because live wiki_audit cannot observe un-reloaded linter code until next /reload.",
+        "Existing alignment-graph smoke covers decision propagation; source-contract/lexicon/graph-lenses verify related surfaces remain valid."
+      ],
+      "notes": [
+        "All required command checks passed.",
+        "Source-owned audit returns warning, not fail; remaining 62 warnings are pre-existing drift/deferred compatibility warnings.",
+        "Live wiki_audit tool remains stale until next /reload because src/state/lint.ts changed during this session."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+      "roadmap_task_id": "TASK-096",
+      "code_files": [
+        "src/state/lint.ts",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "evidence": [
+        "Added DECISION_TABLE_REQUIRED_FROM and legacy decision-build deferral branch in src/state/lint.ts.",
+        "Updated .codewiki/kb/system/builds.md with TASK-096 deferral and deletion trigger.",
+        "Generated graph now reports legacy rowless decision builds as warnings instead of current-schema errors, reducing graph health from 88 errors to 0 errors in source-owned rebuild."
+      ],
+      "notes": [
+        "This task intentionally did not mutate historical decision build JSON files.",
+        "This task intentionally did not delete legacy artifacts or migrate all history.",
+        "One earlier decision gate attempt wrote a block report before fresh audit evidence was supplied; the block report is retained as durable gate evidence."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Used source-owned graph rebuild and audit from changed TS because live wiki_audit cannot observe un-reloaded linter code until next /reload.",
+    "Existing alignment-graph smoke covers decision propagation; source-contract/lexicon/graph-lenses verify related surfaces remain valid."
+  ],
+  "code_change_evidence": [
+    "Added DECISION_TABLE_REQUIRED_FROM and legacy decision-build deferral branch in src/state/lint.ts.",
+    "Updated .codewiki/kb/system/builds.md with TASK-096 deferral and deletion trigger.",
+    "Generated graph now reports legacy rowless decision builds as warnings instead of current-schema errors, reducing graph health from 88 errors to 0 errors in source-owned rebuild."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Active graph-health blockers from legacy decision builds are mapped to scoped remediation evidence or explicitly deferred with deletion triggers.",
+      "evidence": "src/state/lint.ts now classifies decision builds created before 2026-06-05 without decision_table rows as legacy-decision-build-decision-table-deferred warnings citing TASK-096 and deletion trigger; .codewiki/kb/system/builds.md records the defer policy and trigger to delete it when lifecycle traces/catalog entries or GC archive/restore-ledger evidence can recover the history."
+    },
+    {
+      "criterion": "No historical build artifacts are hand-mutated without validation evidence or approved compatibility policy.",
+      "evidence": "No legacy .codewiki/builds/decision/*.json files were edited; reconciliation is implemented as linter compatibility policy plus KB deferral evidence."
+    },
+    {
+      "criterion": "Alignment/generated-parity audits show either fewer uncovered errors or explicit task coverage for remaining legacy drift.",
+      "evidence": "Source-owned rebuild and source-owned audit show alignment warning-only with graph health 0 errors / 62 warnings; generated-parity/source-contract/lexicon/task profiles pass for TASK-096."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed via agency after reload; reconcile uncovered graph-health blocker.",
+    "implemented_changes": [
+      "Created TASK-096 decision/planning lineage for scoped reconciliation.",
+      "Changed decision-build linter so pre-2026-06-05 rowless decision builds are explicit deferred warnings, not current-schema errors.",
+      "Documented TASK-096 deferral and deletion trigger in builds KB.",
+      "Rebuilt graph from source-owned changed TS and verified graph health has 0 errors."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/builds.md"
+      ],
+      "roadmap": [
+        "TASK-096"
+      ],
+      "code": [
+        "src/state/lint.ts"
+      ],
+      "tests": [],
+      "validation": [
+        ".codewiki/validation/2026-06-05-decision-pass-task-096-2026-06-05-accepted-scope.json",
+        ".codewiki/validation/2026-06-05-planning-pass-task-096-2026-06-05-plan-task-096-.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "Source-owned audit alignment+generated-parity+source-contract+lexicon+task returned warning only with graph health 0 errors / 62 warnings.",
+      "alignment-graph smoke passed.",
+      "source-contract smoke passed.",
+      "lexicon-linter smoke passed.",
+      "graph-lenses smoke passed.",
+      "typecheck passed."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+      "npm run typecheck",
+      "source-owned graph rebuild",
+      "source-owned audit"
+    ],
+    "non_goals_preserved": [
+      "Did not migrate all historical artifacts.",
+      "Did not delete legacy build artifacts.",
+      "Did not change TASK-093 lifecycle trace schema."
+    ],
+    "remaining_risks": [
+      "Live tools need /reload to use changed linter policy.",
+      "Graph still has warning-level drift/deferred compatibility issues."
+    ]
+  },
+  "risks": [
+    "User should run /reload before relying on live wiki_audit/wiki_state refresh behavior for the updated linter policy.",
+    "Remaining graph warnings still need future cleanup or GC/archive work.",
+    "The deferral cutoff is date-based (2026-06-05T00:00:00Z), matching DecisionTableV1 adoption boundary; future migrations should remove this policy after trace/catalog/GC coverage exists."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-096",
+      "task_id": "TASK-096",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-096",
+        "title": "Reconcile legacy decision-build lint errors",
+        "summary": "Reconciled legacy decision-build lint errors by deferring pre-DecisionTableV1 artifacts with explicit TASK-096 deletion trigger.",
+        "spec_paths": [
+          ".codewiki/index_graph.json",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/lexicon.md"
+        ],
+        "code_paths": [
+          ".codewiki/builds/decision/**",
+          ".codewiki/validation/**",
+          "src/state/graph.ts",
+          "src/build/**",
+          "src/checks/**",
+          "tests/smoke/alignment-graph.test.mjs",
+          "src/state/lint.ts",
+          ".codewiki/kb/system/builds.md"
+        ],
+        "acceptance": [
+          "Active graph-health blockers from legacy decision builds are mapped to scoped remediation evidence or explicitly deferred with deletion triggers.",
+          "No historical build artifacts are hand-mutated without validation evidence or approved compatibility policy.",
+          "Alignment/generated-parity audits show either fewer uncovered errors or explicit task coverage for remaining legacy drift."
+        ],
+        "verification": [
+          "wiki_audit alignment+generated-parity+source-contract+lexicon",
+          "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+          "npm run typecheck"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+          "npm run typecheck",
+          "source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll()",
+          "source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings)",
+          "LSP diagnostics src/state/lint.ts clean"
+        ],
+        "test_design_evidence": [
+          "Used source-owned graph rebuild and audit from changed TS because live wiki_audit cannot observe un-reloaded linter code until next /reload.",
+          "Existing alignment-graph smoke covers decision propagation; source-contract/lexicon/graph-lenses verify related surfaces remain valid."
+        ],
+        "code_change_evidence": [
+          "Added DECISION_TABLE_REQUIRED_FROM and legacy decision-build deferral branch in src/state/lint.ts.",
+          "Updated .codewiki/kb/system/builds.md with TASK-096 deferral and deletion trigger.",
+          "Generated graph now reports legacy rowless decision builds as warnings instead of current-schema errors, reducing graph health from 88 errors to 0 errors in source-owned rebuild."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-096",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-096",
+      "show_build": "git show refs/codewiki/archive/task/TASK-096:.codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+        ".codewiki/index_graph.json",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/builds/decision/**",
+        ".codewiki/validation/**",
+        "src/state/graph.ts",
+        "src/build/**",
+        "src/checks/**",
+        "tests/smoke/alignment-graph.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-096 Reconcile legacy decision-build lint errors implementation evidence",
+      "body": "Reconciled legacy decision-build lint errors by deferring pre-DecisionTableV1 artifacts with explicit TASK-096 deletion trigger.\n\nChecks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, npm run typecheck, source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll(), source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings), LSP diagnostics src/state/lint.ts clean\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-096\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, npm run typecheck, source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll(), source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings), LSP diagnostics src/state/lint.ts clean\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-096\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-096\nCodeWiki-Digest: sha256:f1045c82cf95d270a3d0b4bfaf8fc3ebbe011a4e6eeedbb24b26d4e417361ce6\nCodeWiki-Restore: /wiki-restore TASK-096",
+      "trailers": [
+        "CodeWiki-Task: TASK-096",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, npm run typecheck, source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll(), source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings), LSP diagnostics src/state/lint.ts clean",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-096",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-096",
+        "CodeWiki-Digest: sha256:f1045c82cf95d270a3d0b4bfaf8fc3ebbe011a4e6eeedbb24b26d4e417361ce6",
+        "CodeWiki-Restore: /wiki-restore TASK-096"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-096 Reconcile legacy decision-build lint errors implementation evidence",
+      "body": "Reconciled legacy decision-build lint errors by deferring pre-DecisionTableV1 artifacts with explicit TASK-096 deletion trigger.\n\nChecks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, npm run typecheck, source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll(), source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings), LSP diagnostics src/state/lint.ts clean\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-096\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs, npm run typecheck, source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll(), source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings), LSP diagnostics src/state/lint.ts clean\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-096\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-096\nCodeWiki-Digest: sha256:f1045c82cf95d270a3d0b4bfaf8fc3ebbe011a4e6eeedbb24b26d4e417361ce6\nCodeWiki-Restore: /wiki-restore TASK-096"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-096",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-096"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-096",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-096",
+        "show_build": "git show refs/codewiki/archive/task/TASK-096:.codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+          ".codewiki/index_graph.json",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/builds/decision/**",
+          ".codewiki/validation/**",
+          "src/state/graph.ts",
+          "src/build/**",
+          "src/checks/**",
+          "tests/smoke/alignment-graph.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-096",
+      "build_path": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-096",
+      "commit_sha": "",
+      "digest": "sha256:f1045c82cf95d270a3d0b4bfaf8fc3ebbe011a4e6eeedbb24b26d4e417361ce6",
+      "restore_command": "/wiki-restore TASK-096"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:0d96abba7283f6f73d7874dc9587b904e34be242767ccf408df36c4139384f37",
+          "bytes": 6868
+        },
+        {
+          "path": "tests/smoke/alignment-graph.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cfd031661a9c35c898b15238a69fc245c8e894fd82e06c01f50b6c3cda42d8c8",
+          "bytes": 17524
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "tests/smoke/lexicon-linter.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:362576b514f5d7e91927ecac4e01e5b8f04499ee568881c0b7953642d86fa2ce",
+          "bytes": 6888
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:325c7674f9976caf26c70fab5337f3c390dc5392be422783c7b0aa1f991a7e12",
+          "bytes": 22416
+        },
+        {
+          "path": "src/state/lint.ts",
+          "role": "code_file",
+          "sha256": "sha256:f06ca795ea67a16f12a52d26240c7e62e934c32a91bd6ce9f15ad58fe57c5562",
+          "bytes": 26718
+        },
+        {
+          "path": ".codewiki/kb/system/builds.md",
+          "role": "code_file",
+          "sha256": "sha256:f2837536f7913baf22b78baf40eccd26da4d92d0476de1794b03cb2563a5c429",
+          "bytes": 4905
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-096",
+      "source_build": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/state/lint.ts",
+          ".codewiki/kb/system/builds.md",
+          "tests/smoke/alignment-graph.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-096",
+        "restore_command": "/wiki-restore TASK-096"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+        "npm run typecheck",
+        "source-owned rebuild: node --experimental-strip-types import CodewikiRebuilder and rebuildAll()",
+        "source-owned audit: executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only (graph health 0 errors / 62 warnings)",
+        "LSP diagnostics src/state/lint.ts clean"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

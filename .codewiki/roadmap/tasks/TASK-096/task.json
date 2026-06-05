@@ -1,0 +1,54 @@
+{
+  "id": "TASK-096",
+  "title": "Reconcile legacy decision-build lint errors",
+  "status": "in_progress",
+  "priority": "medium",
+  "kind": "maintenance",
+  "summary": "Reconcile pre-trace legacy decision builds that fail decision-table lint rules, or document/defer them with explicit migration triggers.",
+  "spec_paths": [
+    ".codewiki/index_graph.json",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/lexicon.md"
+  ],
+  "code_paths": [
+    ".codewiki/builds/decision/**",
+    ".codewiki/validation/**",
+    "src/state/graph.ts",
+    "src/build/**",
+    "src/checks/**",
+    "tests/smoke/alignment-graph.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "reconciliation",
+    "legacy-builds",
+    "graph-health"
+  ],
+  "change_type": "code",
+  "goal": {
+    "outcome": "Graph health has explicit roadmap coverage for legacy decision-build lint errors and a bounded path to clear or defer them.",
+    "acceptance": [
+      "Active graph-health blockers from legacy decision builds are mapped to scoped remediation evidence or explicitly deferred with deletion triggers.",
+      "No historical build artifacts are hand-mutated without validation evidence or approved compatibility policy.",
+      "Alignment/generated-parity audits show either fewer uncovered errors or explicit task coverage for remaining legacy drift."
+    ],
+    "non_goals": [
+      "Do not migrate all historical artifacts in one sweep unless audit proves it is safe and bounded.",
+      "Do not delete legacy build artifacts without archive/restore evidence.",
+      "Do not change the v1 lifecycle trace schema from TASK-093."
+    ],
+    "verification": [
+      "wiki_audit alignment+generated-parity+source-contract+lexicon",
+      "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+      "npm run typecheck"
+    ]
+  },
+  "delta": {
+    "desired": "Legacy decision-build lint errors have scoped remediation/defer coverage and next action can proceed through normal task workflow.",
+    "current": "Roadmap open 0 but graph-health reports legacy decision-build lint errors with no open roadmap coverage.",
+    "closure": "Task closes when graph-health reconciliation is validated and remaining legacy drift has explicit coverage."
+  },
+  "created": "2026-06-05",
+  "updated": "2026-06-05T23:22:54Z"
+}

@@ -1,0 +1,442 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T23:23:26Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-096",
+  "verdict": "block",
+  "rationale": "TASK-096 implementation passes: pre-2026-06-05 rowless legacy decision builds are now explicitly deferred as warnings with TASK-096 deletion trigger rather than current-schema errors; builds KB documents the deferral and removal condition; no historical decision build artifacts were edited or deleted. Source-owned rebuild and audit from changed TS report graph health 0 errors / 62 warnings, generated-parity/source-contract/lexicon/task pass, and required smoke/typecheck checks pass. Live CodeWiki tools must be reloaded before their refresh path uses the updated linter code. Policy blocks implementation gate validation until audit:alignment, audit:changed, audit:generated-parity, audit:source-contract, audit:lexicon, audit:task are recorded.",
+  "checks": [
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "npm run typecheck",
+    "LSP diagnostics src/state/lint.ts clean",
+    "source-owned rebuild via CodewikiRebuilder from src/state/graph/rebuilder.ts",
+    "source-owned audit executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only: graph health 0 errors / 62 warnings"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Live CodeWiki tool process needs /reload before wiki_state/wiki_audit refresh uses changed linter policy."
+    },
+    {
+      "severity": "warning",
+      "summary": "Graph still has 62 warning-level legacy/drift issues after reconciliation."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, changed, generated-parity, source-contract, lexicon, task."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Live CodeWiki tool process needs /reload before wiki_state/wiki_audit refresh uses changed linter policy.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "implementation:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "warning",
+      "summary": "Graph still has 62 warning-level legacy/drift issues after reconciliation.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "implementation:report-issue-3:3",
+      "kind": "report-issue-3",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, changed, generated-parity, source-contract, lexicon, task.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Live CodeWiki tool process needs /reload before wiki_state/wiki_audit refresh uses changed linter policy.",
+      "ref_count": 0
+    },
+    {
+      "id": "implementation:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "warning",
+      "summary": "Graph still has 62 warning-level legacy/drift issues after reconciliation.",
+      "ref_count": 0
+    },
+    {
+      "id": "implementation:report-issue-3:3",
+      "category": "report-issue-3",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment, changed, generated-parity, source-contract, lexicon, task.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "block",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "remediation_route": "implementation",
+    "retry_class": "same_loop",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "generated-parity",
+    "source-contract",
+    "lexicon",
+    "task"
+  ],
+  "audit_refs": [
+    "source-owned-audit:alignment:warning:0-errors-62-warnings",
+    "source-owned-audit:generated-parity:pass",
+    "source-owned-audit:source-contract:pass",
+    "source-owned-audit:lexicon:pass",
+    "source-owned-audit:task:pass:TASK-096"
+  ],
+  "audit_reports": [
+    "alignment:warning graph health 0 errors / 62 warnings after source-owned rebuild",
+    "generated-parity:pass",
+    "source-contract:pass",
+    "lexicon:pass",
+    "task:pass TASK-096"
+  ],
+  "content_proof_refs": [
+    "sha256:12b4e83cafa1548795f8354d943f642450521ee31e0d7ca51e36a42dab86405f"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-block-task-096-2026-06-05-reconci.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      ".codewiki/validation/2026-06-05-implementation-block-task-096-2026-06-05-reconci.json",
+      "src/state/lint.ts",
+      ".codewiki/kb/system/builds.md",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-block-task-096-2026-06-05-reconci.json",
+    "commit_title": "checkpoint(codewiki): TASK-096 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-096",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-block-task-096-2026-06-05-reconci.json",
+      "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs; node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs; npm run typecheck; LSP diagnostics src/state/lint.ts clean; source-owned rebuild via CodewikiRebuilder from src/state/graph/rebuilder.ts; source-owned audit executeCodewikiAudit alignment+generated-parity+source-contract+lexicon+task for TASK-096 returned warning only: graph health 0 errors / 62 warnings"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/lint.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite linter evidence for required profiles: alignment, changed, generated-parity, source-contract, lexicon, task."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "changed",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "task"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-096",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:changed",
+        "audit:generated-parity",
+        "audit:source-contract",
+        "audit:lexicon",
+        "audit:task"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:generated-parity",
+          "audit:source-contract",
+          "audit:lexicon",
+          "audit:task"
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "implementation:audit-evidence:1",
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:generated-parity",
+          "audit:source-contract",
+          "audit:lexicon",
+          "audit:task"
+        ],
+        "affected_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:generated-parity",
+          "audit:source-contract",
+          "audit:lexicon",
+          "audit:task"
+        ],
+        "gate_refs": [
+          "implementation"
+        ],
+        "failure_class": "evidence_missing",
+        "recommended_next_loop": "implementation",
+        "remediation_route": "implementation",
+        "retry_class": "same_loop",
+        "remediation": [
+          "Run or cite the required CodeWiki audit evidence."
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "implementation:audit-evidence:1",
+        "category": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "ref_count": 6
+      }
+    ],
+    "remediation": {
+      "status": "blocked",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "affected_refs": [
+        "audit:alignment",
+        "audit:changed",
+        "audit:generated-parity",
+        "audit:source-contract",
+        "audit:lexicon",
+        "audit:task"
+      ],
+      "next_safe_actions": [
+        "Run or cite the required CodeWiki audit evidence."
+      ]
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:12b4e83cafa1548795f8354d943f642450521ee31e0d7ca51e36a42dab86405f",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation used source-owned tests, rebuild, and audit from changed TS because live tool process cannot use un-reloaded linter change. Dirty tree is pre-commit candidate; digest covers diff and untracked files.",
+    "role": "validator"
+  }
+}

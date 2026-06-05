@@ -92,6 +92,8 @@ Hot compiler output can be compacted or purged only when:
 
 Until TASK-093/TASK-094 replace compatibility readers, `.codewiki/builds/**` and `.codewiki/validation/**` are legacy evidence roots, not scratch. Do not purge them merely because target storage is lifecycle-trace-first.
 
+TASK-096 defers row backfill for decision builds created before 2026-06-05 that predate the DecisionTableV1 requirement. Linters may report these artifacts as legacy-deferred warnings instead of current-schema errors while they remain recoverable compatibility evidence. Delete this deferral when lifecycle traces/catalog entries or GC archive/restore-ledger evidence can recover the historical decision intent without the legacy build file.
+
 ## Related docs
 
 - [Lexicon](../lexicon.md)
