@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T10:28:14Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-091",
+  "verdict": "pass",
+  "rationale": "TASK-091 closes on clean checkpoint commit. Implementation build includes acceptance mapping and package/readiness evidence; implementation and ship-ready validations pass; required tests/typecheck/audits are recorded. Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091 and do not block scoped closure.",
+  "checks": [
+    "commit 712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+    "tree 3bd72e4b8dbdf608977375218c34aa1db964f569",
+    "git status --short -> clean",
+    "source implementation build .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
+    "ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "npm pack --dry-run --json -> shasum e9822128e25e5f179b1dbdd1e2d64d2e75fda3cc integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "wiki_audit profiles=alignment,file-structure,lexicon,task,generated-parity,package,security,stale-reference,changed task_id=TASK-091 -> lexicon/task/generated-parity/package/security/stale-reference pass; file-structure warnings and alignment fail pre-existing; changed pass after amend"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091; scoped task closure approved with recorded warning."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091; scoped task closure approved with recorded warning.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091; scoped task closure approved with recorded warning.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "file-structure",
+    "lexicon",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "alignment",
+    "file-structure",
+    "lexicon",
+    "task",
+    "generated-parity",
+    "package",
+    "security",
+    "stale-reference",
+    "changed",
+    "approved by user"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+    "3bd72e4b8dbdf608977375218c34aa1db964f569",
+    "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-091",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/lexicon.md",
+      ".gitignore",
+      "src/checks/lexicon.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-091",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+    "commit_title": "checkpoint(codewiki): TASK-091 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-091",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "CodeWiki-Checks: commit 712e9836cab8bdbe16907c93f9f293c9ff1e55c6; tree 3bd72e4b8dbdf608977375218c34aa1db964f569; git status --short -> clean; source implementation build .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json; implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json; ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json; node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass; node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass; npm run typecheck -> pass; npm pack --dry-run --json -> shasum e9822128e25e5f179b1dbdd1e2d64d2e75fda3cc integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==; wiki_audit profiles=alignment,file-structure,lexicon,task,generated-parity,package,security,stale-reference,changed task_id=TASK-091 -> lexicon/task/generated-parity/package/security/stale-reference pass; file-structure warnings and alignment fail pre-existing; changed pass after amend"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/checks/lexicon.ts",
+      "src/adapters/pi/tools/ports.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+      "3bd72e4b8dbdf608977375218c34aa1db964f569"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "file-structure",
+      "lexicon",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:file-structure or profile:file-structure",
+      "audit:lexicon or profile:lexicon",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-091",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved by user"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+    "validated_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+    "published_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+    "tree_sha": "3bd72e4b8dbdf608977375218c34aa1db964f569",
+    "package_digest": "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Clean local checkpoint commit includes TASK-091 knowledge/code/test/evidence; no remote push requested.",
+    "role": "validator"
+  }
+}

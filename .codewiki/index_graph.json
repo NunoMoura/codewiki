@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-05T10:27:43.265Z",
+  "generated_at": "2026-06-05T10:29:01.069Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -10090,24 +10090,6 @@
       "lens_family": "execution"
     },
     {
-      "id": "task:TASK-091",
-      "kind": "roadmap_task",
-      "title": "Define CodeWiki hot-state retention cleanup",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:tests/smoke/lexicon-linter.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/lexicon-linter.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
       "id": "task:TASK-092",
       "kind": "roadmap_task",
       "title": "Add trace-aware resume handoff bootstrap",
@@ -10134,6 +10116,14 @@
       "change_type": "system",
       "alignment_state": "drift",
       "lens_family": "work"
+    },
+    {
+      "id": "code:tests/smoke/lexicon-linter.test.mjs",
+      "kind": "code_path",
+      "path": "tests/smoke/lexicon-linter.test.mjs",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
     },
     {
       "id": "task:TASK-094",
@@ -71278,6 +71268,68 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+        "validated_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+        "published_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+        "tree_sha": "3bd72e4b8dbdf608977375218c34aa1db964f569",
+        "package_digest": "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Clean local checkpoint commit includes TASK-091 knowledge/code/test/evidence; no remote push requested.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+        ],
+        "audit_evidence_refs": [
+          "alignment",
+          "file-structure",
+          "lexicon",
+          "task",
+          "generated-parity",
+          "package",
+          "security",
+          "stale-reference",
+          "changed",
+          "approved by user"
+        ],
+        "content_proof_refs": [
+          "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+          "3bd72e4b8dbdf608977375218c34aa1db964f569",
+          "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "content_proof:712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+      "kind": "content_proof",
+      "path": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:3bd72e4b8dbdf608977375218c34aa1db964f569",
+      "kind": "content_proof",
+      "path": "3bd72e4b8dbdf608977375218c34aa1db964f569",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
@@ -71405,7 +71457,7 @@
       "layer": "validation",
       "severity": "warning",
       "issue_kind": "roadmap-missing-code-path",
-      "message": "TASK-091 references missing code path: src/gc/**",
+      "message": "TASK-093 references missing code path: src/telemetry/**",
       "lens_family": "proof"
     },
     {
@@ -96463,213 +96515,6 @@
     },
     {
       "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/file-structure.md",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/kb/system/builds.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/builds.md",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/kb/system/trace-graph.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:src/gc/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:src/telemetry/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:src/state/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:.gitignore",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:tests/smoke/package-smoke.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/trace-graph.md",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/kb/system/graph.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/graph.md",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/kb/lexicon.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:src/gc/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:src/telemetry/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:src/state/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:.gitignore",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:tests/smoke/package-smoke.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/lexicon.md",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-091",
-      "to": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:src/gc/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:src/telemetry/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:src/state/**",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:.gitignore",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:tests/smoke/package-smoke.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-091"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:src/gc/**"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:src/telemetry/**"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:src/state/**"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:.gitignore"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-091",
-      "to": "code:tests/smoke/lexicon-linter.test.mjs"
-    },
-    {
-      "kind": "task_spec",
       "from": "task:TASK-092",
       "to": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
     },
@@ -97000,6 +96845,13 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+      "to": "code:src/telemetry/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
       "to": "code:src/build/**",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
@@ -97008,6 +96860,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
       "to": "code:src/gateway/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+      "to": "code:src/state/**",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -97029,6 +96888,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
       "to": "code:tests/smoke/source-contract.test.mjs",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -97040,6 +96906,13 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/trace-graph.md",
+      "to": "code:src/telemetry/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/trace-graph.md",
       "to": "code:src/build/**",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
@@ -97048,6 +96921,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/trace-graph.md",
       "to": "code:src/gateway/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/trace-graph.md",
+      "to": "code:src/state/**",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -97069,6 +96949,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/trace-graph.md",
       "to": "code:tests/smoke/source-contract.test.mjs",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/trace-graph.md",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -97092,9 +96979,23 @@
       "source_ref": "TASK-093"
     },
     {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/builds.md",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
       "kind": "task_spec",
       "from": "task:TASK-093",
       "to": "doc:.codewiki/kb/system/file-structure.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/file-structure.md",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
     },
     {
       "kind": "task_spec",
@@ -97104,7 +97005,21 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/lexicon.md",
+      "to": "code:src/telemetry/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/lexicon.md",
       "to": "code:src/gateway/**",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/lexicon.md",
+      "to": "code:src/state/**",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -97126,6 +97041,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/lexicon.md",
       "to": "code:tests/smoke/source-contract.test.mjs",
+      "link_source": "roadmap_task",
+      "source_ref": "TASK-093"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/lexicon.md",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-093"
     },
@@ -109207,6 +109129,13 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/trace-graph.md",
+      "to": "code:.gitignore",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/trace-graph.md",
       "to": "code:src/checks/lexicon.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
@@ -109250,6 +109179,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/graph.md",
       "to": "code:src/adapters/pi/tools/ports.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/graph.md",
+      "to": "code:tests/smoke/lexicon-linter.test.mjs",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
     },
@@ -109327,6 +109263,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/lexicon.md",
       "to": "code:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/lexicon.md",
+      "to": "code:.gitignore",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
     },
@@ -184363,6 +184306,95 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:lexicon",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "audit:approved by user",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "content_proof:712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "content_proof:3bd72e4b8dbdf608977375218c34aa1db964f569",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "content_proof:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+      "to": "task:TASK-091"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
       "to": "source:.codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json",
       "default_hidden": true
@@ -185014,19 +185046,18 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 30,
+            "item_count": 29,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 4,
+                "count": 3,
                 "refs": [
-                  "TASK-091",
                   "TASK-092",
                   "TASK-093",
                   "TASK-094"
                 ],
-                "ref_count": 4
+                "ref_count": 3
               },
               {
                 "id": "done_tasks",
@@ -185115,7 +185146,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 309
+                "count": 310
               },
               {
                 "id": "fail_or_block_validation",
@@ -185130,7 +185161,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 2086
+                "count": 2088
               },
               {
                 "id": "traceability_gaps",
@@ -185168,11 +185199,11 @@
             "collapsed": 229
           },
           "validations": {
-            "total": 309,
-            "pass": 257,
+            "total": 310,
+            "pass": 258,
             "fail_or_block": 52,
-            "hot": 13,
-            "collapsed": 309
+            "hot": 12,
+            "collapsed": 310
           }
         },
         "next_action": {
@@ -185228,22 +185259,22 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5628,
-          "edges": 18717,
+          "nodes": 5630,
+          "edges": 18713,
           "open_tasks": 0,
-          "validations": 301,
-          "source_refs": 1334
+          "validations": 302,
+          "source_refs": 1335
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -185252,7 +185283,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1366,
+          "source_ref_count": 1367,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -185274,13 +185305,12 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1358
+            "omitted_ref_count": 1359
           }
         ],
         "data": {
-          "open_task_count": 4,
+          "open_task_count": 3,
           "active_task_ids": [
-            "TASK-091",
             "TASK-092",
             "TASK-093",
             "TASK-094"
@@ -185390,19 +185420,18 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 30,
+              "item_count": 29,
               "badges": [
                 {
                   "id": "open_tasks",
                   "label": "open tasks",
-                  "count": 4,
+                  "count": 3,
                   "refs": [
-                    "TASK-091",
                     "TASK-092",
                     "TASK-093",
                     "TASK-094"
                   ],
-                  "ref_count": 4
+                  "ref_count": 3
                 },
                 {
                   "id": "done_tasks",
@@ -185491,7 +185520,7 @@
                 {
                   "id": "validation_reports",
                   "label": "validation reports",
-                  "count": 309
+                  "count": 310
                 },
                 {
                   "id": "fail_or_block_validation",
@@ -185506,7 +185535,7 @@
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 2086
+                  "count": 2088
                 },
                 {
                   "id": "traceability_gaps",
@@ -185544,21 +185573,10 @@
         "summary": "Stable continuation refs and context-boundary metadata.",
         "source_refs": [
           ".codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/tasks/TASK-091/context.json",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/builds.md",
-          ".codewiki/kb/system/trace-graph.md",
-          ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/lexicon.md",
-          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-          "src/gc/**",
-          "src/telemetry/**",
-          "src/state/**",
-          ".gitignore",
-          "tests/smoke/package-smoke.test.mjs",
-          "tests/smoke/lexicon-linter.test.mjs",
           ".codewiki/roadmap/tasks/TASK-092/context.json",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
           ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+          ".codewiki/kb/system/trace-graph.md",
           ".codewiki/kb/system/runtime.md",
           ".codewiki/kb/system/flows/decision-to-planning.md",
           "src/state/resume-context.ts",
@@ -185570,26 +185588,37 @@
           "tests/smoke/hot-context.test.mjs",
           "tests/smoke/prompt-contract.test.mjs",
           ".codewiki/roadmap/tasks/TASK-093/context.json",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md",
+          "src/telemetry/**",
           "src/build/**",
           "src/gateway/**",
+          "src/state/**",
           "src/project/templates.ts",
           "tests/smoke/graph-lenses.test.mjs",
-          "tests/smoke/source-contract.test.mjs"
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          ".codewiki/roadmap/tasks/TASK-094/context.json",
+          ".codewiki/kb/system/graph.md",
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts"
         ],
         "omitted_counts": {
-          "open_tasks": 3,
-          "source_refs": 14
+          "open_tasks": 2,
+          "source_refs": 10
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -185598,7 +185627,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 46,
+          "source_ref_count": 42,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -185612,48 +185641,49 @@
             "summary": "Read canonical source refs before semantic edits.",
             "refs": [
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-091/context.json",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
+              ".codewiki/roadmap/tasks/TASK-092/context.json",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+              ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
               ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/flows/decision-to-planning.md",
+              "src/state/resume-context.ts"
             ],
-            "omitted_ref_count": 38
+            "omitted_ref_count": 34
           }
         ],
         "data": {
           "selected_task": {
-            "id": "TASK-091",
-            "title": "Define CodeWiki hot-state retention cleanup",
+            "id": "TASK-092",
+            "title": "Add trace-aware resume handoff bootstrap",
             "status": "in_progress",
-            "priority": "medium",
-            "kind": "maintenance",
-            "summary": "Separate dogfood hot state from package source cleanup, document trace hot/cold retention and compatibility vocabulary, and purge only eligible artifacts through GC with restore evidence.",
+            "priority": "high",
+            "kind": "implementation",
+            "summary": "Make the current resume/context-boundary tooling preserve the accepted trace-primary decision handoff before deeper refactor work or session refreshes.",
             "spec_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+              ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
               ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/flows/decision-to-planning.md"
             ],
             "code_paths": [
-              "src/gc/**",
-              "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs"
+              "src/state/resume-context.ts",
+              "src/state/resume-tool.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/prompt-contract.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/smoke/codewiki-compaction.test.mjs",
+              "tests/smoke/hot-context.test.mjs",
+              "tests/smoke/prompt-contract.test.mjs"
             ],
-            "acceptance_count": 6,
+            "acceptance_count": 5,
             "non_goal_count": 3,
             "verification_count": 5,
-            "context_ref": ".codewiki/roadmap/tasks/TASK-091/context.json"
+            "context_ref": ".codewiki/roadmap/tasks/TASK-092/context.json"
           },
           "context_refs": [
-            ".codewiki/roadmap/tasks/TASK-091/context.json"
+            ".codewiki/roadmap/tasks/TASK-092/context.json"
           ],
           "context_boundary": "none"
         },
@@ -185666,21 +185696,10 @@
         "summary": "Executable task boundaries, candidate files, and blockers.",
         "source_refs": [
           ".codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/tasks/TASK-091/context.json",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/builds.md",
-          ".codewiki/kb/system/trace-graph.md",
-          ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/lexicon.md",
-          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-          "src/gc/**",
-          "src/telemetry/**",
-          "src/state/**",
-          ".gitignore",
-          "tests/smoke/package-smoke.test.mjs",
-          "tests/smoke/lexicon-linter.test.mjs",
           ".codewiki/roadmap/tasks/TASK-092/context.json",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
           ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+          ".codewiki/kb/system/trace-graph.md",
           ".codewiki/kb/system/runtime.md",
           ".codewiki/kb/system/flows/decision-to-planning.md",
           "src/state/resume-context.ts",
@@ -185692,26 +185711,37 @@
           "tests/smoke/hot-context.test.mjs",
           "tests/smoke/prompt-contract.test.mjs",
           ".codewiki/roadmap/tasks/TASK-093/context.json",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md",
+          "src/telemetry/**",
           "src/build/**",
           "src/gateway/**",
+          "src/state/**",
           "src/project/templates.ts",
           "tests/smoke/graph-lenses.test.mjs",
-          "tests/smoke/source-contract.test.mjs"
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          ".codewiki/roadmap/tasks/TASK-094/context.json",
+          ".codewiki/kb/system/graph.md",
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts"
         ],
         "omitted_counts": {
           "open_tasks": 0,
-          "source_refs": 7
+          "source_refs": 3
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -185720,7 +185750,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 39,
+          "source_ref_count": 35,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -185734,47 +185764,19 @@
             "summary": "Read canonical source refs before semantic edits.",
             "refs": [
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-091/context.json",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
+              ".codewiki/roadmap/tasks/TASK-092/context.json",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+              ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
               ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/flows/decision-to-planning.md",
+              "src/state/resume-context.ts"
             ],
-            "omitted_ref_count": 31
+            "omitted_ref_count": 27
           }
         ],
         "data": {
           "tasks": [
-            {
-              "id": "TASK-091",
-              "title": "Define CodeWiki hot-state retention cleanup",
-              "status": "in_progress",
-              "priority": "medium",
-              "kind": "maintenance",
-              "summary": "Separate dogfood hot state from package source cleanup, document trace hot/cold retention and compatibility vocabulary, and purge only eligible artifacts through GC with restore evidence.",
-              "spec_paths": [
-                ".codewiki/kb/system/file-structure.md",
-                ".codewiki/kb/system/builds.md",
-                ".codewiki/kb/system/trace-graph.md",
-                ".codewiki/kb/system/graph.md",
-                ".codewiki/kb/lexicon.md",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-              ],
-              "code_paths": [
-                "src/gc/**",
-                "src/telemetry/**",
-                "src/state/**",
-                ".gitignore",
-                "tests/smoke/package-smoke.test.mjs",
-                "tests/smoke/lexicon-linter.test.mjs"
-              ],
-              "acceptance_count": 6,
-              "non_goal_count": 3,
-              "verification_count": 5,
-              "context_ref": ".codewiki/roadmap/tasks/TASK-091/context.json"
-            },
             {
               "id": "TASK-092",
               "title": "Add trace-aware resume handoff bootstrap",
@@ -185911,14 +185913,14 @@
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -186279,20 +186281,20 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "validation_reports": 301,
-          "reconciliation_items": 108,
-          "source_refs": 3091
+          "validation_reports": 302,
+          "reconciliation_items": 104,
+          "source_refs": 3094
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -186301,7 +186303,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3123,
+          "source_ref_count": 3126,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -186323,7 +186325,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3115
+            "omitted_ref_count": 3118
           }
         ],
         "data": {
@@ -186334,6 +186336,13 @@
               "profile": "task-close",
               "verdict": "pass",
               "source": ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json"
+            },
+            {
+              "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+              "task_id": "TASK-091",
+              "profile": "task-close",
+              "verdict": "pass",
+              "source": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
             },
             {
               "path": ".codewiki/validation/2026-06-05-task-close-block-task-095-2026-06-05-implementat.json",
@@ -186376,13 +186385,6 @@
               "profile": "ship-ready",
               "verdict": "block",
               "source": ".codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json"
-            },
-            {
-              "path": ".codewiki/validation/2026-06-05-planning-pass-2026-06-05-planning-handoff-from.json",
-              "task_id": null,
-              "profile": "planning",
-              "verdict": "pass",
-              "source": ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json"
             }
           ],
           "validation_isolation": [
@@ -186617,14 +186619,14 @@
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -186670,21 +186672,10 @@
         "summary": "Scheduling readiness, stop reasons, retry blockers, and promotion hints.",
         "source_refs": [
           ".codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/tasks/TASK-091/context.json",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/builds.md",
-          ".codewiki/kb/system/trace-graph.md",
-          ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/lexicon.md",
-          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-          "src/gc/**",
-          "src/telemetry/**",
-          "src/state/**",
-          ".gitignore",
-          "tests/smoke/package-smoke.test.mjs",
-          "tests/smoke/lexicon-linter.test.mjs",
           ".codewiki/roadmap/tasks/TASK-092/context.json",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
           ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+          ".codewiki/kb/system/trace-graph.md",
           ".codewiki/kb/system/runtime.md",
           ".codewiki/kb/system/flows/decision-to-planning.md",
           "src/state/resume-context.ts",
@@ -186696,93 +186687,64 @@
           "tests/smoke/hot-context.test.mjs",
           "tests/smoke/prompt-contract.test.mjs",
           ".codewiki/roadmap/tasks/TASK-093/context.json",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md",
+          "src/telemetry/**",
           "src/build/**",
           "src/gateway/**",
+          "src/state/**",
           "src/project/templates.ts",
           "tests/smoke/graph-lenses.test.mjs",
-          "tests/smoke/source-contract.test.mjs"
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          ".codewiki/roadmap/tasks/TASK-094/context.json",
+          ".codewiki/kb/system/graph.md",
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts"
         ],
         "omitted_counts": {
           "ready_tasks": 0,
-          "source_refs": 3130
+          "source_refs": 3126
         },
         "next_action": {
-          "kind": "promote",
+          "kind": "run",
           "loop": "implementation",
-          "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-          "command": "wiki_gate profile=task-close task_id=TASK-091",
+          "summary": "TASK-092 is runnable from accepted source refs and scoped leases are available.",
+          "command": "wiki_resume_context taskId=TASK-092",
           "refs": [
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
+            ".codewiki/roadmap/tasks/TASK-092/context.json"
           ],
           "trace_refs": [
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
             ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
           ],
-          "gate_refs": [
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-            "gate:task-close"
-          ],
-          "git_refs": [
-            "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-            "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-            "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-            "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-            "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-          ],
+          "gate_refs": [],
+          "git_refs": [],
           "safe_to_schedule": true
         },
         "next_safe_action": {
-          "kind": "promote",
+          "kind": "run",
           "loop": "implementation",
-          "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-          "command": "wiki_gate profile=task-close task_id=TASK-091",
+          "summary": "TASK-092 is runnable from accepted source refs and scoped leases are available.",
+          "command": "wiki_resume_context taskId=TASK-092",
           "refs": [
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
+            ".codewiki/roadmap/tasks/TASK-092/context.json"
           ],
           "trace_refs": [
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
             ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
           ],
-          "gate_refs": [
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-            "gate:task-close"
-          ],
-          "git_refs": [
-            "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-            "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-            "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-            "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-            "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-          ],
+          "gate_refs": [],
+          "git_refs": [],
           "safe_to_schedule": true
         },
         "blockers": [],
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3162,
+          "source_ref_count": 3158,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -186796,26 +186758,25 @@
             "summary": "Read canonical source refs before semantic edits.",
             "refs": [
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-091/context.json",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
+              ".codewiki/roadmap/tasks/TASK-092/context.json",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+              ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
               ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/kb/system/flows/decision-to-planning.md",
+              "src/state/resume-context.ts"
             ],
-            "omitted_ref_count": 3154
+            "omitted_ref_count": 3150
           }
         ],
         "data": {
           "ready": true,
           "state": "runnable",
-          "selected_task_id": "TASK-091",
+          "selected_task_id": "TASK-092",
           "ready_task_ids": [
             "TASK-092",
             "TASK-093",
-            "TASK-094",
-            "TASK-091"
+            "TASK-094"
           ],
           "runnable_task_ids": [
             "TASK-092",
@@ -186823,9 +186784,7 @@
             "TASK-094"
           ],
           "retryable_task_ids": [],
-          "promotable_task_ids": [
-            "TASK-091"
-          ],
+          "promotable_task_ids": [],
           "waiting_task_ids": [],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
@@ -186835,56 +186794,6 @@
             "SPRINT-022"
           ],
           "tasks": {
-            "TASK-091": {
-              "state": "promotable",
-              "next_action": {
-                "kind": "promote",
-                "loop": "implementation",
-                "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-                "command": "wiki_gate profile=task-close task_id=TASK-091",
-                "refs": [
-                  ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-                  ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-                  ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-                  ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-                ],
-                "trace_refs": [
-                  ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-                  ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-                  ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-                  ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-                  ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-                ],
-                "gate_refs": [
-                  ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-                  ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-                  ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-                  ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-                  "gate:task-close"
-                ],
-                "git_refs": [
-                  "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-                  "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-                  "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-                  "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-                  "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-                  "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-                  "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-                ],
-                "safe_to_schedule": true
-              },
-              "blockers": [],
-              "source_refs": [
-                ".codewiki/roadmap/queue.json",
-                ".codewiki/roadmap/tasks/TASK-091/context.json",
-                ".codewiki/kb/system/file-structure.md",
-                ".codewiki/kb/system/builds.md",
-                ".codewiki/kb/system/trace-graph.md",
-                ".codewiki/kb/system/graph.md",
-                ".codewiki/kb/lexicon.md",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-              ]
-            },
             "TASK-092": {
               "state": "runnable",
               "next_action": {
@@ -187090,14 +186999,14 @@
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -187181,14 +187090,14 @@
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -187280,20 +187189,20 @@
           ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json"
         ],
         "omitted_counts": {
-          "nodes": 5628,
-          "edges": 18717,
-          "source_refs": 1334
+          "nodes": 5630,
+          "edges": 18713,
+          "source_refs": 1335
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -187302,7 +187211,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1366,
+          "source_ref_count": 1367,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -187324,7 +187233,7 @@
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
               ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
             ],
-            "omitted_ref_count": 1358
+            "omitted_ref_count": 1359
           }
         ],
         "requirement_rows": [],
@@ -195057,19 +194966,19 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 3091,
+          "source_refs": 3094,
           "validation_reports": 0
         },
         "next_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
         },
         "next_safe_action": {
           "kind": "decision",
-          "task_id": "TASK-091",
+          "task_id": "TASK-092",
           "item_id": "reconcile:lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-approved-decision-row:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "reason": "Lint error (decision-build-missing-approved-decision-row) has no open roadmap coverage; reconcile knowledge or create scoped work."
@@ -195078,7 +194987,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3123,
+          "source_ref_count": 3126,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -195100,7 +195009,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3115
+            "omitted_ref_count": 3118
           }
         ],
         "validation_reports": [
@@ -202205,6 +202114,33 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-091",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+            ],
+            "audit_evidence_refs": [
+              "alignment",
+              "file-structure",
+              "lexicon",
+              "task",
+              "generated-parity",
+              "package",
+              "security",
+              "stale-reference",
+              "changed",
+              "approved by user"
+            ],
+            "content_proof_refs": [
+              "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+              "3bd72e4b8dbdf608977375218c34aa1db964f569",
+              "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
             "verdict": "pass",
             "profile": "task-close",
@@ -207096,6 +207032,28 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+            "task_id": "TASK-091",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "validated_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "published_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+              "3bd72e4b8dbdf608977375218c34aa1db964f569",
+              "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+            ],
+            "publisher_result_refs": [
+              "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+              "3bd72e4b8dbdf608977375218c34aa1db964f569"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
             "task_id": "TASK-095",
             "verdict": "pass",
@@ -208253,6 +208211,7 @@
           "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
           "3890bd688590557a48b36315ded31e72ea1135ea",
           "3adc645e0b3f8da0d246e578b27c8c62b1feee74",
+          "3bd72e4b8dbdf608977375218c34aa1db964f569",
           "3bfdeddb1f152bcc81d80cbe187020c72def12ac",
           "3ce7c997a21fc9e2e80d82f592904a3965e315de",
           "3cf9d6ad10e3c0462bbb05a20da7c71f8c591340",
@@ -208321,6 +208280,7 @@
           "70d19220015b16e169d5290ae358b779951352be",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
           "7101ab1bab415ae27a346e2248e8aa77ed5462a2",
+          "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
           "71772daaaebca6a7dd3ec6112ce0f3f1a158af1d",
           "7285b8ed9a50b219db34949312caf684f57cf515",
           "738beb2aab20a73347fba6da868ec06518596821",
@@ -210139,45 +210099,6 @@
             ]
           },
           {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
             "id": "reconcile:lint:decision-build-missing-decision-table:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
             "source_id": "lint:decision-build-missing-decision-table:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
             "state": "drift",
@@ -211309,17 +211230,6 @@
             ]
           },
           {
-            "id": "reconcile:task:TASK-091",
-            "source_id": "task:TASK-091",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-091",
-            "reason": "TASK-091 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-092",
             "source_id": "task:TASK-092",
             "state": "drift",
@@ -212208,19 +212118,16 @@
         "TASK-023",
         "TASK-036",
         "TASK-088",
-        "TASK-091",
         "TASK-092",
         "TASK-093",
         "TASK-094"
       ],
       "open_task_ids": [
-        "TASK-091",
         "TASK-092",
         "TASK-093",
         "TASK-094"
       ],
       "in_progress_task_ids": [
-        "TASK-091",
         "TASK-092",
         "TASK-093",
         "TASK-094"
@@ -212236,7 +212143,7 @@
       ],
       "status_counts": {
         "cancelled": 4,
-        "in_progress": 4
+        "in_progress": 3
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -213134,7 +213041,6 @@
             "TASK-095"
           ],
           "open_task_ids": [
-            "TASK-091",
             "TASK-092",
             "TASK-093",
             "TASK-094"
@@ -218542,6 +218448,28 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+          "task_id": "TASK-091",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+          "validated_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+          "published_sha": "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "3bd72e4b8dbdf608977375218c34aa1db964f569",
+            "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+          ],
+          "publisher_result_refs": [
+            "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "3bd72e4b8dbdf608977375218c34aa1db964f569"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
           "task_id": "TASK-095",
           "verdict": "pass",
@@ -220776,6 +220704,7 @@
         "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
         "3890bd688590557a48b36315ded31e72ea1135ea",
         "3adc645e0b3f8da0d246e578b27c8c62b1feee74",
+        "3bd72e4b8dbdf608977375218c34aa1db964f569",
         "3bfdeddb1f152bcc81d80cbe187020c72def12ac",
         "3ce7c997a21fc9e2e80d82f592904a3965e315de",
         "3cf9d6ad10e3c0462bbb05a20da7c71f8c591340",
@@ -220844,6 +220773,7 @@
         "70d19220015b16e169d5290ae358b779951352be",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
         "7101ab1bab415ae27a346e2248e8aa77ed5462a2",
+        "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
         "71772daaaebca6a7dd3ec6112ce0f3f1a158af1d",
         "7285b8ed9a50b219db34949312caf684f57cf515",
         "738beb2aab20a73347fba6da868ec06518596821",
@@ -229580,6 +229510,33 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-091",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+          ],
+          "audit_evidence_refs": [
+            "alignment",
+            "file-structure",
+            "lexicon",
+            "task",
+            "generated-parity",
+            "package",
+            "security",
+            "stale-reference",
+            "changed",
+            "approved by user"
+          ],
+          "content_proof_refs": [
+            "712e9836cab8bdbe16907c93f9f293c9ff1e55c6",
+            "3bd72e4b8dbdf608977375218c34aa1db964f569",
+            "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json",
           "verdict": "pass",
           "profile": "task-close",
@@ -232438,13 +232395,11 @@
           "TASK-023",
           "TASK-036",
           "TASK-088",
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
         ],
         "open_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
@@ -234053,7 +234008,6 @@
             "TASK-095"
           ],
           "open_task_ids": [
-            "TASK-091",
             "TASK-092",
             "TASK-093",
             "TASK-094"
@@ -234107,9 +234061,7 @@
               "TASK-094"
             ],
             "retryable_task_ids": [],
-            "promotable_task_ids": [
-              "TASK-091"
-            ],
+            "promotable_task_ids": [],
             "waiting_task_ids": [],
             "blocked_task_ids": [],
             "ambiguous_task_ids": [],
@@ -234129,30 +234081,10 @@
             },
             "source_refs": [
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-091/context.json",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
-              ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-              "src/gc/**",
-              "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs",
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
               ".codewiki/roadmap/tasks/TASK-092/context.json",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
               ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+              ".codewiki/kb/system/trace-graph.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/flows/decision-to-planning.md",
               "src/state/resume-context.ts",
@@ -234163,13 +234095,22 @@
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/hot-context.test.mjs",
               "tests/smoke/prompt-contract.test.mjs",
+              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
               ".codewiki/roadmap/tasks/TASK-093/context.json",
+              ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/lexicon.md",
+              "src/telemetry/**",
               "src/build/**",
               "src/gateway/**",
+              "src/state/**",
               "src/project/templates.ts",
               "tests/smoke/graph-lenses.test.mjs",
               "tests/smoke/source-contract.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               ".codewiki/roadmap/tasks/TASK-094/context.json",
+              ".codewiki/kb/system/graph.md",
               "src/state/graph.ts",
               "src/state/builders.ts",
               "src/state/reader.ts",
@@ -234436,227 +234377,6 @@
           ],
           "automation_readiness": null
         },
-        "TASK-091": {
-          "kind": "task",
-          "id": "TASK-091",
-          "task_ids": [
-            "TASK-091"
-          ],
-          "open_task_ids": [
-            "TASK-091"
-          ],
-          "sprint_ids": [
-            "SPRINT-022"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/trace-graph.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/lexicon.md",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-          ],
-          "code_paths": [
-            "src/gc/**",
-            "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs"
-          ],
-          "automation_readiness": {
-            "version": 1,
-            "contract_version": 1,
-            "kind": "task",
-            "task_id": "TASK-091",
-            "title": "Define CodeWiki hot-state retention cleanup",
-            "status": "in_progress",
-            "state": "promotable",
-            "runnable": false,
-            "retryable": false,
-            "promotable": true,
-            "safe_to_schedule": true,
-            "generated_at": "2026-06-05T10:27:43.189Z",
-            "expires_at": "2026-06-05T12:27:43.189Z",
-            "sprint_ids": [
-              "SPRINT-022"
-            ],
-            "source_refs": [
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-091/context.json",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
-              ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-              "src/gc/**",
-              "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs",
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-            ],
-            "candidate_files": {
-              "spec_paths": [
-                ".codewiki/kb/system/file-structure.md",
-                ".codewiki/kb/system/builds.md",
-                ".codewiki/kb/system/trace-graph.md",
-                ".codewiki/kb/system/graph.md",
-                ".codewiki/kb/lexicon.md",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-              ],
-              "code_paths": [
-                "src/gc/**",
-                "src/telemetry/**",
-                "src/state/**",
-                ".gitignore",
-                "tests/smoke/package-smoke.test.mjs",
-                "tests/smoke/lexicon-linter.test.mjs"
-              ],
-              "declared": true
-            },
-            "upstream": {
-              "accepted_planning_refs": [
-                ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-                ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
-              ],
-              "accepted_decision_refs": [
-                ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-              ],
-              "approved_exemption_refs": []
-            },
-            "gate_policy": {
-              "required_checks": [
-                "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
-                "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-                "wiki_audit profiles=file-structure,lexicon",
-                "wiki_gc dry-run with archive refs when purge is requested",
-                "npm run typecheck"
-              ],
-              "required_audits": [
-                "alignment"
-              ],
-              "next_loop": "implementation",
-              "next_gate": "task-close",
-              "risk": "medium",
-              "risk_approval_refs": [
-                ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-              ]
-            },
-            "lease_policy": {
-              "requires_scoped_write_lease": true,
-              "worktree_strategy": "role-worktree",
-              "active_lease_ids": [],
-              "waiter_ids": []
-            },
-            "context_boundary": {
-              "required": true,
-              "available": true,
-              "context_path": ".codewiki/roadmap/tasks/TASK-091/context.json",
-              "source_backed": true
-            },
-            "build_refs": {
-              "decision": [
-                ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-              ],
-              "planning": [
-                ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-                ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
-              ],
-              "implementation": [
-                ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-              ]
-            },
-            "validation_refs": {
-              "pass": [
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-                ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json"
-              ],
-              "fail": [],
-              "block": [
-                ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-              ]
-            },
-            "trace_refs": [
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-            ],
-            "gate_refs": [
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-            ],
-            "git_refs": [
-              "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-              "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-              "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-              "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-              "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-              "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-              "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-            ],
-            "model_policy": {
-              "risk": "medium",
-              "approval_refs": [],
-              "notes": []
-            },
-            "blockers": [],
-            "next_action": {
-              "kind": "promote",
-              "loop": "implementation",
-              "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-              "command": "wiki_gate profile=task-close task_id=TASK-091",
-              "refs": [
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-                ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-                ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-              ],
-              "trace_refs": [
-                ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-                ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-                ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-                ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-                ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-              ],
-              "gate_refs": [
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-                ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-                ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-                ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-                "gate:task-close"
-              ],
-              "git_refs": [
-                "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-                "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-                "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-                "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-                "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-                "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-                "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-              ],
-              "safe_to_schedule": true
-            }
-          }
-        },
         "TASK-092": {
           "kind": "task",
           "id": "TASK-092",
@@ -234698,8 +234418,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-05T10:27:43.189Z",
-            "expires_at": "2026-06-05T12:27:43.189Z",
+            "generated_at": "2026-06-05T10:29:00.996Z",
+            "expires_at": "2026-06-05T12:29:00.996Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -234866,8 +234586,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-05T10:27:43.189Z",
-            "expires_at": "2026-06-05T12:27:43.189Z",
+            "generated_at": "2026-06-05T10:29:00.996Z",
+            "expires_at": "2026-06-05T12:29:00.996Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -235034,8 +234754,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-05T10:27:43.189Z",
-            "expires_at": "2026-06-05T12:27:43.189Z",
+            "generated_at": "2026-06-05T10:29:00.996Z",
+            "expires_at": "2026-06-05T12:29:00.996Z",
             "sprint_ids": [
               "SPRINT-022"
             ],
@@ -235165,202 +234885,10 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-05T10:27:43.189Z",
-      "expires_at": "2026-06-05T12:27:43.189Z",
+      "generated_at": "2026-06-05T10:29:00.996Z",
+      "expires_at": "2026-06-05T12:29:00.996Z",
       "state": "runnable",
       "tasks": {
-        "TASK-091": {
-          "version": 1,
-          "contract_version": 1,
-          "kind": "task",
-          "task_id": "TASK-091",
-          "title": "Define CodeWiki hot-state retention cleanup",
-          "status": "in_progress",
-          "state": "promotable",
-          "runnable": false,
-          "retryable": false,
-          "promotable": true,
-          "safe_to_schedule": true,
-          "generated_at": "2026-06-05T10:27:43.189Z",
-          "expires_at": "2026-06-05T12:27:43.189Z",
-          "sprint_ids": [
-            "SPRINT-022"
-          ],
-          "source_refs": [
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-091/context.json",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/trace-graph.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/lexicon.md",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-            "src/gc/**",
-            "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs",
-            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-          ],
-          "candidate_files": {
-            "spec_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/builds.md",
-              ".codewiki/kb/system/trace-graph.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/lexicon.md",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-            ],
-            "code_paths": [
-              "src/gc/**",
-              "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs"
-            ],
-            "declared": true
-          },
-          "upstream": {
-            "accepted_planning_refs": [
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
-            ],
-            "accepted_decision_refs": [
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-            ],
-            "approved_exemption_refs": []
-          },
-          "gate_policy": {
-            "required_checks": [
-              "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
-              "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-              "wiki_audit profiles=file-structure,lexicon",
-              "wiki_gc dry-run with archive refs when purge is requested",
-              "npm run typecheck"
-            ],
-            "required_audits": [
-              "alignment"
-            ],
-            "next_loop": "implementation",
-            "next_gate": "task-close",
-            "risk": "medium",
-            "risk_approval_refs": [
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-            ]
-          },
-          "lease_policy": {
-            "requires_scoped_write_lease": true,
-            "worktree_strategy": "role-worktree",
-            "active_lease_ids": [],
-            "waiter_ids": []
-          },
-          "context_boundary": {
-            "required": true,
-            "available": true,
-            "context_path": ".codewiki/roadmap/tasks/TASK-091/context.json",
-            "source_backed": true
-          },
-          "build_refs": {
-            "decision": [
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
-            ],
-            "planning": [
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
-            ],
-            "implementation": [
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-            ]
-          },
-          "validation_refs": {
-            "pass": [
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json"
-            ],
-            "fail": [],
-            "block": [
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-            ]
-          },
-          "trace_refs": [
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-          ],
-          "gate_refs": [
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-          ],
-          "git_refs": [
-            "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-            "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-            "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-            "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-            "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-            "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-          ],
-          "model_policy": {
-            "risk": "medium",
-            "approval_refs": [],
-            "notes": []
-          },
-          "blockers": [],
-          "next_action": {
-            "kind": "promote",
-            "loop": "implementation",
-            "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-            "command": "wiki_gate profile=task-close task_id=TASK-091",
-            "refs": [
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
-            ],
-            "trace_refs": [
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-            ],
-            "gate_refs": [
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-              ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-              ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-              "gate:task-close"
-            ],
-            "git_refs": [
-              "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-              "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-              "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-              "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-              "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-              "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-              "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-            ],
-            "safe_to_schedule": true
-          }
-        },
         "TASK-092": {
           "version": 1,
           "contract_version": 1,
@@ -235373,8 +234901,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-05T10:27:43.189Z",
-          "expires_at": "2026-06-05T12:27:43.189Z",
+          "generated_at": "2026-06-05T10:29:00.996Z",
+          "expires_at": "2026-06-05T12:29:00.996Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -235511,8 +235039,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-05T10:27:43.189Z",
-          "expires_at": "2026-06-05T12:27:43.189Z",
+          "generated_at": "2026-06-05T10:29:00.996Z",
+          "expires_at": "2026-06-05T12:29:00.996Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -235649,8 +235177,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-05T10:27:43.189Z",
-          "expires_at": "2026-06-05T12:27:43.189Z",
+          "generated_at": "2026-06-05T10:29:00.996Z",
+          "expires_at": "2026-06-05T12:29:00.996Z",
           "sprint_ids": [
             "SPRINT-022"
           ],
@@ -236486,9 +236014,7 @@
             "TASK-094"
           ],
           "retryable_task_ids": [],
-          "promotable_task_ids": [
-            "TASK-091"
-          ],
+          "promotable_task_ids": [],
           "waiting_task_ids": [],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
@@ -236508,30 +236034,10 @@
           },
           "source_refs": [
             ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-091/context.json",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/trace-graph.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/lexicon.md",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-            "src/gc/**",
-            "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs",
-            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-            ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-            ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
             ".codewiki/roadmap/tasks/TASK-092/context.json",
+            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
             ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+            ".codewiki/kb/system/trace-graph.md",
             ".codewiki/kb/system/runtime.md",
             ".codewiki/kb/system/flows/decision-to-planning.md",
             "src/state/resume-context.ts",
@@ -236542,13 +236048,22 @@
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/hot-context.test.mjs",
             "tests/smoke/prompt-contract.test.mjs",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
             ".codewiki/roadmap/tasks/TASK-093/context.json",
+            ".codewiki/kb/system/builds.md",
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/lexicon.md",
+            "src/telemetry/**",
             "src/build/**",
             "src/gateway/**",
+            "src/state/**",
             "src/project/templates.ts",
             "tests/smoke/graph-lenses.test.mjs",
             "tests/smoke/source-contract.test.mjs",
+            "tests/smoke/lexicon-linter.test.mjs",
             ".codewiki/roadmap/tasks/TASK-094/context.json",
+            ".codewiki/kb/system/graph.md",
             "src/state/graph.ts",
             "src/state/builders.ts",
             "src/state/reader.ts",
@@ -236564,76 +236079,34 @@
         "TASK-094"
       ],
       "retryable_task_ids": [],
-      "promotable_task_ids": [
-        "TASK-091"
-      ],
+      "promotable_task_ids": [],
       "waiting_task_ids": [],
       "blocked_task_ids": [],
       "ambiguous_task_ids": [],
-      "selected_task_id": "TASK-091",
+      "selected_task_id": "TASK-092",
       "stop_reasons": [],
       "next_action": {
-        "kind": "promote",
+        "kind": "run",
         "loop": "implementation",
-        "summary": "TASK-091 has validation evidence and can be promoted through task-close gates.",
-        "command": "wiki_gate profile=task-close task_id=TASK-091",
+        "summary": "TASK-092 is runnable from accepted source refs and scoped leases are available.",
+        "command": "wiki_resume_context taskId=TASK-092",
         "refs": [
-          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-          ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-          ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
+          ".codewiki/roadmap/tasks/TASK-092/context.json"
         ],
         "trace_refs": [
-          ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
           ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-          ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-          ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-          ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
+          ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
         ],
-        "gate_refs": [
-          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-          ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-          ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
-          "gate:task-close"
-        ],
-        "git_refs": [
-          "worktree_digest:de6882ec1d5effbdbd5e3ef1f51fe93e8e77a89931c65f38631d016ffe75fe8f",
-          "package_digest:sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
-          "worktree_digest:5caf67aef225f3d0738de97b73f02a36906dff9a5bc37abacb3930d06bbcd275",
-          "worktree_digest:89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
-          "head_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-          "validated_sha:fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
-          "git_tree:b444f689effc21efb5e440aa39dec612a3c59386"
-        ],
+        "gate_refs": [],
+        "git_refs": [],
         "safe_to_schedule": true
       },
       "source_refs": [
         ".codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/tasks/TASK-091/context.json",
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/builds.md",
-        ".codewiki/kb/system/trace-graph.md",
-        ".codewiki/kb/system/graph.md",
-        ".codewiki/kb/lexicon.md",
-        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
-        "src/gc/**",
-        "src/telemetry/**",
-        "src/state/**",
-        ".gitignore",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/lexicon-linter.test.mjs",
-        ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
-        ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
-        ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-        ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
-        ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
-        ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
-        ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
-        ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json",
         ".codewiki/roadmap/tasks/TASK-092/context.json",
+        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
         ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
+        ".codewiki/kb/system/trace-graph.md",
         ".codewiki/kb/system/runtime.md",
         ".codewiki/kb/system/flows/decision-to-planning.md",
         "src/state/resume-context.ts",
@@ -236644,13 +236117,22 @@
         "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/hot-context.test.mjs",
         "tests/smoke/prompt-contract.test.mjs",
+        ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
         ".codewiki/roadmap/tasks/TASK-093/context.json",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/lexicon.md",
+        "src/telemetry/**",
         "src/build/**",
         "src/gateway/**",
+        "src/state/**",
         "src/project/templates.ts",
         "tests/smoke/graph-lenses.test.mjs",
         "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs",
         ".codewiki/roadmap/tasks/TASK-094/context.json",
+        ".codewiki/kb/system/graph.md",
         "src/state/graph.ts",
         "src/state/builders.ts",
         "src/state/reader.ts",
@@ -236699,7 +236181,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-091",
             "TASK-092",
             "TASK-093",
             "TASK-094"
@@ -236721,8 +236202,7 @@
             ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-artifactref.json",
             ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
             ".codewiki/validation/2026-06-03-decision-block.json",
-            ".codewiki/validation/2026-06-04-decision-block-2026-06-04-accepted-backend-only.json",
-            ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
+            ".codewiki/validation/2026-06-04-decision-block-2026-06-04-accepted-backend-only.json"
           ],
           "claim_ids": [],
           "claim_wait_ids": []
@@ -237197,6 +236677,7 @@
             ".codewiki/validation/2026-06-05-implementation-pass-task-095-2026-06-05-task-095.json",
             ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
             ".codewiki/validation/2026-06-05-ship-ready-pass-task-095-2026-06-05-task-095-gat.json",
+            ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
             ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json"
           ]
         }
@@ -239033,45 +238514,6 @@
           ]
         },
         {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
           "id": "reconcile:lint:decision-build-missing-decision-table:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "source_id": "lint:decision-build-missing-decision-table:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           "state": "drift",
@@ -240203,17 +239645,6 @@
           ]
         },
         {
-          "id": "reconcile:task:TASK-091",
-          "source_id": "task:TASK-091",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-091",
-          "reason": "TASK-091 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-092",
           "source_id": "task:TASK-092",
           "state": "drift",
@@ -240248,8 +239679,8 @@
         }
       ],
       "counts_by_loop": {
-        "decision": 104,
-        "implementation": 4
+        "decision": 101,
+        "implementation": 3
       },
       "next_action": {
         "loop": "decision",
@@ -240284,13 +239715,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-05T10:27:42.986Z",
+      "generated_at": "2026-06-05T10:29:00.797Z",
       "counts": {
         "large-doc": 2,
         "missing-code-path": 3,
         "missing-related-docs": 3,
         "diagram-ref-target-missing": 5,
-        "roadmap-missing-code-path": 8,
+        "roadmap-missing-code-path": 5,
         "decision-build-missing-decision-table": 44,
         "decision-build-missing-approved-decision-row": 44,
         "implementation-build-missing-acceptance": 1
@@ -240373,24 +239804,6 @@
           "kind": "diagram-ref-target-missing",
           "path": ".codewiki/kb/system/validation-gateway.md",
           "message": "diagram_refs entry does not match any system diagram node: key-flow:implementation_gate"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-091 references missing code path: src/gc/**"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-091 references missing code path: src/telemetry/**"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-091 references missing code path: src/state/**"
         },
         {
           "severity": "warning",
@@ -240960,27 +240373,27 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-05T10:27:43Z",
+      "generated_at": "2026-06-05T10:29:01Z",
       "health": {
         "color": "red",
         "errors": 88,
-        "warnings": 22,
-        "total_issues": 110
+        "warnings": 19,
+        "total_issues": 107
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 8,
-        "open_count": 4,
+        "task_count": 7,
+        "open_count": 3,
         "sprint_count": 22,
         "active_sprint_count": 2,
         "status_counts": {
           "cancelled": 4,
-          "in_progress": 4
+          "in_progress": 3
         },
         "priority_counts": {
-          "medium": 2,
+          "medium": 1,
           "high": 6
         }
       },
@@ -240990,19 +240403,16 @@
           "TASK-023",
           "TASK-036",
           "TASK-088",
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
         ],
         "open_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
         ],
         "executable_open_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
@@ -241904,7 +241314,6 @@
               "TASK-095"
             ],
             "open_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -241940,13 +241349,11 @@
           }
         ],
         "in_progress_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
         ],
         "executable_in_progress_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
@@ -241962,7 +241369,6 @@
           "TASK-088"
         ],
         "recent_task_ids": [
-          "TASK-091",
           "TASK-093",
           "TASK-092",
           "TASK-094",
@@ -242663,72 +242069,6 @@
             "updated_at": ""
           }
         },
-        "TASK-091": {
-          "id": "TASK-091",
-          "title": "Define CodeWiki hot-state retention cleanup",
-          "status": "in_progress",
-          "priority": "medium",
-          "kind": "maintenance",
-          "change_type": "system",
-          "summary": "Separate dogfood hot state from package source cleanup, document trace hot/cold retention and compatibility vocabulary, and purge only eligible artifacts through GC with restore evidence.",
-          "labels": [
-            "hot-state-retention",
-            "gc-cleanup",
-            "scratch-paths",
-            "trace-catalog",
-            "lexicon-cleanup",
-            "compatibility-vocabulary"
-          ],
-          "goal": {
-            "outcome": "Dogfood and local state retention rules are clear for lifecycle traces, trace catalog, generated graph/cache, runtime state, scratch paths, and compatibility vocabulary.",
-            "acceptance": [
-              "Docs/file-structure map distinguish package source from `.codewiki/**` dogfood truth, hot traces, cold trace catalog, generated views/cache, runtime/session scratch, legacy build/gate evidence, `.pi`, `.vscode`, and `.tmp-worktrees`.",
-              "Hot/cold telemetry retention states when a trace remains as full JSON and when it may be cataloged and cold-archived through Git restore refs.",
-              "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
-              "Post-close GC dry-run identifies eligible tracked/runtime artifacts; any purge writes restore ledger with archive commit/tree proof or records deferral/block reason.",
-              "No gate/build evidence required for open/current policy is deleted.",
-              "Lexicon linter either passes for `proof`/`checks`/`build`/`validation` compatibility terms or records explicit deletion-triggered deferrals."
-            ],
-            "non_goals": [
-              "Do not implement the lifecycle trace writer itself if TASK-093 has not landed.",
-              "Do not purge `.codewiki/validation/**` or `.codewiki/builds/**` evidence needed by active migration tasks.",
-              "Do not remove local scratch folders without Git/worktree/lease safety checks."
-            ],
-            "verification": [
-              "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
-              "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-              "wiki_audit profiles=file-structure,lexicon",
-              "wiki_gc dry-run with archive refs when purge is requested",
-              "npm run typecheck"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/trace-graph.md",
-            ".codewiki/kb/system/graph.md",
-            ".codewiki/kb/lexicon.md",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
-          ],
-          "code_paths": [
-            "src/gc/**",
-            "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs"
-          ],
-          "updated": "2026-06-05T07:24:51Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-091/context.json",
-          "loop": {
-            "updated_at": ""
-          }
-        },
         "TASK-092": {
           "id": "TASK-092",
           "title": "Add trace-aware resume handoff bootstrap",
@@ -242928,7 +242268,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-05T10:27:43Z",
+      "generated_at": "2026-06-05T10:29:01Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -242937,8 +242277,8 @@
       "health": {
         "color": "red",
         "errors": 88,
-        "warnings": 22,
-        "total_issues": 110
+        "warnings": 19,
+        "total_issues": 107
       },
       "summary": {
         "total_specs": 40,
@@ -242948,8 +242288,8 @@
         "untracked_specs": 6,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 8,
-        "open_task_count": 4,
+        "task_count": 7,
+        "open_task_count": 3,
         "done_task_count": 0,
         "file_structure_actionable_drift": 60,
         "file_structure_approved_migration_deltas": 7
@@ -242964,7 +242304,7 @@
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 8,
+          "total": 7,
           "percent": 0
         },
         "spec_mapping": {
@@ -243003,7 +242343,6 @@
           ".codewiki/kb/system/runtime.md"
         ],
         "open_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
@@ -243083,7 +242422,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -243105,8 +242443,7 @@
               ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-artifactref.json",
               ".codewiki/validation/2026-06-03-decision-block-2026-06-03-accepted-core-codewik.json",
               ".codewiki/validation/2026-06-03-decision-block.json",
-              ".codewiki/validation/2026-06-04-decision-block-2026-06-04-accepted-backend-only.json",
-              ".codewiki/validation/2026-06-05-implementation-block-task-091-2026-06-05-task-09.json"
+              ".codewiki/validation/2026-06-04-decision-block-2026-06-04-accepted-backend-only.json"
             ],
             "claim_ids": [],
             "claim_wait_ids": []
@@ -243581,6 +242918,7 @@
               ".codewiki/validation/2026-06-05-implementation-pass-task-095-2026-06-05-task-095.json",
               ".codewiki/validation/2026-06-05-ship-ready-pass-task-091-2026-06-05-task-091-hot.json",
               ".codewiki/validation/2026-06-05-ship-ready-pass-task-095-2026-06-05-task-095-gat.json",
+              ".codewiki/validation/2026-06-05-task-close-pass-task-091-2026-06-05-task-091-hot.json",
               ".codewiki/validation/2026-06-05-task-close-pass-task-095-2026-06-05-task-095-gat.json"
             ]
           }
@@ -244248,16 +243586,13 @@
             "src/audit/**",
             "src/build/",
             "src/build/**",
-            "src/gc/**",
             "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs",
             "src/gateway/**",
+            "src/state/**",
             "src/project/templates.ts",
             "tests/smoke/graph-lenses.test.mjs",
             "tests/smoke/source-contract.test.mjs",
+            "tests/smoke/lexicon-linter.test.mjs",
             "src/domain/shared/types.ts",
             "src/domain/shared/session.ts",
             "src/application/builds.ts",
@@ -244290,6 +243625,7 @@
             ".codewiki/kb/system/trace-graph.md",
             ".codewiki/kb/system/graph.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".gitignore",
             "src/checks/lexicon.ts",
             "src/adapters/pi/tools/ports.ts"
           ],
@@ -244300,19 +243636,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-091",
             "TASK-093"
           ],
           "primary_task": {
-            "id": "TASK-091",
+            "id": "TASK-093",
             "status": "in_progress",
-            "title": "Define CodeWiki hot-state retention cleanup"
+            "title": "Introduce lifecycle trace schema and cold catalog model"
           },
           "revision": {
             "digest": "a6d6390579e52f6e2c6725297cdb39375dad9ddc51e76567d8e4cbd3c539ebf8",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-091"
+          "note": "tracked by TASK-093"
         },
         {
           "path": ".codewiki/kb/system/builds.md",
@@ -244363,9 +243698,9 @@
             "tests/smoke/agency-auto-pickup.test.mjs",
             "src/gc/**",
             ".gitignore",
-            "tests/smoke/lexicon-linter.test.mjs",
             "src/project/templates.ts",
             "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/lexicon-linter.test.mjs",
             "src/domain/shared/types.ts",
             "src/domain/shared/session.ts",
             "src/application/builds.ts",
@@ -244457,19 +243792,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-091",
             "TASK-093"
           ],
           "primary_task": {
-            "id": "TASK-091",
+            "id": "TASK-093",
             "status": "in_progress",
-            "title": "Define CodeWiki hot-state retention cleanup"
+            "title": "Introduce lifecycle trace schema and cold catalog model"
           },
           "revision": {
             "digest": "c2ec4ba714c449dcd1a6026db16ac9d8a1e5f52068f7ceb3fab6fa11085492d4",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-091"
+          "note": "tracked by TASK-093"
         },
         {
           "path": ".codewiki/kb/system/file-structure.md",
@@ -244830,19 +244164,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-091",
             "TASK-093"
           ],
           "primary_task": {
-            "id": "TASK-091",
+            "id": "TASK-093",
             "status": "in_progress",
-            "title": "Define CodeWiki hot-state retention cleanup"
+            "title": "Introduce lifecycle trace schema and cold catalog model"
           },
           "revision": {
             "digest": "65f1ef56044290a41b70e541242cfa8e3f51a88b6dad8cccc43ff3130bb95799",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-091"
+          "note": "tracked by TASK-093"
         },
         {
           "path": ".codewiki/kb/system/flows/decision-to-planning.md",
@@ -245020,7 +244353,6 @@
             "tests/smoke/agency-auto-pickup.test.mjs",
             "src/gc/**",
             ".gitignore",
-            "tests/smoke/lexicon-linter.test.mjs",
             "src/state/graph/**",
             "src/domain/audit/types.ts",
             "src/application/tools/audit.ts",
@@ -245063,7 +244395,8 @@
             ".codewiki/kb/system/trace-graph.md",
             ".codewiki/kb/lexicon.md",
             "src/checks/lexicon.ts",
-            "src/adapters/pi/tools/ports.ts"
+            "src/adapters/pi/tools/ports.ts",
+            "tests/smoke/lexicon-linter.test.mjs"
           ],
           "code_area": ".codewiki, src +8 more",
           "issue_counts": {
@@ -245072,19 +244405,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-091",
             "TASK-094"
           ],
           "primary_task": {
-            "id": "TASK-091",
+            "id": "TASK-094",
             "status": "in_progress",
-            "title": "Define CodeWiki hot-state retention cleanup"
+            "title": "Project lifecycle traces into graph views"
           },
           "revision": {
             "digest": "d025c23a6bb17e6efb714e1174246fbb184628c40e0146406575e03a4295eb9f",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-091"
+          "note": "tracked by TASK-094"
         },
         {
           "path": ".codewiki/kb/system/runtime.md",
@@ -245222,12 +244554,6 @@
           "drift_status": "tracked",
           "code_paths": [
             ".codewiki/kb/**",
-            "src/gc/**",
-            "src/telemetry/**",
-            "src/state/**",
-            ".gitignore",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/smoke/lexicon-linter.test.mjs",
             "src/state/resume-context.ts",
             "src/state/resume-tool.ts",
             "src/adapters/pi/commands/resume.ts",
@@ -245236,11 +244562,14 @@
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/hot-context.test.mjs",
             "tests/smoke/prompt-contract.test.mjs",
+            "src/telemetry/**",
             "src/build/**",
             "src/gateway/**",
+            "src/state/**",
             "src/project/templates.ts",
             "tests/smoke/graph-lenses.test.mjs",
             "tests/smoke/source-contract.test.mjs",
+            "tests/smoke/lexicon-linter.test.mjs",
             "src/state/graph.ts",
             "src/state/builders.ts",
             "src/state/reader.ts",
@@ -245252,6 +244581,7 @@
             ".codewiki/kb/system/graph.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
             ".codewiki/kb/lexicon.md",
+            ".gitignore",
             "src/checks/lexicon.ts",
             "src/adapters/pi/tools/ports.ts"
           ],
@@ -245262,21 +244592,20 @@
             "total": 2
           },
           "related_task_ids": [
-            "TASK-091",
             "TASK-092",
             "TASK-093",
             "TASK-094"
           ],
           "primary_task": {
-            "id": "TASK-091",
+            "id": "TASK-092",
             "status": "in_progress",
-            "title": "Define CodeWiki hot-state retention cleanup"
+            "title": "Add trace-aware resume handoff bootstrap"
           },
           "revision": {
             "digest": "42d7175988cd2b075d7bd3a6ee2eae566e82ee037ee38ee29cc45ebbe5422657",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-091"
+          "note": "tracked by TASK-092"
         },
         {
           "path": ".codewiki/kb/product/overview.md",
@@ -248398,7 +247727,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-05T10:27:43Z",
+        "generated_at": "2026-06-05T10:29:01Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -248453,10 +247782,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-05T10:27:43Z",
+            "checked_at": "2026-06-05T10:29:01Z",
             "revision": {
               "git": {
-                "head": "fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
+                "head": "80fcee28ed210ebd22bde7040508c3d3222e52d3",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -248528,7 +247857,7 @@
                   ".codewiki/kb/system/trace-graph.md": "e9abd4bbf0e5685a331eb11dc2baa177140c0f00",
                   ".codewiki/kb/system/validation-gateway.md": "5e507b9a7d6757f01c8d0c718fc2a7f635bdb4da",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
-                  ".codewiki/roadmap/queue.json": "893ab9146ab557647482f26ec24c9e9402745157",
+                  ".codewiki/roadmap/queue.json": "732ebf25af0658a912d2990ffde2d76b1478a8fc",
                   ".gitignore": "61a0fd3d3015e18b2273d3d6a48cf0f9d841a405",
                   ".pi-lens": "",
                   ".pi/.gitignore": "6e22dd1a5be384448581caa051c73ea6e55d7d7b",
@@ -248713,14 +248042,14 @@
                 }
               },
               "spec_digest": "c2b878f18713bad17306362bb18ef70336f501d704e154c039d462052a6e8d45",
-              "task_digest": "7e1d4f5d1c07c75b5a16cc387d60aa9bdeb0e3d59effc649676fe855d543da44",
-              "code_digest": "dd4edea635e6b97cc2ffefb73c684d14db2dfb9f67e28edd8245d5d52b47f477",
-              "digest": "59ca30c71c9306120f246233254021d3e209e6e3cd072093901a04d97d1e77a5"
+              "task_digest": "3d27a2befed7cb21e06a566c39c5b5f280f54a0c4b87eb8d46355c4fff79e8ff",
+              "code_digest": "3459d91b02bcf8689aa23ec92f7a51c4a1f04f37eb7e69547a0bb1e897aa48f3",
+              "digest": "ad45175a89b0cce7e39a7ecb85298343ba7167df2678b809453511b9ec05ed23"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-05T10:27:43Z",
+              "checked_at": "2026-06-05T10:29:01Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -248934,8 +248263,8 @@
               "tests/smoke/agency-auto-pickup.test.mjs",
               "src/gc/**",
               ".gitignore",
-              "tests/smoke/lexicon-linter.test.mjs",
               "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/domain/shared/types.ts",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
@@ -249209,7 +248538,6 @@
             ],
             "code_area": ".codewiki, src +17 more",
             "open_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -249256,10 +248584,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-05T10:27:43Z",
+            "checked_at": "2026-06-05T10:29:01Z",
             "revision": {
               "git": {
-                "head": "fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
+                "head": "80fcee28ed210ebd22bde7040508c3d3222e52d3",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -249319,7 +248647,7 @@
                   ".codewiki/kb/system/trace-graph.md": "e9abd4bbf0e5685a331eb11dc2baa177140c0f00",
                   ".codewiki/kb/system/validation-gateway.md": "5e507b9a7d6757f01c8d0c718fc2a7f635bdb4da",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
-                  ".codewiki/roadmap/queue.json": "893ab9146ab557647482f26ec24c9e9402745157",
+                  ".codewiki/roadmap/queue.json": "732ebf25af0658a912d2990ffde2d76b1478a8fc",
                   ".gitignore": "61a0fd3d3015e18b2273d3d6a48cf0f9d841a405",
                   ".pi-lens": "",
                   ".pi/.gitignore": "6e22dd1a5be384448581caa051c73ea6e55d7d7b",
@@ -249500,14 +248828,14 @@
                 }
               },
               "spec_digest": "b87c596a1dc3f2f3689ad3fa358467d43aa93546fbc3d2306e98fa2f5cd724fe",
-              "task_digest": "7e1d4f5d1c07c75b5a16cc387d60aa9bdeb0e3d59effc649676fe855d543da44",
-              "code_digest": "dd4edea635e6b97cc2ffefb73c684d14db2dfb9f67e28edd8245d5d52b47f477",
-              "digest": "18f6a35fc21ea6b6fdc0f41199c7af9fbaef7fe990475bed9e49f4cd0026c028"
+              "task_digest": "3d27a2befed7cb21e06a566c39c5b5f280f54a0c4b87eb8d46355c4fff79e8ff",
+              "code_digest": "3459d91b02bcf8689aa23ec92f7a51c4a1f04f37eb7e69547a0bb1e897aa48f3",
+              "digest": "7bbede691f238a4aba7151310b5f827dd3cc0cd83c1ea3356d92d48dc77d8c90"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-05T10:27:43Z",
+              "checked_at": "2026-06-05T10:29:01Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -249599,9 +248927,9 @@
               "tests/smoke/agency-auto-pickup.test.mjs",
               "src/gc/**",
               ".gitignore",
-              "tests/smoke/lexicon-linter.test.mjs",
               "src/project/templates.ts",
               "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/domain/shared/types.ts",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
@@ -249972,7 +249300,6 @@
             ],
             "code_area": ".codewiki, src +17 more",
             "open_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -250015,10 +249342,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-05T10:27:43Z",
+            "checked_at": "2026-06-05T10:29:01Z",
             "revision": {
               "git": {
-                "head": "fd0ee3d2b1bb04b0fdc114bef1a22eedf5a3d3a4",
+                "head": "80fcee28ed210ebd22bde7040508c3d3222e52d3",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -250090,7 +249417,7 @@
                   ".codewiki/kb/system/trace-graph.md": "e9abd4bbf0e5685a331eb11dc2baa177140c0f00",
                   ".codewiki/kb/system/validation-gateway.md": "5e507b9a7d6757f01c8d0c718fc2a7f635bdb4da",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
-                  ".codewiki/roadmap/queue.json": "893ab9146ab557647482f26ec24c9e9402745157",
+                  ".codewiki/roadmap/queue.json": "732ebf25af0658a912d2990ffde2d76b1478a8fc",
                   ".gitignore": "61a0fd3d3015e18b2273d3d6a48cf0f9d841a405",
                   ".pi-lens": "",
                   ".pi/.gitignore": "6e22dd1a5be384448581caa051c73ea6e55d7d7b",
@@ -250275,14 +249602,14 @@
                 }
               },
               "spec_digest": "c2b878f18713bad17306362bb18ef70336f501d704e154c039d462052a6e8d45",
-              "task_digest": "7e1d4f5d1c07c75b5a16cc387d60aa9bdeb0e3d59effc649676fe855d543da44",
-              "code_digest": "dd4edea635e6b97cc2ffefb73c684d14db2dfb9f67e28edd8245d5d52b47f477",
-              "digest": "59ca30c71c9306120f246233254021d3e209e6e3cd072093901a04d97d1e77a5"
+              "task_digest": "3d27a2befed7cb21e06a566c39c5b5f280f54a0c4b87eb8d46355c4fff79e8ff",
+              "code_digest": "3459d91b02bcf8689aa23ec92f7a51c4a1f04f37eb7e69547a0bb1e897aa48f3",
+              "digest": "ad45175a89b0cce7e39a7ecb85298343ba7167df2678b809453511b9ec05ed23"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-05T10:27:43Z",
+              "checked_at": "2026-06-05T10:29:01Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -250496,8 +249823,8 @@
               "tests/smoke/agency-auto-pickup.test.mjs",
               "src/gc/**",
               ".gitignore",
-              "tests/smoke/lexicon-linter.test.mjs",
               "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/domain/shared/types.ts",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
@@ -250771,7 +250098,6 @@
             ],
             "code_area": ".codewiki, src +17 more",
             "open_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -250808,18 +250134,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-091",
+        "task_id": "TASK-092",
         "lane_id": "",
-        "heading": "TASK-091 — Define CodeWiki hot-state retention cleanup",
-        "command": "/wiki-resume TASK-091",
+        "heading": "TASK-092 — Add trace-aware resume handoff bootstrap",
+        "command": "/wiki-resume TASK-092",
         "reason": "Resume roadmap task (in_progress).",
         "status": "in_progress",
-        "verification": "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+        "verification": "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-05T10:27:43Z",
+        "generated_at": "2026-06-05T10:29:01Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -250866,16 +250192,13 @@
               "src/audit/**",
               "src/build/",
               "src/build/**",
-              "src/gc/**",
               "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs",
               "src/gateway/**",
+              "src/state/**",
               "src/project/templates.ts",
               "tests/smoke/graph-lenses.test.mjs",
               "tests/smoke/source-contract.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/domain/shared/types.ts",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
@@ -250908,6 +250231,7 @@
               ".codewiki/kb/system/trace-graph.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".gitignore",
               "src/checks/lexicon.ts",
               "src/adapters/pi/tools/ports.ts"
             ],
@@ -250918,19 +250242,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-091",
               "TASK-093"
             ],
             "primary_task": {
-              "id": "TASK-091",
+              "id": "TASK-093",
               "status": "in_progress",
-              "title": "Define CodeWiki hot-state retention cleanup"
+              "title": "Introduce lifecycle trace schema and cold catalog model"
             },
             "revision": {
               "digest": "a6d6390579e52f6e2c6725297cdb39375dad9ddc51e76567d8e4cbd3c539ebf8",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-091"
+            "note": "tracked by TASK-093"
           },
           {
             "path": ".codewiki/kb/system/builds.md",
@@ -250981,9 +250304,9 @@
               "tests/smoke/agency-auto-pickup.test.mjs",
               "src/gc/**",
               ".gitignore",
-              "tests/smoke/lexicon-linter.test.mjs",
               "src/project/templates.ts",
               "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/domain/shared/types.ts",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
@@ -251075,19 +250398,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-091",
               "TASK-093"
             ],
             "primary_task": {
-              "id": "TASK-091",
+              "id": "TASK-093",
               "status": "in_progress",
-              "title": "Define CodeWiki hot-state retention cleanup"
+              "title": "Introduce lifecycle trace schema and cold catalog model"
             },
             "revision": {
               "digest": "c2ec4ba714c449dcd1a6026db16ac9d8a1e5f52068f7ceb3fab6fa11085492d4",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-091"
+            "note": "tracked by TASK-093"
           },
           {
             "path": ".codewiki/kb/system/file-structure.md",
@@ -251448,19 +250770,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-091",
               "TASK-093"
             ],
             "primary_task": {
-              "id": "TASK-091",
+              "id": "TASK-093",
               "status": "in_progress",
-              "title": "Define CodeWiki hot-state retention cleanup"
+              "title": "Introduce lifecycle trace schema and cold catalog model"
             },
             "revision": {
               "digest": "65f1ef56044290a41b70e541242cfa8e3f51a88b6dad8cccc43ff3130bb95799",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-091"
+            "note": "tracked by TASK-093"
           },
           {
             "path": ".codewiki/kb/system/flows/decision-to-planning.md",
@@ -251638,7 +250959,6 @@
               "tests/smoke/agency-auto-pickup.test.mjs",
               "src/gc/**",
               ".gitignore",
-              "tests/smoke/lexicon-linter.test.mjs",
               "src/state/graph/**",
               "src/domain/audit/types.ts",
               "src/application/tools/audit.ts",
@@ -251681,7 +251001,8 @@
               ".codewiki/kb/system/trace-graph.md",
               ".codewiki/kb/lexicon.md",
               "src/checks/lexicon.ts",
-              "src/adapters/pi/tools/ports.ts"
+              "src/adapters/pi/tools/ports.ts",
+              "tests/smoke/lexicon-linter.test.mjs"
             ],
             "code_area": ".codewiki, src +8 more",
             "issue_counts": {
@@ -251690,19 +251011,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-091",
               "TASK-094"
             ],
             "primary_task": {
-              "id": "TASK-091",
+              "id": "TASK-094",
               "status": "in_progress",
-              "title": "Define CodeWiki hot-state retention cleanup"
+              "title": "Project lifecycle traces into graph views"
             },
             "revision": {
               "digest": "d025c23a6bb17e6efb714e1174246fbb184628c40e0146406575e03a4295eb9f",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-091"
+            "note": "tracked by TASK-094"
           },
           {
             "path": ".codewiki/kb/system/runtime.md",
@@ -251840,12 +251160,6 @@
             "drift_status": "tracked",
             "code_paths": [
               ".codewiki/kb/**",
-              "src/gc/**",
-              "src/telemetry/**",
-              "src/state/**",
-              ".gitignore",
-              "tests/smoke/package-smoke.test.mjs",
-              "tests/smoke/lexicon-linter.test.mjs",
               "src/state/resume-context.ts",
               "src/state/resume-tool.ts",
               "src/adapters/pi/commands/resume.ts",
@@ -251854,11 +251168,14 @@
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/hot-context.test.mjs",
               "tests/smoke/prompt-contract.test.mjs",
+              "src/telemetry/**",
               "src/build/**",
               "src/gateway/**",
+              "src/state/**",
               "src/project/templates.ts",
               "tests/smoke/graph-lenses.test.mjs",
               "tests/smoke/source-contract.test.mjs",
+              "tests/smoke/lexicon-linter.test.mjs",
               "src/state/graph.ts",
               "src/state/builders.ts",
               "src/state/reader.ts",
@@ -251870,6 +251187,7 @@
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
               ".codewiki/kb/lexicon.md",
+              ".gitignore",
               "src/checks/lexicon.ts",
               "src/adapters/pi/tools/ports.ts"
             ],
@@ -251880,21 +251198,20 @@
               "total": 2
             },
             "related_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
             ],
             "primary_task": {
-              "id": "TASK-091",
+              "id": "TASK-092",
               "status": "in_progress",
-              "title": "Define CodeWiki hot-state retention cleanup"
+              "title": "Add trace-aware resume handoff bootstrap"
             },
             "revision": {
               "digest": "42d7175988cd2b075d7bd3a6ee2eae566e82ee037ee38ee29cc45ebbe5422657",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-091"
+            "note": "tracked by TASK-092"
           },
           {
             "path": ".codewiki/kb/product/overview.md",
@@ -255605,16 +254922,13 @@
                   "src/audit/**",
                   "src/build/",
                   "src/build/**",
-                  "src/gc/**",
                   "src/telemetry/**",
-                  "src/state/**",
-                  ".gitignore",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/gateway/**",
+                  "src/state/**",
                   "src/project/templates.ts",
                   "tests/smoke/graph-lenses.test.mjs",
                   "tests/smoke/source-contract.test.mjs",
+                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/domain/shared/types.ts",
                   "src/domain/shared/session.ts",
                   "src/application/builds.ts",
@@ -255647,6 +254961,7 @@
                   ".codewiki/kb/system/trace-graph.md",
                   ".codewiki/kb/system/graph.md",
                   ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".gitignore",
                   "src/checks/lexicon.ts",
                   "src/adapters/pi/tools/ports.ts"
                 ],
@@ -255657,19 +254972,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-091",
                   "TASK-093"
                 ],
                 "primary_task": {
-                  "id": "TASK-091",
+                  "id": "TASK-093",
                   "status": "in_progress",
-                  "title": "Define CodeWiki hot-state retention cleanup"
+                  "title": "Introduce lifecycle trace schema and cold catalog model"
                 },
                 "revision": {
                   "digest": "a6d6390579e52f6e2c6725297cdb39375dad9ddc51e76567d8e4cbd3c539ebf8",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-091"
+                "note": "tracked by TASK-093"
               },
               {
                 "path": ".codewiki/kb/system/builds.md",
@@ -255720,9 +255034,9 @@
                   "tests/smoke/agency-auto-pickup.test.mjs",
                   "src/gc/**",
                   ".gitignore",
-                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/project/templates.ts",
                   "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/domain/shared/types.ts",
                   "src/domain/shared/session.ts",
                   "src/application/builds.ts",
@@ -255814,19 +255128,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-091",
                   "TASK-093"
                 ],
                 "primary_task": {
-                  "id": "TASK-091",
+                  "id": "TASK-093",
                   "status": "in_progress",
-                  "title": "Define CodeWiki hot-state retention cleanup"
+                  "title": "Introduce lifecycle trace schema and cold catalog model"
                 },
                 "revision": {
                   "digest": "c2ec4ba714c449dcd1a6026db16ac9d8a1e5f52068f7ceb3fab6fa11085492d4",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-091"
+                "note": "tracked by TASK-093"
               },
               {
                 "path": ".codewiki/kb/system/file-structure.md",
@@ -256187,19 +255500,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-091",
                   "TASK-093"
                 ],
                 "primary_task": {
-                  "id": "TASK-091",
+                  "id": "TASK-093",
                   "status": "in_progress",
-                  "title": "Define CodeWiki hot-state retention cleanup"
+                  "title": "Introduce lifecycle trace schema and cold catalog model"
                 },
                 "revision": {
                   "digest": "65f1ef56044290a41b70e541242cfa8e3f51a88b6dad8cccc43ff3130bb95799",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-091"
+                "note": "tracked by TASK-093"
               },
               {
                 "path": ".codewiki/kb/system/flows/decision-to-planning.md",
@@ -256377,7 +255689,6 @@
                   "tests/smoke/agency-auto-pickup.test.mjs",
                   "src/gc/**",
                   ".gitignore",
-                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/state/graph/**",
                   "src/domain/audit/types.ts",
                   "src/application/tools/audit.ts",
@@ -256420,7 +255731,8 @@
                   ".codewiki/kb/system/trace-graph.md",
                   ".codewiki/kb/lexicon.md",
                   "src/checks/lexicon.ts",
-                  "src/adapters/pi/tools/ports.ts"
+                  "src/adapters/pi/tools/ports.ts",
+                  "tests/smoke/lexicon-linter.test.mjs"
                 ],
                 "code_area": ".codewiki, src +8 more",
                 "issue_counts": {
@@ -256429,19 +255741,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-091",
                   "TASK-094"
                 ],
                 "primary_task": {
-                  "id": "TASK-091",
+                  "id": "TASK-094",
                   "status": "in_progress",
-                  "title": "Define CodeWiki hot-state retention cleanup"
+                  "title": "Project lifecycle traces into graph views"
                 },
                 "revision": {
                   "digest": "d025c23a6bb17e6efb714e1174246fbb184628c40e0146406575e03a4295eb9f",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-091"
+                "note": "tracked by TASK-094"
               },
               {
                 "path": ".codewiki/kb/system/runtime.md",
@@ -256579,12 +255890,6 @@
                 "drift_status": "tracked",
                 "code_paths": [
                   ".codewiki/kb/**",
-                  "src/gc/**",
-                  "src/telemetry/**",
-                  "src/state/**",
-                  ".gitignore",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/state/resume-context.ts",
                   "src/state/resume-tool.ts",
                   "src/adapters/pi/commands/resume.ts",
@@ -256593,11 +255898,14 @@
                   "tests/smoke/codewiki-compaction.test.mjs",
                   "tests/smoke/hot-context.test.mjs",
                   "tests/smoke/prompt-contract.test.mjs",
+                  "src/telemetry/**",
                   "src/build/**",
                   "src/gateway/**",
+                  "src/state/**",
                   "src/project/templates.ts",
                   "tests/smoke/graph-lenses.test.mjs",
                   "tests/smoke/source-contract.test.mjs",
+                  "tests/smoke/lexicon-linter.test.mjs",
                   "src/state/graph.ts",
                   "src/state/builders.ts",
                   "src/state/reader.ts",
@@ -256609,6 +255917,7 @@
                   ".codewiki/kb/system/graph.md",
                   ".codewiki/kb/system/diagrams/file-structure-map.yaml",
                   ".codewiki/kb/lexicon.md",
+                  ".gitignore",
                   "src/checks/lexicon.ts",
                   "src/adapters/pi/tools/ports.ts"
                 ],
@@ -256619,21 +255928,20 @@
                   "total": 2
                 },
                 "related_task_ids": [
-                  "TASK-091",
                   "TASK-092",
                   "TASK-093",
                   "TASK-094"
                 ],
                 "primary_task": {
-                  "id": "TASK-091",
+                  "id": "TASK-092",
                   "status": "in_progress",
-                  "title": "Define CodeWiki hot-state retention cleanup"
+                  "title": "Add trace-aware resume handoff bootstrap"
                 },
                 "revision": {
                   "digest": "42d7175988cd2b075d7bd3a6ee2eae566e82ee037ee38ee29cc45ebbe5422657",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-091"
+                "note": "tracked by TASK-092"
               },
               {
                 "path": ".codewiki/kb/system/adapters.md",
@@ -259206,15 +258514,14 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-091",
+        "focused_task_id": "TASK-092",
         "blocked_task_ids": [],
         "in_progress_task_ids": [
-          "TASK-091",
           "TASK-092",
           "TASK-093",
           "TASK-094"
         ],
-        "next_task_id": "TASK-091",
+        "next_task_id": "TASK-092",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -260111,7 +259418,6 @@
               "TASK-095"
             ],
             "open_task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
@@ -260156,7 +259462,6 @@
             "id": "implement",
             "label": "Implement",
             "task_ids": [
-              "TASK-091",
               "TASK-092",
               "TASK-093",
               "TASK-094"
