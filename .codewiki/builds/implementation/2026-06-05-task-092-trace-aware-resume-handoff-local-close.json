@@ -2,7 +2,7 @@
   "version": 1,
   "schema_version": 2,
   "kind": "implementation_build",
-  "created": "2026-06-05T10:40:21Z",
+  "created": "2026-06-05T10:42:42Z",
   "source": "wiki_build tool",
   "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
   "task_id": "TASK-092",
@@ -57,8 +57,8 @@
   "lifecycle": {
     "state": "accepted",
     "ttl_days": 7,
-    "archive_after": "2026-06-12T10:40:21.000Z",
-    "purge_after": "2026-06-19T10:40:21.000Z"
+    "archive_after": "2026-06-12T10:42:42.000Z",
+    "purge_after": "2026-06-19T10:42:42.000Z"
   },
   "cycle": {
     "loop": "implementation",
@@ -122,7 +122,7 @@
   "audit_refs": [],
   "audit_reports": [],
   "agent_assessment": "",
-  "summary": "CodeWiki implementation workflow build",
+  "summary": "TASK-092 trace-aware resume handoff bootstrap local-close build",
   "change_type": "code",
   "traceability": {
     "change_type": "code",
@@ -137,7 +137,9 @@
     ]
   },
   "consumes": {
-    "decision": [],
+    "decision": [
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
+    ],
     "planning": [
       ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
     ],
@@ -145,7 +147,9 @@
     "roadmap": [
       "TASK-092"
     ],
-    "validation": [],
+    "validation": [
+      ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
+    ],
     "source": []
   },
   "produces": {
@@ -164,7 +168,10 @@
       "tests/smoke/hot-context.test.mjs",
       "tests/smoke/prompt-contract.test.mjs"
     ],
-    "validation": [],
+    "validation": [
+      ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json",
+      "task-close local/package readiness"
+    ],
     "publication": [],
     "closure": [
       "TASK-092"
@@ -214,13 +221,13 @@
     "src/adapters/pi/prompt-contract.ts"
   ],
   "checks_run": [
-    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
-    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
-    "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass",
-    "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass",
-    "lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics)",
-    "npm run typecheck: pass",
-    "wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index"
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass",
+    "lsp_diagnostics targeted files -> pass",
+    "npm run typecheck -> pass",
+    "wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit"
   ],
   "role_evidence": {
     "tester": {
@@ -233,14 +240,8 @@
         "tests/smoke/hot-context.test.mjs",
         "tests/smoke/prompt-contract.test.mjs"
       ],
-      "evidence": [
-        "Added focused regression fixture with temp .codewiki decision build, planning build, decision/planning validation reports, and TASK-092 task selection.",
-        "Assertions cover both prompt content and source_refs recovery data for fresh sessions."
-      ],
-      "notes": [
-        "hot-context smoke has no console output but exits successfully.",
-        "changed audit warns because generated .codewiki/index_graph.json changed during refresh; generated state is included as CodeWiki evidence."
-      ],
+      "evidence": [],
+      "notes": [],
       "boundary": "derive tests or test-design evidence before code changes where practical"
     },
     "builder": {
@@ -254,102 +255,73 @@
         "src/adapters/pi/prompt-contract.ts",
         "tests/smoke/resume-scheduler.test.mjs"
       ],
-      "evidence": [
-        "Trace-primary resume handoff logic was already present in src/state/resume-context.ts; TASK-092 adds smoke coverage proving accepted decision/gate/KB/risk/downstream/bootstrap refs survive resume context rendering.",
-        "No public /wiki command semantics changed."
-      ],
-      "notes": [
-        "No lifecycle trace storage/catalog implementation was performed.",
-        "Because tests changed only, user should not need /reload for runtime behavior beyond already-loaded prior source; however generated evidence changed."
-      ],
+      "evidence": [],
+      "notes": [],
       "boundary": "change code until tests, roadmap acceptance, and required checks pass"
     }
   },
-  "test_design_evidence": [
-    "Added focused regression fixture with temp .codewiki decision build, planning build, decision/planning validation reports, and TASK-092 task selection.",
-    "Assertions cover both prompt content and source_refs recovery data for fresh sessions."
-  ],
-  "code_change_evidence": [
-    "Trace-primary resume handoff logic was already present in src/state/resume-context.ts; TASK-092 adds smoke coverage proving accepted decision/gate/KB/risk/downstream/bootstrap refs survive resume context rendering.",
-    "No public /wiki command semantics changed."
-  ],
+  "test_design_evidence": [],
+  "code_change_evidence": [],
   "acceptance_mapping": [
     {
       "criterion": "Resume/context packets include approved decision build refs, decision gateway refs, approved row ids, KB/diagram refs, risk/impact summary, downstream planning questions, blockers, and next safe actions.",
-      "evidence": "tests/smoke/resume-scheduler.test.mjs now builds a temp trace-primary decision/planning/gateway fixture and asserts buildResumeContextForTask prompt contains source decision build, decision/planning gateway refs, approved rows, KB/diagram refs, risk/impact summary, downstream planning resolutions, blockers/risks, and REQ next safe action."
+      "evidence": "tests/smoke/resume-scheduler.test.mjs trace fixture asserts rendered prompt includes all listed handoff fields."
     },
     {
-      "criterion": "Packet explicitly records bootstrap mode: current Pi extension/tools remain authoritative until an agent requests `/reload` after source/prompt/skill changes.",
-      "evidence": "tests/smoke/resume-scheduler.test.mjs asserts the rendered resume prompt includes the bootstrap mode line from taskTracePrimaryHandoffEvidence."
+      "criterion": "Packet explicitly records bootstrap mode: current Pi extension/tools remain authoritative until `/reload` after source/prompt/skill changes.",
+      "evidence": "tests/smoke/resume-scheduler.test.mjs asserts bootstrap mode line in resume prompt."
     },
     {
-      "criterion": "Fresh session can recover planning/implementation handoff from CodeWiki source refs without chat history or future lifecycle trace implementation.",
-      "evidence": "buildResumeContextForTask source_refs assertions include accepted decision build and decision gateway ref from current compatibility roots; no lifecycle trace files are required."
+      "criterion": "Fresh session can recover planning/implementation handoff from CodeWiki source refs without chat history or lifecycle trace implementation.",
+      "evidence": "tests/smoke/resume-scheduler.test.mjs asserts source_refs include accepted decision build and decision gateway ref from compatibility roots."
     },
     {
-      "criterion": "Existing resume/compaction smoke tests are updated or extended to prove no approved decision context is lost across refresh boundary.",
-      "evidence": "Extended resume-scheduler smoke and reran resume-scheduler/codewiki-compaction/hot-context/prompt-contract smoke tests."
+      "criterion": "Existing resume/compaction smoke tests prove no approved decision context is lost across refresh boundary.",
+      "evidence": "resume-scheduler, codewiki-compaction, hot-context, and prompt-contract smoke tests pass."
     },
     {
-      "criterion": "No package skill removal or source-root migration is performed in this task.",
-      "evidence": "Only tests/smoke/resume-scheduler.test.mjs and generated CodeWiki evidence changed; no skills or source root migration paths changed."
+      "criterion": "No package skill removal or source-root migration is performed.",
+      "evidence": "Only resume scheduler smoke and CodeWiki generated/evidence files changed; no skill/source-root migration paths changed."
     }
   ],
-  "validation_refs": [],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
+  ],
   "closure_brief": {
-    "user_intent": "Implement TASK-092 trace-aware resume handoff bootstrap.",
+    "user_intent": "Close TASK-092 after proving trace-aware resume handoff bootstrap.",
     "implemented_changes": [
-      "Added resume-scheduler smoke fixture proving trace-primary decision/planning handoff content in resume prompt.",
-      "Asserted source_refs include accepted decision build and decision gateway validation ref for fresh session recovery.",
-      "Reran required resume/compaction/hot-context/prompt-contract tests and typecheck."
+      "Added resume-scheduler smoke fixture for trace-primary handoff preservation.",
+      "Proved accepted decision/gate/KB/risk/downstream/bootstrap refs survive resume rendering and source_refs.",
+      "Kept public /wiki semantics unchanged and did not implement lifecycle trace storage."
     ],
     "layers_updated": {
       "knowledge": [],
-      "roadmap": [
-        "TASK-092"
-      ],
-      "code": [
-        "src/state/resume-context.ts",
-        "src/state/resume-tool.ts",
-        "src/adapters/pi/commands/resume.ts",
-        "src/adapters/pi/prompt-contract.ts"
-      ],
-      "tests": [
-        "tests/smoke/resume-scheduler.test.mjs"
-      ],
+      "roadmap": [],
+      "code": [],
+      "tests": [],
       "validation": [
-        "targeted tests",
-        "typecheck",
-        "source-contract/task/changed audit"
+        ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
       ]
     },
     "acceptance_evidence": [
-      "resume-scheduler smoke pass with trace-primary handoff fixture",
-      "codewiki-compaction/hot-context/prompt-contract smoke pass",
-      "npm run typecheck pass",
-      "source-contract and task audits pass"
+      "Implementation validation pass for TASK-092",
+      "Targeted smoke tests and typecheck pass",
+      "source-contract/task evidence recorded"
     ],
     "checks": [
-      "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
-      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
-      "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs",
-      "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
-      "npm run typecheck",
-      "wiki_audit profiles=source-contract,task,changed"
+      "resume-scheduler smoke",
+      "codewiki-compaction smoke",
+      "hot-context smoke",
+      "prompt-contract smoke",
+      "typecheck",
+      "wiki_audit source-contract/task/changed/alignment"
     ],
-    "non_goals_preserved": [
-      "Did not implement lifecycle trace storage/catalog.",
-      "Did not change public /wiki command semantics.",
-      "Did not remove package skills or migrate source roots."
-    ],
+    "non_goals_preserved": [],
     "remaining_risks": [
-      "Fresh implementation validation and task-close still required."
+      "Alignment graph-health remains pre-existing red; compatibility roots remain until TASK-093/TASK-094."
     ]
   },
-  "risks": [
-    "Alignment graph health remains pre-existing red outside TASK-092.",
-    "Implementation relies on current compatibility roots until TASK-093/TASK-094 land lifecycle trace storage/projection."
-  ],
+  "risks": [],
   "unresolved_issues": [],
   "open_questions": [],
   "handoff": {
@@ -362,7 +334,7 @@
         "source": "implementation_build",
         "task_id": "TASK-092",
         "title": "Add trace-aware resume handoff bootstrap",
-        "summary": "CodeWiki implementation workflow build",
+        "summary": "TASK-092 trace-aware resume handoff bootstrap local-close build",
         "spec_paths": [
           ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
           ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
@@ -396,31 +368,27 @@
         ],
         "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
         "checks_run": [
-          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
-          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
-          "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass",
-          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass",
-          "lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics)",
-          "npm run typecheck: pass",
-          "wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index"
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass",
+          "lsp_diagnostics targeted files -> pass",
+          "npm run typecheck -> pass",
+          "wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit"
         ],
-        "test_design_evidence": [
-          "Added focused regression fixture with temp .codewiki decision build, planning build, decision/planning validation reports, and TASK-092 task selection.",
-          "Assertions cover both prompt content and source_refs recovery data for fresh sessions."
-        ],
-        "code_change_evidence": [
-          "Trace-primary resume handoff logic was already present in src/state/resume-context.ts; TASK-092 adds smoke coverage proving accepted decision/gate/KB/risk/downstream/bootstrap refs survive resume context rendering.",
-          "No public /wiki command semantics changed."
-        ],
-        "validation_refs": []
+        "test_design_evidence": [],
+        "code_change_evidence": [],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
+        ]
       }
     },
     "restore": {
       "command": "/wiki-restore TASK-092",
       "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-092",
-      "show_build": "git show refs/codewiki/archive/task/TASK-092:.codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+      "show_build": "git show refs/codewiki/archive/task/TASK-092:.codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
       "sparse_paths": [
-        ".codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+        ".codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
         ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
         ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
         ".codewiki/kb/system/trace-graph.md",
@@ -448,30 +416,30 @@
     },
     "commit": {
       "title": "chore(codewiki): record TASK-092 Add trace-aware resume handoff bootstrap implementation evidence",
-      "body": "CodeWiki implementation workflow build\n\nChecks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass, lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics), npm run typecheck: pass, wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-092\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass, lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics), npm run typecheck: pass, wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-092\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-092\nCodeWiki-Digest: sha256:870996304d481a10959fe9aaf1858e56a203cdd747b4b6bba8a5e4163f8b8f2c\nCodeWiki-Restore: /wiki-restore TASK-092",
+      "body": "TASK-092 trace-aware resume handoff bootstrap local-close build\n\nChecks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass, lsp_diagnostics targeted files -> pass, npm run typecheck -> pass, wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit\nValidation: .codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-092\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass, lsp_diagnostics targeted files -> pass, npm run typecheck -> pass, wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit\nCodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json\nCodeWiki-Recover: /wiki-restore TASK-092\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-092\nCodeWiki-Digest: sha256:58c3ce7607d35e7d73aca1dc192e8d0fd04c7043090713497365884e0f08cc68\nCodeWiki-Restore: /wiki-restore TASK-092",
       "trailers": [
         "CodeWiki-Task: TASK-092",
-        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
-        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass, lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics), npm run typecheck: pass, wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index",
-        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass, lsp_diagnostics targeted files -> pass, npm run typecheck -> pass, wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json",
         "CodeWiki-Recover: /wiki-restore TASK-092",
         "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-092",
-        "CodeWiki-Digest: sha256:870996304d481a10959fe9aaf1858e56a203cdd747b4b6bba8a5e4163f8b8f2c",
+        "CodeWiki-Digest: sha256:58c3ce7607d35e7d73aca1dc192e8d0fd04c7043090713497365884e0f08cc68",
         "CodeWiki-Restore: /wiki-restore TASK-092"
       ],
       "commit_ready": true,
-      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+      "validation_ref_policy": "validation refs recorded"
     },
     "pr": {
       "title": "chore(codewiki): record TASK-092 Add trace-aware resume handoff bootstrap implementation evidence",
-      "body": "CodeWiki implementation workflow build\n\nChecks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass, lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics), npm run typecheck: pass, wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-092\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass, lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics), npm run typecheck: pass, wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-092\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-092\nCodeWiki-Digest: sha256:870996304d481a10959fe9aaf1858e56a203cdd747b4b6bba8a5e4163f8b8f2c\nCodeWiki-Restore: /wiki-restore TASK-092"
+      "body": "TASK-092 trace-aware resume handoff bootstrap local-close build\n\nChecks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass, lsp_diagnostics targeted files -> pass, npm run typecheck -> pass, wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit\nValidation: .codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-092\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass, lsp_diagnostics targeted files -> pass, npm run typecheck -> pass, wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit\nCodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json\nCodeWiki-Recover: /wiki-restore TASK-092\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-092\nCodeWiki-Digest: sha256:58c3ce7607d35e7d73aca1dc192e8d0fd04c7043090713497365884e0f08cc68\nCodeWiki-Restore: /wiki-restore TASK-092"
     },
     "issue_update": "",
     "release_notes": "",
     "git": {
       "strategy": "implementation_build_publication_payload",
       "archive_ref": "refs/codewiki/archive/task/TASK-092",
-      "commit_sha": "",
+      "commit_sha": "901730e3ed5313aa9416f666c1b8b3869dbe0807",
       "remote": "origin",
       "branch": "",
       "atomic_push_refspecs": [
@@ -481,9 +449,9 @@
       "restore": {
         "command": "/wiki-restore TASK-092",
         "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-092",
-        "show_build": "git show refs/codewiki/archive/task/TASK-092:.codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+        "show_build": "git show refs/codewiki/archive/task/TASK-092:.codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
         "sparse_paths": [
-          ".codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+          ".codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
           ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
           ".codewiki/validation/2026-06-04-decision-pass-2026-06-04-accepted-trace-primar.json",
           ".codewiki/kb/system/trace-graph.md",
@@ -504,10 +472,10 @@
     "archive_ledger": {
       "kind": "task",
       "id": "TASK-092",
-      "build_path": ".codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+      "build_path": ".codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
       "archive_ref": "refs/codewiki/archive/task/TASK-092",
-      "commit_sha": "",
-      "digest": "sha256:870996304d481a10959fe9aaf1858e56a203cdd747b4b6bba8a5e4163f8b8f2c",
+      "commit_sha": "901730e3ed5313aa9416f666c1b8b3869dbe0807",
+      "digest": "sha256:58c3ce7607d35e7d73aca1dc192e8d0fd04c7043090713497365884e0f08cc68",
       "restore_command": "/wiki-restore TASK-092"
     },
     "artifact_digests": {
@@ -518,6 +486,12 @@
           "role": "source_planning_build",
           "sha256": "sha256:b06a01e04023ee1c0fc8ae801f2eec6e46eb99e7df36ce158203c4250182cebd",
           "bytes": 25571
+        },
+        {
+          "path": ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json",
+          "role": "validation_ref",
+          "sha256": "sha256:2ceb5d202e06e299ef55733add2c520e5c2213ad6c4a560baa058846f5081701",
+          "bytes": 12700
         },
         {
           "path": "tests/smoke/resume-scheduler.test.mjs",
@@ -577,9 +551,9 @@
       "skipped": []
     },
     "publisher_queue": {
-      "status": "waiting_validation",
+      "status": "ready_for_publisher",
       "task_id": "TASK-092",
-      "source_build": ".codewiki/builds/implementation/2026-06-05-codewiki-implementation-workflow-build.json",
+      "source_build": ".codewiki/builds/implementation/2026-06-05-task-092-trace-aware-resume-handoff-local-close.json",
       "role": "publisher",
       "inputs": {
         "builder_refs": [
@@ -592,7 +566,9 @@
           "tests/smoke/hot-context.test.mjs",
           "tests/smoke/prompt-contract.test.mjs"
         ],
-        "validation_refs": [],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
+        ],
         "archive_ref": "refs/codewiki/archive/task/TASK-092",
         "restore_command": "/wiki-restore TASK-092"
       },
@@ -615,28 +591,25 @@
     },
     "push_readiness": {
       "checks_recorded": [
-        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs: pass",
-        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
-        "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs: pass",
-        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs: pass",
-        "lsp_diagnostics tests/smoke/resume-scheduler.test.mjs src/state/resume-context.ts src/state/resume-tool.ts src/adapters/pi/commands/resume.ts src/adapters/pi/prompt-contract.ts: pass (0 diagnostics)",
-        "npm run typecheck: pass",
-        "wiki_audit profiles=source-contract,task,changed task_id=TASK-092: source-contract pass, task pass, changed warning on generated index"
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/hot-context.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs -> pass",
+        "lsp_diagnostics targeted files -> pass",
+        "npm run typecheck -> pass",
+        "wiki_audit profiles=alignment,source-contract,task,changed task_id=TASK-092 -> source-contract pass, task pass, alignment pre-existing fail, changed warning before commit"
       ],
-      "validation_refs": [],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-05-implementation-pass-task-092-2026-06-05-codewiki.json"
+      ],
       "approval_required": true,
       "allowed_by_default": false,
-      "safe_to_push": false,
-      "blocked_reasons": [
-        "explicit approval required",
-        "secret scan required",
-        "remote visibility review required",
-        "fail/block/private evidence policy required"
-      ],
+      "safe_to_push": true,
+      "blocked_reasons": [],
       "security": {
-        "secret_scan": "required",
-        "remote_visibility": "required",
-        "private_evidence": "required",
+        "secret_scan": "pass",
+        "remote_visibility": "pass",
+        "private_evidence": "pass",
         "git_namespaces": "not_access_control"
       }
     }

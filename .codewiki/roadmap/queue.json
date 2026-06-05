@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-05T10:28:29Z",
+  "updated": "2026-06-05T10:40:20Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -754,7 +754,7 @@
         "closure": "Task closes when fresh-session recovery can start from build/gateway/KB refs and no approved decision context is lost."
       },
       "created": "2026-06-04",
-      "updated": "2026-06-04T06:48:06Z"
+      "updated": "2026-06-05T10:40:20Z"
     },
     "TASK-093": {
       "id": "TASK-093",

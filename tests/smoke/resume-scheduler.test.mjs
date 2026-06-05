@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
 	resolveImplementationTask,
 	resumeCandidates,
@@ -10,6 +13,8 @@ import {
 	agencyLevelAllowsContinuation,
 	effectiveAgencyPolicy,
 } from "../../src/agency/types.ts";
+import { loadProject } from "../../src/project/context.ts";
+import { buildResumeContextForTask } from "../../src/state/resume-context.ts";
 
 function task(id, status, labels = [], codePaths = [], acceptance = []) {
 	return {
@@ -396,5 +401,167 @@ assert.match(
 	/context_reset/,
 	"agency planner should expose reset auto-pickup policy",
 );
+
+const traceRoot = await mkdtemp(join(tmpdir(), "codewiki-resume-trace-"));
+try {
+	await mkdir(join(traceRoot, ".codewiki/builds/decision"), {
+		recursive: true,
+	});
+	await mkdir(join(traceRoot, ".codewiki/builds/planning"), {
+		recursive: true,
+	});
+	await mkdir(join(traceRoot, ".codewiki/validation"), { recursive: true });
+	await mkdir(join(traceRoot, ".codewiki/roadmap/tasks/TASK-092"), {
+		recursive: true,
+	});
+	await writeFile(
+		join(traceRoot, ".codewiki/config.json"),
+		JSON.stringify(
+			{
+				project_name: "resume-trace-smoke",
+				schema_version: 4,
+				docs_root: ".codewiki/kb",
+			},
+			null,
+			2,
+		),
+	);
+	await writeFile(
+		join(traceRoot, ".codewiki/builds/decision/accepted-trace.json"),
+		JSON.stringify(
+			{
+				kind: "decision_build",
+				status: "accepted",
+				summary: "Accepted trace-primary architecture.",
+				approved_decision_rows: ["ROW-001", "ROW-002"],
+				knowledge_changes: [".codewiki/kb/system/trace-graph.md"],
+				row_to_kb_mappings: [
+					{
+						row_id: "ROW-001",
+						knowledge_refs: [".codewiki/kb/system/runtime.md"],
+						diagram_refs: [
+							".codewiki/kb/system/diagrams/key-flow.yaml",
+						],
+					},
+				],
+				propagation: {
+					product_impact: ["Users keep safe resume context."],
+					system_impact: ["Agents recover trace refs."],
+					downstream_planning_questions: [
+						"Where does resume bootstrap land?",
+					],
+				},
+				risks: ["Trace storage not implemented yet."],
+			},
+			null,
+			2,
+		),
+	);
+	await writeFile(
+		join(traceRoot, ".codewiki/builds/planning/planned-trace.json"),
+		JSON.stringify(
+			{
+				kind: "planning_build",
+				status: "accepted",
+				summary: "Plan trace resume bootstrap.",
+				task_ids: ["TASK-092"],
+				source_decision_build:
+					".codewiki/builds/decision/accepted-trace.json",
+				downstream_question_resolutions: [
+					{
+						question: "Where does resume bootstrap land?",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-092"],
+					},
+				],
+				requirements: [
+					{
+						id: "REQ-RESUME-FIRST",
+						text: "Implement resume bootstrap first.",
+					},
+				],
+				risks: ["Block deep migration until resume is safe."],
+			},
+			null,
+			2,
+		),
+	);
+	await writeFile(
+		join(traceRoot, ".codewiki/validation/decision-pass.json"),
+		JSON.stringify(
+			{
+				profile: "decision",
+				verdict: "pass",
+				source: ".codewiki/builds/decision/accepted-trace.json",
+			},
+			null,
+			2,
+		),
+	);
+	await writeFile(
+		join(traceRoot, ".codewiki/validation/planning-pass.json"),
+		JSON.stringify(
+			{
+				profile: "planning",
+				verdict: "pass",
+				source: ".codewiki/builds/planning/planned-trace.json",
+			},
+			null,
+			2,
+		),
+	);
+	const traceProject = await loadProject(traceRoot);
+	const traceTask = task(
+		"TASK-092",
+		"in_progress",
+		[],
+		["src/state/resume-context.ts"],
+	);
+	const report = {
+		counts: { error: 0, warning: 0, information: 0, hint: 0 },
+		issues: [],
+	};
+	const resumeContext = await buildResumeContextForTask(traceProject, {
+		task: traceTask,
+		selection: {
+			task: traceTask,
+			source: "explicit",
+			artifact_statuses: [],
+			skipped: [],
+		},
+		report,
+		roadmapState: null,
+		graph: null,
+		followUpIntent: "continue trace resume bootstrap",
+	});
+	assert.match(resumeContext.prompt, /Trace-primary handoff:/);
+	assert.match(
+		resumeContext.prompt,
+		/Source decision build: \.codewiki\/builds\/decision\/accepted-trace\.json/,
+	);
+	assert.match(resumeContext.prompt, /Decision gate refs: .*decision-pass\.json/);
+	assert.match(resumeContext.prompt, /Planning gate refs: .*planning-pass\.json/);
+	assert.match(resumeContext.prompt, /Approved rows: ROW-001, ROW-002/);
+	assert.match(resumeContext.prompt, /KB\/diagram refs: .*trace-graph\.md/);
+	assert.match(resumeContext.prompt, /Risk\/impact summary: .*safe resume context/);
+	assert.match(resumeContext.prompt, /Downstream planning resolutions:/);
+	assert.match(resumeContext.prompt, /Blockers\/risks:/);
+	assert.match(resumeContext.prompt, /REQ-RESUME-FIRST: Implement resume bootstrap first/);
+	assert.match(resumeContext.prompt, /Bootstrap mode: current Pi extension\/tools remain authoritative/);
+	assert.ok(
+		resumeContext.source_refs.includes(
+			".codewiki/builds/decision/accepted-trace.json",
+		),
+		"resume source refs should include accepted decision build",
+	);
+	assert.ok(
+		resumeContext.source_refs.includes(
+			".codewiki/validation/decision-pass.json",
+		),
+		"resume source refs should include decision gateway ref",
+	);
+} finally {
+	await rm(traceRoot, { recursive: true, force: true });
+}
 
 console.log("✓ resume scheduler smoke passed");
