@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T23:25:49Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-096",
+  "verdict": "pass",
+  "rationale": "TASK-096 closes successfully. Legacy pre-DecisionTableV1 rowless decision builds are now explicitly deferred as warnings with TASK-096 deletion trigger instead of current-schema errors; builds KB documents the deferral/removal condition; no historical decision build artifacts were edited or deleted. Source-owned rebuild/audit from committed source reports graph health 0 errors / 62 warnings. Implementation and ship-ready gates passed. Source content validated at d5ef934d8a8c0494ccc210fd9e3029549d166ff1; current clean head dc0255760231219413e3a498423878912fb627f9 adds ship-ready validation evidence only. Live CodeWiki tools need /reload before refresh uses the updated linter policy.",
+  "checks": [
+    "explicit_approval:user:proceed TASK-096 after reload",
+    "implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-096-2026-06-05-reconcil.json",
+    "ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-096-2026-06-05-reconciled-l.json",
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+    "npm run typecheck",
+    "npm pack --dry-run --json",
+    "source-owned audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task warning-only",
+    "source content commit d5ef934d8a8c0494ccc210fd9e3029549d166ff1",
+    "current evidence commit dc0255760231219413e3a498423878912fb627f9"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Live CodeWiki tools need /reload before refresh uses updated linter policy."
+    },
+    {
+      "severity": "warning",
+      "summary": "Graph remains yellow with 62 warning-level legacy/drift items."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Live CodeWiki tools need /reload before refresh uses updated linter policy.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "task-close:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "warning",
+      "summary": "Graph remains yellow with 62 warning-level legacy/drift items.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "task-close"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "task-close:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Live CodeWiki tools need /reload before refresh uses updated linter policy.",
+      "ref_count": 0
+    },
+    {
+      "id": "task-close:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "warning",
+      "summary": "Graph remains yellow with 62 warning-level legacy/drift items.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract",
+    "lexicon",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "explicit_approval:user:proceed TASK-096 after reload",
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:source-contract",
+    "audit:lexicon",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "alignment:warning graph health 0 errors / 62 warnings after source-owned rebuild",
+    "changed:clean current head; candidate changes committed",
+    "task:pass TASK-096",
+    "generated-parity:pass",
+    "source-contract:pass",
+    "lexicon:pass",
+    "package:pass",
+    "security:pass",
+    "stale-reference:pass"
+  ],
+  "content_proof_refs": [
+    "d5ef934d8a8c0494ccc210fd9e3029549d166ff1",
+    "dc0255760231219413e3a498423878912fb627f9",
+    "4ad31645802383c15e0c0ea9fde4b04ede3b5334",
+    "sha512-EnkLznOGGBsaOIFFyxN0x1NPKmF086S5LnFvuvsB1lehOHsoBHP9n62retULd00+NU60fKzmaEflGp1pJbrNxg=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-096-2026-06-05-reconciled-l.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      ".codewiki/validation/2026-06-05-task-close-pass-task-096-2026-06-05-reconciled-l.json",
+      "src/state/lint.ts",
+      ".codewiki/kb/system/builds.md",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-096",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+    "validation_report": ".codewiki/validation/2026-06-05-task-close-pass-task-096-2026-06-05-reconciled-l.json",
+    "commit_title": "checkpoint(codewiki): TASK-096 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-096",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-reconciled-legacy-decision-build-lint-errors-by-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-task-close-pass-task-096-2026-06-05-reconciled-l.json",
+      "CodeWiki-Checks: explicit_approval:user:proceed TASK-096 after reload; implementation validation .codewiki/validation/2026-06-05-implementation-pass-task-096-2026-06-05-reconcil.json; ship-ready validation .codewiki/validation/2026-06-05-ship-ready-pass-task-096-2026-06-05-reconciled-l.json; node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs; node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs; node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs; npm run typecheck; npm pack --dry-run --json; source-owned audit alignment+package+security+stale-reference+generated-parity+source-contract+lexicon+task warning-only; source content commit d5ef934d8a8c0494ccc210fd9e3029549d166ff1; current evidence commit dc0255760231219413e3a498423878912fb627f9"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/state/lint.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "4ad31645802383c15e0c0ea9fde4b04ede3b5334"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract",
+      "lexicon",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract",
+      "audit:lexicon or profile:lexicon",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-096",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "explicit_approval:user:proceed TASK-096 after reload"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "dc0255760231219413e3a498423878912fb627f9",
+    "validated_sha": "d5ef934d8a8c0494ccc210fd9e3029549d166ff1",
+    "tree_sha": "4ad31645802383c15e0c0ea9fde4b04ede3b5334",
+    "package_digest": "sha512-EnkLznOGGBsaOIFFyxN0x1NPKmF086S5LnFvuvsB1lehOHsoBHP9n62retULd00+NU60fKzmaEflGp1pJbrNxg==",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Working tree clean before task-close report. Source content validated at d5ef934; current head adds ship-ready validation evidence only.",
+    "role": "validator"
+  }
+}
