@@ -25,6 +25,10 @@ participants:
     label: Decision build
     kind: build
     source: .codewiki/kb/system/builds.md
+  - id: lifecycle_trace
+    label: Lifecycle trace
+    kind: durable_trace
+    source: .codewiki/kb/system/trace-graph.md
   - id: knowledge
     label: Knowledge
     kind: durable_truth
@@ -69,10 +73,18 @@ steps:
     from: decision_compiler
     to: knowledge
     message: applies approved rows to product/system truth
+  - id: decision_gate
+    from: decision_compiler
+    to: validation_gateway
+    message: validates approved decision rows, propagation, and trace impact before planning
   - id: compile_decision
     from: knowledge
     to: decision_build
     message: records approved rows, KB mappings, and propagation evidence
+  - id: record_decision_trace
+    from: decision_build
+    to: lifecycle_trace
+    message: writes decision section refs and gate history
   - id: plan_work
     from: decision_build
     to: planning_compiler
@@ -81,6 +93,10 @@ steps:
     from: planning_compiler
     to: roadmap
     message: creates or refines executable work
+  - id: planning_gate
+    from: planning_compiler
+    to: validation_gateway
+    message: validates task boundaries, parallelization, and verification strategy
   - id: agency_gate
     from: roadmap
     to: agency_controller
@@ -93,6 +109,10 @@ steps:
     from: implementation_compiler
     to: code_tests
     message: changes code/tests inside task scope
+  - id: implementation_gate
+    from: implementation_compiler
+    to: validation_gateway
+    message: validates changed code, tests, evidence, and content refs
   - id: validate
     from: implementation_compiler
     to: validation_gateway

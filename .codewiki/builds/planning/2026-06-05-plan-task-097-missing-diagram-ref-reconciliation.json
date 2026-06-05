@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-05T23:30:27Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-missing-diagr.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-19T23:30:27.000Z",
+    "purge_after": "2026-07-03T23:30:27.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan TASK-097 missing diagram-ref reconciliation from accepted scoped decision.",
+  "task_ids": [
+    "TASK-097"
+  ],
+  "task_changes": [
+    "TASK-097 created to fix architecture:telemetry, key-flow:lifecycle_trace, key-flow:decision_gate, key-flow:planning_gate, key-flow:implementation_gate."
+  ],
+  "roadmap_changes": [
+    "TASK-097 created to fix architecture:telemetry, key-flow:lifecycle_trace, key-flow:decision_gate, key-flow:planning_gate, key-flow:implementation_gate."
+  ],
+  "tdd_plan": [
+    "Inspect existing architecture/key-flow diagram node ids.",
+    "Add nodes when refs are semantically correct and no equivalent node exists; correct docs if an equivalent node exists.",
+    "Run file-structure/alignment/generated-parity/source-contract/lexicon audits plus alignment-graph and typecheck."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/alignment-graph.test.mjs"
+  ],
+  "candidate_code_paths": [
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/diagrams/architecture.yaml",
+    ".codewiki/kb/system/diagrams/key-flow.yaml"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "ROW-DIAGRAM-REFS-SCOPE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-097"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-missing-diagr.json",
+        ".codewiki/validation/2026-06-05-decision-pass-2026-06-05-accepted-scoped-recon.json"
+      ],
+      "owner": "agent",
+      "rationale": "Accepted decision scopes this work to five missing diagram refs.",
+      "evidence": "Decision gate passed and roadmap task TASK-097 created.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which diagram nodes need to be added or which refs corrected for the five missing refs?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-097"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "agent",
+      "rationale": "TASK-097 implementation will inspect current diagram node ids and update nodes/refs surgically.",
+      "evidence": "Task acceptance enumerates all five refs.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [],
+  "assumptions": [
+    "Diagram refs are intended by docs and likely need corresponding diagram nodes.",
+    "No source-code behavior changes are required."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not resolve all file-structure warnings.",
+    "Do not change package runtime/API behavior.",
+    "Do not alter trace schema/projection semantics."
+  ],
+  "risks": [
+    "Adding diagram nodes may require matching diagram parser schema exactly."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-missing-diagr.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-missing-diagr.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-05-accepted-scoped-reconciliation-for-missing-diagr.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-097"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-097"
+    ],
+    "code": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml"
+    ],
+    "tests": [
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

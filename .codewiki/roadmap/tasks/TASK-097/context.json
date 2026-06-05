@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-05T23:34:17Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-097/context.json",
+  "task": {
+    "id": "TASK-097",
+    "title": "Reconcile missing diagram refs",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "maintenance",
+    "change_type": "code",
+    "summary": "Resolve the five warning-level diagram-ref-target-missing issues in trace-graph and validation-gateway docs without broad file-structure cleanup.",
+    "labels": [
+      "reconciliation",
+      "diagrams",
+      "graph-health"
+    ],
+    "goal": {
+      "outcome": "The five missing diagram refs have matching diagram nodes or corrected refs, and graph health warning count decreases without touching unrelated file-structure drift.",
+      "acceptance": [
+        "architecture:telemetry resolves to a system architecture diagram node or trace-graph doc points to the correct existing architecture node.",
+        "key-flow:lifecycle_trace, key-flow:decision_gate, key-flow:planning_gate, and key-flow:implementation_gate resolve to key-flow diagram nodes or their KB refs are corrected to existing nodes.",
+        "file-structure/alignment audit no longer reports diagram-ref-target-missing for trace-graph.md or validation-gateway.md.",
+        "Unrelated compatibility_export_gap, ownership_mismatch, and unexpected_path warnings remain out of scope."
+      ],
+      "non_goals": [
+        "Do not resolve all 58 graph warnings.",
+        "Do not change package runtime/API behavior.",
+        "Do not alter TASK-093/TASK-094 trace schema/projection semantics."
+      ],
+      "verification": [
+        "wiki_audit file-structure+alignment+generated-parity+source-contract+lexicon",
+        "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs",
+        "npm run typecheck"
+      ]
+    },
+    "delta": {
+      "desired": "The five missing diagram refs are resolved or corrected with validation evidence.",
+      "current": "file-structure audit reports five missing diagram refs and no open roadmap coverage.",
+      "closure": "Task closes when diagram-ref-target-missing no longer appears for those five refs and task-close validation passes."
+    }
+  }
+}

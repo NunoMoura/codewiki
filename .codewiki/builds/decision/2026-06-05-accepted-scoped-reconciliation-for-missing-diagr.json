@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-05T23:29:04Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-05T23:29:04.000Z",
+    "purge_after": "2026-08-04T23:29:04.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted scoped reconciliation for missing diagram refs after reload agency pass.",
+  "decision_mode": "accepted",
+  "decision_table": {
+    "schema_version": 1,
+    "id": "ACCEPTED-SCOPED-RECONCILIATION-FOR-MISSING-DIAGR",
+    "title": "Accepted scoped reconciliation for missing diagram refs after reload agency pass.",
+    "status": "approved",
+    "rows": [
+      {
+        "id": "ROW-DIAGRAM-REFS-SCOPE",
+        "question": "ROW-DIAGRAM-REFS-SCOPE",
+        "state_delta": {
+          "current": "Graph health is yellow with warning-level diagram-ref-target-missing issues and no open roadmap coverage.",
+          "desired": "Missing diagram refs have scoped roadmap coverage and can be resolved by adding diagram nodes or correcting refs without broad file-structure cleanup."
+        },
+        "proposed_change": "Create a bounded reconciliation task for the five missing diagram refs: architecture:telemetry, key-flow:lifecycle_trace, key-flow:decision_gate, key-flow:planning_gate, and key-flow:implementation_gate. Do not address unrelated compatibility_export_gap, ownership_mismatch, or unexpected_path warnings in this slice.",
+        "rationale": "Diagram refs are knowledge/diagram alignment warnings; fixing them should be isolated from broader file-structure drift so agency can reduce graph warnings safely.",
+        "impact": {
+          "system": [
+            "knowledge",
+            "diagrams",
+            "graph",
+            "roadmap"
+          ]
+        },
+        "risk": {
+          "level": "low"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Batch all 58 warnings into one broad cleanup task."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Ignore missing diagram refs with no roadmap coverage."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": "user:2026-06-06:reloaded-you-can-proceed"
+          },
+          {
+            "ref": "wiki_audit:file-structure:diagram-ref-target-missing:2026-06-06"
+          }
+        ],
+        "expected_outcome": "Missing diagram refs have scoped roadmap coverage and can be resolved by adding diagram nodes or correcting refs without broad file-structure cleanup.",
+        "validated_outcome": ""
+      }
+    ],
+    "created_at": "2026-06-05T23:29:04Z",
+    "updated_at": "2026-06-05T23:29:04Z"
+  },
+  "approved_decision_rows": [
+    "ROW-DIAGRAM-REFS-SCOPE"
+  ],
+  "approved_rows": [
+    {
+      "id": "ROW-DIAGRAM-REFS-SCOPE",
+      "question": "ROW-DIAGRAM-REFS-SCOPE",
+      "state_delta": {
+        "current": "Graph health is yellow with warning-level diagram-ref-target-missing issues and no open roadmap coverage.",
+        "desired": "Missing diagram refs have scoped roadmap coverage and can be resolved by adding diagram nodes or correcting refs without broad file-structure cleanup."
+      },
+      "proposed_change": "Create a bounded reconciliation task for the five missing diagram refs: architecture:telemetry, key-flow:lifecycle_trace, key-flow:decision_gate, key-flow:planning_gate, and key-flow:implementation_gate. Do not address unrelated compatibility_export_gap, ownership_mismatch, or unexpected_path warnings in this slice.",
+      "rationale": "Diagram refs are knowledge/diagram alignment warnings; fixing them should be isolated from broader file-structure drift so agency can reduce graph warnings safely.",
+      "impact": {
+        "system": [
+          "knowledge",
+          "diagrams",
+          "graph",
+          "roadmap"
+        ]
+      },
+      "risk": {
+        "level": "low"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Batch all 58 warnings into one broad cleanup task."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Ignore missing diagram refs with no roadmap coverage."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": "user:2026-06-06:reloaded-you-can-proceed"
+        },
+        {
+          "ref": "wiki_audit:file-structure:diagram-ref-target-missing:2026-06-06"
+        }
+      ],
+      "expected_outcome": "Missing diagram refs have scoped roadmap coverage and can be resolved by adding diagram nodes or correcting refs without broad file-structure cleanup.",
+      "validated_outcome": ""
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Resolve only the warning-level missing diagram refs in this slice."
+    },
+    {
+      "id": "D2",
+      "summary": "Preserve unrelated file-structure warnings for separate follow-up work."
+    },
+    {
+      "id": "D3",
+      "summary": "Prefer adding stable diagram nodes when KB refs are semantically correct; prefer correcting KB refs only if existing diagram nodes already express the intended concept."
+    }
+  ],
+  "knowledge_changes": [
+    "Potential updates to architecture.yaml/key-flow.yaml and/or KB diagram_refs fields."
+  ],
+  "roadmap_changes": [
+    "Create one scoped implementation task for missing diagram refs."
+  ],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "ROW-DIAGRAM-REFS-SCOPE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/diagrams/architecture.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "diagram_refs": [],
+      "evidence": "file-structure audit listed five missing diagram refs in trace-graph and validation-gateway docs.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "System KB docs and diagram refs become aligned for the five missing diagram refs.",
+      "Graph health warning count should decrease after generated graph rebuild."
+    ],
+    "no_product_impact": "This is internal CodeWiki KB/diagram graph-health reconciliation; no package runtime/API behavior should change.",
+    "downstream_planning_questions": [
+      "Which diagram nodes need to be added or which refs corrected for the five missing refs?"
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "Which diagram nodes need to be added or which refs corrected for the five missing refs?"
+  ],
+  "assumptions": [
+    "User's proceed after reload is approval to continue agency-selected internal reconciliation tasks."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not resolve all file-structure warnings in this slice.",
+    "Do not change source code or package behavior unless tests reveal a diagram parser bug.",
+    "Do not alter TASK-093/TASK-094 trace schema/projection semantics."
+  ],
+  "risks": [
+    "Diagram node naming could drift from existing diagrams if nodes are added without checking current diagram structure."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      "Potential updates to architecture.yaml/key-flow.yaml and/or KB diagram_refs fields.",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml"
+    ],
+    "roadmap": [
+      "Create one scoped implementation task for missing diagram refs."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
