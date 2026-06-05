@@ -1,5 +1,13 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import {
+	existsSync,
+	readFileSync,
+	readdirSync,
+	statSync,
+	writeFileSync,
+	mkdirSync,
+	rmSync,
+} from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { GitCache } from "../../project/local/git-cache.ts";
 import type { WikiProject } from "../../project/types.ts";
@@ -31,11 +39,15 @@ export class CodewikiRebuilder {
 	private findMarkdownFiles(project: WikiProject): string[] {
 		const docsRoot = project.docsRoot.replace(/^\.\//, "").replace(/\/$/, "");
 		try {
-			const raw = execFileSync("git", ["ls-files", "-z", `${docsRoot}/**/*.md`, `${docsRoot}/*.md`], {
-				cwd: this.repoRoot,
-				encoding: "utf8",
-				stdio: "pipe"
-			});
+			const raw = execFileSync(
+				"git",
+				["ls-files", "-z", `${docsRoot}/**/*.md`, `${docsRoot}/*.md`],
+				{
+					cwd: this.repoRoot,
+					encoding: "utf8",
+					stdio: "pipe",
+				},
+			);
 			const files = raw.split("\0").filter(Boolean);
 			if (files.length > 0) return files;
 		} catch {
@@ -54,7 +66,7 @@ export class CodewikiRebuilder {
 
 		const mdFiles: string[] = [];
 		walk(join(this.repoRoot, project.docsRoot), mdFiles);
-		return mdFiles.map(p => relative(this.repoRoot, p).replace(/\\/g, "/"));
+		return mdFiles.map((p) => relative(this.repoRoot, p).replace(/\\/g, "/"));
 	}
 
 	private writeRoadmapTaskViews(
@@ -78,7 +90,11 @@ export class CodewikiRebuilder {
 			writeFileSync(join(taskRoot, "task.json"), JSON.stringify(task, null, 2));
 			writeFileSync(
 				join(taskRoot, "context.json"),
-				JSON.stringify((detail as { context_packet?: unknown }).context_packet, null, 2),
+				JSON.stringify(
+					(detail as { context_packet?: unknown }).context_packet,
+					null,
+					2,
+				),
 			);
 		}
 	}
@@ -92,27 +108,46 @@ export class CodewikiRebuilder {
 			for (const f of readdirSync(dir)) {
 				const p = join(dir, f);
 				if (statSync(p).isDirectory()) walk(p);
-				else if (f.endsWith(".jsonl") && !f.includes("events") && !f.includes("archive")) {
+				else if (
+					f.endsWith(".jsonl") &&
+					!f.includes("events") &&
+					!f.includes("archive")
+				) {
 					try {
 						const raw = readFileSync(p, "utf8");
-						const lines = raw.split(/\r?\n/).filter((l: string) => l.trim().startsWith("{"));
-						const entries = lines.map((l: string) => {
-							try { return JSON.parse(l); } catch { return null; }
-						}).filter(Boolean).map((e: any) => ({
-							id: String(e.id || "").trim(),
-							title: String(e.title || "").trim(),
-							summary: String(e.summary || "").trim(),
-							web_link: String(e.web_link || "").trim(),
-							updated: String(e.updated || "").trim(),
-							tags: (e.tags || []).filter(Boolean).map(String),
-							revision: { digest: "dummy" }
-						}));
+						const lines = raw
+							.split(/\r?\n/)
+							.filter((l: string) => l.trim().startsWith("{"));
+						const entries = lines
+							.map((l: string) => {
+								try {
+									return JSON.parse(l);
+								} catch {
+									return null;
+								}
+							})
+							.filter(Boolean)
+							.map((e: any) => ({
+								id: String(e.id || "").trim(),
+								title: String(e.title || "").trim(),
+								summary: String(e.summary || "").trim(),
+								web_link: String(e.web_link || "").trim(),
+								updated: String(e.updated || "").trim(),
+								tags: (e.tags || []).filter(Boolean).map(String),
+								revision: { digest: "dummy" },
+							}));
 						collections.push({
 							path: relative(this.repoRoot, p).replace(/\\/g, "/"),
 							entry_count: entries.length,
-							entries
+							entries,
 						});
-					} catch {}
+					} catch (error) {
+						this.log(
+							`[Rebuild] Failed to parse research collection: ${relative(this.repoRoot, p).replace(/\\/g, "/")}`,
+							true,
+						);
+						void error;
+					}
 				}
 			}
 		};
@@ -122,9 +157,18 @@ export class CodewikiRebuilder {
 
 	public async rebuildAll(): Promise<void> {
 		const configPath = join(this.repoRoot, ".codewiki", "config.json");
-		const config = existsSync(configPath) ? JSON.parse(readFileSync(configPath, "utf8")) : {};
-		const quiet = this.quietOverride ?? (process.env.CODEWIKI_REBUILD_VERBOSE === "1" ? false : config?.codewiki?.rebuild?.quiet !== false);
-		this.log(`[Rebuild] Starting full rebuild for repo: ${this.repoRoot}`, quiet);
+		const config = existsSync(configPath)
+			? JSON.parse(readFileSync(configPath, "utf8"))
+			: {};
+		const quiet =
+			this.quietOverride ??
+			(process.env.CODEWIKI_REBUILD_VERBOSE === "1"
+				? false
+				: config?.codewiki?.rebuild?.quiet !== false);
+		this.log(
+			`[Rebuild] Starting full rebuild for repo: ${this.repoRoot}`,
+			quiet,
+		);
 
 		this.log(`[Rebuild] Warming up git cache...`, quiet);
 		this.gitCache.prefetchAllBlobOids();
@@ -157,7 +201,9 @@ export class CodewikiRebuilder {
 		const docs: ParsedDoc[] = [];
 		for (const relPath of mdFiles) {
 			try {
-				docs.push(parseDoc(this.repoRoot, project, resolve(this.repoRoot, relPath)));
+				docs.push(
+					parseDoc(this.repoRoot, project, resolve(this.repoRoot, relPath)),
+				);
 			} catch (err) {
 				this.log(`[Rebuild] Failed to parse doc: ${relPath}`, quiet);
 			}
@@ -171,24 +217,42 @@ export class CodewikiRebuilder {
 		const readJsonLines = (file: string) => {
 			const p = join(this.repoRoot, file);
 			if (!existsSync(p)) return [];
-			return readFileSync(p, "utf8").split("\n").filter(l => l.trim()).map(l => JSON.parse(l));
+			return readFileSync(p, "utf8")
+				.split("\n")
+				.filter((l) => l.trim())
+				.map((l) => JSON.parse(l));
 		};
 
-		const roadmapData = readJson(project.roadmapPath, { tasks: {}, sprints: {} });
+		const roadmapData = readJson(project.roadmapPath, {
+			tasks: {},
+			sprints: {},
+		});
 		const roadmapEntries = Object.values(roadmapData.tasks || {}) as any[];
 		const roadmapSprints = Object.values(roadmapData.sprints || {}) as any[];
 		this.writeRoadmapTaskViews(roadmapEntries as RoadmapTaskRecord[]);
 		const claimsPath = claimsFilePath(project);
-		const claims = existsSync(claimsPath) ? normalizeClaimsFile(JSON.parse(readFileSync(claimsPath, "utf8"))) : normalizeClaimsFile(null);
-		const archivePath = config.roadmap_retention?.archive_path || `${metaRoot}/roadmap/archive.jsonl`;
+		const claims = existsSync(claimsPath)
+			? normalizeClaimsFile(JSON.parse(readFileSync(claimsPath, "utf8")))
+			: normalizeClaimsFile(null);
+		const archivePath =
+			config.roadmap_retention?.archive_path ||
+			`${metaRoot}/roadmap/archive.jsonl`;
 		const archivedRoadmapEntries = readJsonLines(archivePath);
-		const archivedTaskIds = archivedRoadmapEntries.map((task: any) => String(task.id || "").trim()).filter(Boolean);
+		const archivedTaskIds = archivedRoadmapEntries
+			.map((task: any) => String(task.id || "").trim())
+			.filter(Boolean);
 		const events: any[] = [];
 
 		const research = this.loadResearchCollections(project);
 
 		this.log(`[Rebuild] Discovering build artifacts...`, quiet);
-		const builds: { path: string; kind: string; taskId?: string; status?: string; data: any }[] = [];
+		const builds: {
+			path: string;
+			kind: string;
+			taskId?: string;
+			status?: string;
+			data: any;
+		}[] = [];
 		const buildsRoot = join(this.repoRoot, ".codewiki", "builds");
 		if (existsSync(buildsRoot)) {
 			for (const kind of ["decision", "planning", "implementation"]) {
@@ -210,13 +274,21 @@ export class CodewikiRebuilder {
 		}
 
 		this.log(`[Rebuild] Discovering validation reports...`, quiet);
-		const validations: { path: string; taskId?: string; verdict?: string; data?: any }[] = [];
+		const validations: {
+			path: string;
+			taskId?: string;
+			verdict?: string;
+			data?: any;
+		}[] = [];
 		const validationRoot = join(this.repoRoot, ".codewiki", "validation");
 		if (existsSync(validationRoot)) {
 			const walk = (dir: string) => {
 				for (const f of readdirSync(dir)) {
 					const p = join(dir, f);
-					if (statSync(p).isDirectory()) { walk(p); continue; }
+					if (statSync(p).isDirectory()) {
+						walk(p);
+						continue;
+					}
 					if (!f.endsWith(".json")) continue;
 					const relPath = relative(this.repoRoot, p).replace(/\\/g, "/");
 					const vdata = readJson(relPath, {});
@@ -231,13 +303,36 @@ export class CodewikiRebuilder {
 			walk(validationRoot);
 		}
 
+		this.log(`[Rebuild] Discovering lifecycle traces...`, quiet);
+		const lifecycleTraces: { path: string; data: any }[] = [];
+		let traceCatalog: { path: string; data: any } | null = null;
+		const telemetryRoot = join(this.repoRoot, ".codewiki", "telemetry");
+		if (existsSync(telemetryRoot)) {
+			for (const f of readdirSync(telemetryRoot)) {
+				if (!f.endsWith(".json")) continue;
+				const relPath = `.codewiki/telemetry/${f}`;
+				if (f === "catalog.json") {
+					traceCatalog = { path: relPath, data: readJson(relPath, {}) };
+					continue;
+				}
+				if (!f.startsWith("TRACE-")) continue;
+				lifecycleTraces.push({ path: relPath, data: readJson(relPath, {}) });
+			}
+		}
+
 		this.log(`[Rebuild] Discovering test files...`, quiet);
 		const testFiles: string[] = [];
 		const scriptsDir = join(this.repoRoot, "scripts");
 		if (existsSync(scriptsDir)) {
 			for (const f of readdirSync(scriptsDir)) {
 				const lower = f.toLowerCase();
-				if ((lower.includes("test") || lower.includes("smoke") || lower.includes("benchmark") || lower.includes("check")) && (f.endsWith(".mjs") || f.endsWith(".ts") || f.endsWith(".js"))) {
+				if (
+					(lower.includes("test") ||
+						lower.includes("smoke") ||
+						lower.includes("benchmark") ||
+						lower.includes("check")) &&
+					(f.endsWith(".mjs") || f.endsWith(".ts") || f.endsWith(".js"))
+				) {
 					testFiles.push(`scripts/${f}`);
 				}
 			}
@@ -245,17 +340,60 @@ export class CodewikiRebuilder {
 
 		this.log(`[Rebuild] Graph and Lint dependencies resolving...`, quiet);
 
-		const lintReport = buildLintReport(this.repoRoot, project, docs, roadmapEntries, research, { builds, validations, archivedTaskIds });
-		const graph = buildGraph({ project, docs, research, roadmapEntries, roadmapSprints, archivedTaskIds, gitCache: this.gitCache, builds, validations, testFiles, claims, lintReport });
-		
+		const lintReport = buildLintReport(
+			this.repoRoot,
+			project,
+			docs,
+			roadmapEntries,
+			research,
+			{ builds, validations, archivedTaskIds },
+		);
+		const graph = buildGraph({
+			project,
+			docs,
+			research,
+			roadmapEntries,
+			roadmapSprints,
+			archivedTaskIds,
+			gitCache: this.gitCache,
+			builds,
+			validations,
+			lifecycleTraces,
+			traceCatalog,
+			testFiles,
+			claims,
+			lintReport,
+		});
+
 		this.log(`[Rebuild] Building UI state...`, quiet);
-		const roadmapState = buildRoadmapState(project, roadmapEntries, graph, lintReport, events, roadmapSprints);
-		
+		const roadmapState = buildRoadmapState(
+			project,
+			roadmapEntries,
+			graph,
+			lintReport,
+			events,
+			roadmapSprints,
+		);
+
 		const previousStatusPath = join(this.repoRoot, project.statusStatePath);
-		const previousState = existsSync(previousStatusPath) ? JSON.parse(readFileSync(previousStatusPath, "utf8")) : {};
+		const previousState = existsSync(previousStatusPath)
+			? JSON.parse(readFileSync(previousStatusPath, "utf8"))
+			: {};
 		const previousStatus = previousState?.lenses?.status || previousState;
-		const statusState = buildStatusState(project, this.repoRoot, this.gitCache, docs, graph, roadmapEntries, lintReport, roadmapState, events, previousStatus, claims);
-		
+		const statusState = buildStatusState(
+			project,
+			this.repoRoot,
+			this.gitCache,
+			docs,
+			graph,
+			roadmapEntries,
+			lintReport,
+			roadmapState,
+			events,
+			previousStatus,
+			claims,
+		);
+
 		const metaRootDir = join(this.repoRoot, metaRoot);
 		if (!existsSync(metaRootDir)) mkdirSync(metaRootDir, { recursive: true });
 
@@ -267,8 +405,14 @@ export class CodewikiRebuilder {
 				status: statusState,
 			},
 		};
-		writeFileSync(join(metaRootDir, "index_graph.json"), JSON.stringify(indexGraph, null, 2));
-		this.writeRoadmapTaskViews(roadmapEntries as RoadmapTaskRecord[], roadmapState);
+		writeFileSync(
+			join(metaRootDir, "index_graph.json"),
+			JSON.stringify(indexGraph, null, 2),
+		);
+		this.writeRoadmapTaskViews(
+			roadmapEntries as RoadmapTaskRecord[],
+			roadmapState,
+		);
 
 		this.log(`[Rebuild] Engine pipeline completed successfully!`, quiet);
 	}

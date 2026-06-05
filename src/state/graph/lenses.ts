@@ -418,6 +418,7 @@ export function buildGraphLensViews(input: {
 	contentProofRefs: string[];
 	fileStructureDrift: CompactFileStructureDrift;
 	claimState: GraphRuntimeLensState;
+	traceDag: ReadModelRecord;
 	gc: GraphGcView;
 	automationReadiness: AutomationReadinessIndex;
 }) {
@@ -705,10 +706,12 @@ export function buildGraphLensViews(input: {
 				? `Next open task is ${selectedTask.id}.`
 				: "No open roadmap task requires action."),
 	};
+	const traceDagSourceRefs = stringList(input.traceDag.source_refs);
 	const graphSourceRefs = unique([
 		".codewiki/index_graph.json",
 		".codewiki/roadmap/queue.json",
 		".codewiki/session/queue.json",
+		...traceDagSourceRefs,
 		...input.canonicalSourceRefs,
 		...buildPaths,
 		...validationPaths,
@@ -814,6 +817,7 @@ export function buildGraphLensViews(input: {
 			blocked_task_ids: blockedTasks.map((task) => task.id),
 			active_sprint_ids: input.activeSprintIds,
 			latest_validation: validationPreview[0] || null,
+			trace_dag: recordOrEmpty(input.traceDag.status),
 			families,
 		},
 	});
@@ -828,6 +832,7 @@ export function buildGraphLensViews(input: {
 			context_refs: selectedTask
 				? [`.codewiki/roadmap/tasks/${selectedTask.id}/context.json`]
 				: [],
+			trace_dag: recordOrEmpty(input.traceDag.resume),
 			context_boundary:
 				input.reconciliationAction?.context_boundary ||
 				"Read source refs directly before semantic edits.",
@@ -841,7 +846,7 @@ export function buildGraphLensViews(input: {
 		},
 		nextAction: graphNextAction,
 		blockers: commonBlockers,
-		data: { tasks: taskPreview },
+		data: { tasks: taskPreview, trace_dag: recordOrEmpty(input.traceDag.task) },
 	});
 	const sprintLens = focusedGraphLens("sprint", {
 		summary: "Sprint membership, gates, task scope, and blockers.",
@@ -893,6 +898,7 @@ export function buildGraphLensViews(input: {
 				String(blocker.kind || "") === "runtime_coordination_conflict",
 		),
 		data: {
+			trace_dag: recordOrEmpty(input.traceDag.runtime),
 			active_claim_count: input.claimState.active_claim_count,
 			warning_count: Number(input.claimState.warning_count || 0),
 			conflict_count: Number(input.claimState.conflict_count || 0),
@@ -1058,6 +1064,7 @@ export function buildGraphLensViews(input: {
 			expansion_hints: graphLensExpansionHints("trace", graphSourceRefs),
 			requirement_rows: input.traceabilityRows,
 			semantic_execution_closure: input.semanticExecutionClosure,
+			trace_dag: input.traceDag,
 			semantic_change_rows: input.semanticChangeRows,
 			semantic_change_gaps: semanticGaps,
 			canonical_source_refs: input.canonicalSourceRefs,

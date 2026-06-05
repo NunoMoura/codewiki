@@ -33,6 +33,7 @@ import {
 	applyDefaultLensCompaction,
 	buildGraphLensViews,
 } from "./graph/lenses.ts";
+import { buildTraceDagProjection } from "./graph/trace-projection.ts";
 
 export interface GraphBuildInputs {
 	project: WikiProject;
@@ -55,6 +56,14 @@ export interface GraphBuildInputs {
 		verdict?: string;
 		data?: any;
 	}[];
+	lifecycleTraces?: {
+		path: string;
+		data: any;
+	}[];
+	traceCatalog?: {
+		path: string;
+		data: any;
+	} | null;
 	testFiles: string[];
 	claims: ChangeClaimsFile;
 	lintReport?: LintReport;
@@ -1303,6 +1312,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		gitCache,
 		builds,
 		validations,
+		lifecycleTraces = [],
+		traceCatalog = null,
 		testFiles,
 		claims,
 		lintReport,
@@ -3194,6 +3205,11 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const decisionPropagationResiduals = decisionPropagationAssessments.flatMap(
 		(assessment) => assessment.residuals,
 	);
+	const traceDag = buildTraceDagProjection({
+		traces: lifecycleTraces,
+		catalog: traceCatalog,
+		runtime: claimState,
+	});
 	const graphLensViews = buildGraphLensViews({
 		nodes,
 		edges,
@@ -3219,6 +3235,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		contentProofRefs: Array.from(contentProofRefSet).sort(),
 		fileStructureDrift,
 		claimState,
+		traceDag,
 		gc,
 		automationReadiness,
 	});
@@ -3248,6 +3265,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			sprints: sprintViews,
 		},
 		semantic_execution_closure: semanticExecutionClosure,
+		trace_dag: traceDag,
 		decision_propagation: {
 			version: 1,
 			model: "accepted-decision-row-to-roadmap-resolution",

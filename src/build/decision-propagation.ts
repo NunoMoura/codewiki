@@ -531,14 +531,18 @@ function validateResolution(
 		}
 	}
 	if (entry.resolution === "deferred") {
+		const triggerSatisfied = deferredTriggerSatisfied(
+			entry,
+			satisfiedDeferredTriggers,
+		);
 		if (executable) {
 			gaps.push("executable_requires_task_or_sprint");
+			if (triggerSatisfied) gaps.push("trigger_satisfied");
 		} else {
 			if (!entry.owner) gaps.push("missing_owner");
 			if (!entry.trigger) gaps.push("missing_trigger");
 			if (!entry.rationale) gaps.push("missing_rationale");
-			if (deferredTriggerSatisfied(entry, satisfiedDeferredTriggers))
-				gaps.push("trigger_satisfied");
+			if (triggerSatisfied) gaps.push("trigger_satisfied");
 		}
 	}
 	return gaps;

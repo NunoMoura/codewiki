@@ -247,6 +247,82 @@ try {
 			},
 		},
 	};
+	const tracePath = ".codewiki/telemetry/TRACE-graph-lens.json";
+	const lifecycleTrace = {
+		schema_version: 1,
+		trace_id: "TRACE-graph-lens",
+		title: "Graph lens trace",
+		summary: "Trace-primary projection fixture.",
+		lifecycle: {
+			status: "active",
+			active_loops: [
+				{
+					loop: "implementation",
+					run_id: "RUN-graph-lens",
+					state: "active",
+					next_action: "Validate graph projection.",
+				},
+			],
+			blockers: [{ severity: "medium", summary: "Fixture blocker." }],
+			next_safe_actions: ["Validate graph projection."],
+		},
+		relations: [
+			{
+				target_trace: "TRACE-cold-graph-lens",
+				rel: "follow_up_to",
+				state: "active",
+			},
+		],
+		scope: {
+			task_refs: ["TASK-100"],
+			sprint_refs: ["SPRINT-900"],
+			knowledge_refs: [".codewiki/kb/system/graph.md"],
+			source_refs: ["src/state/graph.ts"],
+			test_refs: ["tests/smoke/graph-lenses.test.mjs"],
+			gate_refs: [validationPath],
+			path_scopes: ["src/state/**"],
+		},
+		decision: { status: "approved" },
+		planning: { status: "gate_passed" },
+		implementation: {
+			status: "active",
+			code_refs: ["src/state/graph.ts"],
+			test_refs: ["tests/smoke/graph-lenses.test.mjs"],
+			gate_history: [{ ref: validationPath, kind: "gate_attestation" }],
+			publication: { mode: "off", status: "not_configured" },
+		},
+		accountability: {
+			content_proofs: [{ ref: checkedDigest, kind: "content_digest" }],
+		},
+	};
+	const traceCatalog = {
+		schema_version: 1,
+		updated_at: "2026-05-20T00:00:00Z",
+		entries: [
+			{
+				trace_id: "TRACE-cold-graph-lens",
+				title: "Cold graph lens trace",
+				summary: "Cold trace projection fixture.",
+				lifecycle_status: "closed",
+				task_refs: ["TASK-100"],
+				source_refs: ["src/state/reader.ts"],
+				path_scopes: ["src/state/**"],
+				relations: [
+					{
+						target_trace: "TRACE-graph-lens",
+						rel: "depends_on",
+						state: "satisfied",
+					},
+				],
+				restore: {
+					original_path: ".codewiki/telemetry/TRACE-cold-graph-lens.json",
+					commit_sha: "abc123",
+					tree_sha: "def456",
+					content_digest: "sha256:cold-trace",
+				},
+			},
+		],
+	};
 
 	const graph = buildGraph({
 		project,
@@ -263,6 +339,11 @@ try {
 			implementationBuild,
 		],
 		validations: [validationReport],
+		lifecycleTraces: [{ path: tracePath, data: lifecycleTrace }],
+		traceCatalog: {
+			path: ".codewiki/telemetry/catalog.json",
+			data: traceCatalog,
+		},
 		testFiles: ["tests/smoke/graph-lenses.test.mjs"],
 		claims: { version: 1, claims: [] },
 		lintReport: { issues: [], counts: {}, status: "green" },
@@ -318,6 +399,81 @@ try {
 				row.source_refs.includes("src/state/graph.ts"),
 		),
 		"trace lens should expand build source refs",
+	);
+	const traceDag = graph.views.trace_dag;
+	assert.equal(traceDag.source, "generated:trace-dag-projection");
+	assert.equal(traceDag.trace_count, 2, "hot and cold traces should project");
+	assert.equal(
+		traceDag.status.active_trace_ids.includes("TRACE-graph-lens"),
+		true,
+		"status projection includes active traces",
+	);
+	assert.equal(
+		traceDag.decision_queue[0].trace_id,
+		"TRACE-graph-lens",
+		"decision queue projects open decision work",
+	);
+	assert.ok(
+		traceDag.lineage.some(
+			(row) =>
+				row.from_trace === "TRACE-graph-lens" &&
+				row.to_trace === "TRACE-cold-graph-lens" &&
+				row.rel === "follow_up_to",
+		),
+		"lineage projects semantic trace relations",
+	);
+	assert.ok(
+		traceDag.task["TASK-100"].some(
+			(row) => row.trace_id === "TRACE-graph-lens",
+		),
+		"task index projects trace refs",
+	);
+	assert.ok(
+		traceDag.path["src/state/**"].some(
+			(row) => row.trace_id === "TRACE-cold-graph-lens" && row.cold === true,
+		),
+		"path index projects cold catalog refs",
+	);
+	assert.ok(
+		traceDag.path["src/state/**"]
+			.find((row) => row.trace_id === "TRACE-cold-graph-lens")
+			.pointer_ref.startsWith(
+				"git:abc123:.codewiki/telemetry/TRACE-cold-graph-lens.json#",
+			),
+		"cold catalog pointers use git commit restore refs",
+	);
+	assert.equal(
+		traceDag.runtime.durable_truth,
+		false,
+		"runtime projection remains hot coordination input, not durable trace truth",
+	);
+	assert.equal(
+		traceDag.status.active_trace_ids.some((trace) => trace.kind === "trace"),
+		false,
+		"trace-primary records must not expose redundant kind:trace identity",
+	);
+	assert.deepEqual(
+		traceDag.deferred_views,
+		[],
+		"required trace-primary views are implemented in this slice",
+	);
+	assert.equal(
+		graph.views.lenses.status.data.trace_dag.active_trace_ids.includes(
+			"TRACE-graph-lens",
+		),
+		true,
+		"status lens consumes trace DAG projection",
+	);
+	assert.equal(
+		graph.views.lenses.resume.data.trace_dag.active_traces[0].pointer_refs
+			.decision,
+		`${tracePath}#/decision`,
+		"resume lens exposes exact JSON pointer refs",
+	);
+	assert.equal(
+		traceLens.trace_dag,
+		traceDag,
+		"trace lens exposes trace-DAG projection by ref",
 	);
 
 	const auditLens = graph.views.lenses.audit;
@@ -622,7 +778,12 @@ try {
 
 	const validationState = await readCodewikiState(
 		project,
-		{ include: ["summary"], taskId: undefined, refresh: false, lens: "validation" },
+		{
+			include: ["summary"],
+			taskId: undefined,
+			refresh: false,
+			lens: "validation",
+		},
 		ports,
 	);
 	assert.ok(
@@ -634,7 +795,12 @@ try {
 
 	const runtimeState = await readCodewikiState(
 		project,
-		{ include: ["summary"], taskId: undefined, refresh: false, lens: "runtime" },
+		{
+			include: ["summary"],
+			taskId: undefined,
+			refresh: false,
+			lens: "runtime",
+		},
 		ports,
 	);
 	assert.equal(runtimeState.lens.id, "runtime");

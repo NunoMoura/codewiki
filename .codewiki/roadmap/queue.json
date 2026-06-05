@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-05T18:59:31Z",
+  "updated": "2026-06-05T19:36:52Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -751,7 +751,7 @@
         "closure": "Task closes when graph/status/resume views can drive trace-primary continuation without noisy artifact inventory."
       },
       "created": "2026-06-04",
-      "updated": "2026-06-04T06:15:13Z"
+      "updated": "2026-06-05T19:36:52Z"
     }
   },
   "sprints": {
