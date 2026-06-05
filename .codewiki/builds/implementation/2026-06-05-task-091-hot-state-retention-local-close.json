@@ -1,0 +1,664 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-05T10:25:17Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+  "task_id": "TASK-091",
+  "task": {
+    "id": "TASK-091",
+    "title": "Define CodeWiki hot-state retention cleanup",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "maintenance",
+    "summary": "Separate dogfood hot state from package source cleanup, document trace hot/cold retention and compatibility vocabulary, and purge only eligible artifacts through GC with restore evidence.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+    ],
+    "code_paths": [
+      "src/gc/**",
+      "src/telemetry/**",
+      "src/state/**",
+      ".gitignore",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Dogfood and local state retention rules are clear for lifecycle traces, trace catalog, generated graph/cache, runtime state, scratch paths, and compatibility vocabulary.",
+      "acceptance": [
+        "Docs/file-structure map distinguish package source from `.codewiki/**` dogfood truth, hot traces, cold trace catalog, generated views/cache, runtime/session scratch, legacy build/gate evidence, `.pi`, `.vscode`, and `.tmp-worktrees`.",
+        "Hot/cold telemetry retention states when a trace remains as full JSON and when it may be cataloged and cold-archived through Git restore refs.",
+        "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
+        "Post-close GC dry-run identifies eligible tracked/runtime artifacts; any purge writes restore ledger with archive commit/tree proof or records deferral/block reason.",
+        "No gate/build evidence required for open/current policy is deleted.",
+        "Lexicon linter either passes for `proof`/`checks`/`build`/`validation` compatibility terms or records explicit deletion-triggered deferrals."
+      ],
+      "non_goals": [
+        "Do not implement the lifecycle trace writer itself if TASK-093 has not landed.",
+        "Do not purge `.codewiki/validation/**` or `.codewiki/builds/**` evidence needed by active migration tasks.",
+        "Do not remove local scratch folders without Git/worktree/lease safety checks."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "wiki_audit profiles=file-structure,lexicon",
+        "wiki_gc dry-run with archive refs when purge is requested",
+        "npm run typecheck"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-12T10:25:17.000Z",
+    "purge_after": "2026-06-19T10:25:17.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-091 hot-state retention cleanup local-close build",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-091"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+    ],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/lexicon.md"
+    ],
+    "roadmap": [],
+    "code": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/lexicon.md",
+      ".gitignore",
+      "src/checks/lexicon.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ],
+    "tests": [
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
+      "task-close local/package readiness"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-091"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+    ],
+    "code_paths": [
+      "src/gc/**",
+      "src/telemetry/**",
+      "src/state/**",
+      ".gitignore",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/lexicon-linter.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "code_files": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/lexicon.md",
+    ".gitignore",
+    "src/checks/lexicon.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "tests/smoke/lexicon-linter.test.mjs"
+  ],
+  "files_changed": [
+    "tests/smoke/lexicon-linter.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/lexicon.md",
+    ".gitignore",
+    "src/checks/lexicon.ts",
+    "src/adapters/pi/tools/ports.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings",
+    "wiki_gc dry-run -> tracked=0 runtime=4",
+    "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+      "roadmap_task_id": "TASK-091",
+      "test_files": [
+        "tests/smoke/lexicon-linter.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "evidence": [],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+      "roadmap_task_id": "TASK-091",
+      "code_files": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/lexicon.md",
+        ".gitignore",
+        "src/checks/lexicon.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "tests/smoke/lexicon-linter.test.mjs"
+      ],
+      "evidence": [],
+      "notes": [],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [],
+  "code_change_evidence": [],
+  "acceptance_mapping": [
+    {
+      "criterion": "Docs/file-structure map distinguish package source from dogfood truth, hot traces, cold trace catalog, generated views/cache, runtime/session scratch, legacy build/gate evidence, `.pi`, `.vscode`, and `.tmp-worktrees`.",
+      "evidence": ".codewiki/kb/system/file-structure.md and file-structure-map.yaml define retention classes and nodes."
+    },
+    {
+      "criterion": "Hot/cold telemetry retention states when full JSON remains hot and when catalog/cold archive is allowed through Git restore refs.",
+      "evidence": ".codewiki/kb/system/trace-graph.md and builds.md document hot/cold retention and GC restore evidence."
+    },
+    {
+      "criterion": "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
+      "evidence": ".gitignore keeps .tmp-worktrees/; file-structure.md says Git refs/object queries are preferred and worktrees are optional scratch only."
+    },
+    {
+      "criterion": "Post-close GC dry-run identifies eligible tracked/runtime artifacts; purge writes restore ledger or records deferral/block reason.",
+      "evidence": "wiki_gc dry-run found tracked=0 runtime=4; purge deferred pre-close/no tracked candidates."
+    },
+    {
+      "criterion": "No gate/build evidence required for open/current policy is deleted.",
+      "evidence": "No .codewiki/builds/** or .codewiki/validation/** required evidence deleted; docs retain legacy evidence roots during migration."
+    },
+    {
+      "criterion": "Lexicon linter passes for compatibility terms or records deferrals.",
+      "evidence": "src/checks/lexicon.ts supports wildcard migration-doc allowances; lexicon audit passes."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Close TASK-091 after hot-state retention cleanup.",
+    "implemented_changes": [
+      "Documented hot-state retention classes and safe deletion triggers.",
+      "Clarified .tmp-worktrees as optional scratch and Git refs/object queries as preferred restore/catalog mechanism.",
+      "Added lexicon wildcard migration-doc support and simplified compatibility deferrals after reload.",
+      "Ran GC dry-run and retained required build/validation evidence."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [],
+      "tests": [],
+      "validation": [
+        ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "Implementation validation pass for TASK-091",
+      "Lexicon/package smoke tests pass",
+      "file-structure/lexicon/task audit evidence recorded",
+      "GC dry-run tracked=0 runtime=4"
+    ],
+    "checks": [
+      "lexicon smoke",
+      "package smoke",
+      "typecheck",
+      "wiki_audit file-structure/lexicon/task",
+      "wiki_gc dry-run"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "file-structure warnings remain pre-existing migration drift; no tracked purge performed."
+    ]
+  },
+  "risks": [],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-091",
+      "task_id": "TASK-091",
+      "next_focus_task_id": "TASK-092",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-091",
+        "title": "Define CodeWiki hot-state retention cleanup",
+        "summary": "TASK-091 hot-state retention cleanup local-close build",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json"
+        ],
+        "code_paths": [
+          "src/gc/**",
+          "src/telemetry/**",
+          "src/state/**",
+          ".gitignore",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/lexicon.md",
+          "src/checks/lexicon.ts",
+          "src/adapters/pi/tools/ports.ts"
+        ],
+        "acceptance": [
+          "Docs/file-structure map distinguish package source from `.codewiki/**` dogfood truth, hot traces, cold trace catalog, generated views/cache, runtime/session scratch, legacy build/gate evidence, `.pi`, `.vscode`, and `.tmp-worktrees`.",
+          "Hot/cold telemetry retention states when a trace remains as full JSON and when it may be cataloged and cold-archived through Git restore refs.",
+          "`.tmp-worktrees` remains ignored or is removed only after dirty/claim checks prove safe; no production semantics depend on it.",
+          "Post-close GC dry-run identifies eligible tracked/runtime artifacts; any purge writes restore ledger with archive commit/tree proof or records deferral/block reason.",
+          "No gate/build evidence required for open/current policy is deleted.",
+          "Lexicon linter either passes for `proof`/`checks`/`build`/`validation` compatibility terms or records explicit deletion-triggered deferrals."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "wiki_audit profiles=file-structure,lexicon",
+          "wiki_gc dry-run with archive refs when purge is requested",
+          "npm run typecheck"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+          "npm run typecheck -> pass",
+          "wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings",
+          "wiki_gc dry-run -> tracked=0 runtime=4",
+          "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+        ],
+        "test_design_evidence": [],
+        "code_change_evidence": [],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-091",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-091",
+      "show_build": "git show refs/codewiki/archive/task/TASK-091:.codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+        "src/gc/**",
+        "src/telemetry/**",
+        "src/state/**",
+        ".gitignore",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/lexicon-linter.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-091 Define CodeWiki hot-state retention cleanup implementation evidence",
+      "body": "TASK-091 hot-state retention cleanup local-close build\n\nChecks: node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run typecheck -> pass, wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings, wiki_gc dry-run -> tracked=0 runtime=4, npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==\nValidation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-091\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run typecheck -> pass, wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings, wiki_gc dry-run -> tracked=0 runtime=4, npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==\nCodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json\nCodeWiki-Recover: /wiki-restore TASK-091\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-091\nCodeWiki-Digest: sha256:236d3c3470926a56cff2e6d973435a5decc49283310e93cafb07cd16b213d172\nCodeWiki-Restore: /wiki-restore TASK-091",
+      "trailers": [
+        "CodeWiki-Task: TASK-091",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run typecheck -> pass, wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings, wiki_gc dry-run -> tracked=0 runtime=4, npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
+        "CodeWiki-Recover: /wiki-restore TASK-091",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-091",
+        "CodeWiki-Digest: sha256:236d3c3470926a56cff2e6d973435a5decc49283310e93cafb07cd16b213d172",
+        "CodeWiki-Restore: /wiki-restore TASK-091"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-091 Define CodeWiki hot-state retention cleanup implementation evidence",
+      "body": "TASK-091 hot-state retention cleanup local-close build\n\nChecks: node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run typecheck -> pass, wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings, wiki_gc dry-run -> tracked=0 runtime=4, npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==\nValidation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-091\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run typecheck -> pass, wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings, wiki_gc dry-run -> tracked=0 runtime=4, npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==\nCodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json\nCodeWiki-Recover: /wiki-restore TASK-091\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-091\nCodeWiki-Digest: sha256:236d3c3470926a56cff2e6d973435a5decc49283310e93cafb07cd16b213d172\nCodeWiki-Restore: /wiki-restore TASK-091"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-091",
+      "commit_sha": "d172524b40f305e3176a79322d0c48e886d00714",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-091"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-091",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-091",
+        "show_build": "git show refs/codewiki/archive/task/TASK-091:.codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+          "src/gc/**",
+          "src/telemetry/**",
+          "src/state/**",
+          ".gitignore",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/lexicon-linter.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-091",
+      "build_path": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-091",
+      "commit_sha": "d172524b40f305e3176a79322d0c48e886d00714",
+      "digest": "sha256:236d3c3470926a56cff2e6d973435a5decc49283310e93cafb07cd16b213d172",
+      "restore_command": "/wiki-restore TASK-091"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:b06a01e04023ee1c0fc8ae801f2eec6e46eb99e7df36ce158203c4250182cebd",
+          "bytes": 25571
+        },
+        {
+          "path": ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json",
+          "role": "validation_ref",
+          "sha256": "sha256:a3cb667abd1ef83019c2a81afe4d21175d8204afa66aec7930852e825219cf6a",
+          "bytes": 14294
+        },
+        {
+          "path": "tests/smoke/lexicon-linter.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:362576b514f5d7e91927ecac4e01e5b8f04499ee568881c0b7953642d86fa2ce",
+          "bytes": 6888
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:dab1047f1ff71b8b1df6b03210bdff3dbdb1663b7e79f22a3968bbcfab0e960f",
+          "bytes": 112785
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:3a8bee655c426635d5c23608786a497df56adf1dc76bd30f9300502a5dff330a",
+          "bytes": 12586
+        },
+        {
+          "path": ".codewiki/kb/system/builds.md",
+          "role": "code_file",
+          "sha256": "sha256:cd19cec907eee07dd0b19f59a843fff8874139d1456aa012906bf2be6713dc62",
+          "bytes": 4462
+        },
+        {
+          "path": ".codewiki/kb/system/trace-graph.md",
+          "role": "code_file",
+          "sha256": "sha256:941b049034a11972ea1f32e09d0967a36e88a6ad9670e022949796aa14fe4f07",
+          "bytes": 12770
+        },
+        {
+          "path": ".codewiki/kb/system/graph.md",
+          "role": "code_file",
+          "sha256": "sha256:8b3a65c8006dd51eccea81bc2c3d9ffd26d1b7d2db225b582e30bfc4cee21459",
+          "bytes": 6713
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:e607dccb42738e295fc8cd472642033281d437790df05cc5c26fea36f75c72f3",
+          "bytes": 25203
+        },
+        {
+          "path": ".codewiki/kb/lexicon.md",
+          "role": "code_file",
+          "sha256": "sha256:d1ee32a973da283fde8299ccdec4a3c906c5edb71b07142e396880ca32892847",
+          "bytes": 14570
+        },
+        {
+          "path": ".gitignore",
+          "role": "code_file",
+          "sha256": "sha256:91d79f5bc56c86e50a4534b4f111771a227c5b06a5fc90664017f129fac70110",
+          "bytes": 113
+        },
+        {
+          "path": "src/checks/lexicon.ts",
+          "role": "code_file",
+          "sha256": "sha256:0d0e6753bc8db2d2a42b97fb6f6f23f2cd6a9269400feb6cd823682ec1fa2a76",
+          "bytes": 18718
+        },
+        {
+          "path": "src/adapters/pi/tools/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:022e7f79e908407b6336507829f74564d75e798830a5f729f645b1feb144ce82",
+          "bytes": 9710
+        },
+        {
+          "path": "tests/smoke/lexicon-linter.test.mjs",
+          "role": "code_file",
+          "sha256": "sha256:362576b514f5d7e91927ecac4e01e5b8f04499ee568881c0b7953642d86fa2ce",
+          "bytes": 6888
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-091",
+      "source_build": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/lexicon.md",
+          ".gitignore",
+          "src/checks/lexicon.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "tests/smoke/lexicon-linter.test.mjs",
+          "tests/smoke/package-smoke.test.mjs"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-091",
+        "restore_command": "/wiki-restore TASK-091"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+        "npm run typecheck -> pass",
+        "wiki_audit profiles=file-structure,lexicon task_id=TASK-091 -> warning; lexicon pass, task pass, file-structure pre-existing warnings",
+        "wiki_gc dry-run -> tracked=0 runtime=4",
+        "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-codewiki.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": true,
+      "blocked_reasons": [],
+      "security": {
+        "secret_scan": "pass",
+        "remote_visibility": "pass",
+        "private_evidence": "pass",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

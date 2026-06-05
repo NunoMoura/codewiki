@@ -1,0 +1,305 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T10:27:07Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-091",
+  "verdict": "pass",
+  "rationale": "Implementation validation for TASK-091 local-close build after remediation. Build includes acceptance_mapping, validation refs, package digest, and safe local task-close metadata. Required tests and audits are recorded; alignment/file-structure issues are pre-existing repository health/structure drift outside TASK-091 closure.",
+  "checks": [
+    "implementation_build .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "wiki_audit profiles=alignment,file-structure,lexicon,task,generated-parity,package,security,stale-reference,changed task_id=TASK-091 -> lexicon/task/generated-parity/package/security/stale-reference pass; alignment fail and file-structure warning pre-existing; changed warning due generated/index/build before commit"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091 closure."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091 closure.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment/file-structure warnings remain pre-existing migration drift outside TASK-091 closure.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "lexicon",
+    "task",
+    "generated-parity",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "alignment",
+    "file-structure",
+    "lexicon",
+    "task",
+    "generated-parity",
+    "package",
+    "security",
+    "stale-reference",
+    "changed",
+    "approved by user"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
+    "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-091",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/lexicon.md",
+      ".gitignore",
+      "src/checks/lexicon.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "tests/smoke/lexicon-linter.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-091",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
+    "commit_title": "checkpoint(codewiki): TASK-091 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-091",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-pass-task-091-2026-06-05-task-091.json",
+      "CodeWiki-Checks: implementation_build .codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json; node --experimental-strip-types ./tests/smoke/lexicon-linter.test.mjs -> pass; node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass; npm run typecheck -> pass; npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==; wiki_audit profiles=alignment,file-structure,lexicon,task,generated-parity,package,security,stale-reference,changed task_id=TASK-091 -> lexicon/task/generated-parity/package/security/stale-reference pass; alignment fail and file-structure warning pre-existing; changed warning due generated/index/build before commit"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/checks/lexicon.ts",
+      "src/adapters/pi/tools/ports.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "lexicon",
+      "task",
+      "generated-parity",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:lexicon or profile:lexicon",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-091",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved by user"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "89960e16039687370826039cbab4d60845243cbf932c80edac33fce381cc9b4d",
+    "package_digest": "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Dirty validation for TASK-091 local-close build before close commit.",
+    "role": "validator"
+  }
+}
