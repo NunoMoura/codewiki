@@ -227,6 +227,16 @@ assert.ok(
 		"production_policy:check:typecheck",
 	),
 );
+assert.equal(blockedPreflight.remediation.retry_class, "same_loop");
+assert.equal(blockedPreflight.remediation.remediation_route, "implementation");
+assert.ok(
+	blockedPreflight.remediation.affected_refs.includes(
+		"production_policy:check:typecheck",
+	),
+);
+assert.ok(
+	blockedPreflight.diagnostics.every((diagnostic) => diagnostic.retry_class),
+);
 
 const waivedSource = await writeBuild(
 	root,

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-05T10:00:43Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-095/context.json",
+  "task": {
+    "id": "TASK-095",
+    "title": "Implement automatic gate remediation retries",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "agent-workflow",
+    "change_type": "system",
+    "summary": "Teach gateway/agency automation to treat actionable fail/block reports as same-loop remediation input, compile superseding outputs, and keep independent mid-roadmap decision workstreams parallel when safe.",
+    "labels": [
+      "agency",
+      "gateway",
+      "remediation",
+      "parallelization",
+      "decision-workstreams"
+    ],
+    "goal": {
+      "outcome": "Agency can automatically remediate actionable gate fail/block feedback within policy/budget and can fence only dependent tasks when a new mid-roadmap decision appears.",
+      "acceptance": [
+        "Gateway fail/block reports expose high-signal remediation payloads including exact refs, route, retry class, and stop reason when automation must stop.",
+        "Agency planning distinguishes retryable gate remediation from hard stop gates and schedules same-loop remediation only when scoped, safe, and within budget.",
+        "A blocked implementation/planning gate can lead to a superseding compiler/build recommendation without bypassing gateway promotion.",
+        "Mid-roadmap semantic decisions are modeled as parallel decision workstreams: dependent tasks are fenced, independent tasks remain schedulable.",
+        "Stop conditions still block non-actionable diagnostics, missing approval, artifact conflict, risk escalation, destructive/publication action, isolation policy failures, and budget exhaustion."
+      ],
+      "non_goals": [
+        "Do not bypass gateway verdicts or mark work promoted on a blocked report.",
+        "Do not auto-approve semantic decisions.",
+        "Do not implement remote publication or destructive cleanup automation."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+        "wiki_audit profiles=alignment,source-contract,task"
+      ]
+    },
+    "delta": {
+      "desired": "Gate fail/block feedback becomes retryable same-loop remediation when safe, and mid-roadmap decisions fence only dependent work while independent sprint tasks continue.",
+      "current": "Agency stops on validation/blocking health gates even when reports are actionable, and mid-roadmap decisions are not modeled as parallel decision workstreams with dependency fences.",
+      "closure": "Task closes after source/tests encode retry classification, superseding build recommendation, dependency fencing, and hard-stop boundaries."
+    }
+  }
+}

@@ -5,7 +5,7 @@ state: active
 summary: Compatibility contract for historic build artifacts and their target representation inside telemetry loop traces.
 owners:
   - architecture
-updated: "2026-06-03"
+updated: "2026-06-05"
 code_paths:
   - src/build
   - src/adapters/pi/schemas.ts
@@ -24,16 +24,16 @@ Compiler output should carry the smallest useful downstream contract plus enough
 
 ## Target storage
 
-Target CodeWiki state stores compiler output inside loop trace files:
+Target CodeWiki state stores compiler output inside one lifecycle trace JSON file:
 
 ```text
-.codewiki/telemetry/<trace_id>/
-  decision.json
-  planning.json
-  implementation.json
+.codewiki/telemetry/TRACE-YYYYMMDD-<slug>.json
+  decision.compiler_output
+  planning.compiler_output
+  implementation.compiler_output
 ```
 
-Each loop file contains:
+Each loop section contains:
 
 - metadata: schema version, trace id, loop name, status, timestamps, and superseded refs;
 - input refs and fingerprints;
@@ -44,7 +44,7 @@ Each loop file contains:
 - gate criteria, gate verdict, gate findings, remediation items, and next action;
 - retention hints for hot/cold lifecycle.
 
-`implementation.json` also contains Git proof refs such as commit SHA, tree SHA, package digest, branch, remote ref, or working-tree digest when policy permits dirty validation.
+The `implementation` section also contains content evidence refs such as commit SHA, tree SHA, package digest, branch, remote ref, or working-tree digest when policy permits dirty validation.
 
 ## Historic compatibility
 
@@ -84,9 +84,13 @@ Compiler output alone is pending evidence. A passing gate is the promotion bound
 
 Hot compiler output can be compacted or purged only when:
 
-1. the relevant gate pass/fail/block state is represented in the trace;
-2. required Git commit/tree/package refs preserve recoverable history;
-3. graph lenses can still find the gate outcome and remediation history through the trace.
+1. the relevant gate pass/fail/block state is represented in the lifecycle trace or an active compatibility artifact that remains hot;
+2. no open task, current policy, or active migration still requires the legacy `.codewiki/builds/**` or `.codewiki/validation/**` file;
+3. required Git commit/tree/package refs preserve recoverable history;
+4. graph lenses can still find the gate outcome and remediation history through the trace or catalog;
+5. tracked deletion goes through `wiki_gc` with archive commit/tree evidence and a restore ledger.
+
+Until TASK-093/TASK-094 replace compatibility readers, `.codewiki/builds/**` and `.codewiki/validation/**` are legacy evidence roots, not scratch. Do not purge them merely because target storage is lifecycle-trace-first.
 
 ## Related docs
 

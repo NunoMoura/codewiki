@@ -1380,6 +1380,55 @@ function gatewayDiagnosticRefSet(issue: { evidence?: unknown }): string[] {
 	);
 }
 
+type GatewayRetryClass =
+	| "none"
+	| "same_loop"
+	| "route_decision"
+	| "route_planning"
+	| "wait"
+	| "hard_stop";
+
+function compilerLoopForGate(profile: string): WorkflowLoop {
+	if (profile === "decision") return "decision";
+	if (profile === "planning") return "planning";
+	return "implementation";
+}
+
+function gatewayRetryClass(input: {
+	status: string;
+	profile: string;
+	kind: string;
+	routing: {
+		failure_class?: CodewikiValidationFailureClass;
+		recommended_next_loop?: WorkflowLoop;
+		stop_reason?: string;
+	};
+}): GatewayRetryClass {
+	if (input.status === "ready" || input.status === "pass") return "none";
+	if (input.routing.failure_class === "runtime_conflict") return "wait";
+	if (
+		input.routing.failure_class === "risk_approval_missing" ||
+		input.routing.failure_class === "decision_ambiguity"
+	) {
+		return "route_decision";
+	}
+	if (input.routing.failure_class === "planning_gap") return "route_planning";
+	const route = input.routing.recommended_next_loop;
+	if (route && route !== compilerLoopForGate(input.profile)) {
+		if (route === "decision") return "route_decision";
+		if (route === "planning") return "route_planning";
+		if (route === "observe") return "wait";
+	}
+	if (
+		input.kind.includes("risk") ||
+		input.kind.includes("approval") ||
+		input.kind.includes("ambiguity")
+	) {
+		return "route_decision";
+	}
+	return "same_loop";
+}
+
 function gatewayIssueRemediation(
 	kind: string,
 	routing: {
@@ -1424,17 +1473,36 @@ function buildGatewayDiagnostics(input: {
 		stop_reason?: string;
 	};
 }) {
-	const diagnostics = input.issues.map((issue, index) => ({
-		id: `${input.profile}:${issue.kind}:${index + 1}`,
-		kind: issue.kind,
-		severity: issue.severity,
-		summary: issue.summary,
-		refs: gatewayDiagnosticRefSet(issue),
-		gate_refs: [input.gate || input.profile].filter(Boolean),
-		failure_class: input.routing.failure_class,
-		recommended_next_loop: input.routing.recommended_next_loop,
-		remediation: gatewayIssueRemediation(issue.kind, input.routing),
-	}));
+	const diagnostics = input.issues.map((issue, index) => {
+		const refs = gatewayDiagnosticRefSet(issue);
+		const retryClass = gatewayRetryClass({
+			status: input.status,
+			profile: input.profile,
+			kind: issue.kind,
+			routing: input.routing,
+		});
+		const remediation = gatewayIssueRemediation(issue.kind, input.routing);
+		return {
+			id: `${input.profile}:${issue.kind}:${index + 1}`,
+			kind: issue.kind,
+			severity: issue.severity,
+			summary: issue.summary,
+			refs,
+			affected_refs: refs,
+			gate_refs: [input.gate || input.profile].filter(Boolean),
+			failure_class: input.routing.failure_class,
+			recommended_next_loop: input.routing.recommended_next_loop,
+			remediation_route:
+				input.routing.recommended_next_loop ||
+				compilerLoopForGate(input.profile),
+			retry_class: retryClass,
+			stop_reason:
+				retryClass === "same_loop" || retryClass === "none"
+					? undefined
+					: input.routing.stop_reason || issue.summary,
+			remediation,
+		};
+	});
 	const findings = diagnostics.map((diagnostic) => ({
 		id: diagnostic.id,
 		category: diagnostic.kind,
@@ -1445,6 +1513,12 @@ function buildGatewayDiagnostics(input: {
 	const remediation = unique(
 		diagnostics.flatMap((diagnostic) => diagnostic.remediation),
 	);
+	const retryClasses = unique(
+		diagnostics.map((diagnostic) => diagnostic.retry_class),
+	);
+	const affectedRefs = unique(
+		diagnostics.flatMap((diagnostic) => diagnostic.affected_refs),
+	);
 	return {
 		diagnostics,
 		findings,
@@ -1452,7 +1526,22 @@ function buildGatewayDiagnostics(input: {
 			status: input.status,
 			failure_class: input.routing.failure_class,
 			recommended_next_loop: input.routing.recommended_next_loop,
+			remediation_route:
+				input.routing.recommended_next_loop ||
+				compilerLoopForGate(input.profile),
+			retry_class:
+				retryClasses.includes("hard_stop") ||
+				retryClasses.includes("route_decision")
+					? "hard_stop"
+					: retryClasses.includes("route_planning")
+						? "route_planning"
+						: retryClasses.includes("wait")
+							? "wait"
+							: retryClasses.includes("same_loop")
+								? "same_loop"
+								: "none",
 			stop_reason: input.routing.stop_reason,
+			affected_refs: affectedRefs,
 			next_safe_actions: remediation,
 		},
 	};

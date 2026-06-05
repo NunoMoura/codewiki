@@ -5,7 +5,7 @@ state: active
 summary: Three loop exit gates that validate lifecycle trace evidence with structured diagnostics, remediation, and semantic handoff guards.
 owners:
   - architecture
-updated: "2026-06-04"
+updated: "2026-06-05"
 diagram_refs:
   - architecture:gateway
   - key-flow:decision_gate
@@ -42,7 +42,9 @@ Gate output must be actionable. Every gate result should include:
 - remediation items with exact next action;
 - recommended route: same loop, decision, planning, implementation, observe/wait, or user approval.
 
-A passing gate promotes the trace lifecycle to the next safe state or closes implementation when required content proof exists. A fail/block gate refreshes graph state with findings and remediation but does not promote lower-layer work.
+A passing gate promotes the trace lifecycle to the next safe state or closes implementation when required content evidence exists. A fail/block gate refreshes graph state with findings and remediation but does not promote lower-layer work.
+
+Fail/block is not automatically a user-stop. When findings are actionable, scoped to the current loop, and inside configured budgets/policy, the agent should stay in the same loop, apply the remediation, run required linters/tests, compile a superseding loop output, and rerun the same gate. The gate stops automation only when remediation is non-actionable, semantically ambiguous, missing user approval, blocked by artifact conflicts, risk escalation, destructive/publication policy, isolation policy, or retry/budget exhaustion.
 
 ## Decision-to-planning semantic quality gate
 
@@ -77,7 +79,7 @@ user input -> trace.decision -> trace.planning -> trace.implementation -> Git/co
 
 Horizontal alignment validates coherence inside one layer: KB docs, diagrams, trace refs, source, tests, gate criteria, generated graph state, and runtime state when active.
 
-Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git proof such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty validation may use a working-tree digest only when the gate allows it and implementation remains unclosed.
+Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git evidence such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty validation may use a working-tree digest only when the gate allows it and implementation remains unclosed.
 
 ## Compatibility paths
 
@@ -99,10 +101,12 @@ Publication is an implementation-stage concern by default. If CodeWiki config en
 
 - The gateway validates loop evidence; it does not mutate canonical truth.
 - Gate pass is the semantic promotion boundary.
+- Gate fail/block is a remediation boundary, not a fourth loop and not necessarily a user-stop.
 - Compiler output alone cannot promote a loop.
 - Decision, planning, and implementation gates block on stale KB/diagram truth unless an explicit no-impact rationale exists.
 - Planning cannot start from chat memory or incomplete KB edits; it starts from a passed decision trace/build handoff.
-- Implementation gate blocks on missing Git/content proof when the work claims production-ready completion.
+- Implementation gate blocks on missing Git/content evidence when the work claims production-ready completion.
+- Actionable fail/block findings should route back to the same compiler loop for an automatic superseding output when policy and budgets allow.
 - Gate reports and findings are hot only while active routing needs them; long-term history lives in lifecycle trace summaries, `telemetry/catalog.json`, and Git.
 
 ## Related docs

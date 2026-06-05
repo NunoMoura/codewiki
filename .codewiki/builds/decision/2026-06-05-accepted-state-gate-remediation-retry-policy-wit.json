@@ -1,0 +1,476 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-05T08:52:52Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-19T08:52:52.000Z",
+    "purge_after": "2026-07-03T08:52:52.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 3,
+    "attempt": "decision-build-v3-accepted-state",
+    "supersedes": [
+      ".codewiki/builds/decision/2026-06-05-accepted-gate-remediation-retry-policy-actionabl.json",
+      ".codewiki/builds/decision/2026-06-05-superseding-accepted-gate-remediation-retry-poli.json"
+    ],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-GATE-REMEDIATE-001",
+      "text": "Actionable gate fail/block findings must route to same-loop remediation rather than terminal user stop when budget and policy permit.",
+      "source_refs": [
+        "GATE-REMEDIATE-001",
+        "GATE-REMEDIATE-003"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-GATE-REMEDIATE-002",
+      "text": "Gate reports must include high-signal remediation payloads with exact refs, route, retry class, and stop reasons.",
+      "source_refs": [
+        "GATE-REMEDIATE-002"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "REQ-GATE-REMEDIATE-003",
+      "text": "New mid-roadmap decisions may run in parallel as decision workstreams while dependent tasks are fenced and independent tasks continue.",
+      "source_refs": [
+        "GATE-REMEDIATE-003"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Approved rows mapped to KB and executable planning.",
+      "evidence": "Rows and downstream questions mapped to TASK-095 and SPRINT-022.",
+      "requirement_ids": [
+        "REQ-GATE-REMEDIATE-001",
+        "REQ-GATE-REMEDIATE-002",
+        "REQ-GATE-REMEDIATE-003"
+      ],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted-state gate remediation retry policy with resolved TASK-095 planning mappings.",
+  "decision_mode": "accepted",
+  "decision_table": {
+    "schema_version": 1,
+    "id": "ACCEPTED-STATE-GATE-REMEDIATION-RETRY-POLICY-WIT",
+    "title": "Accepted-state gate remediation retry policy with resolved TASK-095 planning mappings.",
+    "status": "approved",
+    "rows": [
+      {
+        "id": "GATE-REMEDIATE-001",
+        "question": "GATE-REMEDIATE-001",
+        "state_delta": {
+          "current": "Current system docs treat gate fail/block as a hard agency stop condition: validation-gateway records remediation but compilers/agency stop on failed or blocked gates.",
+          "desired": "Gate fail/block acts as structured loop feedback when remediation is actionable, scoped, and within budget/policy; it should not require user intervention by default."
+        },
+        "proposed_change": "Reclassify actionable gate block/fail from terminal stop to same-loop remediation input. The gate still prevents promotion, but the agent may continue inside the same compiler loop to fix issues and emit a superseding compiler output/build.",
+        "rationale": "Gateway findings are meant to be high-signal diagnostics. If the fix is mechanical or evidence-completeness work, stopping wastes agency capacity and creates unnecessary user interrupts.",
+        "impact": {
+          "system": [
+            "system",
+            "agency",
+            "gateway",
+            "compilers",
+            "runtime"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Treat every gate fail/block as a hard user stop."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Allow bypass of gate promotion, rejected because gateway remains semantic boundary."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Gate fail/block acts as structured loop feedback when remediation is actionable, scoped, and within budget/policy; it should not require user intervention by default.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "GATE-REMEDIATE-002",
+        "question": "GATE-REMEDIATE-002",
+        "state_delta": {
+          "current": "Gateway diagnostics are documented as actionable, but source tooling can still surface noisy blocker summaries that do not directly drive automatic repair.",
+          "desired": "Each block/fail report contains enough high-signal low-noise remediation data for an agent to decide the next safe loop action without chat history."
+        },
+        "proposed_change": "Require gate reports to include criteria, exact missing/stale/mismatched refs, affected files/paths, recommended route, retry class, and stop reason when automation must stop.",
+        "rationale": "Automatic remediation only works if gate output is precise and source-backed; otherwise the agent must ask the user or risk speculative edits.",
+        "impact": {
+          "system": [
+            "system",
+            "gateway",
+            "graph",
+            "telemetry"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Keep noisy summaries and rely on human judgment."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Hard-code remediation in agency without gate payloads."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Each block/fail report contains enough high-signal low-noise remediation data for an agent to decide the next safe loop action without chat history.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "GATE-REMEDIATE-003",
+        "question": "GATE-REMEDIATE-003",
+        "state_delta": {
+          "current": "Agency stop conditions include any gate fail/block and validation/blocking health gate, so sprint/roadmap automation halts even when the remediation is routine and in-scope.",
+          "desired": "Agency retries same-loop remediation automatically up to budget and policy limits, then invokes the compiler to write a new output/build and reruns the gate."
+        },
+        "proposed_change": "Add an automatic remediation cycle: gate fail/block -> parse remediation -> mark scoped leases -> fix same-loop issue -> run required linters/tests -> compile superseding build -> rerun gate. Stop only on non-actionable diagnostics, semantic ambiguity, missing approval, artifact conflict, risk escalation, destructive/publication action, dirty isolation policy, or budget/retry exhaustion.",
+        "rationale": "This preserves gateway as promotion boundary while using agency to close fixable gaps without manual user commands. New semantic decisions introduced mid-roadmap can run as parallel decision workstreams while only dependent tasks are fenced; unaffected tasks may continue under normal leases.",
+        "impact": {
+          "system": [
+            "agency",
+            "runtime",
+            "compilers",
+            "gateway",
+            "roadmap"
+          ]
+        },
+        "risk": {
+          "level": "high"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Stop all roadmap execution on any gate fail/block."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Let automation continue across decisions without dependency fences, rejected as unsafe."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Agency retries same-loop remediation automatically up to budget and policy limits, then invokes the compiler to write a new output/build and reruns the gate.",
+        "validated_outcome": ""
+      }
+    ],
+    "created_at": "2026-06-05T08:52:52Z",
+    "updated_at": "2026-06-05T08:52:52Z"
+  },
+  "approved_decision_rows": [
+    "GATE-REMEDIATE-001",
+    "GATE-REMEDIATE-002",
+    "GATE-REMEDIATE-003"
+  ],
+  "approved_rows": [
+    {
+      "id": "GATE-REMEDIATE-001",
+      "question": "GATE-REMEDIATE-001",
+      "state_delta": {
+        "current": "Current system docs treat gate fail/block as a hard agency stop condition: validation-gateway records remediation but compilers/agency stop on failed or blocked gates.",
+        "desired": "Gate fail/block acts as structured loop feedback when remediation is actionable, scoped, and within budget/policy; it should not require user intervention by default."
+      },
+      "proposed_change": "Reclassify actionable gate block/fail from terminal stop to same-loop remediation input. The gate still prevents promotion, but the agent may continue inside the same compiler loop to fix issues and emit a superseding compiler output/build.",
+      "rationale": "Gateway findings are meant to be high-signal diagnostics. If the fix is mechanical or evidence-completeness work, stopping wastes agency capacity and creates unnecessary user interrupts.",
+      "impact": {
+        "system": [
+          "system",
+          "agency",
+          "gateway",
+          "compilers",
+          "runtime"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Treat every gate fail/block as a hard user stop."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Allow bypass of gate promotion, rejected because gateway remains semantic boundary."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Gate fail/block acts as structured loop feedback when remediation is actionable, scoped, and within budget/policy; it should not require user intervention by default.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "GATE-REMEDIATE-002",
+      "question": "GATE-REMEDIATE-002",
+      "state_delta": {
+        "current": "Gateway diagnostics are documented as actionable, but source tooling can still surface noisy blocker summaries that do not directly drive automatic repair.",
+        "desired": "Each block/fail report contains enough high-signal low-noise remediation data for an agent to decide the next safe loop action without chat history."
+      },
+      "proposed_change": "Require gate reports to include criteria, exact missing/stale/mismatched refs, affected files/paths, recommended route, retry class, and stop reason when automation must stop.",
+      "rationale": "Automatic remediation only works if gate output is precise and source-backed; otherwise the agent must ask the user or risk speculative edits.",
+      "impact": {
+        "system": [
+          "system",
+          "gateway",
+          "graph",
+          "telemetry"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Keep noisy summaries and rely on human judgment."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Hard-code remediation in agency without gate payloads."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Each block/fail report contains enough high-signal low-noise remediation data for an agent to decide the next safe loop action without chat history.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "GATE-REMEDIATE-003",
+      "question": "GATE-REMEDIATE-003",
+      "state_delta": {
+        "current": "Agency stop conditions include any gate fail/block and validation/blocking health gate, so sprint/roadmap automation halts even when the remediation is routine and in-scope.",
+        "desired": "Agency retries same-loop remediation automatically up to budget and policy limits, then invokes the compiler to write a new output/build and reruns the gate."
+      },
+      "proposed_change": "Add an automatic remediation cycle: gate fail/block -> parse remediation -> mark scoped leases -> fix same-loop issue -> run required linters/tests -> compile superseding build -> rerun gate. Stop only on non-actionable diagnostics, semantic ambiguity, missing approval, artifact conflict, risk escalation, destructive/publication action, dirty isolation policy, or budget/retry exhaustion.",
+      "rationale": "This preserves gateway as promotion boundary while using agency to close fixable gaps without manual user commands. New semantic decisions introduced mid-roadmap can run as parallel decision workstreams while only dependent tasks are fenced; unaffected tasks may continue under normal leases.",
+      "impact": {
+        "system": [
+          "agency",
+          "runtime",
+          "compilers",
+          "gateway",
+          "roadmap"
+        ]
+      },
+      "risk": {
+        "level": "high"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Stop all roadmap execution on any gate fail/block."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Let automation continue across decisions without dependency fences, rejected as unsafe."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Agency retries same-loop remediation automatically up to budget and policy limits, then invokes the compiler to write a new output/build and reruns the gate.",
+      "validated_outcome": ""
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Actionable gate fail/block feedback is same-loop remediation input, not a terminal user stop."
+    },
+    {
+      "id": "D2",
+      "summary": "Gateway reports must carry high-signal, source-backed remediation data for automatic repair."
+    },
+    {
+      "id": "D3",
+      "summary": "Agency may run bounded remediation cycles and compile superseding outputs before rerunning the same gate."
+    },
+    {
+      "id": "D4",
+      "summary": "Mid-roadmap decisions should become parallel decision workstreams when impact can be scoped; dependent tasks are fenced, independent tasks can continue."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/agency.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "GATE-REMEDIATE-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Validation gateway and compiler docs now say fail/block prevents promotion but may keep the agent in same-loop remediation with superseding compiler output.",
+      "deferred": false
+    },
+    {
+      "row_id": "GATE-REMEDIATE-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Gateway diagnostics and agency retry classification now require exact findings, remediation route, retry class, and stop reasons.",
+      "deferred": false
+    },
+    {
+      "row_id": "GATE-REMEDIATE-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Agency docs now define automatic remediation sequence and mid-roadmap decision parallelization with dependency fences.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users should see fewer manual interruptions because routine gate feedback can be remediated automatically.",
+      "Sprint-level agency can keep independent work moving when a new decision is introduced mid-roadmap."
+    ],
+    "system_impact": [
+      "Gateway findings become structured retry inputs.",
+      "Agency scheduler must classify gate fail/block as retryable or hard-stop.",
+      "Compiler loop must support superseding outputs/builds after remediation."
+    ],
+    "downstream_planning_questions": [
+      "Implement gate remediation retry classification in gateway reports and agency planning.",
+      "Add/adjust tests for gate block -> remediation -> superseding build loop planning.",
+      "Model mid-roadmap decision parallelization with dependency fences in automation readiness."
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "Implement gate remediation retry classification in gateway reports and agency planning.",
+    "Add/adjust tests for gate block -> remediation -> superseding build loop planning.",
+    "Model mid-roadmap decision parallelization with dependency fences in automation readiness."
+  ],
+  "assumptions": [
+    "Existing agency budget fields are enough for initial retry limits unless TASK-095 finds a necessary config addition."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not bypass gateway verdicts.",
+    "Do not auto-approve semantic decisions.",
+    "Do not continue dependent implementation work while a new decision may affect it."
+  ],
+  "risks": [
+    "High-risk agency behavior can overrun scope if diagnostics are noisy; mitigated by requiring stop on non-actionable diagnostics and source-backed refs."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/agency.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

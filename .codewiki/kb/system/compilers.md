@@ -6,7 +6,7 @@ summary: Three CodeWiki loop engines that emit compact telemetry trace output fo
 owners:
   - architecture
   - product
-updated: "2026-06-03"
+updated: "2026-06-05"
 ---
 
 # Compilers
@@ -51,8 +51,9 @@ Graph refresh and loop promotion are separate:
 
 - writing compiler output refreshes the graph as pending loop evidence;
 - writing a fail/block gate verdict refreshes the graph with gate findings and remediation items;
+- actionable fail/block findings become same-loop compiler input for a superseding output/build;
 - only a passing gate promotes to the next loop or closes implementation;
-- implementation is not complete until required Git proof is recorded.
+- implementation is not complete until required Git/content evidence is recorded.
 
 ## Rules
 
@@ -62,7 +63,8 @@ Graph refresh and loop promotion are separate:
 - Planning is not implementation and should not change source code.
 - Implementation is TDD-aligned where practical and records justified exceptions for docs-only, config-only, or non-testable work.
 - Normal loop continuation uses CodeWiki source refs, telemetry traces, and `wiki_resume_context`, not chat summaries.
-- Automated compiler execution runs through gated agency controls and stops on hard gates.
+- Automated compiler execution runs through gated agency controls and may retry same-loop remediation on actionable gate fail/block feedback.
+- Automated remediation stops on semantic ambiguity, missing approval, artifact conflict, risk escalation, destructive/publication action, isolation policy, non-actionable diagnostics, or retry/budget exhaustion.
 
 ## Related docs
 

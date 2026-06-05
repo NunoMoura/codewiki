@@ -2,6 +2,7 @@ node_modules/
 .DS_Store
 *.log
 .pi-lens/
+.vscode/
 .codewiki/runtime/
 .codewiki/session/queue.json
 .tmp-worktrees/

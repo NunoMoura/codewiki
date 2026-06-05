@@ -300,7 +300,7 @@ export function piCodeRuntimeFoundation() {
 					"ExtensionCommandContext newSession is not used as parallel spawning evidence",
 				],
 				limitations: [
-					"Bridge requests worker processes but final promotion still requires validation gates and immutable content proof.",
+					"Bridge requests worker processes but final promotion still requires validation gates and immutable content evidence.",
 				],
 			},
 		},

@@ -25,7 +25,7 @@ groups:
   - id: assets_tests
     label: Skills, tests, and helpers
   - id: proof
-    label: Proof and publication
+    label: Content evidence and publication
   - id: drift
     label: Drift and delta controls
 nodes:
@@ -407,24 +407,41 @@ nodes:
       - .codewiki/roadmap/queue.json
       - .codewiki/roadmap/tasks/**
       - .codewiki/roadmap/archive.jsonl
-  - id: dogfood_telemetry
-    label: Lifecycle trace truth
+  - id: hot_trace_truth
+    label: Hot lifecycle trace truth
     group: codewiki_state
     kind: traceability_truth
     source: .codewiki/kb/system/trace-graph.md
-    paths:
-      - .codewiki/builds/**
-      - .codewiki/validation/**
-      - .codewiki/research/**
-      - .codewiki/gc/**
+    requires_doc: true
     target_paths:
       - .codewiki/telemetry/TRACE-*.json
+    retention: full_json_while_active_blocked_unpublished_recent_or_referenced
+  - id: cold_trace_catalog
+    label: Cold trace catalog and restore refs
+    group: codewiki_state
+    kind: durable_truth
+    source: .codewiki/kb/system/trace-graph.md
+    requires_doc: true
+    target_paths:
       - .codewiki/telemetry/catalog.json
+    retention: compact_index_never_scratch_purge
+    restore_refs:
+      - commit_sha
+      - tree_sha
+      - original_path
+      - content_digest
+  - id: legacy_loop_evidence
+    label: Legacy build/gate/research evidence
+    group: codewiki_state
+    kind: compatibility_evidence
+    source: .codewiki/kb/system/builds.md
+    requires_doc: true
     compatibility_paths:
       - .codewiki/builds/**
       - .codewiki/validation/**
       - .codewiki/research/**
       - .codewiki/gc/**
+    retention: keep_until_trace_catalog_or_gc_archive_evidence_proves_safe
   - id: generated_graph
     label: Generated trace graph/views/cache
     group: generated_runtime
@@ -445,6 +462,21 @@ nodes:
     compatibility_paths:
       - .codewiki/session/**
       - .codewiki/runtime/jobs.json
+    retention: active_leases_jobs_and_current_handoffs_only
+  - id: local_workspace_state
+    label: Local Pi/editor/worktree state
+    group: generated_runtime
+    kind: local_state
+    source: .codewiki/kb/system/file-structure.md
+    paths:
+      - .pi/settings.json
+      - .pi/APPEND_SYSTEM.md
+      - .pi/.gitignore
+    ignored_paths:
+      - .pi-lens/**
+      - .vscode/**
+      - .tmp-worktrees/**
+    retention: no_production_semantics_remove_worktrees_only_after_dirty_and_lease_checks
   - id: skills_assets
     label: Three workflow skill assets and Pi prompt assets
     group: assets_tests
@@ -482,7 +514,7 @@ nodes:
       - scripts/**
     rule: removable_without_product_semantic_change
   - id: publication_proof
-    label: Git and publication proof
+    label: Git and publication content evidence
     group: proof
     kind: publication
     source: .codewiki/kb/system/overview.md
@@ -659,14 +691,22 @@ edges:
     from: dogfood_roadmap
     to: concept_root_target
     label: plans executable migration
-  - id: builds_record_handoffs
-    from: dogfood_builds
-    to: concept_root_target
-    label: records loop trace evidence for migration
+  - id: hot_traces_feed_graph
+    from: hot_trace_truth
+    to: generated_graph
+    label: full hot traces project into graph lenses
+  - id: cold_catalog_restores_traces
+    from: cold_trace_catalog
+    to: hot_trace_truth
+    label: preserves restore refs for cold-archived traces
+  - id: legacy_evidence_bridges_migration
+    from: legacy_loop_evidence
+    to: hot_trace_truth
+    label: bridges existing build and gate evidence until trace readers land
   - id: validation_checks_migration
-    from: dogfood_validation
+    from: legacy_loop_evidence
     to: structure_drift_lens
-    label: records gate verdicts and drift policy findings
+    label: records gate verdicts and drift policy findings during migration
   - id: graph_indexes_structure
     from: generated_graph
     to: structure_drift_lens

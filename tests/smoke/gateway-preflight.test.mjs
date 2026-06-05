@@ -253,6 +253,19 @@ try {
 			entry.includes(planning.path),
 		),
 	);
+	assert.equal(missingMetadata.remediation.retry_class, "same_loop");
+	assert.equal(missingMetadata.remediation.remediation_route, "implementation");
+	assert.ok(
+		missingMetadata.remediation.affected_refs.includes("audit:alignment"),
+	);
+	assert.ok(
+		missingMetadata.diagnostics.every((diagnostic) => diagnostic.retry_class),
+	);
+	assert.ok(
+		missingMetadata.diagnostics.every(
+			(diagnostic) => diagnostic.affected_refs.length > 0,
+		),
+	);
 
 	const taskCloseWithoutShipReady = buildGatewayPreflight(project, {
 		profile: "task-close",

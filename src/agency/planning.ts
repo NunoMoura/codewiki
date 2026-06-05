@@ -259,6 +259,7 @@ export function agencyHardStopReasons(input: {
 	claims: Record<string, unknown>;
 	nextStep: Record<string, unknown> | undefined;
 	budget: AgencyBudget;
+	allowScopedContinuation?: boolean;
 }): string[] {
 	const reasons: string[] = [];
 	if (!agencyContinuationAllowed(input.policy, input.trigger)) {
@@ -274,13 +275,15 @@ export function agencyHardStopReasons(input: {
 	}
 	if (
 		hasStopGate(input.policy, "validation_block") &&
-		Number(input.health?.errors || 0) > 0
+		Number(input.health?.errors || 0) > 0 &&
+		!input.allowScopedContinuation
 	) {
 		reasons.push("validation/blocking health gate active");
 	}
 	if (
 		hasStopGate(input.policy, "semantic_decision") &&
-		nextActionMatches(input.nextStep, [/\bdecision\b/i, /semantic/i])
+		nextActionMatches(input.nextStep, [/\bdecision\b/i, /semantic/i]) &&
+		!input.allowScopedContinuation
 	) {
 		reasons.push("semantic decision gate active");
 	}
@@ -438,6 +441,7 @@ export async function planAgency(
 		mode === "work" && openTasks.length > 0 && schedulableTasks.length === 0
 			? readinessStopReasons
 			: [];
+	const allowScopedContinuation = schedulableTasks.length > 0;
 	const hardStops = [
 		...agencyHardStopReasons({
 			policy: agencyPolicy,
@@ -446,6 +450,7 @@ export async function planAgency(
 			claims,
 			nextStep: nextAction,
 			budget,
+			allowScopedContinuation,
 		}),
 		...readinessHardStops,
 	];

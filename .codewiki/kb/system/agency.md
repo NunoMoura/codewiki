@@ -6,7 +6,7 @@ summary: System mechanism for bounded roadmap automation through agency cycles a
 owners:
   - architecture
   - engineering
-updated: "2026-06-03"
+updated: "2026-06-05"
 code_paths:
   - src/agency
   - src/runtime
@@ -34,7 +34,7 @@ The controller reads:
 - roadmap active sprints, active tasks, blockers, and closure state,
 - graph-derived automation-readiness contracts for tasks and sprints,
 - accepted loop trace entries and linked knowledge,
-- gate criteria, gate findings, remediation items, and policy requirements,
+- gate criteria, gate findings, remediation items, retry class, remediation route, and policy requirements,
 - user-provided budgets such as token limit, time limit, cost limit, cycle limit, write limit, session limit, and risk limit,
 - configured agency scope such as roadmap, sprint, or task,
 - configured agency autonomy level and approval cadence such as task, sprint, or roadmap,
@@ -97,19 +97,32 @@ A config-level contract may expose:
 
 These modes are implementation controls, not product stories. Product docs should describe the user-visible gated agency experience.
 
-## Stop conditions
+## Stop and retry conditions
 
-The controller must stop when any gate fails:
+The controller must distinguish remediation feedback from hard stops. A gate fail/block does not promote the loop, but it can be retried automatically when the report names actionable, scoped remediation inside budget and policy.
 
-- token, time, cost, cycle, session, or write budget exhausted,
-- risk exceeds the configured limit,
-- user approval is required,
-- intent is ambiguous,
-- a gate fails or blocks,
-- required linters or executable tests fail,
-- policy forbids the next action,
-- the configured approval cadence boundary is reached,
-- a context reset cannot produce a protocol-safe auto-pickup boundary,
+Automatic same-loop remediation sequence:
+
+1. read gate findings and remediation from source refs;
+2. classify retry route as same loop, decision, planning, implementation, observe/wait, or user approval;
+3. acquire narrow artifact scopes;
+4. fix the identified issue without expanding scope;
+5. rerun required linters/tests;
+6. compile a superseding loop output/build;
+7. rerun the same gate.
+
+The controller must stop when:
+
+- token, time, cost, cycle, session, write, or retry budget is exhausted;
+- risk exceeds the configured limit;
+- user approval is required;
+- intent is ambiguous or a new semantic decision lacks approved rows;
+- gate diagnostics are non-actionable or too noisy to repair safely;
+- artifact conflicts, stale leases, or isolation policy block safe writes;
+- required linters or executable tests fail and no scoped fix is available;
+- policy forbids the next action;
+- the configured approval cadence boundary is reached;
+- a context reset cannot produce a protocol-safe auto-pickup boundary;
 - destructive or publication action is requested without explicit approval.
 
 ## Routing
@@ -123,7 +136,9 @@ graph state -> agency scope/policy -> CodeWiki runtime step -> compiler/gate pre
                 decision/planning <- ambiguity, failed gate, or blocked validation
 ```
 
-When intent is unclear, a requirement is not unequivocally represented in the passed decision trace, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When task boundaries are incomplete, it routes to planning. When code/tests must change and planning evidence is valid, it routes to implementation. When implementation evidence is ready, it routes to the implementation gate and closure Git proof. When context is noisy or policy requires a boundary and the session budget allows it, agency should call Pi session-boundary capability instead of asking the user to run a host command manually. If Pi cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
+When intent is unclear, a requirement is not unequivocally represented in the passed decision trace, or KB semantics must change, it routes to the decision loop and blocks dependent lower-layer work until the user approves, edits, rejects, or defers the missing semantics. Independent tasks whose refs, scopes, and acceptance do not depend on that decision may continue in parallel under normal lease and risk policy. When task boundaries are incomplete, it routes affected work to planning. When code/tests must change and planning evidence is valid, it routes affected work to implementation. When implementation evidence is ready, it routes to the implementation gate and closure Git/content evidence. When context is noisy or policy requires a boundary and the session budget allows it, agency should call Pi session-boundary capability instead of asking the user to run a host command manually. If Pi cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
+
+A new decision introduced mid-roadmap becomes a parallel decision workstream when its impact can be scoped. Agency should fence only dependent tasks, keep unaffected sprint/roadmap tasks schedulable, and record dependency edges from the new decision trace to any paused or future planning/implementation work. Broad architecture, policy, or risk decisions that may affect many active tasks become a sprint/roadmap stop gate until impact classification is approved.
 
 ## Context reset and auto-pickup
 
@@ -138,6 +153,7 @@ If the adapter cannot guarantee a valid next-turn boundary, agency must block or
 - Agency is always gated; unbounded autonomous editing is not allowed.
 - Agency level grants continuation permission only; it never bypasses budgets, validation, risk, policy, publication, or semantic approval gates.
 - Agency cycles authorize bounded runtime steps, not a fourth compiler; the runtime may invoke decision, planning, implementation, and gate tools but must not fabricate compiler outputs.
+- Agency may automatically remediate actionable gate fail/block findings by invoking the same loop compiler again with superseding output; it must not bypass the gate or promote on a failed/blocked report.
 - The controller must not mutate generated graph state directly.
 - The controller must not bypass gateway verdicts or policy decisions.
 - Commit, push, release, and remote updates require explicit publication policy approval.

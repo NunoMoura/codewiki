@@ -2,10 +2,10 @@
 id: spec.system.graph
 title: Graph
 state: active
-summary: Generated query/index projection over KB truth, telemetry traces, source/test facts, runtime coordination, and Git proof.
+summary: Generated query/index projection over KB truth, telemetry traces, source/test facts, runtime coordination, and content evidence.
 owners:
   - architecture
-updated: "2026-06-03"
+updated: "2026-06-05"
 ---
 
 # Graph
@@ -31,7 +31,8 @@ The graph is generated from:
 .codewiki/config.json
 .codewiki/kb/** semantic frontmatter, diagram_refs, links, and explicit refs
 .codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, file-structure refs, and policy boundaries
-.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json
+.codewiki/telemetry/TRACE-*.json hot lifecycle traces
+.codewiki/telemetry/catalog.json cold trace catalog and restore refs
 code/test manifests and source fingerprints
 Git commit SHAs, tree SHAs, package digests, tags, branches, and remote refs
 runtime leases/jobs/questions when active
@@ -55,7 +56,7 @@ Graph refresh and loop promotion are separate:
 - compiler output written: graph refreshes pending loop evidence;
 - gate fail/block written: graph refreshes gate findings and remediation items;
 - gate pass written: graph refreshes and promotes to the next loop;
-- implementation pass plus Git proof: graph marks the trace production-ready/closed for its scope.
+- implementation pass plus content evidence: graph marks the trace production-ready/closed for its scope.
 
 Build/compiler output is not a promotion boundary. Gate pass is the promotion boundary.
 
@@ -66,7 +67,7 @@ The graph should keep high-signal nodes and refs, not full artifact payloads:
 | Node | Purpose |
 | --- | --- |
 | `Trace` | One change journey from decision to implementation completion. |
-| `LoopRun` | Decision, planning, or implementation loop file within a trace. |
+| `LoopRun` | Decision, planning, or implementation section within a trace. |
 | `GateVerdict` | Verdict and status for a loop exit gate. |
 | `GateFinding` | Missing/wrong/stale/weak finding emitted by a gate. |
 | `RemediationItem` | Actionable next repair instruction. |
@@ -74,9 +75,9 @@ The graph should keep high-signal nodes and refs, not full artifact payloads:
 | `Requirement` | Accepted requirement or acceptance criterion with stable id. |
 | `WorkItem` | Executable planned unit, currently roadmap task/sprint during migration. |
 | `SourceFile` | Source, test, doc, package, or script path. |
-| `GitProof` | Commit/tree/package/remote content proof. |
+| `ContentEvidence` | Commit/tree/package/remote refs or working-tree digest that attest checked content. |
 
-Historic `Build`, `ValidationReport`, `Audit`, `Check`, and `Policy` graph nodes should collapse into compiler output refs, gate refs, gate findings, or criteria metadata where possible.
+Historic `Build`, `ValidationReport`, `Audit`, `Check`, `GitProof`, and `Policy` graph nodes should collapse into compiler output refs, gate refs, content evidence refs, gate findings, or criteria metadata where possible.
 
 ## Target edge types
 
@@ -94,8 +95,8 @@ GateVerdict --blocks_on--> GateFinding
 LoopRun --maps_to--> Requirement
 LoopRun --changes--> SourceFile
 LoopRun --tests--> SourceFile
-ImplementationLoop --attests--> GitProof
-GitProof --attests_content--> SourceFile
+ImplementationLoop --attests--> ContentEvidence
+ContentEvidence --attests_content--> SourceFile
 ```
 
 Edges should preserve source refs and JSON pointers so tools can open exact trace, KB, diagram, code, or Git evidence.

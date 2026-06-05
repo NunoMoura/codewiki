@@ -1,6 +1,8 @@
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { planAgencyAutoPickup } from "../../src/agency/auto-pickup.ts";
+import { agencyHardStopReasons } from "../../src/agency/planning.ts";
+import { effectiveAgencyPolicy } from "../../src/agency/types.ts";
 import { buildAutomationReadinessIndex } from "../../src/state/automation-readiness.ts";
 import { CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE } from "../../src/state/resume-kickoff.ts";
 
@@ -303,6 +305,67 @@ function implementationBuild(taskId) {
 	assert.deepEqual(index.sprints["SPRINT-READY"].promotable_task_ids, [
 		"TASK-105",
 	]);
+	assert.equal(index.tasks["TASK-104"].blockers[0].retry_class, "same_loop");
+	assert.equal(
+		index.tasks["TASK-104"].blockers[0].remediation_route,
+		"implementation",
+	);
+}
+
+{
+	const task = readinessTask("TASK-106", "blocked");
+	const index = buildAutomationReadinessIndex({
+		now: "2026-06-01T00:00:00.000Z",
+		tasks: [task],
+		builds: [planningBuild("TASK-106"), implementationBuild("TASK-106")],
+		validations: [
+			{
+				path: ".codewiki/validation/decision-needed.json",
+				taskId: "TASK-106",
+				verdict: "block",
+				data: {
+					task_id: "TASK-106",
+					failure_class: "decision_ambiguity",
+					remediation: {
+						retry_class: "route_decision",
+						remediation_route: "decision",
+						next_safe_actions: ["Route to decision approval."],
+					},
+				},
+			},
+		],
+	});
+	assert.equal(index.tasks["TASK-106"].state, "blocked");
+	assert.equal(index.tasks["TASK-106"].safe_to_schedule, false);
+	assert.equal(
+		index.tasks["TASK-106"].blockers[0].kind,
+		"validation_hard_stop",
+	);
+	assert.equal(
+		index.tasks["TASK-106"].blockers[0].retry_class,
+		"route_decision",
+	);
+	assert.equal(index.tasks["TASK-106"].next_action.loop, "planning");
+}
+
+{
+	const policy = effectiveAgencyPolicy(project().config);
+	const base = {
+		policy,
+		trigger: "manual",
+		health: { errors: 2 },
+		claims: {},
+		nextStep: { reason: "semantic decision gate" },
+		budget: { risk: "medium" },
+	};
+	assert.deepEqual(agencyHardStopReasons(base), [
+		"validation/blocking health gate active",
+		"semantic decision gate active",
+	]);
+	assert.deepEqual(
+		agencyHardStopReasons({ ...base, allowScopedContinuation: true }),
+		[],
+	);
 }
 
 console.log("✓ agency auto-pickup smoke passed");

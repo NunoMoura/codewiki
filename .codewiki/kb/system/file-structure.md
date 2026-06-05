@@ -5,12 +5,17 @@ state: active
 summary: Target repository, package-source, and dogfood CodeWiki state structure for the three-loop lifecycle trace model.
 owners:
   - architecture
-updated: "2026-06-04"
+updated: "2026-06-05"
 diagram_refs:
   - file-structure-map:intended_file_structure
   - file-structure-map:concept_root_target
   - file-structure-map:dogfood_kb
-  - file-structure-map:dogfood_telemetry
+  - file-structure-map:hot_trace_truth
+  - file-structure-map:cold_trace_catalog
+  - file-structure-map:legacy_loop_evidence
+  - file-structure-map:generated_graph
+  - file-structure-map:runtime_session
+  - file-structure-map:local_workspace_state
   - file-structure-map:migration_compatibility_constraints
 ---
 
@@ -52,7 +57,7 @@ Target CodeWiki project state is small:
 Rules:
 
 - `kb/**` owns current product/system truth.
-- `roadmap.json` owns active work truth; `.codewiki/roadmap/queue.json` is previous-state storage until the roadmap migration replaces it.
+- `roadmap.json` owns target active work truth; the configured roadmap queue compatibility path remains migration storage until the roadmap migration replaces it.
 - `telemetry/TRACE-*.json` owns hot lifecycle trace truth for active, blocked, unpublished, recently closed, or active-work-referenced changes.
 - `telemetry/catalog.json` owns compact metadata and Git restore refs for cold traces.
 - `runtime/state.json` owns mutable live coordination only.
@@ -61,6 +66,23 @@ Rules:
 - Pi session transcripts remain in Pi storage; CodeWiki traces store only refs and concise summaries.
 
 Standalone hot roots such as `builds`, `validation`, `gateway`, `archive`, `logs`, `sources`, `research`, `gc`, `session`, and multi-file telemetry trace directories are not target truth roots. New trace-aware code must not add shims that normalize these roots into lifecycle traces.
+
+## Hot-state retention classes
+
+| Class | Paths | Retention rule | Safe deletion trigger |
+| --- | --- | --- | --- |
+| Package source truth | `src/**`, `skills/**`, `scripts/**`, `tests/**`, `README.md`, `CHANGELOG.md`, `package.json`, `package-lock.json`, `tsconfig.json` | Tracked package behavior and tests. This is not CodeWiki dogfood cleanup state. | Only normal product changes; never CodeWiki GC. |
+| Dogfood KB and roadmap truth | `.codewiki/kb/**`, target roadmap root, configured roadmap queue compatibility storage, `.codewiki/roadmap/tasks/**` | Hot while it describes current repository intent or active/closed roadmap history. | Roadmap/archive migration with source-owned restore path; not runtime GC. |
+| Hot lifecycle trace truth | `.codewiki/telemetry/TRACE-*.json` | Full JSON remains hot while the trace is active, blocked, unpublished, recently closed, route-back relevant, or referenced by open roadmap/gate/compiler-output migration evidence. | Cold catalog entry exists with commit SHA, tree SHA, original path, content digest, and graph can route through the catalog. |
+| Cold trace catalog | `.codewiki/telemetry/catalog.json` | Compact Git-tracked index for cold traces and restore refs. | Never purge as scratch; update through retention tooling only. |
+| Legacy build/gate evidence | `.codewiki/builds/**`, `.codewiki/validation/**`, `.codewiki/research/**`, `.codewiki/gc/**` | Compatibility evidence while TASK-093/TASK-094 readers and active migration tasks still consume legacy roots. | `wiki_gc` classifies tracked artifact as purgeable and purge receives archive commit/tree evidence, then writes a restore ledger before deletion. |
+| Generated graph/views/cache | `.codewiki/index_graph.json`, `.codewiki/views/**`, `.codewiki/cache/graph.sqlite` | Rebuildable projections. `index_graph.json` and views may be tracked generated state; SQLite cache is optional and gitignored. | Rebuild or remove cache only; do not use generated files as authoritative deletion evidence. |
+| Runtime/session coordination | `.codewiki/runtime/**`, `.codewiki/session/**` | Hot only for active leases, jobs, heartbeats, wait/wake queues, and current handoffs. | Runtime GC may purge completed/cancelled/failed/external consumed handoffs; current leases/jobs remain. |
+| Pi/local/editor state | `.pi/**`, `.pi-lens/**`, `.vscode/**`, `.tmp-worktrees/**` | `.pi/settings.json`, `.pi/APPEND_SYSTEM.md`, and `.pi/.gitignore` are repo-local Pi configuration; `.pi` package cache contents, `.pi-lens`, `.vscode`, and `.tmp-worktrees` are local/editor/worktree state with no production semantics. | `.vscode`, `.pi-lens`, and `.tmp-worktrees` stay ignored. Remove registered worktrees only with `git worktree remove`/`prune` after dirty-state and CodeWiki lease/claim checks. |
+
+No gate report, compiler output, validation report, or lifecycle trace required by an open task, an active migration, or current policy may be deleted. If a purge is not safe, record the deferral reason instead of deleting.
+
+Prefer Git refs and Git object queries for restore/catalog work. `.tmp-worktrees/**` is optional local isolation scratch for parallel builders, validators, or publishers; it is not durable retention state.
 
 ## Lifecycle trace files
 
@@ -125,7 +147,7 @@ src/
     doc-parser.ts
     diagram-parser.ts
   git/
-    proof.ts
+    content-evidence.ts
     worktrees.ts
     publisher.ts
   pi/

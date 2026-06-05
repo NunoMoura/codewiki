@@ -1,0 +1,331 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-05T10:17:03Z",
+  "profile": "implementation",
+  "gate": "implementation",
+  "task_id": "TASK-095",
+  "verdict": "block",
+  "rationale": "Implementation validation for superseding TASK-095 local-close build. Build carries package digest and safe local task-close publication metadata; source/test behavior unchanged from prior passed validation; targeted tests/typecheck/audits remain valid. Policy blocks implementation gate validation until acceptance_mapping are recorded.",
+  "checks": [
+    "implementation_build .codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "wiki_audit package/security/stale-reference/generated-parity/source-contract/task/changed -> pass/warning as recorded; alignment pre-existing fail"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red from pre-existing health errors outside TASK-095."
+    },
+    {
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: acceptance_mapping."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red from pre-existing health errors outside TASK-095.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "implementation:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: acceptance_mapping.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "implementation"
+      ],
+      "remediation_route": "implementation",
+      "retry_class": "same_loop",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "implementation:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Alignment graph-health remains red from pre-existing health errors outside TASK-095.",
+      "ref_count": 0
+    },
+    {
+      "id": "implementation:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: acceptance_mapping.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "block",
+    "remediation_route": "implementation",
+    "retry_class": "same_loop",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "source-contract",
+    "task",
+    "generated-parity",
+    "package",
+    "security",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "alignment",
+    "source-contract",
+    "task",
+    "changed",
+    "generated-parity",
+    "package",
+    "security",
+    "stale-reference",
+    "approved by user"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "fce10f3d01c97902a0c060f0f9d54127c6615b9612705cabcef21043059c0f89",
+    "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g=="
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-095",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-block-task-095-2026-06-05-task-09.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+      ".codewiki/validation/2026-06-05-implementation-block-task-095-2026-06-05-task-09.json",
+      "src/gateway/report.ts",
+      "src/agency/planning.ts",
+      "src/state/automation-readiness.ts",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-095",
+    "source_build": ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+    "validation_report": ".codewiki/validation/2026-06-05-implementation-block-task-095-2026-06-05-task-09.json",
+    "commit_title": "checkpoint(codewiki): TASK-095 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-095",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-05-implementation-block-task-095-2026-06-05-task-09.json",
+      "CodeWiki-Checks: implementation_build .codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json; node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs -> pass; node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs -> pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs -> pass; npm run typecheck -> pass; npm pack --dry-run --json -> integrity sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==; wiki_audit package/security/stale-reference/generated-parity/source-contract/task/changed -> pass/warning as recorded; alignment pre-existing fail"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/agency/planning.ts",
+      "src/state/automation-readiness.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "commit_readiness"
+  ],
+  "blocking_questions": [
+    "Update the implementation build with commit-ready title, body, trailers, linters/tests, validation placeholder, closure brief, and file evidence before validation can pass."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "source-contract",
+      "task",
+      "generated-parity",
+      "package",
+      "security",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:source-contract or profile:source-contract",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "gate": "implementation",
+    "task_id": "TASK-095",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved by user"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/test-validation/recover trailers"
+    ],
+    "gaps": [
+      "acceptance_mapping"
+    ]
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "fce10f3d01c97902a0c060f0f9d54127c6615b9612705cabcef21043059c0f89",
+    "package_digest": "sha512-AMKy8vvHMaQzgxyV8k+sHhPuweXzT/20hT79IkwBhUWbczEDG0r+iI8hju5Vje0cbFmDLsOnDMdVyBq7lS6B1g==",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Dirty validation for superseding local-close build before amending checkpoint commit.",
+    "role": "validator"
+  }
+}

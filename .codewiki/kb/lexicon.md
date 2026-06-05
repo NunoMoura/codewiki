@@ -143,11 +143,11 @@ Compact support for an assertion. Knowledge evidence supports product/system tru
 
 ## Requirement ID
 
-Stable identifier for an accepted requirement as it moves from decision to knowledge, planning, tests/code, implementation evidence, gate verdicts, and Git proof. Requirement ids let CodeWiki prove alignment without relying on broad prose matching.
+Stable identifier for an accepted requirement as it moves from decision to knowledge, planning, tests/code, implementation evidence, gate verdicts, and Git/content evidence. Requirement ids let CodeWiki prove alignment without relying on broad prose matching.
 
 ## Traceability matrix
 
-Compact generated view that connects requirement ids to decision rows, knowledge clauses, loop trace files, roadmap work, tests/code, gate verdicts, and Git proof. It reports gaps but does not own requirements.
+Compact generated view that connects requirement ids to decision rows, knowledge clauses, loop trace files, roadmap work, tests/code, gate verdicts, and Git/content evidence. It reports gaps but does not own requirements.
 
 ## Vertical alignment
 
@@ -175,7 +175,7 @@ Current truth stored in `.codewiki/kb/**` plus compact active workflow traceabil
 
 ## Cold truth
 
-Git history and immutable content proof: commit SHAs, tree SHAs, tags, package digests, and remote refs. Git stores historical content; telemetry indexes the refs needed to find it.
+Git history and immutable content evidence: commit SHAs, tree SHAs, tags, package digests, and remote refs. Git stores historical content; telemetry indexes the refs needed to find it.
 
 ## Runtime
 
@@ -219,7 +219,7 @@ A non-canonical project expression that still has a project-specific meaning bec
 - Removed expression pattern: `\baudit(?:s|ed|ing)?\b`
 - Allowed compatibility tokens: `/audit`, `wiki_audit`, `codewiki_audit`, `src/audit/**`, `src/adapters/pi/commands/audit.ts`, `src/adapters/pi/tools/audit.ts`, `audit_refs`, `audit_reports`, `AUDIT_*`, `Audit*`, `audit:*`, `graph-audit`, `drift-audit`, `view-audit.md`, `audit.test.mjs`, `audit-drift.test.mjs`.
 - Allowed source literals: `audit`.
-- Allowed migration docs: `.codewiki/kb/system/audits.md`.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
 - Deletion trigger: remove after command, tool, schema, gate-report, and profile-name migrations no longer require audit wording for backward compatibility.
 
 ### proof

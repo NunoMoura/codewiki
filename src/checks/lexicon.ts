@@ -28,6 +28,7 @@ interface RemovedTermRule {
 	allowedTokenPatterns: RegExp[];
 	allowedSourceLiterals: Set<string>;
 	allowedDocPaths: Set<string>;
+	allowedDocPathPatterns: RegExp[];
 	deletionTrigger: string;
 }
 
@@ -178,6 +179,13 @@ function wildcardPattern(token: string): RegExp {
 	return new RegExp(escaped, "g");
 }
 
+function pathPattern(token: string): RegExp {
+	const escaped = escapeRegExp(normalizeRel(token))
+		.replace(/\\\*\\\*/g, ".*")
+		.replace(/\\\*/g, "[^/]*");
+	return new RegExp(`^${escaped}$`);
+}
+
 function parseTemporaryCompatibilityTerms(text: string): {
 	rules: RemovedTermRule[];
 	issues: AuditIssue[];
@@ -215,9 +223,15 @@ function parseTemporaryCompatibilityTerms(text: string): {
 		const allowedSourceLiterals = new Set(
 			codeSpans(fieldValue(block, "Allowed source literals")),
 		);
+		const allowedDocTokens = codeSpans(
+			fieldValue(block, "Allowed migration docs"),
+		).map(normalizeRel);
 		const allowedDocPaths = new Set(
-			codeSpans(fieldValue(block, "Allowed migration docs")).map(normalizeRel),
+			allowedDocTokens.filter((token) => !token.includes("*")),
 		);
+		const allowedDocPathPatterns = allowedDocTokens
+			.filter((token) => token.includes("*"))
+			.map(pathPattern);
 		const deletionTrigger = fieldValue(block, "Deletion trigger");
 		if (!canonical || !patternSource || !deletionTrigger) {
 			issues.push(
@@ -233,7 +247,7 @@ function parseTemporaryCompatibilityTerms(text: string): {
 		if (
 			allowedTokens.length === 0 &&
 			allowedSourceLiterals.size === 0 &&
-			allowedDocPaths.size === 0
+			allowedDocTokens.length === 0
 		) {
 			issues.push(
 				createIssue(
@@ -267,6 +281,7 @@ function parseTemporaryCompatibilityTerms(text: string): {
 			allowedTokenPatterns: allowedTokens.map(wildcardPattern),
 			allowedSourceLiterals,
 			allowedDocPaths,
+			allowedDocPathPatterns,
 			deletionTrigger,
 		});
 	}
@@ -381,6 +396,11 @@ function isAllowedRemovedTerm(
 		return true;
 	}
 	if (rule.allowedDocPaths.has(segment.path)) return true;
+	if (
+		rule.allowedDocPathPatterns.some((pattern) => pattern.test(segment.path))
+	) {
+		return true;
+	}
 	return false;
 }
 

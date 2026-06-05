@@ -248,15 +248,22 @@ Default Graph lens output returns headers, lifecycle, blockers, next actions, an
 
 ## Hot and cold traces
 
-Hot truth lives in `.codewiki/kb/**` plus active `.codewiki/telemetry/**` trace files. Hot traces include active, blocked, recently closed, unpublished, route-back-relevant, or active-work-referenced traces.
+Hot truth lives in `.codewiki/kb/**` plus active `.codewiki/telemetry/TRACE-*.json` trace files. A trace remains full hot JSON while any of these are true:
 
-Cold truth lives in Git refs and immutable content evidence. Closed production-ready or published traces may be cold-archived after they are committed and cataloged. `.codewiki/telemetry/catalog.json` stores compact canonical metadata for cold traces:
+- decision, planning, implementation, publication, route-back, or remediation work is active or blocked;
+- a gate report, compiler output, or current policy still requires direct trace content;
+- an open roadmap task, sprint, lease, wait/wake record, or migration compatibility reader references it;
+- it is recently closed and has not reached the approved retention/cold-archive trigger;
+- it is unpublished or production-ready content still awaiting publication evidence.
+
+Cold truth lives in Git refs and immutable content evidence. A closed production-ready or published trace may be cold-archived only after the trace is committed, no active policy/gate/task depends on full JSON, and `.codewiki/telemetry/catalog.json` stores compact canonical metadata for the cold trace:
 
 - trace id, title, summary, lifecycle state, and relations;
 - task/path/KB/source/test indexes needed for graph rebuild;
-- restore refs: commit SHA, tree SHA, original path, and content digest.
+- restore refs: commit SHA, tree SHA, original path, and content digest;
+- cold-archive reason and deletion/restore ledger ref when tracked hot JSON was purged.
 
-Generated graph entries may reference cold trace details as `git:<commit_sha>:<path>#<pointer>`. Tools hydrate cold details with Git only on demand.
+Generated graph entries may reference cold trace details as `git:<commit_sha>:<path>#<pointer>`. Tools hydrate cold details with Git only on demand. The catalog is not a replacement for open/current gate or compiler-output evidence; if policy still needs the artifact hot, record a deferral instead of deleting.
 
 ## Storage backend
 

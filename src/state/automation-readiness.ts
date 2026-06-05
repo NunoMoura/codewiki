@@ -36,6 +36,10 @@ export interface AutomationReadinessBlocker {
 	publisher_refs?: string[];
 	rebase_requirements?: string[];
 	retryable?: boolean;
+	retry_class?: string;
+	remediation_route?: string;
+	stop_reason?: string;
+	next_safe_actions?: string[];
 }
 
 export interface AutomationReadinessNextAction {
@@ -373,6 +377,74 @@ function taskValidations(
 	});
 }
 
+function validationRemediationRecord(
+	validation: AutomationReadinessValidationInput | null,
+): JsonRecord {
+	const data = isRecord(validation?.data) ? validation.data : {};
+	return recordField(data, "remediation");
+}
+
+function validationRetryClass(
+	validation: AutomationReadinessValidationInput | null,
+): string {
+	const data = isRecord(validation?.data) ? validation.data : {};
+	const remediation = validationRemediationRecord(validation);
+	const routing = recordField(data, "routing");
+	const explicit = String(remediation.retry_class || data.retry_class || "")
+		.trim()
+		.toLowerCase();
+	if (explicit) return explicit;
+	const failureClass = String(data.failure_class || routing.failure_class || "")
+		.trim()
+		.toLowerCase();
+	if (
+		failureClass === "decision_ambiguity" ||
+		failureClass === "risk_approval_missing"
+	) {
+		return "route_decision";
+	}
+	if (failureClass === "planning_gap") return "route_planning";
+	if (failureClass === "runtime_conflict") return "wait";
+	if (validation?.verdict === "fail" || validation?.verdict === "block") {
+		return "same_loop";
+	}
+	return "none";
+}
+
+function validationRemediationRoute(
+	validation: AutomationReadinessValidationInput | null,
+): string {
+	const data = isRecord(validation?.data) ? validation.data : {};
+	const remediation = validationRemediationRecord(validation);
+	const routing = recordField(data, "routing");
+	return String(
+		remediation.remediation_route ||
+			data.recommended_next_loop ||
+			routing.recommended_next_loop ||
+			"implementation",
+	).trim();
+}
+
+function validationNextSafeActions(
+	validation: AutomationReadinessValidationInput | null,
+): string[] {
+	const data = isRecord(validation?.data) ? validation.data : {};
+	const remediation = validationRemediationRecord(validation);
+	return unique([
+		...stringList(remediation.next_safe_actions),
+		...stringList(data.blocking_questions),
+		...stringList(data.stop_reason),
+	]);
+}
+
+function validationRetryable(
+	validation: AutomationReadinessValidationInput | null,
+): boolean {
+	return ["same_loop", "route_planning"].includes(
+		validationRetryClass(validation),
+	);
+}
+
 function labelText(task: RoadmapTaskRecord): string {
 	return [
 		task.kind,
@@ -605,10 +677,13 @@ function stateNextAction(
 		};
 	}
 	if (state === "retryable") {
+		const loop = first?.remediation_route || "implementation";
 		return {
 			kind: "retry",
-			loop: "implementation",
-			summary: `${taskId} has retryable failure/block evidence; resume from validation refs and fix scoped issues.`,
+			loop,
+			summary:
+				first?.summary ||
+				`${taskId} has retryable failure/block evidence; resume from validation refs and fix scoped issues.`,
 			command: `wiki_resume_context taskId=${taskId}`,
 			refs: validationRefs,
 			trace_refs: [],
@@ -767,15 +842,31 @@ function buildTaskReadiness(
 		latestVerdict === "fail" || latestVerdict === "block"
 			? [normalizeRef(latest?.path)]
 			: [];
+	const latestRetryClass = validationRetryClass(latest);
+	const latestRemediationRoute = validationRemediationRoute(latest);
+	const latestNextSafeActions = validationNextSafeActions(latest);
 	if (validationFailureRefs.length > 0) {
+		const retryable = validationRetryable(latest);
 		blockers.push(
 			blocker(
-				"retryable_validation_failure",
-				"medium",
-				`Latest validation verdict is ${latestVerdict}; task can retry from exact validation evidence.`,
+				retryable ? "retryable_validation_failure" : "validation_hard_stop",
+				retryable ? "medium" : "high",
+				retryable
+					? `Latest validation verdict is ${latestVerdict}; task can retry from exact validation evidence.`
+					: `Latest validation verdict is ${latestVerdict}; gate remediation is not same-loop retryable.`,
 				validationFailureRefs,
-				`Re-read ${validationFailureRefs[0]}, resume ${task.id}, and rerun implementation validation after scoped fixes.`,
-				{ validation_refs: validationFailureRefs, retryable: true },
+				latestNextSafeActions[0] ||
+					(retryable
+						? `Re-read ${validationFailureRefs[0]}, resume ${task.id}, and rerun ${latestRemediationRoute} validation after scoped fixes.`
+						: `Re-read ${validationFailureRefs[0]} and route to ${latestRemediationRoute} before scheduling automation.`),
+				{
+					validation_refs: validationFailureRefs,
+					retryable,
+					retry_class: latestRetryClass,
+					remediation_route: latestRemediationRoute,
+					stop_reason: retryable ? undefined : latestNextSafeActions[0],
+					next_safe_actions: latestNextSafeActions,
+				},
 			),
 		);
 	}

@@ -150,8 +150,8 @@
         "session_per_sprint": true,
         "require_claims": true
       },
-      "level": "roadmap",
-      "approval_cadence": "roadmap",
+      "level": "sprint",
+      "approval_cadence": "sprint",
       "context_reset": {
         "enabled": true,
         "auto_pickup": true,
