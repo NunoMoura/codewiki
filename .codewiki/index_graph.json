@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T06:12:34.511Z",
+  "generated_at": "2026-06-06T06:13:11.331Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -54715,76 +54715,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-372",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-372",
-      "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-      "agent_name": "Wren",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-      "expires_at": "2026-06-06T07:26:39.850Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/builds.md"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/lint.ts"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        },
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-104"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/builds.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/builds.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/lint.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/lint.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-104",
-      "kind": "change_claim_scope",
-      "path": "TASK-104",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -175814,36 +175744,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-372",
-      "to": "task:TASK-104"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-372",
-      "to": "claim_scope:.codewiki/kb/system/builds.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-372",
-      "to": "claim_scope:src/state/lint.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-372",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-372",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-372",
-      "to": "claim_scope:TASK-104"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -202318,7 +202218,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 34,
+            "item_count": 28,
             "badges": [
               {
                 "id": "open_tasks",
@@ -202348,7 +202248,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -202530,8 +202430,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6064,
-          "edges": 20441,
+          "nodes": 6058,
+          "edges": 20435,
           "open_tasks": 0,
           "validations": 381,
           "source_refs": 1487
@@ -202695,7 +202595,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 34,
+              "item_count": 28,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -202725,7 +202625,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 1
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -203833,291 +203733,19 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 1,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/builds.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/lint.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-104"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
-          "active_claim_count": 1,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-372",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-104",
-                  "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                  "expires_at": "2026-06-06T07:26:39.850Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/builds.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-372",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-104",
-                  "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                  "expires_at": "2026-06-06T07:26:39.850Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-372",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-104",
-                  "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                  "expires_at": "2026-06-06T07:26:39.850Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/lint.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-372",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-104",
-                  "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                  "expires_at": "2026-06-06T07:26:39.850Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "task_id": "TASK-104"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-372",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-104",
-                  "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                  "expires_at": "2026-06-06T07:26:39.850Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -204591,8 +204219,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6064,
-          "edges": 20441,
+          "nodes": 6058,
+          "edges": 20435,
           "source_refs": 1487
         },
         "next_action": {
@@ -204699,148 +204327,12 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 1,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/builds.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/lint.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-104"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-372",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-104",
-                    "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                    "expires_at": "2026-06-06T07:26:39.850Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
           "publication": [],
           "deferred_views": []
@@ -233741,148 +233233,12 @@
         ],
         "durable_truth": false,
         "source_role": "hot_coordination_input",
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "warning_count": 0,
         "conflict_count": 0,
         "waiting_count": 0,
         "ready_waiter_count": 0,
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/builds.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-104"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ]
+        "artifact_statuses": []
       },
       "publication": [],
       "deferred_views": []
@@ -234354,349 +233710,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-372",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-104",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-372",
-          "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "agent_name": "Wren",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-          "task_id": "TASK-104",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/builds.md"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-104"
-            }
-          ],
-          "created_at": "2026-06-06T05:56:39Z",
-          "updated_at": "2026-06-06T05:56:39Z",
-          "expires_at": "2026-06-06T07:26:39.850Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/builds.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-104"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/builds.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-104"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-372",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-104",
-              "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-              "expires_at": "2026-06-06T07:26:39.850Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -258930,8 +257962,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T06:12:34.430Z",
-            "expires_at": "2026-06-06T08:12:34.430Z",
+            "generated_at": "2026-06-06T06:13:11.241Z",
+            "expires_at": "2026-06-06T08:13:11.241Z",
             "sprint_ids": [
               "SPRINT-023"
             ],
@@ -259063,8 +258095,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T06:12:34.430Z",
-      "expires_at": "2026-06-06T08:12:34.430Z",
+      "generated_at": "2026-06-06T06:13:11.241Z",
+      "expires_at": "2026-06-06T08:13:11.241Z",
       "state": "runnable",
       "tasks": {
         "TASK-105": {
@@ -259079,8 +258111,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T06:12:34.430Z",
-          "expires_at": "2026-06-06T08:12:34.430Z",
+          "generated_at": "2026-06-06T06:13:11.241Z",
+          "expires_at": "2026-06-06T08:13:11.241Z",
           "sprint_ids": [
             "SPRINT-023"
           ],
@@ -260106,9 +259138,7 @@
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
           ],
-          "claim_ids": [
-            "CLAIM-372"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -263227,7 +262257,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T06:12:34.207Z",
+      "generated_at": "2026-06-06T06:13:10.959Z",
       "counts": {
         "large-doc": 2,
         "missing-related-docs": 3,
@@ -263532,7 +262562,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T06:12:34Z",
+      "generated_at": "2026-06-06T06:13:11Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -265331,7 +264361,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T06:12:34Z",
+      "generated_at": "2026-06-06T06:13:11Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -265505,9 +264535,7 @@
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
             ],
-            "claim_ids": [
-              "CLAIM-372"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -266100,7 +265128,7 @@
       },
       "direction": [
         "Lint warning (legacy-decision-build-decision-table-deferred) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=sprint, approval=sprint, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 40/40.",
@@ -270350,7 +269378,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T06:12:34Z",
+        "generated_at": "2026-06-06T06:13:11Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -270405,10 +269433,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T06:12:34Z",
+            "checked_at": "2026-06-06T06:13:11Z",
             "revision": {
               "git": {
-                "head": "d87f1fd0a55947e8acec6a0bd3a22199e444c730",
+                "head": "71739539af65bff6653d79cfbd0a18a35572f1b7",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -270669,12 +269697,12 @@
               "spec_digest": "565792696e7806694ffb93a05a62d78aad5b71e2c079c24cf96c496f31894c8d",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "22f67c44346dd4f88fdf343416f3d65f10a4c82b7aa16649c0ebca8344163ebb",
-              "digest": "84baa3c82822523170e106023f65e762d99b886357e8dfdc5c27bfb6611acbec"
+              "digest": "2bbbe0c5af97a28955f6d79f6b8d7da15a9cbc5062d5baf2c96ad3b9c272b3a4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T06:12:34Z",
+              "checked_at": "2026-06-06T06:13:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -271204,10 +270232,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T06:12:34Z",
+            "checked_at": "2026-06-06T06:13:11Z",
             "revision": {
               "git": {
-                "head": "d87f1fd0a55947e8acec6a0bd3a22199e444c730",
+                "head": "71739539af65bff6653d79cfbd0a18a35572f1b7",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -271454,12 +270482,12 @@
               "spec_digest": "a635a8e0be1338beb83c17e15c86f069190609b314f06d7a5a06f56ec17c9716",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "22f67c44346dd4f88fdf343416f3d65f10a4c82b7aa16649c0ebca8344163ebb",
-              "digest": "2731b86186fd6354da327f860a968999f4f2397ac3442fb1600503d5253e1771"
+              "digest": "ed9de835bea848a840b6c48c83e058f03b922ec79bf06aa6b3db90ae49cf236c"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T06:12:34Z",
+              "checked_at": "2026-06-06T06:13:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -271965,10 +270993,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T06:12:34Z",
+            "checked_at": "2026-06-06T06:13:11Z",
             "revision": {
               "git": {
-                "head": "d87f1fd0a55947e8acec6a0bd3a22199e444c730",
+                "head": "71739539af65bff6653d79cfbd0a18a35572f1b7",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -272229,12 +271257,12 @@
               "spec_digest": "565792696e7806694ffb93a05a62d78aad5b71e2c079c24cf96c496f31894c8d",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "22f67c44346dd4f88fdf343416f3d65f10a4c82b7aa16649c0ebca8344163ebb",
-              "digest": "84baa3c82822523170e106023f65e762d99b886357e8dfdc5c27bfb6611acbec"
+              "digest": "2bbbe0c5af97a28955f6d79f6b8d7da15a9cbc5062d5baf2c96ad3b9c272b3a4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T06:12:34Z",
+              "checked_at": "2026-06-06T06:13:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -272765,200 +271793,23 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-06T06:12:34Z",
+        "generated_at": "2026-06-06T06:13:11Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-372",
-            "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "agent_name": "Wren",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-            "task_id": "TASK-104",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/builds.md"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/lint.ts"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-104"
-              }
-            ],
-            "created_at": "2026-06-06T05:56:39Z",
-            "updated_at": "2026-06-06T05:56:39Z",
-            "expires_at": "2026-06-06T07:26:39.850Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/builds.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-104"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-372",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-104",
-                "summary": "Define residual coverage for legacy rowless decision-build warnings without rewriting/deleting legacy artifacts.",
-                "expires_at": "2026-06-06T07:26:39.850Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-104; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-372 release or validated publisher/patch ref for codewiki/TASK-104/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
