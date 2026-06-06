@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T08:29:42.135Z",
+  "generated_at": "2026-06-06T08:31:19.531Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -54935,146 +54935,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-374",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-374",
-      "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-      "agent_name": "Wren",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-      "expires_at": "2026-06-06T09:49:29.144Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/file-structure.md"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/file-structure.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/file-structure.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim:CLAIM-373",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-373",
-      "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-      "agent_name": "Wren",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-      "expires_at": "2026-06-06T09:47:36.110Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/agency.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/terminal-ui.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/status-dock.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/product/uis/terminal.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/lexicon.md"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        },
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-105"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/agency.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/agency.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/terminal-ui.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/terminal-ui.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/product/uis/status-dock.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/product/uis/status-dock.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/product/uis/terminal.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/product/uis/terminal.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/lexicon.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/lexicon.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-105",
-      "kind": "change_claim_scope",
-      "path": "TASK-105",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -176619,66 +176479,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-374",
-      "to": "task:TASK-105"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-374",
-      "to": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-374",
-      "to": "claim_scope:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-373",
-      "to": "task:TASK-105"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/kb/system/agency.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/kb/system/terminal-ui.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/kb/product/uis/status-dock.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/kb/product/uis/terminal.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/kb/lexicon.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-373",
-      "to": "claim_scope:TASK-105"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -203479,7 +203279,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 39,
+            "item_count": 27,
             "badges": [
               {
                 "id": "open_tasks",
@@ -203505,7 +203305,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -203687,8 +203487,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6101,
-          "edges": 20544,
+          "nodes": 6089,
+          "edges": 20532,
           "open_tasks": 0,
           "validations": 385,
           "source_refs": 1493
@@ -203852,7 +203652,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 39,
+              "item_count": 27,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -203878,7 +203678,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 2
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -204916,561 +204716,19 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 2,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/lexicon.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/product/uis/status-dock.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/product/uis/terminal.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/agency.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-374",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                    "expires_at": "2026-06-06T09:49:29.144Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/file-structure.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-374",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                    "expires_at": "2026-06-06T09:49:29.144Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/terminal-ui.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-105"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
-          "active_claim_count": 2,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/lexicon.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/status-dock.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/terminal.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/agency.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-374",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                  "expires_at": "2026-06-06T09:49:29.144Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/file-structure.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-374",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                  "expires_at": "2026-06-06T09:49:29.144Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/terminal-ui.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "task_id": "TASK-105"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-373",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-105",
-                  "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                  "expires_at": "2026-06-06T09:47:36.110Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -205890,8 +205148,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6101,
-          "edges": 20544,
+          "nodes": 6089,
+          "edges": 20532,
           "source_refs": 1493
         },
         "next_action": {
@@ -205998,283 +205256,12 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 2,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/lexicon.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/product/uis/status-dock.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/product/uis/terminal.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/agency.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-374",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                    "expires_at": "2026-06-06T09:49:29.144Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/file-structure.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-374",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                    "expires_at": "2026-06-06T09:49:29.144Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/terminal-ui.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-105"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-373",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-105",
-                    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                    "expires_at": "2026-06-06T09:47:36.110Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
           "publication": [],
           "deferred_views": []
@@ -235380,283 +234367,12 @@
         ],
         "durable_truth": false,
         "source_role": "hot_coordination_input",
-        "active_claim_count": 2,
+        "active_claim_count": 0,
         "warning_count": 0,
         "conflict_count": 0,
         "waiting_count": 0,
         "ready_waiter_count": 0,
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/lexicon.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/status-dock.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/terminal.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/agency.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-374",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                "expires_at": "2026-06-06T09:49:29.144Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/file-structure.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-374",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                "expires_at": "2026-06-06T09:49:29.144Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/terminal-ui.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-105"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ]
+        "artifact_statuses": []
       },
       "publication": [],
       "deferred_views": []
@@ -236126,667 +234842,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 2,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 2
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-374",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-105",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
-        },
-        {
-          "id": "CLAIM-373",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-105",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-374",
-          "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "agent_name": "Wren",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-          "task_id": "TASK-105",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/file-structure.md"
-            }
-          ],
-          "created_at": "2026-06-06T08:19:29Z",
-          "updated_at": "2026-06-06T08:19:29Z",
-          "expires_at": "2026-06-06T09:49:29.144Z"
-        },
-        {
-          "id": "CLAIM-373",
-          "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "agent_name": "Wren",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-          "task_id": "TASK-105",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/agency.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/terminal-ui.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/status-dock.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/terminal.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/lexicon.md"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-105"
-            }
-          ],
-          "created_at": "2026-06-06T08:17:36Z",
-          "updated_at": "2026-06-06T08:17:36Z",
-          "expires_at": "2026-06-06T09:47:36.110Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/lexicon.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/status-dock.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/terminal.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/agency.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-374",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-              "expires_at": "2026-06-06T09:49:29.144Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/file-structure.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-374",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-              "expires_at": "2026-06-06T09:49:29.144Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/terminal-ui.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-105"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 2,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/lexicon.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/status-dock.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/product/uis/terminal.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/agency.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-374",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-              "expires_at": "2026-06-06T09:49:29.144Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/file-structure.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-374",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-              "expires_at": "2026-06-06T09:49:29.144Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/terminal-ui.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-105"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-373",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-105",
-              "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-              "expires_at": "2026-06-06T09:47:36.110Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -261115,8 +259189,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T08:29:42.039Z",
-      "expires_at": "2026-06-06T10:29:42.039Z",
+      "generated_at": "2026-06-06T08:31:19.437Z",
+      "expires_at": "2026-06-06T10:31:19.437Z",
       "state": "missing",
       "tasks": {},
       "sprints": {
@@ -261976,10 +260050,7 @@
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
           ],
-          "claim_ids": [
-            "CLAIM-374",
-            "CLAIM-373"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -265120,7 +263191,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T08:29:41.789Z",
+      "generated_at": "2026-06-06T08:31:19.157Z",
       "counts": {
         "large-doc": 2,
         "legacy-decision-build-decision-table-deferred": 44
@@ -265406,7 +263477,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T08:29:42Z",
+      "generated_at": "2026-06-06T08:31:19Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -267139,7 +265210,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T08:29:42Z",
+      "generated_at": "2026-06-06T08:31:19Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -267299,10 +265370,7 @@
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
             ],
-            "claim_ids": [
-              "CLAIM-374",
-              "CLAIM-373"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -267904,7 +265972,7 @@
       },
       "direction": [
         "Lint warning (legacy-decision-build-decision-table-deferred) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 2 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=sprint, approval=sprint, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 40/40.",
@@ -272076,7 +270144,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T08:29:42Z",
+        "generated_at": "2026-06-06T08:31:19Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -272131,10 +270199,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T08:29:42Z",
+            "checked_at": "2026-06-06T08:31:19Z",
             "revision": {
               "git": {
-                "head": "2df764a3793a13cb5fe7f3308c27012cc286a961",
+                "head": "27e7fd4e55c1604bd923cfe971622aab58f4e9b5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -272395,12 +270463,12 @@
               "spec_digest": "7898cb5e09ac398a2dd90c61ea888ec23ac6b9405474d7ab6cbd9ba1378616a0",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "4234cfcb8f991d5e0e4bb58b3575fb798c27ccae6ae1553967d5b312b659c433",
-              "digest": "cb2b60389c6a860489d6c8ac6bc021286df541e55d01550e72b5a7298f79a237"
+              "digest": "c59c78c543de6ca4866d7006704d9adf2177268d4a335c6af1c0031b59fb919e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:29:42Z",
+              "checked_at": "2026-06-06T08:31:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -272921,10 +270989,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T08:29:42Z",
+            "checked_at": "2026-06-06T08:31:19Z",
             "revision": {
               "git": {
-                "head": "2df764a3793a13cb5fe7f3308c27012cc286a961",
+                "head": "27e7fd4e55c1604bd923cfe971622aab58f4e9b5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -273169,12 +271237,12 @@
               "spec_digest": "c7533d9dc1906301e77c77504ba0dd69e1165d819d68d8ad0f2f92e04e253dad",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "4234cfcb8f991d5e0e4bb58b3575fb798c27ccae6ae1553967d5b312b659c433",
-              "digest": "0f9ad9dc4d23705860fdb3097b05bb9fbc8f589cea68769e0afc60aa63b9a872"
+              "digest": "6a74d0b3d52745fe6ca833c04ba1c7a5d85a5ef6b79953cd35feb9152d8bf3bb"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:29:42Z",
+              "checked_at": "2026-06-06T08:31:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -273673,10 +271741,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T08:29:42Z",
+            "checked_at": "2026-06-06T08:31:19Z",
             "revision": {
               "git": {
-                "head": "2df764a3793a13cb5fe7f3308c27012cc286a961",
+                "head": "27e7fd4e55c1604bd923cfe971622aab58f4e9b5",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -273937,12 +272005,12 @@
               "spec_digest": "7898cb5e09ac398a2dd90c61ea888ec23ac6b9405474d7ab6cbd9ba1378616a0",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "4234cfcb8f991d5e0e4bb58b3575fb798c27ccae6ae1553967d5b312b659c433",
-              "digest": "cb2b60389c6a860489d6c8ac6bc021286df541e55d01550e72b5a7298f79a237"
+              "digest": "c59c78c543de6ca4866d7006704d9adf2177268d4a335c6af1c0031b59fb919e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:29:42Z",
+              "checked_at": "2026-06-06T08:31:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -274464,375 +272532,23 @@
         "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-06-06T08:29:42Z",
+        "generated_at": "2026-06-06T08:31:19Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 2,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-374",
-            "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "agent_name": "Wren",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-            "task_id": "TASK-105",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/file-structure.md"
-              }
-            ],
-            "created_at": "2026-06-06T08:19:29Z",
-            "updated_at": "2026-06-06T08:19:29Z",
-            "expires_at": "2026-06-06T09:49:29.144Z"
-          },
-          {
-            "id": "CLAIM-373",
-            "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "agent_name": "Wren",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-            "task_id": "TASK-105",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/agency.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/terminal-ui.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/status-dock.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/product/uis/terminal.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/lexicon.md"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-105"
-              }
-            ],
-            "created_at": "2026-06-06T08:17:36Z",
-            "updated_at": "2026-06-06T08:17:36Z",
-            "expires_at": "2026-06-06T09:47:36.110Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/lexicon.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/status-dock.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/product/uis/terminal.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/agency.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-374",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                "expires_at": "2026-06-06T09:49:29.144Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/file-structure.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-374",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Extend TASK-105 scope to file-structure map/doc cleanup for current compatibility export gaps.",
-                "expires_at": "2026-06-06T09:49:29.144Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-374 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/terminal-ui.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-105"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-373",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-105",
-                "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes.",
-                "expires_at": "2026-06-06T09:47:36.110Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-105; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-373 release or validated publisher/patch ref for codewiki/TASK-105/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 2,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
