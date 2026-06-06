@@ -222,6 +222,8 @@ Task-specific regression tests live under task-ref paths/files. Reusable helpers
 
 File-structure cleanup must be scoped by warning class and owner boundary. Do not close a broad “fix all structure warnings” task while leaving warnings unexplained. Remaining actionable drift needs residual coverage: task, sprint, accepted deferral, compatibility rule, archive plan, or false-positive rationale.
 
+Accepted target source structure also needs owner coverage. When target roots or roots-to-retire remain unmatched by current source, planning must route the delta to executable tasks/sprint scope, implementation evidence, or accepted deferral with owner and trigger. Roadmap `open=0` does not prove the target source structure is complete.
+
 `historical`, `non-task`, and `out-of-scope` are not durable coverage. Close evidence must name the owning task/sprint or accepted deferral. Legacy compatibility paths need a migration or deletion trigger.
 
 ## Knowledge-base contract

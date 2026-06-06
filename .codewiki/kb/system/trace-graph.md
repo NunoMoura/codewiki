@@ -6,7 +6,7 @@ summary: Trace-primary state model where one lifecycle trace records a change fr
 owners:
   - architecture
   - product
-updated: "2026-06-04"
+updated: "2026-06-06"
 diagram_refs:
   - architecture:telemetry
   - data-model:telemetry_trace
@@ -47,7 +47,7 @@ Top-level `lifecycle` is the agent-facing control plane. It owns:
 Loop sections are the evidence/data plane. They own loop-specific records and gate history:
 
 - `decision` owns decision table rows, approvals, KB patch evidence, propagation/no-impact evidence, product/system impact, alternatives, risks, downstream planning questions, and decision gate history;
-- `planning` owns work partitioning, task/sprint alignment, parallelization contract, path-conflict matrix, lease plan, route-back triggers, verification strategy, and planning gate history;
+- `planning` owns work partitioning, decision-row/requirement coverage, existing-roadmap reconciliation, task/sprint alignment, parallelization contract, path-conflict matrix, lease plan, route-back triggers, verification strategy, and planning gate history;
 - `implementation` owns work-unit evidence, changed code/test/doc refs, linters/tests, implementation gate history, and optional publication stage.
 
 Multiple loops may be active inside one trace at the same time. Tools must route from `lifecycle.active_loops[]`, not from a single `current_phase` field.
@@ -123,6 +123,8 @@ Hot trace files live under `.codewiki/telemetry/TRACE-*.json`. The canonical sha
   "planning": {
     "status": "not_started|active|gate_passed|blocked",
     "work_units": [],
+    "decision_coverage": [],
+    "roadmap_reconciliation": [],
     "parallelization": {
       "path_conflicts": [],
       "waves": [],
@@ -230,7 +232,7 @@ Loop-to-loop progress lives inside a trace. The graph answers how decisions and 
 
 ## Trace audit and closure residuals
 
-Trace/debug audits must answer what was approved, planned, validated, left open, and who owned every residual issue. Closure evidence that only says `historical`, `non-task`, or `out-of-scope` is incomplete.
+Trace/debug audits must answer what was approved, planned, validated, left open, and who owned every residual issue. Planning trace evidence must show each approved decision row and downstream planning question mapped to work, sprint scope, deferral, no-work rationale, or already-implemented evidence, plus how existing roadmap tasks/sprints were reconciled. Closure evidence that only says `historical`, `non-task`, or `out-of-scope` is incomplete.
 
 When actionable drift remains, gate history or implementation evidence should carry compact residual coverage: issue key/kind, path or glob, classification, owner refs, trigger/expiry for deferrals, and evidence refs. Do not embed raw linter transcripts.
 

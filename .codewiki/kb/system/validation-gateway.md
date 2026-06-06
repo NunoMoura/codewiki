@@ -5,7 +5,7 @@ state: active
 summary: Three loop exit gates that validate lifecycle trace evidence with structured diagnostics, remediation, and semantic handoff guards.
 owners:
   - architecture
-updated: "2026-06-05"
+updated: "2026-06-06"
 diagram_refs:
   - architecture:gateway
   - key-flow:decision_gate
@@ -24,7 +24,7 @@ There is no validation loop. The gateway owns exit gates for the three loops:
 | Gate | Loop exited | Purpose |
 | --- | --- | --- |
 | `decision` | Decision Loop | Verifies semantic completeness, approved rows, KB/diagram propagation, row mappings, trace-lineage impact, product/system impact, risk/benefit assessment, alternatives, explicit approvals, and downstream planning questions. |
-| `planning` | Planning Loop | Verifies decision-to-work propagation, task/sprint boundaries, parallelization contract, acceptance criteria, verification strategy, candidate refs, route-back triggers, and implementation readiness. |
+| `planning` | Planning Loop | Verifies decision-to-work propagation, existing-roadmap reconciliation, task/sprint boundaries, parallelization contract, acceptance criteria, verification strategy, candidate refs, route-back triggers, and implementation readiness. |
 | `implementation` | Implementation Loop | Verifies changed code/docs/tests, required linters/tests, acceptance evidence, KB/diagram freshness, Git/content proof, and publication readiness when configured. |
 
 Former `task-close`, `sprint-close`, `ship-ready`, `publication`, `policy`, `audit`, and `checks` names are compatibility aliases or criteria suites inside the three canonical gates during migration.
@@ -44,7 +44,7 @@ Gate output must be actionable. Every gate result should include:
 
 A passing gate promotes the trace lifecycle to the next safe state or closes implementation when required content evidence exists. A fail/block gate refreshes graph state with findings and remediation but does not promote lower-layer work.
 
-Fail/block is not automatically a user-stop. When findings are actionable, scoped to the current loop, and inside configured budgets/policy, the agent should stay in the same loop, apply the remediation, run required linters/tests, compile a superseding loop output, and rerun the same gate. The gate stops automation only when remediation is non-actionable, semantically ambiguous, missing user approval, blocked by artifact conflicts, risk escalation, destructive/publication policy, isolation policy, or retry/budget exhaustion.
+Fail/block is not automatically a user-stop. When findings are actionable, scoped to the current loop, and inside configured budgets/policy, the agent should stay in the same loop, apply the remediation, run required linters/tests, compile a superseding loop output, and rerun the same gate. Planning fail/block findings keep the planning loop active until a superseding planning output accounts for the finding. The gate stops automation only when remediation is non-actionable, semantically ambiguous, missing user approval, blocked by artifact conflicts, risk escalation, destructive/publication policy, isolation policy, or retry/budget exhaustion.
 
 ## Decision-to-planning semantic quality gate
 
@@ -67,7 +67,21 @@ The decision gate is not just a paperwork gate. Before planning, the decision tr
 
 Decision agents must drill the user when rows are under-specified, risky, conflicting, or strategically important. They should show current project state, expected impact, risks, benefits, and alternatives so the user can validate decisions from product and system standpoints.
 
-The gateway blocks planning handoff when intent is shallow, contradictory, unmapped, unassessed, missing trace impact, missing approvals for the risk tier, or incomplete relative to product/system state.
+The gateway returns fail/block findings for planning handoff when intent is shallow, contradictory, unmapped, unassessed, missing trace impact, missing approvals for the risk tier, or incomplete relative to product/system state. Those findings are remediation input for the current decision or planning loop unless policy says user approval or a higher-risk decision is required.
+
+## Planning coverage gate
+
+Planning gate pass requires complete decision-to-work coverage. Every approved decision row, requirement id, and downstream planning question from the passed decision trace/build must map to at least one of:
+
+- executable roadmap task;
+- sprint scope with task boundaries or planned waves;
+- accepted deferral with owner, trigger, and expiry/route-back condition;
+- explicit no-work rationale tied to KB/diagram truth; or
+- implementation evidence proving the accepted target state already landed.
+
+Planning must also reconcile the existing roadmap against the new decision. It should refine, split, reopen, cancel, supersede, reorder, or update sprint scope when prior tasks no longer match the accepted target state. Creating new tasks without checking existing roadmap coverage is incomplete planning.
+
+If an accepted target state has no implementation evidence, no active/closed owner work, and no accepted deferral, the planning gate returns a finding with exact remediation and keeps planning active. Roadmap `open=0` is never enough evidence that accepted product/system target state is done.
 
 ## Residual issue coverage
 

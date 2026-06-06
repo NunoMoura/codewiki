@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T10:29:34Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Decision-to-planning gate hardening decision passes. User approved rows DTP-001..DTP-005, KB mappings are recorded, gate block semantics are corrected as loop remediation, and downstream planning questions route gate enforcement plus immediate source-restructure replanning.",
+  "checks": [
+    "wiki_decide rows accept DTP-001..DTP-005: pass",
+    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity/changed pass; alignment warning due covered graph warnings",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "decision preflight: ready",
+    "git diff dirty content digest: sha256:a194ef968835d670a0c448453ebe91f07f72503124e78d2ee86720a0f7136b8b"
+  ],
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Planning and implementation work remains: gate code/tests, trace/graph support, and immediate source-restructure replanning."
+    },
+    {
+      "severity": "medium",
+      "summary": "Graph still has covered legacy/large-doc warnings from prior residual tasks."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "decision:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "medium",
+      "summary": "Planning and implementation work remains: gate code/tests, trace/graph support, and immediate source-restructure replanning.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "decision"
+      ],
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "decision:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "medium",
+      "summary": "Graph still has covered legacy/large-doc warnings from prior residual tasks.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "decision"
+      ],
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "decision:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "medium",
+      "summary": "Planning and implementation work remains: gate code/tests, trace/graph support, and immediate source-restructure replanning.",
+      "ref_count": 0
+    },
+    {
+      "id": "decision:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "medium",
+      "summary": "Graph still has covered legacy/large-doc warnings from prior residual tasks.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "decision",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity/changed pass; alignment warning due covered graph warnings",
+    "approval:user: approve all rows DTP-001..DTP-005"
+  ],
+  "content_proof_refs": [
+    "sha256:a194ef968835d670a0c448453ebe91f07f72503124e78d2ee86720a0f7136b8b"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+    "validation_report": ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+      ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+      ".codewiki/kb/system/validation-gateway.md: planning coverage gate, roadmap reconciliation, and fail/block remediation semantics.",
+      ".codewiki/kb/system/flows/decision-to-planning.md: row/question coverage, existing-roadmap reconciliation, and superseding planning loop semantics.",
+      ".codewiki/kb/system/trace-graph.md: planning decision_coverage and roadmap_reconciliation ownership/shape.",
+      ".codewiki/kb/system/file-structure.md: accepted target source-structure deltas need owner coverage; open=0 is not completion evidence.",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+    "validation_report": ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+      "CodeWiki-Checks: wiki_decide rows accept DTP-001..DTP-005: pass; wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity/changed pass; alignment warning due covered graph warnings; npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; decision preflight: ready; git diff dirty content digest: sha256:a194ef968835d670a0c448453ebe91f07f72503124e78d2ee86720a0f7136b8b"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile",
+      "residual issue coverage"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": [],
+      "residual_issue_coverage": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user: approve all rows DTP-001..DTP-005"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    },
+    "residual_issue_coverage": {
+      "required": false,
+      "items": [],
+      "covered": [],
+      "gaps": [],
+      "coverage": []
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:a194ef968835d670a0c448453ebe91f07f72503124e78d2ee86720a0f7136b8b",
+    "clean": false,
+    "fresh_context": true,
+    "role": "validator"
+  }
+}
