@@ -836,10 +836,13 @@ function planningHasRoadmapReconciliationEvidence(planning: any): boolean {
 		.map(planningEvidenceText)
 		.join("\n")
 		.toLowerCase();
-	return /\b(existing|current|prior|previous)\b[\s\S]{0,80}\broadmap\b/.test(
-		fallbackText,
-	) || /\broadmap\b[\s\S]{0,80}\b(reconcil|replan|refin|split|reopen|cancel|supersed|reorder|rescop)/.test(
-		fallbackText,
+	return (
+		/\b(existing|current|prior|previous)\b[\s\S]{0,80}\broadmap\b/.test(
+			fallbackText,
+		) ||
+		/\broadmap\b[\s\S]{0,80}\b(reconcil|replan|refin|split|reopen|cancel|supersed|reorder|rescop)/.test(
+			fallbackText,
+		)
 	);
 }
 
@@ -853,7 +856,9 @@ function planningRoadmapReconciliationGaps(
 	if (buildRefsByKind(planning, "decision").length === 0) return [];
 	return planningHasRoadmapReconciliationEvidence(planning)
 		? []
-		: [`${planningPath || "planning_build"}:roadmap_reconciliation:missing_evidence`];
+		: [
+				`${planningPath || "planning_build"}:roadmap_reconciliation:missing_evidence`,
+			];
 }
 
 function implementationPlanningPropagationGaps(
@@ -2370,9 +2375,7 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps.map((gap) => `decision_mapping:${gap}`),
 		...ambiguityGaps.map((gap) => `ambiguous_intent:${gap}`),
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
-		...roadmapReconciliationGaps.map(
-			(gap) => `roadmap_reconciliation:${gap}`,
-		),
+		...roadmapReconciliationGaps.map((gap) => `roadmap_reconciliation:${gap}`),
 		...semanticClosure.gaps,
 		...semanticClosure.risks,
 		...codeTestGaps.map((gap) => `code_tests:${gap}`),
@@ -2561,9 +2564,7 @@ export async function writeGatewayReport(
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
-		...roadmapReconciliationGaps.map(
-			(gap) => `roadmap_reconciliation:${gap}`,
-		),
+		...roadmapReconciliationGaps.map((gap) => `roadmap_reconciliation:${gap}`),
 		...codeTestGaps.map((gap) => `code_tests:${gap}`),
 		...validationEvidenceGaps.map((gap) => `validation_evidence:${gap}`),
 		...taskCloseShipReadyGaps.map((gap) => `task_close_ship_ready:${gap}`),

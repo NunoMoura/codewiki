@@ -352,7 +352,8 @@ function normalizeDecisionTable(
 			raw?.id || buildSlug(input.slug || input.summary, "decision-table"),
 		).toUpperCase(),
 		title: String(raw?.title || input.summary).trim(),
-		status: raw?.status ||
+		status:
+			raw?.status ||
 			(rows.some((row: any) => row.approval?.status === "approved")
 				? "approved"
 				: "pending"),

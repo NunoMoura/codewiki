@@ -1327,7 +1327,8 @@ try {
 
 	const missingRoadmapReconciliationPlan = await writePlanningBuild(project, {
 		kind: "planning",
-		summary: "Map daemon worker scheduling without roadmap reconciliation evidence.",
+		summary:
+			"Map daemon worker scheduling without roadmap reconciliation evidence.",
 		source_decision_build: executableDeferredDecision.path,
 		decision_row_resolutions: [
 			{

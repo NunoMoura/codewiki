@@ -3,8 +3,14 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeDecisionBuild, writePlanningBuild } from "../../../src/build/writer.ts";
-import { buildGatewayPreflight, writeGatewayReport } from "../../../src/gateway/report.ts";
+import {
+	writeDecisionBuild,
+	writePlanningBuild,
+} from "../../../src/build/writer.ts";
+import {
+	buildGatewayPreflight,
+	writeGatewayReport,
+} from "../../../src/gateway/report.ts";
 import { decisionTableFixture } from "../../decision-table-fixture.mjs";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-task-107-planning-gate-"));
@@ -43,7 +49,8 @@ try {
 		decision_table: decisionTableFixture([
 			{
 				id: "PLAN-COVERAGE",
-				current_state: "Planning can map rows without checking existing roadmap.",
+				current_state:
+					"Planning can map rows without checking existing roadmap.",
 				desired_state:
 					"Planning must map rows and record existing-roadmap reconciliation.",
 				rationale: "TASK-107 regression fixture.",
@@ -61,9 +68,7 @@ try {
 		propagation: {
 			direction: "system-first",
 			product_impact: ["Agents see planning coverage findings."],
-			downstream_planning_questions: [
-				"Which roadmap work owns PLAN-COVERAGE?",
-			],
+			downstream_planning_questions: ["Which roadmap work owns PLAN-COVERAGE?"],
 		},
 		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
 	});
@@ -122,7 +127,9 @@ try {
 		audit_refs: ["audit:alignment"],
 	});
 	assert.equal(missingReport.data.verdict, "block");
-	assert.ok(missingReport.data.failed_criteria.includes("roadmap_reconciliation"));
+	assert.ok(
+		missingReport.data.failed_criteria.includes("roadmap_reconciliation"),
+	);
 	assert.equal(missingReport.data.recommended_next_loop, "planning");
 
 	const mappedWithReconciliation = await writePlanningBuild(project, {
