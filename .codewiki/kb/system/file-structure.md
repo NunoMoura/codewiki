@@ -193,7 +193,7 @@ skills/
   codewiki-implementation/
 ```
 
-Gateway/validation rules belong in the gateway tool contract, loop handoffs, fresh validator kickoff packets, prompt contract, and package docs rather than a normal fourth workflow skill. The generic `codewiki` router skill content belongs in the injected system prompt/package docs, not a visible or hidden skill command. Cross-loop runtime templates, bootstrap prose, starter taxonomy, and tool catalog assets are package prompt assets under `src/adapters/pi/prompt-assets/**` during migration, not discoverable skills and not `.codewiki/kb/**` dogfood truth. Do not preserve removed skill surfaces as old commands, shims, aliases, or `/skill:codewiki-validation` compatibility entrypoints.
+Gateway/validation rules belong in the gateway tool contract, loop handoffs, fresh validator kickoff packets, prompt contract, and package docs rather than a normal fourth workflow skill. The generic `codewiki` router skill content belongs in the injected system prompt/package docs, not a visible or hidden skill command. Cross-loop runtime templates, bootstrap prose, starter taxonomy, and tool catalog assets are package prompt assets under `src/adapters/pi/prompt-assets/**` during migration, not discoverable skills and not `.codewiki/kb/**` dogfood truth. The file-structure map classifies `src/adapters/pi/prompt-assets/**` as compatibility package prompt assets owned by the skill/prompt-asset surface, with target ownership `src/pi/prompt-assets/**` after the Pi source-root migration. They are not a second strict adapter owner during the current migration. Do not preserve removed skill surfaces as old commands, shims, aliases, or `/skill:codewiki-validation` compatibility entrypoints.
 
 ## Tests
 

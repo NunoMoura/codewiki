@@ -482,16 +482,19 @@ nodes:
     group: assets_tests
     kind: component
     source: .codewiki/kb/system/extension.md
+    status: current_valid_until_migrated
     paths:
       - skills/codewiki-decision/**
       - skills/codewiki-planning/**
       - skills/codewiki-implementation/**
+    compatibility_paths:
       - src/adapters/pi/prompt-assets/**
     target_paths:
       - skills/codewiki-decision/**
       - skills/codewiki-planning/**
       - skills/codewiki-implementation/**
-      - src/adapters/pi/prompt-assets/**
+      - src/pi/prompt-assets/**
+    trigger: Pi source-root migration moves prompt assets from src/adapters/pi/prompt-assets/** to src/pi/prompt-assets/**.
     deprecated_paths:
       - skills/codewiki/**
       - skills/codewiki-validation/**
