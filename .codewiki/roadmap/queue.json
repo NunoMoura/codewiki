@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-06-06T21:26:46Z",
+  "updated": "2026-06-06T21:34:49Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
     "TASK-088",
-    "TASK-110",
     "TASK-111",
     "TASK-112",
     "TASK-113",
@@ -695,62 +694,6 @@
       },
       "created": "2026-06-03",
       "updated": "2026-06-03T21:56:21Z"
-    },
-    "TASK-110": {
-      "id": "TASK-110",
-      "title": "Enforce decision row delta normalization",
-      "status": "blocked",
-      "priority": "high",
-      "kind": "architecture",
-      "summary": "Add decision compiler and gate checks that normalize current and legacy accepted decision rows into explicit row-level state deltas.",
-      "spec_paths": [
-        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
-        ".codewiki/kb/system/builds.md"
-      ],
-      "code_paths": [
-        "src/decision/**",
-        "src/build/**",
-        "src/gateway/report.ts",
-        "tests/tasks/TASK-110/**"
-      ],
-      "research_ids": [],
-      "labels": [
-        "DPA-REQ-000",
-        "DPA-REQ-002",
-        "decision-delta",
-        "row-normalization",
-        "legacy-compat"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Decision planning inputs expose normalized row-level state deltas for current decision_table rows and legacy diff_table/approved_rows artifacts.",
-        "acceptance": [
-          "Decision row/build types or normalizers expose current project state, explicit change delta, expected final state, and validated final state values for planning consumers.",
-          "Current decision_table rows and legacy diff_table/approved_rows evidence normalize into stable row/requirement IDs.",
-          "Decision gate/reporting flags semantic/system rows that lack explicit delta or plannable row identity.",
-          "Historical decision artifacts remain readable without rewriting archived JSON files.",
-          "TASK-specific tests cover current rows, legacy compatibility, missing-delta failure, and normalized accepted row output."
-        ],
-        "non_goals": [
-          "Do not move source files for package structure refactor.",
-          "Do not rewrite historical decision build files.",
-          "Do not create validation or publication loop roots.",
-          "Do not implement planning coverage residuals in this task."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "targeted TASK-110 test for decision row delta normalization",
-          "targeted decision gate/report test",
-          "relevant decision approval/build smoke test"
-        ]
-      },
-      "delta": {
-        "desired": "Decision compiler/gate produces normalized row-level state deltas and blocks underspecified semantic deltas.",
-        "current": "Accepted decision evidence can be table-level or legacy-only and lacks guaranteed row-level state delta semantics.",
-        "closure": "Closed when tests prove current and legacy decisions normalize to row-level deltas and missing deltas fail gate/report checks."
-      },
-      "created": "2026-06-06",
-      "updated": "2026-06-06T21:26:46Z"
     },
     "TASK-111": {
       "id": "TASK-111",
