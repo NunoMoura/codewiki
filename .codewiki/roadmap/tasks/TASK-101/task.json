@@ -1,0 +1,47 @@
+{
+  "id": "TASK-101",
+  "title": "Document residual coverage and trace-audit closure policy",
+  "status": "todo",
+  "priority": "high",
+  "kind": "docs",
+  "summary": "Update system KB so residual issue coverage, trace audit debugging, and closure expectations are canonical knowledge.",
+  "spec_paths": [
+    ".codewiki/kb/lexicon.md",
+    ".codewiki/kb/system/trace-graph.md"
+  ],
+  "code_paths": [
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/file-structure.md"
+  ],
+  "research_ids": [],
+  "labels": [
+    "residual-drift-docs",
+    "trace-audit",
+    "closure-policy"
+  ],
+  "change_type": "task",
+  "goal": {
+    "outcome": "System knowledge states that actionable residual drift cannot be orphaned and explains how trace audits expose closure residuals.",
+    "acceptance": [
+      "KB defines residual issue coverage and accepted classifications in closure context.",
+      "KB states historical/non-task rationale is insufficient without task/sprint/defer/archive/compatibility/false-positive coverage.",
+      "Trace/graph docs describe residual coverage snapshots and gate diagnostics refs.",
+      "File-structure docs align cleanup with scoped warning-class tasks and no mega-task closure."
+    ],
+    "non_goals": [
+      "Do not change source gate behavior.",
+      "Do not rewrite unrelated KB sections."
+    ],
+    "verification": [
+      "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+      "wiki_state refresh=true"
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}

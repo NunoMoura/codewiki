@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T00:49:24Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Decision passes. User explicitly approved all residual drift coverage rows; row-to-KB mappings are present with task-scoped deferral reasons; required decision audit evidence is cited. Existing graph warnings are the accepted problem scope and must be routed by planning, not used to reject the decision.",
+  "checks": [
+    "wiki_state: health yellow, 0 errors, 52 warnings, open roadmap 0",
+    "wiki_gate audit profiles=alignment,stale-reference: alignment warning for existing graph warnings; stale-reference pass",
+    "wiki_gate preflight profile=decision with audit refs: ready"
+  ],
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Existing graph warnings remain and are intentionally routed to planning under RDC-005 rather than resolved in the decision loop."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "decision:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "medium",
+      "summary": "Existing graph warnings remain and are intentionally routed to planning under RDC-005 rather than resolved in the decision loop.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "decision"
+      ],
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "decision:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "medium",
+      "summary": "Existing graph warnings remain and are intentionally routed to planning under RDC-005 rather than resolved in the decision loop.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "decision",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,stale-reference: alignment warning due existing 52 graph warnings; stale-reference pass; warning state is accepted problem scope"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+    "validation_report": ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+      ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+      "No KB files edited in this decision loop; approved rows explicitly defer KB/source updates to planning and implementation tasks.",
+      "Planning loop should create a residual coverage enforcement task and scoped structure cleanup sprint/tasks.",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "planned residual coverage enforcement task",
+      "planned structure cleanup sprint",
+      "src/gateway/report.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/telemetry/types.ts",
+      "planned gateway residual coverage regression tests"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+    "validation_report": ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+      "CodeWiki-Checks: wiki_state: health yellow, 0 errors, 52 warnings, open roadmap 0; wiki_gate audit profiles=alignment,stale-reference: alignment warning for existing graph warnings; stale-reference pass; wiki_gate preflight profile=decision with audit refs: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/telemetry/types.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved_diff_row:RDC-001",
+        "approved_diff_row:RDC-002",
+        "approved_diff_row:RDC-003",
+        "approved_diff_row:RDC-004",
+        "approved_diff_row:RDC-005"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

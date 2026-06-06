@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-06T00:48:45Z",
+  "source": "Decision table DT-2026-06-06-2 and user approval on 2026-06-06.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-06T00:48:45.000Z",
+    "purge_after": "2026-08-05T00:48:45.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "RDC-REQ-001",
+      "text": "Actionable residual lint/audit/graph drift must not be orphaned at close/promotion gates.",
+      "source_refs": [
+        "RDC-001",
+        "RDC-003"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "RDC-REQ-002",
+      "text": "Residual issue coverage must record stable issue key, classification, owner/defer/archive refs where applicable, and rationale.",
+      "source_refs": [
+        "RDC-001",
+        "RDC-002"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "RDC-REQ-003",
+      "text": "Current cleanup must be planned in scoped tasks by warning class, not as a mega-task.",
+      "source_refs": [
+        "RDC-005"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "RDC-REQ-004",
+      "text": "Lifecycle trace creation should be planned toward semantic-intent start and gate-updated lifecycle evidence.",
+      "source_refs": [
+        "RDC-004"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Root cause captured from trace audit.",
+      "evidence": "TASK-089 closure was narrow-correct, but broader residual drift had no durable roadmap owner; current graph reports 52 warnings and open roadmap 0.",
+      "requirement_ids": [
+        "RDC-REQ-001",
+        "RDC-REQ-003"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json",
+        ".codewiki/validation/2026-06-04-task-close-pass-task-089-2026-06-04-finalized-ta.json"
+      ]
+    },
+    {
+      "criterion": "Machine enforcement needed beyond prompts.",
+      "evidence": "Gateway source checks required audit refs but not audit warning status/coverage; graph source creates orphan lint reconciliation items but gateway does not consume them.",
+      "requirement_ids": [
+        "RDC-REQ-001",
+        "RDC-REQ-002"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts",
+        "src/policy/gate-policy.ts",
+        "src/state/graph.ts"
+      ]
+    },
+    {
+      "criterion": "Trace timing clarified for future planning.",
+      "evidence": "Graph rebuilder projects traces only from .codewiki/telemetry/TRACE-*.json and catalog.json; build approval creates validation/build nodes, not lifecycle trace nodes.",
+      "requirement_ids": [
+        "RDC-REQ-004"
+      ],
+      "source_refs": [
+        "src/state/graph/rebuilder.ts",
+        "src/state/graph/trace-projection.ts",
+        "src/telemetry/lifecycle-trace.ts"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted residual drift coverage decision: close/promotion gates must not pass with actionable orphan residual drift; traces and planning must record ownership, deferral, archive, compatibility, or false-positive coverage for remaining warning classes.",
+  "decision_mode": "accepted",
+  "decision_table": {
+    "schema_version": 1,
+    "id": "ACCEPTED-RESIDUAL-DRIFT-COVERAGE-DECISION-CLOSE-",
+    "title": "Accepted residual drift coverage decision: close/promotion gates must not pass with actionable orphan residual drift; traces and planning must record ownership, deferral, archive, compatibility, or false-positive coverage for remaining warning classes.",
+    "status": "approved",
+    "rows": [
+      {
+        "id": "RDC-001",
+        "question": "RDC-001",
+        "state_delta": {
+          "current": "Gate validation requires audit evidence refs, but does not prove remaining audit/lint warnings are clean or durably owned.",
+          "desired": "Implementation/task-close/sprint-close/ship-ready style gates cannot pass with actionable residual drift unless every residual issue is fixed or durably covered."
+        },
+        "proposed_change": "Introduce a residual issue coverage invariant: remaining actionable warnings/errors require explicit coverage as fixed, covered_by_task, covered_by_sprint, deferred_by_decision, archive_candidate, accepted_compatibility, or false_positive.",
+        "rationale": "The observed failure mode was orphan residual drift: current graph has 52 warnings and no open roadmap owner after earlier closure evidence claimed green/closed.",
+        "impact": {
+          "system": [
+            "system",
+            "gateway",
+            "graph",
+            "roadmap",
+            "telemetry"
+          ]
+        },
+        "risk": {
+          "level": "medium",
+          "notes": "medium: stricter gates can block closure until old debt is classified."
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Require zero warnings at all close gates; rejected because legacy debt would freeze safe progress."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Leave warnings as next-action only; rejected because roadmap can go empty while drift remains."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": "discussion:2026-06-06-residual-drift-coverage"
+          }
+        ],
+        "expected_outcome": "A task cannot close while warnings fall out of roadmap scope as historical/non-task without machine-readable owner/defer/archive evidence.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RDC-002",
+        "question": "RDC-002",
+        "state_delta": {
+          "current": "Trace/debug evidence is useful but closure reports do not preserve full audit issue snapshots or residual ownership decisions.",
+          "desired": "Trace and gate evidence capture enough residual issue context to answer what drift existed at close and why each leftover item was safe."
+        },
+        "proposed_change": "Add residual_issue_coverage data to decision/planning/implementation or gateway evidence, with stable issue key, classification, owner refs, trigger/expiry where relevant, and rationale.",
+        "rationale": "Looking back into traces was powerful but manual because missing residual coverage forced detective work.",
+        "impact": {
+          "system": [
+            "telemetry",
+            "gateway",
+            "graph",
+            "validation"
+          ]
+        },
+        "risk": {
+          "level": "medium",
+          "notes": "medium: schema additions must stay compact and avoid embedding raw audit payloads."
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Store full raw audit transcripts in trace; rejected because traces must stay compact."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Do nothing; rejected because debugging remains manual and lossy."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": "discussion:2026-06-06-trace-audit-usefulness"
+          }
+        ],
+        "expected_outcome": "Future trace audits can query residual coverage directly instead of reconstructing intent from build prose, validation reports, graph state, and current warnings.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RDC-003",
+        "question": "RDC-003",
+        "state_delta": {
+          "current": "Graph reconciliation creates lint drift items with no open roadmap coverage, but gateway pass/block policy does not consume that orphan-drift signal.",
+          "desired": "Gateway preflight/report generation blocks pass verdicts when current actionable graph reconciliation items remain uncovered."
+        },
+        "proposed_change": "Teach gateway policy to compute residual coverage gaps from current lint/audit/graph state and force block on uncovered residual issues for close/promotion gates.",
+        "rationale": "The graph knew there were orphan lint reconciliation items, but the gate only checked audit evidence refs.",
+        "impact": {
+          "system": [
+            "gateway",
+            "graph",
+            "audit"
+          ]
+        },
+        "risk": {
+          "level": "medium",
+          "notes": "medium: coverage matching must avoid false blockers by supporting task/sprint/defer/archive coverage."
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Only improve prompts/skills; rejected because policy must be machine-enforced."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Only show warnings in status; rejected because status was already insufficient."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": "src/gateway/report.ts"
+          },
+          {
+            "ref": "src/state/graph.ts"
+          }
+        ],
+        "expected_outcome": "A validator cannot close work while graph says lint drift has no open roadmap coverage.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RDC-004",
+        "question": "RDC-004",
+        "state_delta": {
+          "current": "Lifecycle trace nodes are currently projected only from .codewiki/telemetry/TRACE-*.json or catalog entries; legacy builds/validation are separate graph nodes.",
+          "desired": "Lifecycle traces should start at first accountable semantic intent and be updated by gates, not first appear only after gate approval."
+        },
+        "proposed_change": "Plan future trace-primary behavior where decision-table/decision-loop start creates or updates the lifecycle trace, and gate pass/fail/block appends status, diagnostics, and refs.",
+        "rationale": "Trace audit is most valuable when it captures the full lifecycle, including failures and route-backs before approval.",
+        "impact": {
+          "system": [
+            "telemetry",
+            "graph",
+            "decision",
+            "gateway"
+          ]
+        },
+        "risk": {
+          "level": "medium",
+          "notes": "medium: full trace-primary migration should be staged after residual-coverage gate enforcement."
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Create trace only after gate pass; rejected because it loses failed/blocked debugging context."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Keep only build/validation artifacts; rejected because trace-primary architecture already targets lifecycle traces."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": "src/state/graph/trace-projection.ts"
+          },
+          {
+            "ref": "src/state/graph/rebuilder.ts"
+          },
+          {
+            "ref": "src/telemetry/lifecycle-trace.ts"
+          }
+        ],
+        "expected_outcome": "Blocked, failed, abandoned, and deferred work keeps useful trace/debug evidence from the beginning of the accountable change.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RDC-005",
+        "question": "RDC-005",
+        "state_delta": {
+          "current": "Current cleanup warnings are mixed: legacy decision-build deferrals, stale code path refs, missing related docs, prompt-assets ownership mismatch, tests unexpected paths, and compatibility export gaps.",
+          "desired": "Cleanup proceeds as scoped roadmap work by warning class, not one broad fix-all task."
+        },
+        "proposed_change": "Route planning into a structure cleanup sprint with small tasks for warning classes and a separate enforcement task for residual coverage policy.",
+        "rationale": "The prior failure was partly from broad cleanup scope falling out of roadmap; scoped batches make closure auditable.",
+        "impact": {
+          "system": [
+            "roadmap",
+            "knowledge",
+            "gateway",
+            "graph"
+          ]
+        },
+        "risk": {
+          "level": "medium",
+          "notes": "low: planning-only routing; implementation remains staged."
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Create one mega cleanup task; rejected because it repeats the previous failure mode."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Ignore legacy warnings; rejected because orphan warnings must be owned or deferred."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [
+          {
+            "ref": ".codewiki/index_graph.json"
+          },
+          {
+            "ref": ".codewiki/kb/system/file-structure.md"
+          },
+          {
+            "ref": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          }
+        ],
+        "expected_outcome": "Every current warning class is either fixed, covered by an open task/sprint, or explicitly deferred with trigger/archive evidence.",
+        "validated_outcome": ""
+      }
+    ],
+    "created_at": "2026-06-06T00:48:45Z",
+    "updated_at": "2026-06-06T00:48:45Z"
+  },
+  "approved_decision_rows": [
+    "RDC-001",
+    "RDC-002",
+    "RDC-003",
+    "RDC-004",
+    "RDC-005"
+  ],
+  "approved_rows": [
+    {
+      "id": "RDC-001",
+      "question": "RDC-001",
+      "state_delta": {
+        "current": "Gate validation requires audit evidence refs, but does not prove remaining audit/lint warnings are clean or durably owned.",
+        "desired": "Implementation/task-close/sprint-close/ship-ready style gates cannot pass with actionable residual drift unless every residual issue is fixed or durably covered."
+      },
+      "proposed_change": "Introduce a residual issue coverage invariant: remaining actionable warnings/errors require explicit coverage as fixed, covered_by_task, covered_by_sprint, deferred_by_decision, archive_candidate, accepted_compatibility, or false_positive.",
+      "rationale": "The observed failure mode was orphan residual drift: current graph has 52 warnings and no open roadmap owner after earlier closure evidence claimed green/closed.",
+      "impact": {
+        "system": [
+          "system",
+          "gateway",
+          "graph",
+          "roadmap",
+          "telemetry"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "notes": "medium: stricter gates can block closure until old debt is classified."
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Require zero warnings at all close gates; rejected because legacy debt would freeze safe progress."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Leave warnings as next-action only; rejected because roadmap can go empty while drift remains."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": "discussion:2026-06-06-residual-drift-coverage"
+        }
+      ],
+      "expected_outcome": "A task cannot close while warnings fall out of roadmap scope as historical/non-task without machine-readable owner/defer/archive evidence.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RDC-002",
+      "question": "RDC-002",
+      "state_delta": {
+        "current": "Trace/debug evidence is useful but closure reports do not preserve full audit issue snapshots or residual ownership decisions.",
+        "desired": "Trace and gate evidence capture enough residual issue context to answer what drift existed at close and why each leftover item was safe."
+      },
+      "proposed_change": "Add residual_issue_coverage data to decision/planning/implementation or gateway evidence, with stable issue key, classification, owner refs, trigger/expiry where relevant, and rationale.",
+      "rationale": "Looking back into traces was powerful but manual because missing residual coverage forced detective work.",
+      "impact": {
+        "system": [
+          "telemetry",
+          "gateway",
+          "graph",
+          "validation"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "notes": "medium: schema additions must stay compact and avoid embedding raw audit payloads."
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Store full raw audit transcripts in trace; rejected because traces must stay compact."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Do nothing; rejected because debugging remains manual and lossy."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": "discussion:2026-06-06-trace-audit-usefulness"
+        }
+      ],
+      "expected_outcome": "Future trace audits can query residual coverage directly instead of reconstructing intent from build prose, validation reports, graph state, and current warnings.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RDC-003",
+      "question": "RDC-003",
+      "state_delta": {
+        "current": "Graph reconciliation creates lint drift items with no open roadmap coverage, but gateway pass/block policy does not consume that orphan-drift signal.",
+        "desired": "Gateway preflight/report generation blocks pass verdicts when current actionable graph reconciliation items remain uncovered."
+      },
+      "proposed_change": "Teach gateway policy to compute residual coverage gaps from current lint/audit/graph state and force block on uncovered residual issues for close/promotion gates.",
+      "rationale": "The graph knew there were orphan lint reconciliation items, but the gate only checked audit evidence refs.",
+      "impact": {
+        "system": [
+          "gateway",
+          "graph",
+          "audit"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "notes": "medium: coverage matching must avoid false blockers by supporting task/sprint/defer/archive coverage."
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Only improve prompts/skills; rejected because policy must be machine-enforced."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Only show warnings in status; rejected because status was already insufficient."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": "src/gateway/report.ts"
+        },
+        {
+          "ref": "src/state/graph.ts"
+        }
+      ],
+      "expected_outcome": "A validator cannot close work while graph says lint drift has no open roadmap coverage.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RDC-004",
+      "question": "RDC-004",
+      "state_delta": {
+        "current": "Lifecycle trace nodes are currently projected only from .codewiki/telemetry/TRACE-*.json or catalog entries; legacy builds/validation are separate graph nodes.",
+        "desired": "Lifecycle traces should start at first accountable semantic intent and be updated by gates, not first appear only after gate approval."
+      },
+      "proposed_change": "Plan future trace-primary behavior where decision-table/decision-loop start creates or updates the lifecycle trace, and gate pass/fail/block appends status, diagnostics, and refs.",
+      "rationale": "Trace audit is most valuable when it captures the full lifecycle, including failures and route-backs before approval.",
+      "impact": {
+        "system": [
+          "telemetry",
+          "graph",
+          "decision",
+          "gateway"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "notes": "medium: full trace-primary migration should be staged after residual-coverage gate enforcement."
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Create trace only after gate pass; rejected because it loses failed/blocked debugging context."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Keep only build/validation artifacts; rejected because trace-primary architecture already targets lifecycle traces."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": "src/state/graph/trace-projection.ts"
+        },
+        {
+          "ref": "src/state/graph/rebuilder.ts"
+        },
+        {
+          "ref": "src/telemetry/lifecycle-trace.ts"
+        }
+      ],
+      "expected_outcome": "Blocked, failed, abandoned, and deferred work keeps useful trace/debug evidence from the beginning of the accountable change.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RDC-005",
+      "question": "RDC-005",
+      "state_delta": {
+        "current": "Current cleanup warnings are mixed: legacy decision-build deferrals, stale code path refs, missing related docs, prompt-assets ownership mismatch, tests unexpected paths, and compatibility export gaps.",
+        "desired": "Cleanup proceeds as scoped roadmap work by warning class, not one broad fix-all task."
+      },
+      "proposed_change": "Route planning into a structure cleanup sprint with small tasks for warning classes and a separate enforcement task for residual coverage policy.",
+      "rationale": "The prior failure was partly from broad cleanup scope falling out of roadmap; scoped batches make closure auditable.",
+      "impact": {
+        "system": [
+          "roadmap",
+          "knowledge",
+          "gateway",
+          "graph"
+        ]
+      },
+      "risk": {
+        "level": "medium",
+        "notes": "low: planning-only routing; implementation remains staged."
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Create one mega cleanup task; rejected because it repeats the previous failure mode."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Ignore legacy warnings; rejected because orphan warnings must be owned or deferred."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [
+        {
+          "ref": ".codewiki/index_graph.json"
+        },
+        {
+          "ref": ".codewiki/kb/system/file-structure.md"
+        },
+        {
+          "ref": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        }
+      ],
+      "expected_outcome": "Every current warning class is either fixed, covered by an open task/sprint, or explicitly deferred with trigger/archive evidence.",
+      "validated_outcome": ""
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Introduce a residual issue coverage invariant: remaining actionable warnings/errors require explicit coverage as fixed, covered_by_task, covered_by_sprint, deferred_by_decision, archive_candidate, accepted_compatibility, or false_positive."
+    },
+    {
+      "id": "D2",
+      "summary": "Add residual_issue_coverage data to decision/planning/implementation or gateway evidence, with stable issue key, classification, owner refs, trigger/expiry where relevant, and rationale."
+    },
+    {
+      "id": "D3",
+      "summary": "Teach gateway policy to compute residual coverage gaps from current lint/audit/graph state and force block on uncovered residual issues for close/promotion gates."
+    },
+    {
+      "id": "D4",
+      "summary": "Plan future trace-primary behavior where decision-table/decision-loop start creates or updates the lifecycle trace, and gate pass/fail/block appends status, diagnostics, and refs."
+    },
+    {
+      "id": "D5",
+      "summary": "Route planning into a structure cleanup sprint with small tasks for warning classes and a separate enforcement task for residual coverage policy."
+    }
+  ],
+  "knowledge_changes": [
+    "No KB files edited in this decision loop; approved rows explicitly defer KB/source updates to planning and implementation tasks."
+  ],
+  "roadmap_changes": [
+    "Planning loop should create a residual coverage enforcement task and scoped structure cleanup sprint/tasks."
+  ],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "RDC-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Approved policy needs KB update during planned implementation: gateway/file-structure docs should define residual issue coverage invariant and allowed classifications.",
+      "deferred": true,
+      "deferred_reason": "User requested decision approval to move into planning; KB edits will be task-scoped with validation."
+    },
+    {
+      "row_id": "RDC-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Approved trace/debug model needs KB update during planned implementation: trace docs should describe residual_issue_coverage and compact gate diagnostics snapshots.",
+      "deferred": true,
+      "deferred_reason": "Needs coordinated schema/gateway task rather than ad hoc decision-loop doc edits."
+    },
+    {
+      "row_id": "RDC-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Approved gateway/graph enforcement needs KB and source updates during implementation: gate preflight/report must consume uncovered reconciliation lint signals.",
+      "deferred": true,
+      "deferred_reason": "Requires source changes and tests in implementation loop."
+    },
+    {
+      "row_id": "RDC-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Approved trace lifecycle creation timing needs follow-up planning: trace should begin at semantic intent and be updated by gates, staged after residual coverage enforcement.",
+      "deferred": true,
+      "deferred_reason": "Trace-primary creation semantics are broader than immediate cleanup and should be scoped separately."
+    },
+    {
+      "row_id": "RDC-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "diagram_refs": [
+        "file-structure-map"
+      ],
+      "evidence": "Approved planning route: create scoped structure cleanup sprint/tasks by warning class; do not use a mega-task.",
+      "deferred": true,
+      "deferred_reason": "Roadmap mutation belongs in planning loop after accepted decision build."
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "More reliable agent behavior: tasks cannot close while known project-structure drift silently loses ownership.",
+      "Better debugging/resume experience: trace audits can explain what was left open and why."
+    ],
+    "system_impact": [
+      "Gateway policy must inspect residual audit/lint/graph drift coverage, not only audit evidence refs.",
+      "Graph/reconciliation coverage needs class/path/task/sprint/defer/archive matching.",
+      "Lifecycle traces should eventually start at semantic intent rather than only after gate approval.",
+      "Roadmap planning must batch current warning classes into scoped tasks."
+    ],
+    "downstream_planning_questions": [
+      "Plan a task to add residual_issue_coverage schema/coverage evaluation and gate blocking tests.",
+      "Plan a task to update system KB/docs for residual drift coverage and trace audit debugging.",
+      "Plan scoped cleanup tasks for current warning classes: legacy decision-build deferrals, stale code-path refs, related-doc/large-doc hygiene, prompt-assets ownership, tests unexpected_path, compatibility export gaps.",
+      "Plan trace-primary lifecycle creation timing separately after residual coverage enforcement."
+    ]
+  },
+  "diagram_refs": [
+    "file-structure-map"
+  ],
+  "downstream_planning_questions": [
+    "What is the smallest implementation task that blocks gate pass on uncovered residual drift without requiring zero warnings?",
+    "Which KB docs and diagrams need updates to define residual_issue_coverage and closure policy?",
+    "How should current warnings be partitioned into cleanup tasks with explicit accepted deferrals?",
+    "Which trace-primary lifecycle creation changes should be separated from immediate gate enforcement?",
+    "Plan a task to add residual_issue_coverage schema/coverage evaluation and gate blocking tests.",
+    "Plan a task to update system KB/docs for residual drift coverage and trace audit debugging.",
+    "Plan scoped cleanup tasks for current warning classes: legacy decision-build deferrals, stale code-path refs, related-doc/large-doc hygiene, prompt-assets ownership, tests unexpected_path, compatibility export gaps.",
+    "Plan trace-primary lifecycle creation timing separately after residual coverage enforcement."
+  ],
+  "assumptions": [
+    "Decision build can serve as accepted upstream source for planning while KB/source edits remain task-scoped.",
+    "Current warning inventory may change after graph refresh; planning should inspect live graph before creating tasks."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement gateway/source changes in this decision loop.",
+    "Do not hand-edit generated graph state.",
+    "Do not close or archive legacy artifacts without archive/restore evidence.",
+    "Do not create one broad fix-all cleanup task."
+  ],
+  "risks": [
+    "Stricter gates can initially block closure until existing warning classes are classified.",
+    "Coverage matching must distinguish in-scope task regressions from accepted legacy debt."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      ".codewiki/index_graph.json",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/state/graph/rebuilder.ts",
+      "src/state/graph/trace-projection.ts",
+      "src/telemetry/lifecycle-trace.ts"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "No KB files edited in this decision loop; approved rows explicitly defer KB/source updates to planning and implementation tasks.",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [
+      "Planning loop should create a residual coverage enforcement task and scoped structure cleanup sprint/tasks.",
+      "planned residual coverage enforcement task",
+      "planned structure cleanup sprint"
+    ],
+    "code": [
+      "src/gateway/report.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/telemetry/types.ts"
+    ],
+    "tests": [
+      "planned gateway residual coverage regression tests"
+    ],
+    "validation": [
+      "decision gate pending"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}

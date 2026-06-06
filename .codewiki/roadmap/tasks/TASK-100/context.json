@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-06T00:55:38Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-100/context.json",
+  "task": {
+    "id": "TASK-100",
+    "title": "Reconcile stale removed-skill code path refs",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "docs",
+    "change_type": "task",
+    "summary": "Fix KB product/story code path refs that still point to removed generic CodeWiki skill surfaces.",
+    "labels": [
+      "removed-skill-refs",
+      "missing-code-path"
+    ],
+    "goal": {
+      "outcome": "Product story docs no longer reference deleted skills/codewiki paths and point to current skills where appropriate.",
+      "acceptance": [
+        "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
+        "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
+        "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089."
+      ],
+      "non_goals": [
+        "Do not recreate deleted skill folders or compatibility shims.",
+        "Do not change package skill discovery.",
+        "Do not classify prompt asset directory ownership in this task."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
+        "wiki_state refresh=true"
+      ]
+    },
+    "delta": {
+      "desired": "Additional outcome: Prompt asset paths have explicit file-structure ownership and no longer appear as ambiguous adapter/skill drift.",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

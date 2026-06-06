@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-06",
+  "context_path": ".codewiki/roadmap/tasks/TASK-105/context.json",
+  "task": {
+    "id": "TASK-105",
+    "title": "Reconcile doc hygiene and compatibility warnings",
+    "status": "todo",
+    "priority": "low",
+    "kind": "docs",
+    "change_type": "task",
+    "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes after priority ownership/gate tasks.",
+    "labels": [
+      "doc-hygiene-warnings",
+      "compat-export-warnings"
+    ],
+    "goal": {
+      "outcome": "Low-risk doc hygiene and compatibility export warning classes are fixed or explicitly covered after priority ownership/gate tasks are in place.",
+      "acceptance": [
+        "Missing Related docs sections are added where required or linter policy is adjusted with evidence.",
+        "Large-doc warnings are reduced by split/cut or accepted as covered residuals with trigger.",
+        "Compatibility export gaps are resolved by map/policy cleanup or deferred with explicit owner and trigger."
+      ],
+      "non_goals": [
+        "Do not perform broad lexicon rewrite unrelated to warning classes.",
+        "Do not change source compatibility exports unless a specific warning requires it."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+        "wiki_state refresh=true"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

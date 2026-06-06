@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T01:06:48Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "pass",
+  "rationale": "Planning passes. Accepted residual drift coverage decision is mapped to scoped tasks TASK-099..TASK-105 and SPRINT-023; current warning debt remains intentionally owned by these tasks rather than treated as closure-complete. Required alignment audit evidence is cited; alignment warning is the planned cleanup scope.",
+  "checks": [
+    "wiki_state refresh=true",
+    "wiki_gate audit profiles=alignment,task,stale-reference task_id=TASK-099: alignment warning, task pass, stale-reference pass",
+    "wiki_gate preflight profile=planning with audit refs: ready"
+  ],
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Graph still reports 58 warnings; these are intentionally routed to TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 and should not be considered closed until task evidence proves coverage/fix."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "planning:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "medium",
+      "summary": "Graph still reports 58 warnings; these are intentionally routed to TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 and should not be considered closed until task evidence proves coverage/fix.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "planning:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "medium",
+      "summary": "Graph still reports 58 warnings; these are intentionally routed to TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 and should not be considered closed until task evidence proves coverage/fix.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+  "policy_profile": "planning",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "implementation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "implementation"
+  },
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,task,stale-reference task_id=TASK-099: alignment warning due existing graph warnings; task pass; stale-reference pass"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+      "TASK-099: residual coverage gateway enforcement.",
+      "TASK-100: stale removed-skill code-path refs.",
+      "TASK-101: residual coverage and trace-audit KB docs.",
+      "TASK-102: Pi prompt asset directory owner classification.",
+      "TASK-103: current test root classification.",
+      "TASK-104: legacy rowless decision-build coverage/archival strategy.",
+      "TASK-105: doc hygiene and compatibility warnings.",
+      "SPRINT-023: active cohort metadata; no umbrella task.",
+      "planned KB updates in TASK-101/TASK-102/TASK-104/TASK-105",
+      "TASK-099",
+      "TASK-100",
+      "TASK-101",
+      "TASK-102",
+      "TASK-103",
+      "TASK-104",
+      "TASK-105",
+      "SPRINT-023",
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/state/lint.ts",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "planned source updates in TASK-099",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "planned tests for TASK-099 and scoped cleanup smoke checks"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+      "CodeWiki-Checks: wiki_state refresh=true; wiki_gate audit profiles=alignment,task,stale-reference task_id=TASK-099: alignment warning, task pass, stale-reference pass; wiki_gate preflight profile=planning with audit refs: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/state/lint.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation",
+      "remediation_route": "implementation",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "implementation"
+    },
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

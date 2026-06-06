@@ -879,6 +879,27 @@ export async function writeImplementationBuild(
 	const testerNotes = trimList(input.tester_notes);
 	const builderNotes = trimList(input.builder_notes);
 	const validationRefs = trimList(input.validation_refs);
+	const residualIssueCoverage = (input.residual_issue_coverage ?? [])
+		.map((entry) => ({
+			...entry,
+			issue_key: String(entry.issue_key || "").trim() || undefined,
+			issue_kind: String(entry.issue_kind || "").trim() || undefined,
+			path: String(entry.path || "").trim() || undefined,
+			paths: trimList(entry.paths),
+			classification: String(entry.classification || "").trim(),
+			task_id: String(entry.task_id || "").trim() || undefined,
+			task_ids: trimList(entry.task_ids),
+			sprint_id: String(entry.sprint_id || "").trim() || undefined,
+			sprint_ids: trimList(entry.sprint_ids),
+			decision_build_ref:
+				String(entry.decision_build_ref || "").trim() || undefined,
+			refs: trimList(entry.refs),
+			trigger: String(entry.trigger || "").trim() || undefined,
+			expires_at: String(entry.expires_at || "").trim() || undefined,
+			owner: String(entry.owner || "").trim() || undefined,
+			evidence: String(entry.evidence || "").trim(),
+		}))
+		.filter((entry) => entry.classification && entry.evidence);
 	const risks = trimList(input.risks);
 	const openQuestions = trimList(input.open_questions);
 	const nextFocus = await nextFocusTaskId(project, taskId);
@@ -1030,6 +1051,9 @@ export async function writeImplementationBuild(
 		code_change_evidence: codeChangeEvidence,
 		acceptance_mapping: acceptanceMapping,
 		validation_refs: validationRefs,
+		residual_issue_coverage: residualIssueCoverage.length
+			? residualIssueCoverage
+			: undefined,
 		closure_brief: closureBrief || undefined,
 		risks,
 		unresolved_issues: openQuestions,

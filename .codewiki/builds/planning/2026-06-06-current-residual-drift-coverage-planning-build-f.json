@@ -1,0 +1,629 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-06T01:06:17Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-20T01:06:17.000Z",
+    "purge_after": "2026-07-04T01:06:17.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 3,
+    "attempt": "current-decision-clean-build",
+    "supersedes": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+      ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
+    ],
+    "status": "active"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "PLAN-REQ-001",
+      "text": "Create no umbrella/mega task; use sprint metadata for cohort grouping.",
+      "source_refs": [
+        "RDC-005"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "PLAN-REQ-002",
+      "text": "Every current accepted decision row/question maps to task, sprint, or deferred evidence.",
+      "source_refs": [
+        "RDC-001",
+        "RDC-002",
+        "RDC-003",
+        "RDC-004",
+        "RDC-005",
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q5",
+        "Q6",
+        "Q7",
+        "Q8"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "PLAN-REQ-003",
+      "text": "First implementation should enforce residual drift coverage before cleanup closure relies on it.",
+      "source_refs": [
+        "RDC-001",
+        "RDC-003"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Current decision propagation mapped.",
+      "evidence": "RDC-001..RDC-005 and Q1..Q8 are mapped to TASK-099/TASK-101/TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 or explicit future trace-primary deferral.",
+      "requirement_ids": [
+        "PLAN-REQ-001",
+        "PLAN-REQ-002"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Task boundary repaired after auto-reuse.",
+      "evidence": "TASK-099 and TASK-100 were narrowed; TASK-101/TASK-102/TASK-103/TASK-104/TASK-105 carry scoped warning/policy work.",
+      "requirement_ids": [
+        "PLAN-REQ-001"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Current residual drift coverage planning build for SPRINT-023. Supersedes earlier current-decision planning builds and leaves old prompt-skill decision mapping to its separate historical reconciliation build.",
+  "task_ids": [
+    "TASK-099",
+    "TASK-100",
+    "TASK-101",
+    "TASK-102",
+    "TASK-103",
+    "TASK-104",
+    "TASK-105"
+  ],
+  "task_changes": [
+    "TASK-099: residual coverage gateway enforcement.",
+    "TASK-100: stale removed-skill code-path refs.",
+    "TASK-101: residual coverage and trace-audit KB docs.",
+    "TASK-102: Pi prompt asset directory owner classification.",
+    "TASK-103: current test root classification.",
+    "TASK-104: legacy rowless decision-build coverage/archival strategy.",
+    "TASK-105: doc hygiene and compatibility warnings.",
+    "SPRINT-023: active cohort metadata; no umbrella task."
+  ],
+  "roadmap_changes": [
+    "TASK-099: residual coverage gateway enforcement.",
+    "TASK-100: stale removed-skill code-path refs.",
+    "TASK-101: residual coverage and trace-audit KB docs.",
+    "TASK-102: Pi prompt asset directory owner classification.",
+    "TASK-103: current test root classification.",
+    "TASK-104: legacy rowless decision-build coverage/archival strategy.",
+    "TASK-105: doc hygiene and compatibility warnings.",
+    "SPRINT-023: active cohort metadata; no umbrella task."
+  ],
+  "tdd_plan": [
+    "TASK-099 starts with failing tests for uncovered residual drift blocking pass and covered residuals allowing pass.",
+    "TASK-099 adds regression that cited warning audit evidence is not clean pass evidence without coverage.",
+    "Cleanup tasks run scoped audits before/after and record warning-count delta in implementation builds."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/prompt-contract.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/gateway/report.ts",
+    "src/policy/gate-policy.ts",
+    "src/state/graph.ts",
+    "src/audit/types.ts",
+    "src/state/lint.ts",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "RDC-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-099",
+        "TASK-101"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts",
+        "src/policy/gate-policy.ts",
+        "src/state/graph.ts"
+      ],
+      "owner": "TASK-099/TASK-101 implementers",
+      "trigger": "Implement gate enforcement and KB policy.",
+      "rationale": "Residual coverage invariant requires machine enforcement plus canonical docs.",
+      "evidence": "TASK-099 owns gate behavior; TASK-101 owns KB wording.",
+      "inferred": false
+    },
+    {
+      "row_id": "RDC-002",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-099",
+        "TASK-101"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts",
+        "src/state/graph.ts",
+        "src/audit/types.ts"
+      ],
+      "owner": "TASK-099/TASK-101 implementers",
+      "trigger": "Add compact residual coverage/gate diagnostic evidence.",
+      "rationale": "Trace debugging needs coverage snapshots and policy docs.",
+      "evidence": "TASK-099 acceptance defines coverage shape; TASK-101 documents trace-audit closure policy.",
+      "inferred": false
+    },
+    {
+      "row_id": "RDC-003",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-099"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts",
+        "src/state/graph.ts"
+      ],
+      "owner": "TASK-099 implementer",
+      "trigger": "Implement before cleanup task closure relies on stronger gates.",
+      "rationale": "Gateway must consume orphan graph reconciliation signal to block pass verdicts.",
+      "evidence": "TASK-099 acceptance requires preflight/report to compute uncovered residual drift and force block.",
+      "inferred": false
+    },
+    {
+      "row_id": "RDC-004",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-101"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [
+        "src/state/graph/trace-projection.ts",
+        "src/state/graph/rebuilder.ts",
+        "src/telemetry/lifecycle-trace.ts"
+      ],
+      "owner": "TASK-101 implementer plus future trace-primary planning owner",
+      "trigger": "Document trace creation timing now; create separate future source task after residual coverage enforcement if still needed.",
+      "rationale": "Source trace creation timing is broader than immediate orphan-drift fix, but the approved row is planned through TASK-101 policy docs.",
+      "evidence": "TASK-101 records trace-audit/creation timing policy without overloading SPRINT-023.",
+      "inferred": false
+    },
+    {
+      "row_id": "RDC-005",
+      "question_id": "",
+      "question": "",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-100",
+        "TASK-102",
+        "TASK-103",
+        "TASK-104",
+        "TASK-105"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json"
+      ],
+      "owner": "cleanup task implementers",
+      "trigger": "Execute scoped cleanup tasks after planning validation.",
+      "rationale": "Current warning classes need separate owners rather than a mega-task.",
+      "evidence": "SPRINT-023 contains distinct warning-class tasks.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "Q1",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-099"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts"
+      ],
+      "owner": "TASK-099 implementer",
+      "trigger": "Start first implementation task.",
+      "rationale": "Smallest implementation task is TASK-099.",
+      "evidence": "TASK-099 preserves no-zero-warning non-goal.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q2",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-101"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "owner": "TASK-101 implementer",
+      "trigger": "Run docs task after or alongside TASK-099.",
+      "rationale": "TASK-101 owns canonical KB wording.",
+      "evidence": "TASK-101 acceptance covers residual coverage and trace debugging docs.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q3",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-100",
+        "TASK-102",
+        "TASK-103",
+        "TASK-104",
+        "TASK-105"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json"
+      ],
+      "owner": "cleanup task implementers",
+      "trigger": "Execute warning-class tasks in priority order.",
+      "rationale": "Warnings are partitioned into scoped tasks.",
+      "evidence": "TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 own current warning classes.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q4",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-101"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [
+        "src/telemetry/lifecycle-trace.ts",
+        "src/state/graph/trace-projection.ts"
+      ],
+      "owner": "future trace-primary planning loop",
+      "trigger": "After TASK-099 residual coverage enforcement and SPRINT-023 cleanup classification are validated.",
+      "rationale": "Trace lifecycle source timing is separated from immediate gate enforcement.",
+      "evidence": "TASK-101 preserves trace creation timing policy.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q5",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-099"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [
+        "src/gateway/report.ts",
+        "src/state/graph.ts",
+        "src/audit/types.ts"
+      ],
+      "owner": "TASK-099 implementer",
+      "trigger": "Start first implementation task.",
+      "rationale": "Duplicate propagation question maps to TASK-099.",
+      "evidence": "TASK-099 covers schema/evaluation/gate blocking tests.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q6",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-101"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [],
+      "owner": "TASK-101 implementer",
+      "trigger": "Run docs task after planning validation.",
+      "rationale": "Duplicate propagation question maps to TASK-101.",
+      "evidence": "TASK-101 covers residual drift and trace audit KB docs.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q7",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-100",
+        "TASK-102",
+        "TASK-103",
+        "TASK-104",
+        "TASK-105"
+      ],
+      "sprint_ids": [
+        "SPRINT-023"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/builds.md"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json"
+      ],
+      "owner": "cleanup task implementers",
+      "trigger": "Execute scoped cleanup tasks after planning validation.",
+      "rationale": "Duplicate propagation question maps to warning-class tasks.",
+      "evidence": "TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 partition current warning classes.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q8",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-101"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [
+        "src/telemetry/lifecycle-trace.ts",
+        "src/state/graph/trace-projection.ts"
+      ],
+      "owner": "future trace-primary planning loop",
+      "trigger": "After TASK-099 and SPRINT-023 validation expose remaining trace-primary lifecycle gaps.",
+      "rationale": "Source-level trace creation timing is deferred by design to avoid overloading cleanup sprint.",
+      "evidence": "RDC-004 is mapped to TASK-101 for policy and future trigger.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Current decision propagation mapped.",
+      "evidence": "RDC-001..RDC-005 and Q1..Q8 are mapped to TASK-099/TASK-101/TASK-100/TASK-102/TASK-103/TASK-104/TASK-105 or explicit future trace-primary deferral.",
+      "requirement_ids": [
+        "PLAN-REQ-001",
+        "PLAN-REQ-002"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Task boundary repaired after auto-reuse.",
+      "evidence": "TASK-099 and TASK-100 were narrowed; TASK-101/TASK-102/TASK-103/TASK-104/TASK-105 carry scoped warning/policy work.",
+      "requirement_ids": [
+        "PLAN-REQ-001"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    }
+  ],
+  "assumptions": [
+    "TASK-099 should be implemented first or before cleanup task closures rely on residual coverage enforcement.",
+    "Historical prompt-skill mappings are recorded in separate planning build .codewiki/builds/planning/2026-06-06-map-accepted-2026-06-03-prompt-skill-architectur.json.",
+    "Warning inventory can change after graph refresh; implementers must run live audits before edits."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement source changes in planning loop.",
+    "Do not require zero warnings as closure policy.",
+    "Do not delete/rewrite legacy builds without archive/restore evidence.",
+    "Do not create an umbrella cleanup task."
+  ],
+  "risks": [
+    "Roadmap auto-reuse can merge broad cleanup tasks; implementers must inspect boundaries before starting."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-099",
+      "TASK-100",
+      "TASK-101",
+      "TASK-102",
+      "TASK-103",
+      "TASK-104",
+      "TASK-105"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/index_graph.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "planned KB updates in TASK-101/TASK-102/TASK-104/TASK-105"
+    ],
+    "roadmap": [
+      "TASK-099",
+      "TASK-100",
+      "TASK-101",
+      "TASK-102",
+      "TASK-103",
+      "TASK-104",
+      "TASK-105",
+      "SPRINT-023"
+    ],
+    "code": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/state/lint.ts",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "planned source updates in TASK-099"
+    ],
+    "tests": [
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "planned tests for TASK-099 and scoped cleanup smoke checks"
+    ],
+    "validation": [
+      "planning gate pending"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}

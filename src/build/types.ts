@@ -1,4 +1,10 @@
-import type { ChangeType, CodewikiDecisionTableRowInput, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
+import type { ResidualIssueCoverageInput } from "../audit/types.ts";
+import type {
+	ChangeType,
+	CodewikiDecisionTableRowInput,
+	LegacyChangeClass,
+	TraceabilityExemption,
+} from "../change/types.ts";
 import type { CodewikiIsolationRequirementInput } from "../session/types.ts";
 
 export type { CodewikiDecisionTableRowInput } from "../change/types.ts";
@@ -96,7 +102,12 @@ export interface CodewikiDecisionPropagationResolutionInput {
 	row_id?: string;
 	question_id?: string;
 	question?: string;
-	resolution: "knowledge-only" | "roadmap-task" | "sprint" | "deferred" | string;
+	resolution:
+		| "knowledge-only"
+		| "roadmap-task"
+		| "sprint"
+		| "deferred"
+		| string;
 	task_ids?: string[];
 	sprint_ids?: string[];
 	knowledge_refs?: string[];
@@ -142,7 +153,13 @@ export interface CodewikiBuildToolInput {
 	audit_reports?: string[];
 	agent_assessment?: string;
 	lifecycle?: {
-		state?: "proposed" | "accepted" | "consumed" | "applied" | "validated" | "archived";
+		state?:
+			| "proposed"
+			| "accepted"
+			| "consumed"
+			| "applied"
+			| "validated"
+			| "archived";
 		ttl_days?: number;
 		archive_after?: string;
 		purge_after?: string;
@@ -183,6 +200,7 @@ export interface CodewikiBuildToolInput {
 	tester_notes?: string[];
 	builder_notes?: string[];
 	validation_refs?: string[];
+	residual_issue_coverage?: ResidualIssueCoverageInput[];
 	risks?: string[];
 	closure_brief?: CodewikiClosureBriefInput;
 	publication?: {

@@ -1,0 +1,49 @@
+{
+  "id": "TASK-103",
+  "title": "Classify current test roots",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "testing",
+  "summary": "Record accepted ownership or migration route for smoke, task, fixture, and helper test roots.",
+  "spec_paths": [
+    "tests/tasks/README.md"
+  ],
+  "code_paths": [
+    "tests/smoke/**",
+    "tests/tasks/**",
+    "tests/shared/**",
+    "tests/fixtures/**",
+    "tests/run.mjs",
+    "tests/setup-env.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "test-root-map",
+    "unexpected-path-tests"
+  ],
+  "change_type": "task",
+  "goal": {
+    "outcome": "Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.",
+    "acceptance": [
+      "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+      "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+      "No test helper or smoke entrypoint is deleted without replacement evidence."
+    ],
+    "non_goals": [
+      "Do not rewrite all smoke tests in one task.",
+      "Do not remove executable coverage just to satisfy map warnings."
+    ],
+    "verification": [
+      "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}

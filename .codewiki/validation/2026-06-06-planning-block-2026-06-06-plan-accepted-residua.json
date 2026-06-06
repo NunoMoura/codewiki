@@ -1,0 +1,484 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T00:57:55Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "block",
+  "rationale": "Collect planning linter evidence for residual drift coverage sprint planning build. Policy blocks planning gate validation until decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution, decision_propagation:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution, audit:alignment are recorded.",
+  "checks": [],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Accepted decision propagation gaps remain: .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "planning:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "high",
+      "summary": "Accepted decision propagation gaps remain: .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning",
+      "remediation_route": "planning",
+      "retry_class": "route_planning",
+      "stop_reason": "Accepted decision propagation gaps remain: .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution.",
+      "remediation": [
+        "Route the blocker to the planning loop with the cited refs."
+      ]
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning",
+      "remediation_route": "planning",
+      "retry_class": "route_planning",
+      "stop_reason": "Missing required linter evidence for profiles: alignment.",
+      "remediation": [
+        "Route the blocker to the planning loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "planning:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "high",
+      "summary": "Accepted decision propagation gaps remain: .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution, .codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution, .codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution.",
+      "ref_count": 0
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "high",
+      "summary": "Missing required linter evidence for profiles: alignment.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "block",
+    "failure_class": "planning_gap",
+    "recommended_next_loop": "planning",
+    "remediation_route": "planning",
+    "retry_class": "route_planning",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the planning loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+  "policy_profile": "planning",
+  "failure_class": "planning_gap",
+  "recommended_next_loop": "planning",
+  "routing": {
+    "failure_class": "planning_gap",
+    "recommended_next_loop": "planning"
+  },
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-plan-accepted-residua.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+      ".codewiki/validation/2026-06-06-planning-block-2026-06-06-plan-accepted-residua.json",
+      "TASK-099 created/refined as atomic gateway residual coverage enforcement task.",
+      "TASK-100 created/refined as stale removed-skill code path reference cleanup task.",
+      "TASK-101 created as residual coverage and trace-audit KB documentation task.",
+      "TASK-102 created as Pi prompt asset ownership classification task.",
+      "TASK-103 created as current test root classification task.",
+      "TASK-104 created as legacy rowless decision-build coverage/archival strategy task.",
+      "TASK-105 created as low-priority doc hygiene and compatibility warning cleanup task.",
+      "SPRINT-023 created as active cohort metadata for related work; no umbrella task created.",
+      "planned KB updates in TASK-101/TASK-102/TASK-104/TASK-105",
+      "TASK-099",
+      "TASK-100",
+      "TASK-101",
+      "TASK-102",
+      "TASK-103",
+      "TASK-104",
+      "TASK-105",
+      "SPRINT-023",
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/state/lint.ts",
+      "src/telemetry/types.ts",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "planned source updates in TASK-099",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/prompt-contract.test.mjs",
+      "planned tests for TASK-099 and scoped cleanup smoke checks"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-plan-accepted-residua.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-planning-block-2026-06-06-plan-accepted-residua.json"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/audit/types.ts",
+      "src/state/lint.ts",
+      "src/telemetry/types.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "decision_propagation",
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Create or validate a superseding planning build that maps each accepted decision row/downstream question to knowledge-only, roadmap task, sprint metadata, or explicit deferred owner/trigger/rationale evidence.",
+    "Run or cite linter evidence for required profiles: alignment."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution"
+      ],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [
+        "audit:alignment"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [
+      {
+        "kind": "decision-propagation",
+        "severity": "high",
+        "summary": "Accepted decision rows or downstream planning questions are not durably resolved.",
+        "evidence": [
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution"
+        ]
+      },
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "evidence": [
+          "audit:alignment"
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "planning:decision-propagation:1",
+        "kind": "decision-propagation",
+        "severity": "high",
+        "summary": "Accepted decision rows or downstream planning questions are not durably resolved.",
+        "refs": [
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution"
+        ],
+        "affected_refs": [
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution",
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution"
+        ],
+        "gate_refs": [
+          "planning"
+        ],
+        "failure_class": "planning_gap",
+        "recommended_next_loop": "planning",
+        "remediation_route": "planning",
+        "retry_class": "route_planning",
+        "stop_reason": "Accepted decision rows or downstream planning questions are not durably resolved.",
+        "remediation": [
+          "Route the blocker to the planning loop with the cited refs."
+        ]
+      },
+      {
+        "id": "planning:audit-evidence:2",
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "refs": [
+          "audit:alignment"
+        ],
+        "affected_refs": [
+          "audit:alignment"
+        ],
+        "gate_refs": [
+          "planning"
+        ],
+        "failure_class": "planning_gap",
+        "recommended_next_loop": "planning",
+        "remediation_route": "planning",
+        "retry_class": "route_planning",
+        "stop_reason": "Missing required linter evidence.",
+        "remediation": [
+          "Run or cite the required CodeWiki audit evidence."
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "planning:decision-propagation:1",
+        "category": "decision-propagation",
+        "severity": "high",
+        "summary": "Accepted decision rows or downstream planning questions are not durably resolved.",
+        "ref_count": 19
+      },
+      {
+        "id": "planning:audit-evidence:2",
+        "category": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required linter evidence.",
+        "ref_count": 1
+      }
+    ],
+    "remediation": {
+      "status": "blocked",
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning",
+      "remediation_route": "planning",
+      "retry_class": "route_planning",
+      "affected_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:executable_requires_task_or_sprint",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:PROMPT-OS-CONTRACT:row:PROMPT-OS-CONTRACT:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:THREE-SKILLS-ONLY:row:THREE-SKILLS-ONLY:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:REMOVE-ROUTER-SKILL:row:REMOVE-ROUTER-SKILL:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:row:DAEMON-FRESH-WORKER:row:DAEMON-FRESH-WORKER:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q1:question:Q1:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q2:question:Q2:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q3:question:Q3:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q4:question:Q4:missing_resolution",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:question:Q5:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:row:RDC-004:row:RDC-004:executable_requires_task_or_sprint",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q5:question:Q5:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q6:question:Q6:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q7:question:Q7:missing_resolution",
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json:question:Q8:question:Q8:missing_resolution",
+        "audit:alignment"
+      ],
+      "next_safe_actions": [
+        "Route the blocker to the planning loop with the cited refs.",
+        "Run or cite the required CodeWiki audit evidence."
+      ]
+    },
+    "routing": {
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning"
+    },
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

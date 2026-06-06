@@ -1,4 +1,5 @@
 import type { SubagentVerdict } from "../agency/types.ts";
+import type { ResidualIssueCoverageInput } from "../audit/types.ts";
 import {
 	VALIDATION_GATE_ALIAS_VALUES,
 	VALIDATION_GATE_VALUES,
@@ -48,6 +49,7 @@ export interface CodewikiValidationReportInput {
 	rationale: string;
 	checks?: string[];
 	issues?: Array<{ severity: string; summary: string }>;
+	residual_issue_coverage?: ResidualIssueCoverageInput[];
 	source?: string;
 	policy_profile?: string;
 	required_audits?: string[];

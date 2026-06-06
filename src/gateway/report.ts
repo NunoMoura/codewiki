@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import type { ResidualIssueCoverageInput } from "../audit/types.ts";
+import { RESIDUAL_ISSUE_COVERAGE_CLASSIFICATIONS } from "../audit/types.ts";
 import { assessDecisionPropagation } from "../build/decision-propagation.ts";
 import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import {
@@ -400,6 +402,369 @@ function readRoadmapPropagationRefs(project: WikiProject): {
 	} catch {
 		return { taskIds: [], sprintIds: [] };
 	}
+}
+
+const RESIDUAL_ISSUE_COVERAGE_GATES = new Set([
+	"implementation",
+	"task-close",
+	"sprint-close",
+	"ship-ready",
+]);
+
+const OPEN_ROADMAP_STATUSES = new Set(["todo", "in_progress", "blocked"]);
+const ACTIVE_SPRINT_STATUSES = new Set(["planned", "active", "review"]);
+
+type ResidualIssueItem = {
+	key: string;
+	kind: string;
+	path: string;
+	message: string;
+	refs: string[];
+	severity: string;
+};
+
+type RoadmapCoverageTask = {
+	id: string;
+	status: string;
+	title: string;
+	summary: string;
+	labels: string[];
+	paths: string[];
+};
+
+type RoadmapCoverageSprint = {
+	id: string;
+	status: string;
+	taskIds: string[];
+	paths: string[];
+};
+
+type RoadmapResidualCoverage = {
+	tasks: RoadmapCoverageTask[];
+	sprints: RoadmapCoverageSprint[];
+	knownTaskIds: string[];
+	knownSprintIds: string[];
+};
+
+function normalizeResidualPath(value: string) {
+	return value.trim().replace(/\\/g, "/").replace(/^\.\//, "");
+}
+
+function normalizeResidualToken(value: string) {
+	return value
+		.trim()
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+}
+
+function residualTextTokens(value: string) {
+	return normalizeResidualToken(value).split("-").filter(Boolean);
+}
+
+function globPatternMatchesPath(pattern: string, path: string) {
+	const normalizedPattern = normalizeResidualPath(pattern);
+	const normalizedPath = normalizeResidualPath(path);
+	if (!normalizedPattern || !normalizedPath) return false;
+	if (!normalizedPattern.includes("*")) {
+		const prefix = normalizedPattern.replace(/\/$/, "");
+		return normalizedPath === prefix || normalizedPath.startsWith(`${prefix}/`);
+	}
+	const escapeRegExp = (value: string) =>
+		value.replace(/[|\\{}()[\]^$+?.]/g, "\\$&");
+	const patternSource = normalizedPattern
+		.split("**")
+		.map((part) => part.split("*").map(escapeRegExp).join("[^/]*"))
+		.join(".*");
+	return new RegExp(`^${patternSource}$`).test(normalizedPath);
+}
+
+function residualIssueKey(input: {
+	kind?: unknown;
+	path?: unknown;
+	message?: unknown;
+	id?: unknown;
+}) {
+	const id = String(input.id || "").trim();
+	if (id.startsWith("reconcile:lint:")) return id;
+	return unique([
+		"lint",
+		String(input.kind || "unknown").trim() || "unknown",
+		String(input.path || "").trim(),
+		String(input.message || "").trim(),
+	])
+		.filter(Boolean)
+		.join(":");
+}
+
+function readCurrentResidualIssueItems(
+	project: WikiProject,
+): ResidualIssueItem[] {
+	try {
+		const graph = JSON.parse(
+			readFileSync(resolve(project.root, project.graphPath), "utf8"),
+		);
+		const lintIssues = Array.isArray(graph?.lenses?.lint?.issues)
+			? graph.lenses.lint.issues
+			: [];
+		const issueItems = lintIssues
+			.filter((issue: any) =>
+				["warning", "error"].includes(String(issue?.severity || "")),
+			)
+			.map((issue: any) => {
+				const kind = String(issue?.kind || issue?.category || "lint").trim();
+				const path = String(issue?.path || "").trim();
+				const message = String(issue?.message || issue?.summary || "").trim();
+				const refs = trimList(issue?.refs);
+				return {
+					key: residualIssueKey({ kind, path, message }),
+					kind,
+					path,
+					message,
+					refs,
+					severity: String(issue?.severity || "warning"),
+				};
+			});
+		if (issueItems.length > 0) {
+			const byKey = new Map<string, ResidualIssueItem>();
+			for (const item of issueItems) byKey.set(item.key, item);
+			return [...byKey.values()];
+		}
+		const reconciliationItems = Array.isArray(
+			graph?.views?.reconciliation?.items,
+		)
+			? graph.views.reconciliation.items
+			: [];
+		const byKey = new Map<string, ResidualIssueItem>();
+		for (const item of reconciliationItems) {
+			const id = String(item?.id || "").trim();
+			if (!id.startsWith("reconcile:lint:")) continue;
+			const parts = id.split(":");
+			const kind = parts[2] || "lint";
+			const path = String(item?.ref || item?.path || "").trim();
+			const message = String(item?.reason || item?.summary || "").trim();
+			byKey.set(id, {
+				key: id,
+				kind,
+				path,
+				message,
+				refs: trimList(item?.doc_paths),
+				severity: "warning",
+			});
+		}
+		return [...byKey.values()];
+	} catch {
+		return [];
+	}
+}
+
+function readRoadmapResidualCoverage(
+	project: WikiProject,
+): RoadmapResidualCoverage {
+	try {
+		const data = JSON.parse(
+			readFileSync(resolve(project.root, project.roadmapPath), "utf8"),
+		);
+		const taskRecords = Object.values(data?.tasks || {}) as any[];
+		const tasks = taskRecords.map((task) => ({
+			id: String(task?.id || "").trim(),
+			status: String(task?.status || "").trim(),
+			title: String(task?.title || ""),
+			summary: String(task?.summary || ""),
+			labels: trimList(task?.labels),
+			paths: unique([
+				...trimList(task?.spec_paths),
+				...trimList(task?.code_paths),
+			]),
+		}));
+		const activeTaskIds = new Set(
+			tasks
+				.filter((task) => OPEN_ROADMAP_STATUSES.has(task.status))
+				.map((task) => task.id),
+		);
+		const sprints = (Object.values(data?.sprints || {}) as any[]).map(
+			(sprint) => {
+				const taskIds = trimList(sprint?.task_ids);
+				const sprintTasks = tasks.filter((task) => taskIds.includes(task.id));
+				return {
+					id: String(sprint?.id || "").trim(),
+					status: String(sprint?.status || "").trim(),
+					taskIds,
+					paths: unique([
+						...trimList(sprint?.scope?.knowledge),
+						...trimList(sprint?.scope?.code),
+						...sprintTasks.flatMap((task) => task.paths),
+					]),
+				};
+			},
+		);
+		return {
+			tasks: tasks.filter((task) => activeTaskIds.has(task.id)),
+			sprints: sprints.filter((sprint) =>
+				ACTIVE_SPRINT_STATUSES.has(sprint.status),
+			),
+			knownTaskIds: tasks.map((task) => task.id).filter(Boolean),
+			knownSprintIds: sprints.map((sprint) => sprint.id).filter(Boolean),
+		};
+	} catch {
+		return { tasks: [], sprints: [], knownTaskIds: [], knownSprintIds: [] };
+	}
+}
+
+function residualItemText(item: ResidualIssueItem) {
+	return unique([item.key, item.kind, item.path, item.message, ...item.refs])
+		.join("\n")
+		.toLowerCase();
+}
+
+function issueMatchesRoadmapTask(
+	item: ResidualIssueItem,
+	task: RoadmapCoverageTask,
+) {
+	if (!task.id) return false;
+	const text = residualItemText(item);
+	if (text.includes(task.id.toLowerCase())) return true;
+	if (
+		[item.path, ...item.refs].some((path) =>
+			task.paths.some((pattern) => globPatternMatchesPath(pattern, path)),
+		)
+	)
+		return true;
+	const haystack = residualTextTokens(
+		[task.title, task.summary, ...task.labels].join(" "),
+	);
+	const kindTokens = residualTextTokens(item.kind);
+	return (
+		kindTokens.length > 0 &&
+		kindTokens.every((token) => haystack.includes(token))
+	);
+}
+
+function issueMatchesRoadmapSprint(
+	item: ResidualIssueItem,
+	sprint: RoadmapCoverageSprint,
+) {
+	if (!sprint.id) return false;
+	const text = residualItemText(item);
+	if (text.includes(sprint.id.toLowerCase())) return true;
+	if (sprint.taskIds.some((taskId) => text.includes(taskId.toLowerCase())))
+		return true;
+	return [item.path, ...item.refs].some((path) =>
+		sprint.paths.some((pattern) => globPatternMatchesPath(pattern, path)),
+	);
+}
+
+function residualCoverageEntries(
+	input: CodewikiValidationReportInput,
+	build: any,
+): ResidualIssueCoverageInput[] {
+	return [
+		...(input.residual_issue_coverage ?? []),
+		...(build?.residual_issue_coverage ?? []),
+		...(build?.traceability?.residual_issue_coverage ?? []),
+		...(build?.policy?.residual_issue_coverage ?? []),
+		...(build?.closure_brief?.residual_issue_coverage ?? []),
+	].filter(Boolean);
+}
+
+function explicitCoverageCoversIssue(
+	entry: ResidualIssueCoverageInput,
+	item: ResidualIssueItem,
+	roadmap: RoadmapResidualCoverage,
+) {
+	const classification = String(entry.classification || "").trim();
+	if (
+		!RESIDUAL_ISSUE_COVERAGE_CLASSIFICATIONS.includes(classification as any) ||
+		!String(entry.evidence || "").trim()
+	)
+		return false;
+	const entryPaths = unique([
+		String(entry.path || "").trim(),
+		...trimList(entry.paths),
+	]).filter(Boolean);
+	const entryRefs = unique([
+		String(entry.issue_key || "").trim(),
+		String(entry.issue_kind || "").trim(),
+		...entryPaths,
+		...trimList(entry.refs),
+	]).filter(Boolean);
+	const keyMatches = entryRefs.includes(item.key);
+	const kindMatches =
+		String(entry.issue_kind || "").trim() === item.kind ||
+		entryRefs.includes(item.kind);
+	const pathMatches = entryPaths.some((pattern) =>
+		[item.path, ...item.refs].some((path) =>
+			globPatternMatchesPath(pattern, path),
+		),
+	);
+	const refMatches = entryRefs.some((ref) =>
+		residualItemText(item).includes(ref),
+	);
+	if (!keyMatches && !kindMatches && !pathMatches && !refMatches) return false;
+	const taskIds = unique([
+		String(entry.task_id || "").trim(),
+		...trimList(entry.task_ids),
+	]).filter(Boolean);
+	const sprintIds = unique([
+		String(entry.sprint_id || "").trim(),
+		...trimList(entry.sprint_ids),
+	]).filter(Boolean);
+	if (classification === "covered_by_task")
+		return taskIds.some((taskId) => roadmap.knownTaskIds.includes(taskId));
+	if (classification === "covered_by_sprint")
+		return sprintIds.some((sprintId) =>
+			roadmap.knownSprintIds.includes(sprintId),
+		);
+	if (classification === "deferred_by_decision")
+		return Boolean(
+			String(entry.trigger || "").trim() &&
+				(String(entry.decision_build_ref || "").trim() || entryRefs.length > 0),
+		);
+	return true;
+}
+
+function validationResidualIssueCoverage(
+	project: WikiProject,
+	input: CodewikiValidationReportInput,
+	build: any,
+	profile: string,
+) {
+	const required =
+		input.verdict === "pass" && RESIDUAL_ISSUE_COVERAGE_GATES.has(profile);
+	if (!required)
+		return { required, items: [], covered: [], gaps: [], coverage: [] };
+	const items = readCurrentResidualIssueItems(project);
+	if (items.length === 0)
+		return { required, items: [], covered: [], gaps: [], coverage: [] };
+	const roadmap = readRoadmapResidualCoverage(project);
+	const entries = residualCoverageEntries(input, build);
+	const covered: string[] = [];
+	const gaps: string[] = [];
+	for (const item of items) {
+		const coveredByRoadmap =
+			roadmap.tasks.some((task) => issueMatchesRoadmapTask(item, task)) ||
+			roadmap.sprints.some((sprint) => issueMatchesRoadmapSprint(item, sprint));
+		const coveredByExplicitEntry = entries.some((entry) =>
+			explicitCoverageCoversIssue(entry, item, roadmap),
+		);
+		if (coveredByRoadmap || coveredByExplicitEntry) {
+			covered.push(item.key);
+			continue;
+		}
+		gaps.push(`${item.key}${item.path ? ` (${item.path})` : ""}`);
+	}
+	return {
+		required,
+		items: items.map((item) => ({
+			key: item.key,
+			kind: item.kind,
+			path: item.path || undefined,
+			severity: item.severity,
+		})),
+		covered: unique(covered),
+		gaps: unique(gaps),
+		coverage: entries,
+	};
 }
 
 function planningDecisionPropagationGaps(
@@ -1570,6 +1935,8 @@ function inferValidationRouting(
 		(joined.includes("decision_propagation") ||
 		joined.includes("semantic_closure") ||
 		joined.includes("sprint_close") ||
+		joined.includes("residual_issue_coverage") ||
+		joined.includes("residual drift") ||
 		joined.includes("planning gap")
 			? "planning_gap"
 			: undefined) ||
@@ -1758,6 +2125,13 @@ export function buildGatewayPreflight(
 	const productionPolicyGaps = (productionPolicy?.missing ?? []).map(
 		(gap) => `production_policy:${gap}`,
 	);
+	const residualIssueCoverage = validationResidualIssueCoverage(
+		project,
+		input,
+		source.build,
+		profile,
+	);
+	const residualIssueCoverageGaps = residualIssueCoverage.gaps;
 	const blockingGaps = unique([
 		...upstreamGaps,
 		...decisionMappingGaps,
@@ -1775,6 +2149,7 @@ export function buildGatewayPreflight(
 		...staleRefs,
 		...closePublicationBlockers,
 		...productionPolicyGaps,
+		...residualIssueCoverageGaps,
 	]);
 	const status =
 		blockingGaps.length > 0
@@ -1804,6 +2179,7 @@ export function buildGatewayPreflight(
 		close_publication_blockers: closePublicationBlockers,
 		user_approval: approvalMissing,
 		production_policy: productionPolicyGaps,
+		residual_issue_coverage: residualIssueCoverageGaps,
 	};
 	const issues = [
 		...validationPreflightIssue(
@@ -1914,6 +2290,12 @@ export function buildGatewayPreflight(
 			productionPolicyGaps,
 			"Production policy profile evidence, thresholds, content evidence, or waivers are missing.",
 		),
+		...validationPreflightIssue(
+			"residual-issue-coverage",
+			"high",
+			residualIssueCoverageGaps,
+			"Actionable residual lint/audit/graph drift lacks durable task, sprint, deferral, archive, compatibility, fixed, or false-positive coverage.",
+		),
 	];
 	const routingSignals = [
 		...upstreamGaps.map((gap) => `upstream:${gap}`),
@@ -1934,6 +2316,7 @@ export function buildGatewayPreflight(
 		...closePublicationBlockers.map((gap) => `close_publication:${gap}`),
 		...approvalMissing.map((gap) => `risk_approval:${gap}`),
 		...productionPolicyGaps,
+		...residualIssueCoverageGaps.map((gap) => `residual_issue_coverage:${gap}`),
 	];
 	const routing = inferValidationRouting(input, routingSignals);
 	const structured = buildGatewayDiagnostics({
@@ -1969,6 +2352,7 @@ export function buildGatewayPreflight(
 			"close/ship-ready blockers",
 			"risk-tier approval policy",
 			"production policy profile",
+			"residual issue coverage",
 		],
 		missing,
 		issues,
@@ -2003,6 +2387,7 @@ export function buildGatewayPreflight(
 			},
 		},
 		production_policy: productionPolicy,
+		residual_issue_coverage: residualIssueCoverage,
 	};
 }
 
@@ -2081,6 +2466,8 @@ export async function writeGatewayReport(
 		input.verdict === "pass" ? preflight.missing.user_approval : [];
 	const productionPolicyGaps =
 		input.verdict === "pass" ? preflight.missing.production_policy : [];
+	const residualIssueCoverageGaps =
+		input.verdict === "pass" ? preflight.missing.residual_issue_coverage : [];
 	const publicationReadinessGaps =
 		input.verdict === "pass"
 			? preflight.missing.close_publication_blockers.filter((gap) =>
@@ -2108,6 +2495,7 @@ export async function writeGatewayReport(
 		...auditGaps.map((profileName) => `audit:${profileName}`),
 		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
 		...productionPolicyGaps,
+		...residualIssueCoverageGaps.map((gap) => `residual_issue_coverage:${gap}`),
 		...publicationReadinessGaps.map((gap) => `publication_readiness:${gap}`),
 	]);
 	const policyBlocked = policyGaps.length > 0;
@@ -2300,6 +2688,15 @@ export async function writeGatewayReport(
 					},
 				]
 			: [];
+	const residualIssueCoverageIssue =
+		residualIssueCoverageGaps.length > 0
+			? [
+					{
+						severity: "high",
+						summary: `Actionable residual drift lacks durable coverage: ${residualIssueCoverageGaps.join(", ")}.`,
+					},
+				]
+			: [];
 	const traceabilityIssue =
 		traceabilityPolicy.gaps.length > 0
 			? [
@@ -2330,6 +2727,7 @@ export async function writeGatewayReport(
 		...auditIssue,
 		...riskApprovalIssue,
 		...productionPolicyIssue,
+		...residualIssueCoverageIssue,
 		...publicationReadinessIssue,
 	];
 	const structured = buildGatewayDiagnostics({
@@ -2394,6 +2792,9 @@ export async function writeGatewayReport(
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
 			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
 			...(productionPolicyGaps.length > 0 ? ["production_policy"] : []),
+			...(residualIssueCoverageGaps.length > 0
+				? ["residual_issue_coverage"]
+				: []),
 			...(publicationReadinessGaps.length > 0 ? ["publication_readiness"] : []),
 		]),
 		blocking_questions: unique([
@@ -2469,6 +2870,11 @@ export async function writeGatewayReport(
 			...(productionPolicyGaps.length > 0
 				? [
 						"Record required production policy evidence or explicit owner/rationale waivers before promotion.",
+					]
+				: []),
+			...(residualIssueCoverageGaps.length > 0
+				? [
+						"Fix, route, defer, archive, accept compatibility for, or mark false-positive each residual lint/audit/graph issue before promotion.",
 					]
 				: []),
 			...(publicationReadinessGaps.length > 0

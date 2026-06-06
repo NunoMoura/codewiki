@@ -28,6 +28,37 @@ export interface AuditIssue {
 	refs?: string[];
 }
 
+export const RESIDUAL_ISSUE_COVERAGE_CLASSIFICATIONS = [
+	"fixed",
+	"covered_by_task",
+	"covered_by_sprint",
+	"deferred_by_decision",
+	"archive_candidate",
+	"accepted_compatibility",
+	"false_positive",
+] as const;
+
+export type ResidualIssueCoverageClassification =
+	(typeof RESIDUAL_ISSUE_COVERAGE_CLASSIFICATIONS)[number];
+
+export interface ResidualIssueCoverageInput {
+	issue_key?: string;
+	issue_kind?: string;
+	path?: string;
+	paths?: string[];
+	classification: ResidualIssueCoverageClassification | string;
+	task_id?: string;
+	task_ids?: string[];
+	sprint_id?: string;
+	sprint_ids?: string[];
+	decision_build_ref?: string;
+	refs?: string[];
+	trigger?: string;
+	expires_at?: string;
+	owner?: string;
+	evidence: string;
+}
+
 export interface AuditFingerprint {
 	path: string;
 	digest: string;

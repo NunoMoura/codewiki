@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-06",
+  "context_path": ".codewiki/roadmap/tasks/TASK-103/context.json",
+  "task": {
+    "id": "TASK-103",
+    "title": "Classify current test roots",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "testing",
+    "change_type": "task",
+    "summary": "Record accepted ownership or migration route for smoke, task, fixture, and helper test roots.",
+    "labels": [
+      "test-root-map",
+      "unexpected-path-tests"
+    ],
+    "goal": {
+      "outcome": "Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.",
+      "acceptance": [
+        "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+        "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+        "No test helper or smoke entrypoint is deleted without replacement evidence."
+      ],
+      "non_goals": [
+        "Do not rewrite all smoke tests in one task.",
+        "Do not remove executable coverage just to satisfy map warnings."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

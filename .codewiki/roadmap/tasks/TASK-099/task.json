@@ -1,0 +1,59 @@
+{
+  "id": "TASK-099",
+  "title": "Enforce residual issue coverage in gateway pass policy",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Add machine enforcement so close/promotion gates block when actionable lint/audit/graph drift remains without durable residual issue coverage.",
+  "spec_paths": [
+    ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+    ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/graph.md"
+  ],
+  "code_paths": [
+    "src/gateway/report.ts",
+    "src/policy/gate-policy.ts",
+    "src/state/graph.ts",
+    "src/audit/types.ts",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "residual-drift",
+    "gateway",
+    "graph",
+    "trace-primary",
+    "structure-cleanup"
+  ],
+  "change_type": "task",
+  "goal": {
+    "outcome": "Gateway preflight/report pass policy detects uncovered actionable residual drift and blocks closure/promotion until coverage is fixed, owned, deferred, archived, compatible, or marked false-positive with evidence.",
+    "acceptance": [
+      "Defines residual issue coverage shape with stable issue key, classification, refs, rationale, and optional trigger/expiry.",
+      "Gate preflight/report computes uncovered residual drift from current lint/audit/graph evidence.",
+      "Pass verdict is forced to block when uncovered actionable residual drift remains for close/promotion gates.",
+      "Covered warnings do not block when backed by open task, active sprint, accepted deferral, archive candidate, accepted compatibility, or false-positive evidence.",
+      "Regression tests cover uncovered warning block, open-task coverage pass, accepted deferral pass, and audit-warning evidence not being treated as clean pass evidence."
+    ],
+    "non_goals": [
+      "Do not require global zero warnings.",
+      "Do not archive or delete legacy artifacts.",
+      "Do not solve every current warning class in this task."
+    ],
+    "verification": [
+      "wiki_gate audit profiles=alignment,source-contract,generated-parity,changed,task",
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs"
+    ]
+  },
+  "delta": {
+    "desired": "Additional outcome: System knowledge clearly states that actionable residual drift cannot be orphaned and explains how trace audits should expose closure residuals.\nRefinement: Additional outcome: Prompt asset paths have explicit file-structure ownership and no longer appear as ambiguous adapter/skill drift.\nRefinement: Additional outcome: Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.\nRefinement: Additional outcome: Legacy rowless decision-build warnings have explicit residual coverage/deferral or a validated archive/trace-catalog plan with restore evidence requirements.\nRefinement: Additional outcome: Low-risk doc hygiene and compatibility export warning classes are fixed or explicitly covered after priority ownership/gate tasks are in place.",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06T02:31:27Z"
+}

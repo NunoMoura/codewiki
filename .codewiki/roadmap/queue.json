@@ -1,11 +1,18 @@
 {
   "version": 2,
-  "updated": "2026-06-05T23:44:31Z",
+  "updated": "2026-06-06T02:31:27Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-088"
+    "TASK-088",
+    "TASK-099",
+    "TASK-100",
+    "TASK-101",
+    "TASK-102",
+    "TASK-103",
+    "TASK-104",
+    "TASK-105"
   ],
   "tasks": {
     "TASK-012": {
@@ -689,6 +696,354 @@
       },
       "created": "2026-06-03",
       "updated": "2026-06-03T21:56:21Z"
+    },
+    "TASK-099": {
+      "id": "TASK-099",
+      "title": "Enforce residual issue coverage in gateway pass policy",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Add machine enforcement so close/promotion gates block when actionable lint/audit/graph drift remains without durable residual issue coverage.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+        ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "code_paths": [
+        "src/gateway/report.ts",
+        "src/policy/gate-policy.ts",
+        "src/state/graph.ts",
+        "src/audit/types.ts",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "residual-drift",
+        "gateway",
+        "graph",
+        "trace-primary",
+        "structure-cleanup"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Gateway preflight/report pass policy detects uncovered actionable residual drift and blocks closure/promotion until coverage is fixed, owned, deferred, archived, compatible, or marked false-positive with evidence.",
+        "acceptance": [
+          "Defines residual issue coverage shape with stable issue key, classification, refs, rationale, and optional trigger/expiry.",
+          "Gate preflight/report computes uncovered residual drift from current lint/audit/graph evidence.",
+          "Pass verdict is forced to block when uncovered actionable residual drift remains for close/promotion gates.",
+          "Covered warnings do not block when backed by open task, active sprint, accepted deferral, archive candidate, accepted compatibility, or false-positive evidence.",
+          "Regression tests cover uncovered warning block, open-task coverage pass, accepted deferral pass, and audit-warning evidence not being treated as clean pass evidence."
+        ],
+        "non_goals": [
+          "Do not require global zero warnings.",
+          "Do not archive or delete legacy artifacts.",
+          "Do not solve every current warning class in this task."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,source-contract,generated-parity,changed,task",
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "Additional outcome: System knowledge clearly states that actionable residual drift cannot be orphaned and explains how trace audits should expose closure residuals.\nRefinement: Additional outcome: Prompt asset paths have explicit file-structure ownership and no longer appear as ambiguous adapter/skill drift.\nRefinement: Additional outcome: Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.\nRefinement: Additional outcome: Legacy rowless decision-build warnings have explicit residual coverage/deferral or a validated archive/trace-catalog plan with restore evidence requirements.\nRefinement: Additional outcome: Low-risk doc hygiene and compatibility export warning classes are fixed or explicitly covered after priority ownership/gate tasks are in place.",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06T02:31:27Z"
+    },
+    "TASK-100": {
+      "id": "TASK-100",
+      "title": "Reconcile stale removed-skill code path refs",
+      "status": "in_progress",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Fix KB product/story code path refs that still point to removed generic CodeWiki skill surfaces.",
+      "spec_paths": [
+        ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/navigation.md",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+      ],
+      "code_paths": [
+        ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/navigation.md",
+        "skills/codewiki-decision/SKILL.md",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-implementation/SKILL.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "removed-skill-refs",
+        "missing-code-path"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Product story docs no longer reference deleted skills/codewiki paths and point to current skills where appropriate.",
+        "acceptance": [
+          "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
+          "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
+          "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089."
+        ],
+        "non_goals": [
+          "Do not recreate deleted skill folders or compatibility shims.",
+          "Do not change package skill discovery.",
+          "Do not classify prompt asset directory ownership in this task."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
+          "wiki_state refresh=true"
+        ]
+      },
+      "delta": {
+        "desired": "Additional outcome: Prompt asset paths have explicit file-structure ownership and no longer appear as ambiguous adapter/skill drift.",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06T00:55:38Z"
+    },
+    "TASK-101": {
+      "id": "TASK-101",
+      "title": "Document residual coverage and trace-audit closure policy",
+      "status": "todo",
+      "priority": "high",
+      "kind": "docs",
+      "summary": "Update system KB so residual issue coverage, trace audit debugging, and closure expectations are canonical knowledge.",
+      "spec_paths": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "code_paths": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "residual-drift-docs",
+        "trace-audit",
+        "closure-policy"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "System knowledge states that actionable residual drift cannot be orphaned and explains how trace audits expose closure residuals.",
+        "acceptance": [
+          "KB defines residual issue coverage and accepted classifications in closure context.",
+          "KB states historical/non-task rationale is insufficient without task/sprint/defer/archive/compatibility/false-positive coverage.",
+          "Trace/graph docs describe residual coverage snapshots and gate diagnostics refs.",
+          "File-structure docs align cleanup with scoped warning-class tasks and no mega-task closure."
+        ],
+        "non_goals": [
+          "Do not change source gate behavior.",
+          "Do not rewrite unrelated KB sections."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+          "wiki_state refresh=true"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-102": {
+      "id": "TASK-102",
+      "title": "Classify Pi prompt asset directory owner",
+      "status": "in_progress",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Choose and record owner classification for src/adapters/pi/prompt-assets so asset files are not ambiguous adapter drift.",
+      "spec_paths": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/prompt-assets/**",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/prompt-contract.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "pi-prompt-assets",
+        "asset-owner"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Prompt asset paths have explicit ownership and no longer appear as ambiguous adapter/asset drift.",
+        "acceptance": [
+          "Map or KB classifies src/adapters/pi/prompt-assets/** as current package prompt assets or records future src/pi/prompt-assets/** migration trigger.",
+          "Ownership mismatch warnings for the prompt asset directory clear or are covered by accepted deferral with trigger.",
+          "Prompt asset and prompt contract smoke evidence still passes or remains unaffected."
+        ],
+        "non_goals": [
+          "Do not move prompt asset files unless implementation explicitly scopes a migration.",
+          "Do not restore generic CodeWiki skill surfaces."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06T00:58:52Z"
+    },
+    "TASK-103": {
+      "id": "TASK-103",
+      "title": "Classify current test roots",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "testing",
+      "summary": "Record accepted ownership or migration route for smoke, task, fixture, and helper test roots.",
+      "spec_paths": [
+        "tests/tasks/README.md"
+      ],
+      "code_paths": [
+        "tests/smoke/**",
+        "tests/tasks/**",
+        "tests/shared/**",
+        "tests/fixtures/**",
+        "tests/run.mjs",
+        "tests/setup-env.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "test-root-map",
+        "unexpected-path-tests"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.",
+        "acceptance": [
+          "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+          "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+          "No test helper or smoke entrypoint is deleted without replacement evidence."
+        ],
+        "non_goals": [
+          "Do not rewrite all smoke tests in one task.",
+          "Do not remove executable coverage just to satisfy map warnings."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-104": {
+      "id": "TASK-104",
+      "title": "Define legacy decision-build coverage",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "architecture",
+      "summary": "Turn legacy rowless decision-build warning debt into explicit deferral or archive/catalog coverage without unsafe artifact mutation.",
+      "spec_paths": [
+        ".codewiki/kb/system/builds.md"
+      ],
+      "code_paths": [
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/builds/decision/*.json",
+        "src/state/lint.ts"
+      ],
+      "research_ids": [],
+      "labels": [
+        "legacy-rowless-builds",
+        "archive-coverage"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Legacy rowless decision-build warnings have explicit residual coverage/deferral or a validated archive/catalog plan with restore evidence requirements.",
+        "acceptance": [
+          "Docs or build evidence explains why pre-DecisionTableV1 rowless decision builds remain warnings until archive/catalog cleanup.",
+          "Each legacy-decision-build warning class is covered by accepted deferral/trigger or scoped archival follow-up.",
+          "No legacy build is deleted or rewritten without archive SHA/tree SHA and restore ledger evidence."
+        ],
+        "non_goals": [
+          "Do not backfill all legacy decision rows by hand.",
+          "Do not purge hot artifacts unless GC policy and restore evidence are validated."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
+          "wiki_gc action=dry-run if archival candidates are proposed",
+          "wiki_state refresh=true"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-105": {
+      "id": "TASK-105",
+      "title": "Reconcile doc hygiene and compatibility warnings",
+      "status": "todo",
+      "priority": "low",
+      "kind": "docs",
+      "summary": "Fix or explicitly cover remaining related-doc, large-doc, and compatibility export warning classes after priority ownership/gate tasks.",
+      "spec_paths": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/product/uis/status-dock.md",
+        ".codewiki/kb/product/uis/terminal.md"
+      ],
+      "code_paths": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/terminal-ui.md",
+        ".codewiki/kb/product/uis/status-dock.md",
+        ".codewiki/kb/product/uis/terminal.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "doc-hygiene-warnings",
+        "compat-export-warnings"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Low-risk doc hygiene and compatibility export warning classes are fixed or explicitly covered after priority ownership/gate tasks are in place.",
+        "acceptance": [
+          "Missing Related docs sections are added where required or linter policy is adjusted with evidence.",
+          "Large-doc warnings are reduced by split/cut or accepted as covered residuals with trigger.",
+          "Compatibility export gaps are resolved by map/policy cleanup or deferred with explicit owner and trigger."
+        ],
+        "non_goals": [
+          "Do not perform broad lexicon rewrite unrelated to warning classes.",
+          "Do not change source compatibility exports unless a specific warning requires it."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+          "wiki_state refresh=true"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
     }
   },
   "sprints": {
@@ -1609,6 +1964,59 @@
       ],
       "created": "2026-06-03T05:32:26Z",
       "updated": "2026-06-05T08:43:27Z"
+    },
+    "SPRINT-023": {
+      "id": "SPRINT-023",
+      "title": "Residual drift coverage and structure cleanup",
+      "status": "active",
+      "outcome": "Prevent orphan residual drift at closure gates, preserve trace-audit debugging value, and route current structure warnings into scoped owner/defer/archive cleanup tasks.",
+      "task_ids": [
+        "TASK-099",
+        "TASK-101",
+        "TASK-100",
+        "TASK-102",
+        "TASK-103",
+        "TASK-104",
+        "TASK-105"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/product/stories/drift.md",
+          ".codewiki/kb/product/stories/navigation.md"
+        ],
+        "code": [
+          "src/gateway/report.ts",
+          "src/policy/gate-policy.ts",
+          "src/state/graph.ts",
+          "src/audit/types.ts",
+          "src/state/lint.ts",
+          "src/adapters/pi/prompt-assets/**",
+          "tests/smoke/**",
+          "tests/tasks/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 7,
+        "maxSessions": 4,
+        "maxWrites": 90,
+        "risk": "medium"
+      },
+      "gates": [
+        "Decision pass: .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-residual-dri.json",
+        "Planning validation pass before implementation starts.",
+        "TASK-099 should land before closing cleanup tasks under residual drift coverage policy when feasible.",
+        "Each implementation task requires implementation_build, fresh validation, and task-close gate.",
+        "Do not require global zero warnings; require residual issue coverage for remaining actionable warnings.",
+        "No legacy artifact deletion/purge without archive SHA/tree SHA and restore ledger evidence."
+      ],
+      "created": "2026-06-06T00:56:49Z",
+      "updated": "2026-06-06T00:56:49Z"
     }
   }
 }

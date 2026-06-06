@@ -1,6 +1,6 @@
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -815,6 +815,207 @@ try {
 	assert.ok(
 		staleSource.missing.stale_refs.some((entry) =>
 			entry.includes("missing.json"),
+		),
+	);
+
+	await writeFile(
+		join(root, project.graphPath),
+		JSON.stringify(
+			{
+				lenses: {
+					lint: {
+						issues: [
+							{
+								profile: "alignment",
+								severity: "warning",
+								kind: "missing-related-docs",
+								path: ".codewiki/kb/system/orphan.md",
+								message: "Missing Related docs section.",
+							},
+						],
+					},
+				},
+				views: {
+					roadmap: { version: 1 },
+					semantic_execution_closure: {
+						version: 1,
+						invariant: "generated_view_not_canonical_truth",
+						scopes: { tasks: {} },
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+	const residualUncovered = buildGatewayPreflight(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Audit refs alone must not hide residual drift.",
+		source: semanticImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:residual-uncovered",
+		},
+	});
+	assert.equal(residualUncovered.status, "blocked");
+	assert.ok(
+		residualUncovered.missing.residual_issue_coverage.some((entry) =>
+			entry.includes("missing-related-docs"),
+		),
+	);
+	assert.equal(residualUncovered.routing.failure_class, "planning_gap");
+	const residualBlockedReport = await writeGatewayReport(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Report writer must force block on residual drift.",
+		source: semanticImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:residual-report",
+		},
+	});
+	assert.equal(residualBlockedReport.data.verdict, "block");
+	assert.ok(
+		residualBlockedReport.data.failed_criteria.includes(
+			"residual_issue_coverage",
+		),
+	);
+
+	const roadmap = JSON.parse(
+		await readFile(join(root, project.roadmapPath), "utf8"),
+	);
+	roadmap.order.push("TASK-900");
+	roadmap.tasks["TASK-900"] = {
+		id: "TASK-900",
+		title: "Cover orphan docs warning",
+		status: "todo",
+		priority: "medium",
+		kind: "docs",
+		summary: "Own residual docs warning.",
+		spec_paths: [".codewiki/kb/system/orphan.md"],
+		code_paths: [],
+		research_ids: [],
+		labels: ["missing-related-docs"],
+		goal: {
+			outcome: "covered",
+			acceptance: ["covered"],
+			non_goals: [],
+			verification: ["audit"],
+		},
+		delta: { desired: "", current: "", closure: "" },
+		created: "2026-06-02",
+		updated: "2026-06-02",
+	};
+	await writeFile(
+		join(root, project.roadmapPath),
+		JSON.stringify(roadmap, null, 2),
+	);
+	const residualCoveredByOpenTask = buildGatewayPreflight(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Open task owns residual drift.",
+		source: semanticImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:residual-task",
+		},
+	});
+	assert.equal(residualCoveredByOpenTask.status, "ready");
+	assert.deepEqual(
+		residualCoveredByOpenTask.missing.residual_issue_coverage,
+		[],
+	);
+
+	await writeFile(
+		join(root, project.graphPath),
+		JSON.stringify(
+			{
+				lenses: {
+					lint: {
+						issues: [
+							{
+								profile: "alignment",
+								severity: "warning",
+								kind: "legacy-decision-build-decision-table-deferred",
+								path: ".codewiki/builds/decision/legacy.json",
+								message: "Legacy decision build lacks DecisionTableV1 rows.",
+							},
+						],
+					},
+				},
+				views: {
+					roadmap: { version: 1 },
+					semantic_execution_closure: {
+						version: 1,
+						invariant: "generated_view_not_canonical_truth",
+						scopes: { tasks: {} },
+					},
+				},
+			},
+			null,
+			2,
+		),
+	);
+	const residualCoveredByDeferral = buildGatewayPreflight(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Accepted deferral owns residual drift.",
+		source: semanticImplementation.path,
+		audit_refs: implementationAuditRefs,
+		residual_issue_coverage: [
+			{
+				issue_kind: "legacy-decision-build-decision-table-deferred",
+				path: ".codewiki/builds/decision/*.json",
+				classification: "deferred_by_decision",
+				decision_build_ref: decision.path,
+				trigger: "archive/trace catalog cleanup task starts",
+				owner: "maintainers",
+				evidence: "Legacy rowless decisions remain warning debt by policy.",
+			},
+		],
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:residual-deferred",
+		},
+	});
+	assert.equal(residualCoveredByDeferral.status, "ready");
+	assert.deepEqual(
+		residualCoveredByDeferral.missing.residual_issue_coverage,
+		[],
+	);
+
+	await writeFile(
+		join(root, project.graphPath),
+		JSON.stringify(
+			{
+				lenses: { lint: { issues: [] } },
+				views: {
+					roadmap: { version: 1 },
+					semantic_execution_closure: {
+						version: 1,
+						invariant: "generated_view_not_canonical_truth",
+						scopes: { tasks: {} },
+					},
+				},
+			},
+			null,
+			2,
 		),
 	);
 
