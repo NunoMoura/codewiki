@@ -121,6 +121,14 @@ try {
 				source_refs: [decision.path, "TASK-777"],
 			},
 		],
+		roadmap_reconciliation: [
+			{
+				status: "reviewed",
+				evidence:
+					"Existing roadmap reviewed; TASK-777 remains the only matching active implementation route for this fixture.",
+				task_ids: ["TASK-777"],
+			},
+		],
 		downstream_question_resolutions: [
 			{
 				question: "Plan TASK-777 implementation.",
@@ -1204,6 +1212,13 @@ try {
 				source_refs: [deferredDecision.path],
 			},
 		],
+		roadmap_reconciliation: [
+			{
+				status: "reviewed",
+				evidence:
+					"Existing roadmap reviewed; knowledge-only and deferred rows need no new active task in this fixture.",
+			},
+		],
 		downstream_question_resolutions: [
 			{
 				question: "When should EXPLICIT-DEFER resume?",
@@ -1309,6 +1324,67 @@ try {
 		),
 	);
 	assert.equal(executableDeferredBlocked.routing.failure_class, "planning_gap");
+
+	const missingRoadmapReconciliationPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Map daemon worker scheduling without roadmap reconciliation evidence.",
+		source_decision_build: executableDeferredDecision.path,
+		decision_row_resolutions: [
+			{
+				row_id: "DAEMON-WORKER-FOLLOWUP",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-070"],
+				evidence: "TASK-070 owns durable daemon follow-up.",
+				source_refs: ["TASK-070"],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question:
+					"How should daemon worker scheduling follow-up continue after TASK-070?",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-070"],
+				evidence: "TASK-070 is the durable follow-up route.",
+				source_refs: ["TASK-070"],
+			},
+		],
+	});
+	const missingRoadmapReconciliation = buildGatewayPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale:
+			"Planning gate needs existing-roadmap reconciliation evidence, even when row mappings exist.",
+		source: missingRoadmapReconciliationPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(missingRoadmapReconciliation.status, "blocked");
+	assert.ok(
+		missingRoadmapReconciliation.missing.roadmap_reconciliation.some((entry) =>
+			entry.includes("missing_evidence"),
+		),
+	);
+	assert.equal(
+		missingRoadmapReconciliation.routing.recommended_next_loop,
+		"planning",
+	);
+	const missingRoadmapReconciliationReport = await writeGatewayReport(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Planning gate records missing roadmap reconciliation.",
+		source: missingRoadmapReconciliationPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(missingRoadmapReconciliationReport.data.verdict, "block");
+	assert.ok(
+		missingRoadmapReconciliationReport.data.failed_criteria.includes(
+			"roadmap_reconciliation",
+		),
+	);
+	assert.equal(
+		missingRoadmapReconciliationReport.data.recommended_next_loop,
+		"planning",
+	);
+
 	const executableMappedPlan = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Map daemon worker scheduling follow-up to roadmap work.",
@@ -1331,6 +1407,14 @@ try {
 				task_ids: ["TASK-070"],
 				evidence: "TASK-070 is the durable follow-up route.",
 				source_refs: ["TASK-070"],
+			},
+		],
+		roadmap_reconciliation: [
+			{
+				status: "reviewed",
+				evidence:
+					"Existing roadmap reviewed; TASK-070 remains the durable owner and no duplicate task is created.",
+				task_ids: ["TASK-070"],
 			},
 		],
 	});

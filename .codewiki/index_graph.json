@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T10:42:43.726Z",
+  "generated_at": "2026-06-06T11:06:55.749Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -6729,7 +6729,7 @@
       "kind": "code_path",
       "path": "src/gateway/report.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6915,7 +6915,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7285,7 +7285,7 @@
       "kind": "code_path",
       "path": "src/build",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7354,7 +7354,7 @@
       "kind": "code_path",
       "path": "tests/smoke/gateway-preflight.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7870,7 +7870,7 @@
       "kind": "code_path",
       "path": "tests/smoke",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -8032,7 +8032,7 @@
       "kind": "code_path",
       "path": "src/gateway",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -8336,7 +8336,7 @@
       "kind": "code_path",
       "path": "src/build/writer.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -53938,6 +53938,147 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "title": "wiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-107",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+          ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+          "wiki_build tool",
+          "src/gateway/report.ts",
+          "src/build/writer.ts",
+          "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "TASK-107"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
+          "tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
+          "tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
+          "tests/smoke/source-contract.test.mjs@sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
+          "src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
+          "refs/codewiki/archive/task/TASK-107",
+          "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53"
+        ],
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
+      "kind": "content_proof",
+      "path": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
+      "kind": "content_proof",
+      "path": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
+      "kind": "content_proof",
+      "path": "tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
+      "kind": "content_proof",
+      "path": "tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
+      "kind": "content_proof",
+      "path": "src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
+      "kind": "content_proof",
+      "path": "src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-107",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-107",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
+      "kind": "content_proof",
+      "path": "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-107",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-107",
+      "task_id": "TASK-107",
+      "digest": "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
+      "restore_command": "/wiki-restore TASK-107",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
@@ -55199,6 +55340,76 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-375",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-375",
+      "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+      "agent_name": "Wren",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement planning-gate coverage checks and tests.",
+      "expires_at": "2026-06-06T12:45:51.192Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+        "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+        "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "code",
+          "path": "src/gateway/report.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/policy/gate-policy.ts"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        },
+        {
+          "layer": "validation",
+          "path": ".codewiki/validation/**"
+        },
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-107"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/gateway/report.ts",
+      "kind": "change_claim_scope",
+      "path": "src/gateway/report.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/policy/gate-policy.ts",
+      "kind": "change_claim_scope",
+      "path": "src/policy/gate-policy.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/validation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/validation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-107",
+      "kind": "change_claim_scope",
+      "path": "TASK-107",
+      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -78078,6 +78289,83 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
+        "clean": false,
+        "fresh_context": true,
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:stale-reference",
+          "audit:generated-parity",
+          "audit:changed",
+          "audit:task",
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+          "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+          "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+          "approval:user: proceed with SPRINT-024/TASK-107 implementation"
+        ],
+        "content_proof_refs": [
+          "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+      "kind": "audit_evidence",
+      "path": "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+      "kind": "audit_evidence",
+      "path": "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+      "kind": "audit_evidence",
+      "path": "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:approval:user: proceed with SPRINT-024/TASK-107 implementation",
+      "kind": "audit_evidence",
+      "path": "approval:user: proceed with SPRINT-024/TASK-107 implementation",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
+      "kind": "content_proof",
+      "path": "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
@@ -78265,14 +78553,6 @@
       "id": "audit:wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
       "kind": "audit_evidence",
       "path": "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
-      "layer": "audit",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "audit:decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
-      "kind": "audit_evidence",
-      "path": "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
@@ -176092,6 +176372,137 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:.codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:wiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:src/gateway/report.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:src/build/writer.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:tests/smoke/gateway-preflight.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:tests/smoke/source-contract.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "source:TASK-107",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:.codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:tests/smoke/source-contract.test.mjs@sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-107",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "content_proof:sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "task:TASK-107"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-107",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
       "to": "source:.codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
       "default_hidden": true
@@ -177590,6 +178001,36 @@
       "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
       "to": "archive_ref:refs/codewiki/archive/task-106-agency-config-prompt-policy",
       "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-375",
+      "to": "task:TASK-107"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-375",
+      "to": "claim_scope:src/gateway/report.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-375",
+      "to": "claim_scope:src/policy/gate-policy.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-375",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-375",
+      "to": "claim_scope:.codewiki/validation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-375",
+      "to": "claim_scope:TASK-107"
     },
     {
       "kind": "validation_attests_source",
@@ -202415,6 +202856,77 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "audit:approval:user: proceed with SPRINT-024/TASK-107 implementation",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "content_proof:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "to": "task:TASK-107"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
       "to": "source:.codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
       "default_hidden": true
@@ -204499,7 +205011,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 31,
+            "item_count": 37,
             "badges": [
               {
                 "id": "open_tasks",
@@ -204532,7 +205044,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -204553,7 +205065,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 549,
             "badges": [
               {
@@ -204569,12 +205081,18 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 148
+                "count": 149
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 3,
+                "refs": [
+                  "src/build/writer.ts",
+                  "src/gateway/report.ts",
+                  "tests/smoke/gateway-preflight.test.mjs"
+                ],
+                "ref_count": 3
               }
             ],
             "hot_refs": [
@@ -204601,7 +205119,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 395
+                "count": 396
               },
               {
                 "id": "fail_or_block_validation",
@@ -204611,12 +205129,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 853
+                "count": 856
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 2316
+                "count": 2325
               },
               {
                 "id": "traceability_gaps",
@@ -204646,19 +205164,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 268,
+            "total": 269,
             "decision": 53,
             "planning": 67,
-            "implementation": 148,
+            "implementation": 149,
             "hot": 0,
-            "collapsed": 268
+            "collapsed": 269
           },
           "validations": {
-            "total": 395,
-            "pass": 321,
+            "total": 396,
+            "pass": 322,
             "fail_or_block": 74,
             "hot": 25,
-            "collapsed": 395
+            "collapsed": 396
           }
         },
         "next_action": {
@@ -204714,11 +205232,11 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6122,
-          "edges": 20678,
+          "nodes": 6144,
+          "edges": 20718,
           "open_tasks": 0,
-          "validations": 387,
-          "source_refs": 1508
+          "validations": 388,
+          "source_refs": 1510
         },
         "next_action": {
           "kind": "decision",
@@ -204738,7 +205256,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1540,
+          "source_ref_count": 1542,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -204760,7 +205278,7 @@
               ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
             ],
-            "omitted_ref_count": 1532
+            "omitted_ref_count": 1534
           }
         ],
         "data": {
@@ -204883,7 +205401,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 31,
+              "item_count": 37,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -204916,7 +205434,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 0
+                  "count": 1
                 }
               ],
               "hot_refs": [
@@ -204937,7 +205455,7 @@
               "id": "execution",
               "label": "Execution",
               "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-              "state": "aligned",
+              "state": "drift",
               "item_count": 549,
               "badges": [
                 {
@@ -204953,12 +205471,18 @@
                 {
                   "id": "implementation_builds",
                   "label": "implementation builds",
-                  "count": 148
+                  "count": 149
                 },
                 {
                   "id": "dirty_paths",
                   "label": "dirty paths",
-                  "count": 0
+                  "count": 3,
+                  "refs": [
+                    "src/build/writer.ts",
+                    "src/gateway/report.ts",
+                    "tests/smoke/gateway-preflight.test.mjs"
+                  ],
+                  "ref_count": 3
                 }
               ],
               "hot_refs": [
@@ -204985,7 +205509,7 @@
                 {
                   "id": "validation_reports",
                   "label": "validation reports",
-                  "count": 395
+                  "count": 396
                 },
                 {
                   "id": "fail_or_block_validation",
@@ -204995,12 +205519,12 @@
                 {
                   "id": "audit_refs",
                   "label": "audit refs",
-                  "count": 853
+                  "count": 856
                 },
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 2316
+                  "count": 2325
                 },
                 {
                   "id": "traceability_gaps",
@@ -205712,9 +206236,9 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "validation_reports": 387,
+          "validation_reports": 388,
           "reconciliation_items": 50,
-          "source_refs": 3513
+          "source_refs": 3526
         },
         "next_action": {
           "kind": "decision",
@@ -205734,7 +206258,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3545,
+          "source_ref_count": 3558,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -205756,7 +206280,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3537
+            "omitted_ref_count": 3550
           }
         ],
         "data": {
@@ -206094,19 +206618,291 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 0,
+            "active_claim_count": 1,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": []
+            "artifact_statuses": [
+              {
+                "artifact": {
+                  "layer": "build",
+                  "path": ".codewiki/builds/implementation/**"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "validation",
+                  "path": ".codewiki/validation/**"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "code",
+                  "path": "src/gateway/report.ts"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "code",
+                  "path": "src/policy/gate-policy.ts"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "roadmap",
+                  "task_id": "TASK-107"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              }
+            ]
           },
-          "active_claim_count": 0,
+          "active_claim_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": []
+          "artifact_statuses": [
+            {
+              "artifact": {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              "status": "in-use",
+              "holders": [
+                {
+                  "record_id": "CLAIM-375",
+                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "agent_name": "Wren",
+                  "mode": "write",
+                  "role": "builder",
+                  "task_id": "TASK-107",
+                  "summary": "Implement planning-gate coverage checks and tests.",
+                  "expires_at": "2026-06-06T12:45:51.192Z",
+                  "worktree": {
+                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                  },
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                }
+              ],
+              "waiters": [],
+              "conflict_ids": []
+            },
+            {
+              "artifact": {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              },
+              "status": "in-use",
+              "holders": [
+                {
+                  "record_id": "CLAIM-375",
+                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "agent_name": "Wren",
+                  "mode": "write",
+                  "role": "builder",
+                  "task_id": "TASK-107",
+                  "summary": "Implement planning-gate coverage checks and tests.",
+                  "expires_at": "2026-06-06T12:45:51.192Z",
+                  "worktree": {
+                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                  },
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                }
+              ],
+              "waiters": [],
+              "conflict_ids": []
+            },
+            {
+              "artifact": {
+                "layer": "code",
+                "path": "src/gateway/report.ts"
+              },
+              "status": "in-use",
+              "holders": [
+                {
+                  "record_id": "CLAIM-375",
+                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "agent_name": "Wren",
+                  "mode": "write",
+                  "role": "builder",
+                  "task_id": "TASK-107",
+                  "summary": "Implement planning-gate coverage checks and tests.",
+                  "expires_at": "2026-06-06T12:45:51.192Z",
+                  "worktree": {
+                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                  },
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                }
+              ],
+              "waiters": [],
+              "conflict_ids": []
+            },
+            {
+              "artifact": {
+                "layer": "code",
+                "path": "src/policy/gate-policy.ts"
+              },
+              "status": "in-use",
+              "holders": [
+                {
+                  "record_id": "CLAIM-375",
+                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "agent_name": "Wren",
+                  "mode": "write",
+                  "role": "builder",
+                  "task_id": "TASK-107",
+                  "summary": "Implement planning-gate coverage checks and tests.",
+                  "expires_at": "2026-06-06T12:45:51.192Z",
+                  "worktree": {
+                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                  },
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                }
+              ],
+              "waiters": [],
+              "conflict_ids": []
+            },
+            {
+              "artifact": {
+                "layer": "roadmap",
+                "task_id": "TASK-107"
+              },
+              "status": "in-use",
+              "holders": [
+                {
+                  "record_id": "CLAIM-375",
+                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "agent_name": "Wren",
+                  "mode": "write",
+                  "role": "builder",
+                  "task_id": "TASK-107",
+                  "summary": "Implement planning-gate coverage checks and tests.",
+                  "expires_at": "2026-06-06T12:45:51.192Z",
+                  "worktree": {
+                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                  },
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                }
+              ],
+              "waiters": [],
+              "conflict_ids": []
+            }
+          ]
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -206150,16 +206946,16 @@
           ".codewiki/validation/2026-05-19-planning-pass.json"
         ],
         "omitted_counts": {
-          "ready_tasks": 0,
-          "source_refs": 3535
+          "ready_tasks": 1,
+          "source_refs": 3549
         },
         "next_action": {
           "kind": "run",
           "loop": "implementation",
-          "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-          "command": "wiki_resume_context taskId=TASK-107",
+          "summary": "TASK-108 is runnable from accepted source refs and scoped leases are available.",
+          "command": "wiki_resume_context taskId=TASK-108",
           "refs": [
-            ".codewiki/roadmap/tasks/TASK-107/context.json"
+            ".codewiki/roadmap/tasks/TASK-108/context.json"
           ],
           "trace_refs": [
             ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
@@ -206172,10 +206968,10 @@
         "next_safe_action": {
           "kind": "run",
           "loop": "implementation",
-          "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-          "command": "wiki_resume_context taskId=TASK-107",
+          "summary": "TASK-108 is runnable from accepted source refs and scoped leases are available.",
+          "command": "wiki_resume_context taskId=TASK-108",
           "refs": [
-            ".codewiki/roadmap/tasks/TASK-107/context.json"
+            ".codewiki/roadmap/tasks/TASK-108/context.json"
           ],
           "trace_refs": [
             ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
@@ -206185,11 +206981,15 @@
           "git_refs": [],
           "safe_to_schedule": true
         },
-        "blockers": [],
+        "blockers": [
+          {
+            "kind": "active_lease"
+          }
+        ],
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3567,
+          "source_ref_count": 3581,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -206211,29 +207011,31 @@
               "src/policy/gate-policy.ts",
               "tests/smoke/gateway-preflight.test.mjs"
             ],
-            "omitted_ref_count": 3559
+            "omitted_ref_count": 3573
           }
         ],
         "data": {
           "ready": true,
           "state": "runnable",
-          "selected_task_id": "TASK-107",
+          "selected_task_id": "TASK-108",
           "ready_task_ids": [
-            "TASK-107",
             "TASK-108",
             "TASK-109"
           ],
           "runnable_task_ids": [
-            "TASK-107",
             "TASK-108",
             "TASK-109"
           ],
           "retryable_task_ids": [],
           "promotable_task_ids": [],
-          "waiting_task_ids": [],
+          "waiting_task_ids": [
+            "TASK-107"
+          ],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
-          "stop_reasons": [],
+          "stop_reasons": [
+            "active_lease"
+          ],
           "active_sprint_ids": [
             "SPRINT-017",
             "SPRINT-022",
@@ -206242,24 +207044,82 @@
           ],
           "tasks": {
             "TASK-107": {
-              "state": "runnable",
+              "state": "waiting",
               "next_action": {
-                "kind": "run",
-                "loop": "implementation",
-                "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-                "command": "wiki_resume_context taskId=TASK-107",
+                "kind": "wait",
+                "loop": "observe",
+                "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+                "command": "wiki_artifact_status action=wait taskId=TASK-107",
                 "refs": [
-                  ".codewiki/roadmap/tasks/TASK-107/context.json"
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
                 ],
                 "trace_refs": [
                   ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
-                  ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+                  ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+                  ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
                 ],
-                "gate_refs": [],
-                "git_refs": [],
-                "safe_to_schedule": true
+                "gate_refs": [
+                  ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+                ],
+                "git_refs": [
+                  "worktree_digest:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+                ],
+                "safe_to_schedule": false
               },
-              "blockers": [],
+              "blockers": [
+                {
+                  "kind": "active_lease",
+                  "severity": "medium",
+                  "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+                  "refs": [
+                    "CLAIM-375",
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "lease_ids": [
+                    "CLAIM-375"
+                  ],
+                  "branch_refs": [
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                  "retryable": true
+                },
+                {
+                  "kind": "active_lease",
+                  "severity": "medium",
+                  "summary": "Scoped lease CLAIM-375 holds src/policy/gate-policy.ts.",
+                  "refs": [
+                    "CLAIM-375",
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "lease_ids": [
+                    "CLAIM-375"
+                  ],
+                  "branch_refs": [
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                  "retryable": true
+                },
+                {
+                  "kind": "active_lease",
+                  "severity": "medium",
+                  "summary": "Scoped lease CLAIM-375 holds TASK-107.",
+                  "refs": [
+                    "CLAIM-375",
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "lease_ids": [
+                    "CLAIM-375"
+                  ],
+                  "branch_refs": [
+                    "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                  ],
+                  "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                  "retryable": true
+                }
+              ],
               "source_refs": [
                 ".codewiki/roadmap/queue.json",
                 ".codewiki/roadmap/tasks/TASK-107/context.json",
@@ -206636,9 +207496,9 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6122,
-          "edges": 20678,
-          "source_refs": 1508
+          "nodes": 6144,
+          "edges": 20718,
+          "source_refs": 1510
         },
         "next_action": {
           "kind": "decision",
@@ -206658,7 +207518,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1540,
+          "source_ref_count": 1542,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -206680,7 +207540,7 @@
               ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
             ],
-            "omitted_ref_count": 1532
+            "omitted_ref_count": 1534
           }
         ],
         "requirement_rows": [],
@@ -206744,17 +207604,281 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 0,
+            "active_claim_count": 1,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": []
+            "artifact_statuses": [
+              {
+                "artifact": {
+                  "layer": "build",
+                  "path": ".codewiki/builds/implementation/**"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "validation",
+                  "path": ".codewiki/validation/**"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "code",
+                  "path": "src/gateway/report.ts"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "code",
+                  "path": "src/policy/gate-policy.ts"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              },
+              {
+                "artifact": {
+                  "layer": "roadmap",
+                  "task_id": "TASK-107"
+                },
+                "status": "in-use",
+                "holders": [
+                  {
+                    "record_id": "CLAIM-375",
+                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                    "agent_name": "Wren",
+                    "mode": "write",
+                    "role": "builder",
+                    "task_id": "TASK-107",
+                    "summary": "Implement planning-gate coverage checks and tests.",
+                    "expires_at": "2026-06-06T12:45:51.192Z",
+                    "worktree": {
+                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                      "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                    },
+                    "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+                  }
+                ],
+                "waiters": [],
+                "conflict_ids": []
+              }
+            ]
           },
           "publication": [],
           "deferred_views": []
         },
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": "src/build/writer.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+              ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+              ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+              ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+              ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-of-legacy-decision-.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+              ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/gateway/report.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+              ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+              ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+              ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+              ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+              ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+              ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+              ".codewiki/builds/planning/2026-06-05-plan-accepted-gate-remediation-retry-policy-into.json",
+              ".codewiki/builds/planning/2026-06-05-planned-approved-gate-remediation-retry-policy-i.json",
+              ".codewiki/builds/planning/2026-06-05-planning-handoff-for-superseding-gate-remediatio.json",
+              ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json",
+              ".codewiki/builds/planning/2026-06-05-superseding-planning-build-for-gate-remediation-.json",
+              ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+              ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
+              ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+              ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+              ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+              ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+              ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v2.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/gateway-preflight.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+              ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+              ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+              ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+              ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+              ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+              ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+              ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+              ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+              ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+              ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+              ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+              ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+              ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
+              ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+              ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+              ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+              ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+              ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
+              ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+              ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+              ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v2.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json",
+              ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/**",
@@ -206950,6 +208074,7 @@
           ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
           ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+          ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
@@ -215136,6 +216261,25 @@
             ]
           },
           {
+            "path": ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-107"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+              "wiki_build tool",
+              "src/gateway/report.ts",
+              "src/build/writer.ts",
+              "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
+              "tests/smoke/source-contract.test.mjs",
+              "TASK-107"
+            ]
+          },
+          {
             "path": ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
             "kind": "implementation_build",
             "status": "accepted",
@@ -215386,7 +216530,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 3513,
+          "source_refs": 3526,
           "validation_reports": 0
         },
         "next_action": {
@@ -215407,7 +216551,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3545,
+          "source_ref_count": 3558,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -215429,7 +216573,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3537
+            "omitted_ref_count": 3550
           }
         ],
         "validation_reports": [
@@ -223878,6 +225022,30 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-107",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:stale-reference",
+              "audit:generated-parity",
+              "audit:changed",
+              "audit:task",
+              "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+              "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+              "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+              "approval:user: proceed with SPRINT-024/TASK-107 implementation"
+            ],
+            "content_proof_refs": [
+              "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
             "verdict": "block",
             "profile": "planning",
@@ -230290,6 +231458,20 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+            "task_id": "TASK-107",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
             "verdict": "block",
             "status": "legacy",
@@ -231001,6 +232183,7 @@
           "approval:user: planning gateway failure diagnosis approved with proceed request",
           "approval:user: proceed after clarification",
           "approval:user: proceed after scope clarification",
+          "approval:user: proceed with SPRINT-024/TASK-107 implementation",
           "approval:user: user approved SAC-001 and SAC-002",
           "approval:user: user approved SAC-001/SAC-002 and reloaded changed prompt/skill behavior",
           "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23",
@@ -231445,6 +232628,7 @@
           "pending refreshed audit after docs correction",
           "pending refreshed audit after planning build",
           "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+          "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
           "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
           "planning:.codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
           "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
@@ -231707,6 +232891,7 @@
           "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected",
           "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due 50 known graph warnings; changed warning due dirty generated graph",
           "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due known graph warnings",
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
           "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
           "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity/changed pass; alignment warning due covered graph warnings",
           "wiki_gate audit profiles=alignment,stale-reference: alignment warning due existing 52 graph warnings; stale-reference pass; warning state is accepted problem scope",
@@ -231803,6 +232988,7 @@
           ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json@sha256:aa70b48ec7116be04c68b0e8b490c3add404c723f3a7cbb1f2b9a9ef83452154",
           ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json@sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
           ".codewiki/builds/planning/2026-06-06-plan-accepted-config-derived-agency-enforcement-.json@sha256:1df617a1bc2c917fdacc41abec9f1e7644a29dcd5e36a6c4e0c5a3df3aaffc40",
+          ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
           ".codewiki/config.json@sha256:198014973ff76ba965a1133b64fac99f2c4c8d9f8e68e14bdeefe60cda92b8d6",
           ".codewiki/kb/lexicon.md@sha256:4216509b925fd79c5bddb8364a2181552c12657b994e0986c4281685e4360f43",
           ".codewiki/kb/lexicon.md@sha256:d1ee32a973da283fde8299ccdec4a3c906c5edb71b07142e396880ca32892847",
@@ -232093,6 +233279,7 @@
           ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
           ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json@sha256:f12154bc8080adac9b903831d34e6af79e0d22bcbb18f10d7885af4b5877da7a",
           ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
           ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
           ".gitignore@sha256:4849b4b2cf05a5d56fef71f6242a509fcd223b7fa5d0a59087e2a9965ce72203",
           ".gitignore@sha256:91d79f5bc56c86e50a4534b4f111771a227c5b06a5fc90664017f129fac70110",
@@ -232645,6 +233832,7 @@
           "refs/codewiki/archive/task/TASK-104",
           "refs/codewiki/archive/task/TASK-105",
           "refs/codewiki/archive/task/TASK-106",
+          "refs/codewiki/archive/task/TASK-107",
           "refs/heads/main",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -232753,6 +233941,7 @@
           "sha256:6cde044b729f230080c501631ad22fb82efff7dbff0de1c4781930d4501f287e",
           "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
           "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
+          "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
           "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
           "sha256:721d503c044fe4e58e93c7a045951524919fb763f65f1c1ed8faa28a05eb2792",
           "sha256:7267cddb62e480f557c491153d01a8a6d94e4d0ccd65df76d25a41931984c4eb",
@@ -232853,6 +234042,7 @@
           "sha256:d2112ace42c4f6cc0a9250c065c23e1a3ed193dadc4a5e0e6a54b5677b43d71c",
           "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
           "sha256:d4e6590ce4afb07faeea1086dc190c014edeb8dd77ef0996ec3762c65cf8cc42",
+          "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
           "sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b",
           "sha256:d6a6bc0df61cccb14b700d347c6e50d9092145440d07deafe917f3590538716b",
           "sha256:d7a9bf4508cdd6509a59c6605701cfc568f19813d544d7a16125509e871aa6b2",
@@ -233385,6 +234575,7 @@
           "src/build/types.ts@sha256:b9b70cf2a9a1a6ef9c63d8ccdd617a51853facf07aeb7f946393dfb58383a61e",
           "src/build/types.ts@sha256:d65b3cad0acd53e3d6573ffa8c170829b6cd4641ff646c1aa032075671007517",
           "src/build/types.ts@sha256:f89fd6f63b66791fe0b8d01f1b3e09689f3bb8310f9d2d1cbee7784525ffc7c8",
+          "src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
           "src/build/writer.ts@sha256:0f9733f27f66f32291e9aaf863d09791d50dc40d0e13e761a2fe0f4ebdfb1ec2",
           "src/build/writer.ts@sha256:2d506b1457243940fe7de39a152f5dceccfa01c5427b1150ad381837fe402f12",
           "src/build/writer.ts@sha256:2e1ba53aeb2c5c0bc2aa55353317ee3c7a0cfdd7dd451b151a19ca491780c8c3",
@@ -233488,6 +234679,7 @@
           "src/gateway/report.ts@sha256:5e208435c740322e5ba34e8b24a23ac7db3773a7de5c0be3ec13c7b29ff31e51",
           "src/gateway/report.ts@sha256:62a132dc362ffaef1f0c9f51d79effeabf607819b2872aa1765094d3f77b716e",
           "src/gateway/report.ts@sha256:96c8ef12d5bc644ab9e6018a53d45d09f3e0f164c43d968467cbb49280bc07a7",
+          "src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
           "src/gateway/report.ts@sha256:a9196eff900b241a379c454810f59e1fb77ba875173fccb58c2e0188d0692403",
           "src/gateway/report.ts@sha256:e491739558b231edb8400607b673ae1795ce27014cd2e6ebb1f66a84df0bce14",
           "src/gateway/report.ts@sha256:e584c710af473ef978a4759a0040a408db35e4c8b76c803b7ee0332bbeb07dec",
@@ -233850,6 +235042,7 @@
           "tests/smoke/gateway-preflight.test.mjs@sha256:45ff15ba86c1d8b68d1bbfc6f6e6dbd0f9978075c4ee4a5396e818b796566d2c",
           "tests/smoke/gateway-preflight.test.mjs@sha256:6491039706861e3f3143253c5c100eb9b3d0b24f74ab1e050928b8d75c0864fb",
           "tests/smoke/gateway-preflight.test.mjs@sha256:6eca667d88adb419b24555ba5db844a3987fd01c8b2d3ac5264813e849a5c9a5",
+          "tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
           "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
           "tests/smoke/gateway-preflight.test.mjs@sha256:87270f575aa4cbe710ea22d56f2b1f338c06416b7e593a01d989eb82528e4788",
           "tests/smoke/gateway-preflight.test.mjs@sha256:c09c4684af5691938f961a0d44248712467681cf07dbb1c96eb801bc5773fc4a",
@@ -234053,6 +235246,7 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
           "tests/tasks/TASK-093/lifecycle-trace.test.mjs@sha256:1e069f1e46b4709f251a29e4c8528fafa0493d5ec76a9597078da1bc9a8f2771",
           "tests/tasks/TASK-093/lifecycle-trace.test.mjs@sha256:3c510d3ea6a7172683b6ca08791ccbdc808f2f56384128595688735f3c84cf5e",
+          "tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
           "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
           "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
           "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
@@ -236136,12 +237330,148 @@
         ],
         "durable_truth": false,
         "source_role": "hot_coordination_input",
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "warning_count": 0,
         "conflict_count": 0,
         "waiting_count": 0,
         "ready_waiter_count": 0,
-        "artifact_statuses": []
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/gateway/report.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/policy/gate-policy.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-107"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ]
       },
       "publication": [],
       "deferred_views": []
@@ -236609,28 +237939,356 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "tests/smoke/gateway-preflight.test.mjs"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-375",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-107",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+          "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-375",
+          "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+          "agent_name": "Wren",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement planning-gate coverage checks and tests.",
+          "task_id": "TASK-107",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+            "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+            "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "code",
+              "path": "src/gateway/report.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/policy/gate-policy.ts"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-107"
+            }
+          ],
+          "created_at": "2026-06-06T10:45:51Z",
+          "updated_at": "2026-06-06T10:45:51Z",
+          "expires_at": "2026-06-06T12:45:51.192Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/gateway/report.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/policy/gate-policy.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-107"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/gateway/report.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/policy/gate-policy.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-107"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-375",
+              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "agent_name": "Wren",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-107",
+              "summary": "Implement planning-gate coverage checks and tests.",
+              "expires_at": "2026-06-06T12:45:51.192Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -242362,6 +244020,20 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+          "task_id": "TASK-107",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
           "verdict": "block",
           "status": "legacy",
@@ -243169,6 +244841,7 @@
         ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
         ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
         ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+        ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
         ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
         ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
         ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
@@ -244238,6 +245911,7 @@
         "approval:user: planning gateway failure diagnosis approved with proceed request",
         "approval:user: proceed after clarification",
         "approval:user: proceed after scope clarification",
+        "approval:user: proceed with SPRINT-024/TASK-107 implementation",
         "approval:user: user approved SAC-001 and SAC-002",
         "approval:user: user approved SAC-001/SAC-002 and reloaded changed prompt/skill behavior",
         "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23",
@@ -244682,6 +246356,7 @@
         "pending refreshed audit after docs correction",
         "pending refreshed audit after planning build",
         "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+        "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
         "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
         "planning:.codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
         "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
@@ -244944,6 +246619,7 @@
         "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected",
         "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due 50 known graph warnings; changed warning due dirty generated graph",
         "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due known graph warnings",
+        "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
         "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
         "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity/changed pass; alignment warning due covered graph warnings",
         "wiki_gate audit profiles=alignment,stale-reference: alignment warning due existing 52 graph warnings; stale-reference pass; warning state is accepted problem scope",
@@ -245040,6 +246716,7 @@
         ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json@sha256:aa70b48ec7116be04c68b0e8b490c3add404c723f3a7cbb1f2b9a9ef83452154",
         ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json@sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
         ".codewiki/builds/planning/2026-06-06-plan-accepted-config-derived-agency-enforcement-.json@sha256:1df617a1bc2c917fdacc41abec9f1e7644a29dcd5e36a6c4e0c5a3df3aaffc40",
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json@sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
         ".codewiki/config.json@sha256:198014973ff76ba965a1133b64fac99f2c4c8d9f8e68e14bdeefe60cda92b8d6",
         ".codewiki/kb/lexicon.md@sha256:4216509b925fd79c5bddb8364a2181552c12657b994e0986c4281685e4360f43",
         ".codewiki/kb/lexicon.md@sha256:d1ee32a973da283fde8299ccdec4a3c906c5edb71b07142e396880ca32892847",
@@ -245330,6 +247007,7 @@
         ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
         ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json@sha256:f12154bc8080adac9b903831d34e6af79e0d22bcbb18f10d7885af4b5877da7a",
         ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
+        ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json@sha256:c5c9ca9ba0602c5973637126682d369518efd3e2dcf44c47ac460f8e4d955269",
         ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
         ".gitignore@sha256:4849b4b2cf05a5d56fef71f6242a509fcd223b7fa5d0a59087e2a9965ce72203",
         ".gitignore@sha256:91d79f5bc56c86e50a4534b4f111771a227c5b06a5fc90664017f129fac70110",
@@ -245882,6 +247560,7 @@
         "refs/codewiki/archive/task/TASK-104",
         "refs/codewiki/archive/task/TASK-105",
         "refs/codewiki/archive/task/TASK-106",
+        "refs/codewiki/archive/task/TASK-107",
         "refs/heads/main",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -245990,6 +247669,7 @@
         "sha256:6cde044b729f230080c501631ad22fb82efff7dbff0de1c4781930d4501f287e",
         "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
         "sha256:6d0a11a4195379e7ff288dd5c98c1ea87a30e293a66a8079ec2a53ed5b877b93",
+        "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1",
         "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
         "sha256:721d503c044fe4e58e93c7a045951524919fb763f65f1c1ed8faa28a05eb2792",
         "sha256:7267cddb62e480f557c491153d01a8a6d94e4d0ccd65df76d25a41931984c4eb",
@@ -246090,6 +247770,7 @@
         "sha256:d2112ace42c4f6cc0a9250c065c23e1a3ed193dadc4a5e0e6a54b5677b43d71c",
         "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
         "sha256:d4e6590ce4afb07faeea1086dc190c014edeb8dd77ef0996ec3762c65cf8cc42",
+        "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
         "sha256:d5ec73dae695d75a5441b009785720c7d960c43c03bbf1d2714e16720bbe4b0b",
         "sha256:d6a6bc0df61cccb14b700d347c6e50d9092145440d07deafe917f3590538716b",
         "sha256:d7a9bf4508cdd6509a59c6605701cfc568f19813d544d7a16125509e871aa6b2",
@@ -246622,6 +248303,7 @@
         "src/build/types.ts@sha256:b9b70cf2a9a1a6ef9c63d8ccdd617a51853facf07aeb7f946393dfb58383a61e",
         "src/build/types.ts@sha256:d65b3cad0acd53e3d6573ffa8c170829b6cd4641ff646c1aa032075671007517",
         "src/build/types.ts@sha256:f89fd6f63b66791fe0b8d01f1b3e09689f3bb8310f9d2d1cbee7784525ffc7c8",
+        "src/build/writer.ts@sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
         "src/build/writer.ts@sha256:0f9733f27f66f32291e9aaf863d09791d50dc40d0e13e761a2fe0f4ebdfb1ec2",
         "src/build/writer.ts@sha256:2d506b1457243940fe7de39a152f5dceccfa01c5427b1150ad381837fe402f12",
         "src/build/writer.ts@sha256:2e1ba53aeb2c5c0bc2aa55353317ee3c7a0cfdd7dd451b151a19ca491780c8c3",
@@ -246725,6 +248407,7 @@
         "src/gateway/report.ts@sha256:5e208435c740322e5ba34e8b24a23ac7db3773a7de5c0be3ec13c7b29ff31e51",
         "src/gateway/report.ts@sha256:62a132dc362ffaef1f0c9f51d79effeabf607819b2872aa1765094d3f77b716e",
         "src/gateway/report.ts@sha256:96c8ef12d5bc644ab9e6018a53d45d09f3e0f164c43d968467cbb49280bc07a7",
+        "src/gateway/report.ts@sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
         "src/gateway/report.ts@sha256:a9196eff900b241a379c454810f59e1fb77ba875173fccb58c2e0188d0692403",
         "src/gateway/report.ts@sha256:e491739558b231edb8400607b673ae1795ce27014cd2e6ebb1f66a84df0bce14",
         "src/gateway/report.ts@sha256:e584c710af473ef978a4759a0040a408db35e4c8b76c803b7ee0332bbeb07dec",
@@ -247087,6 +248770,7 @@
         "tests/smoke/gateway-preflight.test.mjs@sha256:45ff15ba86c1d8b68d1bbfc6f6e6dbd0f9978075c4ee4a5396e818b796566d2c",
         "tests/smoke/gateway-preflight.test.mjs@sha256:6491039706861e3f3143253c5c100eb9b3d0b24f74ab1e050928b8d75c0864fb",
         "tests/smoke/gateway-preflight.test.mjs@sha256:6eca667d88adb419b24555ba5db844a3987fd01c8b2d3ac5264813e849a5c9a5",
+        "tests/smoke/gateway-preflight.test.mjs@sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
         "tests/smoke/gateway-preflight.test.mjs@sha256:8108361423fc5d3b7b1de35ea0a207f5b34b0dcbb5b30e4c23567f9647c80d59",
         "tests/smoke/gateway-preflight.test.mjs@sha256:87270f575aa4cbe710ea22d56f2b1f338c06416b7e593a01d989eb82528e4788",
         "tests/smoke/gateway-preflight.test.mjs@sha256:c09c4684af5691938f961a0d44248712467681cf07dbb1c96eb801bc5773fc4a",
@@ -247290,6 +248974,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
         "tests/tasks/TASK-093/lifecycle-trace.test.mjs@sha256:1e069f1e46b4709f251a29e4c8528fafa0493d5ec76a9597078da1bc9a8f2771",
         "tests/tasks/TASK-093/lifecycle-trace.test.mjs@sha256:3c510d3ea6a7172683b6ca08791ccbdc808f2f56384128595688735f3c84cf5e",
+        "tests/tasks/TASK-107/planning-coverage-gate.test.mjs@sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
         "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
         "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
         "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
@@ -255745,6 +257430,30 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-107",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:stale-reference",
+            "audit:generated-parity",
+            "audit:changed",
+            "audit:task",
+            "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107: stale-reference/generated-parity/task pass; alignment warning due 51 covered graph warnings; changed warning due dirty generated graph",
+            "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+            "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+            "approval:user: proceed with SPRINT-024/TASK-107 implementation"
+          ],
+          "content_proof_refs": [
+            "sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-06-06-planning-block-2026-06-06-current-residual-drif.json",
           "verdict": "block",
           "profile": "planning",
@@ -259004,7 +260713,135 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": "src/build/writer.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+            ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-of-legacy-decision-.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-task-069-backend-batch-decision-appr.json",
+            ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+            ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-accepted-gate-remediation-retry-policy-into.json",
+            ".codewiki/builds/planning/2026-06-05-planned-approved-gate-remediation-retry-policy-i.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-for-superseding-gate-remediatio.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json",
+            ".codewiki/builds/planning/2026-06-05-superseding-planning-build-for-gate-remediation-.json",
+            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
+            ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+            ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+            ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+            ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+            ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v2.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+            ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+            ".codewiki/builds/implementation/2026-05-31-implemented-generated-semantic-execution-closure.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-closure-close-readiness.json",
+            ".codewiki/builds/implementation/2026-05-31-refined-semantic-execution-closure-task-scope.json",
+            ".codewiki/builds/implementation/2026-06-01-implemented-task-072-decision-to-roadmap-propaga.json",
+            ".codewiki/builds/implementation/2026-06-01-implemented-task-073-gateway-gate-terminology-an.json",
+            ".codewiki/builds/implementation/2026-06-02-expose-six-normal-codewiki-agent-workflow-tools-.json",
+            ".codewiki/builds/implementation/2026-06-02-implemented-production-ready-closure-gate-enforc.json",
+            ".codewiki/builds/implementation/2026-06-02-task-084-inventoried-legacy-closed-production-su.json",
+            ".codewiki/builds/implementation/2026-06-03-implemented-daemon-agency-foundation-source-cont.json",
+            ".codewiki/builds/implementation/2026-06-03-superseding-task-084-implementation-evidence-rec.json",
+            ".codewiki/builds/implementation/2026-06-04-finalized-task-089-deprecated-skill-source-clean.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v2.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close-v3.json",
+            ".codewiki/builds/implementation/2026-06-05-task-095-gate-remediation-retry-local-close.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-099-implementation-build-with-s.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -260861,23 +262698,76 @@
               "TASK-109"
             ],
             "runnable_task_ids": [
-              "TASK-107",
               "TASK-108",
               "TASK-109"
             ],
             "retryable_task_ids": [],
             "promotable_task_ids": [],
-            "waiting_task_ids": [],
+            "waiting_task_ids": [
+              "TASK-107"
+            ],
             "blocked_task_ids": [],
             "ambiguous_task_ids": [],
-            "blockers": [],
+            "blockers": [
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              },
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds src/policy/gate-policy.ts.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              },
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds TASK-107.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              }
+            ],
             "next_action": {
               "kind": "run",
               "loop": "implementation",
-              "summary": "Sprint SPRINT-024 has automation-ready task TASK-107.",
-              "command": "wiki_resume_context taskId=TASK-107",
+              "summary": "Sprint SPRINT-024 has automation-ready task TASK-108.",
+              "command": "wiki_resume_context taskId=TASK-108",
               "refs": [
-                ".codewiki/roadmap/tasks/TASK-107/context.json"
+                ".codewiki/roadmap/tasks/TASK-108/context.json"
               ],
               "trace_refs": [],
               "gate_refs": [],
@@ -260895,6 +262785,8 @@
               "tests/smoke/gateway-preflight.test.mjs",
               ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
               ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
               ".codewiki/roadmap/tasks/TASK-108/context.json",
               ".codewiki/kb/system/graph.md",
               "src/state/graph.ts",
@@ -261197,13 +263089,13 @@
             "task_id": "TASK-107",
             "title": "Enforce planning-gate decision coverage",
             "status": "in_progress",
-            "state": "runnable",
-            "runnable": true,
+            "state": "waiting",
+            "runnable": false,
             "retryable": false,
             "promotable": false,
-            "safe_to_schedule": true,
-            "generated_at": "2026-06-06T10:42:43.632Z",
-            "expires_at": "2026-06-06T12:42:43.632Z",
+            "safe_to_schedule": false,
+            "generated_at": "2026-06-06T11:06:55.663Z",
+            "expires_at": "2026-06-06T13:06:55.663Z",
             "sprint_ids": [
               "SPRINT-024"
             ],
@@ -261217,7 +263109,9 @@
               "src/policy/gate-policy.ts",
               "tests/smoke/gateway-preflight.test.mjs",
               ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
-              ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json"
+              ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+              ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
             ],
             "candidate_files": {
               "spec_paths": [
@@ -261261,7 +263155,9 @@
             "lease_policy": {
               "requires_scoped_write_lease": true,
               "worktree_strategy": "role-worktree",
-              "active_lease_ids": [],
+              "active_lease_ids": [
+                "CLAIM-375"
+              ],
               "waiter_ids": []
             },
             "context_boundary": {
@@ -261277,40 +263173,107 @@
               "planning": [
                 ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
               ],
-              "implementation": []
+              "implementation": [
+                ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+              ]
             },
             "validation_refs": {
-              "pass": [],
+              "pass": [
+                ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+              ],
               "fail": [],
               "block": []
             },
             "trace_refs": [
               ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
-              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
             ],
-            "gate_refs": [],
-            "git_refs": [],
+            "gate_refs": [
+              ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+            ],
+            "git_refs": [
+              "worktree_digest:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+            ],
             "model_policy": {
               "risk": "medium",
               "approval_refs": [],
               "notes": []
             },
-            "blockers": [],
+            "blockers": [
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              },
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds src/policy/gate-policy.ts.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              },
+              {
+                "kind": "active_lease",
+                "severity": "medium",
+                "summary": "Scoped lease CLAIM-375 holds TASK-107.",
+                "refs": [
+                  "CLAIM-375",
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "lease_ids": [
+                  "CLAIM-375"
+                ],
+                "branch_refs": [
+                  "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+                ],
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+                "retryable": true
+              }
+            ],
             "next_action": {
-              "kind": "run",
-              "loop": "implementation",
-              "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-              "command": "wiki_resume_context taskId=TASK-107",
+              "kind": "wait",
+              "loop": "observe",
+              "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+              "command": "wiki_artifact_status action=wait taskId=TASK-107",
               "refs": [
-                ".codewiki/roadmap/tasks/TASK-107/context.json"
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
               ],
               "trace_refs": [
                 ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
-                ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+                ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+                ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
               ],
-              "gate_refs": [],
-              "git_refs": [],
-              "safe_to_schedule": true
+              "gate_refs": [
+                ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+              ],
+              "git_refs": [
+                "worktree_digest:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+              ],
+              "safe_to_schedule": false
             }
           }
         },
@@ -261350,8 +263313,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T10:42:43.632Z",
-            "expires_at": "2026-06-06T12:42:43.632Z",
+            "generated_at": "2026-06-06T11:06:55.663Z",
+            "expires_at": "2026-06-06T13:06:55.663Z",
             "sprint_ids": [
               "SPRINT-024"
             ],
@@ -261500,8 +263463,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T10:42:43.632Z",
-            "expires_at": "2026-06-06T12:42:43.632Z",
+            "generated_at": "2026-06-06T11:06:55.663Z",
+            "expires_at": "2026-06-06T13:06:55.663Z",
             "sprint_ids": [
               "SPRINT-024"
             ],
@@ -261617,8 +263580,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T10:42:43.632Z",
-      "expires_at": "2026-06-06T12:42:43.632Z",
+      "generated_at": "2026-06-06T11:06:55.663Z",
+      "expires_at": "2026-06-06T13:06:55.663Z",
       "state": "runnable",
       "tasks": {
         "TASK-107": {
@@ -261628,13 +263591,13 @@
           "task_id": "TASK-107",
           "title": "Enforce planning-gate decision coverage",
           "status": "in_progress",
-          "state": "runnable",
-          "runnable": true,
+          "state": "waiting",
+          "runnable": false,
           "retryable": false,
           "promotable": false,
-          "safe_to_schedule": true,
-          "generated_at": "2026-06-06T10:42:43.632Z",
-          "expires_at": "2026-06-06T12:42:43.632Z",
+          "safe_to_schedule": false,
+          "generated_at": "2026-06-06T11:06:55.663Z",
+          "expires_at": "2026-06-06T13:06:55.663Z",
           "sprint_ids": [
             "SPRINT-024"
           ],
@@ -261648,7 +263611,9 @@
             "src/policy/gate-policy.ts",
             "tests/smoke/gateway-preflight.test.mjs",
             ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
-            ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json"
+            ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
           ],
           "candidate_files": {
             "spec_paths": [
@@ -261692,7 +263657,9 @@
           "lease_policy": {
             "requires_scoped_write_lease": true,
             "worktree_strategy": "role-worktree",
-            "active_lease_ids": [],
+            "active_lease_ids": [
+              "CLAIM-375"
+            ],
             "waiter_ids": []
           },
           "context_boundary": {
@@ -261708,40 +263675,107 @@
             "planning": [
               ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
             ],
-            "implementation": []
+            "implementation": [
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+            ]
           },
           "validation_refs": {
-            "pass": [],
+            "pass": [
+              ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+            ],
             "fail": [],
             "block": []
           },
           "trace_refs": [
             ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
-            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
           ],
-          "gate_refs": [],
-          "git_refs": [],
+          "gate_refs": [
+            ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+          ],
+          "git_refs": [
+            "worktree_digest:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+          ],
           "model_policy": {
             "risk": "medium",
             "approval_refs": [],
             "notes": []
           },
-          "blockers": [],
+          "blockers": [
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            },
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds src/policy/gate-policy.ts.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            },
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds TASK-107.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            }
+          ],
           "next_action": {
-            "kind": "run",
-            "loop": "implementation",
-            "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-            "command": "wiki_resume_context taskId=TASK-107",
+            "kind": "wait",
+            "loop": "observe",
+            "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+            "command": "wiki_artifact_status action=wait taskId=TASK-107",
             "refs": [
-              ".codewiki/roadmap/tasks/TASK-107/context.json"
+              "CLAIM-375",
+              "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
             ],
             "trace_refs": [
               ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
-              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+              ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
             ],
-            "gate_refs": [],
-            "git_refs": [],
-            "safe_to_schedule": true
+            "gate_refs": [
+              ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+            ],
+            "git_refs": [
+              "worktree_digest:sha256:6e5931429883c3bbaa31e78d1196e2c1b2ec84d1795b90ec9e18d16cb6210bd1"
+            ],
+            "safe_to_schedule": false
           }
         },
         "TASK-108": {
@@ -261756,8 +263790,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T10:42:43.632Z",
-          "expires_at": "2026-06-06T12:42:43.632Z",
+          "generated_at": "2026-06-06T11:06:55.663Z",
+          "expires_at": "2026-06-06T13:06:55.663Z",
           "sprint_ids": [
             "SPRINT-024"
           ],
@@ -261883,8 +263917,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T10:42:43.632Z",
-          "expires_at": "2026-06-06T12:42:43.632Z",
+          "generated_at": "2026-06-06T11:06:55.663Z",
+          "expires_at": "2026-06-06T13:06:55.663Z",
           "sprint_ids": [
             "SPRINT-024"
           ],
@@ -262771,23 +264805,76 @@
             "TASK-109"
           ],
           "runnable_task_ids": [
-            "TASK-107",
             "TASK-108",
             "TASK-109"
           ],
           "retryable_task_ids": [],
           "promotable_task_ids": [],
-          "waiting_task_ids": [],
+          "waiting_task_ids": [
+            "TASK-107"
+          ],
           "blocked_task_ids": [],
           "ambiguous_task_ids": [],
-          "blockers": [],
+          "blockers": [
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds src/gateway/report.ts.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            },
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds src/policy/gate-policy.ts.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            },
+            {
+              "kind": "active_lease",
+              "severity": "medium",
+              "summary": "Scoped lease CLAIM-375 holds TASK-107.",
+              "refs": [
+                "CLAIM-375",
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "lease_ids": [
+                "CLAIM-375"
+              ],
+              "branch_refs": [
+                "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
+              ],
+              "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing.",
+              "retryable": true
+            }
+          ],
           "next_action": {
             "kind": "run",
             "loop": "implementation",
-            "summary": "Sprint SPRINT-024 has automation-ready task TASK-107.",
-            "command": "wiki_resume_context taskId=TASK-107",
+            "summary": "Sprint SPRINT-024 has automation-ready task TASK-108.",
+            "command": "wiki_resume_context taskId=TASK-108",
             "refs": [
-              ".codewiki/roadmap/tasks/TASK-107/context.json"
+              ".codewiki/roadmap/tasks/TASK-108/context.json"
             ],
             "trace_refs": [],
             "gate_refs": [],
@@ -262805,6 +264892,8 @@
             "tests/smoke/gateway-preflight.test.mjs",
             ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
             ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+            ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
             ".codewiki/roadmap/tasks/TASK-108/context.json",
             ".codewiki/kb/system/graph.md",
             "src/state/graph.ts",
@@ -262822,24 +264911,27 @@
         }
       },
       "runnable_task_ids": [
-        "TASK-107",
         "TASK-108",
         "TASK-109"
       ],
       "retryable_task_ids": [],
       "promotable_task_ids": [],
-      "waiting_task_ids": [],
+      "waiting_task_ids": [
+        "TASK-107"
+      ],
       "blocked_task_ids": [],
       "ambiguous_task_ids": [],
-      "selected_task_id": "TASK-107",
-      "stop_reasons": [],
+      "selected_task_id": "TASK-108",
+      "stop_reasons": [
+        "active_lease"
+      ],
       "next_action": {
         "kind": "run",
         "loop": "implementation",
-        "summary": "TASK-107 is runnable from accepted source refs and scoped leases are available.",
-        "command": "wiki_resume_context taskId=TASK-107",
+        "summary": "TASK-108 is runnable from accepted source refs and scoped leases are available.",
+        "command": "wiki_resume_context taskId=TASK-108",
         "refs": [
-          ".codewiki/roadmap/tasks/TASK-107/context.json"
+          ".codewiki/roadmap/tasks/TASK-108/context.json"
         ],
         "trace_refs": [
           ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
@@ -262860,6 +264952,8 @@
         "tests/smoke/gateway-preflight.test.mjs",
         ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
         ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+        ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+        ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
         ".codewiki/roadmap/tasks/TASK-108/context.json",
         ".codewiki/kb/system/graph.md",
         "src/state/graph.ts",
@@ -262953,7 +265047,9 @@
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-375"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -263208,6 +265304,7 @@
             ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
             ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
             ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
             ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json"
@@ -263462,6 +265559,7 @@
             ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
             ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
             ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+            ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
             ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
@@ -264931,6 +267029,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-107",
+          "build_path": ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-107",
+          "commit_sha": "",
+          "digest": "sha256:d5b6ba61c206ce98686c6439fa5dd2ac78e8004507a5cc1fca6559b9d0285a53",
+          "restore_command": "/wiki-restore TASK-107",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-099",
           "build_path": ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-099",
@@ -265041,7 +267149,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 148,
+        "ledger_count": 149,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -265180,6 +267288,7 @@
           "refs/codewiki/archive/task/TASK-104",
           "refs/codewiki/archive/task/TASK-101",
           "refs/codewiki/archive/task/TASK-106",
+          "refs/codewiki/archive/task/TASK-107",
           "refs/codewiki/archive/task/TASK-099",
           "refs/codewiki/archive/task/TASK-105",
           "refs/codewiki/archive/task/TASK-100",
@@ -265330,6 +267439,7 @@
           ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
           ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+          ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
@@ -265477,6 +267587,7 @@
           ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
           ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+          ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
           ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
           ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json"
@@ -266171,7 +268282,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T10:42:43.419Z",
+      "generated_at": "2026-06-06T11:06:55.426Z",
       "counts": {
         "large-doc": 4,
         "roadmap-missing-code-path": 3,
@@ -266488,7 +268599,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T10:42:43Z",
+      "generated_at": "2026-06-06T11:06:55Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -268468,7 +270579,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T10:42:43Z",
+      "generated_at": "2026-06-06T11:06:55Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -268651,7 +270762,9 @@
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-375"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -268906,6 +271019,7 @@
               ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
               ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
               ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
               ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json"
@@ -269160,6 +271274,7 @@
               ".codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
               ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json",
               ".codewiki/builds/implementation/2026-06-06-implemented-config-derived-agency-policy-in-prom.json",
+              ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json",
               ".codewiki/builds/implementation/2026-06-06-implemented-residual-issue-coverage-enforcement-.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
@@ -269257,7 +271372,7 @@
       },
       "direction": [
         "Lint warning (legacy-decision-build-decision-table-deferred) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=sprint, approval=sprint, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 40/40.",
@@ -273482,7 +275597,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T10:42:43Z",
+        "generated_at": "2026-06-06T11:06:55Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -273537,12 +275652,16 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T10:42:43Z",
+            "checked_at": "2026-06-06T11:06:55Z",
             "revision": {
               "git": {
-                "head": "decd05fc7819bbddb2c36e3a8cac945f666ac451",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "bb5dec51957a790640a04001a1429a276a121fd5",
+                "dirty": true,
+                "dirty_paths": [
+                  "src/build/writer.ts",
+                  "src/gateway/report.ts",
+                  "tests/smoke/gateway-preflight.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -273802,13 +275921,13 @@
               },
               "spec_digest": "25812a3290b55d02f9cf0c3bc61f73992f0c00b22a8499bf4cdf118cfc21060a",
               "task_digest": "f9c823b497211bf28d5d4325759344ff3c3e93f2f8498c92c8f24bcee4a7f70c",
-              "code_digest": "303b3084132ea07bf514773d095041177995a41ded14cdbb3e05d4e35fdd8226",
-              "digest": "747d0345fe0d7a1bd3aed26586d9e9a3c5b7794246ba018d5971bddf76235c98"
+              "code_digest": "d3c23bf1c81bd527314fb4437d142ed691d4c6ab3995fd9d9601ed337be70556",
+              "digest": "4345a48e6cfcb33c4538687c07d95e61e348d409c9c61ac09dd0da34c284fdc7"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T10:42:43Z",
+              "checked_at": "2026-06-06T11:06:55Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -274341,12 +276460,16 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T10:42:43Z",
+            "checked_at": "2026-06-06T11:06:55Z",
             "revision": {
               "git": {
-                "head": "decd05fc7819bbddb2c36e3a8cac945f666ac451",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "bb5dec51957a790640a04001a1429a276a121fd5",
+                "dirty": true,
+                "dirty_paths": [
+                  "src/build/writer.ts",
+                  "src/gateway/report.ts",
+                  "tests/smoke/gateway-preflight.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -274590,13 +276713,13 @@
               },
               "spec_digest": "6a165ca936821e99f2024ff9434c04091379c774b75bbeb582733ca54f6866fa",
               "task_digest": "f9c823b497211bf28d5d4325759344ff3c3e93f2f8498c92c8f24bcee4a7f70c",
-              "code_digest": "303b3084132ea07bf514773d095041177995a41ded14cdbb3e05d4e35fdd8226",
-              "digest": "4a0036f8804c29a19573d6aae40c0e6048cd37c49d765ea869f0d848cea39c0b"
+              "code_digest": "d3c23bf1c81bd527314fb4437d142ed691d4c6ab3995fd9d9601ed337be70556",
+              "digest": "793ff6b8d4ac2db0e81eef1e6c4cf2e6798e1b5f4fb8904831765ae8bd616fb9"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T10:42:43Z",
+              "checked_at": "2026-06-06T11:06:55Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -275107,12 +277230,16 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T10:42:43Z",
+            "checked_at": "2026-06-06T11:06:55Z",
             "revision": {
               "git": {
-                "head": "decd05fc7819bbddb2c36e3a8cac945f666ac451",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "bb5dec51957a790640a04001a1429a276a121fd5",
+                "dirty": true,
+                "dirty_paths": [
+                  "src/build/writer.ts",
+                  "src/gateway/report.ts",
+                  "tests/smoke/gateway-preflight.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -275372,13 +277499,13 @@
               },
               "spec_digest": "25812a3290b55d02f9cf0c3bc61f73992f0c00b22a8499bf4cdf118cfc21060a",
               "task_digest": "f9c823b497211bf28d5d4325759344ff3c3e93f2f8498c92c8f24bcee4a7f70c",
-              "code_digest": "303b3084132ea07bf514773d095041177995a41ded14cdbb3e05d4e35fdd8226",
-              "digest": "747d0345fe0d7a1bd3aed26586d9e9a3c5b7794246ba018d5971bddf76235c98"
+              "code_digest": "d3c23bf1c81bd527314fb4437d142ed691d4c6ab3995fd9d9601ed337be70556",
+              "digest": "4345a48e6cfcb33c4538687c07d95e61e348d409c9c61ac09dd0da34c284fdc7"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T10:42:43Z",
+              "checked_at": "2026-06-06T11:06:55Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -275912,23 +278039,200 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-06T10:42:43Z",
+        "generated_at": "2026-06-06T11:06:55Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-375",
+            "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+            "agent_name": "Wren",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement planning-gate coverage checks and tests.",
+            "task_id": "TASK-107",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+              "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "code",
+                "path": "src/gateway/report.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/policy/gate-policy.ts"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              },
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-107"
+              }
+            ],
+            "created_at": "2026-06-06T10:45:51Z",
+            "updated_at": "2026-06-06T10:45:51Z",
+            "expires_at": "2026-06-06T12:45:51.192Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/gateway/report.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/policy/gate-policy.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-107"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-375",
+                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                "agent_name": "Wren",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-107",
+                "summary": "Implement planning-gate coverage checks and tests.",
+                "expires_at": "2026-06-06T12:45:51.192Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "branch": "codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
+                  "notes": "factory=role-worktree; task=TASK-107; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-375 release or validated publisher/patch ref for codewiki/TASK-107/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,

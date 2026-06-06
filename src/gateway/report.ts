@@ -803,6 +803,59 @@ function planningDecisionPropagationGaps(
 	return unique(gaps);
 }
 
+function planningEvidenceText(value: unknown): string {
+	if (!value) return "";
+	if (typeof value === "string") return value.trim();
+	if (Array.isArray(value)) return value.map(planningEvidenceText).join("\n");
+	if (typeof value === "object") {
+		return Object.values(value as Record<string, unknown>)
+			.map(planningEvidenceText)
+			.filter(Boolean)
+			.join("\n");
+	}
+	return String(value).trim();
+}
+
+function planningHasRoadmapReconciliationEvidence(planning: any): boolean {
+	const explicit = [
+		planning?.roadmap_reconciliation,
+		planning?.roadmapReconciliation,
+		planning?.planning?.roadmap_reconciliation,
+		planning?.decision_propagation?.roadmap_reconciliation,
+	]
+		.map(planningEvidenceText)
+		.filter(Boolean);
+	if (explicit.length > 0) return true;
+	const fallbackText = [
+		planning?.evidence_mapping,
+		planning?.acceptance_mapping,
+		planning?.task_changes,
+		planning?.roadmap_changes,
+		planning?.requirements,
+	]
+		.map(planningEvidenceText)
+		.join("\n")
+		.toLowerCase();
+	return /\b(existing|current|prior|previous)\b[\s\S]{0,80}\broadmap\b/.test(
+		fallbackText,
+	) || /\broadmap\b[\s\S]{0,80}\b(reconcil|replan|refin|split|reopen|cancel|supersed|reorder|rescop)/.test(
+		fallbackText,
+	);
+}
+
+function planningRoadmapReconciliationGaps(
+	planning: any,
+	profile: string,
+	planningPath = "",
+): string[] {
+	if (normalizeValidationGate(profile) !== "planning") return [];
+	if (String(planning?.kind || "") !== "planning_build") return [];
+	if (buildRefsByKind(planning, "decision").length === 0) return [];
+	return planningHasRoadmapReconciliationEvidence(planning)
+		? []
+		: [`${planningPath || "planning_build"}:roadmap_reconciliation:missing_evidence`];
+}
+
 function implementationPlanningPropagationGaps(
 	project: WikiProject,
 	build: any,
@@ -1933,6 +1986,8 @@ function inferValidationRouting(
 	const failureClass =
 		explicitClass ||
 		(joined.includes("decision_propagation") ||
+		joined.includes("roadmap_reconciliation") ||
+		joined.includes("roadmap reconciliation") ||
 		joined.includes("semantic_closure") ||
 		joined.includes("sprint_close") ||
 		joined.includes("residual_issue_coverage") ||
@@ -2055,6 +2110,11 @@ export function buildGatewayPreflight(
 		source.build,
 		profile,
 	);
+	const roadmapReconciliationGaps = planningRoadmapReconciliationGaps(
+		source.build,
+		profile,
+		source.source,
+	);
 	const semanticClosure = graphSemanticExecutionClosureForTask(
 		project,
 		input,
@@ -2137,6 +2197,7 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps,
 		...ambiguityGaps,
 		...decisionPropagationGaps,
+		...roadmapReconciliationGaps,
 		...semanticClosure.gaps,
 		...codeTestGaps,
 		...validationEvidenceGaps,
@@ -2165,6 +2226,7 @@ export function buildGatewayPreflight(
 		decision_mappings: decisionMappingGaps,
 		ambiguity: ambiguityGaps,
 		decision_propagation: decisionPropagationGaps,
+		roadmap_reconciliation: roadmapReconciliationGaps,
 		semantic_closure: semanticClosure.gaps,
 		semantic_closure_risks: semanticClosure.risks,
 		code_tests: codeTestGaps,
@@ -2205,6 +2267,12 @@ export function buildGatewayPreflight(
 			"high",
 			decisionPropagationGaps,
 			"Accepted decision rows or downstream planning questions are not durably resolved.",
+		),
+		...validationPreflightIssue(
+			"roadmap-reconciliation",
+			"high",
+			roadmapReconciliationGaps,
+			"Planning builds must record existing-roadmap reconciliation evidence before planning gate pass.",
 		),
 		...validationPreflightIssue(
 			"semantic-closure",
@@ -2302,6 +2370,9 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps.map((gap) => `decision_mapping:${gap}`),
 		...ambiguityGaps.map((gap) => `ambiguous_intent:${gap}`),
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...roadmapReconciliationGaps.map(
+			(gap) => `roadmap_reconciliation:${gap}`,
+		),
 		...semanticClosure.gaps,
 		...semanticClosure.risks,
 		...codeTestGaps.map((gap) => `code_tests:${gap}`),
@@ -2343,6 +2414,7 @@ export function buildGatewayPreflight(
 			"decision row KB/defer mapping coverage",
 			"open semantic questions",
 			"decision-row propagation coverage",
+			"existing roadmap reconciliation evidence",
 			"semantic execution closure report",
 			"sprint-close cohort readiness",
 			"ship-ready content evidence",
@@ -2452,6 +2524,8 @@ export async function writeGatewayReport(
 		input.verdict === "pass" ? preflight.missing.stale_refs : [];
 	const decisionPropagationGaps =
 		input.verdict === "pass" ? preflight.missing.decision_propagation : [];
+	const roadmapReconciliationGaps =
+		input.verdict === "pass" ? preflight.missing.roadmap_reconciliation : [];
 	const codeTestGaps =
 		input.verdict === "pass" ? preflight.missing.code_tests : [];
 	const validationEvidenceGaps =
@@ -2487,6 +2561,9 @@ export async function writeGatewayReport(
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...roadmapReconciliationGaps.map(
+			(gap) => `roadmap_reconciliation:${gap}`,
+		),
 		...codeTestGaps.map((gap) => `code_tests:${gap}`),
 		...validationEvidenceGaps.map((gap) => `validation_evidence:${gap}`),
 		...taskCloseShipReadyGaps.map((gap) => `task_close_ship_ready:${gap}`),
@@ -2643,6 +2720,15 @@ export async function writeGatewayReport(
 					},
 				]
 			: [];
+	const roadmapReconciliationIssue =
+		roadmapReconciliationGaps.length > 0
+			? [
+					{
+						severity: "high",
+						summary: `Planning roadmap reconciliation evidence is missing: ${roadmapReconciliationGaps.join(", ")}.`,
+					},
+				]
+			: [];
 	const sprintCloseIssue =
 		sprintCloseGaps.length > 0
 			? [
@@ -2722,6 +2808,7 @@ export async function writeGatewayReport(
 		...commitReadinessIssue,
 		...traceabilityIssue,
 		...decisionPropagationIssue,
+		...roadmapReconciliationIssue,
 		...sprintCloseIssue,
 		...shipReadyIssue,
 		...auditIssue,
@@ -2787,6 +2874,9 @@ export async function writeGatewayReport(
 				? ["semantic_build_traceability"]
 				: []),
 			...(decisionPropagationGaps.length > 0 ? ["decision_propagation"] : []),
+			...(roadmapReconciliationGaps.length > 0
+				? ["roadmap_reconciliation"]
+				: []),
 			...(sprintCloseGaps.length > 0 ? ["sprint_close"] : []),
 			...(shipReadyGaps.length > 0 ? ["ship_ready"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
@@ -2845,6 +2935,11 @@ export async function writeGatewayReport(
 			...(decisionPropagationGaps.length > 0
 				? [
 						"Create or validate a superseding planning build that maps each accepted decision row/downstream question to knowledge-only, roadmap task, sprint metadata, or explicit deferred owner/trigger/rationale evidence.",
+					]
+				: []),
+			...(roadmapReconciliationGaps.length > 0
+				? [
+						"Create or validate a superseding planning build that records existing-roadmap reconciliation evidence before planning can pass.",
 					]
 				: []),
 			...(sprintCloseGaps.length > 0

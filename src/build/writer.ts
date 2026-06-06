@@ -238,6 +238,36 @@ function normalizeEvidenceMapping(input: CodewikiBuildToolInput) {
 		.filter((mapping) => mapping.criterion && mapping.evidence);
 }
 
+function normalizeRoadmapReconciliation(input: CodewikiBuildToolInput) {
+	const raw = (input as any).roadmap_reconciliation;
+	return (Array.isArray(raw) ? raw : [])
+		.map((entry) => {
+			if (typeof entry === "string") {
+				return {
+					status: "recorded",
+					evidence: entry.trim(),
+				};
+			}
+			return {
+				status: String(entry?.status || entry?.state || "recorded").trim(),
+				summary: String(entry?.summary || entry?.rationale || "").trim(),
+				evidence: String(entry?.evidence || entry?.proof || "").trim(),
+				task_ids: trimList(entry?.task_ids),
+				sprint_ids: trimList(entry?.sprint_ids),
+				source_refs: trimList(entry?.source_refs),
+			};
+		})
+		.filter((entry) =>
+			Boolean(
+				entry.evidence ||
+					entry.summary ||
+					entry.task_ids?.length ||
+					entry.sprint_ids?.length ||
+					entry.source_refs?.length,
+			),
+		);
+}
+
 function buildCycleFields(
 	input: CodewikiBuildToolInput,
 	loop: string,
@@ -834,6 +864,7 @@ export async function writePlanningBuild(
 		candidate_code_paths: candidateCodePaths,
 		decision_row_resolutions: decisionRowResolutions,
 		downstream_question_resolutions: downstreamQuestionResolutions,
+		roadmap_reconciliation: normalizeRoadmapReconciliation(input),
 		acceptance_mapping: normalizeEvidenceMapping(input).length
 			? normalizeEvidenceMapping(input)
 			: (input.acceptance_mapping ?? []).filter(
