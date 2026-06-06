@@ -1,0 +1,550 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-06T22:56:15Z",
+  "source": "DT-2026-06-07-loop-source-of-truth-ownership; user aligned and said proceed.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-06T22:56:15.000Z",
+    "purge_after": "2026-08-05T22:56:15.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "KBO-REQ-000",
+      "text": "Decision compiler/gate must require semantic rows to map to KB/diagram updates or explicit no-KB/no-diagram-impact evidence.",
+      "source_refs": [
+        "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "KBO-REQ-001",
+      "text": "Planning compiler/gate must consume KB truth and route stale/contradictory/missing semantics back to decision rather than changing KB semantics.",
+      "source_refs": [
+        "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "KBO-REQ-002",
+      "text": "Implementation compiler/gate must limit KB writes to accepted non-semantic evidence/status and route new semantic meaning back to decision.",
+      "source_refs": [
+        "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "KBO-REQ-003",
+      "text": "Loop source-of-truth rules must remain generic product behavior with no CodeWiki-repo dogfood special cases.",
+      "source_refs": [
+        "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted loop source-of-truth ownership decision: decision owns KB, planning owns roadmap, implementation owns code/evidence.",
+  "decision_mode": "accepted",
+  "decision_table": {
+    "schema_version": 1,
+    "id": "ACCEPTED-LOOP-SOURCE-OF-TRUTH-OWNERSHIP",
+    "title": "Accepted loop source-of-truth ownership decision: decision owns KB, planning owns roadmap, implementation owns code/evidence.",
+    "status": "approved",
+    "rows": [
+      {
+        "id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+        "question": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+        "state_delta": {
+          "current": "KB update ownership can blur across decision, planning, and implementation loops.",
+          "desired": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build."
+        },
+        "proposed_change": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build.",
+        "rationale": "The decision boundary defines semantic truth; planning should consume intended state instead of inventing it.",
+        "impact": {
+          "system": [
+            "decision",
+            "knowledge",
+            "diagrams",
+            "builds",
+            "gateway"
+          ]
+        },
+        "risk": {
+          "level": "high"
+        },
+        "options": [],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+        "question": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+        "state_delta": {
+          "current": "Planning can be tempted to adjust KB semantics while decomposing work.",
+          "desired": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB."
+        },
+        "proposed_change": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB.",
+        "rationale": "Planning is the source of work, not the source of semantic truth.",
+        "impact": {
+          "system": [
+            "planning",
+            "roadmap",
+            "gateway",
+            "knowledge"
+          ]
+        },
+        "risk": {
+          "level": "high"
+        },
+        "options": [],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+        "question": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+        "state_delta": {
+          "current": "Implementation may discover semantic drift while changing code/tests.",
+          "desired": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision."
+        },
+        "proposed_change": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision.",
+        "rationale": "Keeps code execution from silently changing approved intent.",
+        "impact": {
+          "system": [
+            "implementation",
+            "code",
+            "tests",
+            "knowledge",
+            "validation"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+        "question": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+        "state_delta": {
+          "current": "Gates may not enforce KB/roadmap/code source-of-truth ownership consistently.",
+          "desired": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift."
+        },
+        "proposed_change": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift.",
+        "rationale": "Gate checks make loop ownership durable and automated.",
+        "impact": {
+          "system": [
+            "gateway",
+            "decision",
+            "planning",
+            "implementation",
+            "knowledge",
+            "roadmap"
+          ]
+        },
+        "risk": {
+          "level": "high"
+        },
+        "options": [],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+        "question": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+        "state_delta": {
+          "current": "Self-hosting/dogfood context can tempt repository-specific source behavior for KB/roadmap ownership.",
+          "desired": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence."
+        },
+        "proposed_change": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence.",
+        "rationale": "CodeWiki must remain distributable as a generic Pi extension.",
+        "impact": {
+          "system": [
+            "product",
+            "system",
+            "runtime",
+            "validation"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence.",
+        "validated_outcome": ""
+      }
+    ],
+    "created_at": "2026-06-06T22:56:15Z",
+    "updated_at": "2026-06-06T22:56:15Z"
+  },
+  "approved_decision_rows": [
+    "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+    "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+    "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+    "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+    "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE"
+  ],
+  "approved_rows": [
+    {
+      "id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "question": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "state_delta": {
+        "current": "KB update ownership can blur across decision, planning, and implementation loops.",
+        "desired": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build."
+      },
+      "proposed_change": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build.",
+      "rationale": "The decision boundary defines semantic truth; planning should consume intended state instead of inventing it.",
+      "impact": {
+        "system": [
+          "decision",
+          "knowledge",
+          "diagrams",
+          "builds",
+          "gateway"
+        ]
+      },
+      "risk": {
+        "level": "high"
+      },
+      "options": [],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Decision loop owns semantic KB updates: it reads canonical documentation to establish current project state, captures approved current→desired delta, updates .codewiki/kb/** and diagrams for accepted intended state, and compiles row_to_kb_mappings in the decision_build.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "question": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "state_delta": {
+        "current": "Planning can be tempted to adjust KB semantics while decomposing work.",
+        "desired": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB."
+      },
+      "proposed_change": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB.",
+      "rationale": "Planning is the source of work, not the source of semantic truth.",
+      "impact": {
+        "system": [
+          "planning",
+          "roadmap",
+          "gateway",
+          "knowledge"
+        ]
+      },
+      "risk": {
+        "level": "high"
+      },
+      "options": [],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Planning loop owns roadmap/sprint/task/work-unit decomposition, ordering, and coverage. If KB truth is stale, contradictory, or insufficient for decomposition, planning routes back to decision instead of silently changing semantic KB.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "question": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "state_delta": {
+        "current": "Implementation may discover semantic drift while changing code/tests.",
+        "desired": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision."
+      },
+      "proposed_change": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision.",
+      "rationale": "Keeps code execution from silently changing approved intent.",
+      "impact": {
+        "system": [
+          "implementation",
+          "code",
+          "tests",
+          "knowledge",
+          "validation"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Implementation loop owns code/tests/evidence and may only write non-semantic KB evidence/status fields already covered by accepted decisions. New semantic meaning routes back to decision.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "question": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "state_delta": {
+        "current": "Gates may not enforce KB/roadmap/code source-of-truth ownership consistently.",
+        "desired": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift."
+      },
+      "proposed_change": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift.",
+      "rationale": "Gate checks make loop ownership durable and automated.",
+      "impact": {
+        "system": [
+          "gateway",
+          "decision",
+          "planning",
+          "implementation",
+          "knowledge",
+          "roadmap"
+        ]
+      },
+      "risk": {
+        "level": "high"
+      },
+      "options": [],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Decision gate blocks approved semantic rows without KB mapping or explicit no-kb-impact evidence; planning gate blocks executable accepted rows without roadmap ownership; task-close blocks code changes that leave KB/diagram/source-contract drift.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "question": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "state_delta": {
+        "current": "Self-hosting/dogfood context can tempt repository-specific source behavior for KB/roadmap ownership.",
+        "desired": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence."
+      },
+      "proposed_change": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence.",
+      "rationale": "CodeWiki must remain distributable as a generic Pi extension.",
+      "impact": {
+        "system": [
+          "product",
+          "system",
+          "runtime",
+          "validation"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Loop ownership rules remain generic product behavior for all CodeWiki projects; repository-specific dogfood context appears only as ordinary config, KB, roadmap, runtime, and validation evidence.",
+      "validated_outcome": ""
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Decision loop owns semantic KB/diagram truth updates and row-to-KB mappings."
+    },
+    {
+      "id": "D2",
+      "summary": "Planning loop owns roadmap/sprint/task/work-unit decomposition and routes stale semantic truth back to decision."
+    },
+    {
+      "id": "D3",
+      "summary": "Implementation loop owns source/tests/evidence and routes new semantic meaning back to decision."
+    },
+    {
+      "id": "D4",
+      "summary": "Gates enforce loop-specific source-of-truth ownership."
+    },
+    {
+      "id": "D5",
+      "summary": "No dogfood/self-hosting repository special cases in CodeWiki source."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/flows/decision-to-planning.md",
+    ".codewiki/kb/system/roadmap.md",
+    ".codewiki/kb/system/validation-gateway.md"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated decision-to-planning flow with loop-specific source-of-truth ownership and decision-owned semantic KB clause.",
+      "deferred": false
+    },
+    {
+      "row_id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated roadmap and flow docs to state planning owns work decomposition and routes stale semantic truth back to decision.",
+      "deferred": false
+    },
+    {
+      "row_id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated flow docs to state implementation owns source/tests/evidence and routes new semantic meaning to decision.",
+      "deferred": false
+    },
+    {
+      "row_id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated gateway rules to block missing decision KB mapping, missing planning roadmap ownership, and unowned implementation drift.",
+      "deferred": false
+    },
+    {
+      "row_id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Docs describe generic loop ownership mechanisms rather than repository-specific dogfood behavior.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "Semantic KB ownership moves explicitly to decision loop.",
+      "Planning owns roadmap/work decomposition and cannot silently mutate semantic KB.",
+      "Implementation owns code/tests/evidence and routes semantic discoveries back to decision.",
+      "Gate rules enforce missing KB mapping, missing roadmap ownership, and unowned drift.",
+      "Generic extension behavior preserved for all projects."
+    ],
+    "no_product_impact": "Clarifies internal workflow ownership and gate behavior without changing user-facing commands directly.",
+    "downstream_planning_questions": []
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "Refine SPRINT-025/TASK-116 or add work so decision/planning/implementation gates enforce KBO source-of-truth ownership generically.",
+    "Ensure current PRM/DPA repair tasks do not introduce dogfood-specific source behavior.",
+    "After KBO planning passes, continue SPRINT-025 with TASK-114 unless KBO adds earlier blocking work."
+  ],
+  "assumptions": [
+    "User approved this model by saying alignment is reached and to proceed."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not add CodeWiki-repo-specific dogfood behavior.",
+    "Do not move roadmap decomposition into decision loop.",
+    "Do not let planning or implementation silently change semantic KB truth."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

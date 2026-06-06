@@ -49,6 +49,8 @@ summary: Approved semantic rows become KB evidence, decision builds, and validat
 
 Planning must not guess at unapproved requirements. If a decision row is executable, the planning loop must map it to a roadmap task or sprint id. If it is knowledge-only, rejected, non-executable, deferred, superseded, or already implemented, the durable KB, trace, roadmap, or gate evidence must say so with owner refs and triggers where relevant. Roadmap `open=0` is not proof that accepted target state is complete.
 
+Source-of-truth ownership is loop-specific. The decision loop updates semantic KB and diagram truth for approved intent. The planning loop updates roadmap, sprint, task, work-unit, dependency, and worker-profile truth. The implementation loop updates source code, tests, implementation evidence, validation refs, and content proof. Planning or implementation must route back to decision when they discover stale, contradictory, or missing semantic KB rather than silently changing approved intent.
+
 ## Related docs
 
 - [Compilers](../compilers.md)

@@ -143,6 +143,9 @@ Publication is an implementation-stage concern by default. If CodeWiki config en
 ## Rules
 
 - The gateway validates loop evidence; it does not mutate canonical truth.
+- Decision gate blocks approved semantic rows without row-to-KB/diagram mapping or explicit no-KB/no-diagram-impact rationale.
+- Planning gate blocks executable accepted rows without durable roadmap, sprint, or work-unit ownership, even when the work is blocked or ordered last.
+- Implementation/task-close criteria block code changes that leave KB, diagram, source-contract, or file-structure drift without durable residual issue coverage.
 - Gate pass is the semantic promotion boundary.
 - Gate fail/block is a remediation boundary, not a fourth loop and not necessarily a user-stop.
 - Compiler output alone cannot promote a loop.

@@ -24,6 +24,8 @@ The planning loop owns roadmap alignment. It consumes a decision-gateway-passed 
 
 A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Approved executable decision rows must map to roadmap task ids or sprint ids in the same planning loop; roadmap order, task status, dependencies, blockers, and sprint metadata encode sequencing. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly. Tasks are implementation-ready only after planning validation passes or a documented mechanical/runtime exemption applies.
 
+Planning owns work decomposition, not semantic truth. When accepted KB is stale, contradictory, or insufficient to decompose work safely, planning records the blocker and routes back to the decision loop. Planning must not update product/system KB to invent or alter approved intent; semantic KB changes require a decision build with row-to-KB mapping or explicit no-KB-impact evidence.
+
 ## Progressive refinement
 
 When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking. When an interactive adapter is available, candidate tasks and sprint changes should be shown as row-level approval items before canonical roadmap mutation.

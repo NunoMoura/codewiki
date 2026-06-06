@@ -1,0 +1,843 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-06T22:58:29Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-20T22:58:29.000Z",
+    "purge_after": "2026-07-04T22:58:29.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "KBO-REQ-000",
+      "text": "Decision compiler/gate must require semantic rows to map to KB/diagram updates or explicit no-KB/no-diagram-impact evidence.",
+      "source_refs": [
+        "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "KBO-REQ-001",
+      "text": "Planning compiler/gate must consume KB truth and route stale/contradictory/missing semantics back to decision rather than changing KB semantics.",
+      "source_refs": [
+        "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "KBO-REQ-002",
+      "text": "Implementation compiler/gate must limit KB writes to accepted non-semantic evidence/status and route new semantic meaning back to decision.",
+      "source_refs": [
+        "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "KBO-REQ-003",
+      "text": "Loop source-of-truth rules must remain generic product behavior with no CodeWiki-repo dogfood special cases.",
+      "source_refs": [
+        "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Every KBO row has roadmap coverage.",
+      "evidence": "decision_row_resolutions maps KBO-000..004 to TASK-115, TASK-116, and TASK-120.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "KB semantic ownership updated in decision loop.",
+      "evidence": "KBO decision build row_to_kb_mappings cite updated KB docs; planning only consumes and materializes work.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No dogfood source special-case.",
+      "evidence": "TASK-115/TASK-120 non-goals and KBO decision non_goals forbid repository-specific product behavior.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan accepted KBO loop source-of-truth ownership decision into SPRINT-025 gate/source-of-truth repair work.",
+  "task_ids": [
+    "TASK-115",
+    "TASK-116",
+    "TASK-120"
+  ],
+  "task_changes": [
+    "TASK-115 refined to include loop source-of-truth ownership gate contracts and KBO requirements.",
+    "SPRINT-025 scope updated to include KBO decision build and remaining TASK-114..116 repair tasks.",
+    "TASK-116 remains owner for planning materialization/roadmap ownership strictness.",
+    "TASK-120 remains owner for generic no-dogfood-special-case behavior in Pi/Git root migration."
+  ],
+  "roadmap_changes": [
+    "TASK-115 refined to include loop source-of-truth ownership gate contracts and KBO requirements.",
+    "SPRINT-025 scope updated to include KBO decision build and remaining TASK-114..116 repair tasks.",
+    "TASK-116 remains owner for planning materialization/roadmap ownership strictness.",
+    "TASK-120 remains owner for generic no-dogfood-special-case behavior in Pi/Git root migration."
+  ],
+  "tdd_plan": [
+    "TASK-115 tests should cover decision KB mapping, planning semantic route-back, implementation unowned drift, publication-under-implementation, and no fourth loop.",
+    "TASK-116 tests should cover executable accepted work materialization and reorder evidence."
+  ],
+  "candidate_test_files": [
+    "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+    "tests/tasks/TASK-116/planning-materialization-invariant.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/decision/**",
+    "src/planning/**",
+    "src/implementation/**",
+    "src/gateway/**",
+    "src/checks/**",
+    "src/policy/**",
+    "src/build/writer.ts",
+    "src/roadmap/store.ts"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 acceptance now requires decision gate/reporting to block approved semantic rows without KB/diagram mapping or no-impact rationale.",
+      "inferred": false
+    },
+    {
+      "row_id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 covers route-back for stale semantic KB; TASK-116 covers roadmap/work materialization and planning gate strictness.",
+      "inferred": false
+    },
+    {
+      "row_id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 acceptance covers implementation/task-close blocking or routing for unowned KB/diagram/source-contract drift.",
+      "inferred": false
+    },
+    {
+      "row_id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 owns gate evidence/source-of-truth contracts; TASK-116 owns planning roadmap materialization strictness.",
+      "inferred": false
+    },
+    {
+      "row_id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 non-goals forbid CodeWiki-repo-specific dogfood behavior in gate/source-of-truth contracts; TASK-120 carries same invariant into Pi/Git root migration.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "KBO-Q1",
+      "question": "Refine SPRINT-025/TASK-116 or add work so decision/planning/implementation gates enforce KBO source-of-truth ownership generically.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+      ],
+      "evidence": "TASK-115 refined for source-of-truth gate contracts; TASK-116 covers planning materialization strictness.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "KBO-Q2",
+      "question": "Ensure current PRM/DPA repair tasks do not introduce dogfood-specific source behavior.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+      ],
+      "evidence": "TASK-115 and TASK-120 non-goals explicitly forbid dogfood source special-cases.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "KBO-Q3",
+      "question": "After KBO planning passes, continue SPRINT-025 with TASK-114 unless KBO adds earlier blocking work.",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/config.json"
+      ],
+      "evidence": "KBO planning adds no new task before TASK-114; TASK-115/116 carry KBO work later in SPRINT-025 sequence.",
+      "inferred": false
+    }
+  ],
+  "decision_coverage": [
+    {
+      "id": "KBO-REQ-000",
+      "row_ids": [
+        "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "requirement_id": "KBO-REQ-000",
+      "requirement_ids": [
+        "KBO-REQ-000"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 refined acceptance",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-001",
+      "row_ids": [
+        "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "requirement_id": "KBO-REQ-001",
+      "requirement_ids": [
+        "KBO-REQ-001"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115/TASK-116 refined acceptance",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-002",
+      "row_ids": [
+        "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "requirement_id": "KBO-REQ-002",
+      "requirement_ids": [
+        "KBO-REQ-002"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 refined acceptance",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-003",
+      "row_ids": [
+        "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "requirement_id": "KBO-REQ-003",
+      "requirement_ids": [
+        "KBO-REQ-003"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115/TASK-120 non-goals",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "row_id": "KBO-000-DECISION-OWNS-SEMANTIC-KB",
+      "row_ids": [
+        "KBO-000-DECISION-OWNS-SEMANTIC-KB"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 acceptance now requires decision gate/reporting to block approved semantic rows without KB/diagram mapping or no-impact rationale.",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "row_id": "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS",
+      "row_ids": [
+        "KBO-001-PLANNING-OWNS-ROADMAP-NOT-SEMANTICS"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 covers route-back for stale semantic KB; TASK-116 covers roadmap/work materialization and planning gate strictness.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "row_id": "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE",
+      "row_ids": [
+        "KBO-002-IMPLEMENTATION-OWNS-CODE-EVIDENCE"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 acceptance covers implementation/task-close blocking or routing for unowned KB/diagram/source-contract drift.",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "row_id": "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP",
+      "row_ids": [
+        "KBO-003-GATES-ENFORCE-LOOP-OWNERSHIP"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 owns gate evidence/source-of-truth contracts; TASK-116 owns planning roadmap materialization strictness.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "row_id": "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE",
+      "row_ids": [
+        "KBO-004-GENERIC-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 non-goals forbid CodeWiki-repo-specific dogfood behavior in gate/source-of-truth contracts; TASK-120 carries same invariant into Pi/Git root migration.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-Q1",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "KBO-Q1",
+      "question": "Refine SPRINT-025/TASK-116 or add work so decision/planning/implementation gates enforce KBO source-of-truth ownership generically.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 refined for source-of-truth gate contracts; TASK-116 covers planning materialization strictness.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+      ],
+      "residuals": []
+    },
+    {
+      "id": "KBO-Q2",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "KBO-Q2",
+      "question": "Ensure current PRM/DPA repair tasks do not introduce dogfood-specific source behavior.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 and TASK-120 non-goals explicitly forbid dogfood source special-cases.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+      ],
+      "residuals": []
+    },
+    {
+      "id": "KBO-Q3",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "KBO-Q3",
+      "question": "After KBO planning passes, continue SPRINT-025 with TASK-114 unless KBO adds earlier blocking work.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "KBO planning adds no new task before TASK-114; TASK-115/116 carry KBO work later in SPRINT-025 sequence.",
+      "task_ids": [
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/config.json"
+      ],
+      "residuals": []
+    }
+  ],
+  "roadmap_reconciliation": [
+    {
+      "id": "KBO-REQ-000",
+      "row_ids": [],
+      "requirement_id": "KBO-REQ-000",
+      "requirement_ids": [
+        "KBO-REQ-000"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Existing TASK-115 gate-contract task was refined to include decision KB mapping enforcement.",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-001",
+      "row_ids": [],
+      "requirement_id": "KBO-REQ-001",
+      "requirement_ids": [
+        "KBO-REQ-001"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Existing SPRINT-025 repair tasks cover planning route-back and materialization strictness.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-002",
+      "row_ids": [],
+      "requirement_id": "KBO-REQ-002",
+      "requirement_ids": [
+        "KBO-REQ-002"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-115 now covers implementation/task-close unowned drift handling.",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "KBO-REQ-003",
+      "row_ids": [],
+      "requirement_id": "KBO-REQ-003",
+      "requirement_ids": [
+        "KBO-REQ-003"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "No dogfood special-case rule is represented as generic non-goals in current and future tasks.",
+      "task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-115",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Every KBO row has roadmap coverage.",
+      "evidence": "decision_row_resolutions maps KBO-000..004 to TASK-115, TASK-116, and TASK-120.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "KB semantic ownership updated in decision loop.",
+      "evidence": "KBO decision build row_to_kb_mappings cite updated KB docs; planning only consumes and materializes work.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No dogfood source special-case.",
+      "evidence": "TASK-115/TASK-120 non-goals and KBO decision non_goals forbid repository-specific product behavior.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "User approved KBO model and asked to proceed.",
+    "TASK-115 is the compatible existing task for loop gate/source-of-truth contracts; no new task needed before TASK-114."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not add CodeWiki-repo-specific dogfood behavior.",
+    "Do not move roadmap decomposition into decision loop.",
+    "Do not let planning or implementation silently change semantic KB truth."
+  ],
+  "risks": [
+    "TASK-115 scope expanded; still atomic because it owns one direct outcome: loop gate/source-of-truth contracts.",
+    "Future implementation must avoid breaking compatibility helper surfaces while adding stricter gate checks."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-115",
+      "TASK-116",
+      "TASK-120"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-115",
+      "TASK-116",
+      "TASK-120"
+    ],
+    "code": [
+      "src/decision/**",
+      "src/planning/**",
+      "src/implementation/**",
+      "src/gateway/**",
+      "src/checks/**",
+      "src/policy/**",
+      "src/build/writer.ts",
+      "src/roadmap/store.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "tests/tasks/TASK-116/planning-materialization-invariant.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
