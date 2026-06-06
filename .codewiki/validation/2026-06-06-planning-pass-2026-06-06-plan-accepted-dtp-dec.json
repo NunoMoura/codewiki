@@ -1,0 +1,305 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T10:42:19Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "pass",
+  "rationale": "Planning for accepted DTP decision passes after in-loop remediation. DTP-001..DTP-003 map to TASK-107, DTP-004 maps to TASK-108, DTP-005 maps to TASK-109 plus explicit deferred source-root waves under SPRINT-024. Planning considered existing roadmap state and corrected roadmap auto-reuse overmerge before passing.",
+  "checks": [
+    "wiki_plan created/refined TASK-107, TASK-108, TASK-109 and SPRINT-024: pass",
+    "planning build remediated unknown/missing DTP-005 and downstream question resolutions: pass",
+    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "planning preflight: ready",
+    "git diff dirty content digest: sha256:363c671eabe99746dd965873623bd35c737414aaf4e0d4f37a48991362ca9310"
+  ],
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Roadmap auto-reuse overmerged source-root tasks during planning; planning corrected by narrowing tasks and deferring remaining root waves with owner/trigger. TASK-107/TASK-108 should make this enforceable before more root tasks are created."
+    },
+    {
+      "severity": "medium",
+      "summary": "Remaining source-root migrations beyond decision root are deferred under SPRINT-024, not implemented yet."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "planning:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "medium",
+      "summary": "Roadmap auto-reuse overmerged source-root tasks during planning; planning corrected by narrowing tasks and deferring remaining root waves with owner/trigger. TASK-107/TASK-108 should make this enforceable before more root tasks are created.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "kind": "report-issue-2",
+      "severity": "medium",
+      "summary": "Remaining source-root migrations beyond decision root are deferred under SPRINT-024, not implemented yet.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "planning"
+      ],
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "planning:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "medium",
+      "summary": "Roadmap auto-reuse overmerged source-root tasks during planning; planning corrected by narrowing tasks and deferring remaining root waves with owner/trigger. TASK-107/TASK-108 should make this enforceable before more root tasks are created.",
+      "ref_count": 0
+    },
+    {
+      "id": "planning:report-issue-2:2",
+      "category": "report-issue-2",
+      "severity": "medium",
+      "summary": "Remaining source-root migrations beyond decision root are deferred under SPRINT-024, not implemented yet.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "planning",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed"
+  ],
+  "audit_reports": [
+    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views",
+    "decision pass .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-to.json",
+    "approval:user: approved DTP rows DTP-001..DTP-005 and migration-risk planning into SPRINT-024"
+  ],
+  "content_proof_refs": [
+    "sha256:363c671eabe99746dd965873623bd35c737414aaf4e0d4f37a48991362ca9310"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+      "Created/kept TASK-107 for planning-gate decision coverage enforcement.",
+      "Created TASK-108 for trace coverage and roadmap reconciliation graph support.",
+      "Created/kept TASK-109 for first atomic source-root migration: `src/change/**` -> `src/decision/**`.",
+      "Created SPRINT-024 as active cohort for DTP enforcement and source restructure reconciliation.",
+      "Corrected accidental auto-reuse: initial create merged unrelated source-root tasks into TASK-107/TASK-109; planning narrowed those tasks and recorded remaining roots as explicit deferrals with owner/trigger.",
+      "TASK-107",
+      "TASK-108",
+      "TASK-109",
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/state/lint.ts",
+      "src/state/reader.ts",
+      "src/telemetry/**",
+      "src/change/**",
+      "src/decision/**",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs",
+      "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+      "tests/tasks/TASK-108/trace-coverage-graph.test.mjs",
+      "tests/tasks/TASK-109/decision-root-migration.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dtp-dec.json",
+      "CodeWiki-Checks: wiki_plan created/refined TASK-107, TASK-108, TASK-109 and SPRINT-024: pass; planning build remediated unknown/missing DTP-005 and downstream question resolutions: pass; wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed: stale-reference/generated-parity pass; alignment warning due covered graph warnings; changed warning due generated views; npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; planning preflight: ready; git diff dirty content digest: sha256:363c671eabe99746dd965873623bd35c737414aaf4e0d4f37a48991362ca9310"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "src/state/graph.ts",
+      "src/state/lint.ts",
+      "src/state/reader.ts",
+      "src/telemetry/**",
+      "src/change/**",
+      "src/decision/**"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile",
+      "residual issue coverage"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": [],
+      "residual_issue_coverage": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: approved DTP rows DTP-001..DTP-005 and migration-risk planning into SPRINT-024"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    },
+    "residual_issue_coverage": {
+      "required": false,
+      "items": [],
+      "covered": [],
+      "gaps": [],
+      "coverage": []
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:363c671eabe99746dd965873623bd35c737414aaf4e0d4f37a48991362ca9310",
+    "clean": false,
+    "fresh_context": true,
+    "role": "validator"
+  }
+}

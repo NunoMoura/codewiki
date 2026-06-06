@@ -1,0 +1,54 @@
+{
+  "id": "TASK-108",
+  "title": "Add planning trace coverage graph support",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Add trace/read-model support so decision coverage and roadmap reconciliation states are queryable and auditable.",
+  "spec_paths": [
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/flows/decision-to-planning.md",
+    ".codewiki/kb/system/graph.md"
+  ],
+  "code_paths": [
+    "src/state/graph.ts",
+    "src/state/lint.ts",
+    "src/state/reader.ts",
+    "src/telemetry/**",
+    "tests/smoke/graph-lenses.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "trace-coverage",
+    "roadmap-reconciliation",
+    "DTP-004"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Trace/graph views expose decision coverage and roadmap reconciliation states for implemented, deferred, superseded, unmapped, and replanned work.",
+    "acceptance": [
+      "Planning build/trace readers preserve `decision_coverage` and `roadmap_reconciliation` evidence.",
+      "Graph or lint lens reports unmapped accepted decision rows/questions when no coverage exists.",
+      "Graph/lens distinguishes implemented, deferred, superseded, no-work, and active roadmap coverage.",
+      "Tests cover trace/read-model extraction and warning/finding output."
+    ],
+    "non_goals": [
+      "Do not migrate all source roots in this task.",
+      "Do not purge legacy builds or validation reports.",
+      "Do not implement planning-gate policy checks already owned by TASK-107."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs",
+      "targeted trace coverage test",
+      "wiki_gate audit profiles=alignment,generated-parity,changed task_id=<task>"
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}
