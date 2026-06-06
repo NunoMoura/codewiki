@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T12:05:11.554Z",
+  "generated_at": "2026-06-06T12:06:35.304Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -56208,106 +56208,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-377",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-377",
-      "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-      "agent_name": "Wren",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-      "expires_at": "2026-06-06T14:48:17.333Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-        "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "code",
-          "path": "src/state/graph.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/graph/lenses.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/graph/trace-projection.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/reader.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/lint.ts"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/trace-graph.md"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**",
-          "task_id": "TASK-108"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**",
-          "task_id": "TASK-108"
-        },
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-108"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/graph.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/graph.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/graph/lenses.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/graph/lenses.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/graph/trace-projection.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/graph/trace-projection.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/reader.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/reader.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/lint.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/lint.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/trace-graph.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/trace-graph.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-108",
-      "kind": "change_claim_scope",
-      "path": "TASK-108",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -180657,46 +180557,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-377",
-      "to": "task:TASK-108"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:src/state/graph.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:src/state/graph/lenses.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:src/state/graph/trace-projection.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:src/state/reader.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:src/state/lint.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:.codewiki/kb/system/trace-graph.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-377",
-      "to": "claim_scope:TASK-108"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -208600,7 +208460,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 36,
+            "item_count": 28,
             "badges": [
               {
                 "id": "open_tasks",
@@ -208627,7 +208487,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -208809,8 +208669,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6261,
-          "edges": 21035,
+          "nodes": 6253,
+          "edges": 21027,
           "open_tasks": 0,
           "validations": 399,
           "source_refs": 1532
@@ -208980,7 +208840,7 @@
               "label": "Work",
               "summary": "Planning, roadmap, sprint, task, and coordination state.",
               "state": "drift",
-              "item_count": 36,
+              "item_count": 28,
               "badges": [
                 {
                   "id": "open_tasks",
@@ -209007,7 +208867,7 @@
                 {
                   "id": "active_claims",
                   "label": "active claims",
-                  "count": 1
+                  "count": 0
                 }
               ],
               "hot_refs": [
@@ -210046,511 +209906,19 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 1,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/trace-graph.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph/lenses.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph/trace-projection.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/lint.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/reader.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
-          "active_claim_count": 1,
+          "active_claim_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
           "ready_waiter_count": 0,
-          "artifact_statuses": [
-            {
-              "artifact": {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/trace-graph.md"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/graph.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/graph/lenses.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/graph/trace-projection.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/lint.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "code",
-                "path": "src/state/reader.ts"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**",
-                "task_id": "TASK-108"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "validation",
-                "path": ".codewiki/validation/**",
-                "task_id": "TASK-108"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            },
-            {
-              "artifact": {
-                "layer": "roadmap",
-                "task_id": "TASK-108"
-              },
-              "status": "in-use",
-              "holders": [
-                {
-                  "record_id": "CLAIM-377",
-                  "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "agent_name": "Wren",
-                  "mode": "write",
-                  "role": "builder",
-                  "task_id": "TASK-108",
-                  "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                  "expires_at": "2026-06-06T14:48:17.333Z",
-                  "worktree": {
-                    "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                  },
-                  "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                }
-              ],
-              "waiters": [],
-              "conflict_ids": []
-            }
-          ]
+          "artifact_statuses": []
         },
         "invariant": "generated_state_not_canonical_truth"
       },
@@ -210971,8 +210339,8 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6261,
-          "edges": 21035,
+          "nodes": 6253,
+          "edges": 21027,
           "source_refs": 1532
         },
         "next_action": {
@@ -211169,258 +210537,12 @@
             ],
             "durable_truth": false,
             "source_role": "hot_coordination_input",
-            "active_claim_count": 1,
+            "active_claim_count": 0,
             "warning_count": 0,
             "conflict_count": 0,
             "waiting_count": 0,
             "ready_waiter_count": 0,
-            "artifact_statuses": [
-              {
-                "artifact": {
-                  "layer": "knowledge",
-                  "path": ".codewiki/kb/system/trace-graph.md"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph/lenses.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/graph/trace-projection.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/lint.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "code",
-                  "path": "src/state/reader.ts"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "build",
-                  "path": ".codewiki/builds/implementation/**",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "validation",
-                  "path": ".codewiki/validation/**",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              },
-              {
-                "artifact": {
-                  "layer": "roadmap",
-                  "task_id": "TASK-108"
-                },
-                "status": "in-use",
-                "holders": [
-                  {
-                    "record_id": "CLAIM-377",
-                    "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                    "agent_name": "Wren",
-                    "mode": "write",
-                    "role": "builder",
-                    "task_id": "TASK-108",
-                    "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                    "expires_at": "2026-06-06T14:48:17.333Z",
-                    "worktree": {
-                      "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                      "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                    },
-                    "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-                  }
-                ],
-                "waiters": [],
-                "conflict_ids": []
-              }
-            ]
+            "artifact_statuses": []
           },
           "publication": [],
           "deferred_views": []
@@ -241716,258 +240838,12 @@
         ],
         "durable_truth": false,
         "source_role": "hot_coordination_input",
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "warning_count": 0,
         "conflict_count": 0,
         "waiting_count": 0,
         "ready_waiter_count": 0,
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/trace-graph.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph/lenses.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph/trace-projection.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/reader.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ]
+        "artifact_statuses": []
       },
       "publication": [],
       "deferred_views": []
@@ -242439,587 +241315,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-377",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-108",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-377",
-          "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-          "agent_name": "Wren",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-          "task_id": "TASK-108",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "code",
-              "path": "src/state/graph.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/graph/lenses.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/graph/trace-projection.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/reader.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/trace-graph.md"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**",
-              "task_id": "TASK-108"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**",
-              "task_id": "TASK-108"
-            },
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-108"
-            }
-          ],
-          "created_at": "2026-06-06T11:48:17Z",
-          "updated_at": "2026-06-06T11:48:17Z",
-          "expires_at": "2026-06-06T14:48:17.333Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/trace-graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph/lenses.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph/trace-projection.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/reader.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/trace-graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph/lenses.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/graph/trace-projection.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/lint.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/reader.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-108"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-377",
-              "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-108",
-              "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-              "expires_at": "2026-06-06T14:48:17.333Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -268175,8 +266489,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T12:05:11.473Z",
-      "expires_at": "2026-06-06T14:05:11.473Z",
+      "generated_at": "2026-06-06T12:06:35.225Z",
+      "expires_at": "2026-06-06T14:06:35.225Z",
       "state": "missing",
       "tasks": {},
       "sprints": {
@@ -269070,9 +267384,7 @@
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
             ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
           ],
-          "claim_ids": [
-            "CLAIM-377"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -272319,7 +270631,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T12:05:11.218Z",
+      "generated_at": "2026-06-06T12:06:34.975Z",
       "counts": {
         "large-doc": 4,
         "legacy-decision-build-decision-table-deferred": 44
@@ -272617,7 +270929,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T12:05:11Z",
+      "generated_at": "2026-06-06T12:06:35Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -274403,7 +272715,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T12:05:11Z",
+      "generated_at": "2026-06-06T12:06:35Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -274566,9 +272878,7 @@
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-implemented-residual.json",
               ".codewiki/validation/2026-06-06-ship-ready-block-2026-06-06-superseding-task-100.json"
             ],
-            "claim_ids": [
-              "CLAIM-377"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -275201,7 +273511,7 @@
       },
       "direction": [
         "Lint warning (legacy-decision-build-decision-table-deferred) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=sprint, approval=sprint, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 40/40.",
@@ -279373,7 +277683,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T12:05:11Z",
+        "generated_at": "2026-06-06T12:06:35Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -279428,10 +277738,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T12:05:11Z",
+            "checked_at": "2026-06-06T12:06:35Z",
             "revision": {
               "git": {
-                "head": "366b77d787c3a08bbe83145d48dda9e6f882c245",
+                "head": "a6865eb7784681317649e3821e1f8b3cddfb1f9b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -279690,12 +278000,12 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "9476ad1ab4fb2e5fd34200309d900023ceacec6bcd6be419b415438043ed74a2",
-              "digest": "36b2808c9942d8fec665beda770d7ce16995c2a499c2d465dec9e45c4bbc9f0e"
+              "digest": "f540566d6f033da561396f249b0e0ff4d024c9bdc21fb8119028ef9d0d5c8d5e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:05:11Z",
+              "checked_at": "2026-06-06T12:06:35Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -280216,10 +278526,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T12:05:11Z",
+            "checked_at": "2026-06-06T12:06:35Z",
             "revision": {
               "git": {
-                "head": "366b77d787c3a08bbe83145d48dda9e6f882c245",
+                "head": "a6865eb7784681317649e3821e1f8b3cddfb1f9b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -280462,12 +278772,12 @@
               "spec_digest": "36de9189bbd0be4cd15c5fab1f3f01f7b156cc003c806a37ecb18e963d4f2c9c",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "9476ad1ab4fb2e5fd34200309d900023ceacec6bcd6be419b415438043ed74a2",
-              "digest": "e5d067e0441e529eb778ee8a37f62cf71428b1cf23b0c62ea6857f993167573d"
+              "digest": "e0d0e067504fb5f841080b6f6fae4052a71a3eaf9f799f0cb06fefd3eb9b9392"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:05:11Z",
+              "checked_at": "2026-06-06T12:06:35Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -280966,10 +279276,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T12:05:11Z",
+            "checked_at": "2026-06-06T12:06:35Z",
             "revision": {
               "git": {
-                "head": "366b77d787c3a08bbe83145d48dda9e6f882c245",
+                "head": "a6865eb7784681317649e3821e1f8b3cddfb1f9b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -281228,12 +279538,12 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "9476ad1ab4fb2e5fd34200309d900023ceacec6bcd6be419b415438043ed74a2",
-              "digest": "36b2808c9942d8fec665beda770d7ce16995c2a499c2d465dec9e45c4bbc9f0e"
+              "digest": "f540566d6f033da561396f249b0e0ff4d024c9bdc21fb8119028ef9d0d5c8d5e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:05:11Z",
+              "checked_at": "2026-06-06T12:06:35Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -281755,328 +280065,23 @@
         "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-06-06T12:05:11Z",
+        "generated_at": "2026-06-06T12:06:35Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-377",
-            "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-            "agent_name": "Wren",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-            "task_id": "TASK-108",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-              "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "code",
-                "path": "src/state/graph.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/graph/lenses.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/graph/trace-projection.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/reader.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/lint.ts"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/trace-graph.md"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**",
-                "task_id": "TASK-108"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**",
-                "task_id": "TASK-108"
-              },
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-108"
-              }
-            ],
-            "created_at": "2026-06-06T11:48:17Z",
-            "updated_at": "2026-06-06T11:48:17Z",
-            "expires_at": "2026-06-06T14:48:17.333Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/trace-graph.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph/lenses.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/graph/trace-projection.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/lint.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/reader.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-108"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-377",
-                "session_id": "019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-108",
-                "summary": "Add planning coverage/roadmap reconciliation graph read-model support and tests.",
-                "expires_at": "2026-06-06T14:48:17.333Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "branch": "codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d",
-                  "notes": "factory=role-worktree; task=TASK-108; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-377 release or validated publisher/patch ref for codewiki/TASK-108/builder/019e950b-f8ea-71a5-aba2-6c21ba67c86d; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
