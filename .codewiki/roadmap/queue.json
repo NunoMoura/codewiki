@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-06T04:23:16Z",
+  "updated": "2026-06-06T04:56:41Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -11,8 +11,7 @@
     "TASK-102",
     "TASK-103",
     "TASK-104",
-    "TASK-105",
-    "TASK-106"
+    "TASK-105"
   ],
   "tasks": {
     "TASK-012": {
@@ -976,61 +975,6 @@
         "verification": [
           "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
           "wiki_state refresh=true"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-06-06",
-      "updated": "2026-06-06"
-    },
-    "TASK-106": {
-      "id": "TASK-106",
-      "title": "Enforce agency config in prompt contract and skills",
-      "status": "todo",
-      "priority": "high",
-      "kind": "agent-workflow",
-      "summary": "Update CodeWiki prompt/system instruction injection and focused skills so agents read .codewiki/config.json and follow configured agency continuation, approval cadence, budgets, and stop gates.",
-      "spec_paths": [
-        ".codewiki/builds/decision/2026-06-06-accepted-config-derived-agency-enforcement-decis.json",
-        ".codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-config-deriv.json",
-        ".codewiki/config.json"
-      ],
-      "code_paths": [
-        "src/adapters/pi/prompt-contract.ts",
-        "skills/codewiki-decision/SKILL.md",
-        "skills/codewiki-planning/SKILL.md",
-        "skills/codewiki-implementation/SKILL.md",
-        "tests/smoke/prompt-contract.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "agency-config",
-        "prompt-contract",
-        "skills",
-        "agent-workflow"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "CodeWiki prompt contract and skills deterministically instruct agents to derive continuation/stop behavior from .codewiki/config.json rather than hard-coding task-level stopping.",
-        "acceptance": [
-          "Prompt contract includes agency config instructions when a CodeWiki project is loaded, referencing agency level, approval cadence, budgets, context reset, and stop gates.",
-          "Prompt contract output for a fixture config with agency.level=sprint and approval_cadence=sprint tells agents to continue within sprint until configured stop gates or budget/context bounds.",
-          "Focused CodeWiki skills align with config-derived agency policy and no longer imply task-level stopping as the automation boundary.",
-          "Task execution remains atomic: one task at a time, with continuation decisions after task-close governed by config.",
-          "Regression tests cover prompt contract injection of config-derived agency policy."
-        ],
-        "non_goals": [
-          "Do not create UX/report-rendering tasks or tools in this work.",
-          "Do not change full agency runner/session orchestration beyond prompt/system contract and skill guidance.",
-          "Do not ignore configured stop gates, budgets, or validation/risk blockers."
-        ],
-        "verification": [
-          "wiki_gate audit profiles=alignment,source-contract,generated-parity,changed,task",
-          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs",
-          "npm run typecheck"
         ]
       },
       "delta": {
