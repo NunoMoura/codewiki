@@ -5,7 +5,7 @@ state: active
 summary: Compatibility contract for historic build artifacts and their target representation inside telemetry loop traces.
 owners:
   - architecture
-updated: "2026-06-05"
+updated: "2026-06-06"
 code_paths:
   - src/build
   - src/adapters/pi/schemas.ts
@@ -92,7 +92,27 @@ Hot compiler output can be compacted or purged only when:
 
 Until TASK-093/TASK-094 replace compatibility readers, `.codewiki/builds/**` and `.codewiki/validation/**` are legacy evidence roots, not scratch. Do not purge them merely because target storage is lifecycle-trace-first.
 
-TASK-096 defers row backfill for decision builds created before 2026-06-05 that predate the DecisionTableV1 requirement. Linters may report these artifacts as legacy-deferred warnings instead of current-schema errors while they remain recoverable compatibility evidence. Delete this deferral when lifecycle traces/catalog entries or GC archive/restore-ledger evidence can recover the historical decision intent without the legacy build file.
+TASK-096 defers row backfill for decision builds created before 2026-06-05 that predate the DecisionTableV1 requirement. TASK-104 makes that deferral explicit residual coverage instead of silent warning debt. Linters may report these artifacts as legacy-deferred warnings instead of current-schema errors while they remain recoverable compatibility evidence. Delete this deferral only when lifecycle traces/catalog entries or GC archive/restore-ledger evidence can recover the historical decision intent without the legacy build file.
+
+## Legacy decision-build residual coverage
+
+Current legacy coverage owns one warning class:
+
+| Issue class | Scope | Classification | Owner | Trigger to retire |
+| --- | --- | --- | --- | --- |
+| `legacy-decision-build-decision-table-deferred` | Rowless `.codewiki/builds/decision/*.json` artifacts with `created` before `2026-06-05T00:00:00Z` | accepted migration deferral | architecture/gateway maintainers | Lifecycle trace/catalog migration or tracked GC archive cleanup proves restore paths for the historical decision intent |
+
+These files predate DecisionTableV1, so their rowless shape is expected historical compatibility evidence, not current authoring permission. New accepted decision builds must include Decision Table rows and row-to-KB mapping evidence. Do not hand-backfill every legacy row unless a future accepted decision scopes that reconstruction.
+
+Archive or deletion is a separate controlled cleanup. Before any legacy decision build is purged, validation must record:
+
+1. a `wiki_gc action=dry-run` inventory for the exact candidate scope;
+2. an archive commit SHA and tree SHA that still contain the original files;
+3. a restore ledger path/ref with original path, content digest, archive ref, and restore command;
+4. trace/catalog refs that preserve the historical decision summary, dates, downstream refs, and gate/remediation history; and
+5. a task-close or archive validation report proving no open task, policy, or compatibility reader still requires the hot build file.
+
+Until all five proofs exist, keep the files hot and keep the linter warning as covered residual debt.
 
 ## Related docs
 

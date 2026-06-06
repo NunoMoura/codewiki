@@ -723,7 +723,7 @@ function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 				"warning",
 				"legacy-decision-build-decision-table-deferred",
 				buildPath,
-				"Legacy decision build predates the DecisionTableV1 requirement. TASK-096 explicitly defers row backfill until lifecycle-trace migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+				"Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
 			),
 		);
 		return issues;
