@@ -804,47 +804,54 @@ function planningDecisionPropagationGaps(
 	return unique(gaps);
 }
 
-function planningEvidenceText(value: unknown): string {
-	if (!value) return "";
-	if (typeof value === "string") return value.trim();
-	if (Array.isArray(value)) return value.map(planningEvidenceText).join("\n");
-	if (typeof value === "object") {
-		return Object.values(value as Record<string, unknown>)
-			.map(planningEvidenceText)
-			.filter(Boolean)
-			.join("\n");
-	}
-	return String(value).trim();
+function planningCoverageRows(value: unknown): any[] {
+	return Array.isArray(value) ? value : [];
 }
 
-function planningHasRoadmapReconciliationEvidence(planning: any): boolean {
-	const explicit = [
-		planning?.roadmap_reconciliation,
-		planning?.roadmapReconciliation,
-		planning?.planning?.roadmap_reconciliation,
-		planning?.decision_propagation?.roadmap_reconciliation,
-	]
-		.map(planningEvidenceText)
-		.filter(Boolean);
-	if (explicit.length > 0) return true;
-	const fallbackText = [
-		planning?.evidence_mapping,
-		planning?.acceptance_mapping,
-		planning?.task_changes,
-		planning?.roadmap_changes,
-		planning?.requirements,
-	]
-		.map(planningEvidenceText)
-		.join("\n")
-		.toLowerCase();
-	return (
-		/\b(existing|current|prior|previous)\b[\s\S]{0,80}\broadmap\b/.test(
-			fallbackText,
-		) ||
-		/\broadmap\b[\s\S]{0,80}\b(reconcil|replan|refin|split|reopen|cancel|supersed|reorder|rescop)/.test(
-			fallbackText,
-		)
+function hasPlanningEvidence(row: any): boolean {
+	return Boolean(
+		String(row?.evidence || row?.summary || row?.proof || "").trim() ||
+			trimList(row?.task_ids).length ||
+			trimList(row?.roadmap_task_ids).length ||
+			trimList(row?.sprint_ids).length ||
+			trimList(row?.source_refs).length,
 	);
+}
+
+function planningCoverageIdentity(row: any): string {
+	return String(
+		row?.row_id ||
+			trimList(row?.row_ids)[0] ||
+			row?.requirement_id ||
+			trimList(row?.requirement_ids)[0] ||
+			row?.question_id ||
+			row?.question ||
+			row?.id ||
+			"",
+	).trim();
+}
+
+function planningDecisionCoverageGaps(
+	planning: any,
+	profile: string,
+	planningPath = "",
+): string[] {
+	if (normalizeValidationGate(profile) !== "planning") return [];
+	if (String(planning?.kind || "") !== "planning_build") return [];
+	if (buildRefsByKind(planning, "decision").length === 0) return [];
+	const rows = planningCoverageRows(planning?.decision_coverage);
+	const path = planningPath || "planning_build";
+	if (rows.length === 0)
+		return [`${path}:decision_coverage:missing_structured_entries`];
+	const gaps: string[] = [];
+	rows.forEach((row, index) => {
+		const id = planningCoverageIdentity(row) || `entry-${index + 1}`;
+		if (!planningCoverageIdentity(row))
+			gaps.push(`${path}:decision_coverage:${id}:missing_row_or_requirement`);
+		if (!hasPlanningEvidence(row))
+			gaps.push(`${path}:decision_coverage:${id}:missing_evidence`);
+	});
+	return unique(gaps);
 }
 
 function planningRoadmapReconciliationGaps(
@@ -855,11 +862,32 @@ function planningRoadmapReconciliationGaps(
 	if (normalizeValidationGate(profile) !== "planning") return [];
 	if (String(planning?.kind || "") !== "planning_build") return [];
 	if (buildRefsByKind(planning, "decision").length === 0) return [];
-	return planningHasRoadmapReconciliationEvidence(planning)
-		? []
-		: [
-				`${planningPath || "planning_build"}:roadmap_reconciliation:missing_evidence`,
-			];
+	const rows = planningCoverageRows(planning?.roadmap_reconciliation);
+	const path = planningPath || "planning_build";
+	if (rows.length === 0)
+		return [
+			`${path}:roadmap_reconciliation:missing_structured_entries:missing_evidence`,
+		];
+	const gaps: string[] = [];
+	rows.forEach((row, index) => {
+		const id = planningCoverageIdentity(row) || `entry-${index + 1}`;
+		const state = String(row?.state || row?.status || row?.resolution || "")
+			.trim()
+			.toLowerCase();
+		if (!hasPlanningEvidence(row))
+			gaps.push(`${path}:roadmap_reconciliation:${id}:missing_evidence`);
+		if (["partial", "unmapped"].includes(state)) {
+			if (!String(row?.owner || "").trim())
+				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_owner`);
+			if (!String(row?.trigger || "").trim())
+				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_trigger`);
+			if (!String(row?.rationale || "").trim())
+				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_rationale`);
+			if (!String(row?.evidence || "").trim())
+				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_evidence`);
+		}
+	});
+	return unique(gaps);
 }
 
 function implementationPlanningPropagationGaps(
@@ -2116,6 +2144,11 @@ export function buildGatewayPreflight(
 		source.build,
 		profile,
 	);
+	const decisionCoverageGaps = planningDecisionCoverageGaps(
+		source.build,
+		profile,
+		source.source,
+	);
 	const roadmapReconciliationGaps = planningRoadmapReconciliationGaps(
 		source.build,
 		profile,
@@ -2203,6 +2236,7 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps,
 		...ambiguityGaps,
 		...decisionPropagationGaps,
+		...decisionCoverageGaps,
 		...roadmapReconciliationGaps,
 		...semanticClosure.gaps,
 		...codeTestGaps,
@@ -2232,6 +2266,7 @@ export function buildGatewayPreflight(
 		decision_mappings: decisionMappingGaps,
 		ambiguity: ambiguityGaps,
 		decision_propagation: decisionPropagationGaps,
+		decision_coverage: decisionCoverageGaps,
 		roadmap_reconciliation: roadmapReconciliationGaps,
 		semantic_closure: semanticClosure.gaps,
 		semantic_closure_risks: semanticClosure.risks,
@@ -2275,10 +2310,16 @@ export function buildGatewayPreflight(
 			"Accepted decision rows or downstream planning questions are not durably resolved.",
 		),
 		...validationPreflightIssue(
+			"decision-coverage",
+			"high",
+			decisionCoverageGaps,
+			"Planning builds must record structured decision coverage before planning gate pass.",
+		),
+		...validationPreflightIssue(
 			"roadmap-reconciliation",
 			"high",
 			roadmapReconciliationGaps,
-			"Planning builds must record existing-roadmap reconciliation evidence before planning gate pass.",
+			"Planning builds must record structured existing-roadmap reconciliation evidence before planning gate pass.",
 		),
 		...validationPreflightIssue(
 			"semantic-closure",
@@ -2376,6 +2417,7 @@ export function buildGatewayPreflight(
 		...decisionMappingGaps.map((gap) => `decision_mapping:${gap}`),
 		...ambiguityGaps.map((gap) => `ambiguous_intent:${gap}`),
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...decisionCoverageGaps.map((gap) => `decision_coverage:${gap}`),
 		...roadmapReconciliationGaps.map((gap) => `roadmap_reconciliation:${gap}`),
 		...semanticClosure.gaps,
 		...semanticClosure.risks,
@@ -2528,6 +2570,8 @@ export async function writeGatewayReport(
 		input.verdict === "pass" ? preflight.missing.stale_refs : [];
 	const decisionPropagationGaps =
 		input.verdict === "pass" ? preflight.missing.decision_propagation : [];
+	const decisionCoverageGaps =
+		input.verdict === "pass" ? preflight.missing.decision_coverage : [];
 	const roadmapReconciliationGaps =
 		input.verdict === "pass" ? preflight.missing.roadmap_reconciliation : [];
 	const codeTestGaps =
@@ -2565,6 +2609,7 @@ export async function writeGatewayReport(
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...decisionCoverageGaps.map((gap) => `decision_coverage:${gap}`),
 		...roadmapReconciliationGaps.map((gap) => `roadmap_reconciliation:${gap}`),
 		...codeTestGaps.map((gap) => `code_tests:${gap}`),
 		...validationEvidenceGaps.map((gap) => `validation_evidence:${gap}`),

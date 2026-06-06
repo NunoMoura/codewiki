@@ -238,32 +238,162 @@ function normalizeEvidenceMapping(input: CodewikiBuildToolInput) {
 		.filter((mapping) => mapping.criterion && mapping.evidence);
 }
 
+function planningStateFromResolution(value: string, fallback = "recorded") {
+	const normalized = value.trim().toLowerCase();
+	if (normalized === "roadmap-task") return "active-roadmap";
+	if (normalized === "sprint") return "active-roadmap";
+	if (normalized === "knowledge-only") return "knowledge-only";
+	return normalized || fallback;
+}
+
+function normalizePlanningCoverageEntry(
+	entry: any,
+	index: number,
+	fallbackState = "recorded",
+) {
+	if (typeof entry === "string") {
+		return {
+			id: `coverage-${index + 1}`,
+			state: fallbackState,
+			status: fallbackState,
+			evidence: entry.trim(),
+			row_ids: [],
+			requirement_ids: [],
+			task_ids: [],
+			roadmap_task_ids: [],
+			sprint_ids: [],
+			knowledge_refs: [],
+			source_refs: [],
+			residuals: [],
+		};
+	}
+	const rowIds = unique([
+		String(entry?.row_id || "").trim(),
+		...trimList(entry?.row_ids),
+	]).filter(Boolean);
+	const requirementIds = unique([
+		String(entry?.requirement_id || "").trim(),
+		...trimList(entry?.requirement_ids),
+	]).filter(Boolean);
+	const taskIds = unique([
+		...trimList(entry?.task_ids),
+		...trimList(entry?.roadmap_task_ids),
+	]);
+	const state = planningStateFromResolution(
+		String(entry?.state || entry?.status || entry?.resolution || ""),
+		fallbackState,
+	);
+	return {
+		id: String(
+			entry?.id ||
+				entry?.row_id ||
+				entry?.requirement_id ||
+				entry?.question_id ||
+				`coverage-${index + 1}`,
+		).trim(),
+		row_id: String(entry?.row_id || "").trim() || undefined,
+		row_ids: rowIds,
+		requirement_id: String(entry?.requirement_id || "").trim() || undefined,
+		requirement_ids: requirementIds,
+		question_id: String(entry?.question_id || "").trim() || undefined,
+		question: String(entry?.question || "").trim() || undefined,
+		state,
+		status: state,
+		summary: String(entry?.summary || "").trim(),
+		evidence: String(entry?.evidence || entry?.proof || "").trim(),
+		task_ids: taskIds,
+		roadmap_task_ids: taskIds,
+		sprint_ids: trimList(entry?.sprint_ids),
+		knowledge_refs: trimList(entry?.knowledge_refs),
+		source_refs: trimList(entry?.source_refs),
+		owner: String(entry?.owner || "").trim() || undefined,
+		trigger: String(entry?.trigger || "").trim() || undefined,
+		trigger_state: String(entry?.trigger_state || "").trim() || undefined,
+		rationale: String(entry?.rationale || "").trim() || undefined,
+		residuals: trimList(entry?.residuals),
+	};
+}
+
+function coverageFromResolution(
+	resolution: any,
+	index: number,
+	kind: "row" | "question",
+) {
+	return normalizePlanningCoverageEntry(
+		{
+			id:
+				resolution?.row_id ||
+				resolution?.requirement_id ||
+				resolution?.question_id ||
+				`${kind}-${index + 1}`,
+			row_id: resolution?.row_id,
+			requirement_id: resolution?.requirement_id,
+			question_id: resolution?.question_id,
+			question: resolution?.question,
+			resolution: resolution?.resolution,
+			task_ids: resolution?.task_ids,
+			sprint_ids: resolution?.sprint_ids,
+			knowledge_refs: resolution?.knowledge_refs,
+			source_refs: resolution?.source_refs,
+			owner: resolution?.owner,
+			trigger: resolution?.trigger,
+			trigger_state: resolution?.trigger_state,
+			rationale: resolution?.rationale,
+			evidence: resolution?.evidence,
+		},
+		index,
+		"mapped",
+	);
+}
+
+function normalizeDecisionCoverage(
+	input: CodewikiBuildToolInput,
+	rowResolutions: ReturnType<typeof normalizeDecisionRowResolutions>,
+	questionResolutions: ReturnType<typeof normalizeDecisionQuestionResolutions>,
+) {
+	const explicit = ((input as any).decision_coverage ?? []).map(
+		(entry: any, index: number) =>
+			normalizePlanningCoverageEntry(entry, index, "recorded"),
+	);
+	const derived = [
+		...rowResolutions.map((resolution, index) =>
+			coverageFromResolution(resolution, index, "row"),
+		),
+		...questionResolutions.map((resolution, index) =>
+			coverageFromResolution(resolution, index, "question"),
+		),
+	];
+	return [...explicit, ...derived].filter((entry) =>
+		Boolean(
+			entry.evidence ||
+				entry.summary ||
+				entry.row_id ||
+				entry.row_ids.length ||
+				entry.requirement_id ||
+				entry.requirement_ids.length ||
+				entry.question_id ||
+				entry.question ||
+				entry.task_ids.length ||
+				entry.sprint_ids.length,
+		),
+	);
+}
+
 function normalizeRoadmapReconciliation(input: CodewikiBuildToolInput) {
 	const raw = (input as any).roadmap_reconciliation;
 	return (Array.isArray(raw) ? raw : [])
-		.map((entry) => {
-			if (typeof entry === "string") {
-				return {
-					status: "recorded",
-					evidence: entry.trim(),
-				};
-			}
-			return {
-				status: String(entry?.status || entry?.state || "recorded").trim(),
-				summary: String(entry?.summary || entry?.rationale || "").trim(),
-				evidence: String(entry?.evidence || entry?.proof || "").trim(),
-				task_ids: trimList(entry?.task_ids),
-				sprint_ids: trimList(entry?.sprint_ids),
-				source_refs: trimList(entry?.source_refs),
-			};
-		})
+		.map((entry, index) =>
+			normalizePlanningCoverageEntry(entry, index, "recorded"),
+		)
 		.filter((entry) =>
 			Boolean(
 				entry.evidence ||
 					entry.summary ||
-					entry.task_ids?.length ||
-					entry.sprint_ids?.length ||
-					entry.source_refs?.length,
+					entry.row_ids.length ||
+					entry.requirement_ids.length ||
+					entry.task_ids.length ||
+					entry.sprint_ids.length ||
+					entry.source_refs.length,
 			),
 		);
 }
@@ -829,6 +959,11 @@ export async function writePlanningBuild(
 	const decisionRowResolutions = normalizeDecisionRowResolutions(input);
 	const downstreamQuestionResolutions =
 		normalizeDecisionQuestionResolutions(input);
+	const decisionCoverage = normalizeDecisionCoverage(
+		input,
+		decisionRowResolutions,
+		downstreamQuestionResolutions,
+	);
 	const consumes = trimRefGroups({
 		...input.consumes,
 		decision: unique([
@@ -865,6 +1000,7 @@ export async function writePlanningBuild(
 		candidate_code_paths: candidateCodePaths,
 		decision_row_resolutions: decisionRowResolutions,
 		downstream_question_resolutions: downstreamQuestionResolutions,
+		decision_coverage: decisionCoverage,
 		roadmap_reconciliation: normalizeRoadmapReconciliation(input),
 		acceptance_mapping: normalizeEvidenceMapping(input).length
 			? normalizeEvidenceMapping(input)

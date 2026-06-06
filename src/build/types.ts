@@ -119,6 +119,31 @@ export interface CodewikiDecisionPropagationResolutionInput {
 	evidence: string;
 }
 
+export interface CodewikiPlanningCoverageInput {
+	id?: string;
+	row_id?: string;
+	row_ids?: string[];
+	requirement_id?: string;
+	requirement_ids?: string[];
+	question_id?: string;
+	question?: string;
+	state?: string;
+	status?: string;
+	resolution?: string;
+	evidence?: string;
+	summary?: string;
+	task_ids?: string[];
+	roadmap_task_ids?: string[];
+	sprint_ids?: string[];
+	knowledge_refs?: string[];
+	source_refs?: string[];
+	owner?: string;
+	trigger?: string;
+	trigger_state?: string;
+	rationale?: string;
+	residuals?: string[];
+}
+
 export interface CodewikiBuildToolInput {
 	repoPath?: string;
 	kind: "decision" | "planning" | "implementation";
@@ -185,6 +210,8 @@ export interface CodewikiBuildToolInput {
 	task_changes?: string[];
 	decision_row_resolutions?: CodewikiDecisionPropagationResolutionInput[];
 	downstream_question_resolutions?: CodewikiDecisionPropagationResolutionInput[];
+	decision_coverage?: CodewikiPlanningCoverageInput[];
+	roadmap_reconciliation?: CodewikiPlanningCoverageInput[];
 	tdd_plan?: string[];
 	candidate_test_files?: string[];
 	candidate_code_paths?: string[];

@@ -1,7 +1,7 @@
 {
   "id": "TASK-111",
   "title": "Validate structured planning coverage residuals",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "architecture",
   "summary": "Add planning compiler checks for typed decision coverage and explicit roadmap residual reconciliation.",
@@ -50,5 +50,5 @@
     "closure": "Closed when planning coverage tests prove prose-only and unresolved residuals cannot pass."
   },
   "created": "2026-06-06",
-  "updated": "2026-06-06"
+  "updated": "2026-06-06T21:45:45Z"
 }

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06",
+  "generated_at": "2026-06-06T21:45:45Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-111/context.json",
   "task": {
     "id": "TASK-111",
     "title": "Validate structured planning coverage residuals",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "architecture",
     "change_type": "system",
