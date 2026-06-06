@@ -1,0 +1,59 @@
+{
+  "id": "TASK-117",
+  "title": "Migrate planning loop source root",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "migration",
+  "summary": "Move planning compiler/gate/tool/type ownership toward src/planning while preserving compatibility until source-contract validation passes.",
+  "spec_paths": [
+    ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+    ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/flows/decision-to-planning.md"
+  ],
+  "code_paths": [
+    "src/planning/**",
+    "src/roadmap/**",
+    "src/build/**",
+    "src/gateway/report.ts",
+    "tests/tasks/TASK-117/**",
+    "tests/planning/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "PRM-REQ-001",
+    "DPA-012",
+    "source-structure-refactor",
+    "planning-root",
+    "blocked-by-SPRINT-025"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Planning loop source ownership is visible under src/planning with compiler/gate/tool/type surfaces for decision-to-roadmap decomposition.",
+    "acceptance": [
+      "src/planning/** contains planning compiler/gate/tool/type entrypoints or direct owner modules for planning-loop behavior.",
+      "Existing public/API/tool behavior remains compatible after migration.",
+      "Imports from src/roadmap/build/gateway that still support planning are either migrated or documented as compatibility with owner/trigger evidence.",
+      "Tests cover planning build creation, planning gate coverage/materialization, and source-contract expectations for the planning root.",
+      "No decision-loop or implementation-loop ownership is moved into src/planning."
+    ],
+    "non_goals": [
+      "Do not implement implementation root migration.",
+      "Do not remove compatibility roots until dependent tests/imports are migrated.",
+      "Do not add CodeWiki-repo-specific dogfood behavior."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted TASK-117 planning root migration test",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ]
+  },
+  "delta": {
+    "desired": "src/planning owns planning-loop compiler/gate/tool/type surfaces with compatibility only where explicitly justified.",
+    "current": "Planning behavior is spread across src/roadmap, src/build, and src/gateway compatibility surfaces; src/planning is missing or not owner-complete.",
+    "closure": "Closed when planning root exists with tests and source-contract evidence."
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}

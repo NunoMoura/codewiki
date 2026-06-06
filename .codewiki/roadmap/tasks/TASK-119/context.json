@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-06",
+  "context_path": ".codewiki/roadmap/tasks/TASK-119/context.json",
+  "task": {
+    "id": "TASK-119",
+    "title": "Migrate graph source root and projections",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Move generated graph/read-model ownership from src/state graph compatibility paths toward src/graph while keeping graph projection non-canonical.",
+    "labels": [
+      "PRM-REQ-001",
+      "DPA-REQ-004",
+      "DPA-012",
+      "source-structure-refactor",
+      "graph-root",
+      "generated-projection",
+      "blocked-by-SPRINT-025"
+    ],
+    "goal": {
+      "outcome": "Generated graph/read-model code is owned by src/graph while generated graph remains a projection over canonical roadmap/trace/KB/source truth.",
+      "acceptance": [
+        "src/graph/** contains graph builder/views/reader/type entrypoints or direct owner modules for generated graph behavior.",
+        "src/state graph compatibility code is migrated, retired, or documented with owner/trigger evidence.",
+        "Graph projections continue to expose planning coverage and execution metadata without becoming canonical truth.",
+        "Tests cover graph lenses/projections and source-contract expectations for the graph root.",
+        "No canonical roadmap, trace, or KB truth is moved into generated graph files."
+      ],
+      "non_goals": [
+        "Do not implement planning or implementation root migration.",
+        "Do not make .codewiki/index_graph.json canonical truth.",
+        "Do not add CodeWiki-repo-specific dogfood behavior."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-119 graph root migration test",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ]
+    },
+    "delta": {
+      "desired": "src/graph owns generated graph/read-model behavior and compatibility state paths are accounted for.",
+      "current": "Graph/read-model code lives under src/state/** compatibility paths while accepted target root is src/graph/**.",
+      "closure": "Closed when graph root exists with projection tests and source-contract evidence."
+    }
+  }
+}

@@ -1,0 +1,1278 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-06T22:35:36Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-20T22:35:36.000Z",
+    "purge_after": "2026-07-04T22:35:36.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "PRM-REQ-000",
+      "text": "Decision compiler emits approved semantic decision_build evidence only; planning compiler owns roadmap decomposition and scheduling.",
+      "source_refs": [
+        "PRM-000-DECISION-BUILD-BOUNDARY",
+        "PRM-001-PLANNING-LOOP-DECOMPOSITION"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PRM-REQ-001",
+      "text": "Planning compiler must materialize every executable accepted row/question into roadmap task/sprint/work-unit ownership, including blocked or last-in-queue work.",
+      "source_refs": [
+        "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT",
+        "PRM-006-CURRENT-RESTRUCTURE-CORRECTION"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PRM-REQ-002",
+      "text": "Planning compiler must support many-to-many row/task decomposition and only merge rows into one task when requirement ids and desired outcomes are compatible.",
+      "source_refs": [
+        "PRM-003-ROW-TASK-GRANULARITY"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PRM-REQ-003",
+      "text": "Planning compiler must reconcile existing roadmap and reorder queue/sprint waves by dependency, priority, conflict scopes, and agency budget for every accepted decision build.",
+      "source_refs": [
+        "PRM-004-ROADMAP-REORDER-ON-PLANNING"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PRM-REQ-004",
+      "text": "Planning gate must block incomplete structured coverage; executable deferred work must still have durable roadmap ownership.",
+      "source_refs": [
+        "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PRM-REQ-005",
+      "text": "CodeWiki must not hard-code dogfood/self-hosting repository behavior; generic mechanisms must represent project-specific self-hosting context.",
+      "source_refs": [
+        "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Every approved PRM row has roadmap/sprint/work-unit coverage.",
+      "evidence": "decision_row_resolutions maps PRM-000..007 to TASK-116, TASK-114, TASK-112, TASK-111, SPRINT-026/TASK-117..120, or active repair work.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Accepted source-structure refactor is visible in roadmap now.",
+      "evidence": "SPRINT-026 created with TASK-117..120 and dependency on SPRINT-025 closure.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No dogfood source special-case is introduced.",
+      "evidence": "PRM-007 mapped to generic non-goals/acceptance in TASK-116 and TASK-120; planning build non_goals repeat the constraint.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Roadmap order/reconciliation happened after accepted PRM decision.",
+      "evidence": "SPRINT-025 refined, SPRINT-026 created, and execution_graph wave order places source migration after repairs.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan accepted PRM decision into SPRINT-025 repair refinement and SPRINT-026 visible source-structure refactor backlog.",
+  "task_ids": [
+    "TASK-113",
+    "TASK-114",
+    "TASK-115",
+    "TASK-116",
+    "TASK-117",
+    "TASK-118",
+    "TASK-119",
+    "TASK-120"
+  ],
+  "task_changes": [
+    "TASK-116 created to enforce planning roadmap materialization and reorder invariants generically.",
+    "TASK-117 created to materialize planning loop source-root migration after SPRINT-025 repairs.",
+    "TASK-118 created to materialize implementation loop source-root migration after SPRINT-025 repairs.",
+    "TASK-119 created to materialize graph source-root migration after SPRINT-025 repairs.",
+    "TASK-120 created to materialize Pi and Git helper root migration after SPRINT-025 repairs.",
+    "SPRINT-025 refined to include TASK-116 as repair work before source refactor implementation.",
+    "SPRINT-026 created as planned source-structure refactor backlog with dependency on SPRINT-025 closure."
+  ],
+  "roadmap_changes": [
+    "TASK-116 created to enforce planning roadmap materialization and reorder invariants generically.",
+    "TASK-117 created to materialize planning loop source-root migration after SPRINT-025 repairs.",
+    "TASK-118 created to materialize implementation loop source-root migration after SPRINT-025 repairs.",
+    "TASK-119 created to materialize graph source-root migration after SPRINT-025 repairs.",
+    "TASK-120 created to materialize Pi and Git helper root migration after SPRINT-025 repairs.",
+    "SPRINT-025 refined to include TASK-116 as repair work before source refactor implementation.",
+    "SPRINT-026 created as planned source-structure refactor backlog with dependency on SPRINT-025 closure."
+  ],
+  "tdd_plan": [
+    "For TASK-116, add planning materialization gate tests before source changes.",
+    "For TASK-117..120, add source-contract/root migration tests before moving files.",
+    "Each source-root migration task must keep public/API behavior compatible and record reload guidance generically."
+  ],
+  "candidate_test_files": [
+    "tests/tasks/TASK-116/planning-materialization-invariant.test.mjs",
+    "tests/tasks/TASK-117/planning-root-migration.test.mjs",
+    "tests/tasks/TASK-118/implementation-root-migration.test.mjs",
+    "tests/tasks/TASK-119/graph-root-migration.test.mjs",
+    "tests/tasks/TASK-120/pi-git-root-migration.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/build/writer.ts",
+    "src/gateway/report.ts",
+    "src/roadmap/store.ts",
+    "src/planning/**",
+    "src/implementation/**",
+    "src/graph/**",
+    "src/pi/**",
+    "src/git/**",
+    "src/roadmap/**",
+    "src/build/**",
+    "src/gateway/**",
+    "src/state/**",
+    "src/adapters/pi/**",
+    "src/runtime/**",
+    "src/gc/**"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "PRM-000-DECISION-BUILD-BOUNDARY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-116 acceptance makes decision build boundary and planning materialization generic gate behavior explicit.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-001-PLANNING-LOOP-DECOMPOSITION",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-114",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-114 covers execution graph/worker handoff metadata; TASK-116 covers materialization/decomposition gate invariant.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-116 implements the generic invariant; SPRINT-026/TASK-117..120 visibly materialize the accepted source-structure refactor even though implementation is ordered after SPRINT-025.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-003-ROW-TASK-GRANULARITY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-112 closed safe auto-reuse for compatible requirement/outcome; TASK-116 covers generic many-to-many planning materialization checks.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-004-ROADMAP-REORDER-ON-PLANNING",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-116 acceptance requires planning output to record queue/sprint-wave reorder rationale.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-111 closed structured planning coverage/residual checks; TASK-116 extends them to block build-only executable deferrals without roadmap ownership.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-006-CURRENT-RESTRUCTURE-CORRECTION",
+      "question_id": "",
+      "question": "",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-026",
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "SPRINT-026 and tasks TASK-117..120 now durably materialize the accepted source-structure refactor as planned work ordered after SPRINT-025.",
+      "inferred": false
+    },
+    {
+      "row_id": "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-116 and TASK-120 non-goals/acceptance require generic mechanisms and forbid CodeWiki-repo dogfood special cases.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "PRM-Q1",
+      "question": "Update SPRINT-025 or create follow-up planning work to encode planning-loop materialization invariant and generic no-dogfood-special-case rule.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json"
+      ],
+      "evidence": "TASK-116 owns generic planning materialization; TASK-120 carries generic-extension no-dogfood-special-case through Pi/Git root migration.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "PRM-Q2",
+      "question": "Correct current roadmap by adding visible source-structure refactor materialization ordered after SPRINT-025 repairs or blocked by them.",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-026",
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "evidence": "SPRINT-026 created with planned status and explicit dependency on SPRINT-025; TASK-117..120 materialize planning, implementation, graph, Pi, and Git target roots.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "PRM-Q3",
+      "question": "Ensure TASK-113/TASK-114/TASK-115 scope still matches PRM decisions; refine or add tasks if gaps remain.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+      ],
+      "evidence": "TASK-113/114/115 remain valid DPA repair tasks; TASK-116 fills PRM materialization/reorder gap.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "PRM-Q4",
+      "question": "After PRM planning passes, continue SPRINT-025 implementation in order.",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/config.json"
+      ],
+      "evidence": "Agency policy level=sprint permits continuation through SPRINT-025 after planning gate pass while no stop gate is active.",
+      "inferred": false
+    }
+  ],
+  "decision_coverage": [
+    {
+      "id": "PRM-REQ-000",
+      "row_ids": [
+        "PRM-000-DECISION-BUILD-BOUNDARY",
+        "PRM-001-PLANNING-LOOP-DECOMPOSITION"
+      ],
+      "requirement_id": "PRM-REQ-000",
+      "requirement_ids": [
+        "PRM-REQ-000"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116/TASK-114 goal acceptance",
+      "task_ids": [
+        "TASK-116",
+        "TASK-114"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-114"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-001",
+      "row_ids": [
+        "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT",
+        "PRM-006-CURRENT-RESTRUCTURE-CORRECTION"
+      ],
+      "requirement_id": "PRM-REQ-001",
+      "requirement_ids": [
+        "PRM-REQ-001"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 and SPRINT-026 materialize executable work",
+      "task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-002",
+      "row_ids": [
+        "PRM-003-ROW-TASK-GRANULARITY"
+      ],
+      "requirement_id": "PRM-REQ-002",
+      "requirement_ids": [
+        "PRM-REQ-002"
+      ],
+      "state": "implemented-and-active-roadmap",
+      "status": "implemented-and-active-roadmap",
+      "summary": "",
+      "evidence": "TASK-112 closed safe auto-reuse; TASK-116 covers remaining planning materialization",
+      "task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-003",
+      "row_ids": [
+        "PRM-004-ROADMAP-REORDER-ON-PLANNING"
+      ],
+      "requirement_id": "PRM-REQ-003",
+      "requirement_ids": [
+        "PRM-REQ-003"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 reorder evidence acceptance",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-004",
+      "row_ids": [
+        "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE"
+      ],
+      "requirement_id": "PRM-REQ-004",
+      "requirement_ids": [
+        "PRM-REQ-004"
+      ],
+      "state": "implemented-and-active-roadmap",
+      "status": "implemented-and-active-roadmap",
+      "summary": "",
+      "evidence": "TASK-111 closed structured coverage; TASK-116 covers materialization strictness",
+      "task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-005",
+      "row_ids": [
+        "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "requirement_id": "PRM-REQ-005",
+      "requirement_ids": [
+        "PRM-REQ-005"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116/TASK-120 non-goals and acceptance forbid dogfood special cases",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-000-DECISION-BUILD-BOUNDARY",
+      "row_id": "PRM-000-DECISION-BUILD-BOUNDARY",
+      "row_ids": [
+        "PRM-000-DECISION-BUILD-BOUNDARY"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 acceptance makes decision build boundary and planning materialization generic gate behavior explicit.",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-001-PLANNING-LOOP-DECOMPOSITION",
+      "row_id": "PRM-001-PLANNING-LOOP-DECOMPOSITION",
+      "row_ids": [
+        "PRM-001-PLANNING-LOOP-DECOMPOSITION"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-114 covers execution graph/worker handoff metadata; TASK-116 covers materialization/decomposition gate invariant.",
+      "task_ids": [
+        "TASK-114",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-114",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT",
+      "row_id": "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT",
+      "row_ids": [
+        "PRM-002-ROADMAP-MATERIALIZATION-INVARIANT"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 implements the generic invariant; SPRINT-026/TASK-117..120 visibly materialize the accepted source-structure refactor even though implementation is ordered after SPRINT-025.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-003-ROW-TASK-GRANULARITY",
+      "row_id": "PRM-003-ROW-TASK-GRANULARITY",
+      "row_ids": [
+        "PRM-003-ROW-TASK-GRANULARITY"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-112 closed safe auto-reuse for compatible requirement/outcome; TASK-116 covers generic many-to-many planning materialization checks.",
+      "task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-004-ROADMAP-REORDER-ON-PLANNING",
+      "row_id": "PRM-004-ROADMAP-REORDER-ON-PLANNING",
+      "row_ids": [
+        "PRM-004-ROADMAP-REORDER-ON-PLANNING"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 acceptance requires planning output to record queue/sprint-wave reorder rationale.",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE",
+      "row_id": "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE",
+      "row_ids": [
+        "PRM-005-PLANNING-GATE-COMPLETE-COVERAGE"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-111 closed structured planning coverage/residual checks; TASK-116 extends them to block build-only executable deferrals without roadmap ownership.",
+      "task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-006-CURRENT-RESTRUCTURE-CORRECTION",
+      "row_id": "PRM-006-CURRENT-RESTRUCTURE-CORRECTION",
+      "row_ids": [
+        "PRM-006-CURRENT-RESTRUCTURE-CORRECTION"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "SPRINT-026 and tasks TASK-117..120 now durably materialize the accepted source-structure refactor as planned work ordered after SPRINT-025.",
+      "task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-026",
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE",
+      "row_id": "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE",
+      "row_ids": [
+        "PRM-007-GENERIC-EXTENSION-NO-DOGFOOD-SPECIAL-CASE"
+      ],
+      "requirement_ids": [],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 and TASK-120 non-goals/acceptance require generic mechanisms and forbid CodeWiki-repo dogfood special cases.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-Q1",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "PRM-Q1",
+      "question": "Update SPRINT-025 or create follow-up planning work to encode planning-loop materialization invariant and generic no-dogfood-special-case rule.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 owns generic planning materialization; TASK-120 carries generic-extension no-dogfood-special-case through Pi/Git root migration.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json"
+      ],
+      "residuals": []
+    },
+    {
+      "id": "PRM-Q2",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "PRM-Q2",
+      "question": "Correct current roadmap by adding visible source-structure refactor materialization ordered after SPRINT-025 repairs or blocked by them.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "SPRINT-026 created with planned status and explicit dependency on SPRINT-025; TASK-117..120 materialize planning, implementation, graph, Pi, and Git target roots.",
+      "task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-026",
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "residuals": []
+    },
+    {
+      "id": "PRM-Q3",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "PRM-Q3",
+      "question": "Ensure TASK-113/TASK-114/TASK-115 scope still matches PRM decisions; refine or add tasks if gaps remain.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-113/114/115 remain valid DPA repair tasks; TASK-116 fills PRM materialization/reorder gap.",
+      "task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+      ],
+      "residuals": []
+    },
+    {
+      "id": "PRM-Q4",
+      "row_ids": [],
+      "requirement_ids": [],
+      "question_id": "PRM-Q4",
+      "question": "After PRM planning passes, continue SPRINT-025 implementation in order.",
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Agency policy level=sprint permits continuation through SPRINT-025 after planning gate pass while no stop gate is active.",
+      "task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-113",
+        "TASK-114",
+        "TASK-115",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/config.json"
+      ],
+      "residuals": []
+    }
+  ],
+  "roadmap_reconciliation": [
+    {
+      "id": "PRM-REQ-000",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-000",
+      "requirement_ids": [
+        "PRM-REQ-000"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Existing SPRINT-025 lacked PRM-specific materialization task; TASK-116 added.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-114"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-114"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-001",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-001",
+      "requirement_ids": [
+        "PRM-REQ-001"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Source refactor no longer build-only deferred; SPRINT-026/TASK-117..120 own it visibly.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-002",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-002",
+      "requirement_ids": [
+        "PRM-REQ-002"
+      ],
+      "state": "implemented-and-active-roadmap",
+      "status": "implemented-and-active-roadmap",
+      "summary": "",
+      "evidence": "TASK-112 closed compatible auto-reuse; TASK-116 owns remaining materialization checks.",
+      "task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-112",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-003",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-003",
+      "requirement_ids": [
+        "PRM-REQ-003"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "TASK-116 owns reorder evidence requirement.",
+      "task_ids": [
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-004",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-004",
+      "requirement_ids": [
+        "PRM-REQ-004"
+      ],
+      "state": "implemented-and-active-roadmap",
+      "status": "implemented-and-active-roadmap",
+      "summary": "",
+      "evidence": "TASK-111 closed structured coverage; TASK-116 owns executable materialization gap.",
+      "task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "roadmap_task_ids": [
+        "TASK-111",
+        "TASK-116"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    },
+    {
+      "id": "PRM-REQ-005",
+      "row_ids": [],
+      "requirement_id": "PRM-REQ-005",
+      "requirement_ids": [
+        "PRM-REQ-005"
+      ],
+      "state": "active-roadmap",
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "Generic extension/no special-case rule is represented through ordinary tasks/non-goals.",
+      "task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "roadmap_task_ids": [
+        "TASK-116",
+        "TASK-120"
+      ],
+      "sprint_ids": [
+        "SPRINT-025",
+        "SPRINT-026"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "residuals": []
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Every approved PRM row has roadmap/sprint/work-unit coverage.",
+      "evidence": "decision_row_resolutions maps PRM-000..007 to TASK-116, TASK-114, TASK-112, TASK-111, SPRINT-026/TASK-117..120, or active repair work.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Accepted source-structure refactor is visible in roadmap now.",
+      "evidence": "SPRINT-026 created with TASK-117..120 and dependency on SPRINT-025 closure.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No dogfood source special-case is introduced.",
+      "evidence": "PRM-007 mapped to generic non-goals/acceptance in TASK-116 and TASK-120; planning build non_goals repeat the constraint.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Roadmap order/reconciliation happened after accepted PRM decision.",
+      "evidence": "SPRINT-025 refined, SPRINT-026 created, and execution_graph wave order places source migration after repairs.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "User approved PRM decisions in chat and clarified no product/source special-casing for dogfood context.",
+    "TASK-111 and TASK-112 are already closed and provide part of PRM coverage.",
+    "SPRINT-026 tasks are visible planned work but implementation should wait for SPRINT-025 closure."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement source-root migrations during this planning loop.",
+    "Do not add CodeWiki-repo-specific dogfood behavior.",
+    "Do not make decision loop responsible for roadmap mutation.",
+    "Do not treat generated graph as canonical truth."
+  ],
+  "risks": [
+    "SPRINT-026 tasks are high-impact source migrations and require fresh planning/validation before implementation starts.",
+    "TASK-116 may tighten planning gates; tests must preserve legitimate knowledge-only/no-work/already-implemented resolutions.",
+    "Existing package-smoke fixture drift remains unrelated and should not be used as mapped evidence for new tasks until fixed."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-113",
+      "TASK-114",
+      "TASK-115",
+      "TASK-116",
+      "TASK-117",
+      "TASK-118",
+      "TASK-119",
+      "TASK-120"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-113",
+      "TASK-114",
+      "TASK-115",
+      "TASK-116",
+      "TASK-117",
+      "TASK-118",
+      "TASK-119",
+      "TASK-120"
+    ],
+    "code": [
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "src/roadmap/store.ts",
+      "src/planning/**",
+      "src/implementation/**",
+      "src/graph/**",
+      "src/pi/**",
+      "src/git/**",
+      "src/roadmap/**",
+      "src/build/**",
+      "src/gateway/**",
+      "src/state/**",
+      "src/adapters/pi/**",
+      "src/runtime/**",
+      "src/gc/**"
+    ],
+    "tests": [
+      "tests/tasks/TASK-116/planning-materialization-invariant.test.mjs",
+      "tests/tasks/TASK-117/planning-root-migration.test.mjs",
+      "tests/tasks/TASK-118/implementation-root-migration.test.mjs",
+      "tests/tasks/TASK-119/graph-root-migration.test.mjs",
+      "tests/tasks/TASK-120/pi-git-root-migration.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

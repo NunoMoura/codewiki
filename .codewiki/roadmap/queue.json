@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-06T21:56:25Z",
+  "updated": "2026-06-06T22:34:06Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -8,7 +8,12 @@
     "TASK-088",
     "TASK-113",
     "TASK-114",
-    "TASK-115"
+    "TASK-115",
+    "TASK-116",
+    "TASK-117",
+    "TASK-118",
+    "TASK-119",
+    "TASK-120"
   ],
   "tasks": {
     "TASK-012": {
@@ -852,6 +857,311 @@
         "desired": "Loop-owned gate evidence contracts make the three-loop model explicit and keep publication under implementation.",
         "current": "Gateway/test/publication compatibility surfaces can look like independent loops or source roots.",
         "closure": "Closed when source-contract and gate tests enforce no fourth loop and tests remain evidence providers."
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-116": {
+      "id": "TASK-116",
+      "title": "Enforce planning roadmap materialization invariant",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Make planning compiler/gate require durable roadmap/sprint/work-unit ownership and queue/sprint reorder evidence for executable accepted decision rows.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "src/roadmap/store.ts",
+        "tests/tasks/TASK-116/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "PRM-REQ-000",
+        "PRM-REQ-001",
+        "PRM-REQ-003",
+        "PRM-REQ-004",
+        "planning-materialization",
+        "roadmap-reorder",
+        "generic-product-rule"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Planning cannot pass executable accepted decision work unless it is visibly materialized in roadmap/sprint/work-unit ownership and roadmap ordering is reconciled.",
+        "acceptance": [
+          "Planning build/gate distinguishes executable rows from knowledge-only, no-work, already-implemented, and route-back blockers without CodeWiki-repo special cases.",
+          "Executable accepted rows/questions require task ids, sprint ids, or work-unit ids, even when blocked or ordered last.",
+          "Build-only executable deferral without roadmap ownership blocks planning gate pass.",
+          "Planning output records roadmap/queue/sprint-wave reorder rationale after consuming an accepted decision build.",
+          "TASK-specific tests cover missing materialization block, blocked-but-roadmap-owned pass, knowledge-only/no-work pass, and reorder evidence requirement."
+        ],
+        "non_goals": [
+          "Do not make the decision loop create roadmap tasks.",
+          "Do not implement source-structure file moves.",
+          "Do not add dogfood/self-hosting project special cases."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-116 planning materialization test",
+          "tests/tasks/TASK-111/planning-coverage-residuals.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "Planning gate requires durable roadmap/sprint/work-unit materialization and reorder evidence for executable accepted work.",
+        "current": "Planning can represent executable accepted work as build-only deferral or prose-like coverage, and ordering evidence is not required for every accepted decision build.",
+        "closure": "Closed when generic tests prove executable accepted rows cannot disappear into build-only deferral."
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-117": {
+      "id": "TASK-117",
+      "title": "Migrate planning loop source root",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Move planning compiler/gate/tool/type ownership toward src/planning while preserving compatibility until source-contract validation passes.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "code_paths": [
+        "src/planning/**",
+        "src/roadmap/**",
+        "src/build/**",
+        "src/gateway/report.ts",
+        "tests/tasks/TASK-117/**",
+        "tests/planning/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "PRM-REQ-001",
+        "DPA-012",
+        "source-structure-refactor",
+        "planning-root",
+        "blocked-by-SPRINT-025"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Planning loop source ownership is visible under src/planning with compiler/gate/tool/type surfaces for decision-to-roadmap decomposition.",
+        "acceptance": [
+          "src/planning/** contains planning compiler/gate/tool/type entrypoints or direct owner modules for planning-loop behavior.",
+          "Existing public/API/tool behavior remains compatible after migration.",
+          "Imports from src/roadmap/build/gateway that still support planning are either migrated or documented as compatibility with owner/trigger evidence.",
+          "Tests cover planning build creation, planning gate coverage/materialization, and source-contract expectations for the planning root.",
+          "No decision-loop or implementation-loop ownership is moved into src/planning."
+        ],
+        "non_goals": [
+          "Do not implement implementation root migration.",
+          "Do not remove compatibility roots until dependent tests/imports are migrated.",
+          "Do not add CodeWiki-repo-specific dogfood behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-117 planning root migration test",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "src/planning owns planning-loop compiler/gate/tool/type surfaces with compatibility only where explicitly justified.",
+        "current": "Planning behavior is spread across src/roadmap, src/build, and src/gateway compatibility surfaces; src/planning is missing or not owner-complete.",
+        "closure": "Closed when planning root exists with tests and source-contract evidence."
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-118": {
+      "id": "TASK-118",
+      "title": "Migrate implementation loop source root",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Move implementation compiler/gate/tool/type and publication ownership toward src/implementation without introducing publish or validation roots.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "src/implementation/**",
+        "src/build/**",
+        "src/gateway/**",
+        "src/policy/**",
+        "src/checks/**",
+        "tests/tasks/TASK-118/**",
+        "tests/implementation/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "PRM-REQ-001",
+        "DPA-REQ-001",
+        "DPA-REQ-008",
+        "DPA-012",
+        "source-structure-refactor",
+        "implementation-root",
+        "blocked-by-SPRINT-025"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Implementation loop source ownership is visible under src/implementation with compiler/gate/tool/type surfaces and publication kept under implementation.",
+        "acceptance": [
+          "src/implementation/** contains implementation compiler/gate/tool/type entrypoints or direct owner modules for implementation-loop behavior.",
+          "Publication/task-close/ship-ready criteria remain modeled under implementation, not a publish or validation loop root.",
+          "Existing public/API/tool behavior remains compatible after migration.",
+          "Tests cover implementation build/gate contract, publication-under-implementation invariant, and source-contract expectations for the implementation root.",
+          "No decision-loop or planning-loop ownership is moved into src/implementation."
+        ],
+        "non_goals": [
+          "Do not implement planning root migration.",
+          "Do not create src/validation or src/publish roots.",
+          "Do not add CodeWiki-repo-specific dogfood behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-118 implementation root migration test",
+          "tests/smoke/source-contract.test.mjs",
+          "relevant implementation/package smoke subset"
+        ]
+      },
+      "delta": {
+        "desired": "src/implementation owns implementation-loop compiler/gate/tool/type and publication criteria surfaces.",
+        "current": "Implementation behavior and gate criteria are spread across build/gateway/policy/checks compatibility surfaces; src/implementation root is missing or not owner-complete.",
+        "closure": "Closed when implementation root exists with tests and source-contract evidence."
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-119": {
+      "id": "TASK-119",
+      "title": "Migrate graph source root and projections",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Move generated graph/read-model ownership from src/state graph compatibility paths toward src/graph while keeping graph projection non-canonical.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "code_paths": [
+        "src/graph/**",
+        "src/state/**",
+        "tests/tasks/TASK-119/**",
+        "tests/graph/**",
+        "tests/smoke/graph-lenses.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "PRM-REQ-001",
+        "DPA-REQ-004",
+        "DPA-012",
+        "source-structure-refactor",
+        "graph-root",
+        "generated-projection",
+        "blocked-by-SPRINT-025"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Generated graph/read-model code is owned by src/graph while generated graph remains a projection over canonical roadmap/trace/KB/source truth.",
+        "acceptance": [
+          "src/graph/** contains graph builder/views/reader/type entrypoints or direct owner modules for generated graph behavior.",
+          "src/state graph compatibility code is migrated, retired, or documented with owner/trigger evidence.",
+          "Graph projections continue to expose planning coverage and execution metadata without becoming canonical truth.",
+          "Tests cover graph lenses/projections and source-contract expectations for the graph root.",
+          "No canonical roadmap, trace, or KB truth is moved into generated graph files."
+        ],
+        "non_goals": [
+          "Do not implement planning or implementation root migration.",
+          "Do not make .codewiki/index_graph.json canonical truth.",
+          "Do not add CodeWiki-repo-specific dogfood behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-119 graph root migration test",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/source-contract.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "src/graph owns generated graph/read-model behavior and compatibility state paths are accounted for.",
+        "current": "Graph/read-model code lives under src/state/** compatibility paths while accepted target root is src/graph/**.",
+        "closure": "Closed when graph root exists with projection tests and source-contract evidence."
+      },
+      "created": "2026-06-06",
+      "updated": "2026-06-06"
+    },
+    "TASK-120": {
+      "id": "TASK-120",
+      "title": "Migrate Pi and Git helper roots",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Move Pi distribution integration and Git/content-evidence helpers toward target src/pi and src/git roots using generic extension mechanisms.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "src/pi/**",
+        "src/git/**",
+        "src/adapters/pi/**",
+        "src/runtime/**",
+        "src/gc/**",
+        "tests/tasks/TASK-120/**",
+        "tests/pi/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "PRM-REQ-005",
+        "DPA-012",
+        "source-structure-refactor",
+        "pi-root",
+        "git-root",
+        "generic-extension",
+        "blocked-by-SPRINT-025"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Pi integration and Git/content-evidence behavior move toward generic src/pi and src/git roots without dogfood-specific code paths.",
+        "acceptance": [
+          "src/pi/** owns Pi commands/tools/ui/prompt/compaction surfaces or direct owner modules migrated from src/adapters/pi/**.",
+          "src/git/** owns content evidence, worktree, and publisher helper surfaces or direct owner modules migrated from runtime/gc/gateway compatibility roots.",
+          "Generic reload/worktree/publication evidence behavior remains project-config-driven, not hard-coded for this repository.",
+          "Existing package entrypoints and Pi extension discovery continue to work after migration.",
+          "Tests cover Pi/tool registration or package loading and Git/content-evidence helper behavior where applicable."
+        ],
+        "non_goals": [
+          "Do not add CodeWiki-repo-specific dogfood behavior.",
+          "Do not change package distribution semantics except compatibility-safe imports/entrypoints.",
+          "Do not implement planning/implementation/graph root migrations in this task."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-120 Pi/Git root migration test",
+          "tests/smoke/package-smoke.test.mjs or focused package subset",
+          "tests/smoke/source-contract.test.mjs"
+        ]
+      },
+      "delta": {
+        "desired": "src/pi and src/git own their target surfaces through generic extension mechanisms.",
+        "current": "Pi integration remains under src/adapters/pi/** and Git/content-evidence helpers are spread across runtime/gc/gateway compatibility roots.",
+        "closure": "Closed when Pi/Git roots exist with package/source-contract evidence and no dogfood special cases."
       },
       "created": "2026-06-06",
       "updated": "2026-06-06"
@@ -1891,18 +2201,17 @@
       "id": "SPRINT-025",
       "title": "Decision-planning repair before source refactor",
       "status": "active",
-      "outcome": "Repair decision-to-planning trace, roadmap atomicity, file-structure accountability, execution graph handoff, and loop gate evidence contracts before resuming broad source-structure refactor.",
+      "outcome": "Repair decision-to-planning trace, roadmap atomicity, file-structure accountability, execution graph handoff, loop gate evidence contracts, and planning materialization before resuming broad source-structure refactor.",
       "task_ids": [
-        "TASK-110",
-        "TASK-111",
-        "TASK-112",
         "TASK-113",
         "TASK-114",
-        "TASK-115"
+        "TASK-115",
+        "TASK-116"
       ],
       "scope": {
         "knowledge": [
           ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
           ".codewiki/kb/system/trace-graph.md",
           ".codewiki/kb/system/flows/decision-to-planning.md",
           ".codewiki/kb/system/roadmap.md",
@@ -1913,10 +2222,9 @@
           ".codewiki/kb/system/agency.md"
         ],
         "code": [
-          "src/decision/**",
-          "src/build/**",
-          "src/planning/**",
-          "src/roadmap/**",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "src/roadmap/store.ts",
           "src/audit/**",
           "src/checks/**",
           "src/state/graph/**",
@@ -1924,12 +2232,10 @@
           "src/runtime/**",
           "src/implementation/**",
           "src/policy/**",
-          "tests/tasks/TASK-110/**",
-          "tests/tasks/TASK-111/**",
-          "tests/tasks/TASK-112/**",
           "tests/tasks/TASK-113/**",
           "tests/tasks/TASK-114/**",
-          "tests/tasks/TASK-115/**"
+          "tests/tasks/TASK-115/**",
+          "tests/tasks/TASK-116/**"
         ]
       },
       "budget": {
@@ -1949,7 +2255,65 @@
         "alignment"
       ],
       "created": "2026-06-06T21:07:09Z",
-      "updated": "2026-06-06T21:07:09Z"
+      "updated": "2026-06-06T22:33:41Z"
+    },
+    "SPRINT-026": {
+      "id": "SPRINT-026",
+      "title": "Accepted source-structure refactor backlog",
+      "status": "planned",
+      "outcome": "Implement accepted target package source roots after SPRINT-025 repairs make file-structure accountability, planning materialization, execution graph, and loop gate contracts reliable. Dependency: SPRINT-025 must close before implementation starts.",
+      "task_ids": [
+        "TASK-117",
+        "TASK-118",
+        "TASK-119",
+        "TASK-120"
+      ],
+      "created": "2026-06-06T22:34:06Z",
+      "updated": "2026-06-06T22:34:06Z",
+      "scope": {
+        "knowledge": [
+          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/roadmap.md"
+        ],
+        "code": [
+          "src/planning/**",
+          "src/implementation/**",
+          "src/graph/**",
+          "src/pi/**",
+          "src/git/**",
+          "src/roadmap/**",
+          "src/build/**",
+          "src/gateway/**",
+          "src/state/**",
+          "src/adapters/pi/**",
+          "src/runtime/**",
+          "src/gc/**",
+          "tests/tasks/TASK-117/**",
+          "tests/tasks/TASK-118/**",
+          "tests/tasks/TASK-119/**",
+          "tests/tasks/TASK-120/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 8,
+        "maxWallSeconds": 2400,
+        "maxTokens": 160000,
+        "maxCostUsd": 10,
+        "maxWrites": 80,
+        "maxSessions": 4,
+        "risk": "medium"
+      },
+      "gates": [
+        "planning",
+        "implementation",
+        "task-close",
+        "source-contract",
+        "ship-ready"
+      ]
     }
   }
 }
