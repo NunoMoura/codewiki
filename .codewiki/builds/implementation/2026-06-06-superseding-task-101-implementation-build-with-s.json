@@ -1,0 +1,503 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-06T05:22:36Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+  "task_id": "TASK-101",
+  "task": {
+    "id": "TASK-101",
+    "title": "Document residual coverage and trace-audit closure policy",
+    "status": "todo",
+    "priority": "high",
+    "kind": "docs",
+    "summary": "Update system KB so residual issue coverage, trace audit debugging, and closure expectations are canonical knowledge.",
+    "spec_paths": [
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/trace-graph.md"
+    ],
+    "code_paths": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "goal": {
+      "outcome": "System knowledge states that actionable residual drift cannot be orphaned and explains how trace audits expose closure residuals.",
+      "acceptance": [
+        "KB defines residual issue coverage and accepted classifications in closure context.",
+        "KB states historical/non-task rationale is insufficient without task/sprint/defer/archive/compatibility/false-positive coverage.",
+        "Trace/graph docs describe residual coverage snapshots and gate diagnostics refs.",
+        "File-structure docs align cleanup with scoped warning-class tasks and no mega-task closure."
+      ],
+      "non_goals": [
+        "Do not change source gate behavior.",
+        "Do not rewrite unrelated KB sections."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+        "wiki_state refresh=true"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-13T05:22:36.000Z",
+    "purge_after": "2026-06-20T05:22:36.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 2,
+    "attempt": "ship-ready-publication-evidence",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-06-06-documented-residual-coverage-trace-audit-closure.json"
+    ],
+    "status": "active"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Superseding TASK-101 implementation build with ship-ready publication readiness evidence.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-101"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "tests": [],
+    "validation": [
+      ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-101"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+    "spec_paths": [
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/trace-graph.md"
+    ],
+    "code_paths": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ]
+  },
+  "test_files": [],
+  "code_files": [
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/file-structure.md"
+  ],
+  "files_changed": [
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/file-structure.md"
+  ],
+  "checks_run": [
+    "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed task_id=TASK-101: stale-reference/generated-parity/task pass; known alignment/file-structure/changed warnings remain",
+    "wiki_gate audit profiles=alignment,package,security,stale-reference,task task_id=TASK-101: package/security/stale-reference/task pass; alignment warning due existing graph warnings",
+    "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+    "checkpoint commit 3703a44c46df16b572ae3447c1a8ba6cb7b4b362 tree 6783e5b28706d469eb5c01c3150032c6dce5ce11"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-101",
+      "test_files": [],
+      "evidence": [
+        "Docs-only task; no runtime test added. Verification by KB audits and graph health."
+      ],
+      "notes": [
+        "Remaining warnings owned by other SPRINT-023 tasks; package/security/stale-reference audits passed."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-101",
+      "code_files": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "evidence": [
+        "No docs changes after prior implementation build; this build adds ship-ready/publication readiness metadata."
+      ],
+      "notes": [
+        "No reload required; only CodeWiki KB/evidence changed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Docs-only task; no runtime test added. Verification by KB audits and graph health."
+  ],
+  "code_change_evidence": [
+    "No docs changes after prior implementation build; this build adds ship-ready/publication readiness metadata."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "KB defines residual issue coverage and accepted classifications in closure context.",
+      "evidence": "validation-gateway.md defines residual issue coverage and accepted classifications."
+    },
+    {
+      "criterion": "KB states historical/non-task rationale is insufficient without task/sprint/defer/archive/compatibility/false-positive coverage.",
+      "evidence": "validation-gateway.md and file-structure.md explicitly say historical/non-task/out-of-scope are not durable coverage."
+    },
+    {
+      "criterion": "Trace/graph docs describe residual coverage snapshots and gate diagnostics refs.",
+      "evidence": "trace-graph.md describes compact residual coverage snapshots for trace audits."
+    },
+    {
+      "criterion": "File-structure docs align cleanup with scoped warning-class tasks and no mega-task closure.",
+      "evidence": "file-structure.md requires warning-class/owner-boundary cleanup and residual coverage."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Make residual coverage and trace-audit closure policy canonical.",
+    "implemented_changes": [
+      "Defined residual coverage classifications in gateway docs.",
+      "Documented trace audit residual snapshots.",
+      "Documented scoped file-structure cleanup policy."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "roadmap": [],
+      "code": [],
+      "tests": [],
+      "validation": [
+        ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "implementation pass",
+      "stale-reference/generated-parity/task audits pass",
+      "package/security/stale-reference audits pass"
+    ],
+    "checks": [
+      "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed task_id=TASK-101",
+      "wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-101"
+    ],
+    "non_goals_preserved": [
+      "No source gate behavior changed.",
+      "No unrelated KB rewrite."
+    ],
+    "remaining_risks": [
+      "Remaining warnings are owned by TASK-103/TASK-104/TASK-105."
+    ]
+  },
+  "risks": [
+    "Trace-primary source implementation for early trace creation remains future work; this task documents policy only."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-101",
+      "task_id": "TASK-101",
+      "next_focus_task_id": "TASK-103",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-101",
+        "title": "Document residual coverage and trace-audit closure policy",
+        "summary": "Superseding TASK-101 implementation build with ship-ready publication readiness evidence.",
+        "spec_paths": [
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/kb/system/trace-graph.md"
+        ],
+        "code_paths": [
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/validation-gateway.md"
+        ],
+        "acceptance": [
+          "KB defines residual issue coverage and accepted classifications in closure context.",
+          "KB states historical/non-task rationale is insufficient without task/sprint/defer/archive/compatibility/false-positive coverage.",
+          "Trace/graph docs describe residual coverage snapshots and gate diagnostics refs.",
+          "File-structure docs align cleanup with scoped warning-class tasks and no mega-task closure."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed",
+          "wiki_state refresh=true"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+        "checks_run": [
+          "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed task_id=TASK-101: stale-reference/generated-parity/task pass; known alignment/file-structure/changed warnings remain",
+          "wiki_gate audit profiles=alignment,package,security,stale-reference,task task_id=TASK-101: package/security/stale-reference/task pass; alignment warning due existing graph warnings",
+          "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+          "checkpoint commit 3703a44c46df16b572ae3447c1a8ba6cb7b4b362 tree 6783e5b28706d469eb5c01c3150032c6dce5ce11"
+        ],
+        "test_design_evidence": [
+          "Docs-only task; no runtime test added. Verification by KB audits and graph health."
+        ],
+        "code_change_evidence": [
+          "No docs changes after prior implementation build; this build adds ship-ready/publication readiness metadata."
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-101",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task-101-residual-coverage-policy",
+      "show_build": "git show refs/codewiki/archive/task-101-residual-coverage-policy:.codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "TASK-101 document residual coverage policy",
+      "body": "Define residual issue coverage classifications, trace-audit closure residuals, and scoped file-structure cleanup policy.\n\nChecks: stale-reference/generated-parity/task audits pass; package/security/stale-reference audits pass.\n\nCodeWiki-Task: TASK-101\nCodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+      "trailers": [
+        "CodeWiki-Task: TASK-101",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+        "CodeWiki-Checks: wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed task_id=TASK-101: stale-reference/generated-parity/task pass; known alignment/file-structure/changed warnings remain, wiki_gate audit profiles=alignment,package,security,stale-reference,task task_id=TASK-101: package/security/stale-reference/task pass; alignment warning due existing graph warnings, implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json, checkpoint commit 3703a44c46df16b572ae3447c1a8ba6cb7b4b362 tree 6783e5b28706d469eb5c01c3150032c6dce5ce11",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+        "CodeWiki-Recover: /wiki-restore TASK-101",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task-101-residual-coverage-policy",
+        "CodeWiki-Digest: sha256:5eb45e8c56051fe80e8e7070744e00fc9d2a56d3fca0659ab536180af0559a59",
+        "CodeWiki-Restore: /wiki-restore TASK-101"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "TASK-101 document residual coverage policy",
+      "body": "Define residual issue coverage classifications, trace-audit closure residuals, and scoped file-structure cleanup policy.\n\nChecks: stale-reference/generated-parity/task audits pass; package/security/stale-reference audits pass.\n\nCodeWiki-Task: TASK-101\nCodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task-101-residual-coverage-policy",
+      "commit_sha": "3703a44c46df16b572ae3447c1a8ba6cb7b4b362",
+      "remote": "origin",
+      "branch": "main",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task-101-residual-coverage-policy"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-101",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task-101-residual-coverage-policy",
+        "show_build": "git show refs/codewiki/archive/task-101-residual-coverage-policy:.codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/file-structure.md"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-101",
+      "build_path": ".codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+      "archive_ref": "refs/codewiki/archive/task-101-residual-coverage-policy",
+      "commit_sha": "3703a44c46df16b572ae3447c1a8ba6cb7b4b362",
+      "digest": "sha256:5eb45e8c56051fe80e8e7070744e00fc9d2a56d3fca0659ab536180af0559a59",
+      "restore_command": "/wiki-restore TASK-101"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
+          "bytes": 20120
+        },
+        {
+          "path": ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+          "role": "validation_ref",
+          "sha256": "sha256:de358507b8ed86834f31a2a779972ae5cc9661f232f4a2b4aad4137f38376c04",
+          "bytes": 56221
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "role": "code_file",
+          "sha256": "sha256:723b7820c424fe77bc39e6605feb87a3fedab18f6704045841b35e8620cd4ea4",
+          "bytes": 9410
+        },
+        {
+          "path": ".codewiki/kb/system/trace-graph.md",
+          "role": "code_file",
+          "sha256": "sha256:3d47e082021c7e6925bf9bab1817a77e632fa029d0f7834e930c7dc6807abd9b",
+          "bytes": 13435
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:3fb2185733265bb524ec0b3bfe7a4546a8025f75e16fc5eac997d215fa854460",
+          "bytes": 13449
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-101",
+      "source_build": ".codewiki/builds/implementation/2026-06-06-superseding-task-101-implementation-build-with-s.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/file-structure.md"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task-101-residual-coverage-policy",
+        "restore_command": "/wiki-restore TASK-101"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "wiki_gate audit profiles=alignment,stale-reference,file-structure,generated-parity,changed task_id=TASK-101: stale-reference/generated-parity/task pass; known alignment/file-structure/changed warnings remain",
+        "wiki_gate audit profiles=alignment,package,security,stale-reference,task task_id=TASK-101: package/security/stale-reference/task pass; alignment warning due existing graph warnings",
+        "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json",
+        "checkpoint commit 3703a44c46df16b572ae3447c1a8ba6cb7b4b362 tree 6783e5b28706d469eb5c01c3150032c6dce5ce11"
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-06-implementation-pass-task-101-2026-06-06-document.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": true,
+      "blocked_reasons": [],
+      "security": {
+        "secret_scan": "pass",
+        "remote_visibility": "pass",
+        "private_evidence": "pass",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
