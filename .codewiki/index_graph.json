@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T08:24:25.373Z",
+  "generated_at": "2026-06-06T08:25:50.608Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -53854,7 +53854,9 @@
       "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-105",
-      "superseded_by": [],
+      "superseded_by": [
+        ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
+      ],
       "evidence_summary": {
         "canonical_source_refs": [
           ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
@@ -54729,6 +54731,126 @@
       "task_id": "TASK-104",
       "digest": "sha256:7e64738a7c114e593c8ae22b414b026d894e37a6069d203d5b2b04d0771a8747",
       "restore_command": "/wiki-restore TASK-104",
+      "safety_status": "safe_to_push",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
+      "id": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "title": "wiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+          ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+          "wiki_build tool",
+          ".codewiki/kb/product/uis/status-dock.md",
+          ".codewiki/kb/product/uis/terminal.md",
+          ".codewiki/kb/system/terminal-ui.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/lexicon.md",
+          ".codewiki/kb/system/agency.md",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "TASK-105"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json@sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
+          ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
+          ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
+          "tests/smoke/diagram-refs.test.mjs@sha256:077bcdd5463fe6bec84dea8ff3a5538ef21122628bb5ccd6e700f9c85ad23756",
+          "tests/smoke/source-contract.test.mjs@sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          ".codewiki/kb/product/uis/status-dock.md@sha256:a10b368db59953f45b11f0c609b69bfc016b0116f79bff5fa3b8651756e5bab0",
+          ".codewiki/kb/product/uis/terminal.md@sha256:7e8f7f565ac9a4b013ce389f84b59c91bb3c917f10d3168f1ce6407f6a9a3b2e",
+          ".codewiki/kb/system/terminal-ui.md@sha256:1da5e0d4bd69505dca718794c083ecf518347e3757cd1b496bdb7b1a5ebb8eb2",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:6ee097c30ce0d33ef0a1a080b7a9f5958dc9ad7ba6edc0fc37aa01853dc5a654",
+          ".codewiki/kb/system/file-structure.md@sha256:648d4a1f2911b1230b6c46003f9baf1fdb29297e1544d81270cc772b9d01608d",
+          ".codewiki/kb/lexicon.md@sha256:d1ee32a973da283fde8299ccdec4a3c906c5edb71b07142e396880ca32892847",
+          ".codewiki/kb/system/agency.md@sha256:556090ded2bf96fd9a50f2ff446adc9e3109dea75d58afb7481ced91f3df42af",
+          "95d40c45a0a8631606515f93be815b2ef6cbe534",
+          "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+          "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9"
+        ],
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+          ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json",
+          ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json",
+          ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
+          ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
+      "kind": "content_proof",
+      "path": ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:95d40c45a0a8631606515f93be815b2ef6cbe534",
+      "kind": "content_proof",
+      "path": "95d40c45a0a8631606515f93be815b2ef6cbe534",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
+      "kind": "content_proof",
+      "path": "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "task_id": "TASK-105",
+      "digest": "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
+      "restore_command": "/wiki-restore TASK-105",
       "safety_status": "safe_to_push",
       "default_hidden": true,
       "layer": "archive",
@@ -176123,6 +176245,203 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:wiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/product/uis/status-dock.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/product/uis/terminal.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/system/terminal-ui.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/lexicon.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:.codewiki/kb/system/agency.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:tests/smoke/diagram-refs.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:tests/smoke/source-contract.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "source:TASK-105",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json@sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:tests/smoke/diagram-refs.test.mjs@sha256:077bcdd5463fe6bec84dea8ff3a5538ef21122628bb5ccd6e700f9c85ad23756",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:tests/smoke/source-contract.test.mjs@sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/product/uis/status-dock.md@sha256:a10b368db59953f45b11f0c609b69bfc016b0116f79bff5fa3b8651756e5bab0",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/product/uis/terminal.md@sha256:7e8f7f565ac9a4b013ce389f84b59c91bb3c917f10d3168f1ce6407f6a9a3b2e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/system/terminal-ui.md@sha256:1da5e0d4bd69505dca718794c083ecf518347e3757cd1b496bdb7b1a5ebb8eb2",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:6ee097c30ce0d33ef0a1a080b7a9f5958dc9ad7ba6edc0fc37aa01853dc5a654",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/system/file-structure.md@sha256:648d4a1f2911b1230b6c46003f9baf1fdb29297e1544d81270cc772b9d01608d",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/lexicon.md@sha256:d1ee32a973da283fde8299ccdec4a3c906c5edb71b07142e396880ca32892847",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:.codewiki/kb/system/agency.md@sha256:556090ded2bf96fd9a50f2ff446adc9e3109dea75d58afb7481ced91f3df42af",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:95d40c45a0a8631606515f93be815b2ef6cbe534",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "content_proof:sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "task:TASK-105"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+      "to": "archive_ref:refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
       "to": "source:.codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
       "default_hidden": true
@@ -202925,7 +203244,7 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 147
+                "count": 148
               },
               {
                 "id": "dirty_paths",
@@ -202972,7 +203291,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 2304
+                "count": 2308
               },
               {
                 "id": "traceability_gaps",
@@ -203002,12 +203321,12 @@
         ],
         "badges": {
           "builds": {
-            "total": 265,
+            "total": 266,
             "decision": 52,
             "planning": 66,
-            "implementation": 147,
+            "implementation": 148,
             "hot": 0,
-            "collapsed": 265
+            "collapsed": 266
           },
           "validations": {
             "total": 390,
@@ -203070,11 +203389,11 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6083,
-          "edges": 20492,
+          "nodes": 6090,
+          "edges": 20525,
           "open_tasks": 0,
           "validations": 382,
-          "source_refs": 1489
+          "source_refs": 1490
         },
         "next_action": {
           "kind": "decision",
@@ -203094,7 +203413,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1521,
+          "source_ref_count": 1522,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -203116,7 +203435,7 @@
               ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
             ],
-            "omitted_ref_count": 1513
+            "omitted_ref_count": 1514
           }
         ],
         "data": {
@@ -203302,7 +203621,7 @@
                 {
                   "id": "implementation_builds",
                   "label": "implementation builds",
-                  "count": 147
+                  "count": 148
                 },
                 {
                   "id": "dirty_paths",
@@ -203349,7 +203668,7 @@
                 {
                   "id": "content_proofs",
                   "label": "content proofs",
-                  "count": 2304
+                  "count": 2308
                 },
                 {
                   "id": "traceability_gaps",
@@ -203993,7 +204312,7 @@
         "omitted_counts": {
           "validation_reports": 382,
           "reconciliation_items": 45,
-          "source_refs": 3486
+          "source_refs": 3490
         },
         "next_action": {
           "kind": "decision",
@@ -204013,7 +204332,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3518,
+          "source_ref_count": 3522,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -204035,7 +204354,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3510
+            "omitted_ref_count": 3514
           }
         ],
         "data": {
@@ -204972,7 +205291,7 @@
         ],
         "omitted_counts": {
           "ready_tasks": 1,
-          "source_refs": 3502
+          "source_refs": 3507
         },
         "next_action": {
           "kind": "stop",
@@ -205004,7 +205323,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3534,
+          "source_ref_count": 3539,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -205026,7 +205345,7 @@
               ".codewiki/kb/lexicon.md",
               ".codewiki/session/queue.json"
             ],
-            "omitted_ref_count": 3526
+            "omitted_ref_count": 3531
           }
         ],
         "data": {
@@ -205068,7 +205387,8 @@
                   ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
                   ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
                   ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-                  ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+                  ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+                  ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
                 ],
                 "gate_refs": [
                   ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
@@ -205464,9 +205784,9 @@
           ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json"
         ],
         "omitted_counts": {
-          "nodes": 6083,
-          "edges": 20492,
-          "source_refs": 1489
+          "nodes": 6090,
+          "edges": 20525,
+          "source_refs": 1490
         },
         "next_action": {
           "kind": "decision",
@@ -205486,7 +205806,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 1521,
+          "source_ref_count": 1522,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -205508,7 +205828,7 @@
               ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
               ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
             ],
-            "omitted_ref_count": 1513
+            "omitted_ref_count": 1514
           }
         ],
         "requirement_rows": [],
@@ -205853,165 +206173,7 @@
           "publication": [],
           "deferred_views": []
         },
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/kb/product/uis/status-dock.md",
-            "change_type": "product",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/product/uis/terminal.md",
-            "change_type": "product",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-              ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
-              ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
-              ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
-              ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
-              ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-              ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-              ".codewiki/builds/implementation/2026-06-03-implemented-task-086-warning-cleanup-by-aligning.json",
-              ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
-              ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
-              ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json",
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json",
-              ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-              ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
-              ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
-              ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
-              ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
-              ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-              ".codewiki/builds/implementation/2026-06-03-implemented-task-086-warning-cleanup-by-aligning.json",
-              ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
-              ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/terminal-ui.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-              ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
-              ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-              ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/**",
@@ -206215,6 +206377,7 @@
           ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+          ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
@@ -214495,6 +214658,29 @@
             ]
           },
           {
+            "path": ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-105"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+              ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+              "wiki_build tool",
+              ".codewiki/kb/product/uis/status-dock.md",
+              ".codewiki/kb/product/uis/terminal.md",
+              ".codewiki/kb/system/terminal-ui.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/lexicon.md",
+              ".codewiki/kb/system/agency.md",
+              "tests/smoke/diagram-refs.test.mjs",
+              "tests/smoke/source-contract.test.mjs",
+              "TASK-105"
+            ]
+          },
+          {
             "path": ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
             "kind": "implementation_build",
             "status": "accepted",
@@ -214555,7 +214741,7 @@
           ".codewiki/validation/2026-05-21-task-close-pass-task-009.json"
         ],
         "omitted_counts": {
-          "source_refs": 3486,
+          "source_refs": 3490,
           "validation_reports": 0
         },
         "next_action": {
@@ -214576,7 +214762,7 @@
         "freshness": {
           "status": "fresh",
           "basis": "generated_index_source_refs",
-          "source_ref_count": 3518,
+          "source_ref_count": 3522,
           "stale_when": "canonical source refs change without rebuilding generated graph/state"
         },
         "expansion_hints": [
@@ -214598,7 +214784,7 @@
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json"
             ],
-            "omitted_ref_count": 3510
+            "omitted_ref_count": 3514
           }
         ],
         "validation_reports": [
@@ -231035,6 +231221,7 @@
           ".codewiki/validation/2026-06-06-implementation-pass-task-102-2026-06-06-classifi.json@sha256:1194b9e2c8ca99e695288629d67fb9c0151d7d45ef4afd98cb32825b881756ab",
           ".codewiki/validation/2026-06-06-implementation-pass-task-103-2026-06-06-classifi.json@sha256:b14cb12d7a36b58a8a9822c580f4e82d6086a8674a3bbd31ac265e83693123d7",
           ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json@sha256:f045fe1348e4c2b97f2203e053bc2f72b21a0c527477ea6ee15479ad1ef4c37b",
+          ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
           ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json@sha256:f12154bc8080adac9b903831d34e6af79e0d22bcbb18f10d7885af4b5877da7a",
           ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
           ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
@@ -231274,6 +231461,7 @@
           "93ba50facaa893ad7eddfa5d44ff26620544a3dd",
           "94384261e3f900b35080497b743eb56f4a941bc2",
           "95ad03ed84658d96692a015d293d1f12bc4d11c4",
+          "95d40c45a0a8631606515f93be815b2ef6cbe534",
           "96139118671c2e33ec941da3012be17f3ae32aed",
           "96213363ccf4ff3e01d21a088b61ea0042f63aa1",
           "983bf348d55fb77a1ee21376664bcfa1ccd96db5",
@@ -231480,6 +231668,7 @@
           "refs/codewiki/archive/task-102-prompt-asset-ownership",
           "refs/codewiki/archive/task-103-test-root-classification",
           "refs/codewiki/archive/task-104-legacy-decision-build-coverage",
+          "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
           "refs/codewiki/archive/task-106-agency-config-prompt-policy",
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-002",
@@ -231594,6 +231783,7 @@
           "sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709",
           "sha256:0a1a39b318fbe54f27cba0c399a6eb7b41d969c33c94e88d8bfd4e5e7eedb148",
           "sha256:0b93d1afcd1ecf44a592ad917a128036d2cd3ae181c2f28c8f299ecdcd291425",
+          "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
           "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
           "sha256:0cc7221c74e1c397edcbb41beed9459284510834317c2011eb8e1149be276272",
           "sha256:1014395e2251ba2111b5456915354fcfc1d6e9e0e161b0666283edf6fde7a8bc",
@@ -242807,6 +242997,7 @@
         ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
         ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
         ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+        ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
         ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
@@ -244933,6 +245124,7 @@
         ".codewiki/validation/2026-06-06-implementation-pass-task-102-2026-06-06-classifi.json@sha256:1194b9e2c8ca99e695288629d67fb9c0151d7d45ef4afd98cb32825b881756ab",
         ".codewiki/validation/2026-06-06-implementation-pass-task-103-2026-06-06-classifi.json@sha256:b14cb12d7a36b58a8a9822c580f4e82d6086a8674a3bbd31ac265e83693123d7",
         ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json@sha256:f045fe1348e4c2b97f2203e053bc2f72b21a0c527477ea6ee15479ad1ef4c37b",
+        ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json@sha256:8cab99f43411251e51d0044dbb8ce64f3d831c87254ed0fcda914a7b40119dd6",
         ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json@sha256:f12154bc8080adac9b903831d34e6af79e0d22bcbb18f10d7885af4b5877da7a",
         ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json@sha256:891b555d6ffdddf6cb2183d776fd0363b363c38d257aab50cc6faaaf456aa56a",
         ".codewiki/validation/2026-06-06-task-close-pass-task-104-2026-06-06-superseding-.json@sha256:351b50c5fb024dca6f9764a1fd998a064f37cd501d81705e79fa5c31d2099ae8",
@@ -245172,6 +245364,7 @@
         "93ba50facaa893ad7eddfa5d44ff26620544a3dd",
         "94384261e3f900b35080497b743eb56f4a941bc2",
         "95ad03ed84658d96692a015d293d1f12bc4d11c4",
+        "95d40c45a0a8631606515f93be815b2ef6cbe534",
         "96139118671c2e33ec941da3012be17f3ae32aed",
         "96213363ccf4ff3e01d21a088b61ea0042f63aa1",
         "983bf348d55fb77a1ee21376664bcfa1ccd96db5",
@@ -245378,6 +245571,7 @@
         "refs/codewiki/archive/task-102-prompt-asset-ownership",
         "refs/codewiki/archive/task-103-test-root-classification",
         "refs/codewiki/archive/task-104-legacy-decision-build-coverage",
+        "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
         "refs/codewiki/archive/task-106-agency-config-prompt-policy",
         "refs/codewiki/archive/task/TASK-001",
         "refs/codewiki/archive/task/TASK-002",
@@ -245492,6 +245686,7 @@
         "sha256:05cc7ca765956cedb85cd3d1e304387d86c1d2e9bc3e5a3a66ff301cfe336709",
         "sha256:0a1a39b318fbe54f27cba0c399a6eb7b41d969c33c94e88d8bfd4e5e7eedb148",
         "sha256:0b93d1afcd1ecf44a592ad917a128036d2cd3ae181c2f28c8f299ecdcd291425",
+        "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
         "sha256:0c0db3b51b3472b54586be4c13d981bb7ecf5bec1e798ce4777c5dbf379fd592",
         "sha256:0cc7221c74e1c397edcbb41beed9459284510834317c2011eb8e1149be276272",
         "sha256:1014395e2251ba2111b5456915354fcfc1d6e9e0e161b0666283edf6fde7a8bc",
@@ -258477,165 +258672,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/kb/product/uis/status-dock.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/product/uis/terminal.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
-            ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
-            ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
-            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
-            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
-            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
-            ".codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-            ".codewiki/builds/implementation/2026-06-03-implemented-task-086-warning-cleanup-by-aligning.json",
-            ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
-            ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
-            ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json",
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json",
-            ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
-            ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
-            ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
-            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
-            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
-            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
-            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
-            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
-            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
-            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json",
-            ".codewiki/builds/implementation/2026-06-03-implemented-task-086-warning-cleanup-by-aligning.json",
-            ".codewiki/builds/implementation/2026-06-03-superseding-task-086-implementation-evidence-use.json",
-            ".codewiki/builds/implementation/2026-06-05-task-091-hot-state-retention-local-close.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/terminal-ui.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
-            ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
-            ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-06-01-implemented-task-071-terminal-first-cleanup-remo.json",
-            ".codewiki/builds/implementation/2026-06-01-refined-task-071-implementation-handoff-with-com.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -260539,6 +260576,7 @@
               ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
               ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
             ]
           }
@@ -260837,8 +260875,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-06T08:24:25.262Z",
-            "expires_at": "2026-06-06T10:24:25.262Z",
+            "generated_at": "2026-06-06T08:25:50.508Z",
+            "expires_at": "2026-06-06T10:25:50.508Z",
             "sprint_ids": [
               "SPRINT-023"
             ],
@@ -260856,6 +260894,7 @@
               ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
               ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
               ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
             ],
             "candidate_files": {
@@ -260927,7 +260966,8 @@
                 ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
               ],
               "implementation": [
-                ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+                ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+                ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
               ]
             },
             "validation_refs": {
@@ -260943,7 +260983,8 @@
               ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
               ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
               ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
             ],
             "gate_refs": [
               ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
@@ -261075,7 +261116,8 @@
                 ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
                 ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
                 ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-                ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+                ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+                ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
               ],
               "gate_refs": [
                 ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
@@ -261092,8 +261134,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T08:24:25.262Z",
-      "expires_at": "2026-06-06T10:24:25.262Z",
+      "generated_at": "2026-06-06T08:25:50.508Z",
+      "expires_at": "2026-06-06T10:25:50.508Z",
       "state": "waiting",
       "tasks": {
         "TASK-105": {
@@ -261108,8 +261150,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-06T08:24:25.262Z",
-          "expires_at": "2026-06-06T10:24:25.262Z",
+          "generated_at": "2026-06-06T08:25:50.508Z",
+          "expires_at": "2026-06-06T10:25:50.508Z",
           "sprint_ids": [
             "SPRINT-023"
           ],
@@ -261127,6 +261169,7 @@
             ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
             ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
           ],
           "candidate_files": {
@@ -261198,7 +261241,8 @@
               ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
             ],
             "implementation": [
-              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
             ]
           },
           "validation_refs": {
@@ -261214,7 +261258,8 @@
             ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
             ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
             ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-            ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+            ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
           ],
           "gate_refs": [
             ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
@@ -261346,7 +261391,8 @@
               ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
               ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
               ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json",
-              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json"
+              ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json"
             ],
             "gate_refs": [
               ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
@@ -262240,6 +262286,7 @@
             ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
             ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
             ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
           ]
         }
@@ -262281,6 +262328,7 @@
         ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
         ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
         ".codewiki/builds/implementation/2026-06-06-reconciled-related-doc-and-compatibility-export-.json",
+        ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
         ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json"
       ]
     },
@@ -262876,6 +262924,7 @@
             ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json"
           ]
         },
@@ -262890,6 +262939,7 @@
             "TASK-102",
             "TASK-103",
             "TASK-104",
+            "TASK-105",
             "TASK-106"
           ],
           "build_paths": [
@@ -262902,6 +262952,7 @@
             ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+            ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
             ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json"
           ],
           "validation_paths": [
@@ -262929,6 +262980,7 @@
             ".codewiki/validation/2026-06-06-implementation-pass-task-103-2026-06-06-supersed.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-supersed.json",
+            ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json",
             ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-supersed.json",
             ".codewiki/validation/2026-06-06-ship-ready-pass-task-099-2026-06-06-superseding-.json",
@@ -264419,6 +264471,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-105",
+          "build_path": ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
+          "archive_ref": "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
+          "commit_sha": "95d40c45a0a8631606515f93be815b2ef6cbe534",
+          "digest": "sha256:0beab958071eb060b7c85ded612fa860304ebfc6e55a0a913758b62ccae0aeb9",
+          "restore_command": "/wiki-restore TASK-105",
+          "safety_status": "safe_to_push"
+        },
+        {
+          "kind": "task",
           "id": "TASK-106",
           "build_path": ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json",
           "archive_ref": "refs/codewiki/archive/task-106-agency-config-prompt-policy",
@@ -264429,7 +264491,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 147,
+        "ledger_count": 148,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -264577,6 +264639,7 @@
           "refs/codewiki/archive/task-102-prompt-asset-ownership",
           "refs/codewiki/archive/task-103-test-root-classification",
           "refs/codewiki/archive/task-104-legacy-decision-build-coverage",
+          "refs/codewiki/archive/task-105-doc-hygiene-compatibility",
           "refs/codewiki/archive/task-106-agency-config-prompt-policy"
         ],
         "build_paths": [
@@ -264726,6 +264789,7 @@
           ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+          ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
           ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json"
         ],
         "blocked_purge_build_paths": [
@@ -265496,7 +265560,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T08:24:24.948Z",
+      "generated_at": "2026-06-06T08:25:50.241Z",
       "counts": {
         "large-doc": 2,
         "legacy-decision-build-decision-table-deferred": 44
@@ -265782,7 +265846,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T08:24:25Z",
+      "generated_at": "2026-06-06T08:25:50Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -267581,7 +267645,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T08:24:25Z",
+      "generated_at": "2026-06-06T08:25:50Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -268272,6 +268336,7 @@
               ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json"
             ]
           },
@@ -268286,6 +268351,7 @@
               "TASK-102",
               "TASK-103",
               "TASK-104",
+              "TASK-105",
               "TASK-106"
             ],
             "build_paths": [
@@ -268298,6 +268364,7 @@
               ".codewiki/builds/implementation/2026-06-06-superseding-task-102-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-103-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-104-implementation-build-with-s.json",
+              ".codewiki/builds/implementation/2026-06-06-superseding-task-105-implementation-build-with-s.json",
               ".codewiki/builds/implementation/2026-06-06-superseding-task-106-implementation-build-with-s.json"
             ],
             "validation_paths": [
@@ -268325,6 +268392,7 @@
               ".codewiki/validation/2026-06-06-implementation-pass-task-103-2026-06-06-supersed.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-supersed.json",
+              ".codewiki/validation/2026-06-06-implementation-pass-task-105-2026-06-06-reconcil.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-implemen.json",
               ".codewiki/validation/2026-06-06-implementation-pass-task-106-2026-06-06-supersed.json",
               ".codewiki/validation/2026-06-06-ship-ready-pass-task-099-2026-06-06-superseding-.json",
@@ -272565,7 +272633,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T08:24:25Z",
+        "generated_at": "2026-06-06T08:25:50Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -272620,18 +272688,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T08:24:25Z",
+            "checked_at": "2026-06-06T08:25:50Z",
             "revision": {
               "git": {
-                "head": "ef4410c62d79a3b09b440e03d5817890b2944785",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/uis/status-dock.md",
-                  ".codewiki/kb/product/uis/terminal.md",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/terminal-ui.md"
-                ],
+                "head": "95d40c45a0a8631606515f93be815b2ef6cbe534",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -272648,8 +272710,8 @@
                   ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
                   ".codewiki/kb/product/uis/control-room.md": "3efd8ddf7dadc5e98866afe0c4e7f3f18a5c7303",
                   ".codewiki/kb/product/uis/graph-navigation.md": "ce6113aa020673ce4cc2741b3d218cce3b7887ee",
-                  ".codewiki/kb/product/uis/status-dock.md": "3f625354e61b3be37f90312e0150990e027ef769",
-                  ".codewiki/kb/product/uis/terminal.md": "2d1556127f493e61af6c452c2591d2ae154d7918",
+                  ".codewiki/kb/product/uis/status-dock.md": "828b1bc29b95c00a91b6f93eacf35c38e17f761d",
+                  ".codewiki/kb/product/uis/terminal.md": "41f672df8db8bb1ff3f5e8445da29b37581f1f82",
                   ".codewiki/kb/product/users/agents.md": "ddb033a355284c9a5c657cbf24886b8f53bfaef3",
                   ".codewiki/kb/product/users/external-users.md": "7e600b462cbfb504059095263344927f78965529",
                   ".codewiki/kb/product/users/maintainers.md": "bc25c72532ff7fb7c7f52c76621f40e97ee191cf",
@@ -272680,9 +272742,9 @@
                   ".codewiki/kb/system/diagrams/architecture.yaml": "638e30de5f15ec07a65476f5f6b11d37ef600443",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "1638d88a58509134c40afbe3149fd87c19d06d2a",
                   ".codewiki/kb/system/diagrams/context-map.yaml": "2974252192770b06bb6d7e7d1c32c161d735abb0",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "fea14da12c206b33cd1d6cf16878d2a92f80b70c",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "4a63b8e2839e76559ae3726f22111efeded9146f",
                   ".codewiki/kb/system/extension.md": "3cd553fbff16e07f583af5bc7a711c114e635774",
-                  ".codewiki/kb/system/file-structure.md": "2d5ae28cc2fd3c220b92917f1867cf653bfa960d",
+                  ".codewiki/kb/system/file-structure.md": "b95105e746c39d0369d8ac422f616c19d965e7ef",
                   ".codewiki/kb/system/flows/artifact-claim-wait-wake.md": "33e837bf46f8fa50f7e2cf7ce71527b50ca84709",
                   ".codewiki/kb/system/flows/decision-to-planning.md": "a7925671b4ea11350991d416c6b42c9228152e71",
                   ".codewiki/kb/system/flows/implementation-validation-close.md": "d6dc2885f5a2580b26af92245f3103a315806fe8",
@@ -272697,7 +272759,7 @@
                   ".codewiki/kb/system/roadmap.md": "443ba0deb3e3201c23d3f929129d3b063f9d05cd",
                   ".codewiki/kb/system/runtime.md": "ee51d708cfb6963a64a936c1ceedf69c1ed07de1",
                   ".codewiki/kb/system/system-truth-and-compilers.md": "1d529df9928f2c42aeb010e759ab6466b4fb378b",
-                  ".codewiki/kb/system/terminal-ui.md": "e4e3fb638850b1ab6351282a5a9d5243b5712f1f",
+                  ".codewiki/kb/system/terminal-ui.md": "0d8dde95f6bbd6b5b24cb40387f44e40e1ca4f05",
                   ".codewiki/kb/system/trace-graph.md": "0d26a601c354dad9091916e8c38b2ba349533886",
                   ".codewiki/kb/system/validation-gateway.md": "ae204abfbb1d5b91a5ff6cd78eb0053306d0ed8d",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
@@ -272890,12 +272952,12 @@
               "spec_digest": "7898cb5e09ac398a2dd90c61ea888ec23ac6b9405474d7ab6cbd9ba1378616a0",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "6bb20112b91d2eab926b5afe7014d4a1252f5cde53d4f8fbbaf84547980ebebf",
-              "digest": "98daeccb68a3461f35fa68e50513a9e162929dc55cd592a4e87bc10e03e7f950"
+              "digest": "f6cabaf7c2c003ac382ec7a91fe45c82b0eabc75a13b1476cd0ae89c525821a1"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:24:25Z",
+              "checked_at": "2026-06-06T08:25:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -273425,18 +273487,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T08:24:25Z",
+            "checked_at": "2026-06-06T08:25:50Z",
             "revision": {
               "git": {
-                "head": "ef4410c62d79a3b09b440e03d5817890b2944785",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/uis/status-dock.md",
-                  ".codewiki/kb/product/uis/terminal.md",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/terminal-ui.md"
-                ],
+                "head": "95d40c45a0a8631606515f93be815b2ef6cbe534",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -273447,8 +273503,8 @@
                   ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
                   ".codewiki/kb/product/uis/control-room.md": "3efd8ddf7dadc5e98866afe0c4e7f3f18a5c7303",
                   ".codewiki/kb/product/uis/graph-navigation.md": "ce6113aa020673ce4cc2741b3d218cce3b7887ee",
-                  ".codewiki/kb/product/uis/status-dock.md": "3f625354e61b3be37f90312e0150990e027ef769",
-                  ".codewiki/kb/product/uis/terminal.md": "2d1556127f493e61af6c452c2591d2ae154d7918",
+                  ".codewiki/kb/product/uis/status-dock.md": "828b1bc29b95c00a91b6f93eacf35c38e17f761d",
+                  ".codewiki/kb/product/uis/terminal.md": "41f672df8db8bb1ff3f5e8445da29b37581f1f82",
                   ".codewiki/kb/system/": "",
                   ".codewiki/kb/system/adapters.md": "b388f113c4ae1a64e2c9bed5d08cdf3e5a7b7457",
                   ".codewiki/kb/system/agency.md": "89e0143af0bd5c0e609310f821b8996d1c547268",
@@ -273475,9 +273531,9 @@
                   ".codewiki/kb/system/diagrams/architecture.yaml": "638e30de5f15ec07a65476f5f6b11d37ef600443",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "1638d88a58509134c40afbe3149fd87c19d06d2a",
                   ".codewiki/kb/system/diagrams/context-map.yaml": "2974252192770b06bb6d7e7d1c32c161d735abb0",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "fea14da12c206b33cd1d6cf16878d2a92f80b70c",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "4a63b8e2839e76559ae3726f22111efeded9146f",
                   ".codewiki/kb/system/extension.md": "3cd553fbff16e07f583af5bc7a711c114e635774",
-                  ".codewiki/kb/system/file-structure.md": "2d5ae28cc2fd3c220b92917f1867cf653bfa960d",
+                  ".codewiki/kb/system/file-structure.md": "b95105e746c39d0369d8ac422f616c19d965e7ef",
                   ".codewiki/kb/system/flows/artifact-claim-wait-wake.md": "33e837bf46f8fa50f7e2cf7ce71527b50ca84709",
                   ".codewiki/kb/system/flows/decision-to-planning.md": "a7925671b4ea11350991d416c6b42c9228152e71",
                   ".codewiki/kb/system/flows/implementation-validation-close.md": "d6dc2885f5a2580b26af92245f3103a315806fe8",
@@ -273492,7 +273548,7 @@
                   ".codewiki/kb/system/roadmap.md": "443ba0deb3e3201c23d3f929129d3b063f9d05cd",
                   ".codewiki/kb/system/runtime.md": "ee51d708cfb6963a64a936c1ceedf69c1ed07de1",
                   ".codewiki/kb/system/system-truth-and-compilers.md": "1d529df9928f2c42aeb010e759ab6466b4fb378b",
-                  ".codewiki/kb/system/terminal-ui.md": "e4e3fb638850b1ab6351282a5a9d5243b5712f1f",
+                  ".codewiki/kb/system/terminal-ui.md": "0d8dde95f6bbd6b5b24cb40387f44e40e1ca4f05",
                   ".codewiki/kb/system/trace-graph.md": "0d26a601c354dad9091916e8c38b2ba349533886",
                   ".codewiki/kb/system/validation-gateway.md": "ae204abfbb1d5b91a5ff6cd78eb0053306d0ed8d",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
@@ -273681,12 +273737,12 @@
               "spec_digest": "c7533d9dc1906301e77c77504ba0dd69e1165d819d68d8ad0f2f92e04e253dad",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "6bb20112b91d2eab926b5afe7014d4a1252f5cde53d4f8fbbaf84547980ebebf",
-              "digest": "98d15ebd886ba791e8602441249d09f817f523169513731741f4dc81400a40a7"
+              "digest": "7bd5eb7fc3b516688922d20add706176d33fbfb16e6047e5d585b20582a8c30d"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:24:25Z",
+              "checked_at": "2026-06-06T08:25:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -274192,18 +274248,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T08:24:25Z",
+            "checked_at": "2026-06-06T08:25:50Z",
             "revision": {
               "git": {
-                "head": "ef4410c62d79a3b09b440e03d5817890b2944785",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/uis/status-dock.md",
-                  ".codewiki/kb/product/uis/terminal.md",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/terminal-ui.md"
-                ],
+                "head": "95d40c45a0a8631606515f93be815b2ef6cbe534",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "ae90e3608679603f936504534787b4cf25221451",
                   ".codewiki/kb/": "",
@@ -274220,8 +274270,8 @@
                   ".codewiki/kb/product/uis/control-room-details.md": "1f6da3e0814320167b2c17109c5d1c11432b445b",
                   ".codewiki/kb/product/uis/control-room.md": "3efd8ddf7dadc5e98866afe0c4e7f3f18a5c7303",
                   ".codewiki/kb/product/uis/graph-navigation.md": "ce6113aa020673ce4cc2741b3d218cce3b7887ee",
-                  ".codewiki/kb/product/uis/status-dock.md": "3f625354e61b3be37f90312e0150990e027ef769",
-                  ".codewiki/kb/product/uis/terminal.md": "2d1556127f493e61af6c452c2591d2ae154d7918",
+                  ".codewiki/kb/product/uis/status-dock.md": "828b1bc29b95c00a91b6f93eacf35c38e17f761d",
+                  ".codewiki/kb/product/uis/terminal.md": "41f672df8db8bb1ff3f5e8445da29b37581f1f82",
                   ".codewiki/kb/product/users/agents.md": "ddb033a355284c9a5c657cbf24886b8f53bfaef3",
                   ".codewiki/kb/product/users/external-users.md": "7e600b462cbfb504059095263344927f78965529",
                   ".codewiki/kb/product/users/maintainers.md": "bc25c72532ff7fb7c7f52c76621f40e97ee191cf",
@@ -274252,9 +274302,9 @@
                   ".codewiki/kb/system/diagrams/architecture.yaml": "638e30de5f15ec07a65476f5f6b11d37ef600443",
                   ".codewiki/kb/system/diagrams/component-map.yaml": "1638d88a58509134c40afbe3149fd87c19d06d2a",
                   ".codewiki/kb/system/diagrams/context-map.yaml": "2974252192770b06bb6d7e7d1c32c161d735abb0",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "fea14da12c206b33cd1d6cf16878d2a92f80b70c",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml": "4a63b8e2839e76559ae3726f22111efeded9146f",
                   ".codewiki/kb/system/extension.md": "3cd553fbff16e07f583af5bc7a711c114e635774",
-                  ".codewiki/kb/system/file-structure.md": "2d5ae28cc2fd3c220b92917f1867cf653bfa960d",
+                  ".codewiki/kb/system/file-structure.md": "b95105e746c39d0369d8ac422f616c19d965e7ef",
                   ".codewiki/kb/system/flows/artifact-claim-wait-wake.md": "33e837bf46f8fa50f7e2cf7ce71527b50ca84709",
                   ".codewiki/kb/system/flows/decision-to-planning.md": "a7925671b4ea11350991d416c6b42c9228152e71",
                   ".codewiki/kb/system/flows/implementation-validation-close.md": "d6dc2885f5a2580b26af92245f3103a315806fe8",
@@ -274269,7 +274319,7 @@
                   ".codewiki/kb/system/roadmap.md": "443ba0deb3e3201c23d3f929129d3b063f9d05cd",
                   ".codewiki/kb/system/runtime.md": "ee51d708cfb6963a64a936c1ceedf69c1ed07de1",
                   ".codewiki/kb/system/system-truth-and-compilers.md": "1d529df9928f2c42aeb010e759ab6466b4fb378b",
-                  ".codewiki/kb/system/terminal-ui.md": "e4e3fb638850b1ab6351282a5a9d5243b5712f1f",
+                  ".codewiki/kb/system/terminal-ui.md": "0d8dde95f6bbd6b5b24cb40387f44e40e1ca4f05",
                   ".codewiki/kb/system/trace-graph.md": "0d26a601c354dad9091916e8c38b2ba349533886",
                   ".codewiki/kb/system/validation-gateway.md": "ae204abfbb1d5b91a5ff6cd78eb0053306d0ed8d",
                   ".codewiki/kb/system/worktree-isolation.md": "b2bb0a66af0c623220728328100a576c3445ccd2",
@@ -274462,12 +274512,12 @@
               "spec_digest": "7898cb5e09ac398a2dd90c61ea888ec23ac6b9405474d7ab6cbd9ba1378616a0",
               "task_digest": "aa79ceb86410a76c4c1acb64a334fd3b7c425de2db116ef13de341b92de63ca7",
               "code_digest": "6bb20112b91d2eab926b5afe7014d4a1252f5cde53d4f8fbbaf84547980ebebf",
-              "digest": "98daeccb68a3461f35fa68e50513a9e162929dc55cd592a4e87bc10e03e7f950"
+              "digest": "f6cabaf7c2c003ac382ec7a91fe45c82b0eabc75a13b1476cd0ae89c525821a1"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T08:24:25Z",
+              "checked_at": "2026-06-06T08:25:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -274998,7 +275048,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-06T08:24:25Z",
+        "generated_at": "2026-06-06T08:25:50Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
