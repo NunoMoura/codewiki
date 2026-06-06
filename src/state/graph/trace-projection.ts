@@ -129,6 +129,20 @@ function sectionGateRefs(section: unknown): string[] {
 	]);
 }
 
+function compactPlanningEvidenceRows(
+	planning: unknown,
+	path: string,
+	key: "decision_coverage" | "roadmap_reconciliation",
+): JsonRecord[] {
+	return arrayField(planning, key).map((item, index) => {
+		const row = recordField({ item }, "item");
+		return {
+			...row,
+			pointer_ref: hotPointer(path, `/planning/${key}/${index}`),
+		};
+	});
+}
+
 function tracePointerRefs(path: string): Record<string, string> {
 	return {
 		root: hotPointer(path, ""),
@@ -216,6 +230,16 @@ function compactHotTrace(
 		next_safe_actions: stringList(lifecycle.next_safe_actions),
 		decision_status: String(decision.status || "").trim() || undefined,
 		planning_status: String(planning.status || "").trim() || undefined,
+		planning_decision_coverage: compactPlanningEvidenceRows(
+			planning,
+			input.path,
+			"decision_coverage",
+		),
+		planning_roadmap_reconciliation: compactPlanningEvidenceRows(
+			planning,
+			input.path,
+			"roadmap_reconciliation",
+		),
 		implementation_status:
 			String(implementation.status || "").trim() || undefined,
 		publication_status: String(publication.status || "").trim() || undefined,
@@ -377,6 +401,20 @@ function publicationRows(records: TraceProjectionRecord[]): JsonRecord[] {
 		}));
 }
 
+function planningEvidenceRows(
+	records: TraceProjectionRecord[],
+	key: "planning_decision_coverage" | "planning_roadmap_reconciliation",
+): JsonRecord[] {
+	return records.flatMap((record) =>
+		(Array.isArray(record[key]) ? (record[key] as JsonRecord[]) : []).map(
+			(row) => ({
+				trace_id: record.trace_id,
+				...row,
+			}),
+		),
+	);
+}
+
 export function buildTraceDagProjection(
 	input: BuildTraceDagProjectionInput,
 ): JsonRecord {
@@ -406,6 +444,14 @@ export function buildTraceDagProjection(
 	);
 	const blockers = blockerRows(records);
 	const lineage = lineageRows(recordsById, input.traces || [], catalogEntries);
+	const planningDecisionCoverage = planningEvidenceRows(
+		records,
+		"planning_decision_coverage",
+	);
+	const planningRoadmapReconciliation = planningEvidenceRows(
+		records,
+		"planning_roadmap_reconciliation",
+	);
 	const sourceRefs = unique([
 		...hotTraces.map((record) => record.source_ref),
 		...(catalog
@@ -450,6 +496,10 @@ export function buildTraceDagProjection(
 		decision_queue: decisionQueue(records),
 		"decision-queue": decisionQueue(records),
 		lineage,
+		planning_coverage: {
+			decision_coverage: planningDecisionCoverage,
+			roadmap_reconciliation: planningRoadmapReconciliation,
+		},
 		work_ready: records
 			.filter((record) => record.implementation_status === "active")
 			.map((record) => ({

@@ -129,6 +129,27 @@ try {
 					affected_layers: ["task"],
 				},
 				{
+					id: "ROW-UNMAPPED",
+					current_state: "Unmapped rows are not visible.",
+					desired_state: "Unmapped planning coverage is reported.",
+					user_action: "approved",
+					affected_layers: ["code"],
+				},
+				{
+					id: "ROW-DEFERRED",
+					current_state: "No-code planning deferral is hidden.",
+					desired_state: "No-code deferred planning state is visible.",
+					user_action: "approved",
+					affected_layers: ["knowledge"],
+				},
+				{
+					id: "ROW-NOWORK",
+					current_state: "No-work decisions look unmapped.",
+					desired_state: "No-work decisions are explicitly classified.",
+					user_action: "approved",
+					affected_layers: ["knowledge"],
+				},
+				{
 					id: "ROW-REJECTED",
 					current_state: "Rejected rows vanish.",
 					desired_state: "Rejected rows are listed as excluded.",
@@ -136,7 +157,13 @@ try {
 					affected_layers: ["task"],
 				},
 			]),
-			approved_decision_rows: ["ROW-LENS", "ROW-MISSING"],
+			approved_decision_rows: [
+				"ROW-LENS",
+				"ROW-MISSING",
+				"ROW-UNMAPPED",
+				"ROW-DEFERRED",
+				"ROW-NOWORK",
+			],
 			row_to_kb_mappings: [
 				{
 					row_id: "ROW-LENS",
@@ -148,6 +175,22 @@ try {
 					knowledge_refs: [".codewiki/kb/system/graph.md"],
 					evidence:
 						"Fixture maps missing row to docs but leaves execution open.",
+				},
+				{
+					row_id: "ROW-UNMAPPED",
+					knowledge_refs: [".codewiki/kb/system/graph.md"],
+					evidence:
+						"Fixture maps unmapped row to docs but leaves planning coverage open.",
+				},
+				{
+					row_id: "ROW-DEFERRED",
+					knowledge_refs: [".codewiki/kb/system/graph.md"],
+					evidence: "Fixture maps deferred row to docs.",
+				},
+				{
+					row_id: "ROW-NOWORK",
+					knowledge_refs: [".codewiki/kb/system/graph.md"],
+					evidence: "Fixture maps no-work row to docs.",
 				},
 			],
 			produces: {
@@ -178,6 +221,46 @@ try {
 					resolution: "roadmap-task",
 					task_ids: ["TASK-101"],
 					evidence: "ROW-MISSING is planned but not implemented.",
+				},
+				{
+					row_id: "ROW-DEFERRED",
+					resolution: "deferred",
+					owner: "maintainers",
+					trigger: "future graph UI work",
+					rationale: "No-code trace labeling is deferred until UI work resumes.",
+					evidence: "ROW-DEFERRED has an accepted no-code deferral.",
+				},
+				{
+					row_id: "ROW-NOWORK",
+					resolution: "non-executable",
+					knowledge_refs: [".codewiki/kb/system/graph.md"],
+					evidence: "ROW-NOWORK needs no roadmap work.",
+				},
+			],
+			decision_coverage: [
+				{
+					row_id: "ROW-LENS",
+					status: "implemented",
+					task_ids: ["TASK-100"],
+					evidence: "Planning records ROW-LENS as implemented by TASK-100.",
+				},
+				{
+					row_id: "ROW-MISSING",
+					status: "active-roadmap",
+					task_ids: ["TASK-101"],
+					evidence: "Planning records ROW-MISSING as active roadmap work.",
+				},
+			],
+			roadmap_reconciliation: [
+				{
+					status: "replanned",
+					task_ids: ["TASK-100", "TASK-101"],
+					evidence: "Existing roadmap work was replanned into TASK-100 and TASK-101.",
+				},
+				{
+					status: "superseded",
+					task_ids: ["TASK-102"],
+					evidence: "Sprint sibling TASK-102 is superseded by TASK-100 scope.",
 				},
 			],
 			produces: { roadmap: ["TASK-100", "TASK-101", "TASK-102"] },
@@ -283,7 +366,24 @@ try {
 			path_scopes: ["src/state/**"],
 		},
 		decision: { status: "approved" },
-		planning: { status: "gate_passed" },
+		planning: {
+			status: "gate_passed",
+			decision_coverage: [
+				{
+					row_id: "ROW-LENS",
+					status: "implemented",
+					task_ids: ["TASK-100"],
+					evidence: "Trace records ROW-LENS planning coverage.",
+				},
+			],
+			roadmap_reconciliation: [
+				{
+					status: "replanned",
+					task_ids: ["TASK-100"],
+					evidence: "Trace records existing roadmap reconciliation.",
+				},
+			],
+		},
 		implementation: {
 			status: "active",
 			code_refs: ["src/state/graph.ts"],
@@ -475,6 +575,23 @@ try {
 		traceDag,
 		"trace lens exposes trace-DAG projection by ref",
 	);
+	assert.ok(
+		traceDag.planning_coverage.decision_coverage.some(
+			(row) =>
+				row.trace_id === "TRACE-graph-lens" &&
+				row.row_id === "ROW-LENS" &&
+				row.pointer_ref === `${tracePath}#/planning/decision_coverage/0`,
+		),
+		"trace DAG preserves planning decision_coverage rows with pointer refs",
+	);
+	assert.ok(
+		traceDag.planning_coverage.roadmap_reconciliation.some(
+			(row) =>
+				row.trace_id === "TRACE-graph-lens" &&
+				row.pointer_ref === `${tracePath}#/planning/roadmap_reconciliation/0`,
+		),
+		"trace DAG preserves planning roadmap_reconciliation rows with pointer refs",
+	);
 
 	const auditLens = graph.views.lenses.audit;
 	assert.ok(
@@ -540,6 +657,59 @@ try {
 		typeof graph.views.lenses["automation-readiness"].data.ready,
 		"boolean",
 		"automation readiness lens should expose a deterministic readiness signal",
+	);
+
+	const planningCoverage = graph.views.planning_coverage;
+	assert.equal(
+		planningCoverage.summary.residual_count,
+		1,
+		"planning coverage reports unmapped accepted rows/questions",
+	);
+	assert.ok(
+		planningCoverage.decision_coverage.some(
+			(row) => row.id === "ROW-LENS" && row.state === "implemented",
+		),
+		"planning coverage distinguishes implemented decision rows",
+	);
+	assert.ok(
+		planningCoverage.decision_coverage.some(
+			(row) => row.id === "ROW-MISSING" && row.state === "active-roadmap",
+		),
+		"planning coverage distinguishes active roadmap coverage",
+	);
+	assert.ok(
+		planningCoverage.decision_coverage.some(
+			(row) => row.id === "ROW-DEFERRED" && row.state === "deferred",
+		),
+		"planning coverage distinguishes deferred rows",
+	);
+	assert.ok(
+		planningCoverage.decision_coverage.some(
+			(row) => row.id === "ROW-NOWORK" && row.state === "no-work",
+		),
+		"planning coverage distinguishes no-work rows",
+	);
+	assert.ok(
+		planningCoverage.roadmap_reconciliation.some(
+			(row) => row.state === "superseded" && row.roadmap_task_ids.includes("TASK-102"),
+		),
+		"planning coverage preserves superseded roadmap reconciliation state",
+	);
+	assert.ok(
+		planningCoverage.roadmap_reconciliation.some(
+			(row) => row.state === "replanned" && row.roadmap_task_ids.includes("TASK-100"),
+		),
+		"planning coverage preserves replanned roadmap reconciliation state",
+	);
+	assert.equal(
+		traceLens.planning_coverage,
+		planningCoverage,
+		"trace lens exposes planning coverage by ref",
+	);
+	assert.equal(
+		auditLens.planning_coverage.summary.residual_count,
+		1,
+		"audit lens reports planning coverage gaps",
 	);
 
 	const closureReport = graph.views.semantic_execution_closure;
@@ -613,12 +783,12 @@ try {
 	);
 	assert.equal(
 		traceLens.semantic_execution_closure.summary.approved_row_count,
-		2,
+		5,
 		"trace lens exposes closure report",
 	);
 	assert.equal(
 		auditLens.semantic_execution_closure.summary.gap_count,
-		1,
+		2,
 		"audit lens exposes closure gaps",
 	);
 

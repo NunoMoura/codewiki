@@ -411,6 +411,7 @@ export function buildGraphLensViews(input: {
 	traceabilityRows: ReadModelRecord[];
 	semanticChangeRows: ReadModelRecord[];
 	semanticExecutionClosure: ReadModelRecord;
+	planningCoverage: ReadModelRecord;
 	validationAttestations: ReadModelRecord[];
 	validationIsolationRows: ReadModelRecord[];
 	canonicalSourceRefs: string[];
@@ -517,9 +518,13 @@ export function buildGraphLensViews(input: {
 	const semanticClosureSummary = recordOrEmpty(
 		input.semanticExecutionClosure.summary,
 	);
+	const planningCoverageSummary = recordOrEmpty(input.planningCoverage.summary);
 	const semanticClosureGapCount = Number(semanticClosureSummary.gap_count || 0);
 	const semanticClosureRiskCount = Number(
 		semanticClosureSummary.remaining_risk_count || 0,
+	);
+	const planningCoverageResidualCount = Number(
+		planningCoverageSummary.residual_count || 0,
 	);
 	const fileStructureAuditSummary = {
 		version: input.fileStructureDrift.version,
@@ -553,6 +558,11 @@ export function buildGraphLensViews(input: {
 				"semantic_closure_gaps",
 				"closure gaps",
 				semanticClosureGapCount,
+			),
+			graphLensBadge(
+				"planning_coverage_gaps",
+				"planning coverage gaps",
+				planningCoverageResidualCount,
 			),
 		],
 		knowledge: [
@@ -764,6 +774,16 @@ export function buildGraphLensViews(input: {
 						kind: "semantic_execution_closure_gap",
 						count: semanticClosureRiskCount,
 						summary: "Semantic execution closure still has gaps.",
+					},
+				]
+			: []),
+		...(planningCoverageResidualCount > 0
+			? [
+					{
+						kind: "planning_coverage_gap",
+						count: planningCoverageResidualCount,
+						summary:
+							"Accepted decisions have unmapped planning coverage rows or questions.",
 					},
 				]
 			: []),
@@ -1064,6 +1084,7 @@ export function buildGraphLensViews(input: {
 			expansion_hints: graphLensExpansionHints("trace", graphSourceRefs),
 			requirement_rows: input.traceabilityRows,
 			semantic_execution_closure: input.semanticExecutionClosure,
+			planning_coverage: input.planningCoverage,
 			trace_dag: input.traceDag,
 			semantic_change_rows: input.semanticChangeRows,
 			semantic_change_gaps: semanticGaps,
@@ -1105,6 +1126,7 @@ export function buildGraphLensViews(input: {
 			traceability_gaps: traceabilityGaps,
 			semantic_change_gaps: semanticGaps,
 			semantic_execution_closure: input.semanticExecutionClosure,
+			planning_coverage: input.planningCoverage,
 			file_structure_drift: fileStructureAuditSummary,
 		},
 	};

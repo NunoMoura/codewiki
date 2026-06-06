@@ -234,6 +234,8 @@ Loop-to-loop progress lives inside a trace. The graph answers how decisions and 
 
 Trace/debug audits must answer what was approved, planned, validated, left open, and who owned every residual issue. Planning trace evidence must show each approved decision row and downstream planning question mapped to work, sprint scope, deferral, no-work rationale, or already-implemented evidence, plus how existing roadmap tasks/sprints were reconciled. Closure evidence that only says `historical`, `non-task`, or `out-of-scope` is incomplete.
 
+Generated graph state now carries a `planning_coverage` view for this evidence. It projects accepted decision rows/questions into `implemented`, `active-roadmap`, `deferred`, `no-work`, and `unmapped` coverage states, preserves explicit planning-build `decision_coverage` rows, and preserves `roadmap_reconciliation` states such as `replanned` and `superseded`. Trace-DAG projection also preserves planning `decision_coverage` and `roadmap_reconciliation` rows with JSON pointer refs back to the source trace.
+
 When actionable drift remains, gate history or implementation evidence should carry compact residual coverage: issue key/kind, path or glob, classification, owner refs, trigger/expiry for deferrals, and evidence refs. Do not embed raw linter transcripts.
 
 Trace evidence should start at first accountable semantic intent when trace-primary creation is available; gate pass updates status, not initial accountability.

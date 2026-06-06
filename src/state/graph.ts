@@ -1301,6 +1301,204 @@ function buildSemanticExecutionClosureView(input: {
 	};
 }
 
+function planningCoverageState(input: {
+	entry: any;
+	closureRow?: any;
+	activeTaskIds: Set<string>;
+	doneTaskIds: Set<string>;
+}): string {
+	const gaps = stringList(input.entry?.gaps);
+	if (gaps.length > 0) return "unmapped";
+	const resolution = String(input.entry?.resolution || "").toLowerCase();
+	if (resolution === "deferred") return "deferred";
+	if (
+		[
+			"knowledge-only",
+			"non-executable",
+			"not-applicable",
+			"rejected",
+			"blocked",
+			"covered-by-row-resolutions",
+		].includes(resolution)
+	)
+		return "no-work";
+	const taskIds = stringList(input.entry?.task_ids);
+	const implemented =
+		String(input.closureRow?.status || "") === "complete" ||
+		stringList(input.closureRow?.implementation_builds).length > 0 ||
+		taskIds.some((taskId) => input.doneTaskIds.has(taskId));
+	if (implemented) return "implemented";
+	if (taskIds.some((taskId) => input.activeTaskIds.has(taskId)))
+		return "active-roadmap";
+	return String(input.entry?.status || "") === "resolved" ? "mapped" : "unmapped";
+}
+
+function normalizeReconciliationState(value: unknown): string {
+	const normalized = String(value || "")
+		.trim()
+		.toLowerCase()
+		.replace(/_/g, "-");
+	if (normalized.includes("supersed")) return "superseded";
+	if (normalized.includes("replan")) return "replanned";
+	if (normalized.includes("implement") || normalized === "done")
+		return "implemented";
+	if (normalized.includes("active") || normalized.includes("roadmap"))
+		return "active-roadmap";
+	if (normalized.includes("defer")) return "deferred";
+	if (normalized.includes("no-work") || normalized.includes("no work"))
+		return "no-work";
+	return normalized || "reviewed";
+}
+
+function planningCoverageStatusCounts(rows: any[]) {
+	return Object.fromEntries(
+		[...new Set(rows.map((row) => String(row.state || "unknown")))]
+			.sort()
+			.map((state) => [
+				state,
+				rows.filter((row) => String(row.state || "unknown") === state).length,
+			]),
+	);
+}
+
+function buildPlanningCoverageView(input: {
+	planningBuilds: BuildArtifact[];
+	decisionPropagationAssessments: any[];
+	semanticExecutionClosure: any;
+	roadmapEntries: RoadmapTaskRecord[];
+}) {
+	const activeTaskIds = new Set(
+		input.roadmapEntries
+			.filter((task) => !["done", "closed", "cancelled"].includes(task.status))
+			.map((task) => task.id),
+	);
+	const doneTaskIds = new Set(
+		input.roadmapEntries
+			.filter((task) => ["done", "closed"].includes(task.status))
+			.map((task) => task.id),
+	);
+	const closureRows = new Map(
+		(Array.isArray(input.semanticExecutionClosure?.rows)
+			? input.semanticExecutionClosure.rows
+			: []
+		).map((row: any) => [
+			`${normalizeCodewikiRef(row.decision_build)}:${String(row.row_id || "")}`,
+			row,
+		]),
+	);
+	const decisionCoverage = input.decisionPropagationAssessments.flatMap(
+		(assessment) => {
+			const decisionBuild = normalizeCodewikiRef(assessment.decision_build);
+			return [...(assessment.rows || []), ...(assessment.questions || [])].map(
+				(entry: any) => {
+					const closureRow = closureRows.get(`${decisionBuild}:${entry.id}`);
+					const state = planningCoverageState({
+						entry,
+						closureRow,
+						activeTaskIds,
+						doneTaskIds,
+					});
+					return {
+						decision_build: decisionBuild,
+						kind: entry.kind,
+						id: entry.id,
+						text: entry.text,
+						state,
+						resolution: entry.resolution,
+						classification: entry.classification,
+						executable: entry.executable,
+						planning_builds: stringList(entry.planning_builds),
+						roadmap_task_ids: stringList(entry.task_ids),
+						sprint_ids: stringList(entry.sprint_ids),
+						knowledge_refs: stringList(entry.knowledge_refs),
+						source_refs: stringList(entry.source_refs),
+						evidence: String(entry.evidence || "").trim(),
+						gaps: stringList(entry.gaps),
+					};
+				},
+			);
+		},
+	);
+	const roadmapReconciliation = input.planningBuilds.flatMap((build) => {
+		const buildPath = normalizeCodewikiRef(build.path);
+		const sourceDecisionBuild = normalizeCodewikiRef(
+			build.data?.source_decision_build,
+		);
+		return (Array.isArray(build.data?.roadmap_reconciliation)
+			? build.data.roadmap_reconciliation
+			: []
+		).map((entry: any, index: number) => ({
+			planning_build: buildPath,
+			source_decision_build: sourceDecisionBuild,
+			id: String(entry?.id || `roadmap-reconciliation-${index + 1}`).trim(),
+			state: normalizeReconciliationState(
+				entry?.state || entry?.status || entry?.resolution,
+			),
+			evidence: String(entry?.evidence || entry?.summary || "").trim(),
+			roadmap_task_ids: unique([
+				...stringList(entry?.task_ids),
+				...stringList(entry?.roadmap_task_ids),
+			]),
+			sprint_ids: stringList(entry?.sprint_ids),
+			source_refs: stringList(entry?.source_refs),
+		}));
+	});
+	const explicitDecisionCoverage = input.planningBuilds.flatMap((build) => {
+		const buildPath = normalizeCodewikiRef(build.path);
+		return (Array.isArray(build.data?.decision_coverage)
+			? build.data.decision_coverage
+			: []
+		).map((entry: any, index: number) => ({
+			planning_build: buildPath,
+			id: String(
+				entry?.id || entry?.row_id || entry?.question_id || `coverage-${index + 1}`,
+			).trim(),
+			kind: String(entry?.kind || (entry?.question_id ? "question" : "row")),
+			state: normalizeReconciliationState(
+				entry?.state || entry?.status || entry?.resolution,
+			),
+			evidence: String(entry?.evidence || entry?.summary || "").trim(),
+			roadmap_task_ids: unique([
+				...stringList(entry?.task_ids),
+				...stringList(entry?.roadmap_task_ids),
+			]),
+			sprint_ids: stringList(entry?.sprint_ids),
+			source_refs: stringList(entry?.source_refs),
+		}));
+	});
+	const residuals = decisionCoverage.filter(
+		(row) => row.state === "unmapped" || row.gaps.length > 0,
+	);
+	return {
+		version: 1,
+		source: "generated:planning-coverage",
+		model:
+			"accepted-decision-rows-and-questions-to-planning-coverage-and-roadmap-reconciliation",
+		summary: {
+			planning_build_count: input.planningBuilds.length,
+			decision_coverage_count: decisionCoverage.length,
+			explicit_decision_coverage_count: explicitDecisionCoverage.length,
+			roadmap_reconciliation_count: roadmapReconciliation.length,
+			residual_count: residuals.length,
+			states: planningCoverageStatusCounts([
+				...decisionCoverage,
+				...explicitDecisionCoverage,
+				...roadmapReconciliation,
+			]),
+		},
+		decision_coverage: decisionCoverage,
+		explicit_decision_coverage: explicitDecisionCoverage,
+		roadmap_reconciliation: roadmapReconciliation,
+		residuals,
+		source_refs: unique([
+			...input.planningBuilds.map((build) => normalizeCodewikiRef(build.path)),
+			...decisionCoverage.flatMap((row) => stringList(row.planning_builds)),
+			...roadmapReconciliation.flatMap((row) => stringList(row.source_refs)),
+			...explicitDecisionCoverage.flatMap((row) => stringList(row.source_refs)),
+		]),
+	};
+}
+
 export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const {
 		project,
@@ -2561,24 +2759,25 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		}
 	}
 
+	const activeDecisionBuilds = builds.filter((build) => {
+		if (build.kind !== "decision_build") return false;
+		if (!isAcceptedBuild(build)) return false;
+		const lifecycleState =
+			String(
+				build.data?.lifecycle?.state ||
+					build.data?.status ||
+					build.status ||
+					"",
+			).trim() || "unknown";
+		const buildPath = normalizeCodewikiRef(build.path);
+		return (
+			!isLifecycleComplete(lifecycleState) &&
+			!supersededByPath.has(buildPath) &&
+			!historicalColdBuild(build, lifecycleState)
+		);
+	});
 	const semanticExecutionClosure = buildSemanticExecutionClosureView({
-		decisionBuilds: builds.filter((build) => {
-			if (build.kind !== "decision_build") return false;
-			if (!isAcceptedBuild(build)) return false;
-			const lifecycleState =
-				String(
-					build.data?.lifecycle?.state ||
-						build.data?.status ||
-						build.status ||
-						"",
-				).trim() || "unknown";
-			const buildPath = normalizeCodewikiRef(build.path);
-			return (
-				!isLifecycleComplete(lifecycleState) &&
-				!supersededByPath.has(buildPath) &&
-				!historicalColdBuild(build, lifecycleState)
-			);
-		}),
+		decisionBuilds: activeDecisionBuilds,
 		planningByDecision,
 		implementationByPlanning,
 		validations,
@@ -2591,6 +2790,12 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		knownSprintIds: normalizedSprints.map((sprint) => sprint.id),
 		satisfiedDeferredTriggers:
 			fileStructureDrift.satisfied_deferred_triggers || [],
+	});
+	const planningCoverage = buildPlanningCoverageView({
+		planningBuilds: builds.filter((build) => build.kind === "planning_build"),
+		decisionPropagationAssessments,
+		semanticExecutionClosure,
+		roadmapEntries,
 	});
 
 	// Process active change claims
@@ -3228,6 +3433,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		traceabilityRows,
 		semanticChangeRows,
 		semanticExecutionClosure,
+		planningCoverage,
 		validationAttestations,
 		validationIsolationRows,
 		canonicalSourceRefs: Array.from(canonicalSourceRefs).sort(),
@@ -3265,6 +3471,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			sprints: sprintViews,
 		},
 		semantic_execution_closure: semanticExecutionClosure,
+		planning_coverage: planningCoverage,
 		trace_dag: traceDag,
 		decision_propagation: {
 			version: 1,
