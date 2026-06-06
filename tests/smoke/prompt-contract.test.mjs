@@ -58,6 +58,30 @@ try {
 				project_name: "prompt-contract-smoke",
 				schema_version: 4,
 				docs_root: ".codewiki/kb",
+				codewiki: {
+					agency: {
+						level: "sprint",
+						approval_cadence: "sprint",
+						budgets: {
+							sprint: {
+								maxCycles: 8,
+								maxWrites: 80,
+								risk: "medium",
+							},
+						},
+						context_reset: {
+							enabled: true,
+							auto_pickup: true,
+							strategy: "soft-first",
+							require_source_backed_kickoff: true,
+						},
+						stop_gates: [
+							"semantic_decision",
+							"validation_block",
+							"risk_escalation",
+						],
+					},
+				},
 			},
 			null,
 			2,
@@ -74,6 +98,15 @@ try {
 	);
 	assert.match(injected.systemPrompt, /\.codewiki\/kb\/\*\*/);
 	assert.match(injected.systemPrompt, /wiki_runtime/);
+	assert.match(injected.systemPrompt, /Agency policy from \.codewiki\/config\.json/);
+	assert.match(injected.systemPrompt, /level: sprint/);
+	assert.match(injected.systemPrompt, /approval cadence: sprint/);
+	assert.match(
+		injected.systemPrompt,
+		/continue to next scoped task after task-close when no configured stop gate is active/,
+	);
+	assert.match(injected.systemPrompt, /stop gates: semantic_decision, validation_block/);
+	assert.match(injected.systemPrompt, /sprint budget: maxCycles=8, maxWrites=80, risk=medium/);
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

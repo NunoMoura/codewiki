@@ -20,6 +20,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 ## Core rules
 
 - Start with `wiki_state` and read only the knowledge/code paths needed to ground the proposal.
+- Read `.codewiki/config.json` when the decision may affect agent workflow, continuation, automation, validation cadence, context reset, or stop behavior. Treat `codewiki.agency.level`, `approval_cadence`, `budgets`, `parallelism`, `context_reset`, and `stop_gates` as the source of truth for agency boundaries.
 - Read `.codewiki/kb/lexicon.md` before proposing project-specific technical terms or updating KB; align decisions to canonical vocabulary, and add temporary compatibility terms only with replacement, narrow allowed contexts, and deletion trigger.
 - Do not create roadmap tasks or edit source code in decision mode.
 - Use `wiki_decide` for semantic change proposals, row approvals, KB mappings, propagation evidence, and decision-build creation.
@@ -80,6 +81,7 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
    - Run linter profiles when policy/risk requires.
    - Use `wiki_gate` for decision linter evidence, preflight, and fail/block/policy-required reports.
    - Route executable work to planning from the accepted `decision_build`.
+   - When approved rows affect agent workflow or automation, include the effective agency policy from `.codewiki/config.json` in downstream planning questions or requirements so planning/implementation do not fall back to task-level defaults.
 
 ## Stop conditions
 

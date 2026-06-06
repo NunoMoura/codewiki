@@ -18,7 +18,8 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 ## Core rules
 
 - Start from a validated `decision_build` or an explicit validation/linter route to planning.
-- Start with `wiki_state`, then read the decision build, changed knowledge refs, active tasks, and active sprint context directly.
+- Start with `wiki_state`, then read the decision build, changed knowledge refs, active tasks, active sprint context, and `.codewiki/config.json` agency policy directly.
+- Use `codewiki.agency.level`, `approval_cadence`, `budgets`, `parallelism`, `context_reset`, and `stop_gates` from `.codewiki/config.json` to shape planning handoff and continuation boundaries; do not hard-code task-level approval cadence when config says sprint or roadmap.
 - Decision owns semantic intent and knowledge. Planning owns roadmap alignment. Implementation owns code/tests.
 - Use `wiki_plan` for roadmap creation/refinement, sprint metadata, durable roadmap lifecycle, and planning-build creation. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
 - Inspect active tasks and sprints before creating work. Refine an existing active task when paths, labels, or intent overlap.
@@ -75,8 +76,9 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Validation reviews decision-to-roadmap alignment, task atomicity, boundary quality, and planning build completeness.
 
 8. **Route to implementation**
-   - Provide the `planning_build` ref and target task id as source refs when implementation must start fresh.
+   - Provide the `planning_build` ref, target task id, sprint/roadmap scope, and effective agency policy from `.codewiki/config.json` as source refs when implementation must start fresh.
    - Expected output is `implementation_build` plus validation evidence.
+   - If config allows sprint/roadmap continuation, state that implementers should continue to the next scoped task after task-close unless a configured stop gate, budget/context limit, or approval cadence boundary is reached.
 
 ## Stop conditions
 

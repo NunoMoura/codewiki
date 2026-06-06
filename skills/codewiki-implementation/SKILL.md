@@ -17,7 +17,9 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 
 ## Core rules
 
-- Execute one self-contained roadmap task at a time.
+- Execute one self-contained roadmap task at a time, but do not treat task completion as the automation boundary by default.
+- Read `.codewiki/config.json` through project context or source refs before continuation decisions. Use `codewiki.agency.level`, `approval_cadence`, `budgets`, `parallelism`, `context_reset`, and `stop_gates` to decide whether to stop after the task or continue to the next scoped task/sprint/roadmap item.
+- After task-close, continue only when the configured agency level/cadence permits it, budget/context bounds remain safe, and no configured stop gate is active (`semantic_decision`, `validation_block`, `artifact_conflict`, `risk_escalation`, `publication`, `destructive_action`, `unsafe_reset_boundary`, or project-specific gates).
 - Start from `wiki_state` and, when context is noisy/stale/token-heavy, `/wiki resume`, CodeWiki-owned compaction, or source refs from `wiki_state`; then read the selected task, source `planning_build`, linked knowledge/build refs, validation refs, and candidate code/test paths.
 - If the task is an umbrella/container/sprint coordinator, or its acceptance mainly says other tasks must close, stop and route back to planning.
 - If task meaning, product intent, or acceptance needs user approval, stop and route back to decision.
@@ -68,10 +70,11 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Provide the implementation build ref, task id, changed files, linters/tests, and expected validator output to a fresh validation context.
    - The validator must start from artifacts, not builder chat context, and record `fresh_context=true` plus checked content evidence.
 
-8. **Record task evidence**
+8. **Record task evidence and continuation decision**
    - Use `wiki_implement` to append builder evidence and staged validation handoff.
    - Use `wiki_plan action="close"` only after the required passing validation/task-close evidence exists.
    - After the close/publication commit captures revive context, use `wiki_runtime` for GC dry-run; if tracked candidates exist, purge only with `archive_sha`/`tree_sha` and keep the restore ledger, otherwise record why GC is deferred or blocked.
+   - Read the effective agency policy from `.codewiki/config.json` before summarizing. If the policy boundary is sprint/roadmap and no stop gate is active, route directly to the next scoped task instead of stopping at the task boundary. If stopping, cite the configured stop gate, budget/context limit, or approval cadence reason.
    - Release runtime leases when done.
 
 ## Output
@@ -84,6 +87,7 @@ End implementation mode with:
 - fresh validation source refs and required evidence;
 - post-commit GC review status: purged with ledger, deferred, blocked, or not yet eligible;
 - task status recommendation: `in_progress`, `blocked`, or `done after validation`;
+- config-derived continuation decision: next scoped task when allowed, or exact configured stop gate/budget/context/approval reason when stopping;
 - remaining risks or follow-up routing.
 
 ## Stop conditions

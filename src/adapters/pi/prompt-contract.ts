@@ -1,4 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { effectiveAgencyPolicy } from "../../agency/types.ts";
 import { maybeLoadProject } from "../../project/context.ts";
 import type { WikiProject } from "../../project/types.ts";
 
@@ -19,7 +20,24 @@ This repository has an active CodeWiki contract. Apply these invariants before s
 - Route semantic changes through decision -> planning -> implementation, with gateway pass/fail/block evidence at loop exits; use focused CodeWiki skills for loop details when needed.
 - Use wiki_runtime before non-trivial overlapping edits for leases/wait-wake/session focus and release claims when done.
 - Use wiki_state, /wiki resume, or CodeWiki source refs instead of chat-history archaeology for continuation; low-level wiki_* primitives are compatibility/expert aliases, not the normal surface.
-- Keep detailed loop policy in the CodeWiki skills; this prompt is only the small always-on contract.`;
+${renderAgencyPolicyContract(project)}- Keep detailed loop policy in the CodeWiki skills; this prompt is only the small always-on contract.`;
+}
+
+function renderAgencyPolicyContract(project?: WikiProject | null): string {
+	if (!project) return "";
+	const policy = effectiveAgencyPolicy(project.config);
+	const budget = project.config.codewiki?.agency?.budgets?.[policy.level] ||
+		project.config.codewiki?.agency?.budgets?.default;
+	const budgetText = budget
+		? `${policy.level} budget: ${Object.entries(budget)
+				.filter(([, value]) => value !== undefined)
+				.map(([key, value]) => `${key}=${value}`)
+				.join(", ")}`
+		: `${policy.level} budget: not configured`;
+	const reset = policy.context_reset;
+	return `- Agency policy from .codewiki/config.json: level: ${policy.level}; approval cadence: ${policy.approval_cadence}; default scope: ${policy.default_scope.kind}${policy.default_scope.id ? `:${policy.default_scope.id}` : ""}; ${budgetText}; context reset: enabled=${reset.enabled}, auto_pickup=${reset.auto_pickup}, strategy=${reset.strategy}, require_source_backed_kickoff=${reset.require_source_backed_kickoff}, require_idle_boundary=${reset.require_idle_boundary}; stop gates: ${policy.stop_gates.join(", ")}.
+- Agency continuation must follow config: execute one roadmap task atomically, then continue to next scoped task after task-close when no configured stop gate is active, budget/context bounds remain safe, and approval cadence/agency level still permit continuation.
+`;
 }
 
 export function appendCodewikiSystemPromptContract(
