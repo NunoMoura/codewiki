@@ -6,7 +6,7 @@ summary: Narrow system contract for future Pi TUI ASCII/Unicode rendering of can
 owners:
   - architecture
   - design
-updated: "2026-06-04"
+updated: "2026-06-06"
 diagram_refs:
   - component-map:extension
   - component-map:api
@@ -53,3 +53,9 @@ The renderer should use Unicode box drawing by default and ASCII fallback when n
 - No Product/System navigation panel work.
 - No full generated graph renderer by default.
 - No hidden terminal-only workflow state.
+
+## Related docs
+
+- [Product TUI Diagram Rendering](../product/uis/terminal.md)
+- [Deprecated Status UI](../product/uis/status-dock.md)
+- [Graph](graph.md)

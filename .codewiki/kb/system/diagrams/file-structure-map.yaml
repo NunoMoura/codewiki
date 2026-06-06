@@ -90,8 +90,10 @@ nodes:
       - src/roadmap/**
       - src/session/**
       - src/state/**
-      - src/validation/**
       - src/workflow/**
+    former_compatibility_paths:
+      - src/validation/**
+    trigger: TASK-105 removed absent src/validation/** from compatibility exports; do not recreate it without a future accepted gateway migration.
   - id: first_concept_root_pilot
     label: Agency concept-root pilot
     group: source_target
@@ -164,18 +166,19 @@ nodes:
     paths:
       - src/build/**
       - src/gateway/**
-      - src/validation/**
       - tests/tasks/TASK-022/**
       - tests/smoke/gateway-preflight.test.mjs
-    compatibility_paths:
+    former_compatibility_paths:
       - src/validation/**
     removed_paths:
+      - src/validation/**
       - src/domain/build/**
       - src/domain/validation/**
       - src/application/builds.ts
       - src/application/tools/build.ts
       - src/application/tools/validation.ts
       - src/application/gateway/**
+    trigger: TASK-105 classifies absent src/validation/** as removed gateway compatibility, not a required current export.
   - id: project_concept_root_boundary
     label: Project/bootstrap concept-root migration
     group: source_target
@@ -461,8 +464,10 @@ nodes:
       - .codewiki/runtime/state.json
     compatibility_paths:
       - .codewiki/session/**
+    former_compatibility_paths:
       - .codewiki/runtime/jobs.json
     retention: active_leases_jobs_and_current_handoffs_only
+    trigger: Recreate .codewiki/runtime/jobs.json only when runtime runner jobs are active; absent idle jobs file is not a required compatibility export.
   - id: local_workspace_state
     label: Local Pi/editor/worktree state
     group: generated_runtime

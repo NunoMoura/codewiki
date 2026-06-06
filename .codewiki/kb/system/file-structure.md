@@ -5,7 +5,7 @@ state: active
 summary: Target repository, package-source, and dogfood CodeWiki state structure for the three-loop lifecycle trace model.
 owners:
   - architecture
-updated: "2026-06-05"
+updated: "2026-06-06"
 diagram_refs:
   - file-structure-map:intended_file_structure
   - file-structure-map:concept_root_target

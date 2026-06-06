@@ -6,7 +6,7 @@ summary: Narrow retained UI direction for Pi TUI ASCII/Unicode system diagram re
 owners:
   - product
   - design
-updated: "2026-06-04"
+updated: "2026-06-06"
 code_paths:
   - src/adapters/pi/ui
   - src/adapters/pi/commands
@@ -58,3 +58,9 @@ Backend status and continuation remain available through `wiki_state`, graph len
 - No Board or Map product UI.
 - No product/system navigation panel work.
 - No broad graph visualizer.
+
+## Related docs
+
+- [System TUI Diagram Rendering](../../system/terminal-ui.md)
+- [Deprecated Status UI](status-dock.md)
+- [Graph](../../system/graph.md)
