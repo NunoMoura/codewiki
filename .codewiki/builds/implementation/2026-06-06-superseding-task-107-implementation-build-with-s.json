@@ -1,0 +1,590 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-06T11:08:16Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+  "task_id": "TASK-107",
+  "task": {
+    "id": "TASK-107",
+    "title": "Enforce planning-gate decision coverage",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Make planning gate return remediation when approved decision rows/questions lack coverage or existing-roadmap reconciliation evidence.",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/trace-graph.md"
+    ],
+    "code_paths": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Planning validation fails with actionable remediation when decision rows/questions or roadmap reconciliation are incomplete, and passes when coverage evidence is complete.",
+      "acceptance": [
+        "Planning gate inspects approved decision rows, requirements, and downstream planning questions from decision builds/traces.",
+        "Planning gate verifies each item maps to task, sprint, deferral, no-work rationale, or implementation evidence.",
+        "Planning gate verifies planning builds include existing-roadmap reconciliation evidence.",
+        "Fail/block reports route to planning-loop remediation and do not imply user-stop when remediation is actionable.",
+        "Tests cover missing row coverage, missing roadmap reconciliation, and passing complete coverage."
+      ],
+      "non_goals": [
+        "Do not implement source-root migration in this task.",
+        "Do not require global zero lint warnings.",
+        "Do not break legacy decision/planning build compatibility."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+        "targeted TASK test for planning-gate coverage",
+        "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-13T11:08:16.000Z",
+    "purge_after": "2026-06-20T11:08:16.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 2,
+    "attempt": "ship-ready-publication-evidence",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-06-06-implemented-planning-gate-roadmap-reconciliation.json"
+    ],
+    "status": "active"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Superseding TASK-107 implementation build with safe-to-promote publication readiness evidence.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-to-planning-gate-hardening-pla.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-107"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/gateway/report.ts",
+      "src/build/writer.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-107"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/trace-graph.md"
+    ],
+    "code_paths": [
+      "src/gateway/report.ts",
+      "src/policy/gate-policy.ts",
+      "tests/smoke/gateway-preflight.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/source-contract.test.mjs"
+  ],
+  "code_files": [
+    "src/gateway/report.ts",
+    "src/build/writer.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "src/gateway/report.ts",
+    "src/build/writer.ts"
+  ],
+  "checks_run": [
+    "git status --short: clean",
+    "git rev-parse HEAD: fdc15ebbb335ea7816250dc50fc55f864a5e3200",
+    "git rev-parse HEAD^{tree}: 5aebe3bdf65b6ce3412eeb89d26455f3e2fc59e2",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-107/planning-coverage-gate.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-107: package/security/stale-reference/task pass; alignment warning due 51 covered graph warnings",
+    "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+    "npm pack package digest: sha256:b946145eafc89f070353cffa7c978dbfdfa388f6720a0be967d9cf79b9581c91"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      "roadmap_task_id": "TASK-107",
+      "test_files": [
+        "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "evidence": [
+        "Focused TASK-107 fixture covers missing roadmap reconciliation after row/question mapping succeeds, written report remediation, and complete coverage pass.",
+        "Gateway-preflight smoke covers compatibility with broader gateway risk/policy fixtures."
+      ],
+      "notes": [
+        "`tests/smoke/builds.test.mjs` has unrelated current task-close fixture drift; not part of TASK-107 verification."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+      "roadmap_task_id": "TASK-107",
+      "code_files": [
+        "src/gateway/report.ts",
+        "src/build/writer.ts"
+      ],
+      "evidence": [
+        "Planning build writer persists normalized `roadmap_reconciliation` evidence.",
+        "Planning preflight requires existing-roadmap reconciliation evidence for planning builds with decision refs, accepting explicit field or legacy textual fallback.",
+        "Validation reports include roadmap-reconciliation findings, failed criteria, routing, and remediation text."
+      ],
+      "notes": [
+        "Run /reload before relying on live extension behavior from changed source files."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Focused TASK-107 fixture covers missing roadmap reconciliation after row/question mapping succeeds, written report remediation, and complete coverage pass.",
+    "Gateway-preflight smoke covers compatibility with broader gateway risk/policy fixtures."
+  ],
+  "code_change_evidence": [
+    "Planning build writer persists normalized `roadmap_reconciliation` evidence.",
+    "Planning preflight requires existing-roadmap reconciliation evidence for planning builds with decision refs, accepting explicit field or legacy textual fallback.",
+    "Validation reports include roadmap-reconciliation findings, failed criteria, routing, and remediation text."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Planning gate inspects approved decision rows, requirements, and downstream planning questions from decision builds/traces.",
+      "evidence": "Decision propagation gate remains active; TASK-107 test and gateway smoke prove row/question mappings are required."
+    },
+    {
+      "criterion": "Planning gate verifies each item maps to task, sprint, deferral, no-work rationale, or implementation evidence.",
+      "evidence": "Existing decision_propagation checks still block unresolved rows/questions; tests cover unresolved and mapped cases."
+    },
+    {
+      "criterion": "Planning gate verifies planning builds include existing-roadmap reconciliation evidence.",
+      "evidence": "Planning preflight now reports `missing.roadmap_reconciliation` for accepted-decision planning builds without reconciliation evidence; tests cover missing and ready cases."
+    },
+    {
+      "criterion": "Fail/block reports route to planning-loop remediation and do not imply user-stop when remediation is actionable.",
+      "evidence": "Written validation report for missing roadmap reconciliation records `verdict=block`, `failed_criteria=roadmap_reconciliation`, and `recommended_next_loop=planning`."
+    },
+    {
+      "criterion": "Tests cover missing row coverage, missing roadmap reconciliation, and passing complete coverage.",
+      "evidence": "TASK-107 focused test plus gateway-preflight smoke passed."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Enforce decision-to-planning planning gate coverage without treating gate findings as user-stop.",
+    "implemented_changes": [
+      "Persisted roadmap reconciliation evidence in planning builds.",
+      "Blocked planning preflight when reconciliation evidence is absent.",
+      "Routed missing reconciliation reports to the planning loop with remediation.",
+      "Added focused and smoke tests."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/gateway/report.ts",
+        "src/build/writer.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "validation": [
+        ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "implementation pass",
+      "TASK-107 test pass",
+      "gateway-preflight smoke pass",
+      "typecheck pass",
+      "source-contract smoke pass",
+      "package/security/stale-reference audits pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "TASK-107 planning coverage test",
+      "gateway-preflight smoke",
+      "source-contract smoke",
+      "wiki_gate audit alignment,stale-reference,generated-parity,changed task_id=TASK-107",
+      "wiki_gate audit alignment,package,security,stale-reference task_id=TASK-107",
+      "npm pack"
+    ],
+    "non_goals_preserved": [
+      "No source-root migration implemented.",
+      "No global zero-warning rule added.",
+      "Legacy planning compatibility fallback preserved."
+    ],
+    "remaining_risks": [
+      "Graph still has covered residual warnings unrelated to TASK-107."
+    ]
+  },
+  "risks": [
+    "Legacy textual fallback is intentionally permissive for older planning builds; TASK-108 can make trace/graph extraction more precise."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-107",
+      "task_id": "TASK-107",
+      "next_focus_task_id": "TASK-109",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-107",
+        "title": "Enforce planning-gate decision coverage",
+        "summary": "Superseding TASK-107 implementation build with safe-to-promote publication readiness evidence.",
+        "spec_paths": [
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/flows/decision-to-planning.md",
+          ".codewiki/kb/system/trace-graph.md"
+        ],
+        "code_paths": [
+          "src/gateway/report.ts",
+          "src/policy/gate-policy.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "src/build/writer.ts"
+        ],
+        "acceptance": [
+          "Planning gate inspects approved decision rows, requirements, and downstream planning questions from decision builds/traces.",
+          "Planning gate verifies each item maps to task, sprint, deferral, no-work rationale, or implementation evidence.",
+          "Planning gate verifies planning builds include existing-roadmap reconciliation evidence.",
+          "Fail/block reports route to planning-loop remediation and do not imply user-stop when remediation is actionable.",
+          "Tests cover missing row coverage, missing roadmap reconciliation, and passing complete coverage."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "targeted TASK test for planning-gate coverage",
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-107"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+        "checks_run": [
+          "git status --short: clean",
+          "git rev-parse HEAD: fdc15ebbb335ea7816250dc50fc55f864a5e3200",
+          "git rev-parse HEAD^{tree}: 5aebe3bdf65b6ce3412eeb89d26455f3e2fc59e2",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-107/planning-coverage-gate.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+          "wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-107: package/security/stale-reference/task pass; alignment warning due 51 covered graph warnings",
+          "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+          "npm pack package digest: sha256:b946145eafc89f070353cffa7c978dbfdfa388f6720a0be967d9cf79b9581c91"
+        ],
+        "test_design_evidence": [
+          "Focused TASK-107 fixture covers missing roadmap reconciliation after row/question mapping succeeds, written report remediation, and complete coverage pass.",
+          "Gateway-preflight smoke covers compatibility with broader gateway risk/policy fixtures."
+        ],
+        "code_change_evidence": [
+          "Planning build writer persists normalized `roadmap_reconciliation` evidence.",
+          "Planning preflight requires existing-roadmap reconciliation evidence for planning builds with decision refs, accepting explicit field or legacy textual fallback.",
+          "Validation reports include roadmap-reconciliation findings, failed criteria, routing, and remediation text."
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-107",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+      "show_build": "git show refs/codewiki/archive/task-107-planning-roadmap-reconciliation:.codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/trace-graph.md",
+        "src/gateway/report.ts",
+        "src/policy/gate-policy.ts",
+        "tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "TASK-107 enforce planning roadmap reconciliation",
+      "body": "Add planning build roadmap_reconciliation evidence, enforce it in planning preflight, and cover pass/block behavior with TASK-107 and gateway smoke tests.\n\nChecks: typecheck; TASK-107 planning coverage test; gateway-preflight smoke; source-contract smoke; package/security/stale-reference audits.\n\nCodeWiki-Task: TASK-107\nCodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+      "trailers": [
+        "CodeWiki-Task: TASK-107",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+        "CodeWiki-Checks: git status --short: clean, git rev-parse HEAD: fdc15ebbb335ea7816250dc50fc55f864a5e3200, git rev-parse HEAD^{tree}: 5aebe3bdf65b6ce3412eeb89d26455f3e2fc59e2, npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-107/planning-coverage-gate.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-107: package/security/stale-reference/task pass; alignment warning due 51 covered graph warnings, implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json, npm pack package digest: sha256:b946145eafc89f070353cffa7c978dbfdfa388f6720a0be967d9cf79b9581c91",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+        "CodeWiki-Recover: /wiki-restore TASK-107",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+        "CodeWiki-Digest: sha256:95647453c3b27a0233f095a556d1424afcf91b5da809230614ecfd5d00ebd228",
+        "CodeWiki-Restore: /wiki-restore TASK-107"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "TASK-107 enforce planning roadmap reconciliation",
+      "body": "Add planning build roadmap_reconciliation evidence, enforce it in planning preflight, and cover pass/block behavior with TASK-107 and gateway smoke tests.\n\nChecks: typecheck; TASK-107 planning coverage test; gateway-preflight smoke; source-contract smoke; package/security/stale-reference audits.\n\nCodeWiki-Task: TASK-107\nCodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+      "commit_sha": "fdc15ebbb335ea7816250dc50fc55f864a5e3200",
+      "remote": "origin",
+      "branch": "main",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task-107-planning-roadmap-reconciliation"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-107",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+        "show_build": "git show refs/codewiki/archive/task-107-planning-roadmap-reconciliation:.codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/flows/decision-to-planning.md",
+          ".codewiki/kb/system/trace-graph.md",
+          "src/gateway/report.ts",
+          "src/policy/gate-policy.ts",
+          "tests/smoke/gateway-preflight.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-107",
+      "build_path": ".codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+      "archive_ref": "refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+      "commit_sha": "fdc15ebbb335ea7816250dc50fc55f864a5e3200",
+      "digest": "sha256:95647453c3b27a0233f095a556d1424afcf91b5da809230614ecfd5d00ebd228",
+      "restore_command": "/wiki-restore TASK-107"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:103eecdf8f8337efa36cb17ad7a417f9ce05b0965af4bbc6d1ce9700ab97d9b9",
+          "bytes": 22563
+        },
+        {
+          "path": ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+          "role": "validation_ref",
+          "sha256": "sha256:ebe27dc57dd62ea4e5951d9265ad841d73330391a63159ede4ea608f333b1b45",
+          "bytes": 59589
+        },
+        {
+          "path": "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:fb2eecca3787069c28d5fc502cc631540282c9525964709bd1de29a0f44f9938",
+          "bytes": 5640
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7bd9e3016e13e431dde7b656ac4cb01fa59e71060f58cce348f6090cbefb5abe",
+          "bytes": 53686
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:a0ff66bd54afad55bdb19712f3081582b504fa17221503232a383b7a0d7eb516",
+          "bytes": 94112
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:043788841d9d3d7e0f3dc557bdef48f6cb6d7d0a47275a263c47e136f60aa9d2",
+          "bytes": 36169
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-107",
+      "source_build": ".codewiki/builds/implementation/2026-06-06-superseding-task-107-implementation-build-with-s.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/gateway/report.ts",
+          "src/build/writer.ts",
+          "tests/tasks/TASK-107/planning-coverage-gate.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/source-contract.test.mjs"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task-107-planning-roadmap-reconciliation",
+        "restore_command": "/wiki-restore TASK-107"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "git status --short: clean",
+        "git rev-parse HEAD: fdc15ebbb335ea7816250dc50fc55f864a5e3200",
+        "git rev-parse HEAD^{tree}: 5aebe3bdf65b6ce3412eeb89d26455f3e2fc59e2",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-107/planning-coverage-gate.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+        "wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-107: package/security/stale-reference/task pass; alignment warning due 51 covered graph warnings",
+        "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json",
+        "npm pack package digest: sha256:b946145eafc89f070353cffa7c978dbfdfa388f6720a0be967d9cf79b9581c91"
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-06-implementation-pass-task-107-2026-06-06-implemen.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": true,
+      "blocked_reasons": [],
+      "security": {
+        "secret_scan": "pass",
+        "remote_visibility": "pass",
+        "private_evidence": "pass",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
