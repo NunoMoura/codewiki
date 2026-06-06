@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T12:00:29.386Z",
+  "generated_at": "2026-06-06T12:01:11.487Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -208145,6 +208145,11 @@
                 "id": "semantic_closure_gaps",
                 "label": "closure gaps",
                 "count": 0
+              },
+              {
+                "id": "planning_coverage_gaps",
+                "label": "planning coverage gaps",
+                "count": 0
               }
             ],
             "hot_refs": [],
@@ -208523,6 +208528,11 @@
                 {
                   "id": "semantic_closure_gaps",
                   "label": "closure gaps",
+                  "count": 0
+                },
+                {
+                  "id": "planning_coverage_gaps",
+                  "label": "planning coverage gaps",
                   "count": 0
                 }
               ],
@@ -210854,6 +210864,92 @@
           },
           "source_refs": []
         },
+        "planning_coverage": {
+          "version": 1,
+          "source": "generated:planning-coverage",
+          "model": "accepted-decision-rows-and-questions-to-planning-coverage-and-roadmap-reconciliation",
+          "summary": {
+            "planning_build_count": 67,
+            "decision_coverage_count": 0,
+            "explicit_decision_coverage_count": 0,
+            "roadmap_reconciliation_count": 0,
+            "residual_count": 0,
+            "states": {}
+          },
+          "decision_coverage": [],
+          "explicit_decision_coverage": [],
+          "roadmap_reconciliation": [],
+          "residuals": [],
+          "source_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-008-domain-application-rebalance-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-from-accept.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-explic.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-roadma.json",
+            ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
+            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+            ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
+            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+            ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+            ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+            ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-accepted-gate-remediation-retry-policy-into.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-of-legacy-decision-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-097-missing-diagram-ref-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-098-task-095-acceptance-mapping-reconc.json",
+            ".codewiki/builds/planning/2026-06-05-planned-approved-gate-remediation-retry-policy-i.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-for-superseding-gate-remediatio.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json",
+            ".codewiki/builds/planning/2026-06-05-superseding-planning-build-for-gate-remediation-.json",
+            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+            ".codewiki/builds/planning/2026-06-06-map-accepted-2026-06-03-prompt-skill-architectur.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-config-derived-agency-enforcement-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
+          ]
+        },
         "trace_dag": {
           "version": 1,
           "source": "generated:trace-dag-projection",
@@ -210876,6 +210972,10 @@
           "decision_queue": [],
           "decision-queue": [],
           "lineage": [],
+          "planning_coverage": {
+            "decision_coverage": [],
+            "roadmap_reconciliation": []
+          },
           "work_ready": [],
           "blockers": [],
           "task": {},
@@ -239741,6 +239841,92 @@
           },
           "source_refs": []
         },
+        "planning_coverage": {
+          "version": 1,
+          "source": "generated:planning-coverage",
+          "model": "accepted-decision-rows-and-questions-to-planning-coverage-and-roadmap-reconciliation",
+          "summary": {
+            "planning_build_count": 67,
+            "decision_coverage_count": 0,
+            "explicit_decision_coverage_count": 0,
+            "roadmap_reconciliation_count": 0,
+            "residual_count": 0,
+            "states": {}
+          },
+          "decision_coverage": [],
+          "explicit_decision_coverage": [],
+          "roadmap_reconciliation": [],
+          "residuals": [],
+          "source_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-008-domain-application-rebalance-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-from-accept.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-explic.json",
+            ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-roadma.json",
+            ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+            ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+            ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+            ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
+            ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+            ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+            ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
+            ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
+            ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+            ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+            ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+            ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
+            ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+            ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+            ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+            ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+            ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-accepted-gate-remediation-retry-policy-into.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-of-legacy-decision-.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-097-missing-diagram-ref-reconciliation.json",
+            ".codewiki/builds/planning/2026-06-05-plan-task-098-task-095-acceptance-mapping-reconc.json",
+            ".codewiki/builds/planning/2026-06-05-planned-approved-gate-remediation-retry-policy-i.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-for-superseding-gate-remediatio.json",
+            ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json",
+            ".codewiki/builds/planning/2026-06-05-superseding-planning-build-for-gate-remediation-.json",
+            ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+            ".codewiki/builds/planning/2026-06-06-map-accepted-2026-06-03-prompt-skill-architectur.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-config-derived-agency-enforcement-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+            ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+            ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
+          ]
+        },
         "file_structure_drift": {
           "version": 1,
           "source": "file-structure-map",
@@ -241096,6 +241282,92 @@
       },
       "source_refs": []
     },
+    "planning_coverage": {
+      "version": 1,
+      "source": "generated:planning-coverage",
+      "model": "accepted-decision-rows-and-questions-to-planning-coverage-and-roadmap-reconciliation",
+      "summary": {
+        "planning_build_count": 67,
+        "decision_coverage_count": 0,
+        "explicit_decision_coverage_count": 0,
+        "roadmap_reconciliation_count": 0,
+        "residual_count": 0,
+        "states": {}
+      },
+      "decision_coverage": [],
+      "explicit_decision_coverage": [],
+      "roadmap_reconciliation": [],
+      "residuals": [],
+      "source_refs": [
+        ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+        ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+        ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+        ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+        ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+        ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+        ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+        ".codewiki/builds/planning/2026-05-20-task-008-domain-application-rebalance-plan.json",
+        ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+        ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+        ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+        ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+        ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+        ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+        ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+        ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+        ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+        ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+        ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+        ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+        ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+        ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+        ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+        ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-from-accept.json",
+        ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-explic.json",
+        ".codewiki/builds/planning/2026-05-28-task-042-executable-planning-handoff-with-roadma.json",
+        ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+        ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+        ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+        ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+        ".codewiki/builds/planning/2026-05-31-planned-backend-automation-foundation-after-acce.json",
+        ".codewiki/builds/planning/2026-05-31-planned-decision-roadmap-propagation-hardening.json",
+        ".codewiki/builds/planning/2026-05-31-planned-gateway-gates-ship-ready.json",
+        ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction-resolved.json",
+        ".codewiki/builds/planning/2026-05-31-planned-pi-distribution-correction.json",
+        ".codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json",
+        ".codewiki/builds/planning/2026-05-31-planned-terminal-first-cleanup-after-accepted-fu.json",
+        ".codewiki/builds/planning/2026-06-01-legacy-production-readiness-reconciliation.json",
+        ".codewiki/builds/planning/2026-06-01-planned-scoped-documentation-reconciliation-for-.json",
+        ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-planning-build-.json",
+        ".codewiki/builds/planning/2026-06-01-planned-scoped-reconciliation-of-roadmap-missing.json",
+        ".codewiki/builds/planning/2026-06-01-production-surface-automation-readiness-plan.json",
+        ".codewiki/builds/planning/2026-06-02-task-085-package-smoke-task-close-fixture-remedi.json",
+        ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-from-accepted-.json",
+        ".codewiki/builds/planning/2026-06-03-daemon-agency-foundation-planning-v2-with-post-d.json",
+        ".codewiki/builds/planning/2026-06-03-plan-task-086-maintenance-to-align-file-structur.json",
+        ".codewiki/builds/planning/2026-06-03-planned-sprint-022-post-daemon-structure-cleanup.json",
+        ".codewiki/builds/planning/2026-06-03-superseding-task-086-plan-for-warning-cleanup-af.json",
+        ".codewiki/builds/planning/2026-06-04-planned-backend-only-ui-deprecation-into-task-08.json",
+        ".codewiki/builds/planning/2026-06-04-planned-decision-table-clean-cut-migration-by-re.json",
+        ".codewiki/builds/planning/2026-06-04-planned-sprint-022-trace-primary-migration-from-.json",
+        ".codewiki/builds/planning/2026-06-05-plan-accepted-gate-remediation-retry-policy-into.json",
+        ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-from-accepted-scope.json",
+        ".codewiki/builds/planning/2026-06-05-plan-task-096-reconciliation-of-legacy-decision-.json",
+        ".codewiki/builds/planning/2026-06-05-plan-task-097-missing-diagram-ref-reconciliation.json",
+        ".codewiki/builds/planning/2026-06-05-plan-task-098-task-095-acceptance-mapping-reconc.json",
+        ".codewiki/builds/planning/2026-06-05-planned-approved-gate-remediation-retry-policy-i.json",
+        ".codewiki/builds/planning/2026-06-05-planning-handoff-for-superseding-gate-remediatio.json",
+        ".codewiki/builds/planning/2026-06-05-planning-handoff-from-accepted-state-gate-remedi.json",
+        ".codewiki/builds/planning/2026-06-05-superseding-planning-build-for-gate-remediation-.json",
+        ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+        ".codewiki/builds/planning/2026-06-06-map-accepted-2026-06-03-prompt-skill-architectur.json",
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-config-derived-agency-enforcement-.json",
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-dtp-decision-into-sprint-024-with-.json",
+        ".codewiki/builds/planning/2026-06-06-plan-accepted-residual-drift-coverage-decision-i.json",
+        ".codewiki/builds/planning/2026-06-06-superseding-planning-build-for-sprint-023-correc.json"
+      ]
+    },
     "trace_dag": {
       "version": 1,
       "source": "generated:trace-dag-projection",
@@ -241118,6 +241390,10 @@
       "decision_queue": [],
       "decision-queue": [],
       "lineage": [],
+      "planning_coverage": {
+        "decision_coverage": [],
+        "roadmap_reconciliation": []
+      },
       "work_ready": [],
       "blockers": [],
       "task": {},
@@ -267605,8 +267881,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": false,
-            "generated_at": "2026-06-06T12:00:29.297Z",
-            "expires_at": "2026-06-06T14:00:29.297Z",
+            "generated_at": "2026-06-06T12:01:11.403Z",
+            "expires_at": "2026-06-06T14:01:11.403Z",
             "sprint_ids": [
               "SPRINT-024"
             ],
@@ -267869,8 +268145,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T12:00:29.297Z",
-      "expires_at": "2026-06-06T14:00:29.297Z",
+      "generated_at": "2026-06-06T12:01:11.403Z",
+      "expires_at": "2026-06-06T14:01:11.403Z",
       "state": "waiting",
       "tasks": {
         "TASK-108": {
@@ -267885,8 +268161,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": false,
-          "generated_at": "2026-06-06T12:00:29.297Z",
-          "expires_at": "2026-06-06T14:00:29.297Z",
+          "generated_at": "2026-06-06T12:01:11.403Z",
+          "expires_at": "2026-06-06T14:01:11.403Z",
           "sprint_ids": [
             "SPRINT-024"
           ],
@@ -272469,7 +272745,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T12:00:29.081Z",
+      "generated_at": "2026-06-06T12:01:10.126Z",
       "counts": {
         "large-doc": 4,
         "roadmap-missing-code-path": 1,
@@ -272774,7 +273050,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T12:00:29Z",
+      "generated_at": "2026-06-06T12:01:11Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -274629,7 +274905,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T12:00:29Z",
+      "generated_at": "2026-06-06T12:01:11Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -279635,7 +279911,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T12:00:29Z",
+        "generated_at": "2026-06-06T12:01:11Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -279690,10 +279966,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T12:00:29Z",
+            "checked_at": "2026-06-06T12:01:11Z",
             "revision": {
               "git": {
-                "head": "f5d262734f4116379dd1264b3571898c8c292f5e",
+                "head": "8aea6ef20b5750c6f5e628279cbae45f6893bbaf",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -279952,12 +280228,12 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "331bda5d601c208a6cf23a692c57517cee8df277816d0d526a26496472d03871",
               "code_digest": "6b3642921eb3ce1153cb77622ce90c507cd7ae90004ce111266b976481767f83",
-              "digest": "5657a63caa0caa28202621f12afe9837dfc5c35727e7d788519a4be129904f4d"
+              "digest": "459c1b90b0dcb3c441d87f235c34387eea5588b0bab306e3807e8c1a9d1a4f21"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:00:29Z",
+              "checked_at": "2026-06-06T12:01:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -280484,10 +280760,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T12:00:29Z",
+            "checked_at": "2026-06-06T12:01:11Z",
             "revision": {
               "git": {
-                "head": "f5d262734f4116379dd1264b3571898c8c292f5e",
+                "head": "8aea6ef20b5750c6f5e628279cbae45f6893bbaf",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -280730,12 +281006,12 @@
               "spec_digest": "36de9189bbd0be4cd15c5fab1f3f01f7b156cc003c806a37ecb18e963d4f2c9c",
               "task_digest": "331bda5d601c208a6cf23a692c57517cee8df277816d0d526a26496472d03871",
               "code_digest": "6b3642921eb3ce1153cb77622ce90c507cd7ae90004ce111266b976481767f83",
-              "digest": "443b42fceb4cc1a87cdefeceec3afa2541d1d0cee5f994a0cab7680d880e540f"
+              "digest": "bae7392937f656de4333bf3accefba54b0484b04f136d99077c366e34f26f300"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:00:29Z",
+              "checked_at": "2026-06-06T12:01:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -281240,10 +281516,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T12:00:29Z",
+            "checked_at": "2026-06-06T12:01:11Z",
             "revision": {
               "git": {
-                "head": "f5d262734f4116379dd1264b3571898c8c292f5e",
+                "head": "8aea6ef20b5750c6f5e628279cbae45f6893bbaf",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -281502,12 +281778,12 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "331bda5d601c208a6cf23a692c57517cee8df277816d0d526a26496472d03871",
               "code_digest": "6b3642921eb3ce1153cb77622ce90c507cd7ae90004ce111266b976481767f83",
-              "digest": "5657a63caa0caa28202621f12afe9837dfc5c35727e7d788519a4be129904f4d"
+              "digest": "459c1b90b0dcb3c441d87f235c34387eea5588b0bab306e3807e8c1a9d1a4f21"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-06-06T12:00:29Z",
+              "checked_at": "2026-06-06T12:01:11Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -282035,7 +282311,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-06T12:00:29Z",
+        "generated_at": "2026-06-06T12:01:11Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
