@@ -218,6 +218,12 @@ tests/
 
 Task-specific regression tests live under task-ref paths/files. Reusable helpers/suites live under `tests/shared/**`. Gate/source-contract checks live under shared gate harnesses or loop gate contracts. Legacy `tests/smoke/**` may remain as explicitly classified package/gate evidence during migration, but new long-lived suites should map to task refs or shared contracts.
 
+## Residual structure cleanup
+
+File-structure cleanup must be scoped by warning class and owner boundary. Do not close a broad “fix all structure warnings” task while leaving warnings unexplained. Remaining actionable drift needs residual coverage: task, sprint, accepted deferral, compatibility rule, archive plan, or false-positive rationale.
+
+`historical`, `non-task`, and `out-of-scope` are not durable coverage. Close evidence must name the owning task/sprint or accepted deferral. Legacy compatibility paths need a migration or deletion trigger.
+
 ## Knowledge-base contract
 
 Project KB uses:

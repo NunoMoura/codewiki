@@ -69,6 +69,35 @@ Decision agents must drill the user when rows are under-specified, risky, confli
 
 The gateway blocks planning handoff when intent is shallow, contradictory, unmapped, unassessed, missing trace impact, missing approvals for the risk tier, or incomplete relative to product/system state.
 
+## Residual issue coverage
+
+Gate validation must not allow actionable lint, audit, graph, or file-structure drift to become orphaned when work closes or promotes. A task, sprint, or ship-ready gate may pass with residual warnings only when each remaining actionable issue has durable residual issue coverage.
+
+Residual issue coverage records:
+
+- stable issue key or issue kind;
+- affected path or path glob;
+- classification;
+- owner refs such as task id, sprint id, decision build, archive plan, or compatibility policy;
+- rationale/evidence;
+- trigger or expiry when the issue is deferred.
+
+Accepted classifications are:
+
+| Classification | Meaning |
+| --- | --- |
+| `fixed` | Current work fixed the issue; validation evidence proves it no longer appears. |
+| `covered_by_task` | An open or closed roadmap task owns the remaining issue and has acceptance/verification for it. |
+| `covered_by_sprint` | Active sprint scope owns the issue class and routes it to scoped tasks. |
+| `deferred_by_decision` | Accepted decision/build evidence explicitly defers the issue with owner and trigger. |
+| `archive_candidate` | The issue is retained only until archive/catalog/GC policy can prove safe removal with restore evidence. |
+| `accepted_compatibility` | The path or behavior is intentionally kept during migration and has a deletion or migration trigger. |
+| `false_positive` | The warning is proven to be linter overreach and has a follow-up policy/test change or explicit rationale. |
+
+`historical`, `non-task`, `out-of-scope`, or `not part of this task` is not enough. Those words only explain why the current task will not fix an issue; they do not provide durable ownership. The gate must block until each residual issue is fixed, owned by task/sprint, deferred by decision, archived by policy, accepted as compatibility, or marked false-positive with evidence.
+
+Residual coverage is intentionally weaker than a global zero-warning rule. Legacy warning debt may remain while current work proceeds, but it must stay routeable and accountable.
+
 ## Alignment and content evidence
 
 Vertical alignment traces intent through one lifecycle trace:

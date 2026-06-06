@@ -228,6 +228,14 @@ The generated graph is a trace DAG. Primary graph records are traces. Graph reco
 
 Loop-to-loop progress lives inside a trace. The graph answers how decisions and change journeys relate across the project.
 
+## Trace audit and closure residuals
+
+Trace/debug audits must answer what was approved, planned, validated, left open, and who owned every residual issue. Closure evidence that only says `historical`, `non-task`, or `out-of-scope` is incomplete.
+
+When actionable drift remains, gate history or implementation evidence should carry compact residual coverage: issue key/kind, path or glob, classification, owner refs, trigger/expiry for deferrals, and evidence refs. Do not embed raw linter transcripts.
+
+Trace evidence should start at first accountable semantic intent when trace-primary creation is available; gate pass updates status, not initial accountability.
+
 ## Graph views
 
 Views are generated compact projections, not durable truth. Required trace-first views include:
