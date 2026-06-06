@@ -1,0 +1,54 @@
+{
+  "id": "TASK-111",
+  "title": "Validate structured planning coverage residuals",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Add planning compiler checks for typed decision coverage and explicit roadmap residual reconciliation.",
+  "spec_paths": [
+    ".codewiki/kb/system/flows/decision-to-planning.md",
+    ".codewiki/kb/system/roadmap.md"
+  ],
+  "code_paths": [
+    "src/planning/**",
+    "src/roadmap/**",
+    "src/state/graph/lenses.ts",
+    "tests/tasks/TASK-111/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "DPA-REQ-003",
+    "planning-coverage",
+    "roadmap-reconciliation",
+    "residual-state"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Decision-sourced planning builds carry typed decision coverage and roadmap reconciliation, and semantic/system planning cannot pass with prose-only or unresolved residual coverage.",
+    "acceptance": [
+      "Planning build data supports structured decision_coverage entries keyed by row or requirement ID with coverage state and evidence refs.",
+      "Planning build data supports roadmap_reconciliation entries for implemented, active-roadmap, partial, deferred, no-work, superseded, replanned, and unmapped states.",
+      "Semantic/system planning fails or blocks when relying only on prose coverage.",
+      "Partial or unmapped residuals require owner, trigger, rationale, and evidence before planning pass.",
+      "Graph/read-model projections expose coverage and residual findings as derived views only.",
+      "TASK-specific tests cover full coverage pass, prose-only failure, partial residual blocking, and projection output."
+    ],
+    "non_goals": [
+      "Do not implement decision row delta normalization.",
+      "Do not close implementation tasks from planning context.",
+      "Do not spawn runtime workers."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted TASK-111 test for planning coverage residuals",
+      "targeted graph/lens projection test"
+    ]
+  },
+  "delta": {
+    "desired": "Planning builds emit typed coverage and residual reconciliation; semantic/system planning requires structured evidence.",
+    "current": "Decision-sourced planning builds can pass with prose and no structured residual accounting.",
+    "closure": "Closed when planning coverage tests prove prose-only and unresolved residuals cannot pass."
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}

@@ -1,0 +1,843 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-06-06T21:09:07Z",
+  "source": "wiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-20T21:09:07.000Z",
+    "purge_after": "2026-07-04T21:09:07.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "DPA-REQ-000",
+      "text": "Decision rows must expose current project state, explicit decision/change delta, expected final state, and validated final state; underspecified deltas block decision gate pass.",
+      "source_refs": [
+        "DPA-000-DECISION-DELTA-SCHEMA"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-001",
+      "text": "Target source structure keeps exactly three loop roots owning compiler and gate behavior: src/decision, src/planning, and src/implementation; publication remains under implementation.",
+      "source_refs": [
+        "DPA-001-LOOP-OWNED-GATES",
+        "DPA-011-PUBLICATION-UNDER-IMPLEMENTATION"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-002",
+      "text": "Decision compiler/gate must normalize accepted evidence to row-level Decision Table semantics and require plannable row/requirement atomicity.",
+      "source_refs": [
+        "DPA-002-DECISION-ROW-ATOMICITY",
+        "DPA-003-ROW-LEVEL-TRACE-NORMALIZATION"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-003",
+      "text": "Planning compiler/gate must require structured decision_coverage and roadmap_reconciliation; prose-only coverage cannot pass semantic/system planning.",
+      "source_refs": [
+        "DPA-004-STRUCTURED-PLANNING-COVERAGE",
+        "DPA-005-PARTIAL-COVERAGE-RESIDUALS"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-004",
+      "text": "Accepted target file-structure deltas must have implementation evidence, active roadmap/sprint coverage, or structured deferral with owner/trigger/evidence.",
+      "source_refs": [
+        "DPA-006-FILE-STRUCTURE-ACCOUNTABILITY"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-005",
+      "text": "Planning gate must enforce atomic task boundaries and avoid auto-reuse/merge unless requirement ids and desired outcomes overlap.",
+      "source_refs": [
+        "DPA-007-TASK-ATOMICITY-CONTRACT"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-006",
+      "text": "Planning trace must include execution graph metadata: work units, dependencies, waves, conflict scopes, lease plan, route-back triggers, roles, required gates, and publisher serialization.",
+      "source_refs": [
+        "DPA-008-PLANNING-EXECUTION-GRAPH"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-007",
+      "text": "Agency authorizes parallel continuation, runtime daemon dispatches workers through freshWorkerBridge, implementation workers execute roles, gates validate outputs, and publisher serializes merge/final graph/content evidence.",
+      "source_refs": [
+        "DPA-009-RUNTIME-WORKER-DISPATCH"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-008",
+      "text": "Tests are evidence providers; loop-owned gates define required test/linters/content proof and implementation traces record test refs/results.",
+      "source_refs": [
+        "DPA-010-TEST-EVIDENCE-GATE-CONTRACT"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "DPA-REQ-009",
+      "text": "After gate/planning repair planning, create a refactor sprint for remaining target roots and stale/deprecated cleanup in atomic safe waves.",
+      "source_refs": [
+        "DPA-012-REFACTOR-REPLAN-AFTER-GATE-FIXES"
+      ],
+      "state": "planned-by-sprint-trigger"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "All accepted DPA rows have roadmap or sprint-trigger resolution.",
+      "evidence": "decision_row_resolutions maps DPA-000..DPA-011 to TASK-110..TASK-115 and DPA-012 to SPRINT-025 replan trigger.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Downstream planning questions are resolved.",
+      "evidence": "downstream_question_resolutions maps DPA-Q1..DPA-Q6 to tasks and DPA-Q7 to SPRINT-025 replan trigger.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No source refactor implementation starts before repair gates.",
+      "evidence": "DPA-012 is owned by SPRINT-025 as a post-repair replan trigger; sprint outcome and non-goals block broad source-root refactor until SPRINT-025 closes.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Execution graph remains planning trace, not generated graph truth.",
+      "evidence": "execution_graph.canonical_owner is planning_build.trace and projection is generated graph/read-model only.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan accepted DPA decision into SPRINT-025 repair tasks before source-structure refactor resumes.",
+  "task_ids": [
+    "TASK-110",
+    "TASK-111",
+    "TASK-112",
+    "TASK-113",
+    "TASK-114",
+    "TASK-115"
+  ],
+  "task_changes": [
+    "TASK-110 created for decision row delta normalization and legacy/current accepted row trace normalization.",
+    "TASK-111 created for structured planning coverage and residual roadmap reconciliation.",
+    "TASK-112 created for roadmap task atomicity and safe auto-reuse enforcement.",
+    "TASK-113 created for accepted file-structure target gap accountability.",
+    "TASK-114 created for planning execution graph metadata and runtime/agency handoff projection.",
+    "TASK-115 created for loop-owned gate evidence and publication-under-implementation contracts.",
+    "SPRINT-025 created as repair cohort; broad source-structure refactor remains deferred until these repairs pass planning/implementation/task-close gates."
+  ],
+  "roadmap_changes": [
+    "TASK-110 created for decision row delta normalization and legacy/current accepted row trace normalization.",
+    "TASK-111 created for structured planning coverage and residual roadmap reconciliation.",
+    "TASK-112 created for roadmap task atomicity and safe auto-reuse enforcement.",
+    "TASK-113 created for accepted file-structure target gap accountability.",
+    "TASK-114 created for planning execution graph metadata and runtime/agency handoff projection.",
+    "TASK-115 created for loop-owned gate evidence and publication-under-implementation contracts.",
+    "SPRINT-025 created as repair cohort; broad source-structure refactor remains deferred until these repairs pass planning/implementation/task-close gates."
+  ],
+  "tdd_plan": [
+    "For each task, add TASK-specific failing tests before source changes where practical.",
+    "Prefer small fixture-based tests over broad smoke tests; run npm run typecheck plus targeted tests before implementation_build.",
+    "Use source-contract/file-structure smoke only for tasks changing contract/audit surfaces.",
+    "Record implementation_build acceptance_mapping to task acceptance and DPA requirement IDs."
+  ],
+  "candidate_test_files": [
+    "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+    "tests/tasks/TASK-111/planning-coverage-residuals.test.mjs",
+    "tests/tasks/TASK-112/roadmap-task-reuse-boundary.test.mjs",
+    "tests/tasks/TASK-113/file-structure-target-accountability.test.mjs",
+    "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+    "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/decision-approval-ui.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/decision/**",
+    "src/build/**",
+    "src/gateway/report.ts",
+    "src/planning/**",
+    "src/roadmap/**",
+    "src/audit/tool.ts",
+    "src/checks/**",
+    "src/state/graph/**",
+    "src/agency/planning.ts",
+    "src/runtime/**",
+    "src/implementation/**",
+    "src/policy/**",
+    "src/adapters/pi/**"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "DPA-000-DECISION-DELTA-SCHEMA",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-110 acceptance covers explicit state-delta fields/equivalents and missing-delta gate/report checks.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-001-LOOP-OWNED-GATES",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 acceptance covers loop-owned gate evidence contracts and no fourth validation/publish loop roots.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-002-DECISION-ROW-ATOMICITY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-110 acceptance covers plannable row/requirement identity for current and legacy accepted rows.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-003-ROW-LEVEL-TRACE-NORMALIZATION",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/builds.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-110 acceptance covers legacy diff_table/approved_rows compatibility and row-level normalization.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-004-STRUCTURED-PLANNING-COVERAGE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-111"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-111 acceptance covers structured decision_coverage and roadmap_reconciliation entries and prose-only failure.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-005-PARTIAL-COVERAGE-RESIDUALS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-111"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-111 acceptance covers partial/unmapped residual owner, trigger, rationale, and evidence requirements.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-006-FILE-STRUCTURE-ACCOUNTABILITY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-113"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-113 acceptance turns accepted target gaps and roots-to-retire into actionable findings unless covered or deferred.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-007-TASK-ATOMICITY-CONTRACT",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-112"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-112 acceptance requires requirement/outcome overlap for auto-reuse and tests unsafe path/label-only reuse rejection.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-008-PLANNING-EXECUTION-GRAPH",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-114"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-114 acceptance covers work units, dependencies, waves, conflict scopes, leases, route-backs, gates, roles, and publisher serialization.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-009-RUNTIME-WORKER-DISPATCH",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-114"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-114 acceptance exposes runtime/agency dispatch intent without automatic spawning or bypassing gates/leases.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-010-TEST-EVIDENCE-GATE-CONTRACT",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 acceptance distinguishes tests/linters as evidence providers from loop gate criteria owners.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-011-PUBLICATION-UNDER-IMPLEMENTATION",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "source_refs": [],
+      "evidence": "TASK-115 acceptance keeps task-close/ship-ready/publication criteria under implementation and rejects validation/publish roots.",
+      "inferred": false
+    },
+    {
+      "row_id": "DPA-012-REFACTOR-REPLAN-AFTER-GATE-FIXES",
+      "question_id": "",
+      "question": "",
+      "resolution": "sprint",
+      "task_ids": [],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [],
+      "owner": "planning-loop",
+      "trigger": "After SPRINT-025 tasks close with passing task-close/implementation evidence and planning gate no longer reports DPA residuals.",
+      "trigger_state": "SPRINT-025 closed and accepted target gap accounting available.",
+      "rationale": "SPRINT-025 owns the repair preconditions and post-repair replan trigger; source-structure refactor should not resume until repairs prevent accepted root deltas from being lost again.",
+      "evidence": "SPRINT-025 outcome carries the DPA-012 replan trigger; no source-root refactor implementation task is created yet.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "DPA-Q1",
+      "question": "Plan decision delta schema and row-level normalization for legacy/current decisions.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json"
+      ],
+      "evidence": "TASK-110 owns delta schema/normalization work.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q2",
+      "question": "Plan planning compiler/gate work to require structured decision_coverage and roadmap_reconciliation and reject prose-only pass evidence.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-111"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/flows/decision-to-planning.md"
+      ],
+      "evidence": "TASK-111 owns planning coverage/residual gate work.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q3",
+      "question": "Plan task-boundary and auto-reuse enforcement so roadmap tasks stay atomic by requirement id/outcome.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-112"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "evidence": "TASK-112 owns roadmap reuse/atomicity work.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q4",
+      "question": "Plan file-structure accountability enforcement for absent accepted target roots and roots-to-retire.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-113"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": "TASK-113 owns accepted target gap accountability.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q5",
+      "question": "Plan planning execution graph schema/projection/runtime handoff for parallel work.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-114"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/runtime.md"
+      ],
+      "evidence": "TASK-114 owns execution graph metadata and runtime/agency handoff projection.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q6",
+      "question": "Plan loop-owned gate/test evidence contracts and migration away from central gateway compatibility roots.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "evidence": "TASK-115 owns loop gate evidence and implementation publication contract.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "DPA-Q7",
+      "question": "After the fixes, plan a new repo file-structure refactor sprint for remaining target roots and stale/deprecated cleanup.",
+      "resolution": "sprint",
+      "task_ids": [],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [],
+      "owner": "planning-loop",
+      "trigger": "SPRINT-025 closed with file-structure accountability and structured planning coverage available.",
+      "trigger_state": "All repair tasks closed; accepted target gaps can be represented with coverage/residual states.",
+      "rationale": "SPRINT-025 owns the safe replan trigger; creating source-refactor implementation tasks now risks repeating the open=0/source-root residual loss this sprint is repairing.",
+      "evidence": "DPA-012 refactor replanning is routed through SPRINT-025 closure rather than left unmapped.",
+      "inferred": false
+    }
+  ],
+  "roadmap_reconciliation": [
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-110"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-111"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-113"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-112"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-114"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-114"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "active-roadmap",
+      "summary": "",
+      "evidence": "",
+      "task_ids": [
+        "TASK-115"
+      ],
+      "sprint_ids": [],
+      "source_refs": []
+    },
+    {
+      "status": "deferred",
+      "summary": "Refactor sprint creation depends on accountability and coverage repairs.",
+      "evidence": "",
+      "task_ids": [],
+      "sprint_ids": [
+        "SPRINT-025"
+      ],
+      "source_refs": []
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "All accepted DPA rows have roadmap or sprint-trigger resolution.",
+      "evidence": "decision_row_resolutions maps DPA-000..DPA-011 to TASK-110..TASK-115 and DPA-012 to SPRINT-025 replan trigger.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Downstream planning questions are resolved.",
+      "evidence": "downstream_question_resolutions maps DPA-Q1..DPA-Q6 to tasks and DPA-Q7 to SPRINT-025 replan trigger.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "No source refactor implementation starts before repair gates.",
+      "evidence": "DPA-012 is owned by SPRINT-025 as a post-repair replan trigger; sprint outcome and non-goals block broad source-root refactor until SPRINT-025 closes.",
+      "requirement_ids": [],
+      "source_refs": []
+    },
+    {
+      "criterion": "Execution graph remains planning trace, not generated graph truth.",
+      "evidence": "execution_graph.canonical_owner is planning_build.trace and projection is generated graph/read-model only.",
+      "requirement_ids": [],
+      "source_refs": []
+    }
+  ],
+  "assumptions": [
+    "The accepted DPA decision build is sufficient user approval for high-risk system planning.",
+    "Roadmap auto-reuse currently overmerged one attempted task; TASK-110 was repaired, and TASK-112 now directly addresses this failure mode.",
+    "Planning may proceed despite dirty workspace because this loop is creating canonical roadmap/build handoff; implementation validation must use fresh content evidence."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement package source-root refactor work in SPRINT-025 except minimal loop contract paths needed by repair tasks.",
+    "Do not create validation/publish loop roots.",
+    "Do not hand-edit generated graph/task views.",
+    "Do not spawn runtime workers automatically."
+  ],
+  "risks": [
+    "Current planner auto-reuse can still overmerge future tasks until TASK-112 lands; this planning build uses explicit task IDs and disjoint scopes to mitigate.",
+    "Implementation tasks may touch overlapping graph/checks paths; execution graph serializes conflict waves.",
+    "Broad source-structure refactor remains incomplete and intentionally deferred until repair gates pass."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-110",
+      "TASK-111",
+      "TASK-112",
+      "TASK-113",
+      "TASK-114",
+      "TASK-115"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-110",
+      "TASK-111",
+      "TASK-112",
+      "TASK-113",
+      "TASK-114",
+      "TASK-115"
+    ],
+    "code": [
+      "src/decision/**",
+      "src/build/**",
+      "src/gateway/report.ts",
+      "src/planning/**",
+      "src/roadmap/**",
+      "src/audit/tool.ts",
+      "src/checks/**",
+      "src/state/graph/**",
+      "src/agency/planning.ts",
+      "src/runtime/**",
+      "src/implementation/**",
+      "src/policy/**",
+      "src/adapters/pi/**"
+    ],
+    "tests": [
+      "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+      "tests/tasks/TASK-111/planning-coverage-residuals.test.mjs",
+      "tests/tasks/TASK-112/roadmap-task-reuse-boundary.test.mjs",
+      "tests/tasks/TASK-113/file-structure-target-accountability.test.mjs",
+      "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+      "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

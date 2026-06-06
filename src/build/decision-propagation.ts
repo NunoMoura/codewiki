@@ -1,3 +1,4 @@
+import { normalizeDecisionStateDeltaRows } from "../decision/state-delta.ts";
 import { unique } from "../shared/utils.ts";
 
 export type DecisionPropagationResolutionKind =
@@ -245,15 +246,21 @@ export function normalizeDecisionQuestionResolutions(
 }
 
 export function acceptedDecisionRows(decision: any): DecisionPropagationRow[] {
-	const approvedIds = new Set(stringList(decision?.approved_decision_rows));
-	const rows = list(decision?.decision_table?.rows).filter((row) => {
-		const id = text(row?.id);
-		return (
-			text(row?.approval?.status).toLowerCase() === "approved" ||
-			approvedIds.has(id)
-		);
-	});
-	const sourceRows = rows.length ? rows : list(decision?.approved_rows);
+	const normalizedRows = normalizeDecisionStateDeltaRows(decision);
+	if (normalizedRows.length > 0) {
+		return normalizedRows.map((row) => ({
+			id: row.id,
+			text: text(
+				row.change_delta ||
+					row.expected_final_state ||
+					row.desired_state ||
+					row.rationale ||
+					row.id,
+			),
+			affected_layers: row.affected_layers,
+		}));
+	}
+	const sourceRows = list(decision?.approved_rows);
 	return unique(
 		sourceRows.map((row, index) => text(row?.id) || `ROW-${index + 1}`),
 	).map((id) => {

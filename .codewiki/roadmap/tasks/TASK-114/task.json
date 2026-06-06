@@ -1,0 +1,55 @@
+{
+  "id": "TASK-114",
+  "title": "Encode planning execution graph metadata",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "architecture",
+  "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, and publisher serialization.",
+  "spec_paths": [
+    ".codewiki/kb/system/trace-graph.md",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "code_paths": [
+    "src/agency/planning.ts",
+    "src/runtime/**",
+    "src/state/graph/trace-projection.ts",
+    "src/adapters/pi/**",
+    "tests/tasks/TASK-114/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "DPA-REQ-006",
+    "DPA-REQ-007",
+    "execution-graph-metadata",
+    "agency-runtime-handoff"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Planning trace can carry execution graph metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning workers automatically.",
+    "acceptance": [
+      "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, roles, required gates, route-back triggers, and publisher serialization.",
+      "Agency planning reads or reports execution graph metadata as authorization context while preserving configured budgets and stop gates.",
+      "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh validation, or publisher serialization.",
+      "Graph/read-model projection exposes execution graph metadata as derived view only.",
+      "TASK-specific tests cover execution graph parsing/projection and route-back/serialization metadata."
+    ],
+    "non_goals": [
+      "Do not spawn background workers automatically.",
+      "Do not bypass artifact leases, validation gates, or publisher serialization.",
+      "Do not create a second canonical graph outside planning trace data."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted TASK-114 test for planning execution graph metadata",
+      "targeted graph/lens or runtime handoff projection test"
+    ]
+  },
+  "delta": {
+    "desired": "Planning trace carries canonical execution graph metadata and runtime/graph project it for scheduling context.",
+    "current": "Planning output lacks consistent execution graph metadata for safe parallel implementation handoff.",
+    "closure": "Closed when planning builds can encode and expose worker waves, dependencies, and leases without executing workers."
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}

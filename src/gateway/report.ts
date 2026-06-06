@@ -17,6 +17,7 @@ import {
 	semanticTraceabilityGaps,
 	trimList,
 } from "../build/shared.ts";
+import { decisionStateDeltaGaps } from "../decision/state-delta.ts";
 import {
 	normalizeTraceabilityExemption,
 	isSemanticTraceability,
@@ -1527,7 +1528,7 @@ function validationDecisionMappingGaps(build: any, profile: string): string[] {
 	const mappings = Array.isArray(build?.row_to_kb_mappings)
 		? build.row_to_kb_mappings
 		: [];
-	const gaps: string[] = [];
+	const gaps: string[] = [...decisionStateDeltaGaps(build)];
 	for (const rowId of approvedIds) {
 		const row = rows.find(
 			(candidate: any) => String(candidate?.id || "").trim() === rowId,

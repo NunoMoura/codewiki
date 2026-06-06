@@ -1,0 +1,572 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-06T21:24:49Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+  "task_id": "TASK-110",
+  "task": {
+    "id": "TASK-110",
+    "title": "Enforce decision row delta normalization",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Add decision compiler and gate checks that normalize current and legacy accepted decision rows into explicit row-level state deltas.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+      ".codewiki/kb/system/builds.md"
+    ],
+    "code_paths": [
+      "src/decision/**",
+      "src/build/**",
+      "src/gateway/report.ts",
+      "tests/tasks/TASK-110/**"
+    ],
+    "goal": {
+      "outcome": "Decision planning inputs expose normalized row-level state deltas for current decision_table rows and legacy diff_table/approved_rows artifacts.",
+      "acceptance": [
+        "Decision row/build types or normalizers expose current project state, explicit change delta, expected final state, and validated final state values for planning consumers.",
+        "Current decision_table rows and legacy diff_table/approved_rows evidence normalize into stable row/requirement IDs.",
+        "Decision gate/reporting flags semantic/system rows that lack explicit delta or plannable row identity.",
+        "Historical decision artifacts remain readable without rewriting archived JSON files.",
+        "TASK-specific tests cover current rows, legacy compatibility, missing-delta failure, and normalized accepted row output."
+      ],
+      "non_goals": [
+        "Do not move source files for package structure refactor.",
+        "Do not rewrite historical decision build files.",
+        "Do not create validation or publication loop roots.",
+        "Do not implement planning coverage residuals in this task."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-110 test for decision row delta normalization",
+        "targeted decision gate/report test",
+        "relevant decision approval/build smoke test"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-13T21:24:49.000Z",
+    "purge_after": "2026-06-20T21:24:49.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented decision row state-delta normalization and decision-gate missing-delta checks for TASK-110.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-110"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/decision/state-delta.ts",
+      "src/build/decision-propagation.ts",
+      "src/gateway/report.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-110"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+      ".codewiki/kb/system/builds.md"
+    ],
+    "code_paths": [
+      "src/decision/**",
+      "src/build/**",
+      "src/gateway/report.ts",
+      "tests/tasks/TASK-110/**"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/decision-approval-ui.test.mjs"
+  ],
+  "code_files": [
+    "src/decision/state-delta.ts",
+    "src/build/decision-propagation.ts",
+    "src/gateway/report.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/decision-approval-ui.test.mjs",
+    "src/decision/state-delta.ts",
+    "src/build/decision-propagation.ts",
+    "src/gateway/report.ts"
+  ],
+  "checks_run": [
+    "npm run typecheck",
+    "node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+    "node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs",
+    "node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs",
+    "wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-110",
+      "test_files": [
+        "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/decision-approval-ui.test.mjs"
+      ],
+      "evidence": [
+        "Added TASK-110 fixture test before source implementation; initial run failed on missing src/decision/state-delta.ts module.",
+        "Used existing gateway preflight smoke and decision approval UI smoke as regression coverage for decision gate/writer compatibility."
+      ],
+      "notes": [
+        "Targeted TASK-110 test passed.",
+        "Typecheck passed.",
+        "Gateway preflight and decision approval UI smoke tests passed.",
+        "CodeWiki audit warning only: generated graph/task views changed from planning/runtime refresh, no TASK-110 source-contract error."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-110",
+      "code_files": [
+        "src/decision/state-delta.ts",
+        "src/build/decision-propagation.ts",
+        "src/gateway/report.ts"
+      ],
+      "evidence": [
+        "Added src/decision/state-delta.ts normalized decision state-delta rows and missing delta gap helper.",
+        "Updated src/build/decision-propagation.ts acceptedDecisionRows to use normalized current/legacy rows for row-level planning trace.",
+        "Updated src/gateway/report.ts decision gate mapping gaps to include decisionStateDeltaGaps."
+      ],
+      "notes": [
+        "No source-root refactor moves performed.",
+        "No historical decision build JSON rewritten.",
+        "No validation/publish loop root created."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added TASK-110 fixture test before source implementation; initial run failed on missing src/decision/state-delta.ts module.",
+    "Used existing gateway preflight smoke and decision approval UI smoke as regression coverage for decision gate/writer compatibility."
+  ],
+  "code_change_evidence": [
+    "Added src/decision/state-delta.ts normalized decision state-delta rows and missing delta gap helper.",
+    "Updated src/build/decision-propagation.ts acceptedDecisionRows to use normalized current/legacy rows for row-level planning trace.",
+    "Updated src/gateway/report.ts decision gate mapping gaps to include decisionStateDeltaGaps."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Decision row/build types or normalizers expose current project state, explicit change delta, expected final state, and validated final state values for planning consumers.",
+      "evidence": "src/decision/state-delta.ts exports normalizeDecisionStateDeltaRows with current_project_state, change_delta, expected_final_state, validated_final_state; TASK-110 test asserts current decision_table rows expose all values."
+    },
+    {
+      "criterion": "Current decision_table rows and legacy diff_table/approved_rows evidence normalize into stable row/requirement IDs.",
+      "evidence": "normalizeDecisionStateDeltaRows reads decision_table.rows, raw decision_table arrays, approved_rows, and diff_table; src/build/decision-propagation.ts uses it for acceptedDecisionRows; TASK-110 test covers current and legacy diff_table rows."
+    },
+    {
+      "criterion": "Decision gate/reporting flags semantic/system rows that lack explicit delta or plannable row identity.",
+      "evidence": "src/gateway/report.ts includes decisionStateDeltaGaps in decision validation mapping gaps; TASK-110 test asserts buildGatewayPreflight blocks malformed approved row and reports missing_current_project_state, missing_change_delta, and missing_expected_final_state."
+    },
+    {
+      "criterion": "Historical decision artifacts remain readable without rewriting archived JSON files.",
+      "evidence": "Legacy diff_table/approved_rows normalization works in-memory without modifying build artifacts; no historical decision JSON files rewritten."
+    },
+    {
+      "criterion": "TASK-specific tests cover current rows, legacy compatibility, missing-delta failure, and normalized accepted row output.",
+      "evidence": "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs covers current decision_table, legacy diff_table, acceptedDecisionRows output, and decision gate preflight malformed delta block."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Repair decision/planning gate behavior so accepted decision rows normalize to explicit row-level state deltas before implementation planning.",
+    "implemented_changes": [
+      "Added decision state-delta normalizer for current decision_table, raw decision_table, approved_rows, and legacy diff_table evidence.",
+      "Routed acceptedDecisionRows through normalized row-level state deltas.",
+      "Added decision gate preflight gaps for approved rows missing current project state, change delta, or expected final state.",
+      "Added TASK-110 regression test covering current rows, legacy compatibility, malformed delta gate failure, and accepted row normalization."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/decision/state-delta.ts",
+        "src/build/decision-propagation.ts",
+        "src/gateway/report.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "TASK-110 acceptance_mapping entries map all task criteria to changed source/tests.",
+      "npm run typecheck passed.",
+      "TASK-110 targeted test passed.",
+      "gateway-preflight and decision-approval-ui smoke tests passed."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+      "node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs",
+      "node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs",
+      "wiki_audit task/changed/source-contract/alignment warning-only"
+    ],
+    "non_goals_preserved": [
+      "No package source-root refactor moves.",
+      "No historical decision build JSON rewrites.",
+      "No validation or publication loop roots."
+    ],
+    "remaining_risks": [
+      "Generated CodeWiki views remain dirty as part of planning/runtime state; publication should handle or refresh/revert generated files according to policy."
+    ]
+  },
+  "risks": [
+    "Implementation gate should treat changed generated CodeWiki views as warning until publication; generated files came from CodeWiki refresh/rebuild.",
+    "Decision state-delta gate is intentionally conservative for malformed rows but preserves legacy row fallback behavior."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-110",
+      "task_id": "TASK-110",
+      "next_focus_task_id": "TASK-111",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-110",
+        "title": "Enforce decision row delta normalization",
+        "summary": "Implemented decision row state-delta normalization and decision-gate missing-delta checks for TASK-110.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/kb/system/builds.md"
+        ],
+        "code_paths": [
+          "src/decision/**",
+          "src/build/**",
+          "src/gateway/report.ts",
+          "tests/tasks/TASK-110/**",
+          "src/decision/state-delta.ts",
+          "src/build/decision-propagation.ts"
+        ],
+        "acceptance": [
+          "Decision row/build types or normalizers expose current project state, explicit change delta, expected final state, and validated final state values for planning consumers.",
+          "Current decision_table rows and legacy diff_table/approved_rows evidence normalize into stable row/requirement IDs.",
+          "Decision gate/reporting flags semantic/system rows that lack explicit delta or plannable row identity.",
+          "Historical decision artifacts remain readable without rewriting archived JSON files.",
+          "TASK-specific tests cover current rows, legacy compatibility, missing-delta failure, and normalized accepted row output."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-110 test for decision row delta normalization",
+          "targeted decision gate/report test",
+          "relevant decision approval/build smoke test"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+        "checks_run": [
+          "npm run typecheck",
+          "node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+          "node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs",
+          "wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only"
+        ],
+        "test_design_evidence": [
+          "Added TASK-110 fixture test before source implementation; initial run failed on missing src/decision/state-delta.ts module.",
+          "Used existing gateway preflight smoke and decision approval UI smoke as regression coverage for decision gate/writer compatibility."
+        ],
+        "code_change_evidence": [
+          "Added src/decision/state-delta.ts normalized decision state-delta rows and missing delta gap helper.",
+          "Updated src/build/decision-propagation.ts acceptedDecisionRows to use normalized current/legacy rows for row-level planning trace.",
+          "Updated src/gateway/report.ts decision gate mapping gaps to include decisionStateDeltaGaps."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-110",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-110",
+      "show_build": "git show refs/codewiki/archive/task/TASK-110:.codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/kb/system/builds.md",
+        "src/decision/**",
+        "src/build/**",
+        "src/gateway/report.ts",
+        "tests/tasks/TASK-110/**"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-110 Enforce decision row delta normalization implementation evidence",
+      "body": "Implemented decision row state-delta normalization and decision-gate missing-delta checks for TASK-110.\n\nChecks: npm run typecheck, node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs, node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs, node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs, wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-110\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json\nCodeWiki-Checks: npm run typecheck, node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs, node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs, node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs, wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-110\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-110\nCodeWiki-Digest: sha256:f0a69760297965b4c4b88afb658d7396a0eba38285a7e925caff26f446848616\nCodeWiki-Restore: /wiki-restore TASK-110",
+      "trailers": [
+        "CodeWiki-Task: TASK-110",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+        "CodeWiki-Checks: npm run typecheck, node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs, node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs, node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs, wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-110",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-110",
+        "CodeWiki-Digest: sha256:f0a69760297965b4c4b88afb658d7396a0eba38285a7e925caff26f446848616",
+        "CodeWiki-Restore: /wiki-restore TASK-110"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-110 Enforce decision row delta normalization implementation evidence",
+      "body": "Implemented decision row state-delta normalization and decision-gate missing-delta checks for TASK-110.\n\nChecks: npm run typecheck, node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs, node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs, node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs, wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-110\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json\nCodeWiki-Checks: npm run typecheck, node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs, node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs, node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs, wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-110\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-110\nCodeWiki-Digest: sha256:f0a69760297965b4c4b88afb658d7396a0eba38285a7e925caff26f446848616\nCodeWiki-Restore: /wiki-restore TASK-110"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-110",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-110"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-110",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-110",
+        "show_build": "git show refs/codewiki/archive/task/TASK-110:.codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/kb/system/builds.md",
+          "src/decision/**",
+          "src/build/**",
+          "src/gateway/report.ts",
+          "tests/tasks/TASK-110/**"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-110",
+      "build_path": ".codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-110",
+      "commit_sha": "",
+      "digest": "sha256:f0a69760297965b4c4b88afb658d7396a0eba38285a7e925caff26f446848616",
+      "restore_command": "/wiki-restore TASK-110"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:67cd43f3a14571102f1ebf9bfb1b81655f9af56935282497f3e920d803ac07a4",
+          "bytes": 28453
+        },
+        {
+          "path": "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cbd9c3b2a05e85bd7513f0d1987a774bf15f02044eddf9a644fdb5067a887377",
+          "bytes": 6178
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:54c42ad615eea09d7bf1b8bb9658e5c98efc8cbf2a018d26fee432d983b22997",
+          "bytes": 53689
+        },
+        {
+          "path": "tests/smoke/decision-approval-ui.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1b26c360f0248a96241b82796638b7ae8889fd311e1f29d99eb9c6a11aa996c2",
+          "bytes": 7021
+        },
+        {
+          "path": "src/decision/state-delta.ts",
+          "role": "code_file",
+          "sha256": "sha256:4c8e66fd4ed92c57549b991632317e572756c6611defcd213d0637c84679a0e0",
+          "bytes": 5190
+        },
+        {
+          "path": "src/build/decision-propagation.ts",
+          "role": "code_file",
+          "sha256": "sha256:50653aaa5dae1eb114ac36d2a205c4f82a20131d15c0f296a960de0a98addea3",
+          "bytes": 19580
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:187ef8aa04ec9613e39b8f33f6f088ac06482eeae9acacba296fa0ce3b2b7adb",
+          "bytes": 94222
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-110",
+      "source_build": ".codewiki/builds/implementation/2026-06-06-implemented-decision-row-state-delta-normalizati.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/decision/state-delta.ts",
+          "src/build/decision-propagation.ts",
+          "src/gateway/report.ts",
+          "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/decision-approval-ui.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-110",
+        "restore_command": "/wiki-restore TASK-110"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck",
+        "node --experimental-strip-types tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+        "node --experimental-strip-types tests/smoke/gateway-preflight.test.mjs",
+        "node --experimental-strip-types tests/smoke/decision-approval-ui.test.mjs",
+        "wiki_audit profiles=task,changed,source-contract,alignment task_id=TASK-110: warning only"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

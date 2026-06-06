@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-06T21:14:47Z",
+  "profile": "planning",
+  "gate": "planning",
+  "verdict": "pass",
+  "rationale": "Accepted DPA decision rows are mapped to SPRINT-025 tasks or a sprint-owned refactor replan trigger. Decision gate pass exists; scoped audits provide required planning evidence. Source-structure refactor implementation remains blocked until repair tasks close.",
+  "checks": [
+    "explicit approval by user: all 13 DPA rows approved",
+    "decision gate pass: .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-pla.json",
+    "wiki_state refresh: open 6, next TASK-110, unmapped 0",
+    "wiki_audit profiles task,alignment,source-contract,changed: warning only; task pass and source-contract pass",
+    "planning build exists: .codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+    "SPRINT-025 exists with TASK-110..TASK-115",
+    "DPA-012 is resolved through SPRINT-025 replan trigger; no source-root refactor implementation task created yet"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "planning",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+  "policy_profile": "semantic-system",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "task",
+    "source-contract",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:task",
+    "audit:source-contract",
+    "audit:changed"
+  ],
+  "audit_reports": [
+    "wiki_audit:task,alignment,source-contract,changed:warning"
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dpa-dec.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+      ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dpa-dec.json",
+      "TASK-110 created for decision row delta normalization and legacy/current accepted row trace normalization.",
+      "TASK-111 created for structured planning coverage and residual roadmap reconciliation.",
+      "TASK-112 created for roadmap task atomicity and safe auto-reuse enforcement.",
+      "TASK-113 created for accepted file-structure target gap accountability.",
+      "TASK-114 created for planning execution graph metadata and runtime/agency handoff projection.",
+      "TASK-115 created for loop-owned gate evidence and publication-under-implementation contracts.",
+      "SPRINT-025 created as repair cohort; broad source-structure refactor remains deferred until these repairs pass planning/implementation/task-close gates.",
+      "TASK-110",
+      "TASK-111",
+      "TASK-112",
+      "TASK-113",
+      "TASK-114",
+      "TASK-115",
+      "src/decision/**",
+      "src/build/**",
+      "src/gateway/report.ts",
+      "src/planning/**",
+      "src/roadmap/**",
+      "src/audit/tool.ts",
+      "src/checks/**",
+      "src/state/graph/**",
+      "src/agency/planning.ts",
+      "src/runtime/**",
+      "src/implementation/**",
+      "src/policy/**",
+      "src/adapters/pi/**",
+      "tests/tasks/TASK-110/decision-row-delta-normalization.test.mjs",
+      "tests/tasks/TASK-111/planning-coverage-residuals.test.mjs",
+      "tests/tasks/TASK-112/roadmap-task-reuse-boundary.test.mjs",
+      "tests/tasks/TASK-113/file-structure-target-accountability.test.mjs",
+      "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+      "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+    "validation_report": ".codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dpa-dec.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-06-planning-pass-2026-06-06-plan-accepted-dpa-dec.json",
+      "CodeWiki-Checks: explicit approval by user: all 13 DPA rows approved; decision gate pass: .codewiki/validation/2026-06-06-decision-pass-2026-06-06-accepted-decision-pla.json; wiki_state refresh: open 6, next TASK-110, unmapped 0; wiki_audit profiles task,alignment,source-contract,changed: warning only; task pass and source-contract pass; planning build exists: .codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json; SPRINT-025 exists with TASK-110..TASK-115; DPA-012 is resolved through SPRINT-025 replan trigger; no source-root refactor implementation task created yet"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/decision/**",
+      "src/build/**",
+      "src/gateway/report.ts",
+      "src/planning/**",
+      "src/roadmap/**",
+      "src/audit/tool.ts",
+      "src/checks/**",
+      "src/state/graph/**",
+      "src/agency/planning.ts",
+      "src/runtime/**",
+      "src/implementation/**",
+      "src/policy/**",
+      "src/adapters/pi/**"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "task",
+      "source-contract",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:task or profile:task",
+      "audit:source-contract or profile:source-contract",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "gate": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "existing roadmap reconciliation evidence",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile",
+      "residual issue coverage"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "roadmap_reconciliation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": [],
+      "residual_issue_coverage": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "explicit approval by user: all 13 DPA rows approved"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    },
+    "residual_issue_coverage": {
+      "required": false,
+      "items": [],
+      "covered": [],
+      "gaps": [],
+      "coverage": []
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Planning validation after context compaction; dirty workspace contains roadmap/build/generated artifacts from planning loop, not implementation promotion.",
+    "role": "validator"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "TASK-115",
+  "title": "Codify implementation gate evidence ownership",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "architecture",
+  "summary": "Define loop gate evidence contracts that keep tests as evidence providers and publication under implementation.",
+  "spec_paths": [
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md"
+  ],
+  "code_paths": [
+    "src/implementation/**",
+    "src/checks/**",
+    "src/policy/**",
+    "tests/tasks/TASK-115/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "DPA-REQ-001",
+    "DPA-REQ-008",
+    "implementation-publication-contract",
+    "test-evidence-provider"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Loop gate evidence contracts make decision/planning/implementation ownership explicit, keep tests as evidence providers, and keep publication criteria under implementation.",
+    "acceptance": [
+      "Source or policy contract exposes loop gate evidence ownership for decision, planning, and implementation without adding validation or publish loop roots.",
+      "Evidence reporting distinguishes tests and linters as evidence providers from loop gate criteria owners.",
+      "Implementation/publication criteria stay under implementation, including task-close and ship-ready compatibility behavior.",
+      "File-structure/source-contract checks enforce exactly three loop roots and no fourth validation/publish root.",
+      "TASK-specific tests cover loop-owned evidence contract shape, publication-under-implementation invariant, and no fourth loop/root."
+    ],
+    "non_goals": [
+      "Do not physically migrate all gateway/checks/policy helpers unless needed for contract clarity.",
+      "Do not create src/validation or src/publish roots.",
+      "Do not change public tool schemas except compatibility-safe additions."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted TASK-115 test for loop-owned gate evidence contracts",
+      "tests/smoke/source-contract.test.mjs or equivalent",
+      "relevant package smoke subset"
+    ]
+  },
+  "delta": {
+    "desired": "Loop-owned gate evidence contracts make the three-loop model explicit and keep publication under implementation.",
+    "current": "Gateway/test/publication compatibility surfaces can look like independent loops or source roots.",
+    "closure": "Closed when source-contract and gate tests enforce no fourth loop and tests remain evidence providers."
+  },
+  "created": "2026-06-06",
+  "updated": "2026-06-06"
+}
