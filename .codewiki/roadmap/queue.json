@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "updated": "2026-06-06T05:05:45Z",
+  "updated": "2026-06-06T05:15:34Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
     "TASK-088",
     "TASK-101",
-    "TASK-102",
     "TASK-103",
     "TASK-104",
     "TASK-105"
@@ -741,53 +740,6 @@
       },
       "created": "2026-06-06",
       "updated": "2026-06-06"
-    },
-    "TASK-102": {
-      "id": "TASK-102",
-      "title": "Classify Pi prompt asset directory owner",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "docs",
-      "summary": "Choose and record owner classification for src/adapters/pi/prompt-assets so asset files are not ambiguous adapter drift.",
-      "spec_paths": [
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/kb/system/file-structure.md"
-      ],
-      "code_paths": [
-        "src/adapters/pi/prompt-assets/**",
-        "tests/smoke/prompt-assets.test.mjs",
-        "tests/smoke/prompt-contract.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "pi-prompt-assets",
-        "asset-owner"
-      ],
-      "change_type": "task",
-      "goal": {
-        "outcome": "Prompt asset paths have explicit ownership and no longer appear as ambiguous adapter/asset drift.",
-        "acceptance": [
-          "Map or KB classifies src/adapters/pi/prompt-assets/** as current package prompt assets or records future src/pi/prompt-assets/** migration trigger.",
-          "Ownership mismatch warnings for the prompt asset directory clear or are covered by accepted deferral with trigger.",
-          "Prompt asset and prompt contract smoke evidence still passes or remains unaffected."
-        ],
-        "non_goals": [
-          "Do not move prompt asset files unless implementation explicitly scopes a migration.",
-          "Do not restore generic CodeWiki skill surfaces."
-        ],
-        "verification": [
-          "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
-          "node --experimental-strip-types ./tests/smoke/prompt-assets.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/prompt-contract.test.mjs"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-06-06",
-      "updated": "2026-06-06T00:58:52Z"
     },
     "TASK-103": {
       "id": "TASK-103",
