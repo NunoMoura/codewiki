@@ -6,10 +6,14 @@ summary: CodeWiki should expose contradictions between intent, knowledge, work, 
   state, builds, validation, tests, and code.
 owners:
 - product
-updated: '2026-05-31'
+updated: '2026-06-06'
 code_paths:
-- skills/codewiki/playbooks/view-audit.md
-- skills/codewiki/playbooks/architecture.md
+- src/state/graph.ts
+- src/state/lint.ts
+- src/gateway/report.ts
+- skills/codewiki-decision/SKILL.md
+- skills/codewiki-planning/SKILL.md
+- skills/codewiki-implementation/SKILL.md
 code_paths_mode: explicit_override
 ---
 

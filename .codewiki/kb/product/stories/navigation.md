@@ -6,10 +6,14 @@ summary: Humans and agents should start from compact graph-backed state and expa
   only to exact needed context.
 owners:
 - product
-updated: '2026-05-09'
+updated: '2026-06-06'
 code_paths:
-- skills/codewiki/SKILL.md
-- src/adapters/pi/ui
+- src/state/tool.ts
+- src/state/resume-context.ts
+- src/state/graph/lenses.ts
+- skills/codewiki-decision/SKILL.md
+- skills/codewiki-planning/SKILL.md
+- skills/codewiki-implementation/SKILL.md
 code_paths_mode: explicit_override
 ---
 

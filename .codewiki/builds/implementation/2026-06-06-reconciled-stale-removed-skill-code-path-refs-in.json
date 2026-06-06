@@ -1,0 +1,493 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-06T04:59:30Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+  "task_id": "TASK-100",
+  "task": {
+    "id": "TASK-100",
+    "title": "Reconcile stale removed-skill code path refs",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "docs",
+    "summary": "Fix KB product/story code path refs that still point to removed generic CodeWiki skill surfaces.",
+    "spec_paths": [
+      ".codewiki/kb/product/stories/drift.md",
+      ".codewiki/kb/product/stories/navigation.md",
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+    ],
+    "code_paths": [
+      ".codewiki/kb/product/stories/drift.md",
+      ".codewiki/kb/product/stories/navigation.md",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md"
+    ],
+    "goal": {
+      "outcome": "Product story docs no longer reference deleted skills/codewiki paths and point to current skills where appropriate.",
+      "acceptance": [
+        "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
+        "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
+        "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089."
+      ],
+      "non_goals": [
+        "Do not recreate deleted skill folders or compatibility shims.",
+        "Do not change package skill discovery.",
+        "Do not classify prompt asset directory ownership in this task."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
+        "wiki_state refresh=true"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-13T04:59:30.000Z",
+    "purge_after": "2026-06-20T04:59:30.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Reconciled stale removed-skill code path refs in product story docs.",
+  "change_type": "product",
+  "traceability": {
+    "change_type": "product",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-100"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      ".codewiki/kb/product/stories/drift.md",
+      ".codewiki/kb/product/stories/navigation.md"
+    ],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-100"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+    "spec_paths": [
+      ".codewiki/kb/product/stories/drift.md",
+      ".codewiki/kb/product/stories/navigation.md",
+      ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+    ],
+    "code_paths": [
+      ".codewiki/kb/product/stories/drift.md",
+      ".codewiki/kb/product/stories/navigation.md",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md"
+    ]
+  },
+  "test_files": [],
+  "code_files": [
+    ".codewiki/kb/product/stories/drift.md",
+    ".codewiki/kb/product/stories/navigation.md"
+  ],
+  "files_changed": [
+    ".codewiki/kb/product/stories/drift.md",
+    ".codewiki/kb/product/stories/navigation.md"
+  ],
+  "checks_run": [
+    "grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains",
+    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected",
+    "wiki_state refresh=true: health yellow, 0 errors, 55 warnings"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-100",
+      "test_files": [],
+      "evidence": [
+        "Docs-only/frontmatter cleanup; no runtime test added. Verification uses stale-reference/generated-parity/task audits and graph warning delta."
+      ],
+      "notes": [
+        "Alignment warning remains due known SPRINT-023 residual warnings; TASK-100 only cleared the removed generic skill missing-code-path class."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-100",
+      "code_files": [
+        ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/navigation.md"
+      ],
+      "evidence": [
+        "Updated product story code_path frontmatter only.",
+        "No package skill discovery or prompt assets ownership changes."
+      ],
+      "notes": [
+        "No reload required; only CodeWiki KB frontmatter and generated graph state changed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Docs-only/frontmatter cleanup; no runtime test added. Verification uses stale-reference/generated-parity/task audits and graph warning delta."
+  ],
+  "code_change_evidence": [
+    "Updated product story code_path frontmatter only.",
+    "No package skill discovery or prompt assets ownership changes."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
+      "evidence": "Updated drift.md and navigation.md frontmatter code_paths to existing graph/lint/gateway/state and focused CodeWiki skill files; removed active refs to deleted skills/codewiki/SKILL.md and skills/codewiki/playbooks/**."
+    },
+    {
+      "criterion": "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
+      "evidence": "wiki_state refresh=true reduced graph warnings from 58 to 55; stale-reference audit passed and grep shows removed generic skill refs no longer appear in product story frontmatter."
+    },
+    {
+      "criterion": "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089.",
+      "evidence": "No deleted skill folder or compatibility shim was recreated; docs now point at focused codewiki-decision/planning/implementation skills or source modules."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Remove stale active product story refs to deleted generic CodeWiki skills without reintroducing shims.",
+    "implemented_changes": [
+      "Updated drift story code_paths to existing graph/lint/gateway/focused skill files.",
+      "Updated navigation story code_paths to existing state/resume/graph/focused skill files.",
+      "Verified removed generic skill refs cleared from active product story frontmatter."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/navigation.md"
+      ],
+      "roadmap": [],
+      "code": [],
+      "tests": [],
+      "validation": [
+        "wiki_gate audit evidence",
+        "wiki_state warning count delta"
+      ]
+    },
+    "acceptance_evidence": [
+      "stale-reference audit passed",
+      "generated-parity audit passed",
+      "task audit passed",
+      "graph warnings reduced 58 to 55"
+    ],
+    "checks": [
+      "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100",
+      "wiki_state refresh=true",
+      "grep removed generic skill refs"
+    ],
+    "non_goals_preserved": [
+      "Did not recreate deleted skill folders or shims.",
+      "Did not change package skill discovery.",
+      "Did not classify prompt asset directory ownership."
+    ],
+    "remaining_risks": [
+      "Remaining warnings belong to other SPRINT-023 tasks."
+    ]
+  },
+  "risks": [
+    "One file-structure map compatibility pattern still references skills/codewiki/** as map policy; it is not an active missing-code-path frontmatter ref and remains outside TASK-100 scope."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-100",
+      "task_id": "TASK-100",
+      "next_focus_task_id": "TASK-102",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-100",
+        "title": "Reconcile stale removed-skill code path refs",
+        "summary": "Reconciled stale removed-skill code path refs in product story docs.",
+        "spec_paths": [
+          ".codewiki/kb/product/stories/drift.md",
+          ".codewiki/kb/product/stories/navigation.md",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
+        ],
+        "code_paths": [
+          ".codewiki/kb/product/stories/drift.md",
+          ".codewiki/kb/product/stories/navigation.md",
+          "skills/codewiki-decision/SKILL.md",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-implementation/SKILL.md"
+        ],
+        "acceptance": [
+          "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
+          "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
+          "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
+          "wiki_state refresh=true"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+        "checks_run": [
+          "grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains",
+          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected",
+          "wiki_state refresh=true: health yellow, 0 errors, 55 warnings"
+        ],
+        "test_design_evidence": [
+          "Docs-only/frontmatter cleanup; no runtime test added. Verification uses stale-reference/generated-parity/task audits and graph warning delta."
+        ],
+        "code_change_evidence": [
+          "Updated product story code_path frontmatter only.",
+          "No package skill discovery or prompt assets ownership changes."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-100",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-100",
+      "show_build": "git show refs/codewiki/archive/task/TASK-100:.codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+        ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/navigation.md",
+        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
+        "skills/codewiki-decision/SKILL.md",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-implementation/SKILL.md"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-100 Reconcile stale removed-skill code path refs implementation evidence",
+      "body": "Reconciled stale removed-skill code path refs in product story docs.\n\nChecks: grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains, wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected, wiki_state refresh=true: health yellow, 0 errors, 55 warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-100\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json\nCodeWiki-Checks: grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains, wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected, wiki_state refresh=true: health yellow, 0 errors, 55 warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-100\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-100\nCodeWiki-Digest: sha256:e08e022b14c0be196c0c28d951039b3ee38e52b5fa4e41ef247a33a5c9a70867\nCodeWiki-Restore: /wiki-restore TASK-100",
+      "trailers": [
+        "CodeWiki-Task: TASK-100",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+        "CodeWiki-Checks: grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains, wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected, wiki_state refresh=true: health yellow, 0 errors, 55 warnings",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-100",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-100",
+        "CodeWiki-Digest: sha256:e08e022b14c0be196c0c28d951039b3ee38e52b5fa4e41ef247a33a5c9a70867",
+        "CodeWiki-Restore: /wiki-restore TASK-100"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-100 Reconcile stale removed-skill code path refs implementation evidence",
+      "body": "Reconciled stale removed-skill code path refs in product story docs.\n\nChecks: grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains, wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected, wiki_state refresh=true: health yellow, 0 errors, 55 warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-100\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json\nCodeWiki-Checks: grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains, wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected, wiki_state refresh=true: health yellow, 0 errors, 55 warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-100\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-100\nCodeWiki-Digest: sha256:e08e022b14c0be196c0c28d951039b3ee38e52b5fa4e41ef247a33a5c9a70867\nCodeWiki-Restore: /wiki-restore TASK-100"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-100",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-100"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-100",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-100",
+        "show_build": "git show refs/codewiki/archive/task/TASK-100:.codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+          ".codewiki/kb/product/stories/drift.md",
+          ".codewiki/kb/product/stories/navigation.md",
+          ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
+          "skills/codewiki-decision/SKILL.md",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-implementation/SKILL.md"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-100",
+      "build_path": ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-100",
+      "commit_sha": "",
+      "digest": "sha256:e08e022b14c0be196c0c28d951039b3ee38e52b5fa4e41ef247a33a5c9a70867",
+      "restore_command": "/wiki-restore TASK-100"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
+          "bytes": 20120
+        },
+        {
+          "path": ".codewiki/kb/product/stories/drift.md",
+          "role": "code_file",
+          "sha256": "sha256:b60e812d78cafb9d94ac05d61f7f374b2cdb9503a23e4f919a8c51b14446d450",
+          "bytes": 1745
+        },
+        {
+          "path": ".codewiki/kb/product/stories/navigation.md",
+          "role": "code_file",
+          "sha256": "sha256:299977f5a186cf3e2ae5705707392dd20e44deb9300a16e9ab39f31e9ff597bc",
+          "bytes": 1456
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-100",
+      "source_build": ".codewiki/builds/implementation/2026-06-06-reconciled-stale-removed-skill-code-path-refs-in.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/product/stories/drift.md",
+          ".codewiki/kb/product/stories/navigation.md"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-100",
+        "restore_command": "/wiki-restore TASK-100"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "grep for removed generic skill refs in product/system KB: only accepted file-structure map compatibility pattern remains",
+        "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-100: stale-reference/generated-parity/task pass; alignment/changed warnings expected",
+        "wiki_state refresh=true: health yellow, 0 errors, 55 warnings"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
