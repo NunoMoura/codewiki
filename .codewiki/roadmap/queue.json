@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-06-06T04:56:41Z",
+  "updated": "2026-06-06T05:05:45Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
     "TASK-088",
-    "TASK-100",
     "TASK-101",
     "TASK-102",
     "TASK-103",
@@ -695,56 +694,6 @@
       },
       "created": "2026-06-03",
       "updated": "2026-06-03T21:56:21Z"
-    },
-    "TASK-100": {
-      "id": "TASK-100",
-      "title": "Reconcile stale removed-skill code path refs",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "docs",
-      "summary": "Fix KB product/story code path refs that still point to removed generic CodeWiki skill surfaces.",
-      "spec_paths": [
-        ".codewiki/kb/product/stories/drift.md",
-        ".codewiki/kb/product/stories/navigation.md",
-        ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json"
-      ],
-      "code_paths": [
-        ".codewiki/kb/product/stories/drift.md",
-        ".codewiki/kb/product/stories/navigation.md",
-        "skills/codewiki-decision/SKILL.md",
-        "skills/codewiki-planning/SKILL.md",
-        "skills/codewiki-implementation/SKILL.md"
-      ],
-      "research_ids": [],
-      "labels": [
-        "removed-skill-refs",
-        "missing-code-path"
-      ],
-      "change_type": "task",
-      "goal": {
-        "outcome": "Product story docs no longer reference deleted skills/codewiki paths and point to current skills where appropriate.",
-        "acceptance": [
-          "Stale refs to skills/codewiki/SKILL.md and skills/codewiki/playbooks/** are removed, replaced, or explicitly historical without active code_path frontmatter.",
-          "missing-code-path warnings for removed generic skill surfaces clear after graph refresh.",
-          "Docs preserve accepted no-shims/no-generic-skill intent from TASK-089."
-        ],
-        "non_goals": [
-          "Do not recreate deleted skill folders or compatibility shims.",
-          "Do not change package skill discovery.",
-          "Do not classify prompt asset directory ownership in this task."
-        ],
-        "verification": [
-          "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed",
-          "wiki_state refresh=true"
-        ]
-      },
-      "delta": {
-        "desired": "Additional outcome: Prompt asset paths have explicit file-structure ownership and no longer appear as ambiguous adapter/skill drift.",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-06-06",
-      "updated": "2026-06-06T00:55:38Z"
     },
     "TASK-101": {
       "id": "TASK-101",
