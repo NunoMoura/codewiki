@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { executeDecisionTableAction } from "../../src/change/decision-table.ts";
+import { executeDecisionTableAction } from "../../src/decision/table.ts";
 import {
 	applyDecisionApprovalAction,
 	buildTaskCandidateApprovalModel,

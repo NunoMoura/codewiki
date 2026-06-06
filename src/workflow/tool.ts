@@ -13,7 +13,7 @@ import { executeCodewikiBuildTool } from "../build/tool.ts";
 import {
 	executeCodewikiDecisionTool,
 	executeCodewikiDecisionTableTool,
-} from "../change/tool.ts";
+} from "../decision/tool.ts";
 import { executeCodewikiValidationTool } from "../gateway/tool.ts";
 import { executeCodewikiRoadmapTool } from "../roadmap/tool.ts";
 import { executeCodewikiAgencyTool } from "../agency/tool.ts";

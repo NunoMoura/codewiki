@@ -7,13 +7,13 @@ import type {
 	CodewikiBuildToolInput,
 } from "./types.ts";
 import { isAcceptedBuildData } from "./lifecycle.ts";
-import type { ChangeType } from "../change/types.ts";
+import type { ChangeType } from "../decision/types.ts";
 import type { WikiProject } from "../project/types.ts";
 import {
 	normalizeChangeType,
 	normalizeTraceabilityExemption,
 	isSemanticTraceability,
-} from "../change/traceability.ts";
+} from "../decision/traceability.ts";
 import { unique } from "../shared/utils.ts";
 export {
 	DEFAULT_REQUIRED_AUDIT_PROFILES,

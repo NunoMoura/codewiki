@@ -82,7 +82,6 @@ nodes:
       - src/adapters/pi/**
       - src/audit/**
       - src/build/**
-      - src/change/**
       - src/checks/**
       - src/gc/**
       - src/gateway/**
@@ -92,8 +91,9 @@ nodes:
       - src/state/**
       - src/workflow/**
     former_compatibility_paths:
+      - src/change/**
       - src/validation/**
-    trigger: TASK-105 removed absent src/validation/** from compatibility exports; do not recreate it without a future accepted gateway migration.
+    trigger: TASK-109 removed absent src/change/** from compatibility exports and TASK-105 removed absent src/validation/**; do not recreate either without a future accepted migration.
   - id: first_concept_root_pilot
     label: Agency concept-root pilot
     group: source_target
@@ -235,23 +235,25 @@ nodes:
     removed_paths:
       - src/application/knowledge/doc-parser.ts
       - src/application/knowledge/diagram-parser.ts
-  - id: change_decision_table_concept_root_boundary
-    label: Change and decision-table concept-root migration
+  - id: decision_loop_source_boundary
+    label: Decision loop source-root migration
     group: source_target
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: task_close_validated_by_task_026
-    task_id: TASK-026
-    validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-026.json
-    cleanup_state: old_change_decision_table_paths_removed
+    status: implementation_in_progress_by_task_109
+    task_id: TASK-109
+    prior_task_id: TASK-026
+    prior_validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-026.json
+    cleanup_state: src_change_removed
     paths:
-      - src/change/**
-      - tests/tasks/TASK-026/change-decision-table-source-root.test.mjs
-      - tests/smoke/builds.test.mjs
+      - src/decision/**
+      - tests/tasks/TASK-109/decision-root-migration.test.mjs
+      - tests/smoke/decision-approval-ui.test.mjs
       - tests/smoke/efficiency-ui.test.mjs
       - tests/smoke/package-smoke.test.mjs
     removed_paths:
+      - src/change/**
       - src/domain/change/types.ts
       - src/domain/change/traceability.ts
       - src/application/decision-table.ts

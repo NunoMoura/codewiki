@@ -6,7 +6,7 @@ export { executeCodewikiBuildTool } from "../build/tool.ts";
 export {
 	executeCodewikiDecisionTool,
 	executeCodewikiDecisionTableTool,
-} from "../change/tool.ts";
+} from "../decision/tool.ts";
 export { executeCodewikiGcTool } from "../gc/tool.ts";
 export {
 	executeCodewikiBootstrapTool,

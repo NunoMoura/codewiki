@@ -7,7 +7,7 @@ import { readRoadmapFile } from "../../src/roadmap/store.ts";
 import {
 	executeDecisionTableAction,
 	readRuntimeDecisionTables,
-} from "../../src/change/decision-table.ts";
+} from "../../src/decision/table.ts";
 import {
 	readDecisionTablePanelData,
 	readGraphPanelData,

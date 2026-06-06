@@ -2,7 +2,7 @@ import {
 	isSemanticTraceability,
 	normalizeChangeType,
 	normalizeTraceabilityExemption,
-} from "../change/traceability.ts";
+} from "../decision/traceability.ts";
 import { unique } from "../shared/utils.ts";
 import { normalizeValidationGate } from "./gates.ts";
 

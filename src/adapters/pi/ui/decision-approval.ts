@@ -4,7 +4,7 @@ import type { WikiProject } from "../../../project/types.ts";
 import {
 	executeDecisionTableAction,
 	type CodewikiDecisionTableToolInput,
-} from "../../../change/decision-table.ts";
+} from "../../../decision/table.ts";
 import { truncatePlain } from "./text.ts";
 
 export type DecisionApprovalAction = "approve" | "reject" | "defer" | "edit";
@@ -311,13 +311,14 @@ function toApprovalRow(
 			row.validated_outcome || row.validated_final_state || "",
 		).trim(),
 		rationale: String(row.rationale || "").trim(),
-		affectedLayers: [
+		affectedLayers: uniqueStrings([
+			...stringList(row.affected_layers),
 			...stringList(row.impact?.product),
 			...stringList(row.impact?.system),
 			...stringList(row.impact?.source),
 			...stringList(row.impact?.tests),
 			...stringList(row.impact?.docs),
-		],
+		]),
 		risk: String(row.risk?.level || row.risk || "medium").trim(),
 		source: String(table.summary || table.id || "pending").trim(),
 		alternatives: Array.isArray(row.options)
@@ -337,16 +338,18 @@ function toApprovalRow(
 }
 
 function stringList(values: unknown): string[] {
-	return Array.isArray(values)
-		? Array.from(
-				new Set(
-					values
-						.map(String)
-						.map((value) => value.trim())
-						.filter(Boolean),
-				),
-			)
-		: [];
+	return Array.isArray(values) ? uniqueStrings(values) : [];
+}
+
+function uniqueStrings(values: unknown[]): string[] {
+	return Array.from(
+		new Set(
+			values
+				.map(String)
+				.map((value) => value.trim())
+				.filter(Boolean),
+		),
+	);
 }
 
 function decisionTableActionForApproval(

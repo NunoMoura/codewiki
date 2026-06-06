@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import { normalizeDecisionTableUserAction } from "../change/types.ts";
+import { normalizeDecisionTableUserAction } from "../decision/types.ts";
 import type { CodewikiDecisionTableV1 } from "../telemetry/types.ts";
 import type {
 	CodewikiBuildProducesInput,

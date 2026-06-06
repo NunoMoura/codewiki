@@ -3,7 +3,7 @@ import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import {
 	normalizeChangeType,
 	normalizeTraceabilityExemption,
-} from "../change/traceability.ts";
+} from "../decision/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { ChangeClaimsFile, WorkflowCursor } from "../session/types.ts";

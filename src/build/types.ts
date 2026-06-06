@@ -4,10 +4,10 @@ import type {
 	CodewikiDecisionTableRowInput,
 	LegacyChangeClass,
 	TraceabilityExemption,
-} from "../change/types.ts";
+} from "../decision/types.ts";
 import type { CodewikiIsolationRequirementInput } from "../session/types.ts";
 
-export type { CodewikiDecisionTableRowInput } from "../change/types.ts";
+export type { CodewikiDecisionTableRowInput } from "../decision/types.ts";
 
 export interface CodewikiBuildIsolationPolicyInput {
 	loop_start?: CodewikiIsolationRequirementInput;

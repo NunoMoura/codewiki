@@ -12,7 +12,7 @@ import { AUDIT_PROFILE_VALUES } from "../../audit/types.ts";
 import {
 	CHANGE_TYPE_VALUES,
 	TRACEABILITY_EXEMPTION_VALUES,
-} from "../../change/types.ts";
+} from "../../decision/types.ts";
 import { GC_ACTION_VALUES, GC_INCLUDE_VALUES } from "../../gc/types.ts";
 import {
 	ROADMAP_PRIORITY_VALUES,

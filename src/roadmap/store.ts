@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { readFile, stat, writeFile } from "node:fs/promises";
-import type { ChangeType } from "../change/types.ts";
+import type { ChangeType } from "../decision/types.ts";
 import type { WikiProject } from "../project/types.ts";
 import type {
 	RoadmapFile,
@@ -18,7 +18,7 @@ import type {
 } from "./types.ts";
 import type { RoadmapStateTaskSummary } from "../state/types.ts";
 import type { TaskVerifierResult } from "../gateway/types.ts";
-import { CHANGE_TYPE_VALUES } from "../change/types.ts";
+import { CHANGE_TYPE_VALUES } from "../decision/types.ts";
 import { ROADMAP_STATUS_VALUES, ROADMAP_PRIORITY_VALUES } from "./types.ts";
 import { unique, nowIso, formatError } from "../shared/utils.ts";
 import { withLockedPaths } from "../shared/lock.ts";

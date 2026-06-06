@@ -171,7 +171,7 @@ Loop roots own their compiler engines and loop-specific gates. Shared roots exis
 | --- | --- |
 | `src/adapters/pi/**` | `src/pi/**` because Pi is the foundation for the CodeWiki distribution, not a mere adapter. |
 | `src/build/**` | old compiler-output writer to replace; target output is emitted to lifecycle traces under `src/telemetry/**`. |
-| `src/change/**` | `src/decision/**`, with decision-table behavior in `src/decision/table.ts`. |
+| `src/change/**` (retired by TASK-109; do not recreate without accepted migration trigger) | `src/decision/**`, with decision-table behavior in `src/decision/table.ts`. |
 | `src/roadmap/**` | `src/planning/**` for work shaping; migrate active roadmap storage without a shim layer. |
 | `src/audit/**`, `src/checks/**`, `src/policy/**`, `src/gateway/**` | loop gate facets plus shared gate criteria helpers; migrate toward loop-owned gates. |
 | `src/validation/**` | remove; it is not a target source root or shim root. Use `src/gateway/**`, loop gate helpers, or public API contracts during migration. |

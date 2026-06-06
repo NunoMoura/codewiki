@@ -3,7 +3,7 @@ import {
 	executeDecisionTableAction,
 	type CodewikiDecisionTableRowActionInput,
 	type CodewikiDecisionTableToolInput,
-} from "./decision-table.ts";
+} from "./table.ts";
 
 export interface CodewikiDecisionWorkflowToolInput {
 	action: "rows";

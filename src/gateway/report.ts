@@ -20,7 +20,7 @@ import {
 import {
 	normalizeTraceabilityExemption,
 	isSemanticTraceability,
-} from "../change/traceability.ts";
+} from "../decision/traceability.ts";
 import { auditEvidenceGaps, auditRequirement } from "../policy/gate-policy.ts";
 import { normalizeValidationGate } from "../policy/gates.ts";
 import type { WikiProject } from "../project/types.ts";

@@ -675,8 +675,8 @@ async function main() {
 		);
 		assert.match(
 			schemaSource,
-			/change\/types/,
-			"Pi schemas should read change values from the change source-root module",
+			/decision\/types/,
+			"Pi schemas should read decision values from the decision source-root module",
 		);
 		assert.match(
 			architectureScriptSource,
@@ -695,6 +695,21 @@ async function main() {
 				"Audit package paths should not delegate through old audit shims",
 			);
 		}
+		for (const removedDecisionShim of [
+			"src/change/types.ts",
+			"src/change/traceability.ts",
+			"src/change/decision-table.ts",
+			"src/change/tool.ts",
+			"src/domain/change/types.ts",
+			"src/domain/change/traceability.ts",
+			"src/application/decision-table.ts",
+			"src/application/tools/decision-table.ts",
+		]) {
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedDecisionShim)),
+				`${removedDecisionShim} should not be packaged after decision migration`,
+			);
+		}
 		assert.doesNotMatch(
 			piIndexSource,
 			/application\/tools\/decision-table|application\/decision-table|domain\/change/,
@@ -702,8 +717,8 @@ async function main() {
 		);
 		assert.doesNotMatch(
 			schemaSource,
-			/domain\/change/,
-			"Schema package paths should not read change values from old change shims",
+			/change\/types|domain\/change/,
+			"Schema package paths should not read decision values from old change shims",
 		);
 		for (const removedGcShim of [
 			"src/domain/gc/types.ts",
@@ -1241,6 +1256,14 @@ async function main() {
 						source_refs: [resumeDecision.details.path, "TASK-001"],
 					},
 				],
+				roadmap_reconciliation: [
+					{
+						status: "reviewed",
+						evidence:
+							"Existing roadmap reviewed; TASK-001 is the single owner and no duplicate task is needed.",
+						task_ids: ["TASK-001"],
+					},
+				],
 				tdd_plan: ["Resume context smoke uses planning proof."],
 				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
 				candidate_code_paths: ["src/state/resume-context.ts"],
@@ -1670,6 +1693,7 @@ async function main() {
 						clean: true,
 						published_sha: "def5678",
 						tree_sha: "abc1234",
+						package_digest: "sha256:smoke-package-digest",
 						archive_ref: `refs/codewiki/archive/task/${taskId}`,
 					},
 				},
@@ -1733,6 +1757,7 @@ async function main() {
 					clean: true,
 					published_sha: "def5678",
 					tree_sha: "abc1234",
+					package_digest: "sha256:smoke-package-digest",
 					builder_session_id: "smoke-builder-session",
 				},
 			},

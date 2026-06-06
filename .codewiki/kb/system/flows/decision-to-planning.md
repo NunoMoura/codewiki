@@ -26,7 +26,7 @@ source_refs:
   - .codewiki/kb/system/validation-gateway.md
   - .codewiki/kb/system/roadmap.md
 code_paths:
-  - src/change
+  - src/decision
   - src/build
   - src/gateway
   - src/roadmap

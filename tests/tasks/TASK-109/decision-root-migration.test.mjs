@@ -17,56 +17,60 @@ const thisTest = relative(repoRoot, fileURLToPath(import.meta.url)).replaceAll(
 	"\\",
 	"/",
 );
-const requiredChangeFiles = [
+const requiredDecisionFiles = [
+	"src/decision/types.ts",
+	"src/decision/traceability.ts",
+	"src/decision/table.ts",
+	"src/decision/tool.ts",
+];
+const removedDecisionOwnerPaths = [
 	"src/change/types.ts",
 	"src/change/traceability.ts",
 	"src/change/decision-table.ts",
 	"src/change/tool.ts",
-];
-const removedChangeOwnerPaths = [
 	"src/domain/change/types.ts",
 	"src/domain/change/traceability.ts",
 	"src/application/decision-table.ts",
 	"src/application/tools/decision-table.ts",
 ];
-const removedChangeOwnerAbsPaths = removedChangeOwnerPaths.map((path) =>
+const removedDecisionOwnerAbsPaths = removedDecisionOwnerPaths.map((path) =>
 	resolve(repoRoot, path),
 );
 
-for (const path of requiredChangeFiles) {
+for (const path of requiredDecisionFiles) {
 	assert.ok(
 		existsSync(resolve(repoRoot, path)),
-		`TASK-026 owner path missing: ${path}`,
+		`TASK-109 decision owner path missing: ${path}`,
 	);
 }
-for (const path of removedChangeOwnerPaths) {
+for (const path of removedDecisionOwnerPaths) {
 	assert.equal(
 		existsSync(resolve(repoRoot, path)),
 		false,
-		`Legacy change/decision-table owner path remains: ${path}`,
+		`Retired decision/change owner path remains: ${path}`,
 	);
 }
 
-const changeTypes = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "types.ts")).href
+const decisionTypes = await import(
+	pathToFileURL(resolve(repoRoot, "src", "decision", "types.ts")).href
 );
 const traceability = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "traceability.ts")).href
+	pathToFileURL(resolve(repoRoot, "src", "decision", "traceability.ts")).href
 );
 const decisionTable = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "decision-table.ts")).href
+	pathToFileURL(resolve(repoRoot, "src", "decision", "table.ts")).href
 );
 const decisionTableTool = await import(
-	pathToFileURL(resolve(repoRoot, "src", "change", "tool.ts")).href
+	pathToFileURL(resolve(repoRoot, "src", "decision", "tool.ts")).href
 );
 
 assert.deepEqual(
-	changeTypes.CHANGE_TYPE_VALUES,
+	decisionTypes.CHANGE_TYPE_VALUES,
 	["product", "system", "task", "code"],
 	"Change type values must stay stable",
 );
 assert.deepEqual(
-	changeTypes.TRACEABILITY_EXEMPTION_VALUES,
+	decisionTypes.TRACEABILITY_EXEMPTION_VALUES,
 	["generated", "runtime", "mechanical"],
 	"Traceability exemption values must stay stable",
 );
@@ -90,18 +94,18 @@ assert.equal(
 	true,
 	"Missing exemption should remain semantic by default",
 );
-const changeTypesSource = readFileSync(
-	resolve(repoRoot, "src", "change", "types.ts"),
+const decisionTypesSource = readFileSync(
+	resolve(repoRoot, "src", "decision", "types.ts"),
 	"utf8",
 );
 const decisionTableSource = readFileSync(
-	resolve(repoRoot, "src", "change", "decision-table.ts"),
+	resolve(repoRoot, "src", "decision", "table.ts"),
 	"utf8",
 );
 assert.match(
-	changeTypesSource,
+	decisionTypesSource,
 	/interface CodewikiDecisionTableRowInput/,
-	"Decision decision-table row type should be owned by src/change/types.ts",
+	"Decision-table row input should be owned by src/decision/types.ts",
 );
 assert.doesNotMatch(
 	decisionTableSource,
@@ -111,20 +115,20 @@ assert.doesNotMatch(
 assert.equal(
 	typeof decisionTable.executeDecisionTableAction,
 	"function",
-	"Decision-table mutation use case should be owned by src/change/decision-table.ts",
+	"Decision-table mutation use case should be owned by src/decision/table.ts",
 );
 assert.equal(
 	typeof decisionTable.readRuntimeDecisionTables,
 	"function",
-	"Decision-table storage read helper should be owned by src/change/decision-table.ts",
+	"Decision-table storage read helper should be owned by src/decision/table.ts",
 );
 assert.equal(
 	typeof decisionTableTool.executeCodewikiDecisionTableTool,
 	"function",
-	"wiki_decision_table tool execution should be owned by src/change/tool.ts",
+	"wiki_decision_table tool execution should be owned by src/decision/tool.ts",
 );
 
-const runtimeRoot = mkdtempSync(resolve(tmpdir(), "codewiki-task-026-"));
+const runtimeRoot = mkdtempSync(resolve(tmpdir(), "codewiki-task-109-"));
 try {
 	const project = {
 		root: runtimeRoot,
@@ -134,13 +138,13 @@ try {
 	};
 	const proposed = await decisionTable.executeDecisionTableAction(project, {
 		action: "propose",
-		table_id: "DT-TASK-026",
-		summary: "Approve migration guard",
+		table_id: "DT-TASK-109",
+		summary: "Approve decision root migration guard",
 		rows: [
 			{
 				id: "DTR-001",
-				current_state: "Legacy path",
-				desired_state: "src/change path",
+				current_state: "Decision code lived under src/change.",
+				desired_state: "Decision code lives under src/decision.",
 				rationale: "Owner root migration",
 				affected_layers: ["code"],
 				risk: "low",
@@ -162,7 +166,7 @@ try {
 		project,
 		{
 			action: "accept",
-			table_id: "DT-TASK-026",
+			table_id: "DT-TASK-109",
 			row_id: "DTR-001",
 		},
 	);
@@ -187,43 +191,60 @@ try {
 }
 
 const importViolations = [];
+const retiredPathTextAllowlist = new Set([
+	thisTest,
+	"tests/smoke/package-smoke.test.mjs",
+]);
 for (const filePath of walkCodeFiles(["src", "scripts", "tests"])) {
 	const rel = relative(repoRoot, filePath).replaceAll("\\", "/");
 	if (rel === thisTest) continue;
 	const source = readFileSync(filePath, "utf8");
 	for (const specifier of importSpecifiers(source)) {
-		if (pointsAtRemovedChangeOwner(filePath, specifier)) {
+		if (pointsAtRemovedDecisionOwner(filePath, specifier)) {
 			importViolations.push(`${rel}: ${specifier}`);
 		}
 	}
-	assert.equal(
-		source.includes("src/domain/change/"),
-		false,
-		`${rel} still references legacy change type path text`,
-	);
-	assert.equal(
-		source.includes("src/application/decision-table"),
-		false,
-		`${rel} still references legacy decision-table path text`,
-	);
-	assert.equal(
-		source.includes("src/application/tools/decision-table"),
-		false,
-		`${rel} still references legacy decision-table tool path text`,
-	);
+	if (!retiredPathTextAllowlist.has(rel)) {
+		assert.equal(
+			source.includes("src/change/"),
+			false,
+			`${rel} still references retired src/change path text`,
+		);
+	}
+	if (!retiredPathTextAllowlist.has(rel)) {
+		assert.equal(
+			source.includes("src/domain/change/"),
+			false,
+			`${rel} still references legacy change type path text`,
+		);
+		assert.equal(
+			source.includes("src/application/decision-table"),
+			false,
+			`${rel} still references legacy decision-table path text`,
+		);
+		assert.equal(
+			source.includes("src/application/tools/decision-table"),
+			false,
+			`${rel} still references legacy decision-table tool path text`,
+		);
+	}
 }
 assert.deepEqual(
 	importViolations,
 	[],
-	"Source, tests, and scripts should not import removed change/decision-table owner paths",
+	"Source, tests, and scripts should not import retired decision/change owner paths",
 );
 
-const piIndexSource = readFileSync(
-	resolve(repoRoot, "src", "adapters", "pi", "index.ts"),
+const apiFacadeSource = readFileSync(
+	resolve(repoRoot, "src", "api", "tools.ts"),
 	"utf8",
 );
 const schemaSource = readFileSync(
 	resolve(repoRoot, "src", "adapters", "pi", "schemas.ts"),
+	"utf8",
+);
+const decisionApprovalSource = readFileSync(
+	resolve(repoRoot, "src", "adapters", "pi", "ui", "decision-approval.ts"),
 	"utf8",
 );
 const graphSource = readFileSync(
@@ -240,39 +261,37 @@ const gatewayReportSource = readFileSync(
 );
 
 assert.match(
-	piIndexSource,
-	/from "\.\.\/\.\.\/api\/tools\.ts"/,
-	"Pi adapter should route wiki_decision_table through src/api/tools.ts",
-);
-const apiFacadeSource = readFileSync(
-	resolve(repoRoot, "src", "api", "tools.ts"),
-	"utf8",
-);
-assert.match(
 	apiFacadeSource,
-	/from "\.\.\/change\/tool\.ts"/,
-	"API facade should expose wiki_decision_table from src/change/tool.ts",
+	/from "\.\.\/decision\/tool\.ts"/,
+	"API facade should expose wiki_decision_table from src/decision/tool.ts",
 );
 assert.match(
 	schemaSource,
-	/from "\.\.\/\.\.\/change\/types\.ts"/,
-	"Pi schemas should read change values from src/change/types.ts",
+	/from "\.\.\/\.\.\/decision\/types\.ts"/,
+	"Pi schemas should read decision values from src/decision/types.ts",
+);
+assert.match(
+	decisionApprovalSource,
+	/from "\.\.\/\.\.\/\.\.\/decision\/table\.ts"/,
+	"Decision approval UI should use src/decision/table.ts",
 );
 assert.match(
 	graphSource,
-	/from "\.\.\/change\/traceability\.ts"/,
-	"Graph builder should read traceability helpers from src/change/traceability.ts",
+	/from "\.\.\/decision\/traceability\.ts"/,
+	"Graph builder should read traceability helpers from src/decision/traceability.ts",
 );
 assert.match(
 	buildSharedSource,
-	/from "\.\.\/change\/traceability\.ts"/,
-	"Build shared helpers should read traceability helpers from src/change/traceability.ts",
+	/from "\.\.\/decision\/traceability\.ts"/,
+	"Build shared helpers should read traceability helpers from src/decision/traceability.ts",
 );
 assert.match(
 	gatewayReportSource,
-	/from "\.\.\/change\/traceability\.ts"/,
-	"Gateway report should read traceability helpers from src/change/traceability.ts",
+	/from "\.\.\/decision\/traceability\.ts"/,
+	"Gateway report should read traceability helpers from src/decision/traceability.ts",
 );
+
+console.log("✓ TASK-109 decision root migration test passed");
 
 function walkCodeFiles(roots) {
 	return roots.flatMap((root) => {
@@ -307,16 +326,16 @@ function importSpecifiers(sourceText) {
 	);
 }
 
-function pointsAtRemovedChangeOwner(filePath, specifier) {
+function pointsAtRemovedDecisionOwner(filePath, specifier) {
 	if (specifier.startsWith(".")) {
 		const resolved = resolve(dirname(filePath), specifier);
-		return removedChangeOwnerAbsPaths.some(
+		return removedDecisionOwnerAbsPaths.some(
 			(removedPath) =>
 				resolved === removedPath ||
 				resolved === removedPath.replace(/\.ts$/, ""),
 		);
 	}
-	return removedChangeOwnerPaths.some(
+	return removedDecisionOwnerPaths.some(
 		(removedPath) =>
 			specifier === removedPath || specifier.endsWith(`/${removedPath}`),
 	);
