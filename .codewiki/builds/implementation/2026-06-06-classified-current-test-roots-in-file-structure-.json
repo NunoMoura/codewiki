@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-06T05:30:46Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+  "task_id": "TASK-103",
+  "task": {
+    "id": "TASK-103",
+    "title": "Classify current test roots",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "testing",
+    "summary": "Record accepted ownership or migration route for smoke, task, fixture, and helper test roots.",
+    "spec_paths": [
+      "tests/tasks/README.md"
+    ],
+    "code_paths": [
+      "tests/smoke/**",
+      "tests/tasks/**",
+      "tests/shared/**",
+      "tests/fixtures/**",
+      "tests/run.mjs",
+      "tests/setup-env.mjs"
+    ],
+    "goal": {
+      "outcome": "Current test paths are accepted compatibility surfaces, mapped shared/task roots, or migrated in scoped batches with validation.",
+      "acceptance": [
+        "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+        "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+        "No test helper or smoke entrypoint is deleted without replacement evidence."
+      ],
+      "non_goals": [
+        "Do not rewrite all smoke tests in one task.",
+        "Do not remove executable coverage just to satisfy map warnings."
+      ],
+      "verification": [
+        "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-13T05:30:46.000Z",
+    "purge_after": "2026-06-20T05:30:46.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Classified current test roots in file-structure map/docs.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json",
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-residual-drift-coverage-decision-close-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-103"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "tests": [
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-103"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+    "spec_paths": [
+      "tests/tasks/README.md"
+    ],
+    "code_paths": [
+      "tests/smoke/**",
+      "tests/tasks/**",
+      "tests/shared/**",
+      "tests/fixtures/**",
+      "tests/run.mjs",
+      "tests/setup-env.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/source-contract.test.mjs"
+  ],
+  "code_files": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "files_changed": [
+    "tests/smoke/source-contract.test.mjs",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "checks_run": [
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class",
+    "wiki_state refresh=true: health yellow, 0 errors, 54 warnings"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-103",
+      "test_files": [
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "evidence": [
+        "Map/docs-only classification; verification uses file-structure audit delta, typecheck, and source-contract smoke."
+      ],
+      "notes": [
+        "Remaining file-structure actionables are compatibility export gaps owned by TASK-105/TASK-104 scope, not test roots."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+      "roadmap_task_id": "TASK-103",
+      "code_files": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": [
+        "Classified current test roots in file-structure map as accepted migration compatibility evidence.",
+        "Updated file-structure docs to explain smoke/fixtures/helper entrypoints remain until future test-root migration."
+      ],
+      "notes": [
+        "No reload required; only CodeWiki KB/map changed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Map/docs-only classification; verification uses file-structure audit delta, typecheck, and source-contract smoke."
+  ],
+  "code_change_evidence": [
+    "Classified current test roots in file-structure map as accepted migration compatibility evidence.",
+    "Updated file-structure docs to explain smoke/fixtures/helper entrypoints remain until future test-root migration."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+      "evidence": "file-structure-map.yaml now lists current test paths for tests/tasks, tests/shared, tests/smoke, tests/fixtures, tests/run.mjs, tests/setup-env.mjs, and tests/decision-table-fixture.mjs under tests_and_smoke with current_valid_until_migrated status and target loop/shared roots."
+    },
+    {
+      "criterion": "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+      "evidence": "file-structure audit actionables dropped from 50 to 3 and remaining items are compatibility_export_gap, not test unexpected_path warnings."
+    },
+    {
+      "criterion": "No test helper or smoke entrypoint is deleted without replacement evidence.",
+      "evidence": "No test files were moved or deleted; typecheck and source-contract smoke passed."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Classify current tests so test-root unexpected_path warnings do not remain orphaned.",
+    "implemented_changes": [
+      "Added test roots and helper entrypoints to tests_and_smoke file-structure map node.",
+      "Documented tests/smoke, fixtures, run/setup helpers, and decision-table fixture as accepted migration compatibility evidence.",
+      "Validated typecheck/source-contract smoke."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [],
+      "code": [],
+      "tests": [
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "file-structure actionables reduced to 3 compatibility_export_gap warnings",
+      "source-contract smoke pass",
+      "typecheck pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103"
+    ],
+    "non_goals_preserved": [
+      "No smoke tests rewritten.",
+      "No executable test coverage removed."
+    ],
+    "remaining_risks": [
+      "Compatibility export gaps remain for later cleanup tasks."
+    ]
+  },
+  "risks": [
+    "Future test-root migration should move long-lived suites without deleting executable coverage."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-103",
+      "task_id": "TASK-103",
+      "next_focus_task_id": "TASK-104",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-103",
+        "title": "Classify current test roots",
+        "summary": "Classified current test roots in file-structure map/docs.",
+        "spec_paths": [
+          "tests/tasks/README.md"
+        ],
+        "code_paths": [
+          "tests/smoke/**",
+          "tests/tasks/**",
+          "tests/shared/**",
+          "tests/fixtures/**",
+          "tests/run.mjs",
+          "tests/setup-env.mjs",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        ],
+        "acceptance": [
+          "Map/docs explicitly classify legacy tests/smoke/** and helper roots that may remain during migration.",
+          "Unexpected-path warnings for tests clear or become covered residuals with task/sprint/defer evidence.",
+          "No test helper or smoke entrypoint is deleted without replacement evidence."
+        ],
+        "verification": [
+          "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed",
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+        "checks_run": [
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+          "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class",
+          "wiki_state refresh=true: health yellow, 0 errors, 54 warnings"
+        ],
+        "test_design_evidence": [
+          "Map/docs-only classification; verification uses file-structure audit delta, typecheck, and source-contract smoke."
+        ],
+        "code_change_evidence": [
+          "Classified current test roots in file-structure map as accepted migration compatibility evidence.",
+          "Updated file-structure docs to explain smoke/fixtures/helper entrypoints remain until future test-root migration."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-103",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-103",
+      "show_build": "git show refs/codewiki/archive/task/TASK-103:.codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+        "tests/tasks/README.md",
+        "tests/smoke/**",
+        "tests/tasks/**",
+        "tests/shared/**",
+        "tests/fixtures/**",
+        "tests/run.mjs",
+        "tests/setup-env.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-103 Classify current test roots implementation evidence",
+      "body": "Classified current test roots in file-structure map/docs.\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class, wiki_state refresh=true: health yellow, 0 errors, 54 warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-103\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class, wiki_state refresh=true: health yellow, 0 errors, 54 warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-103\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-103\nCodeWiki-Digest: sha256:db8239456bb4fcebdf22e213a0eb9a290e600509ccbf46691c963bb9517ed255\nCodeWiki-Restore: /wiki-restore TASK-103",
+      "trailers": [
+        "CodeWiki-Task: TASK-103",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+        "CodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class, wiki_state refresh=true: health yellow, 0 errors, 54 warnings",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-103",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-103",
+        "CodeWiki-Digest: sha256:db8239456bb4fcebdf22e213a0eb9a290e600509ccbf46691c963bb9517ed255",
+        "CodeWiki-Restore: /wiki-restore TASK-103"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-103 Classify current test roots implementation evidence",
+      "body": "Classified current test roots in file-structure map/docs.\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class, wiki_state refresh=true: health yellow, 0 errors, 54 warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-103\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class, wiki_state refresh=true: health yellow, 0 errors, 54 warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-103\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-103\nCodeWiki-Digest: sha256:db8239456bb4fcebdf22e213a0eb9a290e600509ccbf46691c963bb9517ed255\nCodeWiki-Restore: /wiki-restore TASK-103"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-103",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-103"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-103",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-103",
+        "show_build": "git show refs/codewiki/archive/task/TASK-103:.codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+          "tests/tasks/README.md",
+          "tests/smoke/**",
+          "tests/tasks/**",
+          "tests/shared/**",
+          "tests/fixtures/**",
+          "tests/run.mjs",
+          "tests/setup-env.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-103",
+      "build_path": ".codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-103",
+      "commit_sha": "",
+      "digest": "sha256:db8239456bb4fcebdf22e213a0eb9a290e600509ccbf46691c963bb9517ed255",
+      "restore_command": "/wiki-restore TASK-103"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-current-residual-drift-coverage-planning-build-f.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:b1a12e2670f52190e62e9f20bfc6477b76247c8711496061008ef20c2294a749",
+          "bytes": 20120
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:15d54df9182f7d731980354a8ec8c8d8fcf8687f0b60596fe470a447cbf5408c",
+          "bytes": 5286
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:51d473e52540ef38794e409052cc2664568b7a1ba8ac35ac7df2f92974b65e0d",
+          "bytes": 13644
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:ea257dfc886cd127b5a4547c6695a3f5fd271974f36474d9ec209b74a761260e",
+          "bytes": 26156
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-103",
+      "source_build": ".codewiki/builds/implementation/2026-06-06-classified-current-test-roots-in-file-structure-.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "tests/smoke/source-contract.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-103",
+        "restore_command": "/wiki-restore TASK-103"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+        "wiki_gate audit profiles=file-structure,alignment,source-contract,generated-parity,changed task_id=TASK-103: source-contract/generated-parity/task pass; file-structure actionables reduced to compatibility_export_gap class",
+        "wiki_state refresh=true: health yellow, 0 errors, 54 warnings"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

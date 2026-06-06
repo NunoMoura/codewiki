@@ -499,15 +499,38 @@ nodes:
       - skills/codewiki/**
       - skills/codewiki-validation/**
   - id: tests_and_smoke
-    label: Task-linked and shared test evidence
+    label: Task-linked, shared, fixture, and smoke test evidence
     group: assets_tests
     kind: executable_truth
     source: .codewiki/kb/system/file-structure.md
+    status: current_valid_until_migrated
+    paths:
+      - tests/tasks/**
+      - tests/shared/**
+      - tests/smoke
+      - tests/smoke/**
+      - tests/fixtures
+      - tests/fixtures/**
+      - tests/run.mjs
+      - tests/setup-env.mjs
+      - tests/decision-table-fixture.mjs
     target_paths:
       - tests/tasks/**
       - tests/shared/**
+      - tests/decision/**
+      - tests/planning/**
+      - tests/implementation/**
+      - tests/telemetry/**
+      - tests/graph/**
+      - tests/runtime/**
+      - tests/pi/**
     compatibility_paths:
       - tests/smoke/**
+      - tests/fixtures/**
+      - tests/run.mjs
+      - tests/setup-env.mjs
+      - tests/decision-table-fixture.mjs
+    trigger: Future test-root migration moves long-lived smoke, fixture, and helper coverage into task-linked, shared, or loop-owned roots without deleting executable evidence.
   - id: optional_scripts
     label: Optional developer helper scripts
     group: assets_tests

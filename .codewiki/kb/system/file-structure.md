@@ -216,7 +216,7 @@ tests/
   pi/
 ```
 
-Task-specific regression tests live under task-ref paths/files. Reusable helpers/suites live under `tests/shared/**`. Gate/source-contract checks live under shared gate harnesses or loop gate contracts. Legacy `tests/smoke/**` may remain as explicitly classified package/gate evidence during migration, but new long-lived suites should map to task refs or shared contracts.
+Task-specific regression tests live under task-ref paths/files. Reusable helpers/suites live under `tests/shared/**`. Gate/source-contract checks live under shared gate harnesses or loop gate contracts. Current `tests/smoke/**`, `tests/fixtures/**`, `tests/run.mjs`, `tests/setup-env.mjs`, and `tests/decision-table-fixture.mjs` are accepted migration compatibility evidence while they remain referenced by package/gate checks. Future test-root migration should move long-lived suites into task-linked, shared, or loop-owned roots without deleting executable coverage.
 
 ## Residual structure cleanup
 
