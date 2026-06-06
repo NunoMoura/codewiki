@@ -1,21 +1,21 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-06-06T06:04:27Z",
+  "created": "2026-06-06T06:06:15Z",
   "profile": "implementation",
   "gate": "implementation",
   "task_id": "TASK-104",
   "verdict": "pass",
-  "rationale": "TASK-104 implementation passes. Builds policy now documents explicit residual coverage for legacy rowless decision-build warnings, source warning text cites TASK-104 coverage, no legacy decision build artifacts were rewritten or deleted, required tests/audits and GC dry-run completed.",
+  "rationale": "TASK-104 clean implementation validation passes for committed content. Legacy decision-build residual coverage is documented, lint source text updated, no legacy build artifacts were mutated, and accepted planning/user approval evidence is cited.",
   "checks": [
-    "lsp_diagnostics src/state/lint.ts: pass",
+    "git status --short: clean",
+    "git rev-parse HEAD: 3157a6efd1a1ece210d88a7545972e3d4d725cee",
+    "git rev-parse HEAD^{tree}: f3df670b41233b27d4996967a59c66028dad8f94",
     "npm run typecheck: pass",
     "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
     "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
-    "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due 50 known graph warnings; changed warning due dirty generated graph",
-    "wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0",
-    "wiki_state refresh=true: health yellow, 0 errors, 50 warnings",
-    "implementation preflight: ready"
+    "wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-104: package/security/stale-reference/task pass; alignment warning due 50 known graph warnings",
+    "wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0"
   ],
   "issues": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "severity": "low",
-      "summary": "Current Pi extension may need /reload before generated graph warning text reflects the updated src/state/lint.ts wording."
+      "summary": "Run /reload before relying on live extension behavior from updated src/state/lint.ts."
     }
   ],
   "diagnostics": [
@@ -48,7 +48,7 @@
       "id": "implementation:report-issue-2:2",
       "kind": "report-issue-2",
       "severity": "low",
-      "summary": "Current Pi extension may need /reload before generated graph warning text reflects the updated src/state/lint.ts wording.",
+      "summary": "Run /reload before relying on live extension behavior from updated src/state/lint.ts.",
       "refs": [],
       "affected_refs": [],
       "gate_refs": [
@@ -73,7 +73,7 @@
       "id": "implementation:report-issue-2:2",
       "category": "report-issue-2",
       "severity": "low",
-      "summary": "Current Pi extension may need /reload before generated graph warning text reflects the updated src/state/lint.ts wording.",
+      "summary": "Run /reload before relying on live extension behavior from updated src/state/lint.ts.",
       "ref_count": 0
     }
   ],
@@ -101,11 +101,15 @@
     "audit:task"
   ],
   "audit_reports": [
+    "implementation pass .codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json",
+    "planning pass .codewiki/validation/2026-06-06-planning-pass-2026-06-06-current-residual-drif.json",
     "wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due 50 known graph warnings; changed warning due dirty generated graph",
-    "wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0"
+    "wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0",
+    "approval:user: accepted residual drift cleanup sprint and approved continuation"
   ],
   "content_proof_refs": [
-    "sha256:e835cc106c9455ea3a634344c708423cb8684da5cea5ea73f0d005a8225ae080"
+    "3157a6efd1a1ece210d88a7545972e3d4d725cee",
+    "f3df670b41233b27d4996967a59c66028dad8f94"
   ],
   "context_boundary": {
     "recommended": true,
@@ -145,7 +149,7 @@
       "CodeWiki-Task: TASK-104",
       "CodeWiki-Build: .codewiki/builds/implementation/2026-06-06-defined-explicit-residual-coverage-for-legacy-ro.json",
       "CodeWiki-Validation: .codewiki/validation/2026-06-06-implementation-pass-task-104-2026-06-06-defined-.json",
-      "CodeWiki-Checks: lsp_diagnostics src/state/lint.ts: pass; npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; wiki_gate audit profiles=alignment,stale-reference,generated-parity,changed task_id=TASK-104: stale-reference/generated-parity/task pass; alignment warning due 50 known graph warnings; changed warning due dirty generated graph; wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0; wiki_state refresh=true: health yellow, 0 errors, 50 warnings; implementation preflight: ready"
+      "CodeWiki-Checks: git status --short: clean; git rev-parse HEAD: 3157a6efd1a1ece210d88a7545972e3d4d725cee; git rev-parse HEAD^{tree}: f3df670b41233b27d4996967a59c66028dad8f94; npm run typecheck: pass; node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass; node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass; wiki_gate audit profiles=alignment,package,security,stale-reference task_id=TASK-104: package/security/stale-reference/task pass; alignment warning due 50 known graph warnings; wiki_gc action=dry-run include=tracked,runtime scopes=.codewiki/builds/decision/**: tracked=0 runtime=0"
     ],
     "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close, sprint-close, and ship-ready metadata belong in later gate-specific commits."
   },
@@ -245,10 +249,12 @@
     },
     "routing": {},
     "risk": {
-      "tier": "mechanical-docs",
-      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
-      "approval_required": false,
-      "approval_evidence": [],
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: accepted residual drift cleanup sprint and approved continuation"
+      ],
       "approval_missing": [],
       "fresh_context": {
         "required": true,
@@ -258,9 +264,9 @@
         "reason": "Implementation validation requires independent validator context and checked content evidence."
       },
       "fast_path": {
-        "candidate": true,
-        "eligible": true,
-        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
       }
     },
     "residual_issue_coverage": {
@@ -670,8 +676,10 @@
     "warnings": []
   },
   "isolation": {
-    "working_tree_digest": "sha256:e835cc106c9455ea3a634344c708423cb8684da5cea5ea73f0d005a8225ae080",
-    "clean": false,
+    "head_sha": "3157a6efd1a1ece210d88a7545972e3d4d725cee",
+    "validated_sha": "3157a6efd1a1ece210d88a7545972e3d4d725cee",
+    "tree_sha": "f3df670b41233b27d4996967a59c66028dad8f94",
+    "clean": true,
     "fresh_context": true,
     "role": "validator"
   }
