@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06T22:43:32.826Z",
+  "generated_at": "2026-06-06T22:53:57.189Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/architecture.yaml",
@@ -292370,8 +292370,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-025"
             ],
@@ -292530,8 +292530,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-025"
             ],
@@ -292689,8 +292689,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-025"
             ],
@@ -292842,8 +292842,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-026"
             ],
@@ -293001,8 +293001,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-026"
             ],
@@ -293162,8 +293162,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-026"
             ],
@@ -293321,8 +293321,8 @@
             "retryable": false,
             "promotable": false,
             "safe_to_schedule": true,
-            "generated_at": "2026-06-06T22:43:32.728Z",
-            "expires_at": "2026-06-07T00:43:32.728Z",
+            "generated_at": "2026-06-06T22:53:57.060Z",
+            "expires_at": "2026-06-07T00:53:57.060Z",
             "sprint_ids": [
               "SPRINT-026"
             ],
@@ -293449,8 +293449,8 @@
     "automation_readiness": {
       "version": 1,
       "contract_version": 1,
-      "generated_at": "2026-06-06T22:43:32.728Z",
-      "expires_at": "2026-06-07T00:43:32.728Z",
+      "generated_at": "2026-06-06T22:53:57.060Z",
+      "expires_at": "2026-06-07T00:53:57.060Z",
       "state": "runnable",
       "tasks": {
         "TASK-114": {
@@ -293465,8 +293465,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-025"
           ],
@@ -293602,8 +293602,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-025"
           ],
@@ -293736,8 +293736,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-025"
           ],
@@ -293862,8 +293862,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-026"
           ],
@@ -293992,8 +293992,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-026"
           ],
@@ -294126,8 +294126,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-026"
           ],
@@ -294256,8 +294256,8 @@
           "retryable": false,
           "promotable": false,
           "safe_to_schedule": true,
-          "generated_at": "2026-06-06T22:43:32.728Z",
-          "expires_at": "2026-06-07T00:43:32.728Z",
+          "generated_at": "2026-06-06T22:53:57.060Z",
+          "expires_at": "2026-06-07T00:53:57.060Z",
           "sprint_ids": [
             "SPRINT-026"
           ],
@@ -299393,7 +299393,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-06-06T22:43:32.470Z",
+      "generated_at": "2026-06-06T22:53:56.796Z",
       "counts": {
         "large-doc": 4,
         "roadmap-missing-code-path": 31,
@@ -299878,7 +299878,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-06-06T22:43:32Z",
+      "generated_at": "2026-06-06T22:53:57Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -302268,7 +302268,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-06-06T22:43:32Z",
+      "generated_at": "2026-06-06T22:53:57Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -307433,7 +307433,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-06-06T22:43:32Z",
+        "generated_at": "2026-06-06T22:53:57Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -307488,10 +307488,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T22:43:32Z",
+            "checked_at": "2026-06-06T22:53:57Z",
             "revision": {
               "git": {
-                "head": "3dbc6817fa114ddc021fcb021eb4b33357a31572",
+                "head": "ac02a0b4e2a585b6dbd06730f640537380f60871",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -307751,14 +307751,14 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "1246cd2854c30b2078fe9e1761e1c38719675aaaa40e62677cdd519cc2d1b645",
               "code_digest": "e13c8c5be410cdba2d6e8123072c59e77ac3345e81e6379e88aac82a3f61d347",
-              "digest": "7866fcdbde43bb777a6978728dd969c622948fd241cec629e056a9af64339165"
+              "digest": "afee250611af6ffdd6ec7cbaad2c084a7e404293710eea3a29a682919c2ae514"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-06T22:43:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-06T22:53:57Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -308307,10 +308307,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-06-06T22:43:32Z",
+            "checked_at": "2026-06-06T22:53:57Z",
             "revision": {
               "git": {
-                "head": "3dbc6817fa114ddc021fcb021eb4b33357a31572",
+                "head": "ac02a0b4e2a585b6dbd06730f640537380f60871",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -308554,14 +308554,14 @@
               "spec_digest": "36de9189bbd0be4cd15c5fab1f3f01f7b156cc003c806a37ecb18e963d4f2c9c",
               "task_digest": "1246cd2854c30b2078fe9e1761e1c38719675aaaa40e62677cdd519cc2d1b645",
               "code_digest": "e13c8c5be410cdba2d6e8123072c59e77ac3345e81e6379e88aac82a3f61d347",
-              "digest": "a2b36b84f063209a99e4db932be7d2d6ccaa85b2cdc5b7bd9681d301720e368d"
+              "digest": "dfc756275a1d7be6cf8298d627966a28aac901f8a144bf66911aeadae4d59924"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-06T22:43:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-06T22:53:57Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/agency.md",
@@ -309088,10 +309088,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-06-06T22:43:32Z",
+            "checked_at": "2026-06-06T22:53:57Z",
             "revision": {
               "git": {
-                "head": "3dbc6817fa114ddc021fcb021eb4b33357a31572",
+                "head": "ac02a0b4e2a585b6dbd06730f640537380f60871",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -309351,14 +309351,14 @@
               "spec_digest": "727d29f1feee3ba012fe23ee1441ea4c2b1c07305f55597eb1828f20e4f32c8b",
               "task_digest": "1246cd2854c30b2078fe9e1761e1c38719675aaaa40e62677cdd519cc2d1b645",
               "code_digest": "e13c8c5be410cdba2d6e8123072c59e77ac3345e81e6379e88aac82a3f61d347",
-              "digest": "7866fcdbde43bb777a6978728dd969c622948fd241cec629e056a9af64339165"
+              "digest": "afee250611af6ffdd6ec7cbaad2c084a7e404293710eea3a29a682919c2ae514"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-06-06T22:43:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-06-06T22:53:57Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -309908,7 +309908,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-06-06T22:43:32Z",
+        "generated_at": "2026-06-06T22:53:57Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
