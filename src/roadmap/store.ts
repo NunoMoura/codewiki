@@ -507,17 +507,67 @@ function findRelatedRoadmapTask(roadmap: RoadmapFile, input: RoadmapTaskInput): 
 	const matches = Object.values(roadmap.tasks)
 		.filter((task) => ACTIVE_REUSE_STATUSES.has(task.status))
 		.map((task) => scoreRoadmapTaskReuse(task, input))
-		.filter(isReusableRoadmapTaskMatch)
+		.filter((match) => isReusableRoadmapTaskMatch(match, input))
 		.sort((a, b) => b.score - a.score || a.task.id.localeCompare(b.task.id));
 	return matches[0] ?? null;
 }
 
-function isReusableRoadmapTaskMatch(match: RoadmapTaskReuseMatch): boolean {
+function isReusableRoadmapTaskMatch(match: RoadmapTaskReuseMatch, input: RoadmapTaskInput): boolean {
 	if (match.score < 10) return false;
 	const hasLabel = match.reasons.some((reason) => reason.startsWith("labels:"));
 	const hasIntent = match.reasons.includes("title") || match.reasons.some((reason) => reason.startsWith("intent:"));
 	const hasPath = match.reasons.some((reason) => reason.startsWith("spec_paths:") || reason.startsWith("code_paths:") || reason.startsWith("research_ids:"));
-	return hasLabel || hasIntent || (hasPath && match.score >= 18);
+	if (!(hasLabel || hasIntent || (hasPath && match.score >= 18))) return false;
+	return hasRequirementIdOverlap(match.task, input) && hasCompatibleDesiredOutcome(match.task, input);
+}
+
+const REQUIREMENT_ID_PATTERN = /\b[A-Z][A-Z0-9-]*-REQ-\d+\b/g;
+
+function requirementIdsFromText(value: string): string[] {
+	return value.toUpperCase().match(REQUIREMENT_ID_PATTERN) ?? [];
+}
+
+function requirementIdsFromTask(task: RoadmapTaskRecord): string[] {
+	return unique([
+		...task.labels.flatMap(requirementIdsFromText),
+		...requirementIdsFromText(task.title),
+		...requirementIdsFromText(task.summary),
+		...requirementIdsFromText(task.goal.outcome),
+		...task.goal.acceptance.flatMap(requirementIdsFromText),
+		...requirementIdsFromText(task.delta.desired),
+	]);
+}
+
+function requirementIdsFromInput(input: RoadmapTaskInput): string[] {
+	return unique([
+		...(input.labels ?? []).flatMap(requirementIdsFromText),
+		...requirementIdsFromText(input.title),
+		...requirementIdsFromText(input.summary ?? ""),
+		...requirementIdsFromText(input.goal?.outcome ?? ""),
+		...(input.goal?.acceptance ?? []).flatMap(requirementIdsFromText),
+		...requirementIdsFromText(input.delta?.desired ?? ""),
+	]);
+}
+
+function hasRequirementIdOverlap(task: RoadmapTaskRecord, input: RoadmapTaskInput): boolean {
+	const left = new Set(requirementIdsFromTask(task));
+	if (left.size === 0) return false;
+	return requirementIdsFromInput(input).some((id) => left.has(id));
+}
+
+function desiredOutcomeTextFromTask(task: RoadmapTaskRecord): string {
+	return [task.goal.outcome, task.delta.desired].map((item) => item.trim()).filter(Boolean).join("\n");
+}
+
+function desiredOutcomeTextFromInput(input: RoadmapTaskInput): string {
+	return [input.goal?.outcome ?? "", input.delta?.desired ?? ""].map((item) => item.trim()).filter(Boolean).join("\n");
+}
+
+function hasCompatibleDesiredOutcome(task: RoadmapTaskRecord, input: RoadmapTaskInput): boolean {
+	const left = desiredOutcomeTextFromTask(task);
+	const right = desiredOutcomeTextFromInput(input);
+	if (!left || !right) return false;
+	return relatedText(left, right) || tokenJaccard(left, right) >= 0.35;
 }
 
 function scoreRoadmapTaskReuse(task: RoadmapTaskRecord, input: RoadmapTaskInput): RoadmapTaskReuseMatch {

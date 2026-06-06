@@ -1,7 +1,7 @@
 {
   "id": "TASK-112",
   "title": "Block unsafe roadmap task reuse",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "architecture",
   "summary": "Change roadmap task-boundary assessment so reuse/refinement requires matching requirement IDs and compatible desired outcomes.",
@@ -48,5 +48,5 @@
     "closure": "Closed when overmerge regression tests fail before fix and pass after fix."
   },
   "created": "2026-06-06",
-  "updated": "2026-06-06"
+  "updated": "2026-06-06T21:53:21Z"
 }
