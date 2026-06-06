@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06",
+  "generated_at": "2026-06-06T22:41:00Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-113/context.json",
   "task": {
     "id": "TASK-113",
     "title": "Report accepted file-structure target gaps",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "architecture",
     "change_type": "system",

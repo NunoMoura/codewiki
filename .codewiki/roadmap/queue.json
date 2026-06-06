@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-06T22:34:06Z",
+  "updated": "2026-06-06T22:41:00Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -701,7 +701,7 @@
     "TASK-113": {
       "id": "TASK-113",
       "title": "Report accepted file-structure target gaps",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "architecture",
       "summary": "Make file-structure audit report missing accepted target paths unless implementation evidence, roadmap coverage, or deferral exists.",
@@ -750,7 +750,7 @@
         "closure": "Closed when accepted target gaps cannot disappear from roadmap/gate visibility."
       },
       "created": "2026-06-06",
-      "updated": "2026-06-06"
+      "updated": "2026-06-06T22:41:00Z"
     },
     "TASK-114": {
       "id": "TASK-114",
@@ -2268,8 +2268,6 @@
         "TASK-119",
         "TASK-120"
       ],
-      "created": "2026-06-06T22:34:06Z",
-      "updated": "2026-06-06T22:34:06Z",
       "scope": {
         "knowledge": [
           ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
@@ -2313,7 +2311,9 @@
         "task-close",
         "source-contract",
         "ship-ready"
-      ]
+      ],
+      "created": "2026-06-06T22:34:06Z",
+      "updated": "2026-06-06T22:34:06Z"
     }
   }
 }

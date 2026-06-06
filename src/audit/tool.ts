@@ -24,6 +24,7 @@ import { parseDoc } from "../knowledge/doc-parser.ts";
 import {
 	buildFileStructureDriftReport,
 	validateSystemDiagramRefs,
+	type FileStructureDriftEntry,
 } from "../knowledge/diagram-parser.ts";
 
 const execFileAsync = promisify(execFile);
@@ -181,6 +182,39 @@ function statusForIssues(issues: AuditIssue[]): AuditStatus {
 	if (issues.some((issue) => issue.severity === "error")) return "fail";
 	if (issues.some((issue) => issue.severity === "warning")) return "warning";
 	return "pass";
+}
+
+function stripGlobSuffix(path: string): string {
+	return normalizeRel(path).replace(/(?:\/\*\*|\/\*|\*)+$/g, "").replace(/\/+$/, "");
+}
+
+function structurePatternCovers(candidate: string, target: string): boolean {
+	const left = stripGlobSuffix(candidate);
+	const right = stripGlobSuffix(target);
+	if (!left || !right) return false;
+	return left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`);
+}
+
+function roadmapTaskCoversFileStructureEntry(task: JsonObject, entry: FileStructureDriftEntry): boolean {
+	const paths = [
+		...(Array.isArray(task.code_paths) ? task.code_paths : []),
+		...(Array.isArray(task.spec_paths) ? task.spec_paths : []),
+		...(Array.isArray(task.labels) ? task.labels : []),
+		String(task.summary || ""),
+		String(task.title || ""),
+		String(task.goal?.outcome || ""),
+		String(task.delta?.desired || ""),
+	];
+	return paths.some((path) => structurePatternCovers(String(path), entry.path));
+}
+
+function fileStructureEntryHasRoadmapCoverage(queue: JsonObject | null, entry: FileStructureDriftEntry): boolean {
+	const tasks = queue?.tasks && typeof queue.tasks === "object" ? queue.tasks : {};
+	return Object.values(tasks).some((task: any) => {
+		const status = String(task?.status || "").trim();
+		if (["done", "cancelled"].includes(status)) return false;
+		return roadmapTaskCoversFileStructureEntry(task as JsonObject, entry);
+	});
 }
 
 async function maybeReadJson(path: string): Promise<JsonObject | null> {
@@ -566,7 +600,21 @@ async function auditFileStructure(
 		);
 	}
 	for (const entry of fileStructureDrift.entries) {
-		if (entry.category === "approved_migration_delta") continue;
+		if (entry.category === "approved_migration_delta") {
+			if (fileStructureEntryHasRoadmapCoverage(queue, entry)) continue;
+			issues.push(
+				createIssue(
+					profile,
+					"warning",
+					"accepted-target-gap-uncovered",
+					`${entry.path} is an accepted file-structure target delta but has no active roadmap coverage or structured deferral evidence.`,
+					entry.path,
+					entry.message,
+					entry.refs,
+				),
+			);
+			continue;
+		}
 		issues.push(
 			createIssue(
 				profile,
