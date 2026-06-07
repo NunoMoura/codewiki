@@ -1,20 +1,20 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-06-07T04:32:18Z",
-  "profile": "ship-ready",
-  "gate": "ship-ready",
+  "created": "2026-06-07T04:32:51Z",
+  "profile": "task-close",
+  "gate": "task-close",
   "task_id": "TASK-115",
   "verdict": "pass",
-  "rationale": "TASK-115 closure-evidence checkpoint is ship-ready for task-close compatibility: clean working tree, immutable commit/tree evidence, implementation validation pass, required audit evidence, and explicit user approval for local checkpoint commit. No network publication was performed.",
+  "rationale": "TASK-115 is ready to close. Loop-owned gate/source-of-truth contracts are implemented and validated; semantic closure rows map to implementation builds for PRM, KBO, and DPA planning traces; ship-ready compatibility passed for the local closure-evidence checkpoint; commit/tree evidence anchors the content candidate; required audit evidence is present. No network publication was performed.",
   "checks": [
-    "git status --porcelain=v1: clean",
-    "git rev-parse HEAD: c1ba7be77c3e9b51f0c617c17148c5e9ff36a07f",
-    "git rev-parse HEAD^{tree}: 3db1b7699c4f3177abe475e95fc48eac63fa07a1",
     "Implementation validation passed: .codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-07-task-115.json",
+    "Ship-ready validation passed: .codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
+    "commit c1ba7be77c3e9b51f0c617c17148c5e9ff36a07f",
+    "tree 3db1b7699c4f3177abe475e95fc48eac63fa07a1",
     "required linter profiles passed",
     "approval:user local checkpoint commit permitted",
-    "wiki_gate ship-ready preflight: ready"
+    "wiki_gate task-close preflight: ready"
   ],
   "issues": [],
   "diagnostics": [],
@@ -27,23 +27,25 @@
     "next_safe_actions": []
   },
   "source": ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
-  "policy_profile": "ship-ready",
+  "policy_profile": "task-close",
   "routing": {},
   "required_audits": [
     "alignment",
-    "package",
-    "security",
-    "stale-reference"
+    "changed",
+    "task",
+    "generated-parity"
   ],
   "audit_refs": [
     "audit:alignment",
     "audit:changed",
+    "audit:task",
     "audit:task:TASK-115",
     "audit:generated-parity",
     "audit:package",
     "audit:security",
     "audit:stale-reference",
     ".codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-07-task-115.json",
+    ".codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
     "approval:user local checkpoint commit permitted"
   ],
   "audit_reports": [],
@@ -63,10 +65,10 @@
     ],
     "task_id": "TASK-115",
     "source_build": ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
-    "validation_report": ".codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
+    "validation_report": ".codewiki/validation/2026-06-07-task-close-pass-task-115-2026-06-07-task-115-loo.json",
     "source_refs": [
       ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
-      ".codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
+      ".codewiki/validation/2026-06-07-task-close-pass-task-115-2026-06-07-task-115-loo.json",
       "src/gateway/loop-contracts.ts",
       "src/gateway/report.ts",
       "src/build/decision-propagation.ts",
@@ -92,13 +94,13 @@
     "separate_close_publication_commit": true,
     "task_id": "TASK-115",
     "source_build": ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
-    "validation_report": ".codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
+    "validation_report": ".codewiki/validation/2026-06-07-task-close-pass-task-115-2026-06-07-task-115-loo.json",
     "commit_title": "checkpoint(codewiki): TASK-115 implementation validation pass",
     "trailers": [
       "CodeWiki-Task: TASK-115",
       "CodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
-      "CodeWiki-Validation: .codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json",
-      "CodeWiki-Checks: git status --porcelain=v1: clean; git rev-parse HEAD: c1ba7be77c3e9b51f0c617c17148c5e9ff36a07f; git rev-parse HEAD^{tree}: 3db1b7699c4f3177abe475e95fc48eac63fa07a1; Implementation validation passed: .codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-07-task-115.json; required linter profiles passed; approval:user local checkpoint commit permitted; wiki_gate ship-ready preflight: ready"
+      "CodeWiki-Validation: .codewiki/validation/2026-06-07-task-close-pass-task-115-2026-06-07-task-115-loo.json",
+      "CodeWiki-Checks: Implementation validation passed: .codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-07-task-115.json; Ship-ready validation passed: .codewiki/validation/2026-06-07-ship-ready-pass-task-115-2026-06-07-task-115-loo.json; commit c1ba7be77c3e9b51f0c617c17148c5e9ff36a07f; tree 3db1b7699c4f3177abe475e95fc48eac63fa07a1; required linter profiles passed; approval:user local checkpoint commit permitted; wiki_gate task-close preflight: ready"
     ],
     "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
   },
@@ -134,9 +136,9 @@
       "publisher queue result evidence",
       "published_sha/tree_sha/archive_ref/remote_ref"
     ],
-    "handoff": "ship-ready validation",
+    "handoff": "task-close validation",
     "profiles": [
-      "ship-ready"
+      "task-close"
     ]
   },
   "publisher_result_requirement": {
@@ -155,15 +157,15 @@
     "required": true,
     "profiles": [
       "alignment",
-      "package",
-      "security",
-      "stale-reference"
+      "changed",
+      "task",
+      "generated-parity"
     ],
     "evidence": [
       "audit:alignment or profile:alignment",
-      "audit:package or profile:package",
-      "audit:security or profile:security",
-      "audit:stale-reference or profile:stale-reference"
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
     ],
     "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
     "gaps": []
@@ -171,13 +173,13 @@
   "preflight": {
     "version": 1,
     "status": "ready",
-    "profile": "ship-ready",
-    "gate": "ship-ready",
+    "profile": "task-close",
+    "gate": "task-close",
     "task_id": "TASK-115",
     "loop_gate_ownership": {
-      "profile": "ship-ready",
+      "profile": "task-close",
       "criteria_owner_loop": "implementation",
-      "compatibility_gate": "ship-ready",
+      "compatibility_gate": "task-close",
       "canonical_truth": [
         "src/**",
         "tests/**",
@@ -919,9 +921,9 @@
     }
   },
   "loop_gate_ownership": {
-    "profile": "ship-ready",
+    "profile": "task-close",
     "criteria_owner_loop": "implementation",
-    "compatibility_gate": "ship-ready",
+    "compatibility_gate": "task-close",
     "canonical_truth": [
       "src/**",
       "tests/**",
@@ -964,6 +966,6 @@
     "tree_sha": "3db1b7699c4f3177abe475e95fc48eac63fa07a1",
     "clean": true,
     "fresh_context": true,
-    "notes": "Local closure-evidence checkpoint commit only."
+    "notes": "Task-close evaluates committed content candidate c1ba7be; final gate reports were refreshed after checkpoint."
   }
 }
