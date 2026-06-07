@@ -1,0 +1,989 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-07T05:12:39Z",
+  "profile": "task-close",
+  "gate": "task-close",
+  "task_id": "TASK-114",
+  "verdict": "pass",
+  "rationale": "TASK-114 is ready to close. Role-free execution graph/context-boundary metadata is implemented and validated; planning-trace coverage builds close DPA/PRM/RCS rows; implementation and ship-ready reports pass; immutable commit/tree evidence anchors the content candidate; required audits are present.",
+  "checks": [
+    "Implementation validation passed: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+    "Ship-ready validation passed: .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json",
+    "Semantic closure coverage builds: .codewiki/builds/implementation/2026-06-07-task-114-dpa-planning-trace-coverage.json; .codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+    "commit 154c8da4d15a7f4617d667e2894ebd571e072e35",
+    "tree 148c14b60c5f8974910073b61f98d6c60a0d900c",
+    "required audit profiles passed with warning only for pre-existing graph health",
+    "approval:user TASK-114 implementation kickoff; local checkpoint only"
+  ],
+  "issues": [],
+  "diagnostics": [],
+  "findings": [],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "implementation",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": []
+  },
+  "source": ".codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:task:TASK-114",
+    "audit:generated-parity",
+    "audit:package",
+    "audit:security",
+    "audit:stale-reference",
+    "audit:lexicon:TASK-114-doc-test",
+    ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+    ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json",
+    ".codewiki/builds/implementation/2026-06-07-task-114-dpa-planning-trace-coverage.json",
+    ".codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+    "approval:user TASK-114 implementation kickoff; local checkpoint only"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "154c8da4d15a7f4617d667e2894ebd571e072e35",
+    "148c14b60c5f8974910073b61f98d6c60a0d900c"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-114",
+    "source_build": ".codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json",
+    "validation_report": ".codewiki/validation/2026-06-07-task-close-pass-task-114-2026-06-07-task-114-rol.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json",
+      ".codewiki/validation/2026-06-07-task-close-pass-task-114-2026-06-07-task-114-rol.json",
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      ".codewiki/kb/system/trace-graph.md",
+      "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "TASK-114"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-114",
+    "source_build": ".codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json",
+    "validation_report": ".codewiki/validation/2026-06-07-task-close-pass-task-114-2026-06-07-task-114-rol.json",
+    "commit_title": "checkpoint(codewiki): TASK-114 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-114",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-07-task-close-pass-task-114-2026-06-07-task-114-rol.json",
+      "CodeWiki-Checks: Implementation validation passed: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json; Ship-ready validation passed: .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json; Semantic closure coverage builds: .codewiki/builds/implementation/2026-06-07-task-114-dpa-planning-trace-coverage.json; .codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json; commit 154c8da4d15a7f4617d667e2894ebd571e072e35; tree 148c14b60c5f8974910073b61f98d6c60a0d900c; required audit profiles passed with warning only for pre-existing graph health; approval:user TASK-114 implementation kickoff; local checkpoint only"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result evidence",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "148c14b60c5f8974910073b61f98d6c60a0d900c"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "gate": "task-close",
+    "task_id": "TASK-114",
+    "loop_gate_ownership": {
+      "profile": "task-close",
+      "criteria_owner_loop": "implementation",
+      "compatibility_gate": "task-close",
+      "canonical_truth": [
+        "src/**",
+        "tests/**",
+        ".codewiki/builds/implementation/**",
+        "Git commit/tree/package refs"
+      ],
+      "blocking_contracts": [
+        "unowned KB/diagram/source-contract drift",
+        "missing content proof",
+        "publication criteria outside implementation"
+      ],
+      "routes_to_decision_on_semantic_drift": true,
+      "evidence_provider_role": {
+        "tests": "evidence-provider",
+        "linters": "evidence-provider",
+        "audits": "evidence-provider",
+        "criteria_owner": "implementation"
+      },
+      "publication_owner": "implementation",
+      "forbidden_loop_roots": [
+        "src/validation",
+        "src/publish",
+        "src/publication"
+      ],
+      "dogfood_special_case_allowed": false
+    },
+    "checks": [
+      "loop gate ownership contract",
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "existing roadmap reconciliation evidence",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile",
+      "residual issue coverage"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "decision_coverage": [],
+      "roadmap_reconciliation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [
+        "semantic_closure:TASK-114:risk:Repo graph health remains yellow with pre-existing warnings.",
+        "semantic_closure:TASK-114:risk:Source files still contain legacy lexicon terms outside TASK-114 changes; scoped lexicon evidence passes for changed doc/test surfaces.",
+        "semantic_closure:TASK-114:risk:Fresh implementation validation and task-close still required.",
+        "semantic_closure:TASK-114:risk:Pre-existing graph health warnings remain."
+      ],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": [],
+      "residual_issue_coverage": []
+    },
+    "issues": [
+      {
+        "kind": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "evidence": [
+          "semantic_closure:TASK-114:risk:Repo graph health remains yellow with pre-existing warnings.",
+          "semantic_closure:TASK-114:risk:Source files still contain legacy lexicon terms outside TASK-114 changes; scoped lexicon evidence passes for changed doc/test surfaces.",
+          "semantic_closure:TASK-114:risk:Fresh implementation validation and task-close still required.",
+          "semantic_closure:TASK-114:risk:Pre-existing graph health warnings remain."
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "task-close:semantic-closure-risks:1",
+        "kind": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "refs": [
+          "semantic_closure:TASK-114:risk:Repo graph health remains yellow with pre-existing warnings.",
+          "semantic_closure:TASK-114:risk:Source files still contain legacy lexicon terms outside TASK-114 changes; scoped lexicon evidence passes for changed doc/test surfaces.",
+          "semantic_closure:TASK-114:risk:Fresh implementation validation and task-close still required.",
+          "semantic_closure:TASK-114:risk:Pre-existing graph health warnings remain."
+        ],
+        "affected_refs": [
+          "semantic_closure:TASK-114:risk:Repo graph health remains yellow with pre-existing warnings.",
+          "semantic_closure:TASK-114:risk:Source files still contain legacy lexicon terms outside TASK-114 changes; scoped lexicon evidence passes for changed doc/test surfaces.",
+          "semantic_closure:TASK-114:risk:Fresh implementation validation and task-close still required.",
+          "semantic_closure:TASK-114:risk:Pre-existing graph health warnings remain."
+        ],
+        "gate_refs": [
+          "task-close"
+        ],
+        "failure_class": "planning_gap",
+        "recommended_next_loop": "planning",
+        "remediation_route": "planning",
+        "retry_class": "none",
+        "remediation": [
+          "Route the blocker to the planning loop with the cited refs."
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "task-close:semantic-closure-risks:1",
+        "category": "semantic-closure-risks",
+        "severity": "medium",
+        "summary": "Semantic execution closure report lists remaining risks for close review.",
+        "ref_count": 4
+      }
+    ],
+    "remediation": {
+      "status": "ready",
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning",
+      "remediation_route": "planning",
+      "retry_class": "none",
+      "affected_refs": [
+        "semantic_closure:TASK-114:risk:Repo graph health remains yellow with pre-existing warnings.",
+        "semantic_closure:TASK-114:risk:Source files still contain legacy lexicon terms outside TASK-114 changes; scoped lexicon evidence passes for changed doc/test surfaces.",
+        "semantic_closure:TASK-114:risk:Fresh implementation validation and task-close still required.",
+        "semantic_closure:TASK-114:risk:Pre-existing graph health warnings remain."
+      ],
+      "next_safe_actions": [
+        "Route the blocker to the planning loop with the cited refs."
+      ]
+    },
+    "routing": {
+      "failure_class": "planning_gap",
+      "recommended_next_loop": "planning"
+    },
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user TASK-114 implementation kickoff; local checkpoint only"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close, sprint-close, and ship-ready validation require independent validator context, a clean worktree, and immutable content evidence."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    },
+    "residual_issue_coverage": {
+      "required": true,
+      "items": [
+        {
+          "key": "lint:large-doc:.codewiki/kb/lexicon.md:Live doc has 2079 words; consider split or cut.",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/lexicon.md",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:large-doc:.codewiki/kb/system/agency.md:Live doc has 1984 words; consider split or cut.",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/system/agency.md",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:large-doc:.codewiki/kb/system/file-structure.md:Live doc has 1629 words; consider split or cut.",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/system/file-structure.md",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:large-doc:.codewiki/kb/system/roadmap.md:Live doc has 1634 words; consider split or cut.",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/system/roadmap.md",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:large-doc:.codewiki/kb/system/trace-graph.md:Live doc has 1762 words; consider split or cut.",
+          "kind": "large-doc",
+          "path": ".codewiki/kb/system/trace-graph.md",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: src/runtime/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: src/adapters/pi/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: tests/tasks/TASK-114/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-116 references missing code path: tests/tasks/TASK-116/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/planning/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/roadmap/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/build/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: tests/tasks/TASK-117/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: tests/planning/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/implementation/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/build/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/gateway/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/policy/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/checks/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: tests/tasks/TASK-118/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: tests/implementation/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: src/graph/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: src/state/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: tests/tasks/TASK-119/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: tests/graph/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/pi/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/git/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/adapters/pi/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/runtime/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/gc/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: tests/tasks/TASK-120/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: tests/pi/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/runtime/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/agency/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/session/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/state/graph/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/gateway/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/adapters/pi/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: tests/tasks/TASK-121/**",
+          "kind": "roadmap-missing-code-path",
+          "path": ".codewiki/roadmap/queue.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-roadmap-level-agency-config.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-28-roadmap-level-agency-config.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-gateway-gates-ship-ready.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-gateway-gates-ship-ready.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-artifactref-legacy-feedback-removal-and.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-artifactref-legacy-feedback-removal-and.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-graph-boundary-and-compact-trace-struct.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-graph-boundary-and-compact-trace-struct.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-dec.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-dec.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json",
+          "severity": "warning"
+        },
+        {
+          "key": "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+          "kind": "legacy-decision-build-decision-table-deferred",
+          "path": ".codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json",
+          "severity": "warning"
+        }
+      ],
+      "covered": [
+        "lint:large-doc:.codewiki/kb/lexicon.md:Live doc has 2079 words; consider split or cut.",
+        "lint:large-doc:.codewiki/kb/system/agency.md:Live doc has 1984 words; consider split or cut.",
+        "lint:large-doc:.codewiki/kb/system/file-structure.md:Live doc has 1629 words; consider split or cut.",
+        "lint:large-doc:.codewiki/kb/system/roadmap.md:Live doc has 1634 words; consider split or cut.",
+        "lint:large-doc:.codewiki/kb/system/trace-graph.md:Live doc has 1762 words; consider split or cut.",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: src/runtime/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: src/adapters/pi/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-114 references missing code path: tests/tasks/TASK-114/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-116 references missing code path: tests/tasks/TASK-116/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/planning/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/roadmap/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: src/build/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: tests/tasks/TASK-117/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-117 references missing code path: tests/planning/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/implementation/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/build/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/gateway/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/policy/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: src/checks/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: tests/tasks/TASK-118/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-118 references missing code path: tests/implementation/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: src/graph/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: src/state/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: tests/tasks/TASK-119/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-119 references missing code path: tests/graph/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/pi/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/git/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/adapters/pi/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/runtime/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: src/gc/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: tests/tasks/TASK-120/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-120 references missing code path: tests/pi/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/runtime/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/agency/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/session/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/state/graph/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/gateway/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: src/adapters/pi/**",
+        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json:TASK-121 references missing code path: tests/tasks/TASK-121/**",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-roadmap-level-agency-config.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-architecture-first-system-kb-reorganiza.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-cli-first-codewiki-distribution.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-decision-planning-hardening.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-gateway-gates-ship-ready.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-graph-centered-access-backend-daemon-sc.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-graph-centered-agent-access-backend-fir.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki-resolved.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-pi-distribution-codewiki.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-05-31-accepted-terminal-first-codewiki-ux-web-ui-depre.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-for-canc.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-accepted-scoped-reconciliation-decision-to-add-e.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-01-production-surface-automation-readiness.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-artifactref-legacy-feedback-removal-and.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-codewiki-prompt-skill-architecture-deci.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-codewiki-tidy-architecture-decisions-v2.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-core-codewiki-tidy-up-decisions.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-graph-boundary-and-compact-trace-struct.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-low-risk-maintenance-decision-to-align-.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-maintenance-decision-to-resolve-remaini.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-03-accepted-prompt-skill-architecture-planning-reco.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-backend-only-ui-deprecation-decision-in.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-decision-table-naming-and-schema-clean-.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-dec.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v2.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact.",
+        "lint:legacy-decision-build-decision-table-deferred:.codewiki/builds/decision/2026-06-04-accepted-trace-primary-codewiki-architecture-v3.json:Legacy decision build predates the DecisionTableV1 requirement. TASK-104 covers this class as accepted residual migration debt until lifecycle-trace/catalog migration or archive/restore-ledger cleanup can retire the legacy compatibility artifact."
+      ],
+      "gaps": [],
+      "coverage": []
+    }
+  },
+  "loop_gate_ownership": {
+    "profile": "task-close",
+    "criteria_owner_loop": "implementation",
+    "compatibility_gate": "task-close",
+    "canonical_truth": [
+      "src/**",
+      "tests/**",
+      ".codewiki/builds/implementation/**",
+      "Git commit/tree/package refs"
+    ],
+    "blocking_contracts": [
+      "unowned KB/diagram/source-contract drift",
+      "missing content proof",
+      "publication criteria outside implementation"
+    ],
+    "routes_to_decision_on_semantic_drift": true,
+    "evidence_provider_role": {
+      "tests": "evidence-provider",
+      "linters": "evidence-provider",
+      "audits": "evidence-provider",
+      "criteria_owner": "implementation"
+    },
+    "publication_owner": "implementation",
+    "forbidden_loop_roots": [
+      "src/validation",
+      "src/publish",
+      "src/publication"
+    ],
+    "dogfood_special_case_allowed": false
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "head_sha": "154c8da4d15a7f4617d667e2894ebd571e072e35",
+    "validated_sha": "154c8da4d15a7f4617d667e2894ebd571e072e35",
+    "tree_sha": "148c14b60c5f8974910073b61f98d6c60a0d900c",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close source-backed validation of committed TASK-114 checkpoint; local checkpoint only."
+  }
+}

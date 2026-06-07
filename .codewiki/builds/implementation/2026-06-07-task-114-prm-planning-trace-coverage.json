@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-07T05:11:55Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+  "task_id": "TASK-114",
+  "task": {
+    "id": "TASK-114",
+    "title": "Encode role-free context-boundary execution graph metadata",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "architecture",
+    "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, context-boundary handoff, and publication serialization without role-based scheduling.",
+    "spec_paths": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+      ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/runtime/**",
+      "src/state/graph/trace-projection.ts",
+      "src/adapters/pi/**",
+      "src/state/resume-context.ts",
+      "tests/tasks/TASK-114/**"
+    ],
+    "goal": {
+      "outcome": "Planning trace can carry role-free execution graph/context-boundary metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning sessions automatically.",
+      "acceptance": [
+        "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, context-boundary reasons, expected outputs, required gates, route-back triggers, and publication serialization without a canonical role axis.",
+        "Agency planning reads or reports execution graph metadata as authorization context while preserving configured budgets and stop gates.",
+        "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh gate evaluation, or publication serialization.",
+        "Graph/read-model projection exposes execution graph/context-boundary metadata as a derived view only, not a second canonical graph.",
+        "TASK-specific tests cover execution graph parsing/projection, route-back/serialization metadata, context-boundary reason/expected-output shape, and no required role field."
+      ],
+      "non_goals": [
+        "Do not spawn background sessions automatically in this metadata task.",
+        "Do not bypass artifact leases, gate reports, or publication serialization.",
+        "Do not create a second canonical graph outside planning trace data.",
+        "Do not make role a scheduling, policy, or gate criterion."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-114 test for role-free planning execution graph metadata",
+        "targeted graph/lens or runtime handoff projection test",
+        "wiki_audit profiles=alignment,lexicon scoped to changed planning/runtime docs and tests"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-14T05:11:55.000Z",
+    "purge_after": "2026-06-21T05:11:55.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Record TASK-114 implementation coverage for PRM planning trace row PRM-001.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json"
+    ],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json"
+    ],
+    "roadmap": [
+      "TASK-114"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json"
+    ],
+    "source": [
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      ".codewiki/kb/system/trace-graph.md",
+      "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-114"
+    ],
+    "code": [
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/state/graph.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/types.ts",
+      "src/agency/planning.ts",
+      ".codewiki/kb/system/trace-graph.md"
+    ],
+    "tests": [
+      "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+      ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-114",
+      "PRM-001-PLANNING-LOOP-DECOMPOSITION"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+    "spec_paths": [
+      ".codewiki/kb/system/trace-graph.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+      ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/runtime/**",
+      "src/state/graph/trace-projection.ts",
+      "src/adapters/pi/**",
+      "src/state/resume-context.ts",
+      "tests/tasks/TASK-114/**"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs"
+  ],
+  "code_files": [
+    "src/build/types.ts",
+    "src/build/writer.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/state/graph.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/types.ts",
+    "src/agency/planning.ts",
+    ".codewiki/kb/system/trace-graph.md"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "src/build/types.ts",
+    "src/build/writer.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/state/graph.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/types.ts",
+    "src/agency/planning.ts",
+    ".codewiki/kb/system/trace-graph.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+    "node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+    "npm run typecheck: pass",
+    "wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass",
+    "wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-114",
+      "test_files": [
+        "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/agency-auto-pickup.test.mjs"
+      ],
+      "evidence": [
+        "TASK-114 targeted test validates planning trace parsing plus runtime/graph projection shape needed by PRM-001 decomposition."
+      ],
+      "notes": [
+        "No source changes in this coverage build; fresh session reran targeted tests, LSP diagnostics, typecheck, and audits."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-114",
+      "code_files": [
+        "src/build/types.ts",
+        "src/build/writer.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/state/graph.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/types.ts",
+        "src/agency/planning.ts",
+        ".codewiki/kb/system/trace-graph.md"
+      ],
+      "evidence": [
+        "Primary implementation build .codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json contains the actual code/doc/test changes; this build maps the same validated implementation to the PRM planning trace row."
+      ],
+      "notes": [
+        "Semantic closure required a build sourced from the PRM planning trace because task-close projection keys implementation coverage by source_planning_build."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TASK-114 targeted test validates planning trace parsing plus runtime/graph projection shape needed by PRM-001 decomposition."
+  ],
+  "code_change_evidence": [
+    "Primary implementation build .codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json contains the actual code/doc/test changes; this build maps the same validated implementation to the PRM planning trace row."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "PRM-001 planning-loop decomposition has a concrete TASK-114 implementation artifact for execution graph/worker handoff metadata.",
+      "evidence": "TASK-114 implementation build and targeted tests encode planning execution_graph metadata, graph/lens projection, and agency authorization context without role scheduling."
+    },
+    {
+      "criterion": "Graph/read-model projection exposes execution graph/context-boundary metadata as derived view only.",
+      "evidence": "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs asserts durable_truth=false, dispatch_axis=context-boundary, and pointer_ref projections."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+    ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Implement TASK-114 role-free planning execution graph metadata and close PRM planning trace coverage.",
+    "implemented_changes": [
+      "Mapped the already-implemented TASK-114 role-free execution_graph metadata changes to PRM-001 planning trace row.",
+      "Preserved generated-read-model-only ownership and context-boundary dispatch semantics."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        "TASK-114"
+      ],
+      "code": [
+        "src/build/types.ts",
+        "src/build/writer.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/state/graph.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/types.ts",
+        "src/agency/planning.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/agency-auto-pickup.test.mjs"
+      ],
+      "validation": [
+        ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+        ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "PRM-001 covered by execution graph metadata support and graph/lens projection tests.",
+      "Runtime/agency projection is authorization context only and does not spawn sessions."
+    ],
+    "checks": [
+      "lsp_diagnostics TASK-114 modified TypeScript files",
+      "TASK-114 targeted test",
+      "graph-lenses smoke test",
+      "agency-auto-pickup smoke test",
+      "npm run typecheck",
+      "wiki_audit scoped TASK-114 evidence"
+    ],
+    "non_goals_preserved": [
+      "Did not create a second canonical graph outside planning trace data.",
+      "Did not spawn background sessions automatically."
+    ],
+    "remaining_risks": []
+  },
+  "risks": [],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-114",
+      "task_id": "TASK-114",
+      "next_focus_task_id": "TASK-121",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-114",
+        "title": "Encode role-free context-boundary execution graph metadata",
+        "summary": "Record TASK-114 implementation coverage for PRM planning trace row PRM-001.",
+        "spec_paths": [
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+          ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json"
+        ],
+        "code_paths": [
+          "src/agency/planning.ts",
+          "src/runtime/**",
+          "src/state/graph/trace-projection.ts",
+          "src/adapters/pi/**",
+          "src/state/resume-context.ts",
+          "tests/tasks/TASK-114/**",
+          "src/build/types.ts",
+          "src/build/writer.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/state/graph.ts",
+          "src/state/graph/lenses.ts",
+          "src/state/types.ts",
+          ".codewiki/kb/system/trace-graph.md"
+        ],
+        "acceptance": [
+          "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, context-boundary reasons, expected outputs, required gates, route-back triggers, and publication serialization without a canonical role axis.",
+          "Agency planning reads or reports execution graph metadata as authorization context while preserving configured budgets and stop gates.",
+          "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh gate evaluation, or publication serialization.",
+          "Graph/read-model projection exposes execution graph/context-boundary metadata as a derived view only, not a second canonical graph.",
+          "TASK-specific tests cover execution graph parsing/projection, route-back/serialization metadata, context-boundary reason/expected-output shape, and no required role field."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-114 test for role-free planning execution graph metadata",
+          "targeted graph/lens or runtime handoff projection test",
+          "wiki_audit profiles=alignment,lexicon scoped to changed planning/runtime docs and tests"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+        "checks_run": [
+          "lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+          "node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+          "npm run typecheck: pass",
+          "wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass",
+          "wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health"
+        ],
+        "test_design_evidence": [
+          "TASK-114 targeted test validates planning trace parsing plus runtime/graph projection shape needed by PRM-001 decomposition."
+        ],
+        "code_change_evidence": [
+          "Primary implementation build .codewiki/builds/implementation/2026-06-07-task-114-role-free-execution-graph-metadata.json contains the actual code/doc/test changes; this build maps the same validated implementation to the PRM planning trace row."
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+          ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-114",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-114",
+      "show_build": "git show refs/codewiki/archive/task/TASK-114:.codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+        ".codewiki/kb/system/trace-graph.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+        ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+        "src/agency/planning.ts",
+        "src/runtime/**",
+        "src/state/graph/trace-projection.ts",
+        "src/adapters/pi/**",
+        "src/state/resume-context.ts",
+        "tests/tasks/TASK-114/**"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-114 Encode role-free context-boundary execution graph metadata implementation evidence",
+      "body": "Record TASK-114 implementation coverage for PRM planning trace row PRM-001.\n\nChecks: lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass, wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health\nValidation: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json, .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-114\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json\nCodeWiki-Checks: lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass, wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health\nCodeWiki-Validation: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json, .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json\nCodeWiki-Recover: /wiki-restore TASK-114\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-114\nCodeWiki-Digest: sha256:83cb5e78db0752e473ed0c1b2db4e15cc1373107aed8fa7c4233c11f050e6b20\nCodeWiki-Restore: /wiki-restore TASK-114",
+      "trailers": [
+        "CodeWiki-Task: TASK-114",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+        "CodeWiki-Checks: lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass, wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health",
+        "CodeWiki-Validation: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json, .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json",
+        "CodeWiki-Recover: /wiki-restore TASK-114",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-114",
+        "CodeWiki-Digest: sha256:83cb5e78db0752e473ed0c1b2db4e15cc1373107aed8fa7c4233c11f050e6b20",
+        "CodeWiki-Restore: /wiki-restore TASK-114"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-114 Encode role-free context-boundary execution graph metadata implementation evidence",
+      "body": "Record TASK-114 implementation coverage for PRM planning trace row PRM-001.\n\nChecks: lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass, wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health\nValidation: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json, .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-114\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json\nCodeWiki-Checks: lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass, node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass, wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health\nCodeWiki-Validation: .codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json, .codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json\nCodeWiki-Recover: /wiki-restore TASK-114\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-114\nCodeWiki-Digest: sha256:83cb5e78db0752e473ed0c1b2db4e15cc1373107aed8fa7c4233c11f050e6b20\nCodeWiki-Restore: /wiki-restore TASK-114"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-114",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-114"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-114",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-114",
+        "show_build": "git show refs/codewiki/archive/task/TASK-114:.codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+          ".codewiki/kb/system/trace-graph.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+          ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+          "src/agency/planning.ts",
+          "src/runtime/**",
+          "src/state/graph/trace-projection.ts",
+          "src/adapters/pi/**",
+          "src/state/resume-context.ts",
+          "tests/tasks/TASK-114/**"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-114",
+      "build_path": ".codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-114",
+      "commit_sha": "",
+      "digest": "sha256:83cb5e78db0752e473ed0c1b2db4e15cc1373107aed8fa7c4233c11f050e6b20",
+      "restore_command": "/wiki-restore TASK-114"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:28ab9d06018b696e43e65fa510df1c3b697a787e50d550b2693dd5c9f543b964",
+          "bytes": 38750
+        },
+        {
+          "path": ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+          "role": "validation_ref",
+          "sha256": "sha256:8440f44b6e3fd390504035d7c1c6537e3cd8830ae067ffa14dfda756245f97d7",
+          "bytes": 76464
+        },
+        {
+          "path": ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json",
+          "role": "validation_ref",
+          "sha256": "sha256:3564ec6b7470250898c4b3a907939931797fac7b1b889ddf89a6b32904cf9af8",
+          "bytes": 73866
+        },
+        {
+          "path": "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:79cc5590ff1a5ff74fd209098de991ecde04da037a281bdec6d3beaf8bc2248a",
+          "bytes": 7972
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:02fb53b5a65f864c6ffa51783f740355b8e4ee085c370ef88ea4f2f0964f7130",
+          "bytes": 27411
+        },
+        {
+          "path": "tests/smoke/agency-auto-pickup.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cbf29451c51237ad31fd3f7f026fa8c9d630d96d34de7c2a1b7bd47032bcb68f",
+          "bytes": 10102
+        },
+        {
+          "path": "src/build/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:bc2d7f96809697cae528a5ea5b2eb03b3268555c937e6b94e571a750fb95653b",
+          "bytes": 8793
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:3d593d0d0057c2068dddbbee942adeeba93691449f61f777dd52756b8fcf3617",
+          "bytes": 48665
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:fea0dd31f7c535e9f14c582a271a7a835db3724ffb7c5c65b0166d59af587127",
+          "bytes": 46519
+        },
+        {
+          "path": "src/state/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:411f65837b51c839dca0374f67823bd720d9dc1c0fef1954ab274cd541605d5e",
+          "bytes": 120033
+        },
+        {
+          "path": "src/state/graph/lenses.ts",
+          "role": "code_file",
+          "sha256": "sha256:3b99127c643cbf377868d7c406aafc95a0f264aa32e50ab27bd7a3eeb9616c5c",
+          "bytes": 35209
+        },
+        {
+          "path": "src/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:3c9760ae70e7fdf716be58101328b62bc921e33abb624ccb6f0e8c82c12387ee",
+          "bytes": 12574
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "role": "code_file",
+          "sha256": "sha256:e3bc24db42fca63818e7ffa19ae4512f3186ff1794989539d40b3f7e3c519ab9",
+          "bytes": 21325
+        },
+        {
+          "path": ".codewiki/kb/system/trace-graph.md",
+          "role": "code_file",
+          "sha256": "sha256:ff98e337342564e596da4a5945bc82477f73910469af5bc9f6809f38f7950192",
+          "bytes": 15229
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-114",
+      "source_build": ".codewiki/builds/implementation/2026-06-07-task-114-prm-planning-trace-coverage.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/build/types.ts",
+          "src/build/writer.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/state/graph.ts",
+          "src/state/graph/lenses.ts",
+          "src/state/types.ts",
+          "src/agency/planning.ts",
+          ".codewiki/kb/system/trace-graph.md",
+          "tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/agency-auto-pickup.test.mjs"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+          ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-114",
+        "restore_command": "/wiki-restore TASK-114"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics TASK-114 modified TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+        "node --experimental-strip-types ./tests/tasks/TASK-114/planning-execution-graph-metadata.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/graph-lenses.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+        "npm run typecheck: pass",
+        "wiki_audit profiles=alignment,lexicon scoped to changed TASK-114 doc/test: warning only for pre-existing graph health; lexicon pass",
+        "wiki_audit profiles=alignment,package,security,stale-reference,changed,task,generated-parity task_id=TASK-114: warning only for pre-existing graph health"
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-06-07-implementation-pass-task-114-2026-06-07-task-114.json",
+        ".codewiki/validation/2026-06-07-ship-ready-pass-task-114-2026-06-07-task-114-rol.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
