@@ -514,6 +514,13 @@ function normalizeDecisionKbMappings(input: CodewikiBuildToolInput) {
 			deferred: Boolean(mapping.deferred),
 			deferred_reason:
 				String(mapping.deferred_reason || "").trim() || undefined,
+			no_kb_impact: String(mapping.no_kb_impact || "").trim() || undefined,
+			no_knowledge_impact:
+				String(mapping.no_knowledge_impact || "").trim() || undefined,
+			no_diagram_impact:
+				String(mapping.no_diagram_impact || "").trim() || undefined,
+			no_impact_rationale:
+				String(mapping.no_impact_rationale || "").trim() || undefined,
 		}))
 		.filter((mapping) => mapping.row_id && mapping.evidence);
 }

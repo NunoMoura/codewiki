@@ -47,6 +47,11 @@ import type {
 	CodewikiValidationReportInput,
 } from "./types.ts";
 import { VALIDATION_FAILURE_CLASS_VALUES } from "./types.ts";
+import {
+	loopGateOwnershipContracts,
+	loopGateOwnershipFor,
+	type CodewikiLoopId,
+} from "./loop-contracts.ts";
 
 function validationContentProofRefs(
 	isolation: ReturnType<typeof normalizeValidationIsolation> | undefined,
@@ -878,13 +883,21 @@ function planningRoadmapReconciliationGaps(
 			gaps.push(`${path}:roadmap_reconciliation:${id}:missing_evidence`);
 		if (["partial", "unmapped"].includes(state)) {
 			if (!String(row?.owner || "").trim())
-				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_owner`);
+				gaps.push(
+					`${path}:roadmap_reconciliation:${id}:${state}:missing_owner`,
+				);
 			if (!String(row?.trigger || "").trim())
-				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_trigger`);
+				gaps.push(
+					`${path}:roadmap_reconciliation:${id}:${state}:missing_trigger`,
+				);
 			if (!String(row?.rationale || "").trim())
-				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_rationale`);
+				gaps.push(
+					`${path}:roadmap_reconciliation:${id}:${state}:missing_rationale`,
+				);
 			if (!String(row?.evidence || "").trim())
-				gaps.push(`${path}:roadmap_reconciliation:${id}:${state}:missing_evidence`);
+				gaps.push(
+					`${path}:roadmap_reconciliation:${id}:${state}:missing_evidence`,
+				);
 		}
 	});
 	return unique(gaps);
@@ -1580,11 +1593,20 @@ function validationDecisionMappingGaps(build: any, profile: string): string[] {
 		const hasKnowledgeOrDiagram =
 			trimList(mapping?.knowledge_refs).length > 0 ||
 			trimList(mapping?.diagram_refs).length > 0;
+		const hasNoImpactRationale = Boolean(
+			String(
+				mapping?.no_kb_impact ||
+					mapping?.no_knowledge_impact ||
+					mapping?.no_diagram_impact ||
+					mapping?.no_impact_rationale ||
+					"",
+			).trim(),
+		);
 		if (mapping?.deferred === true) {
 			if (!String(mapping?.deferred_reason || "").trim())
 				gaps.push(`decision_row:${rowId}:missing_deferred_reason`);
-		} else if (!hasKnowledgeOrDiagram) {
-			gaps.push(`decision_row:${rowId}:missing_knowledge_or_deferred_mapping`);
+		} else if (!hasKnowledgeOrDiagram && !hasNoImpactRationale) {
+			gaps.push(`decision_row:${rowId}:missing_knowledge_or_no_impact_mapping`);
 		}
 	}
 	if (trimList(build?.open_questions).length > 0)
@@ -1846,6 +1868,32 @@ function compilerLoopForGate(profile: string): WorkflowLoop {
 	return "implementation";
 }
 
+function loopGateOwnershipMetadata(profile: string) {
+	const normalizedProfile = normalizeValidationGate(profile);
+	const owner = compilerLoopForGate(normalizedProfile) as CodewikiLoopId;
+	const contract = loopGateOwnershipFor(owner);
+	const catalog = loopGateOwnershipContracts();
+	return {
+		profile: normalizedProfile,
+		criteria_owner_loop: owner,
+		compatibility_gate:
+			normalizedProfile !== owner ? normalizedProfile : undefined,
+		canonical_truth: contract.canonical_truth,
+		blocking_contracts: contract.blocks_on,
+		routes_to_decision_on_semantic_drift:
+			contract.routes_to_decision_on_semantic_drift,
+		evidence_provider_role: {
+			tests: "evidence-provider",
+			linters: "evidence-provider",
+			audits: "evidence-provider",
+			criteria_owner: owner,
+		},
+		publication_owner: catalog.publication_owner,
+		forbidden_loop_roots: catalog.forbidden_loop_roots,
+		dogfood_special_case_allowed: catalog.dogfood_special_case_allowed,
+	};
+}
+
 function gatewayRetryClass(input: {
 	status: string;
 	profile: string;
@@ -2099,6 +2147,7 @@ export function buildGatewayPreflight(
 ) {
 	const inputProfile = input.profile.trim();
 	const profile = normalizeValidationGate(input.gate || inputProfile);
+	const loopGateOwnership = loopGateOwnershipMetadata(profile);
 	const policyProfile =
 		(input.policy_profile
 			? normalizeValidationGate(input.policy_profile)
@@ -2454,7 +2503,9 @@ export function buildGatewayPreflight(
 			source.build?.task_id ||
 			source.build?.task?.id ||
 			undefined,
+		loop_gate_ownership: loopGateOwnership,
 		checks: [
+			"loop gate ownership contract",
 			"source refs readable",
 			"accepted upstream builds with gateway pass",
 			"decision row KB/defer mapping coverage",
@@ -3045,6 +3096,7 @@ export async function writeGatewayReport(
 		},
 		production_policy_requirement: preflight.production_policy,
 		preflight,
+		loop_gate_ownership: preflight.loop_gate_ownership,
 		commit_readiness_requirement:
 			profile === "implementation"
 				? {

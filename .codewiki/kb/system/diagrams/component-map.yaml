@@ -176,7 +176,7 @@ edges:
     label: records attempts and heartbeats
   - from: runtime
     to: resume_context
-    label: requests source-backed reset kickoff
+    label: requests role-free source-backed boundary packet
   - from: runtime
     to: roadmap
     label: claims task/sprint/roadmap scopes

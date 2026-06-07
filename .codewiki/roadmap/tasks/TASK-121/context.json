@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-07T04:06:58Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-121/context.json",
+  "task": {
+    "id": "TASK-121",
+    "title": "Implement runtime context-boundary dispatch",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Implement generic runtime-owned session/context-boundary dispatch and source-backed context packets so compaction, fresh gate evaluation, parallel continuation, and future subagents use trace/source refs instead of canonical roles.",
+    "labels": [
+      "RCS-REQ-001",
+      "RCS-REQ-002",
+      "RCS-REQ-003",
+      "runtime",
+      "context-boundary",
+      "source-backed-context",
+      "role-free-dispatch",
+      "fresh-gate",
+      "compaction"
+    ],
+    "goal": {
+      "outcome": "Runtime can request and record role-free source-backed context boundaries for compaction, fresh gate evaluation, parallel continuation, and adapter-backed subagent spawning, with high-signal packets and content evidence requirements.",
+      "acceptance": [
+        "Runtime dispatch/request model uses context-boundary reason, trace/task/sprint scope, graph lens, expected output, constraints, source refs, artifact status, budgets, and content-evidence requirements; role is absent or optional compatibility metadata only.",
+        "Source-backed context packet generation points agents to current trace/scope, graph lens, exact source refs, blockers, artifact status, expected output, constraints, and content-evidence requirements without including full chat history, full graph dumps, or unrelated roadmap work.",
+        "Fresh gate evaluation handoff can be requested through runtime context-boundary dispatch and records platform-limited evidence when the host cannot spawn a fresh session.",
+        "Existing same-session compaction and /wiki-resume --new paths consume the same source-backed packet contract where compatible.",
+        "Artifact status and worktree isolation remain enforced before write-capable spawned/continued sessions; role labels do not determine conflicts, permissions, or gate criteria.",
+        "Gateway preflight/reporting treats freshness as context-boundary plus content evidence, not validator compatibility label.",
+        "TASK-specific tests cover packet shape, dispatch-ready vs platform-limited outcomes, fresh gate handoff, context-bloat continuation, compatibility role labels not being required, and no validation/publish loop root."
+      ],
+      "non_goals": [
+        "Do not remove existing role fields from public/compatibility schemas unless a compatibility-safe optional facade is provided.",
+        "Do not change public tool schemas except compatibility-safe additions or optional fields.",
+        "Do not create src/validation, src/publish, or src/publication roots.",
+        "Do not bypass gate reports, artifact leases, content evidence requirements, or publication approval.",
+        "Do not publish, push, or run destructive cleanup."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-121 context-boundary dispatch tests",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+        "wiki_audit profiles=lexicon,source-contract,alignment,changed scoped to runtime/session/gateway/state/adapters changes"
+      ]
+    },
+    "delta": {
+      "desired": "Runtime has a generic role-free context-boundary dispatch contract and source-backed packet used by compaction, fresh gates, and future subagent spawning.",
+      "current": "Runtime/session/gateway surfaces still expose role-shaped fields and current tools can plan handoff but not generically dispatch fresh context-boundary sessions from trace/source refs.",
+      "closure": "Closed when tests prove runtime context boundaries are source-backed, role-free, content-evidence aware, platform-limited when host spawn is unavailable, and reusable for compaction and fresh gate handoff."
+    }
+  }
+}

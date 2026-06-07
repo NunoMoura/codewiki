@@ -1,0 +1,477 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-06-07T03:57:53Z",
+  "source": "wiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-07-07T03:57:53.000Z",
+    "purge_after": "2026-08-06T03:57:53.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "RCS-REQ-001",
+      "text": "Runtime owns generic context-boundary dispatch for subagents, compaction, fresh gate evaluation, parallel continuation, and future session spawning.",
+      "source_refs": [
+        "RCS-001-RUNTIME-OWNS-SPAWN"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "RCS-REQ-002",
+      "text": "Spawned or compacted sessions start from a trace pointer or focused graph lens plus scoped source refs, expected output, constraints, budgets, blockers, artifact status, and content-evidence requirements.",
+      "source_refs": [
+        "RCS-002-TRACE-REFS-NOT-CHAT"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "RCS-REQ-003",
+      "text": "Role is not a canonical scheduling, gate, or policy axis; existing role fields are compatibility labels only until migrated.",
+      "source_refs": [
+        "RCS-003-NO-CANONICAL-ROLES"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accept runtime-owned role-free context session dispatch and high-signal source-backed context packet contract.",
+  "decision_mode": "accepted",
+  "decision_table": {
+    "schema_version": 1,
+    "id": "ACCEPT-RUNTIME-OWNED-ROLE-FREE-CONTEXT-SESSION-D",
+    "title": "Accept runtime-owned role-free context session dispatch and high-signal source-backed context packet contract.",
+    "status": "approved",
+    "rows": [
+      {
+        "id": "RCS-001-RUNTIME-OWNS-SPAWN",
+        "question": "RCS-001-RUNTIME-OWNS-SPAWN",
+        "state_delta": {
+          "current": "Session spawning is discussed through worker/validator/publication compatibility labels and current agency planning surfaces can imply role-specific dispatch paths.",
+          "desired": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing."
+        },
+        "proposed_change": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing.",
+        "rationale": "Spawning is execution coordination, not semantic loop ownership. One runtime mechanism can serve planning workers, gate review, context-bloat refresh, parallel work, and future agent sessions without adding loop roots.",
+        "impact": {
+          "system": [
+            "system",
+            "runtime",
+            "gateway",
+            "agency",
+            "lexicon"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Keep role-specific dispatchers for validator/worker/publisher."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Let each loop own its own session-spawn mechanism."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RCS-002-TRACE-REFS-NOT-CHAT",
+        "question": "RCS-002-TRACE-REFS-NOT-CHAT",
+        "state_delta": {
+          "current": "Fresh validation and compaction can be framed as role-bound sessions or rely on broad context packets that risk noisy chat/history carryover.",
+          "desired": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps."
+        },
+        "proposed_change": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps.",
+        "rationale": "CodeWiki truth lives in KB/trace/source refs and graph state. Trace-head plus source refs gives token-efficient continuation while preserving source-backed verification.",
+        "impact": {
+          "system": [
+            "system",
+            "runtime",
+            "graph",
+            "telemetry",
+            "gateway"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Send full graph/context dump to subagents."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Use chat compaction summaries as primary continuation memory."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps.",
+        "validated_outcome": ""
+      },
+      {
+        "id": "RCS-003-NO-CANONICAL-ROLES",
+        "question": "RCS-003-NO-CANONICAL-ROLES",
+        "state_delta": {
+          "current": "Runtime and gateway isolation metadata currently includes role-like fields, and discussion used validator/worker labels as if they were core policy concepts.",
+          "desired": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs."
+        },
+        "proposed_change": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs.",
+        "rationale": "Role labels are not in the desired mental model and constrain future trace-cycle behavior. Sessions may be spawned for context bloat, review, repair, or continuation at arbitrary points in the cycle.",
+        "impact": {
+          "system": [
+            "system",
+            "runtime",
+            "gateway",
+            "lexicon",
+            "schemas"
+          ]
+        },
+        "risk": {
+          "level": "medium"
+        },
+        "options": [
+          {
+            "id": "ALT-1",
+            "label": "Keep roles as required dispatch field."
+          },
+          {
+            "id": "ALT-2",
+            "label": "Create fixed role enum for validator/builder/planner/publisher."
+          }
+        ],
+        "approval": {
+          "status": "approved"
+        },
+        "evidence_refs": [],
+        "expected_outcome": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs.",
+        "validated_outcome": ""
+      }
+    ],
+    "created_at": "2026-06-07T03:57:53Z",
+    "updated_at": "2026-06-07T03:57:53Z"
+  },
+  "approved_decision_rows": [
+    "RCS-001-RUNTIME-OWNS-SPAWN",
+    "RCS-002-TRACE-REFS-NOT-CHAT",
+    "RCS-003-NO-CANONICAL-ROLES"
+  ],
+  "approved_rows": [
+    {
+      "id": "RCS-001-RUNTIME-OWNS-SPAWN",
+      "question": "RCS-001-RUNTIME-OWNS-SPAWN",
+      "state_delta": {
+        "current": "Session spawning is discussed through worker/validator/publication compatibility labels and current agency planning surfaces can imply role-specific dispatch paths.",
+        "desired": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing."
+      },
+      "proposed_change": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing.",
+      "rationale": "Spawning is execution coordination, not semantic loop ownership. One runtime mechanism can serve planning workers, gate review, context-bloat refresh, parallel work, and future agent sessions without adding loop roots.",
+      "impact": {
+        "system": [
+          "system",
+          "runtime",
+          "gateway",
+          "agency",
+          "lexicon"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Keep role-specific dispatchers for validator/worker/publisher."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Let each loop own its own session-spawn mechanism."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Runtime owns one generic subagent/session dispatch mechanism for any source-backed context boundary, regardless of decision/planning/implementation timing.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RCS-002-TRACE-REFS-NOT-CHAT",
+      "question": "RCS-002-TRACE-REFS-NOT-CHAT",
+      "state_delta": {
+        "current": "Fresh validation and compaction can be framed as role-bound sessions or rely on broad context packets that risk noisy chat/history carryover.",
+        "desired": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps."
+      },
+      "proposed_change": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps.",
+      "rationale": "CodeWiki truth lives in KB/trace/source refs and graph state. Trace-head plus source refs gives token-efficient continuation while preserving source-backed verification.",
+      "impact": {
+        "system": [
+          "system",
+          "runtime",
+          "graph",
+          "telemetry",
+          "gateway"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Send full graph/context dump to subagents."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Use chat compaction summaries as primary continuation memory."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Spawned or compacted sessions start from a high-signal trace pointer, graph lens, scoped source refs, expected output, constraints, and content-evidence requirements; they do not rely on chat history or graph dumps.",
+      "validated_outcome": ""
+    },
+    {
+      "id": "RCS-003-NO-CANONICAL-ROLES",
+      "question": "RCS-003-NO-CANONICAL-ROLES",
+      "state_delta": {
+        "current": "Runtime and gateway isolation metadata currently includes role-like fields, and discussion used validator/worker labels as if they were core policy concepts.",
+        "desired": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs."
+      },
+      "proposed_change": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs.",
+      "rationale": "Role labels are not in the desired mental model and constrain future trace-cycle behavior. Sessions may be spawned for context bloat, review, repair, or continuation at arbitrary points in the cycle.",
+      "impact": {
+        "system": [
+          "system",
+          "runtime",
+          "gateway",
+          "lexicon",
+          "schemas"
+        ]
+      },
+      "risk": {
+        "level": "medium"
+      },
+      "options": [
+        {
+          "id": "ALT-1",
+          "label": "Keep roles as required dispatch field."
+        },
+        {
+          "id": "ALT-2",
+          "label": "Create fixed role enum for validator/builder/planner/publisher."
+        }
+      ],
+      "approval": {
+        "status": "approved"
+      },
+      "evidence_refs": [],
+      "expected_outcome": "Do not make role a canonical scheduling, gate, or policy axis. If compatibility fields remain, treat them as optional labels only; runtime dispatch is driven by reason, trace scope, expected output, constraints, budgets, and source refs.",
+      "validated_outcome": ""
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Runtime, not individual loops or gates, owns session spawning and context-boundary mechanics."
+    },
+    {
+      "id": "D2",
+      "summary": "Trace/source-ref packets, not chat history or graph dumps, are the continuation substrate."
+    },
+    {
+      "id": "D3",
+      "summary": "Roles are removed from the canonical mental model and retained only as migration compatibility labels."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/lexicon.md",
+    ".codewiki/kb/system/runtime.md",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/data-model.yaml"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "RCS-001-RUNTIME-OWNS-SPAWN",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ],
+      "evidence": "Runtime, agency, gateway, and lexicon now state that runtime owns generic role-free context-boundary dispatch for subagents, compaction, gates, and future session spawning.",
+      "deferred": false
+    },
+    {
+      "row_id": "RCS-002-TRACE-REFS-NOT-CHAT",
+      "knowledge_refs": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ],
+      "evidence": "Docs define Source-backed context packet and graph-lens/trace-pointer behavior, explicitly excluding full chat history and graph dumps.",
+      "deferred": false
+    },
+    {
+      "row_id": "RCS-003-NO-CANONICAL-ROLES",
+      "knowledge_refs": [
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Lexicon adds role as temporary compatibility term; runtime/agency/gateway docs say role labels are compatibility metadata only, not scheduling, policy, or gate criteria.",
+      "deferred": false,
+      "no_diagram_impact": "Role removal is vocabulary/policy semantics already covered by component/data-model updates for dispatch packet shape; no additional diagram node is needed."
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "Runtime dispatch becomes generic and role-free.",
+      "Context-bloat, fresh gate, parallel work, review, and replacement sessions use one context-boundary mechanism.",
+      "Source-backed context packets become the high-signal continuation contract.",
+      "Gateway freshness is context-boundary/content-evidence based, not validator-role based.",
+      "Legacy role fields are compatibility labels only."
+    ],
+    "no_product_impact": "This changes internal system architecture vocabulary and workflow contracts; no user-facing product UI behavior changes yet.",
+    "downstream_planning_questions": []
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/data-model.yaml"
+  ],
+  "downstream_planning_questions": [
+    "Plan executable work to implement generic runtime context-boundary dispatch without canonical role labels.",
+    "Plan source/schema migration or compatibility facade for existing role fields and worktree paths.",
+    "Plan high-signal Source-backed context packet shape from trace pointer, graph lens, source refs, expected output, constraints, and content evidence.",
+    "Reconcile with existing context-bloat auto-refresh decision rows and TASK-115 runtime/gateway contracts."
+  ],
+  "assumptions": [
+    "Current source still contains compatibility role fields and role-worktree wording; migration can be planned separately without blocking semantic acceptance.",
+    "Existing TASK-115 implementation remains valid but should route follow-up runtime/session dispatch changes through planning."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement source changes in the decision loop.",
+    "Do not remove compatibility role fields immediately.",
+    "Do not create validation or publish loop roots."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/data-model.yaml"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

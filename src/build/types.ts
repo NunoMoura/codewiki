@@ -87,6 +87,10 @@ export interface CodewikiDecisionKbMappingInput {
 	evidence: string;
 	deferred?: boolean;
 	deferred_reason?: string;
+	no_kb_impact?: string;
+	no_knowledge_impact?: string;
+	no_diagram_impact?: string;
+	no_impact_rationale?: string;
 }
 
 export interface CodewikiDecisionPropagationInput {

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-06T22:57:29Z",
+  "updated": "2026-06-07T04:24:49Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -12,7 +12,8 @@
     "TASK-117",
     "TASK-118",
     "TASK-119",
-    "TASK-120"
+    "TASK-120",
+    "TASK-121"
   ],
   "tasks": {
     "TASK-012": {
@@ -699,58 +700,68 @@
     },
     "TASK-114": {
       "id": "TASK-114",
-      "title": "Encode planning execution graph metadata",
-      "status": "todo",
+      "title": "Encode role-free context-boundary execution graph metadata",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "architecture",
-      "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, and publisher serialization.",
+      "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, context-boundary handoff, and publication serialization without role-based scheduling.",
       "spec_paths": [
         ".codewiki/kb/system/trace-graph.md",
         ".codewiki/kb/system/agency.md",
-        ".codewiki/kb/system/runtime.md"
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+        ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json"
       ],
       "code_paths": [
         "src/agency/planning.ts",
         "src/runtime/**",
         "src/state/graph/trace-projection.ts",
         "src/adapters/pi/**",
+        "src/state/resume-context.ts",
         "tests/tasks/TASK-114/**"
       ],
       "research_ids": [],
       "labels": [
         "DPA-REQ-006",
         "DPA-REQ-007",
+        "RCS-REQ-001",
+        "RCS-REQ-002",
+        "RCS-REQ-003",
         "execution-graph-metadata",
-        "agency-runtime-handoff"
+        "agency-runtime-handoff",
+        "context-boundary",
+        "role-free"
       ],
       "change_type": "system",
       "goal": {
-        "outcome": "Planning trace can carry execution graph metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning workers automatically.",
+        "outcome": "Planning trace can carry role-free execution graph/context-boundary metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning sessions automatically.",
         "acceptance": [
-          "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, roles, required gates, route-back triggers, and publisher serialization.",
+          "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, context-boundary reasons, expected outputs, required gates, route-back triggers, and publication serialization without a canonical role axis.",
           "Agency planning reads or reports execution graph metadata as authorization context while preserving configured budgets and stop gates.",
-          "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh validation, or publisher serialization.",
-          "Graph/read-model projection exposes execution graph metadata as derived view only.",
-          "TASK-specific tests cover execution graph parsing/projection and route-back/serialization metadata."
+          "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh gate evaluation, or publication serialization.",
+          "Graph/read-model projection exposes execution graph/context-boundary metadata as a derived view only, not a second canonical graph.",
+          "TASK-specific tests cover execution graph parsing/projection, route-back/serialization metadata, context-boundary reason/expected-output shape, and no required role field."
         ],
         "non_goals": [
-          "Do not spawn background workers automatically.",
-          "Do not bypass artifact leases, validation gates, or publisher serialization.",
-          "Do not create a second canonical graph outside planning trace data."
+          "Do not spawn background sessions automatically in this metadata task.",
+          "Do not bypass artifact leases, gate reports, or publication serialization.",
+          "Do not create a second canonical graph outside planning trace data.",
+          "Do not make role a scheduling, policy, or gate criterion."
         ],
         "verification": [
           "npm run typecheck",
-          "targeted TASK-114 test for planning execution graph metadata",
-          "targeted graph/lens or runtime handoff projection test"
+          "targeted TASK-114 test for role-free planning execution graph metadata",
+          "targeted graph/lens or runtime handoff projection test",
+          "wiki_audit profiles=alignment,lexicon scoped to changed planning/runtime docs and tests"
         ]
       },
       "delta": {
-        "desired": "Planning trace carries canonical execution graph metadata and runtime/graph project it for scheduling context.",
-        "current": "Planning output lacks consistent execution graph metadata for safe parallel implementation handoff.",
-        "closure": "Closed when planning builds can encode and expose worker waves, dependencies, and leases without executing workers."
+        "desired": "Planning trace carries canonical role-free execution graph and context-boundary metadata; runtime/graph project it for scheduling context.",
+        "current": "Planning output lacks consistent execution graph/context-boundary metadata and still references roles as if they could be scheduling fields.",
+        "closure": "Closed when planning builds can encode and expose context-boundary waves, dependencies, expected outputs, gates, and leases without executing sessions or requiring roles."
       },
       "created": "2026-06-06",
-      "updated": "2026-06-06"
+      "updated": "2026-06-07T04:03:54Z"
     },
     "TASK-115": {
       "id": "TASK-115",
@@ -823,7 +834,7 @@
         "closure": "Closed when source-contract/gate tests enforce no fourth loop, tests remain evidence providers, decision KB mapping is required, planning owns work not semantics, and implementation cannot close unowned drift."
       },
       "created": "2026-06-06",
-      "updated": "2026-06-06T22:57:13Z"
+      "updated": "2026-06-07T04:24:49Z"
     },
     "TASK-116": {
       "id": "TASK-116",
@@ -1129,6 +1140,89 @@
       },
       "created": "2026-06-06",
       "updated": "2026-06-06"
+    },
+    "TASK-121": {
+      "id": "TASK-121",
+      "title": "Implement runtime context-boundary dispatch",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Implement generic runtime-owned session/context-boundary dispatch and source-backed context packets so compaction, fresh gate evaluation, parallel continuation, and future subagents use trace/source refs instead of canonical roles.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+        ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+        ".codewiki/kb/lexicon.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ],
+      "code_paths": [
+        "src/runtime/**",
+        "src/agency/**",
+        "src/session/**",
+        "src/state/resume-context.ts",
+        "src/state/graph/**",
+        "src/gateway/**",
+        "src/adapters/pi/**",
+        "tests/tasks/TASK-121/**",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/agency-auto-pickup.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "RCS-REQ-001",
+        "RCS-REQ-002",
+        "RCS-REQ-003",
+        "runtime",
+        "context-boundary",
+        "source-backed-context",
+        "role-free-dispatch",
+        "fresh-gate",
+        "compaction"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Runtime can request and record role-free source-backed context boundaries for compaction, fresh gate evaluation, parallel continuation, and adapter-backed subagent spawning, with high-signal packets and content evidence requirements.",
+        "acceptance": [
+          "Runtime dispatch/request model uses context-boundary reason, trace/task/sprint scope, graph lens, expected output, constraints, source refs, artifact status, budgets, and content-evidence requirements; role is absent or optional compatibility metadata only.",
+          "Source-backed context packet generation points agents to current trace/scope, graph lens, exact source refs, blockers, artifact status, expected output, constraints, and content-evidence requirements without including full chat history, full graph dumps, or unrelated roadmap work.",
+          "Fresh gate evaluation handoff can be requested through runtime context-boundary dispatch and records platform-limited evidence when the host cannot spawn a fresh session.",
+          "Existing same-session compaction and /wiki-resume --new paths consume the same source-backed packet contract where compatible.",
+          "Artifact status and worktree isolation remain enforced before write-capable spawned/continued sessions; role labels do not determine conflicts, permissions, or gate criteria.",
+          "Gateway preflight/reporting treats freshness as context-boundary plus content evidence, not validator compatibility label.",
+          "TASK-specific tests cover packet shape, dispatch-ready vs platform-limited outcomes, fresh gate handoff, context-bloat continuation, compatibility role labels not being required, and no validation/publish loop root."
+        ],
+        "non_goals": [
+          "Do not remove existing role fields from public/compatibility schemas unless a compatibility-safe optional facade is provided.",
+          "Do not change public tool schemas except compatibility-safe additions or optional fields.",
+          "Do not create src/validation, src/publish, or src/publication roots.",
+          "Do not bypass gate reports, artifact leases, content evidence requirements, or publication approval.",
+          "Do not publish, push, or run destructive cleanup."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-121 context-boundary dispatch tests",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs",
+          "wiki_audit profiles=lexicon,source-contract,alignment,changed scoped to runtime/session/gateway/state/adapters changes"
+        ]
+      },
+      "delta": {
+        "desired": "Runtime has a generic role-free context-boundary dispatch contract and source-backed packet used by compaction, fresh gates, and future subagent spawning.",
+        "current": "Runtime/session/gateway surfaces still expose role-shaped fields and current tools can plan handoff but not generically dispatch fresh context-boundary sessions from trace/source refs.",
+        "closure": "Closed when tests prove runtime context boundaries are source-backed, role-free, content-evidence aware, platform-limited when host spawn is unavailable, and reusable for compaction and fresh gate handoff."
+      },
+      "created": "2026-06-07",
+      "updated": "2026-06-07T04:06:58Z"
     }
   },
   "sprints": {
@@ -2165,25 +2259,21 @@
       "id": "SPRINT-025",
       "title": "Decision-planning repair before source refactor",
       "status": "active",
-      "outcome": "Repair decision-to-planning trace, roadmap atomicity, file-structure accountability, execution graph handoff, loop gate/source-of-truth evidence contracts, and planning materialization before resuming broad source-structure refactor.",
+      "outcome": "Repair decision-to-planning trace, roadmap atomicity, file-structure accountability, execution graph handoff, loop gate/source-of-truth evidence contracts, role-free runtime context-boundary dispatch, and planning materialization before resuming broad source-structure refactor.",
       "task_ids": [
         "TASK-114",
         "TASK-115",
-        "TASK-116"
+        "TASK-116",
+        "TASK-121"
       ],
       "scope": {
         "knowledge": [
-          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
-          ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
-          ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
           ".codewiki/kb/system/trace-graph.md",
-          ".codewiki/kb/system/flows/decision-to-planning.md",
-          ".codewiki/kb/system/roadmap.md",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/validation-gateway.md",
-          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/agency.md",
           ".codewiki/kb/system/runtime.md",
-          ".codewiki/kb/system/agency.md"
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/lexicon.md"
         ],
         "code": [
           "src/build/writer.ts",
@@ -2195,12 +2285,16 @@
           "src/audit/**",
           "src/checks/**",
           "src/state/graph/**",
+          "src/state/resume-context.ts",
           "src/agency/**",
           "src/runtime/**",
+          "src/session/**",
+          "src/adapters/pi/**",
           "src/policy/**",
           "tests/tasks/TASK-114/**",
           "tests/tasks/TASK-115/**",
-          "tests/tasks/TASK-116/**"
+          "tests/tasks/TASK-116/**",
+          "tests/tasks/TASK-121/**"
         ]
       },
       "budget": {
@@ -2217,10 +2311,12 @@
         "implementation",
         "task-close",
         "source-contract",
-        "alignment"
+        "alignment",
+        "No canonical role axis in new runtime/context-boundary work.",
+        "No src/validation, src/publish, or src/publication loop roots."
       ],
       "created": "2026-06-06T21:07:09Z",
-      "updated": "2026-06-06T22:57:29Z"
+      "updated": "2026-06-07T04:05:12Z"
     },
     "SPRINT-026": {
       "id": "SPRINT-026",

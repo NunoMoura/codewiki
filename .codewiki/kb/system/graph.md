@@ -5,7 +5,7 @@ state: active
 summary: Generated query/index projection over KB truth, telemetry traces, source/test facts, runtime coordination, and content evidence.
 owners:
   - architecture
-updated: "2026-06-05"
+updated: "2026-06-07"
 ---
 
 # Graph
@@ -121,7 +121,7 @@ Lens output should return:
 - freshness and stale-ref findings;
 - automation-readiness contracts for daemon/agency scheduling.
 
-Graph output should not duplicate whole KB docs, full loop trace files, raw test logs, raw diffs, or full Git history.
+Graph output should not duplicate whole KB docs, full loop trace files, raw test logs, raw diffs, full Git history, or full chat history. Spawned and compacted sessions should receive a trace pointer or focused graph lens plus exact source refs, not a graph dump.
 
 ## System diagram nodes
 

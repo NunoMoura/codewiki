@@ -1,0 +1,762 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-06-07T04:24:50Z",
+  "source": "wiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+  "task_id": "TASK-115",
+  "task": {
+    "id": "TASK-115",
+    "title": "Codify loop-owned gate and source-of-truth contracts",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "architecture",
+    "summary": "Define loop gate evidence contracts and source-of-truth ownership so decision owns semantic KB, planning owns roadmap/work, implementation owns code/evidence, and publication stays under implementation.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/decision/**",
+      "src/planning/**",
+      "src/implementation/**",
+      "src/gateway/**",
+      "src/checks/**",
+      "src/policy/**",
+      "tests/tasks/TASK-115/**"
+    ],
+    "goal": {
+      "outcome": "Decision, planning, and implementation loop gates enforce source-of-truth ownership: decision updates semantic KB, planning owns roadmap/work decomposition, implementation owns code/evidence, and publication stays under implementation.",
+      "acceptance": [
+        "Source or policy contract exposes loop gate evidence ownership for decision, planning, and implementation without adding validation or publish loop roots.",
+        "Decision gate/reporting blocks approved semantic rows without row-to-KB/diagram mapping or explicit no-KB/no-diagram-impact rationale.",
+        "Planning gate/reporting routes stale, contradictory, or missing semantic KB back to decision and blocks executable accepted rows without roadmap/sprint/work-unit ownership.",
+        "Implementation/task-close reporting blocks or routes code changes that leave KB, diagram, source-contract, or file-structure drift without durable residual issue coverage.",
+        "Evidence reporting distinguishes tests and linters as evidence providers from loop gate criteria owners.",
+        "Implementation/publication criteria stay under implementation, including task-close and ship-ready compatibility behavior.",
+        "File-structure/source-contract checks align with exactly three loop roots and no fourth validation/publish root.",
+        "TASK-specific tests cover loop-owned evidence contract shape, source-of-truth ownership gate checks, publication-under-implementation invariant, and no fourth loop/root."
+      ],
+      "non_goals": [
+        "Do not physically migrate all gateway/checks/policy helpers unless needed for contract clarity.",
+        "Do not create src/validation or src/publish roots.",
+        "Do not change public tool schemas except compatibility-safe additions.",
+        "Do not add CodeWiki-repo-specific dogfood behavior.",
+        "Do not make planning or implementation silently mutate semantic KB truth."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted TASK-115 test for loop-owned gate/source-of-truth contracts",
+        "tests/smoke/source-contract.test.mjs or equivalent",
+        "relevant package/gateway smoke subset"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-14T04:24:50.000Z",
+    "purge_after": "2026-06-21T04:24:50.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "trace-covered",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-06-06-implement-task-115-loop-owned-gate-source-of-tru.json"
+    ],
+    "status": "ready-for-final-validation"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task:TASK-115",
+    "audit:generated-parity"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Supersede TASK-115 implementation build with full planning trace coverage.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-kbo-loop-source-of-truth-ownership.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-kbo-loop-source-of-truth-ownership.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-kbo-loop-source-of-truth-ownership.json",
+      ".codewiki/builds/planning/2026-06-06-plan-accepted-dpa-decision-into-sprint-025-repai.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-115"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-06-implemen.json"
+    ],
+    "source": [
+      "src/gateway/loop-contracts.ts",
+      "src/gateway/report.ts",
+      "src/build/decision-propagation.ts",
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/checks/source-contract-snapshot.ts",
+      "src/checks/source-contract.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/adapters/pi/schemas.ts",
+      "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/gateway/loop-contracts.ts",
+      "src/gateway/report.ts",
+      "src/build/decision-propagation.ts",
+      "src/build/types.ts",
+      "src/build/writer.ts",
+      "src/checks/source-contract-snapshot.ts",
+      "src/checks/source-contract.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/adapters/pi/schemas.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/policy-gate.test.mjs"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-06-implemen.json"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-115"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+      ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/flows/decision-to-planning.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/decision/**",
+      "src/planning/**",
+      "src/implementation/**",
+      "src/gateway/**",
+      "src/checks/**",
+      "src/policy/**",
+      "tests/tasks/TASK-115/**"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs"
+  ],
+  "code_files": [
+    "src/gateway/loop-contracts.ts",
+    "src/gateway/report.ts",
+    "src/build/decision-propagation.ts",
+    "src/build/types.ts",
+    "src/build/writer.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "src/checks/source-contract.ts",
+    "src/knowledge/diagram-parser.ts",
+    "src/adapters/pi/schemas.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/policy-gate.test.mjs",
+    "src/gateway/loop-contracts.ts",
+    "src/gateway/report.ts",
+    "src/build/decision-propagation.ts",
+    "src/build/types.ts",
+    "src/build/writer.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "src/checks/source-contract.ts",
+    "src/knowledge/diagram-parser.ts",
+    "src/adapters/pi/schemas.ts"
+  ],
+  "checks_run": [
+    "lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+    "node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "npm run typecheck: pass",
+    "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-115",
+      "test_files": [
+        "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "evidence": [
+        "Targeted TASK-115 test covers decision, planning, implementation, publication, evidence-provider, residual drift, and no-fourth-root scenarios.",
+        "Source-contract smoke covers forbidden validation root fixture."
+      ],
+      "notes": [
+        "tests/smoke/package-smoke.test.mjs has known unrelated fixture drift and is not used as TASK-115 acceptance evidence."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+      "roadmap_task_id": "TASK-115",
+      "code_files": [
+        "src/gateway/loop-contracts.ts",
+        "src/gateway/report.ts",
+        "src/build/decision-propagation.ts",
+        "src/build/types.ts",
+        "src/build/writer.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "src/checks/source-contract.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/adapters/pi/schemas.ts"
+      ],
+      "evidence": [
+        "Gateway preflight/reporting now emits loop gate ownership metadata.",
+        "Decision mapping validation supports explicit no-KB/no-diagram impact rationale in compatibility schema.",
+        "Planning propagation treats executable rows as requiring task/sprint work even if marked knowledge-only/deferred.",
+        "Source-contract snapshot/audit forbids validation/publish/publication roots and exposes logical loop roots.",
+        "Validation gateway KB component removes src/validation root ownership and clarifies implementation-owned publication compatibility."
+      ],
+      "notes": [
+        "This build supersedes the earlier TASK-115 implementation build to link PRM, KBO, and DPA planning builds for semantic closure.",
+        "No source changes were made after implementation validation; this build adds trace coverage for task-close semantics."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Targeted TASK-115 test covers decision, planning, implementation, publication, evidence-provider, residual drift, and no-fourth-root scenarios.",
+    "Source-contract smoke covers forbidden validation root fixture."
+  ],
+  "code_change_evidence": [
+    "Gateway preflight/reporting now emits loop gate ownership metadata.",
+    "Decision mapping validation supports explicit no-KB/no-diagram impact rationale in compatibility schema.",
+    "Planning propagation treats executable rows as requiring task/sprint work even if marked knowledge-only/deferred.",
+    "Source-contract snapshot/audit forbids validation/publish/publication roots and exposes logical loop roots.",
+    "Validation gateway KB component removes src/validation root ownership and clarifies implementation-owned publication compatibility."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Loop gate/source-of-truth contract shape is source-owned and exposes decision/planning/implementation criteria ownership.",
+      "evidence": "src/gateway/loop-contracts.ts and src/gateway/report.ts expose loop_gate_ownership metadata; targeted TASK-115 tests assert no fourth loop and publication owner implementation."
+    },
+    {
+      "criterion": "Decision gate requires row-to-KB/diagram mapping or explicit no-impact rationale.",
+      "evidence": "src/gateway/report.ts decision mapping validation plus TASK-115 test fixture for missing mappings."
+    },
+    {
+      "criterion": "Planning gate blocks executable accepted rows without work ownership and routes semantic drift to decision.",
+      "evidence": "src/build/decision-propagation.ts row executability logic plus TASK-115 planning preflight fixture."
+    },
+    {
+      "criterion": "Implementation/task-close surfaces block unowned KB/diagram/source-contract/file-structure drift without durable residual issue coverage.",
+      "evidence": "TASK-115 implementation preflight fixture injects source-contract drift and asserts residual_issue_coverage blocker."
+    },
+    {
+      "criterion": "Tests/linters are evidence providers, not criteria owners.",
+      "evidence": "loop_gate_ownership.evidence_provider_role metadata and test assertions."
+    },
+    {
+      "criterion": "Publication/task-close/ship-ready remain implementation-owned compatibility gates.",
+      "evidence": "loop-contracts publication_owner and publication preflight TASK-115 test."
+    },
+    {
+      "criterion": "File-structure/source-contract checks align to exactly three loop roots.",
+      "evidence": "source-contract snapshot/audit additions and tests/smoke/source-contract.test.mjs forbidden root fixture."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-115 loop-owned gate/source-of-truth contracts.",
+    "implemented_changes": [
+      "Added source-owned loop gate ownership contract and gateway preflight/report metadata.",
+      "Enforced decision row KB/diagram mapping or explicit no-impact rationale.",
+      "Tightened planning propagation so executable accepted rows require roadmap/sprint/work ownership.",
+      "Extended implementation residual drift and source-contract tests for no fourth loop/root.",
+      "Kept publication/task-close/ship-ready compatibility under implementation."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/components/validation-gateway.md"
+      ],
+      "roadmap": [
+        "TASK-115"
+      ],
+      "code": [
+        "src/gateway/loop-contracts.ts",
+        "src/gateway/report.ts",
+        "src/build/decision-propagation.ts",
+        "src/build/types.ts",
+        "src/build/writer.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "src/checks/source-contract.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/adapters/pi/schemas.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "validation": [
+        ".codewiki/validation/2026-06-07-implementation-pass-task-115-2026-06-06-implemen.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "Targeted TASK-115 test passed.",
+      "source-contract smoke passed.",
+      "gateway-preflight smoke passed.",
+      "policy-gate smoke passed.",
+      "typecheck passed.",
+      "Implementation validation pass exists for prior build and final validation will target this superseding trace-covered build."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs",
+      "npm run typecheck",
+      "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115"
+    ],
+    "non_goals_preserved": [
+      "No src/validation, src/publish, or src/publication roots created.",
+      "No fourth validation/publish loop root added.",
+      "No CodeWiki dogfood special-case behavior added.",
+      "No public tool schema breaking change."
+    ],
+    "remaining_risks": []
+  },
+  "risks": [],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-115",
+      "task_id": "TASK-115",
+      "next_focus_task_id": "TASK-114",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-115",
+        "title": "Codify loop-owned gate and source-of-truth contracts",
+        "summary": "Supersede TASK-115 implementation build with full planning trace coverage.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/flows/decision-to-planning.md",
+          ".codewiki/kb/system/roadmap.md"
+        ],
+        "code_paths": [
+          "src/decision/**",
+          "src/planning/**",
+          "src/implementation/**",
+          "src/gateway/**",
+          "src/checks/**",
+          "src/policy/**",
+          "tests/tasks/TASK-115/**",
+          "src/gateway/loop-contracts.ts",
+          "src/gateway/report.ts",
+          "src/build/decision-propagation.ts",
+          "src/build/types.ts",
+          "src/build/writer.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "src/checks/source-contract.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/adapters/pi/schemas.ts"
+        ],
+        "acceptance": [
+          "Source or policy contract exposes loop gate evidence ownership for decision, planning, and implementation without adding validation or publish loop roots.",
+          "Decision gate/reporting blocks approved semantic rows without row-to-KB/diagram mapping or explicit no-KB/no-diagram-impact rationale.",
+          "Planning gate/reporting routes stale, contradictory, or missing semantic KB back to decision and blocks executable accepted rows without roadmap/sprint/work-unit ownership.",
+          "Implementation/task-close reporting blocks or routes code changes that leave KB, diagram, source-contract, or file-structure drift without durable residual issue coverage.",
+          "Evidence reporting distinguishes tests and linters as evidence providers from loop gate criteria owners.",
+          "Implementation/publication criteria stay under implementation, including task-close and ship-ready compatibility behavior.",
+          "File-structure/source-contract checks align with exactly three loop roots and no fourth validation/publish root.",
+          "TASK-specific tests cover loop-owned evidence contract shape, source-of-truth ownership gate checks, publication-under-implementation invariant, and no fourth loop/root."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted TASK-115 test for loop-owned gate/source-of-truth contracts",
+          "tests/smoke/source-contract.test.mjs or equivalent",
+          "relevant package/gateway smoke subset"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+        "checks_run": [
+          "lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+          "node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+          "npm run typecheck: pass",
+          "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings"
+        ],
+        "test_design_evidence": [
+          "Targeted TASK-115 test covers decision, planning, implementation, publication, evidence-provider, residual drift, and no-fourth-root scenarios.",
+          "Source-contract smoke covers forbidden validation root fixture."
+        ],
+        "code_change_evidence": [
+          "Gateway preflight/reporting now emits loop gate ownership metadata.",
+          "Decision mapping validation supports explicit no-KB/no-diagram impact rationale in compatibility schema.",
+          "Planning propagation treats executable rows as requiring task/sprint work even if marked knowledge-only/deferred.",
+          "Source-contract snapshot/audit forbids validation/publish/publication roots and exposes logical loop roots.",
+          "Validation gateway KB component removes src/validation root ownership and clarifies implementation-owned publication compatibility."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-115",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-115",
+      "show_build": "git show refs/codewiki/archive/task/TASK-115:.codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+        ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/flows/decision-to-planning.md",
+        ".codewiki/kb/system/roadmap.md",
+        "src/decision/**",
+        "src/planning/**",
+        "src/implementation/**",
+        "src/gateway/**",
+        "src/checks/**",
+        "src/policy/**",
+        "tests/tasks/TASK-115/**"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use wiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-115 Codify loop-owned gate and source-of-truth contracts implementation evidence",
+      "body": "Supersede TASK-115 implementation build with full planning trace coverage.\n\nChecks: lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-115\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json\nCodeWiki-Checks: lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-115\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-115\nCodeWiki-Digest: sha256:f1dde9b306ced6c02cb8f8035f09b415ad5b066b2b63ba165fab2f17fd4e046c\nCodeWiki-Restore: /wiki-restore TASK-115",
+      "trailers": [
+        "CodeWiki-Task: TASK-115",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+        "CodeWiki-Checks: lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-115",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-115",
+        "CodeWiki-Digest: sha256:f1dde9b306ced6c02cb8f8035f09b415ad5b066b2b63ba165fab2f17fd4e046c",
+        "CodeWiki-Restore: /wiki-restore TASK-115"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-115 Codify loop-owned gate and source-of-truth contracts implementation evidence",
+      "body": "Supersede TASK-115 implementation build with full planning trace coverage.\n\nChecks: lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-115\nCodeWiki-Build: .codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json\nCodeWiki-Checks: lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints, node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run typecheck: pass, wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-115\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-115\nCodeWiki-Digest: sha256:f1dde9b306ced6c02cb8f8035f09b415ad5b066b2b63ba165fab2f17fd4e046c\nCodeWiki-Restore: /wiki-restore TASK-115"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-115",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-115"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-115",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-115",
+        "show_build": "git show refs/codewiki/archive/task/TASK-115:.codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-decision-planning-audit-repair.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-planning-roadmap-materialization.json",
+          ".codewiki/builds/decision/2026-06-06-accepted-loop-source-of-truth-ownership.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/flows/decision-to-planning.md",
+          ".codewiki/kb/system/roadmap.md",
+          "src/decision/**",
+          "src/planning/**",
+          "src/implementation/**",
+          "src/gateway/**",
+          "src/checks/**",
+          "src/policy/**",
+          "tests/tasks/TASK-115/**"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-115",
+      "build_path": ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-115",
+      "commit_sha": "",
+      "digest": "sha256:f1dde9b306ced6c02cb8f8035f09b415ad5b066b2b63ba165fab2f17fd4e046c",
+      "restore_command": "/wiki-restore TASK-115"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-06-06-plan-accepted-prm-decision-into-sprint-025-repai.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:28ab9d06018b696e43e65fa510df1c3b697a787e50d550b2693dd5c9f543b964",
+          "bytes": 38750
+        },
+        {
+          "path": "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:58a7cc28dcc22567a72aa084bb013b75a7fa7134ca21a440aee5b05366354254",
+          "bytes": 13185
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1f8dcddaa3829489146125cedb8f6733a630109030507a75e79652b59f9aec93",
+          "bytes": 6457
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:54c42ad615eea09d7bf1b8bb9658e5c98efc8cbf2a018d26fee432d983b22997",
+          "bytes": 53689
+        },
+        {
+          "path": "tests/smoke/policy-gate.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9f40b40b794124bea2a2d97888856add133f40ef36db053ee0b0f1194826d6ff",
+          "bytes": 7520
+        },
+        {
+          "path": "src/gateway/loop-contracts.ts",
+          "role": "code_file",
+          "sha256": "sha256:74d1389d5dc0973fc40b30eb973eae9f62022e27bf2e7c06591a0d36f604ecbc",
+          "bytes": 3194
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:1c016b1149e5bb081e156d956762432c0c684ba81b040f604d93193a78797f55",
+          "bytes": 97685
+        },
+        {
+          "path": "src/build/decision-propagation.ts",
+          "role": "code_file",
+          "sha256": "sha256:df058c322d89010acd65362f708ecdc750a655bb946f30eb1343d89079bf370c",
+          "bytes": 19619
+        },
+        {
+          "path": "src/build/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:2518e0d8865e55a9dd46340598bf7c34fe4420df5d5d387cb97962c9022bc967",
+          "bytes": 6513
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:effd2d8cd03ab180f1a59091175f73e2815fa04ee1ca575d23522352109f94db",
+          "bytes": 40493
+        },
+        {
+          "path": "src/checks/source-contract-snapshot.ts",
+          "role": "code_file",
+          "sha256": "sha256:809f0f951ba30f0d331ef927244ac7deb8cf7aaf1006de4f7453cadca5d6c688",
+          "bytes": 6675
+        },
+        {
+          "path": "src/checks/source-contract.ts",
+          "role": "code_file",
+          "sha256": "sha256:0ed60b6290e9d12e29ebcedb51b22dc416d770bd72c8a81ed78e9ed8ec17bb4c",
+          "bytes": 13120
+        },
+        {
+          "path": "src/knowledge/diagram-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:8ae72a4e551866d4ab692b91bd52a8c93f4e1d15b8dcf49ba21b668ff321d624",
+          "bytes": 43266
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:d951dfacaa82512d3123fe2e1ccc8e90ba587c78f5160d55e39e8e177280d341",
+          "bytes": 41821
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-115",
+      "source_build": ".codewiki/builds/implementation/2026-06-07-task-115-loop-gate-contracts-trace-covered.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/gateway/loop-contracts.ts",
+          "src/gateway/report.ts",
+          "src/build/decision-propagation.ts",
+          "src/build/types.ts",
+          "src/build/writer.ts",
+          "src/checks/source-contract-snapshot.ts",
+          "src/checks/source-contract.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/adapters/pi/schemas.ts",
+          "tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs",
+          "tests/smoke/source-contract.test.mjs",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/policy-gate.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-115",
+        "restore_command": "/wiki-restore TASK-115"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics modified TASK-115 TypeScript files: pass except pre-existing changeClassSchema deprecation hints",
+        "node --experimental-strip-types ./tests/tasks/TASK-115/loop-gate-evidence-contract.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/source-contract.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+        "npm run typecheck: pass",
+        "wiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-115: warning only; task and generated-parity pass; graph health and generated changed files are expected dirty pre-commit warnings"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

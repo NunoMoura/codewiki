@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-06-07T04:00:04Z",
+  "profile": "decision",
+  "gate": "decision",
+  "verdict": "pass",
+  "rationale": "Accepted runtime-owned role-free context-boundary decision rows have KB/diagram mappings, system propagation, explicit no-product-impact evidence, no unresolved decision questions, and required linter evidence. Pre-existing graph-health warnings are not decision blockers.",
+  "checks": [
+    "User approved all rows: RCS-001, RCS-002, RCS-003",
+    "wiki_audit profiles=alignment,stale-reference,lexicon scoped refs: warning only for pre-existing graph health; stale-reference pass; lexicon pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Generated graph health reports 83 pre-existing warnings; tracked separately from this decision."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "decision:report-issue-1:1",
+      "kind": "report-issue-1",
+      "severity": "warning",
+      "summary": "Generated graph health reports 83 pre-existing warnings; tracked separately from this decision.",
+      "refs": [],
+      "affected_refs": [],
+      "gate_refs": [
+        "decision"
+      ],
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "remediation": [
+        "Route the blocker to the implementation loop with the cited refs."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "decision:report-issue-1:1",
+      "category": "report-issue-1",
+      "severity": "warning",
+      "summary": "Generated graph health reports 83 pre-existing warnings; tracked separately from this decision.",
+      "ref_count": 0
+    }
+  ],
+  "remediation": {
+    "status": "pass",
+    "remediation_route": "decision",
+    "retry_class": "none",
+    "affected_refs": [],
+    "next_safe_actions": [
+      "Route the blocker to the implementation loop with the cited refs."
+    ]
+  },
+  "source": ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:lexicon"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+    "validation_report": ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+    "source_refs": [
+      ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+      ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/data-model.yaml"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+    "validation_report": ".codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/decision/2026-06-07-accept-runtime-owned-role-free-context-session-d.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-06-07-decision-pass-2026-06-07-accept-runtime-owned.json",
+      "CodeWiki-Checks: User approved all rows: RCS-001, RCS-002, RCS-003; wiki_audit profiles=alignment,stale-reference,lexicon scoped refs: warning only for pre-existing graph health; stale-reference pass; lexicon pass"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "gate": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "existing roadmap reconciliation evidence",
+      "semantic execution closure report",
+      "sprint-close cohort readiness",
+      "ship-ready content evidence",
+      "required linter evidence",
+      "task id consistency",
+      "content-evidence strategy",
+      "close/ship-ready blockers",
+      "risk-tier approval policy",
+      "production policy profile",
+      "residual issue coverage"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "decision_coverage": [],
+      "roadmap_reconciliation": [],
+      "semantic_closure": [],
+      "semantic_closure_risks": [],
+      "code_tests": [],
+      "validation_evidence": [],
+      "task_close_ship_ready": [],
+      "sprint_close": [],
+      "ship_ready": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": [],
+      "residual_issue_coverage": []
+    },
+    "issues": [],
+    "diagnostics": [],
+    "findings": [],
+    "remediation": {
+      "status": "ready",
+      "remediation_route": "decision",
+      "retry_class": "none",
+      "affected_refs": [],
+      "next_safe_actions": []
+    },
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway linters and content evidence remain mandatory."
+      }
+    },
+    "residual_issue_coverage": {
+      "required": false,
+      "items": [],
+      "covered": [],
+      "gaps": [],
+      "coverage": []
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

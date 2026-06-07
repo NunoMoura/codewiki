@@ -859,6 +859,10 @@ export const codewikiBuildToolInputSchema = Type.Object({
 				evidence: Type.String({ minLength: 1 }),
 				deferred: Type.Optional(Type.Boolean()),
 				deferred_reason: Type.Optional(Type.String({ minLength: 1 })),
+				no_kb_impact: Type.Optional(Type.String({ minLength: 1 })),
+				no_knowledge_impact: Type.Optional(Type.String({ minLength: 1 })),
+				no_diagram_impact: Type.Optional(Type.String({ minLength: 1 })),
+				no_impact_rationale: Type.Optional(Type.String({ minLength: 1 })),
 			}),
 		),
 	),
@@ -886,7 +890,9 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	),
 	// Decision row table
 	decision_table: Type.Optional(Type.Array(codewikiDecisionTableRowSchema)),
-	approved_decision_rows: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	approved_decision_rows: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 })),
+	),
 	decisions: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	assumptions: Type.Optional(Type.Array(Type.String(), { default: [] })),
 	open_questions: Type.Optional(Type.Array(Type.String(), { default: [] })),
@@ -1058,7 +1064,9 @@ export const codewikiDecideToolInputSchema = Type.Object(
 		table_id: Type.Optional(Type.String({ minLength: 1 })),
 		row_id: Type.Optional(Type.String({ minLength: 1 })),
 		row_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
-		row_actions: Type.Optional(Type.Array(codewikiDecisionTableRowActionSchema)),
+		row_actions: Type.Optional(
+			Type.Array(codewikiDecisionTableRowActionSchema),
+		),
 		rows: Type.Optional(Type.Array(codewikiDecisionTableRowSchema)),
 		decision_build: Type.Optional(looseWorkflowObjectSchema),
 		build: Type.Optional(looseWorkflowObjectSchema),

@@ -5,7 +5,7 @@ state: active
 summary: Three loop exit gates that validate lifecycle trace evidence with structured diagnostics, remediation, and semantic handoff guards.
 owners:
   - architecture
-updated: "2026-06-06"
+updated: "2026-06-07"
 diagram_refs:
   - architecture:gateway
   - key-flow:decision_gate
@@ -122,7 +122,7 @@ user input -> trace.decision -> trace.planning -> trace.implementation -> Git/co
 
 Horizontal alignment validates coherence inside one layer: KB docs, diagrams, trace refs, source, tests, gate criteria, generated graph state, and runtime state when active.
 
-Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git evidence such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty validation may use a working-tree digest only when the gate allows it and implementation remains unclosed.
+Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git evidence such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty gate evaluation may use a working-tree digest only when the gate allows it and implementation remains unclosed. Freshness is a context-boundary property, not a validator role requirement: runtime provides a source-backed packet, clean or digest-backed content proof, and expected gate output.
 
 ## Compatibility paths
 
@@ -154,6 +154,7 @@ Publication is an implementation-stage concern by default. If CodeWiki config en
 - Implementation gate blocks on missing Git/content evidence when the work claims production-ready completion.
 - Actionable fail/block findings should route back to the same compiler loop for an automatic superseding output when policy and budgets allow.
 - Gate reports and findings are hot only while active routing needs them; long-term history lives in lifecycle trace summaries, `telemetry/catalog.json`, and Git.
+- Gate sessions requested by runtime are role-free context-boundary continuations. Their dispatch contract is trace scope, source refs, expected gate output, constraints, budgets, and content evidence; compatibility role labels must not become gate criteria.
 
 ## Related docs
 

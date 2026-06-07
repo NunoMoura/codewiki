@@ -487,8 +487,6 @@ function rowIsExecutable(
 		resolution?.resolution === "sprint"
 	)
 		return true;
-	if (resolution && NON_EXECUTABLE_RESOLUTIONS.has(resolution.resolution))
-		return false;
 	return rowLooksExecutable(row);
 }
 
@@ -551,6 +549,8 @@ function validateResolution(
 			if (!entry.rationale) gaps.push("missing_rationale");
 			if (triggerSatisfied) gaps.push("trigger_satisfied");
 		}
+	} else if (executable && NON_EXECUTABLE_RESOLUTIONS.has(entry.resolution)) {
+		gaps.push("executable_requires_task_or_sprint");
 	}
 	return gaps;
 }

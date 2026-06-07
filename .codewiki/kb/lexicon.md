@@ -6,7 +6,7 @@ summary: Canonical CodeWiki vocabulary for commands, tools, loops, compiler outp
 owners:
 - product
 - architecture
-updated: '2026-06-04'
+updated: '2026-06-07'
 ---
 
 # Lexicon
@@ -197,9 +197,17 @@ Pi is the runtime foundation for the CodeWiki software-development distribution.
 
 The active Pi agent session memory. It is volatile RAM and expensive because it is reloaded with each prompt in the session.
 
+## Context boundary
+
+Runtime-controlled point where CodeWiki continues from source-backed state instead of carrying noisy chat memory forward. A context boundary can be same-session compaction, a fresh subagent invocation, or a replacement session when the adapter supports it. It is driven by trace scope, graph lens, source refs, expected output, constraints, budgets, and content-evidence requirements.
+
+## Source-backed context packet
+
+High-signal, low-noise continuation packet generated from CodeWiki truth and graph state. It carries the current trace pointer or task/sprint scope, active loop or gate target, exact source refs, blockers, artifact status, budget, expected output, and required content evidence. It does not include full chat history, full graph dumps, or unrelated roadmap context.
+
 ## Subagent
 
-A fresh Pi agent invocation with a clean context window used for bounded work such as gate review, research, planning review, architecture review, testing, or building.
+A fresh Pi agent invocation with a clean context window used for bounded source-backed continuation, review, research, gate evaluation, planning, testing, building, or context-bloat recovery. Subagents are not categorized by canonical roles; runtime dispatch is driven by context-boundary reason, trace scope, source refs, expected output, constraints, and budgets.
 
 ## Product UI
 
@@ -253,6 +261,15 @@ A non-canonical project expression that still has a project-specific meaning bec
 - Allowed compatibility tokens: `.codewiki/validation/**`, `src/validation/**`, `validation_refs`, `validation-gateway.md`, `codewiki-validation` skill.
 - Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
 - Deletion trigger: remove folder/root/loop wording after gate traces and direct gate APIs replace old validation roots.
+
+### role
+
+- Canonical replacement: context-boundary reason, expected output, gate target, trace scope, or compatibility label depending on context.
+- Removed expression pattern: `\b(builder|validator|publisher|planner|reviewer) role\b|role-bound|role-specific|roles? as (policy|scheduling|dispatch)`.
+- Allowed compatibility tokens: `role`, `role=`, `role?:`, `isolation.role`, `worktree.role`, `Role`, `role-worktree`, `builder_session_id`, `builder_claim_id`, `publisher-proof`, existing `.codewiki/session/**` claim records, and migration docs that describe old worktree/session evidence.
+- Allowed source literals: `builder`, `validator`, `publisher`, `planner`, `reviewer` when required by current compatibility schemas, tests, historical records, or external adapter fields.
+- Allowed migration docs: `.codewiki/kb/system/**`, `.codewiki/kb/product/**`.
+- Deletion trigger: remove canonical role wording after runtime dispatch, session queue, worktree isolation, gateway isolation, and tests use context-boundary reason, expected output, source refs, and gate target instead of role as a scheduling or policy axis.
 
 ## Related docs
 

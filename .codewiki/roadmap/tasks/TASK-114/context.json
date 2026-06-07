@@ -1,45 +1,52 @@
 {
   "version": 1,
-  "generated_at": "2026-06-06",
+  "generated_at": "2026-06-07T04:03:54Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-114/context.json",
   "task": {
     "id": "TASK-114",
-    "title": "Encode planning execution graph metadata",
-    "status": "todo",
+    "title": "Encode role-free context-boundary execution graph metadata",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "architecture",
     "change_type": "system",
-    "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, and publisher serialization.",
+    "summary": "Add canonical planning trace fields for work units, dependencies, waves, leases, route-backs, gates, context-boundary handoff, and publication serialization without role-based scheduling.",
     "labels": [
       "DPA-REQ-006",
       "DPA-REQ-007",
+      "RCS-REQ-001",
+      "RCS-REQ-002",
+      "RCS-REQ-003",
       "execution-graph-metadata",
-      "agency-runtime-handoff"
+      "agency-runtime-handoff",
+      "context-boundary",
+      "role-free"
     ],
     "goal": {
-      "outcome": "Planning trace can carry execution graph metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning workers automatically.",
+      "outcome": "Planning trace can carry role-free execution graph/context-boundary metadata that agency/runtime/graph surfaces use for safe parallel implementation handoff without spawning sessions automatically.",
       "acceptance": [
-        "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, roles, required gates, route-back triggers, and publisher serialization.",
+        "Planning build schema or trace data supports work units, dependencies, waves, conflict scopes, lease plan, context-boundary reasons, expected outputs, required gates, route-back triggers, and publication serialization without a canonical role axis.",
         "Agency planning reads or reports execution graph metadata as authorization context while preserving configured budgets and stop gates.",
-        "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh validation, or publisher serialization.",
-        "Graph/read-model projection exposes execution graph metadata as derived view only.",
-        "TASK-specific tests cover execution graph parsing/projection and route-back/serialization metadata."
+        "Runtime/status surfaces can project dispatch intent without bypassing leases, worktrees, fresh gate evaluation, or publication serialization.",
+        "Graph/read-model projection exposes execution graph/context-boundary metadata as a derived view only, not a second canonical graph.",
+        "TASK-specific tests cover execution graph parsing/projection, route-back/serialization metadata, context-boundary reason/expected-output shape, and no required role field."
       ],
       "non_goals": [
-        "Do not spawn background workers automatically.",
-        "Do not bypass artifact leases, validation gates, or publisher serialization.",
-        "Do not create a second canonical graph outside planning trace data."
+        "Do not spawn background sessions automatically in this metadata task.",
+        "Do not bypass artifact leases, gate reports, or publication serialization.",
+        "Do not create a second canonical graph outside planning trace data.",
+        "Do not make role a scheduling, policy, or gate criterion."
       ],
       "verification": [
         "npm run typecheck",
-        "targeted TASK-114 test for planning execution graph metadata",
-        "targeted graph/lens or runtime handoff projection test"
+        "targeted TASK-114 test for role-free planning execution graph metadata",
+        "targeted graph/lens or runtime handoff projection test",
+        "wiki_audit profiles=alignment,lexicon scoped to changed planning/runtime docs and tests"
       ]
     },
     "delta": {
-      "desired": "Planning trace carries canonical execution graph metadata and runtime/graph project it for scheduling context.",
-      "current": "Planning output lacks consistent execution graph metadata for safe parallel implementation handoff.",
-      "closure": "Closed when planning builds can encode and expose worker waves, dependencies, and leases without executing workers."
+      "desired": "Planning trace carries canonical role-free execution graph and context-boundary metadata; runtime/graph project it for scheduling context.",
+      "current": "Planning output lacks consistent execution graph/context-boundary metadata and still references roles as if they could be scheduling fields.",
+      "closure": "Closed when planning builds can encode and expose context-boundary waves, dependencies, expected outputs, gates, and leases without executing sessions or requiring roles."
     }
   }
 }

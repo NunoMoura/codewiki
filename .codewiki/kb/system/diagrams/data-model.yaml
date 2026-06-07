@@ -104,14 +104,17 @@ entities:
       - lenses
       - reconciliation
   - id: resume_context_packet
-    label: Resume context packet
-    storage: tool/command output generated from graph and task context
-    role: bounded continuation input for current or fresh sessions; not durable truth
+    label: Source-backed context packet
+    storage: tool/command output generated from trace pointer, graph lens, and scoped source refs
+    role: high-signal continuation input for compaction, fresh subagent sessions, and replacement sessions; not durable truth
     key_fields:
+      - trace_ref
       - task_id
       - source_refs
+      - expected_output
+      - constraints
+      - content_evidence_requirements
       - preflight
-      - evidence
       - prompt
   - id: agency_contract
     label: Agency contract
@@ -144,7 +147,7 @@ entities:
       - max_attempts
       - run_id
       - run_status
-      - worker/session/claim refs
+      - session/claim refs
       - last_heartbeat_at
       - block_reason
       - trace_refs
@@ -176,7 +179,7 @@ relationships:
     type: maps_to
   - from: state_index
     to: resume_context_packet
-    type: composes
+    type: composes_focused_lens
   - from: agency_contract
     to: resume_context_packet
     type: seeds_auto_pickup
@@ -185,7 +188,7 @@ relationships:
     type: bounds_continuation
   - from: roadmap_task
     to: resume_context_packet
-    type: seeds
+    type: scopes
   - from: loop_trace_file
     to: executable_truth
     type: evidences
@@ -234,6 +237,9 @@ relationships:
   - from: state_index
     to: daemon_job_store
     type: may_derive_runtime_status_from
+  - from: daemon_job_store
+    to: resume_context_packet
+    type: dispatches_context_boundary
   - from: diagram_spec
     to: knowledge_doc
     type: cites_source

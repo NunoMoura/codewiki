@@ -6,7 +6,7 @@ summary: Source concept root for CodeWiki daemon-capable software-development ru
 owners:
   - architecture
   - engineering
-updated: "2026-06-05"
+updated: "2026-06-07"
 diagram_refs:
   - component-map:runtime
   - file-structure-map:runtime_orchestration_boundary
@@ -27,9 +27,11 @@ The long-term CodeWiki distribution should remain Pi-based: CodeWiki configures 
 
 Runtime performs one bounded execution step at a time. Agency decides whether CodeWiki may continue; runtime performs the selected step and stops with evidence. Before claiming scopes or requesting a context boundary, runtime verifies the selected trace/task automation-readiness contract. Missing, expired, ambiguous, blocked, or waiting contracts stop the runner with exact blockers and next safe actions; only `runnable`, `retryable`, or `promotable` contracts may proceed to a decision, planning, implementation, or gate-preparation step.
 
-The daemon can request fresh Pi worker or gate sessions only through an explicit runtime `freshWorkerBridge` adapter port. Command-context `newSession`/`withSession` remains replacement-session support for `/wiki-resume --new`; it is not evidence of parallel worker spawning. The Pi adapter’s supported bridge is subprocess-backed (`pi --mode json -p --no-session`) and marks `chat_context_shared=false`. If the bridge is unavailable, runtime records a precise `platform_limited` blocker with trace/gate/Git refs and manual `/wiki-resume --new` remediation.
+The daemon can request fresh Pi subagent or gate sessions only through an explicit runtime context-boundary adapter port. Command-context `newSession`/`withSession` remains replacement-session support for `/wiki-resume --new`; it is not evidence of parallel subagent spawning. The Pi adapter’s supported bridge is subprocess-backed (`pi --mode json -p --no-session`) and marks `chat_context_shared=false`. If the bridge is unavailable, runtime records a precise `platform_limited` blocker with trace/gate/Git refs and manual `/wiki-resume --new` remediation.
 
-Fresh worker requests carry role, task id, context path, build refs, validation refs, trace refs, gate refs, Git refs, artifact refs, and content-evidence requirements. Dirty implementation handoff requires exact `working_tree_digest` plus patch or worktree handoff refs. Promotion gates such as task-close, sprint-close, ship-ready, publication, and release require immutable content evidence such as commit/tree/package/archive/remote refs. Missing content proof blocks before spawning.
+Runtime dispatch is role-free. Fresh subagent and compaction requests carry a context-boundary reason, trace/task/sprint scope, graph lens, expected output, constraints, source refs, compiler-output refs, gate refs, Git refs, artifact refs, and content-evidence requirements. Compatibility fields may still record old builder/validator/publisher labels, but those labels are not scheduling, policy, or gate criteria. Dirty implementation handoff requires exact `working_tree_digest` plus patch or worktree handoff refs. Promotion gates such as task-close, sprint-close, ship-ready, publication, and release require immutable content evidence such as commit/tree/package/archive/remote refs. Missing content proof blocks before dispatch or compaction pickup.
+
+Runtime keeps spawned and compacted sessions high-signal and low-noise. The Source-backed context packet points to the current trace head or task/sprint scope, graph lens, exact source refs, blockers, artifact status, budget, expected output, and proof requirements. It does not include full chat history, full graph dumps, or unrelated roadmap work.
 
 Daemon/agency completion is the enabling sprint for the broader structure refactor. Until runtime aligns with the three-loop model, telemetry traces, gate diagnostics/remediation, graph readiness queries, fresh worker session spawning, and safe worktree publishing, daemon automation is pilot-capable for observe/maintain or narrow bounded steps rather than broad autonomous refactor execution.
 
@@ -65,6 +67,8 @@ Fail/block boundaries keep the same canonical loop or job blocked until evidence
 - Runtime treats artifact status as temporary coordination evidence.
 - Runtime releases leases it acquires before returning unless the adapter/process fails and records that failure.
 - Runtime requests host capabilities through explicit adapter ports and records platform-limited evidence instead of fabricating behavior.
+- Runtime owns all subagent spawning and context-boundary mechanics; decision, planning, implementation, and gates request boundaries but do not own dispatch.
+- Runtime dispatch and compaction use context-boundary reason, source refs, expected output, constraints, and budgets rather than canonical roles.
 - Dogfood operational state under `.codewiki/runtime/**` is compatibility coordination state, not package source or target truth root.
 
 ## Related docs
@@ -73,4 +77,4 @@ Fail/block boundaries keep the same canonical loop or job blocked until evidence
 - [API](api.md)
 - [Compilers](compilers.md)
 - [Validation Gateway](validation-gateway.md)
-- [Role Worktree Isolation](worktree-isolation.md)
+- [Worktree Isolation](worktree-isolation.md) — compatibility doc retaining historical role wording until source schemas migrate.

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { relative, resolve } from "node:path";
+import { loopGateOwnershipContracts } from "../gateway/loop-contracts.ts";
 import type { WikiProject } from "../project/types.ts";
 import { pathExists } from "../project/local/filesystem.ts";
 import { unique } from "../shared/utils.ts";
@@ -19,6 +20,9 @@ export interface SourceContractSnapshot {
 	>;
 	commands: string[];
 	api_exports: string[];
+	source_roots: string[];
+	loop_roots: string[];
+	forbidden_loop_roots: string[];
 	package: {
 		name: string;
 		type: string;
@@ -58,6 +62,16 @@ async function walkFiles(dir: string): Promise<string[]> {
 			out.push(child);
 	}
 	return out.sort();
+}
+
+async function collectSourceRoots(project: WikiProject): Promise<string[]> {
+	const srcRoot = resolve(project.root, "src");
+	if (!(await pathExists(srcRoot))) return [];
+	const entries = await readdir(srcRoot, { withFileTypes: true });
+	return entries
+		.filter((entry) => entry.isDirectory())
+		.map((entry) => `src/${entry.name}`)
+		.sort();
 }
 
 async function readIfExists(path: string): Promise<string> {
@@ -159,6 +173,9 @@ export async function generateSourceContractSnapshot(
 	}
 
 	const packageContract = await readPackageContract(project);
+	const sourceRoots = await collectSourceRoots(project);
+	const loopCatalog = loopGateOwnershipContracts();
+	const loopRoots = loopCatalog.loops.map((contract) => `src/${contract.loop}`);
 	const relSourceFiles = unique(
 		[...sourceFiles, ...apiFiles, resolve(project.root, "package.json")].map(
 			(file) => normalizeRel(relative(project.root, file)),
@@ -174,6 +191,9 @@ export async function generateSourceContractSnapshot(
 		),
 		commands: unique(commandNames).sort(),
 		api_exports: unique(apiExports).sort(),
+		source_roots: sourceRoots,
+		loop_roots: loopRoots,
+		forbidden_loop_roots: [...loopCatalog.forbidden_loop_roots].sort(),
 		package: packageContract,
 		source_files: relSourceFiles,
 	};

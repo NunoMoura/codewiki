@@ -365,6 +365,41 @@ function apiFacadeIssues(
 	}
 }
 
+function loopRootContractIssues(
+	snapshot: SourceContractSnapshot,
+	issues: AuditIssue[],
+): void {
+	const sourceRoots = new Set(snapshot.source_roots);
+	const expectedLoopRoots = [...snapshot.loop_roots].sort();
+	if (
+		expectedLoopRoots.length !== 3 ||
+		JSON.stringify(expectedLoopRoots) !==
+			JSON.stringify(["src/decision", "src/implementation", "src/planning"])
+	) {
+		issues.push(
+			createIssue(
+				"error",
+				"loop-root-contract-invalid",
+				"Loop gate ownership contract must expose exactly decision, planning, and implementation source roots.",
+				"src/gateway/loop-contracts.ts",
+				expectedLoopRoots,
+			),
+		);
+	}
+	for (const forbidden of snapshot.forbidden_loop_roots) {
+		if (!sourceRoots.has(forbidden)) continue;
+		issues.push(
+			createIssue(
+				"error",
+				"forbidden-loop-root-present",
+				`${forbidden} would create a fourth workflow loop/root; publication and validation remain under implementation-owned gateway compatibility.`,
+				forbidden,
+				[forbidden],
+			),
+		);
+	}
+}
+
 async function fingerprintFile(
 	project: WikiProject,
 	relPath: string,
@@ -426,11 +461,13 @@ export async function auditSourceContract(
 	staleToolNamespaceIssues(expected.tools, snapshot.tools, issues);
 	packageEntryIssues(snapshot, expected, issues);
 	apiFacadeIssues(snapshot, issues);
+	loopRootContractIssues(snapshot, issues);
 	const files = unique([
 		...snapshot.source_files,
 		...expected.sources,
 		"src/api/index.ts",
 		"src/api/tools.ts",
+		"src/gateway/loop-contracts.ts",
 		"package.json",
 	]).sort();
 	return {
@@ -451,6 +488,7 @@ export async function auditSourceContract(
 		evidence_refs: [
 			"src/checks/source-contract.ts",
 			"src/checks/source-contract-snapshot.ts",
+			"src/gateway/loop-contracts.ts",
 			"README.md",
 			".codewiki/kb/system/api.md",
 		],

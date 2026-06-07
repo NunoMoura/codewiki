@@ -21,6 +21,7 @@ const expectedFixture = JSON.parse(
 async function writeFixtureProject({
 	toolName = "wiki_state",
 	commandName = "wiki-status",
+	forbiddenRoot,
 } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-source-contract-"));
 	await mkdir(resolve(root, ".codewiki/kb/system"), { recursive: true });
@@ -66,6 +67,10 @@ async function writeFixtureProject({
 		resolve(root, "src/adapters/pi/index.ts"),
 		`export function registerPiAdapter(pi) {\n\tpi.registerTool({ name: "${toolName}" });\n\tpi.registerCommand("${commandName}", {});\n}\n`,
 	);
+	if (forbiddenRoot) {
+		await mkdir(resolve(root, forbiddenRoot), { recursive: true });
+		await writeFile(resolve(root, forbiddenRoot, "index.ts"), "export {};\n");
+	}
 	return { root, project: { root, label: "fixture" } };
 }
 
@@ -136,6 +141,30 @@ try {
 	}
 
 	{
+		const { root, project } = await writeFixtureProject({
+			forbiddenRoot: "src/validation",
+		});
+		try {
+			const audit = await auditSourceContract(project, {
+				include_fingerprints: false,
+			});
+			assert.equal(
+				audit.status,
+				"fail",
+				"source contract should block a validation loop/root",
+			);
+			assert.ok(
+				audit.issues.some(
+					(issue) => issue.kind === "forbidden-loop-root-present",
+				),
+				"validation/publish roots should be forbidden as fourth loops",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	}
+
+	{
 		const project = await loadProject(repoRoot);
 		const report = await executeCodewikiAudit(project, {
 			profiles: ["source-contract"],
@@ -155,6 +184,18 @@ try {
 			result.details.snapshot.commands.includes("wiki-status"),
 			"repo snapshot should include legacy command names",
 		);
+		assert.deepEqual(
+			result.details.snapshot.loop_roots,
+			["src/decision", "src/planning", "src/implementation"],
+			"repo source contract should expose exactly three loop roots",
+		);
+		for (const forbidden of result.details.snapshot.forbidden_loop_roots) {
+			assert.equal(
+				result.details.snapshot.source_roots.includes(forbidden),
+				false,
+				`${forbidden} must not be a present source root`,
+			);
+		}
 	}
 
 	console.log("✓ source contract check smoke passed");
