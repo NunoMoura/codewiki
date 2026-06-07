@@ -35,7 +35,7 @@ export interface CodewikiRuntimeResult {
 	claim_id?: string;
 	scopes: string[];
 	artifact_statuses?: ArtifactStatusRecord[];
-	context_boundary?: Record<string, unknown>;
+	context_boundary?: CodewikiSourceBackedContextBoundary | Record<string, unknown>;
 	gateway?: Record<string, unknown>;
 	fresh_worker?: CodewikiFreshWorkerResult;
 	budget_used: CodewikiRuntimeBudgetUsage;
@@ -268,6 +268,30 @@ export type CodewikiFreshWorkerRole =
 
 export type CodewikiFreshWorkerContentMode = "clean" | "dirty" | "immutable";
 
+export interface CodewikiSourceBackedContextBoundary {
+	reason: string;
+	task_id?: string;
+	sprint_id?: string;
+	trace_refs: string[];
+	gate_refs: string[];
+	source_refs: string[];
+	artifact_refs: ArtifactRef[];
+	graph_lens: string;
+	expected_output: string;
+	constraints: Record<string, unknown>;
+	blockers: string[];
+	artifact_status: ArtifactStatusRecord[];
+	budget: AgencyBudget;
+	content_evidence_requirements: string[];
+	chat_history_included: false;
+	full_graph_included: false;
+	compatibility: {
+		role?: CodewikiFreshWorkerRole;
+		worker_profile?: CodewikiDaemonWorkerProfile;
+		notes: string[];
+	};
+}
+
 export interface CodewikiFreshWorkerContentEvidence {
 	mode: CodewikiFreshWorkerContentMode;
 	working_tree_digest?: string;
@@ -283,7 +307,8 @@ export interface CodewikiFreshWorkerContentEvidence {
 }
 
 export interface CodewikiFreshWorkerRequest {
-	role: CodewikiFreshWorkerRole;
+	role?: CodewikiFreshWorkerRole;
+	compatibility_role?: CodewikiFreshWorkerRole;
 	task_id: string;
 	reason: string;
 	requested_at: string;
@@ -302,6 +327,8 @@ export interface CodewikiFreshWorkerRequest {
 	gate_refs: string[];
 	git_refs: string[];
 	artifact_refs: ArtifactRef[];
+	source_refs: string[];
+	context_boundary: CodewikiSourceBackedContextBoundary;
 	content_evidence: CodewikiFreshWorkerContentEvidence;
 }
 

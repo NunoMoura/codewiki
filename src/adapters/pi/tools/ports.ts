@@ -143,6 +143,12 @@ function formatSpawnError(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }
 
+function freshWorkerRequestLabel(request: CodewikiFreshWorkerRequest): string {
+	return request.compatibility_role
+		? `${request.compatibility_role} compatibility worker`
+		: "context-boundary worker";
+}
+
 function platformLimitedFreshWorker(
 	request: CodewikiFreshWorkerRequest,
 	summary: string,
@@ -201,10 +207,11 @@ export function piFreshWorkerBridge(
 		requestFreshWorker: (request) => {
 			const args = ["--mode", "json", "-p", "--no-session", request.prompt];
 			const invocation = getPiInvocation(args, options);
+			const workerLabel = freshWorkerRequestLabel(request);
 			if (!executableExists(invocation.command)) {
 				return platformLimitedFreshWorker(
 					request,
-					`Fresh ${request.role} worker for ${request.task_id} unavailable: Pi subprocess command ${invocation.command} is not executable.`,
+					`Fresh ${workerLabel} for ${request.task_id} unavailable: Pi subprocess command ${invocation.command} is not executable.`,
 					[...invocation.evidence, `missing_executable:${invocation.command}`],
 					[
 						"Install or expose the Pi CLI/package entrypoint on PATH, or use manual /wiki-resume --new fallback.",
@@ -223,7 +230,7 @@ export function piFreshWorkerBridge(
 			} catch (error) {
 				return platformLimitedFreshWorker(
 					request,
-					`Fresh ${request.role} worker for ${request.task_id} unavailable: Pi subprocess spawn failed (${formatSpawnError(error)}).`,
+					`Fresh ${workerLabel} for ${request.task_id} unavailable: Pi subprocess spawn failed (${formatSpawnError(error)}).`,
 					[...invocation.evidence, `spawn_error:${formatSpawnError(error)}`],
 					[
 						"Fix the local Pi subprocess invocation or use manual /wiki-resume --new fallback.",
@@ -236,7 +243,7 @@ export function piFreshWorkerBridge(
 			if (!child.pid) {
 				return platformLimitedFreshWorker(
 					request,
-					`Fresh ${request.role} worker for ${request.task_id} unavailable: Pi subprocess did not provide a worker pid.`,
+					`Fresh ${workerLabel} for ${request.task_id} unavailable: Pi subprocess did not provide a worker pid.`,
 					[...invocation.evidence, "spawn_pid:missing"],
 					[
 						"Check Pi subprocess permissions/entrypoint or use manual /wiki-resume --new fallback.",
@@ -246,11 +253,13 @@ export function piFreshWorkerBridge(
 			child.unref();
 			return {
 				status: "requested",
-				summary: `Requested fresh ${request.role} worker for ${request.task_id} through Pi subprocess bridge.`,
+				summary: `Requested fresh ${workerLabel} for ${request.task_id} through Pi subprocess bridge.`,
 				request,
 				worker: {
 					session_id: `pi-subprocess-${child.pid}`,
-					agent_name: `CodeWiki ${request.role}`,
+					agent_name: request.compatibility_role
+						? `CodeWiki ${request.compatibility_role}`
+						: "CodeWiki context-boundary",
 					pid: child.pid,
 					invocation: [
 						invocation.command,
@@ -260,7 +269,7 @@ export function piFreshWorkerBridge(
 				},
 				blockers: [],
 				handoff: {
-					summary: `Fresh ${request.role} worker requested for ${request.task_id}.`,
+					summary: `Fresh ${workerLabel} requested for ${request.task_id}.`,
 					build_refs: request.build_refs,
 					validation_refs: request.validation_refs,
 					content_refs: request.content_evidence.content_refs,

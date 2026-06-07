@@ -18,6 +18,10 @@ export function buildCodewikiResumeKickoff(input: {
 	taskId?: string | null;
 	contextPath?: string | null;
 	sourceRefs?: string[];
+	graphLens?: string;
+	expectedOutput?: string;
+	constraints?: Record<string, unknown>;
+	contentEvidenceRequirements?: string[];
 	policy: EffectiveAgencyPolicy;
 }): CodewikiResumeKickoffMessage {
 	const generatedAt = input.generatedAt ?? nowIso();
@@ -35,6 +39,10 @@ export function buildCodewikiResumeKickoff(input: {
 		`Context packet: ${input.contextPath || "—"}`,
 		`Agency: level=${input.policy.level}; approval=${input.policy.approval_cadence}; reset_auto_pickup=${resetAutoPickup ? "on" : "off"}`,
 		`Source refs: ${sourceRefs.slice(0, 8).join(", ") || "—"}`,
+		...(input.graphLens ? [`Graph lens: ${input.graphLens}`] : []),
+		...(input.expectedOutput
+			? [`Expected output: ${input.expectedOutput}`]
+			: []),
 		"",
 		"Proceed from this CodeWiki source-backed kickoff. Do not depend on pre-reset chat history.",
 		"",
@@ -51,6 +59,10 @@ export function buildCodewikiResumeKickoff(input: {
 			taskId: input.taskId ?? null,
 			contextPath: input.contextPath ?? null,
 			sourceRefs,
+			graphLens: input.graphLens ?? null,
+			expectedOutput: input.expectedOutput ?? null,
+			constraints: input.constraints ?? {},
+			contentEvidenceRequirements: input.contentEvidenceRequirements ?? [],
 			agencyLevel: input.policy.level,
 			approvalCadence: input.policy.approval_cadence,
 			contextResetAutoPickup: resetAutoPickup,

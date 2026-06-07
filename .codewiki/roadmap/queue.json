@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-07T05:12:55Z",
+  "updated": "2026-06-07T07:20:52Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -1082,7 +1082,7 @@
         "closure": "Closed when tests prove runtime context boundaries are source-backed, role-free, content-evidence aware, platform-limited when host spawn is unavailable, and reusable for compaction and fresh gate handoff."
       },
       "created": "2026-06-07",
-      "updated": "2026-06-07T04:06:58Z"
+      "updated": "2026-06-07T07:20:52Z"
     }
   },
   "sprints": {

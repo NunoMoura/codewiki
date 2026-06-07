@@ -30,6 +30,7 @@ import { registerCodewikiResumeContextTool } from "./tools/resume-context.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
 import { installCodewikiPromptContract } from "./prompt-contract.ts";
+import { installCodewikiContextProjection } from "./context-projection.ts";
 import {
 	buildPostGatewayContextRefreshRequest,
 	installCodewikiCompaction,
@@ -105,6 +106,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerBootstrapFeatures(pi);
 	installCodewikiCompaction(pi);
 	installCodewikiPromptContract(pi);
+	installCodewikiContextProjection(pi);
 	let disposeArtifactWake: (() => void) | null = null;
 
 	pi.on("session_shutdown", () => {

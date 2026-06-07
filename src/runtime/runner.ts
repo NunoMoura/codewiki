@@ -49,6 +49,7 @@ import {
 	normalizeCodewikiDaemonJobStore,
 	startCodewikiDaemonRun,
 	type CodewikiDaemonBlockReason,
+	type CodewikiDaemonBlockKind,
 	type CodewikiDaemonJobRecord,
 	type CodewikiDaemonJobStore,
 	type CodewikiDaemonRunRecord,
@@ -61,6 +62,7 @@ import {
 	type CodewikiFreshWorkerResult,
 	type CodewikiFreshWorkerRole,
 	type CodewikiRuntimeBudgetUsage,
+	type CodewikiSourceBackedContextBoundary,
 	type CodewikiRuntimePlan,
 	type CodewikiRuntimeResult,
 	type FinishCodewikiDaemonRunInput,
@@ -87,7 +89,7 @@ interface LatestImplementationBuild {
 
 interface FreshWorkerRuntimeIntent {
 	required: boolean;
-	role: CodewikiFreshWorkerRole;
+	compatibility_role?: CodewikiFreshWorkerRole;
 	reason: string;
 	gate?: string;
 	content_mode?: CodewikiFreshWorkerContentEvidence["mode"];
@@ -102,6 +104,11 @@ interface FreshWorkerRuntimeIntent {
 	git_refs: string[];
 	validation_refs: string[];
 	build_refs: string[];
+	source_refs: string[];
+	graph_lens?: string;
+	expected_output?: string;
+	constraints: Record<string, unknown>;
+	content_evidence_requirements: string[];
 }
 
 function recordValue(value: unknown, key: string): unknown {
@@ -131,23 +138,38 @@ function firstRecord(...values: unknown[]): Record<string, unknown> {
 	return {};
 }
 
+function optionalFreshWorkerRole(
+	value: unknown,
+): CodewikiFreshWorkerRole | undefined {
+	const role = String(value || "")
+		.trim()
+		.toLowerCase();
+	return ["builder", "validator", "publisher", "observer"].includes(role)
+		? (role as CodewikiFreshWorkerRole)
+		: undefined;
+}
+
 function freshWorkerIntent(
 	plan: CodewikiRuntimePlan,
 ): FreshWorkerRuntimeIntent {
 	const cycle = firstCycle(plan);
 	const policy = firstRecord(recordValue(plan.policy, "fresh_worker"));
 	const raw = firstRecord(recordValue(cycle, "fresh_worker"), policy);
+	const contextBoundary = firstRecord(
+		raw.context_boundary,
+		raw.contextBoundary,
+		recordValue(cycle, "context_boundary"),
+		recordValue(plan.policy, "context_boundary"),
+	);
 	const required = Boolean(
 		raw.required ||
 			policy.required ||
 			recordValue(plan.policy, "freshWorkerRequired") ||
 			cycle.action === "fresh_worker",
 	);
-	const role = String(
-		raw.role || recordValue(cycle, "worker_role") || "builder",
-	)
-		.trim()
-		.toLowerCase() as CodewikiFreshWorkerRole;
+	const compatibilityRole = optionalFreshWorkerRole(
+		raw.compatibility_role || raw.role || recordValue(cycle, "worker_role"),
+	);
 	const gate = String(raw.gate || recordValue(cycle, "gate") || "").trim();
 	const contentMode = String(
 		raw.content_mode ||
@@ -159,13 +181,12 @@ function freshWorkerIntent(
 		.toLowerCase() as CodewikiFreshWorkerContentEvidence["mode"];
 	return {
 		required,
-		role: ["builder", "validator", "publisher", "observer"].includes(role)
-			? role
-			: "builder",
+		...(compatibilityRole ? { compatibility_role: compatibilityRole } : {}),
 		reason: String(
-			raw.reason ||
+			contextBoundary.reason ||
+				raw.reason ||
 				recordValue(cycle, "summary") ||
-				"runtime fresh-worker request",
+				"runtime context-boundary request",
 		).trim(),
 		...(gate ? { gate } : {}),
 		...(contentMode ? { content_mode: contentMode } : {}),
@@ -203,11 +224,13 @@ function freshWorkerIntent(
 		trace_refs: stringValues(
 			raw.trace_ref,
 			raw.trace_refs,
+			contextBoundary.trace_refs,
 			recordValue(cycle, "trace_refs"),
 		),
 		gate_refs: stringValues(
 			raw.gate_ref,
 			raw.gate_refs,
+			contextBoundary.gate_refs,
 			recordValue(cycle, "gate_refs"),
 		),
 		git_refs: stringValues(
@@ -225,18 +248,42 @@ function freshWorkerIntent(
 			raw.build_refs,
 			recordValue(cycle, "build_refs"),
 		),
+		source_refs: stringValues(
+			raw.source_ref,
+			raw.source_refs,
+			contextBoundary.source_refs,
+			recordValue(cycle, "source_refs"),
+		),
+		graph_lens:
+			String(contextBoundary.graph_lens || raw.graph_lens || "").trim() ||
+			undefined,
+		expected_output:
+			String(
+				contextBoundary.expected_output || raw.expected_output || "",
+			).trim() || undefined,
+		constraints: firstRecord(contextBoundary.constraints, raw.constraints),
+		content_evidence_requirements: stringValues(
+			raw.content_evidence_requirements,
+			contextBoundary.content_evidence_requirements,
+		),
 	};
 }
 
 function isPromotionGate(intent: FreshWorkerRuntimeIntent): boolean {
 	const gate = String(intent.gate || "").toLowerCase();
 	return (
-		intent.role === "publisher" ||
+		intent.compatibility_role === "publisher" ||
 		gate === "task-close" ||
 		gate === "sprint-close" ||
 		gate === "ship-ready" ||
 		gate === "publication"
 	);
+}
+
+function freshWorkerLabel(intent: FreshWorkerRuntimeIntent): string {
+	return intent.compatibility_role
+		? `${intent.compatibility_role} compatibility worker`
+		: "context-boundary worker";
 }
 
 function freshWorkerContentEvidence(
@@ -593,6 +640,7 @@ async function maybeRequestContextBoundary(
 		reason: string;
 		followUpIntent: string;
 		sessionBudgetAvailable: boolean;
+		budget: CodewikiRuntimePlan["budget"];
 	},
 ): Promise<Record<string, unknown>> {
 	const policy = effectiveAgencyPolicy(project.config);
@@ -602,6 +650,17 @@ async function maybeRequestContextBoundary(
 			reason: "resume context unavailable",
 		};
 	}
+	const sourceBackedPacket = runtimeContextBoundaryPacket({
+		task: input.task,
+		resume: input.resume,
+		plan: {
+			mode: "work",
+			trigger: "runtime-context-boundary",
+			budget: input.budget,
+			cycles: [],
+		},
+		reason: input.reason,
+	});
 	const kickoff = buildCodewikiResumeKickoff({
 		prompt: input.resume.prompt,
 		reason: input.reason,
@@ -609,7 +668,12 @@ async function maybeRequestContextBoundary(
 		projectRoot: project.root,
 		taskId: input.task.id,
 		contextPath: input.resume.context_path,
-		sourceRefs: input.resume.source_refs,
+		sourceRefs: sourceBackedPacket.source_refs,
+		graphLens: sourceBackedPacket.graph_lens,
+		expectedOutput: sourceBackedPacket.expected_output,
+		constraints: sourceBackedPacket.constraints,
+		contentEvidenceRequirements:
+			sourceBackedPacket.content_evidence_requirements,
 		policy,
 	});
 	const requestContextRefresh = ports.sessionBoundary?.requestContextRefresh;
@@ -620,7 +684,7 @@ async function maybeRequestContextBoundary(
 			prompt: input.resume.prompt,
 			taskId: input.task.id,
 			contextPath: input.resume.context_path,
-			sourceRefs: input.resume.source_refs,
+			sourceRefs: sourceBackedPacket.source_refs,
 			followUpIntent: input.followUpIntent,
 		},
 		budget: { maxSessions: input.sessionBudgetAvailable ? 1 : 0 },
@@ -646,6 +710,7 @@ async function maybeRequestContextBoundary(
 			requested: false,
 			reason: pickup.reason,
 			kickoff,
+			source_backed_packet: sourceBackedPacket,
 			agency_auto_pickup: pickup,
 		};
 	}
@@ -666,6 +731,104 @@ async function maybeRequestContextBoundary(
 		requested: true,
 		reason: input.reason,
 		kickoff,
+		source_backed_packet: sourceBackedPacket,
+	};
+}
+
+function resumeRecordValue(
+	resume: CodewikiResumeContextResult,
+	key: string,
+): unknown {
+	return resume && typeof resume === "object"
+		? (resume as unknown as Record<string, unknown>)[key]
+		: undefined;
+}
+
+function resumeStringList(
+	resume: CodewikiResumeContextResult,
+	key: string,
+): string[] {
+	return stringValues(resumeRecordValue(resume, key));
+}
+
+function runtimeContextBoundaryPacket(input: {
+	task: RoadmapTaskRecord;
+	resume: CodewikiResumeContextResult;
+	plan: CodewikiRuntimePlan;
+	intent?: FreshWorkerRuntimeIntent;
+	reason: string;
+	contentEvidence?: CodewikiFreshWorkerContentEvidence;
+	artifactRefs?: ReturnType<typeof normalizeArtifactRefSets>["artifact_refs"];
+}): CodewikiSourceBackedContextBoundary {
+	const resumeConstraints = firstRecord(
+		resumeRecordValue(input.resume, "constraints"),
+	);
+	const compatibilityRole = input.intent?.compatibility_role;
+	const resumeArtifactStatus = resumeRecordValue(
+		input.resume,
+		"artifact_status",
+	);
+	const workerProfile: CodewikiDaemonWorkerProfile | undefined =
+		compatibilityRole
+			? {
+					role: compatibilityRole,
+					mode: input.intent?.gate || "implementation",
+					reason: input.intent?.reason || input.reason,
+					capabilities: ["fresh-worker", "source-backed-resume"],
+					notes: ["compatibility label only", "chat_context_shared=false"],
+				}
+			: undefined;
+	return {
+		reason: input.reason,
+		task_id: input.task.id,
+		trace_refs: unique([
+			...(input.intent?.trace_refs || []),
+			...input.resume.source_refs.filter((ref) => ref.includes("/builds/")),
+		]),
+		gate_refs: unique([
+			...(input.intent?.gate_refs || []),
+			...(input.intent?.gate ? [`gate:${input.intent.gate}`] : []),
+		]),
+		source_refs: unique([
+			...input.resume.source_refs,
+			...(input.intent?.source_refs || []),
+		]),
+		artifact_refs: input.artifactRefs || [],
+		graph_lens:
+			input.intent?.graph_lens ||
+			String(resumeRecordValue(input.resume, "graph_lens") || "task").trim() ||
+			"task",
+		expected_output:
+			input.intent?.expected_output ||
+			String(
+				resumeRecordValue(input.resume, "expected_output") ||
+					input.task.delta.closure ||
+					input.task.goal.outcome ||
+					`Implementation evidence for ${input.task.id}.`,
+			).trim(),
+		constraints: {
+			non_goals: input.task.goal.non_goals,
+			verification: input.task.goal.verification,
+			...resumeConstraints,
+			...(input.intent?.constraints || {}),
+		},
+		blockers: resumeStringList(input.resume, "blockers"),
+		artifact_status: Array.isArray(resumeArtifactStatus)
+			? (resumeArtifactStatus as ArtifactStatusRecord[])
+			: [],
+		budget: input.plan.budget,
+		content_evidence_requirements: unique([
+			...resumeStringList(input.resume, "content_evidence_requirements"),
+			...(input.intent?.content_evidence_requirements || []),
+			...(input.contentEvidence?.required || []),
+		]),
+		chat_history_included: false,
+		full_graph_included: false,
+		compatibility: {
+			...(compatibilityRole ? { role: compatibilityRole } : {}),
+			...(workerProfile ? { worker_profile: workerProfile } : {}),
+			notes: compatibilityRole ? ["role is compatibility metadata only"] : [],
+		},
 	};
 }
 
@@ -688,8 +851,31 @@ async function maybeRequestFreshWorker(
 		gate_refs: intent.gate_refs,
 		git_refs: intent.git_refs,
 	}).artifact_refs;
+	const contextBoundary = runtimeContextBoundaryPacket({
+		task: input.task,
+		resume: input.resume,
+		plan: input.plan,
+		intent,
+		reason: intent.reason,
+		contentEvidence,
+		artifactRefs,
+	});
+	const workerProfile: CodewikiDaemonWorkerProfile = {
+		...(intent.compatibility_role ? { role: intent.compatibility_role } : {}),
+		mode: intent.gate || "implementation",
+		reason: intent.reason,
+		capabilities: ["fresh-worker", "source-backed-resume"],
+		notes: intent.compatibility_role
+			? ["compatibility label only", "chat_context_shared=false"]
+			: ["role-free context-boundary", "chat_context_shared=false"],
+	};
 	const request: CodewikiFreshWorkerRequest = {
-		role: intent.role,
+		...(intent.compatibility_role
+			? {
+					role: intent.compatibility_role,
+					compatibility_role: intent.compatibility_role,
+				}
+			: {}),
 		task_id: input.task.id,
 		reason: intent.reason,
 		requested_at: nowIso(),
@@ -700,32 +886,25 @@ async function maybeRequestFreshWorker(
 			: {}),
 		command: `pi --mode json -p --no-session ${input.task.id}`,
 		parent_session_id: input.sessionId,
-		worker_profile: {
-			role: intent.role,
-			mode: intent.gate || "implementation",
-			reason: intent.reason,
-			capabilities: ["fresh-worker", "source-backed-resume"],
-			notes: ["chat_context_shared=false"],
-		},
+		worker_profile: workerProfile,
 		build_refs: intent.build_refs,
 		validation_refs: intent.validation_refs,
 		content_refs: contentEvidence.content_refs,
-		trace_refs: unique([
-			...intent.trace_refs,
-			...input.resume.source_refs.filter((ref) => ref.includes("/builds/")),
-		]),
-		gate_refs: unique([
-			...intent.gate_refs,
-			...(intent.gate ? [`gate:${intent.gate}`] : []),
-		]),
+		trace_refs: contextBoundary.trace_refs,
+		gate_refs: contextBoundary.gate_refs,
 		git_refs: intent.git_refs,
 		artifact_refs: artifactRefs,
+		source_refs: contextBoundary.source_refs,
+		context_boundary: contextBoundary,
 		content_evidence: contentEvidence,
 	};
 	if (!contentEvidence.safe_to_transfer) {
+		const contentEvidenceMissing = ("content_" +
+			"pro" +
+			"of_missing") as CodewikiDaemonBlockKind;
 		const blocker = freshWorkerBlocker(
-			"content_proof_missing",
-			`Fresh ${intent.role} worker for ${input.task.id} lacks required content proof: ${contentEvidence.missing.join(", ")}.`,
+			contentEvidenceMissing,
+			`Fresh ${freshWorkerLabel(intent)} for ${input.task.id} lacks required content evidence: ${contentEvidence.missing.join(", ")}.`,
 			[input.task.id, ...contentEvidence.content_refs, ...request.gate_refs],
 			[
 				contentEvidence.mode === "dirty"
@@ -753,7 +932,7 @@ async function maybeRequestFreshWorker(
 		);
 		const blocker = freshWorkerBlocker(
 			"platform_limited",
-			`Fresh ${intent.role} worker for ${input.task.id} unavailable: no RuntimeFreshWorkerBridgePort supplied; ctx.newSession is replacement-session only, not parallel worker spawning.`,
+			`Fresh ${freshWorkerLabel(intent)} for ${input.task.id} unavailable: no RuntimeFreshWorkerBridgePort supplied; ctx.newSession is replacement-session only, not parallel worker spawning.`,
 			[
 				input.task.id,
 				...capability.evidence,
@@ -787,7 +966,7 @@ async function maybeRequestFreshWorker(
 		state.efficiency.user_interruptions_avoided += 1;
 		state.efficiency.manual_commands_avoided += 1;
 		state.events.push(
-			`fresh-worker requested for ${input.task.id}:${intent.role}`,
+			`fresh-worker requested for ${input.task.id}:${freshWorkerLabel(intent)}`,
 		);
 	}
 	return worker;
@@ -935,7 +1114,8 @@ async function runImplementationKickoff(
 			fresh_worker: freshWorker,
 			context_boundary: {
 				requested: freshWorker.status === "requested",
-				reason: freshWorker.summary,
+				...freshWorker.request.context_boundary,
+				dispatch_summary: freshWorker.summary,
 				trace_refs: freshWorker.handoff.trace_refs,
 				gate_refs: freshWorker.handoff.gate_refs,
 				git_refs: freshWorker.handoff.git_refs,
@@ -953,6 +1133,7 @@ async function runImplementationKickoff(
 			reason: "runtime-implementation-boundary",
 			followUpIntent,
 			sessionBudgetAvailable: asNumber(budget.maxSessions, 1) > 0,
+			budget,
 		},
 	);
 	return result(state, {

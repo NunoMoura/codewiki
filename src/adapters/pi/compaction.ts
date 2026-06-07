@@ -18,7 +18,7 @@ import {
 } from "../../agency/types.ts";
 import { planAgencyAutoPickup } from "../../agency/auto-pickup.ts";
 
-const DEFAULT_CONTEXT_REFRESH_THRESHOLD_PERCENT = 80;
+const DEFAULT_CONTEXT_REFRESH_THRESHOLD_PERCENT = 70;
 const CONTEXT_REFRESH_PREFIX = "CodeWiki context refresh";
 
 export { CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE, buildCodewikiResumeKickoff };
@@ -355,10 +355,15 @@ export async function buildCodewikiCompactionSummary(
 	const requestSourceRefs = normalizeContextRefreshSourceRefs(
 		request.sourceRefs,
 	);
-	const hasSourceRefIntent = Boolean(request.followUpIntent?.toLowerCase().includes("source refs"));
-	const sourceRefIntent = requestSourceRefs.length && !hasSourceRefIntent
-		? ["Source refs:", ...requestSourceRefs.map((ref) => `- ${ref}`)].join("\n")
-		: "";
+	const hasSourceRefIntent = Boolean(
+		request.followUpIntent?.toLowerCase().includes("source refs"),
+	);
+	const sourceRefIntent =
+		requestSourceRefs.length && !hasSourceRefIntent
+			? ["Source refs:", ...requestSourceRefs.map((ref) => `- ${ref}`)].join(
+					"\n",
+				)
+			: "";
 	const followUpIntent = [
 		request.followUpIntent,
 		sourceRefIntent,

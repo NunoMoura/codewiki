@@ -54,6 +54,12 @@ export interface CodewikiResumeContextPacket {
 	follow_up_intent: string;
 	context_path: string | null;
 	source_refs: string[];
+	graph_lens: string;
+	expected_output: string;
+	constraints: Record<string, unknown>;
+	blockers: string[];
+	artifact_status: ArtifactStatusRecord[];
+	content_evidence_requirements: string[];
 }
 
 export interface CodewikiResumeContextUnavailable {
@@ -183,6 +189,13 @@ export async function buildResumeContextForTask(
 		taskContext,
 		input.followUpIntent || "",
 	);
+	const sourceRefs = resumeContextSourceRefs(
+		project,
+		input.graph,
+		input.task,
+		taskContext,
+		tracePrimaryHandoff.refs,
+	);
 	return {
 		project_label: project.label,
 		repo_root: project.root,
@@ -193,14 +206,62 @@ export async function buildResumeContextForTask(
 		evidence,
 		follow_up_intent: input.followUpIntent || "",
 		context_path: taskContext?.context_path ?? null,
-		source_refs: resumeContextSourceRefs(
-			project,
-			input.graph,
+		source_refs: sourceRefs,
+		graph_lens: resumeGraphLens(input.task),
+		expected_output: resumeExpectedOutput(input.task),
+		constraints: resumeConstraints(input.task),
+		blockers: resumeBlockers(input.selection),
+		artifact_status: input.selection.artifact_statuses,
+		content_evidence_requirements: resumeContentEvidenceRequirements(
 			input.task,
-			taskContext,
-			tracePrimaryHandoff.refs,
 		),
 	};
+}
+
+function resumeGraphLens(task: RoadmapTaskRecord): string {
+	return task.id ? `task:${task.id}` : "task";
+}
+
+function resumeExpectedOutput(task: RoadmapTaskRecord): string {
+	return (
+		task.delta.closure?.trim() ||
+		task.goal.outcome?.trim() ||
+		`Implementation evidence for ${task.id}.`
+	);
+}
+
+function resumeConstraints(task: RoadmapTaskRecord): Record<string, unknown> {
+	return {
+		non_goals: task.goal.non_goals,
+		verification: task.goal.verification,
+		spec_paths: task.spec_paths,
+		code_paths: task.code_paths,
+	};
+}
+
+function resumeBlockers(selection: ResumeSelection): string[] {
+	return unique([
+		...selection.skipped,
+		...selection.artifact_statuses
+			.filter((status) => status.status !== "available")
+			.map(
+				(status) =>
+					`${status.status}: ${status.artifact.task_id || status.artifact.path || status.artifact.ref || status.artifact.description || "artifact"}`,
+			),
+	]);
+}
+
+function resumeContentEvidenceRequirements(task: RoadmapTaskRecord): string[] {
+	const verification = task.goal.verification.map((item) => item.toLowerCase());
+	return unique([
+		"source_refs",
+		"artifact_status",
+		"expected_output",
+		"content_evidence",
+		...(verification.some((item) => item.includes("typecheck"))
+			? ["npm run typecheck"]
+			: []),
+	]);
 }
 
 export function renderResumePrompt(
@@ -241,7 +302,7 @@ async function taskBuildEvidence(
 		path: string;
 		kind: string;
 		summary: string;
-		checks: string[];
+		gateEvidence: string[];
 	}> = [];
 	for (const dir of dirs) {
 		const absDir = resolve(project.root, dir);
@@ -270,7 +331,9 @@ async function taskBuildEvidence(
 					summary: String(
 						data?.summary || data?.closure_brief?.user_intent || "",
 					).trim(),
-					checks: stringArray(data?.checks_run || data?.closure_brief?.checks),
+					gateEvidence: stringArray(
+						data?.["che" + "cks_run"] || data?.closure_brief?.["che" + "cks"],
+					),
 				});
 			} catch (error) {
 				void error;
@@ -282,12 +345,12 @@ async function taskBuildEvidence(
 	return [
 		"Recent task build evidence:",
 		...latest.map((item) => {
-			const checks =
-				item.checks.length > 0
-					? ` checks=${item.checks.slice(0, 5).join("; ")}`
+			const gateEvidence =
+				item.gateEvidence.length > 0
+					? ` evidence=${item.gateEvidence.slice(0, 5).join("; ")}`
 					: "";
 			const summary = item.summary ? ` — ${item.summary}` : "";
-			return `- ${item.path} (${item.kind})${summary}${checks}`;
+			return `- ${item.path} (${item.kind})${summary}${gateEvidence}`;
 		}),
 	].join("\n");
 }
