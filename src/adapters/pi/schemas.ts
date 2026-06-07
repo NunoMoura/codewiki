@@ -764,6 +764,148 @@ const codewikiEvidenceMappingSchema = Type.Object({
 		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
 	),
 });
+const codewikiPlanningExecutionGraphScopeSchema = Type.Object({
+	layer: Type.Optional(Type.String({ minLength: 1 })),
+	path: Type.Optional(Type.String({ minLength: 1 })),
+	task_id: Type.Optional(Type.String({ minLength: 1 })),
+	ref: Type.Optional(Type.String({ minLength: 1 })),
+	description: Type.Optional(Type.String({ minLength: 1 })),
+});
+
+const codewikiPlanningExecutionGraphContextBoundarySchema = Type.Object({
+	id: Type.Optional(Type.String({ minLength: 1 })),
+	reason: Type.String({ minLength: 1 }),
+	expected_output: Type.String({ minLength: 1 }),
+	trace_ref: Type.Optional(Type.String({ minLength: 1 })),
+	graph_lens: Type.Optional(Type.String({ minLength: 1 })),
+	source_refs: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	constraints: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+	content_evidence_requirements: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+});
+
+const codewikiPlanningExecutionGraphRouteBackSchema = Type.Object({
+	trigger: Type.String({ minLength: 1 }),
+	target_loop: Type.Optional(Type.String({ minLength: 1 })),
+	reason: Type.Optional(Type.String({ minLength: 1 })),
+	evidence: Type.Optional(Type.String({ minLength: 1 })),
+});
+
+const codewikiPlanningExecutionGraphPublicationSchema = Type.Object({
+	required: Type.Optional(Type.Boolean()),
+	serialized_by: Type.Optional(Type.String({ minLength: 1 })),
+	queue: Type.Optional(Type.String({ minLength: 1 })),
+	reason: Type.Optional(Type.String({ minLength: 1 })),
+	gates: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+});
+
+const codewikiPlanningExecutionGraphSchema = Type.Object({
+	canonical_owner: Type.Optional(Type.String({ minLength: 1 })),
+	projection: Type.Optional(Type.String({ minLength: 1 })),
+	work_units: Type.Optional(
+		Type.Array(
+			Type.Object({
+				id: Type.String({ minLength: 1 }),
+				task_id: Type.Optional(Type.String({ minLength: 1 })),
+				summary: Type.String({ minLength: 1 }),
+				depends_on: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+				wave: Type.Optional(Type.String({ minLength: 1 })),
+				conflict_scopes: Type.Optional(
+					Type.Array(codewikiPlanningExecutionGraphScopeSchema, {
+						default: [],
+					}),
+				),
+				lease_scopes: Type.Optional(
+					Type.Array(codewikiPlanningExecutionGraphScopeSchema, {
+						default: [],
+					}),
+				),
+				required_gates: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+				route_back_triggers: Type.Optional(
+					Type.Array(codewikiPlanningExecutionGraphRouteBackSchema, {
+						default: [],
+					}),
+				),
+				context_boundary: Type.Optional(
+					codewikiPlanningExecutionGraphContextBoundarySchema,
+				),
+				expected_output: Type.Optional(Type.String({ minLength: 1 })),
+				publication_serialization: Type.Optional(
+					codewikiPlanningExecutionGraphPublicationSchema,
+				),
+			}),
+			{ default: [] },
+		),
+	),
+	dependencies: Type.Optional(
+		Type.Array(
+			Type.Object({
+				from: Type.String({ minLength: 1 }),
+				to: Type.String({ minLength: 1 }),
+				reason: Type.Optional(Type.String({ minLength: 1 })),
+			}),
+			{ default: [] },
+		),
+	),
+	waves: Type.Optional(
+		Type.Array(
+			Type.Object({
+				id: Type.String({ minLength: 1 }),
+				summary: Type.Optional(Type.String({ minLength: 1 })),
+				work_unit_ids: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+				max_parallel: Type.Optional(Type.Number()),
+				required_gates: Type.Optional(
+					Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+				),
+			}),
+			{ default: [] },
+		),
+	),
+	conflict_scopes: Type.Optional(
+		Type.Array(codewikiPlanningExecutionGraphScopeSchema, { default: [] }),
+	),
+	lease_plan: Type.Optional(
+		Type.Array(
+			Type.Object({
+				work_unit_id: Type.Optional(Type.String({ minLength: 1 })),
+				mode: Type.Optional(Type.String({ minLength: 1 })),
+				reason: Type.Optional(Type.String({ minLength: 1 })),
+				scopes: Type.Optional(
+					Type.Array(codewikiPlanningExecutionGraphScopeSchema, {
+						default: [],
+					}),
+				),
+			}),
+			{ default: [] },
+		),
+	),
+	required_gates: Type.Optional(
+		Type.Array(Type.String({ minLength: 1 }), { default: [] }),
+	),
+	route_back_triggers: Type.Optional(
+		Type.Array(codewikiPlanningExecutionGraphRouteBackSchema, { default: [] }),
+	),
+	context_boundaries: Type.Optional(
+		Type.Array(codewikiPlanningExecutionGraphContextBoundarySchema, {
+			default: [],
+		}),
+	),
+	publication_serialization: Type.Optional(
+		codewikiPlanningExecutionGraphPublicationSchema,
+	),
+});
+
 const codewikiDecisionPropagationResolutionSchema = Type.Object({
 	row_id: Type.Optional(Type.String({ minLength: 1 })),
 	question_id: Type.Optional(Type.String({ minLength: 1 })),
@@ -909,6 +1051,7 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	downstream_question_resolutions: Type.Optional(
 		Type.Array(codewikiDecisionPropagationResolutionSchema),
 	),
+	execution_graph: Type.Optional(codewikiPlanningExecutionGraphSchema),
 	tdd_plan: Type.Optional(Type.Array(Type.String())),
 	candidate_test_files: Type.Optional(Type.Array(Type.String())),
 	candidate_code_paths: Type.Optional(Type.Array(Type.String())),

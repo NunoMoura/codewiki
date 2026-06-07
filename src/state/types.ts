@@ -244,6 +244,7 @@ export interface GraphViews {
 	system_diagrams?: JsonObject;
 	traceability?: JsonObject;
 	semantic_execution_closure?: JsonObject;
+	execution_graph?: JsonObject;
 	artifact_status?: JsonObject;
 	validation?: JsonObject;
 	automation_readiness?: unknown;

@@ -6,7 +6,7 @@ summary: Trace-primary state model where one lifecycle trace records a change fr
 owners:
   - architecture
   - product
-updated: "2026-06-06"
+updated: "2026-06-07"
 diagram_refs:
   - architecture:telemetry
   - data-model:telemetry_trace
@@ -47,7 +47,7 @@ Top-level `lifecycle` is the agent-facing control plane. It owns:
 Loop sections are the evidence/data plane. They own loop-specific records and gate history:
 
 - `decision` owns decision table rows, approvals, KB patch evidence, propagation/no-impact evidence, product/system impact, alternatives, risks, downstream planning questions, and decision gate history;
-- `planning` owns work partitioning, decision-row/requirement coverage, existing-roadmap reconciliation, task/sprint alignment, parallelization contract, path-conflict matrix, lease plan, route-back triggers, verification strategy, and planning gate history;
+- `planning` owns work partitioning, decision-row/requirement coverage, existing-roadmap reconciliation, task/sprint alignment, role-free execution graph metadata, context-boundary handoff requirements, path-conflict matrix, lease plan, route-back triggers, verification strategy, and planning gate history;
 - `implementation` owns work-unit evidence, changed code/test/doc refs, linters/tests, implementation gate history, and optional publication stage.
 
 Multiple loops may be active inside one trace at the same time. Tools must route from `lifecycle.active_loops[]`, not from a single `current_phase` field.
@@ -125,13 +125,19 @@ Hot trace files live under `.codewiki/telemetry/TRACE-*.json`. The canonical sha
     "work_units": [],
     "decision_coverage": [],
     "roadmap_reconciliation": [],
-    "parallelization": {
-      "path_conflicts": [],
+    "execution_graph": {
+      "canonical_owner": "planning_build.trace",
+      "projection": "generated_read_model_only",
+      "durable_truth": false,
+      "work_units": [],
+      "dependencies": [],
       "waves": [],
-      "session_count": 0,
+      "conflict_scopes": [],
       "lease_plan": [],
+      "required_gates": [],
       "route_back_triggers": [],
-      "publisher_serialization": []
+      "context_boundaries": [],
+      "publication_serialization": {}
     },
     "verification_strategy": [],
     "gate_history": []
@@ -236,6 +242,8 @@ Trace/debug audits must answer what was approved, planned, validated, left open,
 
 Generated graph state now carries a `planning_coverage` view for this evidence. It projects accepted decision rows/questions into `implemented`, `active-roadmap`, `deferred`, `no-work`, and `unmapped` coverage states, preserves explicit planning-build `decision_coverage` rows, and preserves `roadmap_reconciliation` states such as `replanned` and `superseded`. Trace-DAG projection also preserves planning `decision_coverage` and `roadmap_reconciliation` rows with JSON pointer refs back to the source trace.
 
+Planning builds may also carry `execution_graph` metadata for role-free execution planning. This metadata is canonical only inside the planning build/trace evidence. Generated graph/read-model views project it as `execution_graph` with `durable_truth=false`, JSON pointer refs, work units, dependencies, waves, conflict scopes, lease plan, required gates, route-back triggers, context-boundary reasons, expected outputs, and publication serialization. Runtime and agency may read that projection as authorization context, but it does not spawn sessions, bypass leases, bypass gates, or become a second canonical graph.
+
 When actionable drift remains, gate history or implementation evidence should carry compact residual coverage: issue key/kind, path or glob, classification, owner refs, trigger/expiry for deferrals, and evidence refs. Do not embed raw linter transcripts.
 
 Trace evidence should start at first accountable semantic intent when trace-primary creation is available; gate pass updates status, not initial accountability.
@@ -253,7 +261,7 @@ Views are generated compact projections, not durable truth. Required trace-first
 - `path` — traces touching a path or glob;
 - `task` — traces tied to a roadmap task;
 - `gate` — current and historical gate verdicts by trace;
-- `runtime` — active leases, workers, jobs, and heartbeats from runtime state;
+- `runtime` — active leases, context-boundary dispatch intent, jobs, and heartbeats from runtime state;
 - `publication` — production-ready and published content evidence chains.
 
 Default Graph lens output returns headers, lifecycle, blockers, next actions, and JSON pointers. Tools expand full sections only on explicit pointer or focused view request. Decision Table `evidence_refs` should use ArtifactRef-shaped entries when a row needs typed refs instead of plain strings.

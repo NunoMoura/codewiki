@@ -420,6 +420,7 @@ export function buildGraphLensViews(input: {
 	fileStructureDrift: CompactFileStructureDrift;
 	claimState: GraphRuntimeLensState;
 	traceDag: ReadModelRecord;
+	planningExecutionGraph: ReadModelRecord;
 	gc: GraphGcView;
 	automationReadiness: AutomationReadinessIndex;
 }) {
@@ -717,6 +718,14 @@ export function buildGraphLensViews(input: {
 				: "No open roadmap task requires action."),
 	};
 	const traceDagSourceRefs = stringList(input.traceDag.source_refs);
+	const executionGraphTaskIndex = recordOrEmpty(
+		input.planningExecutionGraph.by_task,
+	);
+	const selectedExecutionGraphRows = selectedTask
+		? Array.isArray(executionGraphTaskIndex[selectedTask.id])
+			? (executionGraphTaskIndex[selectedTask.id] as unknown[]).slice(0, 8)
+			: []
+		: [];
 	const graphSourceRefs = unique([
 		".codewiki/index_graph.json",
 		".codewiki/roadmap/queue.json",
@@ -849,6 +858,12 @@ export function buildGraphLensViews(input: {
 		blockers: commonBlockers,
 		data: {
 			selected_task: selectedTask ? compactTaskForLens(selectedTask) : null,
+			execution_graph: {
+				durable_truth: input.planningExecutionGraph.durable_truth === true,
+				canonical_owner: input.planningExecutionGraph.canonical_owner,
+				dispatch_axis: input.planningExecutionGraph.dispatch_axis,
+				selected_work_units: selectedExecutionGraphRows,
+			},
 			context_refs: selectedTask
 				? [`.codewiki/roadmap/tasks/${selectedTask.id}/context.json`]
 				: [],
@@ -866,7 +881,16 @@ export function buildGraphLensViews(input: {
 		},
 		nextAction: graphNextAction,
 		blockers: commonBlockers,
-		data: { tasks: taskPreview, trace_dag: recordOrEmpty(input.traceDag.task) },
+		data: {
+			tasks: taskPreview,
+			trace_dag: recordOrEmpty(input.traceDag.task),
+			execution_graph: {
+				selected_work_units: selectedExecutionGraphRows,
+				work_unit_count: Array.isArray(input.planningExecutionGraph.work_units)
+					? input.planningExecutionGraph.work_units.length
+					: 0,
+			},
+		},
 	});
 	const sprintLens = focusedGraphLens("sprint", {
 		summary: "Sprint membership, gates, task scope, and blockers.",
@@ -919,6 +943,30 @@ export function buildGraphLensViews(input: {
 		),
 		data: {
 			trace_dag: recordOrEmpty(input.traceDag.runtime),
+			execution_graph: {
+				durable_truth: input.planningExecutionGraph.durable_truth === true,
+				work_unit_count: Array.isArray(input.planningExecutionGraph.work_units)
+					? input.planningExecutionGraph.work_units.length
+					: 0,
+				conflict_scope_count: Array.isArray(
+					input.planningExecutionGraph.conflict_scopes,
+				)
+					? input.planningExecutionGraph.conflict_scopes.length
+					: 0,
+				lease_count: Array.isArray(input.planningExecutionGraph.lease_plan)
+					? input.planningExecutionGraph.lease_plan.length
+					: 0,
+				context_boundary_count: Array.isArray(
+					input.planningExecutionGraph.context_boundaries,
+				)
+					? input.planningExecutionGraph.context_boundaries.length
+					: 0,
+				publication_serialization: Array.isArray(
+					input.planningExecutionGraph.publication_serialization,
+				)
+					? input.planningExecutionGraph.publication_serialization.slice(0, 4)
+					: [],
+			},
 			active_claim_count: input.claimState.active_claim_count,
 			warning_count: Number(input.claimState.warning_count || 0),
 			conflict_count: Number(input.claimState.conflict_count || 0),

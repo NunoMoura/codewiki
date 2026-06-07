@@ -6,6 +6,7 @@ import type {
 	CodewikiBuildProducesInput,
 	CodewikiBuildRefsInput,
 	CodewikiBuildToolInput,
+	CodewikiPlanningExecutionGraphInput,
 	CodewikiClosureBriefInput,
 	CodewikiDecisionTableRowInput,
 } from "./types.ts";
@@ -396,6 +397,238 @@ function normalizeRoadmapReconciliation(input: CodewikiBuildToolInput) {
 					entry.source_refs.length,
 			),
 		);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizedObject(value: unknown): Record<string, unknown> | undefined {
+	if (!isRecord(value)) return undefined;
+	const out: Record<string, unknown> = {};
+	for (const [key, raw] of Object.entries(value)) {
+		if (key === "role" || key === "roles" || key === "worker_role") continue;
+		if (raw === undefined || raw === null) continue;
+		out[key] = raw;
+	}
+	return Object.keys(out).length ? out : undefined;
+}
+
+function trimUnknownList(value: unknown): string[] {
+	return trimList(Array.isArray(value) ? value : undefined);
+}
+
+function normalizeExecutionGraphScope(value: unknown) {
+	if (!isRecord(value)) return null;
+	const scope = {
+		layer: String(value.layer || "").trim() || undefined,
+		path: String(value.path || "").trim() || undefined,
+		task_id: String(value.task_id || value.taskId || "").trim() || undefined,
+		ref: String(value.ref || "").trim() || undefined,
+		description: String(value.description || "").trim() || undefined,
+	};
+	return Object.values(scope).some(Boolean) ? scope : null;
+}
+
+function normalizeExecutionGraphScopes(value: unknown) {
+	return (Array.isArray(value) ? value : [])
+		.map(normalizeExecutionGraphScope)
+		.filter(Boolean);
+}
+
+function normalizeExecutionGraphRouteBack(value: unknown) {
+	if (!isRecord(value)) return null;
+	const trigger = String(value.trigger || "").trim();
+	const targetLoop = String(value.target_loop || value.to_loop || "").trim();
+	const reason = String(value.reason || value.rationale || "").trim();
+	const evidence = String(value.evidence || "").trim();
+	if (!trigger && !targetLoop && !reason && !evidence) return null;
+	return {
+		trigger: trigger || undefined,
+		target_loop: targetLoop || undefined,
+		reason: reason || undefined,
+		evidence: evidence || undefined,
+	};
+}
+
+function normalizeExecutionGraphRouteBacks(value: unknown) {
+	return (Array.isArray(value) ? value : [])
+		.map(normalizeExecutionGraphRouteBack)
+		.filter(Boolean);
+}
+
+function normalizeExecutionGraphContextBoundary(value: unknown) {
+	if (!isRecord(value)) return null;
+	const reason = String(value.reason || "").trim();
+	const expectedOutput = String(
+		value.expected_output || value.expectedOutput || "",
+	).trim();
+	if (!reason && !expectedOutput) return null;
+	const constraints = normalizedObject(value.constraints);
+	return {
+		id: String(value.id || "").trim() || undefined,
+		reason,
+		expected_output: expectedOutput,
+		trace_ref:
+			String(value.trace_ref || value.traceRef || "").trim() || undefined,
+		graph_lens:
+			String(value.graph_lens || value.graphLens || "").trim() || undefined,
+		source_refs: trimUnknownList(value.source_refs),
+		...(constraints ? { constraints } : {}),
+		content_evidence_requirements: trimUnknownList(
+			value.content_evidence_requirements,
+		),
+	};
+}
+
+function normalizeExecutionGraphContextBoundaries(value: unknown) {
+	return (Array.isArray(value) ? value : [])
+		.map(normalizeExecutionGraphContextBoundary)
+		.filter(Boolean);
+}
+
+function normalizeExecutionGraphPublication(value: unknown) {
+	if (!isRecord(value)) return undefined;
+	const publication = {
+		required: value.required === true,
+		serialized_by: String(value.serialized_by || "").trim() || undefined,
+		queue: String(value.queue || "").trim() || undefined,
+		reason: String(value.reason || "").trim() || undefined,
+		gates: trimUnknownList(value.gates),
+	};
+	return publication.required ||
+		publication.serialized_by ||
+		publication.queue ||
+		publication.reason ||
+		publication.gates.length
+		? publication
+		: undefined;
+}
+
+function normalizeExecutionGraphWorkUnit(value: unknown, index: number) {
+	if (!isRecord(value)) return null;
+	const id = String(
+		value.id || value.work_unit_id || `work-${index + 1}`,
+	).trim();
+	const summary = String(value.summary || value.title || "").trim();
+	if (!id || !summary) return null;
+	const contextBoundary = normalizeExecutionGraphContextBoundary(
+		value.context_boundary,
+	);
+	const publicationSerialization = normalizeExecutionGraphPublication(
+		value.publication_serialization,
+	);
+	return {
+		id,
+		task_id: String(value.task_id || value.taskId || "").trim() || undefined,
+		summary,
+		depends_on: trimUnknownList(value.depends_on),
+		wave: String(value.wave || "").trim() || undefined,
+		conflict_scopes: normalizeExecutionGraphScopes(value.conflict_scopes),
+		lease_scopes: normalizeExecutionGraphScopes(value.lease_scopes),
+		required_gates: trimUnknownList(value.required_gates),
+		route_back_triggers: normalizeExecutionGraphRouteBacks(
+			value.route_back_triggers,
+		),
+		...(contextBoundary ? { context_boundary: contextBoundary } : {}),
+		expected_output:
+			String(value.expected_output || value.expectedOutput || "").trim() ||
+			undefined,
+		...(publicationSerialization
+			? { publication_serialization: publicationSerialization }
+			: {}),
+	};
+}
+
+function normalizeExecutionGraphWave(value: unknown, index: number) {
+	if (!isRecord(value)) return null;
+	const id = String(value.id || `wave-${index + 1}`).trim();
+	if (!id) return null;
+	const rawMaxParallel = Number(value.max_parallel ?? value.maxParallel ?? 0);
+	return {
+		id,
+		summary: String(value.summary || "").trim() || undefined,
+		work_unit_ids: trimUnknownList(value.work_unit_ids),
+		max_parallel: rawMaxParallel > 0 ? rawMaxParallel : undefined,
+		required_gates: trimUnknownList(value.required_gates),
+	};
+}
+
+function normalizeExecutionGraphLease(value: unknown) {
+	if (!isRecord(value)) return null;
+	const scopes = normalizeExecutionGraphScopes(value.scopes);
+	const lease = {
+		work_unit_id:
+			String(value.work_unit_id || value.workUnitId || "").trim() || undefined,
+		mode: String(value.mode || "").trim() || undefined,
+		reason: String(value.reason || "").trim() || undefined,
+		scopes,
+	};
+	return lease.work_unit_id || lease.mode || lease.reason || scopes.length
+		? lease
+		: null;
+}
+
+function normalizeExecutionGraph(input: CodewikiBuildToolInput) {
+	const raw = (
+		input as { execution_graph?: CodewikiPlanningExecutionGraphInput }
+	).execution_graph;
+	if (!isRecord(raw)) return undefined;
+	const workUnits = (Array.isArray(raw.work_units) ? raw.work_units : [])
+		.map(normalizeExecutionGraphWorkUnit)
+		.filter(Boolean);
+	const dependencies = (Array.isArray(raw.dependencies) ? raw.dependencies : [])
+		.map((dependency) => {
+			if (!isRecord(dependency)) return null;
+			const from = String(dependency.from || "").trim();
+			const to = String(dependency.to || "").trim();
+			if (!from || !to) return null;
+			return {
+				from,
+				to,
+				reason: String(dependency.reason || "").trim() || undefined,
+			};
+		})
+		.filter(Boolean);
+	const waves = (Array.isArray(raw.waves) ? raw.waves : [])
+		.map(normalizeExecutionGraphWave)
+		.filter(Boolean);
+	const leasePlan = (Array.isArray(raw.lease_plan) ? raw.lease_plan : [])
+		.map(normalizeExecutionGraphLease)
+		.filter(Boolean);
+	const executionGraph = {
+		canonical_owner:
+			String(raw.canonical_owner || "").trim() || "planning_build.trace",
+		projection:
+			String(raw.projection || "").trim() || "generated_read_model_only",
+		durable_truth: false,
+		work_units: workUnits,
+		dependencies,
+		waves,
+		conflict_scopes: normalizeExecutionGraphScopes(raw.conflict_scopes),
+		lease_plan: leasePlan,
+		required_gates: trimUnknownList(raw.required_gates),
+		route_back_triggers: normalizeExecutionGraphRouteBacks(
+			raw.route_back_triggers,
+		),
+		context_boundaries: normalizeExecutionGraphContextBoundaries(
+			raw.context_boundaries,
+		),
+		publication_serialization: normalizeExecutionGraphPublication(
+			raw.publication_serialization,
+		),
+	};
+	return workUnits.length ||
+		dependencies.length ||
+		waves.length ||
+		executionGraph.conflict_scopes.length ||
+		leasePlan.length ||
+		executionGraph.required_gates.length ||
+		executionGraph.route_back_triggers.length ||
+		executionGraph.context_boundaries.length ||
+		executionGraph.publication_serialization
+		? executionGraph
+		: undefined;
 }
 
 function buildCycleFields(
@@ -971,6 +1204,7 @@ export async function writePlanningBuild(
 		decisionRowResolutions,
 		downstreamQuestionResolutions,
 	);
+	const executionGraph = normalizeExecutionGraph(input);
 	const consumes = trimRefGroups({
 		...input.consumes,
 		decision: unique([
@@ -1009,6 +1243,7 @@ export async function writePlanningBuild(
 		downstream_question_resolutions: downstreamQuestionResolutions,
 		decision_coverage: decisionCoverage,
 		roadmap_reconciliation: normalizeRoadmapReconciliation(input),
+		...(executionGraph ? { execution_graph: executionGraph } : {}),
 		acceptance_mapping: normalizeEvidenceMapping(input).length
 			? normalizeEvidenceMapping(input)
 			: (input.acceptance_mapping ?? []).filter(

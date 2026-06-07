@@ -354,6 +354,47 @@ function nextActionMatches(
 	return patterns.some((pattern) => pattern.test(haystack));
 }
 
+function recordOrEmpty(value: unknown): Record<string, unknown> {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function arrayOrEmpty(value: unknown): unknown[] {
+	return Array.isArray(value) ? value : [];
+}
+
+export function agencyExecutionGraphContext(
+	executionGraph: unknown,
+	openTaskIds: string[],
+): Record<string, unknown> {
+	const graph = recordOrEmpty(executionGraph);
+	const byTask = recordOrEmpty(graph.by_task);
+	const selectedWorkUnits = openTaskIds.flatMap((taskId) =>
+		arrayOrEmpty(byTask[taskId]).slice(0, 4),
+	);
+	return {
+		source: graph.source || "generated:planning-execution-graph-projection",
+		canonical_owner: graph.canonical_owner || "planning_build.execution_graph",
+		durable_truth: graph.durable_truth === true,
+		dispatch_axis: graph.dispatch_axis || "context-boundary",
+		authorization_context_only: true,
+		spawns_sessions: false,
+		work_unit_count: arrayOrEmpty(graph.work_units).length,
+		selected_work_units: selectedWorkUnits.slice(0, 8),
+		conflict_scope_count: arrayOrEmpty(graph.conflict_scopes).length,
+		lease_count: arrayOrEmpty(graph.lease_plan).length,
+		required_gates: arrayOrEmpty(graph.required_gates)
+			.map((gate) => String(gate || "").trim())
+			.filter(Boolean),
+		route_back_triggers: arrayOrEmpty(graph.route_back_triggers).slice(0, 8),
+		context_boundaries: arrayOrEmpty(graph.context_boundaries).slice(0, 8),
+		publication_serialization: arrayOrEmpty(
+			graph.publication_serialization,
+		).slice(0, 4),
+	};
+}
+
 function resolveModeAndTrigger(
 	inputMode?: AgencyMode,
 	inputTrigger?: AgencyTrigger,
@@ -420,9 +461,17 @@ export async function planAgency(
 	const summaryState = state.summary as Record<string, unknown> | undefined;
 	const roadmap = state.roadmap as Record<string, unknown> | undefined;
 	const graph = state.graph as Record<string, any> | undefined;
+	const executionGraphContext = agencyExecutionGraphContext(
+		graph?.views?.execution_graph,
+		[],
+	);
 	const readiness = automationReadinessIndex(graph);
 	const openTasks = taskIdsForScope(scope, roadmap);
 	const schedulableTasks = automationSchedulableTaskIds(openTasks, readiness);
+	Object.assign(
+		executionGraphContext,
+		agencyExecutionGraphContext(graph?.views?.execution_graph, openTasks),
+	);
 	const readinessStopReasons = automationReadinessStopReasons(
 		openTasks,
 		readiness,
@@ -578,6 +627,7 @@ export async function planAgency(
 					automationReadinessTask(readiness, nextTask)?.next_action?.loop ||
 					(trigger === "sprint_end" ? "decision" : "implementation"),
 				scheduler_plan: schedulerPlan,
+				execution_graph: executionGraphContext,
 				session_spawn_plan: canSpawnSessions
 					? {
 							mode:
@@ -659,6 +709,7 @@ export async function planAgency(
 				: null,
 			action: cycles[0]?.action ?? "none",
 			scheduler_status: schedulerPlan.status,
+			execution_graph: executionGraphContext,
 			scheduler_ready_task_ids: schedulerPlan.allocations.map(
 				(allocation) => allocation.task_id,
 			),

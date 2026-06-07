@@ -123,6 +123,82 @@ export interface CodewikiDecisionPropagationResolutionInput {
 	evidence: string;
 }
 
+export interface CodewikiPlanningExecutionGraphContextBoundaryInput {
+	id?: string;
+	reason: string;
+	expected_output: string;
+	trace_ref?: string;
+	graph_lens?: string;
+	source_refs?: string[];
+	constraints?: Record<string, unknown>;
+	content_evidence_requirements?: string[];
+}
+
+export interface CodewikiPlanningExecutionGraphScopeInput {
+	layer?: string;
+	path?: string;
+	task_id?: string;
+	ref?: string;
+	description?: string;
+}
+
+export interface CodewikiPlanningExecutionGraphRouteBackInput {
+	trigger: string;
+	target_loop?: string;
+	reason?: string;
+	evidence?: string;
+}
+
+export interface CodewikiPlanningExecutionGraphPublicationInput {
+	required?: boolean;
+	serialized_by?: string;
+	queue?: string;
+	reason?: string;
+	gates?: string[];
+}
+
+export interface CodewikiPlanningExecutionGraphWorkUnitInput {
+	id: string;
+	task_id?: string;
+	summary: string;
+	depends_on?: string[];
+	wave?: string;
+	conflict_scopes?: CodewikiPlanningExecutionGraphScopeInput[];
+	lease_scopes?: CodewikiPlanningExecutionGraphScopeInput[];
+	required_gates?: string[];
+	route_back_triggers?: CodewikiPlanningExecutionGraphRouteBackInput[];
+	context_boundary?: CodewikiPlanningExecutionGraphContextBoundaryInput;
+	expected_output?: string;
+	publication_serialization?: CodewikiPlanningExecutionGraphPublicationInput;
+}
+
+export interface CodewikiPlanningExecutionGraphWaveInput {
+	id: string;
+	summary?: string;
+	work_unit_ids?: string[];
+	max_parallel?: number;
+	required_gates?: string[];
+}
+
+export interface CodewikiPlanningExecutionGraphInput {
+	canonical_owner?: string;
+	projection?: string;
+	work_units?: CodewikiPlanningExecutionGraphWorkUnitInput[];
+	dependencies?: Array<{ from: string; to: string; reason?: string }>;
+	waves?: CodewikiPlanningExecutionGraphWaveInput[];
+	conflict_scopes?: CodewikiPlanningExecutionGraphScopeInput[];
+	lease_plan?: Array<{
+		work_unit_id?: string;
+		mode?: string;
+		reason?: string;
+		scopes?: CodewikiPlanningExecutionGraphScopeInput[];
+	}>;
+	required_gates?: string[];
+	route_back_triggers?: CodewikiPlanningExecutionGraphRouteBackInput[];
+	context_boundaries?: CodewikiPlanningExecutionGraphContextBoundaryInput[];
+	publication_serialization?: CodewikiPlanningExecutionGraphPublicationInput;
+}
+
 export interface CodewikiPlanningCoverageInput {
 	id?: string;
 	row_id?: string;
@@ -216,6 +292,7 @@ export interface CodewikiBuildToolInput {
 	downstream_question_resolutions?: CodewikiDecisionPropagationResolutionInput[];
 	decision_coverage?: CodewikiPlanningCoverageInput[];
 	roadmap_reconciliation?: CodewikiPlanningCoverageInput[];
+	execution_graph?: CodewikiPlanningExecutionGraphInput;
 	tdd_plan?: string[];
 	candidate_test_files?: string[];
 	candidate_code_paths?: string[];

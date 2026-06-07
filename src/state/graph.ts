@@ -81,6 +81,187 @@ function isOpenTaskStatus(status: string): boolean {
 	return ["todo", "in_progress", "blocked"].includes(status);
 }
 
+function planningGraphArray(value: unknown, key: string): any[] {
+	if (!value || typeof value !== "object" || Array.isArray(value)) return [];
+	const next = (value as Record<string, unknown>)[key];
+	return Array.isArray(next) ? next : [];
+}
+
+function planningGraphRecord(value: unknown): Record<string, unknown> {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function planningGraphPointer(path: string, pointer: string): string {
+	return `${normalizeCodewikiRef(path)}#${pointer}`;
+}
+
+function compactPlanningExecutionGraphRow(
+	buildPath: string,
+	key: string,
+	item: unknown,
+	index: number,
+): Record<string, unknown> {
+	const row = planningGraphRecord(item);
+	return {
+		...row,
+		planning_build: normalizeCodewikiRef(buildPath),
+		pointer_ref: planningGraphPointer(
+			buildPath,
+			`/execution_graph/${key}/${index}`,
+		),
+	};
+}
+
+function compactPlanningExecutionWorkUnit(
+	buildPath: string,
+	item: unknown,
+	index: number,
+): Record<string, unknown> {
+	const row = compactPlanningExecutionGraphRow(
+		buildPath,
+		"work_units",
+		item,
+		index,
+	);
+	const contextBoundary = planningGraphRecord(row.context_boundary);
+	if (Object.keys(contextBoundary).length > 0) {
+		row.context_boundary = {
+			...contextBoundary,
+			pointer_ref: planningGraphPointer(
+				buildPath,
+				`/execution_graph/work_units/${index}/context_boundary`,
+			),
+		};
+	}
+	return row;
+}
+
+function planningGraphTaskIds(row: Record<string, unknown>): string[] {
+	return unique(
+		[
+			String(row.task_id || "").trim(),
+			...stringList(row.task_ids),
+			...stringList(row.roadmap_task_ids),
+		]
+			.filter(Boolean)
+			.filter((id) => /^TASK-/.test(id)),
+	);
+}
+
+function buildPlanningExecutionGraphProjection(
+	builds: GraphBuildInputs["builds"],
+) {
+	const planningBuilds = builds.filter(
+		(build) =>
+			build.kind === "planning_build" &&
+			planningGraphRecord(build.data).execution_graph,
+	);
+	const workUnits: Record<string, unknown>[] = [];
+	const dependencies: Record<string, unknown>[] = [];
+	const waves: Record<string, unknown>[] = [];
+	const conflictScopes: Record<string, unknown>[] = [];
+	const leasePlan: Record<string, unknown>[] = [];
+	const routeBackTriggers: Record<string, unknown>[] = [];
+	const contextBoundaries: Record<string, unknown>[] = [];
+	const publicationSerialization: Record<string, unknown>[] = [];
+	const requiredGates: string[] = [];
+	const byTask: Record<string, Record<string, unknown>[]> = {};
+	for (const build of planningBuilds) {
+		const buildPath = normalizeCodewikiRef(build.path);
+		const graph = planningGraphRecord(
+			planningGraphRecord(build.data).execution_graph,
+		);
+		planningGraphArray(graph, "work_units").forEach((item, index) => {
+			const row = compactPlanningExecutionWorkUnit(buildPath, item, index);
+			workUnits.push(row);
+			for (const taskId of planningGraphTaskIds(row)) {
+				byTask[taskId] = [...(byTask[taskId] || []), row];
+			}
+		});
+		planningGraphArray(graph, "dependencies").forEach((item, index) =>
+			dependencies.push(
+				compactPlanningExecutionGraphRow(
+					buildPath,
+					"dependencies",
+					item,
+					index,
+				),
+			),
+		);
+		planningGraphArray(graph, "waves").forEach((item, index) =>
+			waves.push(
+				compactPlanningExecutionGraphRow(buildPath, "waves", item, index),
+			),
+		);
+		planningGraphArray(graph, "conflict_scopes").forEach((item, index) =>
+			conflictScopes.push(
+				compactPlanningExecutionGraphRow(
+					buildPath,
+					"conflict_scopes",
+					item,
+					index,
+				),
+			),
+		);
+		planningGraphArray(graph, "lease_plan").forEach((item, index) =>
+			leasePlan.push(
+				compactPlanningExecutionGraphRow(buildPath, "lease_plan", item, index),
+			),
+		);
+		planningGraphArray(graph, "route_back_triggers").forEach((item, index) =>
+			routeBackTriggers.push(
+				compactPlanningExecutionGraphRow(
+					buildPath,
+					"route_back_triggers",
+					item,
+					index,
+				),
+			),
+		);
+		planningGraphArray(graph, "context_boundaries").forEach((item, index) =>
+			contextBoundaries.push(
+				compactPlanningExecutionGraphRow(
+					buildPath,
+					"context_boundaries",
+					item,
+					index,
+				),
+			),
+		);
+		const publication = planningGraphRecord(graph.publication_serialization);
+		if (Object.keys(publication).length > 0) {
+			publicationSerialization.push({
+				...publication,
+				planning_build: buildPath,
+				pointer_ref: planningGraphPointer(
+					buildPath,
+					"/execution_graph/publication_serialization",
+				),
+			});
+		}
+		requiredGates.push(...stringList(graph.required_gates));
+	}
+	return {
+		source: "generated:planning-execution-graph-projection",
+		canonical_owner: "planning_build.execution_graph",
+		durable_truth: false,
+		dispatch_axis: "context-boundary",
+		planning_build_count: planningBuilds.length,
+		work_units: workUnits,
+		dependencies,
+		waves,
+		conflict_scopes: conflictScopes,
+		lease_plan: leasePlan,
+		required_gates: unique(requiredGates),
+		route_back_triggers: routeBackTriggers,
+		context_boundaries: contextBoundaries,
+		publication_serialization: publicationSerialization,
+		by_task: byTask,
+	};
+}
+
 type ReconciliationLoop =
 	| "decision"
 	| "planning"
@@ -1330,7 +1511,9 @@ function planningCoverageState(input: {
 	if (implemented) return "implemented";
 	if (taskIds.some((taskId) => input.activeTaskIds.has(taskId)))
 		return "active-roadmap";
-	return String(input.entry?.status || "") === "resolved" ? "mapped" : "unmapped";
+	return String(input.entry?.status || "") === "resolved"
+		? "mapped"
+		: "unmapped";
 }
 
 function normalizeReconciliationState(value: unknown): string {
@@ -1424,9 +1607,10 @@ function buildPlanningCoverageView(input: {
 		const sourceDecisionBuild = normalizeCodewikiRef(
 			build.data?.source_decision_build,
 		);
-		return (Array.isArray(build.data?.roadmap_reconciliation)
-			? build.data.roadmap_reconciliation
-			: []
+		return (
+			Array.isArray(build.data?.roadmap_reconciliation)
+				? build.data.roadmap_reconciliation
+				: []
 		).map((entry: any, index: number) => ({
 			planning_build: buildPath,
 			source_decision_build: sourceDecisionBuild,
@@ -1445,13 +1629,17 @@ function buildPlanningCoverageView(input: {
 	});
 	const explicitDecisionCoverage = input.planningBuilds.flatMap((build) => {
 		const buildPath = normalizeCodewikiRef(build.path);
-		return (Array.isArray(build.data?.decision_coverage)
-			? build.data.decision_coverage
-			: []
+		return (
+			Array.isArray(build.data?.decision_coverage)
+				? build.data.decision_coverage
+				: []
 		).map((entry: any, index: number) => ({
 			planning_build: buildPath,
 			id: String(
-				entry?.id || entry?.row_id || entry?.question_id || `coverage-${index + 1}`,
+				entry?.id ||
+					entry?.row_id ||
+					entry?.question_id ||
+					`coverage-${index + 1}`,
 			).trim(),
 			kind: String(entry?.kind || (entry?.question_id ? "question" : "row")),
 			state: normalizeReconciliationState(
@@ -3415,6 +3603,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		catalog: traceCatalog,
 		runtime: claimState,
 	});
+	const planningExecutionGraph = buildPlanningExecutionGraphProjection(builds);
 	const graphLensViews = buildGraphLensViews({
 		nodes,
 		edges,
@@ -3442,6 +3631,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		fileStructureDrift,
 		claimState,
 		traceDag,
+		planningExecutionGraph,
 		gc,
 		automationReadiness,
 	});
@@ -3473,6 +3663,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		semantic_execution_closure: semanticExecutionClosure,
 		planning_coverage: planningCoverage,
 		trace_dag: traceDag,
+		execution_graph: planningExecutionGraph,
 		decision_propagation: {
 			version: 1,
 			model: "accepted-decision-row-to-roadmap-resolution",
