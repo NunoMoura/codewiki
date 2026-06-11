@@ -1,5 +1,7 @@
 import type { IsoTimestamp } from "../utils/time.ts";
 
+export type TraceLoop = "decision" | "planning" | "implementation" | "runtime";
+export type TraceRecordType = "trace_head" | "trace_event" | "tail_checkpoint";
 export type TraceRecord = TraceHead | TraceEvent | TailCheckpoint;
 
 export interface TraceHead {
@@ -15,7 +17,7 @@ export interface TraceEvent {
 	parentId: string | null;
 	traceId: string;
 	sequence: number;
-	loop: "decision" | "planning" | "implementation" | "runtime";
+	loop: TraceLoop;
 	event: string;
 	refs: string[];
 	createdAt: IsoTimestamp;
@@ -30,4 +32,10 @@ export interface TailCheckpoint {
 	firstKeptRecordId: string;
 	summary: string;
 	createdAt: IsoTimestamp;
+	data?: Record<string, unknown>;
+}
+
+export interface TraceFile {
+	head: TraceHead;
+	records: TraceRecord[];
 }
