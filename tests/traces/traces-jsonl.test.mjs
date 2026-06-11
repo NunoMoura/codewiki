@@ -16,6 +16,7 @@ import {
 	traceHasEvent,
 	traceRefs,
 	buildTraceRetentionStub,
+	TRACE_LOOP_VALUES,
 } from "../../src/api/traces.ts";
 
 function sampleRecords() {
@@ -57,6 +58,15 @@ describe("trace JSONL core", () => {
 		assert.throws(
 			() => parseTraceText('{"type":"trace_event","id":"bad"}\n'),
 			/TraceValidationError|Trace event/,
+		);
+		assert.deepEqual([...TRACE_LOOP_VALUES], [
+			"decision",
+			"planning",
+			"implementation",
+		]);
+		assert.throws(
+			() => parseTraceText(formatTraceText([{ ...records[1], loop: "runtime" }])),
+			/decision, planning, or implementation/,
 		);
 	});
 

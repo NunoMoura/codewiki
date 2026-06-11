@@ -9,12 +9,7 @@ export const TRACE_RECORD_TYPE_VALUES = [
 	"tail_checkpoint",
 ] as const;
 
-export const TRACE_LOOP_VALUES = [
-	"decision",
-	"planning",
-	"implementation",
-	"runtime",
-] as const;
+export const TRACE_LOOP_VALUES = ["decision", "planning", "implementation"] as const;
 
 export interface TraceValidationIssue {
 	path: string;
@@ -84,7 +79,7 @@ function validateTraceEvent(issues: TraceValidationIssue[], value: Partial<Trace
 		issue(issues, "$.sequence", "Trace event sequence must be a positive integer.");
 	}
 	if (!TRACE_LOOP_VALUES.includes(value.loop as never)) {
-		issue(issues, "$.loop", "Trace event loop must be decision, planning, implementation, or runtime.");
+		issue(issues, "$.loop", "Trace event loop must be decision, planning, or implementation.");
 	}
 	requireString(issues, value.event, "$.event");
 	requireStringArray(issues, value.refs, "$.refs");

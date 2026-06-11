@@ -105,7 +105,8 @@ Loop responsibilities:
 - `decision` records approved intent, requirements, alternatives, risks, KB impact, and route-back questions.
 - `planning` records work-unit materialization, ordering, conflicts, verification strategy, and work-plan ownership for every accepted executable decision row/question.
 - `implementation` records code/docs/tests changes, evidence refs, checks, content proof, and optional publication state.
-- `runtime` records boundaries, claims, leases, scheduling decisions, budgets, and temporary-state lifecycle events. Runtime events coordinate execution but do not create a fourth semantic loop.
+
+Runtime records boundaries, claims, leases, scheduling decisions, budgets, and temporary-state lifecycle events as coordination events inside the affected semantic loop. Runtime events should use explicit event names such as `runtime.claim.acquired` and, when needed, a data field such as `runtimeScope`; they must not create a fourth `loop` value.
 
 ## Generated views
 

@@ -1,6 +1,6 @@
 import type { IsoTimestamp } from "../utils/time.ts";
 
-export type TraceLoop = "decision" | "planning" | "implementation" | "runtime";
+export type TraceLoop = "decision" | "planning" | "implementation";
 export type TraceRecordType = "trace_head" | "trace_event" | "tail_checkpoint";
 export type TraceRecord = TraceHead | TraceEvent | TailCheckpoint;
 
