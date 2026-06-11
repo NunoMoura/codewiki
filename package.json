@@ -11,8 +11,8 @@
 	"type": "module",
 	"scripts": {
 		"test": "npm run typecheck && npm run test:smoke",
-		"test:smoke": "node --experimental-strip-types --test ./tests/scaffold.test.mjs ./tests/decision/*.test.mjs",
-		"test:features": "node --experimental-strip-types --test ./tests/decision/*.test.mjs",
+		"test:smoke": "node --experimental-strip-types --test ./tests/scaffold.test.mjs ./tests/decision/*.test.mjs ./tests/planning/*.test.mjs",
+		"test:features": "node --experimental-strip-types --test ./tests/decision/*.test.mjs ./tests/planning/*.test.mjs",
 		"test:pack": "npm pack --dry-run",
 		"typecheck": "tsc --noEmit"
 	},
