@@ -2,182 +2,107 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki System Architecture
 kind: architecture_map
-purpose: Show the high-level CodeWiki user surfaces, application workflow components, durable truth stores, generated graph, executable proof, and publication support from canonical YAML.
+purpose: "Show the target CodeWiki architecture during the rebuild: KB truth, JSONL trace truth, loop compilers, runtime coordination, generated views, Pi terminal surface, and Git content evidence."
 source_docs:
   - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/terminal-ui.md
-  - .codewiki/kb/system/extension.md
-  - .codewiki/kb/system/adapters.md
-  - .codewiki/kb/system/api.md
-  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/compilers.md
-  - .codewiki/kb/system/validation-gateway.md
-  - .codewiki/kb/system/knowledge.md
-  - .codewiki/kb/system/builds.md
-  - .codewiki/kb/system/roadmap.md
-  - .codewiki/kb/system/graph.md
+  - .codewiki/kb/system/runtime.md
+  - .codewiki/kb/system/terminal-ui.md
 renderer:
-  preferred: layered_graph
+  preferred: layered_projection
   fallback: mermaid_flowchart
   layout: top_down
   stable_ids: true
-  future_tui_ascii:
-    enabled: true
-    rank_direction: top_down
-    node_width: medium
-    edge_labels: optional
-    group_lanes: true
 groups:
   - id: surfaces
     label: User surfaces
-  - id: integration
-    label: Host integration
-  - id: application
-    label: Application workflows
-  - id: truth_state
-    label: Truth and generated state
-  - id: proof_publication
-    label: Proof and publication
+  - id: loops
+    label: Semantic loops
+  - id: truth
+    label: Durable truth
+  - id: runtime
+    label: Runtime coordination
+  - id: generated
+    label: Generated views
+  - id: evidence
+    label: Content evidence
 nodes:
   - id: user
     label: User / agent intent
     group: surfaces
     kind: actor
-  - id: terminal_surface
-    label: Pi-hosted CodeWiki surface
+  - id: pi_tui
+    label: Pi terminal UI
     group: surfaces
-    kind: ui
+    kind: terminal_ui
     source: .codewiki/kb/system/terminal-ui.md
-  - id: extension
-    label: Extension
-    group: integration
-    kind: adapter
-    source: .codewiki/kb/system/extension.md
-  - id: adapters
-    label: Adapters
-    group: integration
-    kind: adapter
-    source: .codewiki/kb/system/adapters.md
-  - id: api
-    label: CodeWiki API
-    group: application
-    kind: application
-    source: .codewiki/kb/system/api.md
-  - id: agency
-    label: Agency controller
-    group: application
-    kind: workflow
-    source: .codewiki/kb/system/agency.md
-  - id: compilers
-    label: Compilers
-    group: application
-    kind: workflow
+  - id: decision
+    label: Decision loop
+    group: loops
+    kind: compiler_loop
     source: .codewiki/kb/system/compilers.md
-  - id: gateway
-    label: Validation gateway
-    group: application
-    kind: workflow
-    source: .codewiki/kb/system/validation-gateway.md
-  - id: knowledge
-    label: Knowledge
-    group: truth_state
+  - id: planning
+    label: Planning loop
+    group: loops
+    kind: compiler_loop
+    source: .codewiki/kb/system/compilers.md
+  - id: implementation
+    label: Implementation loop
+    group: loops
+    kind: compiler_loop
+    source: .codewiki/kb/system/compilers.md
+  - id: kb
+    label: Knowledge base
+    group: truth
     kind: durable_truth
-    source: .codewiki/kb/system/knowledge.md
-  - id: builds
-    label: Builds
-    group: truth_state
-    kind: handoff_truth
-    source: .codewiki/kb/system/builds.md
-  - id: roadmap
-    label: Roadmap
-    group: truth_state
+    source: .codewiki/kb/system/file-structure.md
+  - id: traces
+    label: JSONL traces
+    group: truth
     kind: durable_truth
-    source: .codewiki/kb/system/roadmap.md
-  - id: graph
-    label: Generated state graph
-    group: truth_state
-    kind: generated_state
-    source: .codewiki/kb/system/graph.md
-  - id: telemetry
-    label: Lifecycle trace telemetry
-    group: truth_state
-    kind: durable_truth
-    source: .codewiki/kb/system/trace-graph.md
-  - id: code_tests
-    label: Code + tests
-    group: proof_publication
+    source: .codewiki/kb/system/traces.md
+  - id: runtime
+    label: Runtime coordination
+    group: runtime
+    kind: coordination
+    source: .codewiki/kb/system/runtime.md
+  - id: views
+    label: Generated views
+    group: generated
+    kind: generated_projection
+    source: .codewiki/kb/system/file-structure.md
+  - id: git
+    label: Git content evidence
+    group: evidence
     kind: executable_truth
-  - id: publication
-    label: Publication support
-    group: proof_publication
-    kind: publication
-    summary: Commit, PR, issue, release, and push support.
 edges:
   - from: user
-    to: terminal_surface
-  - from: user
-    to: extension
-  - from: extension
-    to: terminal_surface
-  - from: extension
-    to: adapters
-  - from: terminal_surface
-    to: api
-  - from: adapters
-    to: api
-  - from: api
-    to: agency
-  - from: api
-    to: compilers
-  - from: api
-    to: knowledge
-  - from: api
-    to: builds
-  - from: api
-    to: roadmap
-  - from: api
-    to: graph
-  - from: api
-    to: telemetry
-  - from: api
-    to: gateway
-  - from: agency
-    to: graph
-  - from: agency
-    to: roadmap
-  - from: agency
-    to: compilers
-  - from: agency
-    to: gateway
-  - from: compilers
-    to: builds
-  - from: compilers
-    to: knowledge
-  - from: compilers
-    to: roadmap
-  - from: compilers
-    to: code_tests
-  - from: compilers
-    to: gateway
-  - from: gateway
-    to: builds
-  - from: gateway
-    to: graph
-  - from: gateway
-    to: telemetry
-  - from: gateway
-    to: publication
-  - from: knowledge
-    to: graph
-  - from: builds
-    to: graph
-  - from: telemetry
-    to: graph
-  - from: roadmap
-    to: graph
-  - from: code_tests
-    to: graph
-  - from: builds
-    to: publication
-  - from: code_tests
-    to: publication
+    to: pi_tui
+  - from: pi_tui
+    to: decision
+  - from: decision
+    to: planning
+  - from: planning
+    to: implementation
+  - from: decision
+    to: kb
+  - from: decision
+    to: traces
+  - from: planning
+    to: traces
+  - from: implementation
+    to: traces
+  - from: implementation
+    to: git
+  - from: runtime
+    to: traces
+  - from: traces
+    to: views
+  - from: kb
+    to: views
+  - from: git
+    to: views
+  - from: views
+    to: pi_tui

@@ -1,8 +1,6 @@
-import type { SourceRef } from "../shared/types.ts";
-
 export interface ImplementationChange {
 	id: string;
-	planningRefs: SourceRef[];
+	planningRefs: string[];
 	codePaths: string[];
 	testPaths: string[];
 	checks: string[];

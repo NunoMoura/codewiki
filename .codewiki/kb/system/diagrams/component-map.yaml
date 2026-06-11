@@ -59,7 +59,7 @@ nodes:
     kind: domain
     source: .codewiki/kb/system/file-structure.md
   - id: state_engine
-    label: Graph engine
+    label: Generated views
     group: app_layer
     kind: application
     source: .codewiki/kb/system/graph.md
@@ -114,12 +114,12 @@ nodes:
     kind: durable_truth
     source: .codewiki/kb/system/roadmap.md
   - id: builds
-    label: Telemetry traces and compiler output
+    label: JSONL traces and compiler output
     group: truth_layer
     kind: traceability_truth
     source: .codewiki/kb/system/builds.md
   - id: graph
-    label: Generated state graph
+    label: Generated views
     group: truth_layer
     kind: generated_state
     source: .codewiki/kb/system/graph.md

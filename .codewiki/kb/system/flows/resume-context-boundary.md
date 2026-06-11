@@ -1,50 +1,22 @@
 ---
 id: spec.system.flows.resume-context-boundary
-title: Resume Context Boundary Flow
-state: active
+title: Resume Context Boundary
+state: deprecated
+summary: Deprecated CodeWiki-owned resume/refresh flow; Pi native compaction is active during the rebuild.
 owners:
   - architecture
-flow_id: resume_context_boundary
-participants:
-  - state_engine
-  - runtime
-  - adapter
-  - worker_session
-component_ids:
-  - state_engine
-  - runtime
-  - adapters_ui
-  - api_facade
-diagram_refs:
-  - component-map:resume_context
-  - component-map:state_engine
-  - key-flow:resume_context
-source_refs:
-  - .codewiki/kb/system/api.md
-  - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/compilers.md
-code_paths:
-  - src/state
-  - src/runtime
-  - src/adapters
-code_paths_mode: explicit_override
-updated: "2026-06-01"
-summary: Context refresh, compaction, and replacement-session starts are seeded from CodeWiki source refs.
+updated: "2026-06-11"
 ---
 
-# Resume Context Boundary Flow
+# Resume Context Boundary
 
-1. State reads graph, roadmap, task context shards, builds, validation reports, and source refs.
-2. `wiki_resume_context` emits a bounded source-backed packet for the next loop.
-3. Same-agent context refresh or compaction may use that packet after safe visible tool results.
-4. Hard replacement sessions use adapter-owned session boundary capability and source-backed kickoff.
-5. The next loop reads exact refs directly before semantic edits.
+The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.
 
-Normal continuation uses CodeWiki refs, not VCC recall, generic chat summaries, or slash-command injection. Adapter limitations must be visible and must fail closed when the host cannot provide a required boundary.
+Target runtime may later produce source-backed boundary packets from JSONL traces, KB refs, source refs, and Git content evidence, but that behavior requires a future accepted decision and an explicit Pi extension reintroduction.
+
+Current rule: use Pi native compaction only. Do not run CodeWiki-owned compaction, auto-pickup, or `wiki_*` tools in this repository.
 
 ## Related docs
 
-- [Compilers](../compilers.md)
 - [Runtime](../runtime.md)
-- [Validation Gateway](../validation-gateway.md)
-- [Key flow diagram](../diagrams/key-flow.yaml)
+- [Traces](../traces.md)

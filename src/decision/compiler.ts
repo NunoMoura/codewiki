@@ -5,11 +5,9 @@ export interface DecisionCompileResult {
 	readyForPlanning: boolean;
 }
 
-export function compileDecision(
-	records: DecisionRecord[],
-): DecisionCompileResult {
+export function compileDecision(records: DecisionRecord[]): DecisionCompileResult {
 	return {
-		records: records.map((record) => ({ ...record })),
+		records: records.map((record) => ({ ...record, risks: [...record.risks], sourceRefs: [...record.sourceRefs] })),
 		readyForPlanning: records.length > 0,
 	};
 }

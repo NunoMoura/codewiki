@@ -1,252 +1,72 @@
 schema_version: 1
 id: spec.system.diagrams.data-model
-title: CodeWiki Product and Runtime Data Model
+title: CodeWiki Data Model
 kind: data_model
-purpose: Show durable truth, transient handoffs, generated state, coordination state, and executable proof.
+purpose: Show target data ownership for KB docs, JSONL traces, generated views, runtime tmp, source/tests, and Git proof.
 source_docs:
-  - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/knowledge.md
-  - .codewiki/kb/system/builds.md
-  - .codewiki/kb/system/roadmap.md
-  - .codewiki/kb/system/graph.md
-  - .codewiki/kb/system/agency.md
-  - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/adapters.md
+  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/traces.md
 renderer:
-  preferred: er
-  fallback: mermaid_er
+  preferred: entity_relationship
+  fallback: mermaid_flowchart
 entities:
   - id: knowledge_doc
     label: Knowledge document
     storage: .codewiki/kb/**/*.md
-    role: durable product/system intent
-    key_fields:
-      - id
-      - title
-      - state
-      - summary
-      - owners
-      - diagram_refs
-      - optional_explicit_code_paths
-  - id: diagram_spec
-    label: Diagram spec
-    storage: .codewiki/kb/system/diagrams/**/*.yaml
-    role: durable agent-editable diagram raw data
-    key_fields:
-      - schema_version
-      - id
-      - kind
-      - source_docs
-  - id: roadmap_task
-    label: Roadmap task
-    storage: .codewiki/roadmap/**
-    role: active work truth and closure state
-    key_fields:
-      - id
-      - title
+    truth: true
+  - id: trace_file
+    label: Trace JSONL file
+    storage: .codewiki/traces/TRACE-*.jsonl
+    truth: true
+  - id: trace_record
+    label: Trace record
+    storage: one JSON object per trace line
+    truth: true
+    record_types:
+      - trace_head
+      - trace_event
+      - tail_checkpoint
+  - id: generated_view
+    label: Generated view
+    storage: .codewiki/views/*.json
+    truth: false
+    examples:
       - status
-      - priority
-      - goal
-      - spec_paths
-      - code_paths
-  - id: telemetry_trace
-    label: Telemetry trace
-    storage: .codewiki/telemetry/<trace_id>/**
-    role: compact workflow traceability from decision to production-ready implementation
-    key_fields:
-      - trace_id
-      - status
-      - decision.json
-      - planning.json
-      - implementation.json
-      - trace_refs
-  - id: loop_trace_file
-    label: Loop trace file
-    storage: .codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json
-    role: loop compiler output, gate verdict, gate diagnostics, refs, and next action
-    key_fields:
-      - loop
-      - compiler_output
-      - gate
-      - knowledge_refs
-      - diagram_refs
-      - source_refs
-      - test_refs
-      - gate_refs
-      - compiler_output_refs
-  - id: gate_verdict
-    label: Gate verdict
-    storage: embedded in loop trace files
-    role: pass/fail/block exit decision plus findings and remediation
-    key_fields:
-      - gate
-      - verdict
-      - criteria
-      - findings
-      - remediation_items
-      - next_action
-  - id: git_proof
-    label: Git proof
-    storage: Git history and refs indexed from implementation.json
-    role: cold source of truth for historical content and production-ready content proof
-    key_fields:
-      - commit_sha
-      - tree_sha
-      - package_digest
-      - remote_ref
-  - id: state_index
-    label: State index / graph
-    storage: .codewiki/index_graph.json
-    role: generated state relationship and reconciliation representation
-    key_fields:
-      - nodes
-      - edges
-      - lenses
-      - reconciliation
-  - id: resume_context_packet
-    label: Source-backed context packet
-    storage: tool/command output generated from trace pointer, graph lens, and scoped source refs
-    role: high-signal continuation input for compaction, fresh subagent sessions, and replacement sessions; not durable truth
-    key_fields:
-      - trace_ref
-      - task_id
-      - source_refs
-      - expected_output
-      - constraints
-      - content_evidence_requirements
-      - preflight
-      - prompt
-  - id: agency_contract
-    label: Agency contract
-    storage: .codewiki/config.json and tool input
-    role: configured continuation level, approval cadence, budgets, stop gates, and reset policy
-    key_fields:
-      - level
-      - default_scope
-      - approval_cadence
-      - context_reset
-      - budgets
-  - id: scoped_lease
-    label: Session queue scoped lease
-    storage: .codewiki/session/queue.json
-    role: temporary parallel-work lease
-    key_fields:
-      - id
-      - mode
-      - scopes
-      - expires_at
-  - id: daemon_job_store
-    label: Daemon job/run store
-    storage: .codewiki/runtime/jobs.json
-    role: durable execution-attempt state; references trace, task, gate, and Git proof without replacing canonical truth
-    key_fields:
-      - job_id
-      - task_id
-      - loop
-      - job_status
-      - max_attempts
-      - run_id
-      - run_status
-      - session/claim refs
-      - last_heartbeat_at
-      - block_reason
-      - trace_refs
-      - gate_refs
-      - git_refs
-      - handoff
-  - id: executable_truth
-    label: Code and tests
-    storage: repository code/test paths
-    role: implemented behavior and automated proof
+      - resume
+      - work-plan
+      - blockers
+      - conflicts
+  - id: runtime_tmp
+    label: Runtime temporary data
+    storage: .codewiki/runtime/tmp/<trace-id>/<loop>/**
+    truth: false
+  - id: source_file
+    label: Source/test file
+    storage: src/** and tests/**
+    truth: true
+  - id: git_ref
+    label: Git/content proof
+    storage: commits, trees, restore refs, publication refs
+    truth: true
 relationships:
-  - from: telemetry_trace
-    to: loop_trace_file
-    type: contains
-  - from: loop_trace_file
-    to: gate_verdict
-    type: embeds_exit_gate
-  - from: loop_trace_file
-    to: knowledge_doc
-    type: records_changes
-  - from: loop_trace_file
-    to: roadmap_task
-    type: plans_or_closes_work
-  - from: roadmap_task
-    to: knowledge_doc
-    type: references
-  - from: roadmap_task
-    to: executable_truth
-    type: maps_to
-  - from: state_index
-    to: resume_context_packet
-    type: composes_focused_lens
-  - from: agency_contract
-    to: resume_context_packet
-    type: seeds_auto_pickup
-  - from: agency_contract
-    to: roadmap_task
-    type: bounds_continuation
-  - from: roadmap_task
-    to: resume_context_packet
-    type: scopes
-  - from: loop_trace_file
-    to: executable_truth
-    type: evidences
-  - from: loop_trace_file
-    to: git_proof
-    type: indexes_content_proof
-  - from: gate_verdict
-    to: roadmap_task
-    type: evaluates
-  - from: gate_verdict
-    to: loop_trace_file
-    type: supports
-  - from: state_index
-    to: knowledge_doc
-    type: derives_from
-  - from: state_index
-    to: roadmap_task
-    type: derives_from
-  - from: state_index
-    to: telemetry_trace
-    type: derives_from
-  - from: state_index
-    to: loop_trace_file
-    type: derives_from
-  - from: state_index
-    to: gate_verdict
-    type: derives_from
-  - from: state_index
-    to: git_proof
-    type: derives_from
-  - from: state_index
-    to: scoped_lease
-    type: derives_from
-  - from: daemon_job_store
-    to: roadmap_task
-    type: references_attempt_for
-  - from: daemon_job_store
-    to: scoped_lease
-    type: records_claim_refs
-  - from: daemon_job_store
-    to: loop_trace_file
-    type: carries_trace_refs
-  - from: daemon_job_store
-    to: gate_verdict
-    type: carries_gate_refs
-  - from: state_index
-    to: daemon_job_store
-    type: may_derive_runtime_status_from
-  - from: daemon_job_store
-    to: resume_context_packet
-    type: dispatches_context_boundary
-  - from: diagram_spec
-    to: knowledge_doc
-    type: cites_source
-ui_hints:
-  default_entities:
-    - knowledge_doc
-    - roadmap_task
-    - telemetry_trace
-    - state_index
-  show_storage_paths: true
+  - from: knowledge_doc
+    to: trace_record
+    label: referenced by
+  - from: trace_file
+    to: trace_record
+    label: contains
+  - from: trace_record
+    to: generated_view
+    label: projects into
+  - from: knowledge_doc
+    to: generated_view
+    label: supports
+  - from: source_file
+    to: trace_record
+    label: evidence ref
+  - from: git_ref
+    to: trace_record
+    label: content proof
+  - from: runtime_tmp
+    to: trace_record
+    label: promotes durable facts before cleanup

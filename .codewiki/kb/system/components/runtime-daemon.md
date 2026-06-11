@@ -8,7 +8,7 @@ diagram_refs:
   - file-structure-map:runtime_orchestration_boundary
 source_roots:
   - src/runtime/**
-  - src/agency/**
+  - src/runtime/**
 owners:
   - architecture
   - engineering
@@ -25,7 +25,7 @@ The runtime executes one bounded CodeWiki step after agency policy authorizes it
 ## Owned paths
 
 - `src/runtime/**` owns runner, dispatcher, ports, and runtime result types.
-- `src/agency/**` owns agency planning and budget policy that the runtime consumes.
+- `src/runtime/**` owns agency planning and budget policy that the runtime consumes.
 - `.codewiki/runtime/**` stores dogfood runtime job state, not package source.
 
 ## Contracts

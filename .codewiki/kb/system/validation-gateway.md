@@ -42,7 +42,7 @@ Gate output must be actionable. Every gate result should include:
 - remediation items with exact next action;
 - recommended route: same loop, decision, planning, implementation, observe/wait, or user approval.
 
-A passing gate promotes the trace lifecycle to the next safe state or closes implementation when required content evidence exists. A fail/block gate refreshes graph state with findings and remediation but does not promote lower-layer work.
+A passing gate promotes the trace lifecycle to the next safe state or closes implementation when required content evidence exists. A fail/block gate refreshes generated view state with findings and remediation but does not promote lower-layer work.
 
 Fail/block is not automatically a user-stop. When findings are actionable, scoped to the current loop, and inside configured budgets/policy, the agent should stay in the same loop, apply the remediation, run required linters/tests, compile a superseding loop output, and rerun the same gate. Planning fail/block findings keep the planning loop active until a superseding planning output accounts for the finding. The gate stops automation only when remediation is non-actionable, semantically ambiguous, missing user approval, blocked by artifact conflicts, risk escalation, destructive/publication policy, isolation policy, or retry/budget exhaustion.
 
@@ -85,7 +85,7 @@ If an accepted target state has no implementation evidence, no active/closed own
 
 ## Residual issue coverage
 
-Gate validation must not allow actionable lint, audit, graph, or file-structure drift to become orphaned when work closes or promotes. A task, sprint, or ship-ready gate may pass with residual warnings only when each remaining actionable issue has durable residual issue coverage.
+Gate validation must not allow actionable lint, audit, generated-view, or file-structure drift to become orphaned when work closes or promotes. A task, sprint, or ship-ready gate may pass with residual warnings only when each remaining actionable issue has durable residual issue coverage.
 
 Residual issue coverage records:
 
@@ -120,21 +120,21 @@ Vertical alignment traces intent through one lifecycle trace:
 user input -> trace.decision -> trace.planning -> trace.implementation -> Git/content proof
 ```
 
-Horizontal alignment validates coherence inside one layer: KB docs, diagrams, trace refs, source, tests, gate criteria, generated graph state, and runtime state when active.
+Horizontal alignment validates coherence inside one layer: KB docs, diagrams, trace refs, source, tests, gate criteria, generated views, and runtime state when active.
 
 Implementation gate requires fresh or explicitly trusted content evidence. Code-changing implementation completion requires exact Git evidence such as commit SHA and tree SHA, plus package digest or remote ref when policy requires publication readiness. Dirty gate evaluation may use a working-tree digest only when the gate allows it and implementation remains unclosed. Freshness is a context-boundary property, not a validator role requirement: runtime provides a source-backed packet, clean or digest-backed content proof, and expected gate output.
 
 ## Compatibility paths
 
-Current repositories may still persist gate reports under `.codewiki/validation/**` and expose compatibility source under `src/validation/**`. Target traces embed gate verdicts, findings, and remediation inside loop sections:
+Current repositories may still persist legacy gate reports under `.codewiki/validation/**` and expose compatibility source under `src/validation/**`. Target traces embed gate verdicts, findings, and remediation as JSONL trace events:
 
 ```text
-.codewiki/telemetry/TRACE-*.json#/decision/gate_history
-.codewiki/telemetry/TRACE-*.json#/planning/gate_history
-.codewiki/telemetry/TRACE-*.json#/implementation/gate_history
+.codewiki/traces/TRACE-*.jsonl#decision.gate
+.codewiki/traces/TRACE-*.jsonl#planning.gate
+.codewiki/traces/TRACE-*.jsonl#implementation.gate
 ```
 
-Graph readers normalize `validation_refs` and legacy report paths into gate histories and gate refs during migration. `src/validation/**` is not a target source root and should be removed by planned migration once imports/tests are moved to `src/gateway/**` or loop gate helpers.
+Generated view readers normalize legacy `validation_refs` and legacy report paths into trace-derived gate refs during migration. `src/validation/**` is not a target source root and should be removed by planned migration once imports/tests are moved to loop-owned gate helpers.
 
 ## Publication
 
@@ -153,15 +153,14 @@ Publication is an implementation-stage concern by default. If CodeWiki config en
 - Planning cannot start from chat memory or incomplete KB edits; it starts from a passed decision trace/build handoff.
 - Implementation gate blocks on missing Git/content evidence when the work claims production-ready completion.
 - Actionable fail/block findings should route back to the same compiler loop for an automatic superseding output when policy and budgets allow.
-- Gate reports and findings are hot only while active routing needs them; long-term history lives in lifecycle trace summaries, `telemetry/catalog.json`, and Git.
+- Gate reports and findings are hot only while active routing needs them; long-term history lives in JSONL trace events/checkpoints and Git.
 - Gate sessions requested by runtime are role-free context-boundary continuations. Their dispatch contract is trace scope, source refs, expected gate output, constraints, budgets, and content evidence; compatibility role labels must not become gate criteria.
 
 ## Related docs
 
-- [Trace Graph and Lifecycle Trace Schema](trace-graph.md)
+- [Traces](traces.md)
 - [Validation gateway component](components/validation-gateway.md)
 - [Alignment Model](alignment-model.md)
 - [Compiler Output Artifacts](builds.md)
 - [Compilers](compilers.md)
-- [Graph](graph.md)
 - [File Structure](file-structure.md)

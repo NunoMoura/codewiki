@@ -2,74 +2,47 @@
 id: spec.system.compilers
 title: Compilers
 state: active
-summary: Three CodeWiki loop engines that emit compact telemetry trace output for decision, planning, and implementation gates.
+summary: Three CodeWiki compiler loops that append JSONL trace events and promote only through loop-owned gates.
 owners:
   - architecture
-  - product
-updated: "2026-06-05"
+updated: "2026-06-11"
 ---
 
 # Compilers
 
-## Responsibility
+CodeWiki has three compiler loops: decision, planning, and implementation. Compilers transform approved input into durable trace events. They do not own generated views and they do not promote themselves without passing their loop gate.
 
-CodeWiki compilers are the engines for the three workflow loops. They move user intent through decision, planning, and implementation boundaries while keeping durable truth in KB docs, source/tests, telemetry traces, and Git.
+## Loop responsibilities
 
-```text
-Decision Loop -> decision gate
-  -> Planning Loop -> planning gate
-    -> Implementation Loop -> implementation gate -> Git content proof
-```
+| Loop | Responsibility | Source root | Gate |
+| --- | --- | --- | --- |
+| Decision | Turn user intent and KB deltas into approved decisions, requirements, risks, and route-back questions. | `src/decision/**` | `decision/gate.ts` |
+| Planning | Turn approved decision events into work units, ordering, conflicts, verification strategy, and work-plan ownership. | `src/planning/**` | `planning/gate.ts` |
+| Implementation | Turn planned work into code/docs/tests changes, check evidence, content proof, and optional publication state. | `src/implementation/**` | `implementation/gate.ts` |
 
-There is no validation loop. Gateway gates are exit conditions for loops.
+Gates are loop exits. There is no standalone validation loop or gateway source root in the target architecture.
 
-## Loop index
+## Trace output
 
-| Loop | Compiler responsibility | Exit gate |
-| --- | --- | --- |
-| Decision | Convert user input, grounded reads, and approved diff rows into KB/diagram truth and decision compiler output in `decision.json`. | Decision gate verifies approved semantics, KB/diagram propagation, no-impact rationales, and risk approval. |
-| Planning | Convert passed decision output into executable task/sprint alignment, acceptance criteria, verification strategy, candidate refs, and planning compiler output in `planning.json`. | Planning gate verifies every accepted row/question is mapped to knowledge-only, roadmap task, sprint, or deferred disposition with evidence. |
-| Implementation | Convert passed planning output into code/docs/tests, required evidence, implementation compiler output, and Git content proof in `implementation.json`. | Implementation gate verifies acceptance evidence, tests/linters, KB/diagram freshness, clean or digest-backed content, and commit/tree/package refs when required. |
+Compiler output is recorded as JSONL trace events under `.codewiki/traces/TRACE-*.jsonl`.
 
-## Compiler output vs build compatibility
+Historic `decision_build`, `planning_build`, and `implementation_build` files are compatibility artifacts from the old implementation. They can guide migration, but the target output format is trace records and checkpoints.
 
-The compiler is source code. The build is emitted trace data.
+## Promotion boundaries
 
-Target source layout uses loop-owned engines:
+- Decision gate pass allows planning to start.
+- Planning gate pass allows implementation/runtime scheduling to start.
+- Implementation gate pass allows closure or publication readiness.
+- Gate fail/block routes remediation back to the originating loop.
+- Compiler output alone cannot promote work.
 
-```text
-src/decision/compiler.ts
-src/planning/compiler.ts
-src/implementation/compiler.ts
-```
+## Generated views
 
-Historic `decision_build`, `planning_build`, and `implementation_build` names remain compatibility names for compiler output sections. They should migrate into `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json` rather than stay as separate hot `.codewiki/builds/**` piles or a top-level product-source `src/build/**` concept.
-
-## Graph and promotion boundaries
-
-Graph refresh and loop promotion are separate:
-
-- writing compiler output refreshes the graph as pending loop evidence;
-- writing a fail/block gate verdict refreshes the graph with gate findings and remediation items;
-- actionable fail/block findings become same-loop compiler input for a superseding output/build;
-- only a passing gate promotes to the next loop or closes implementation;
-- implementation is not complete until required Git/content evidence is recorded.
-
-## Rules
-
-- Compilers do not validate their own outputs.
-- A compiler output is pre-gateway and cannot promote work by itself.
-- Any compiler may route back to decision when intent is unclear or KB truth is stale.
-- Planning is not implementation and should not change source code.
-- Implementation is TDD-aligned where practical and records justified exceptions for docs-only, config-only, or non-testable work.
-- Normal loop continuation uses CodeWiki source refs, telemetry traces, and `wiki_resume_context`, not chat summaries.
-- Automated compiler execution runs through gated agency controls and may retry same-loop remediation on actionable gate fail/block feedback.
-- Automated remediation stops on semantic ambiguity, missing approval, artifact conflict, risk escalation, destructive/publication action, isolation policy, non-actionable diagnostics, or retry/budget exhaustion.
+Generated views under `.codewiki/views/**` are projections over KB, traces, source/tests, and Git refs. View refresh is separate from loop promotion. A stale view can be regenerated; it is not truth.
 
 ## Related docs
 
-- [Compiler loop component](components/compilers.md)
-- [Builds](builds.md)
-- [Validation Gateway](validation-gateway.md)
-- [Graph](graph.md)
+- [Traces](traces.md)
 - [File Structure](file-structure.md)
+- [Runtime](runtime.md)
+- [Validation Gateway](validation-gateway.md)

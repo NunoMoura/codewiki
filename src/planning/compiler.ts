@@ -5,5 +5,6 @@ export function compilePlan(items: PlanningWorkItem[]): PlanningWorkItem[] {
 		...item,
 		decisionRefs: [...item.decisionRefs],
 		acceptance: [...item.acceptance],
+		pathScopes: [...item.pathScopes],
 	}));
 }

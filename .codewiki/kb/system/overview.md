@@ -2,104 +2,80 @@
 id: spec.system.overview
 title: System Overview
 state: active
-summary: Main runtime areas and ownership boundaries for CodeWiki.
+summary: Target CodeWiki architecture during the rebuild: three compiler loops, JSONL traces, generated views, runtime coordination, Pi terminal surface, and Git content evidence.
 owners:
   - architecture
-updated: "2026-06-03"
+updated: "2026-06-11"
 ---
 
 # System Overview
 
-## Main boundaries
+CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is disabled and archived under `_OLD_VERSION/**`. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module.
 
-CodeWiki is a Pi-based software-development distribution that maintains the repository-local `.codewiki/` contract and exposes it through backend API calls, internal agent tools, and minimal command surfaces. Pi is the runtime foundation, not a mere adapter. Adapter language is reserved for future/non-Pi protocol translation or compatibility paths.
+## Target mental model
 
-- **Knowledge base semantics** own product specs, visual UI specs, system access-surface specs, system specs, architecture rules, and workflow vocabulary under `.codewiki/kb/**`.
-- **Agency controller** owns bounded automation through agency cycles and explicit token, time, risk, gate, model, and approval boundaries.
-- **Three compiler loops** own decision, planning, and implementation engines. Compiler output is emitted into loop trace files, not a standalone source architecture layer.
-- **Telemetry traces** own compact lifecycle traceability under `.codewiki/telemetry/TRACE-*.json`, with cold trace metadata in `.codewiki/telemetry/catalog.json`.
-- **Gateway gates** validate loop outputs against criteria, source refs, gate evidence, generated graph context, KB/diagram freshness, and content proof. Gate pass is the promotion boundary.
-- **Graph engine** owns generated reconciliation state in `.codewiki/index_graph.json`: drift detection, routing, traceability, status, and freshness checks. The graph is required gate context but never overrides canonical sources or immutable content proof.
-- **File-structure ownership map** owns human-readable intended source/tree ownership, current implementation shape, approved migration deltas, and drift categories through [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
-- **Linters/gate criteria** produce deterministic alignment, file-structure, stale-reference, package, security, generated-parity, and source-contract evidence for users and gateways.
-- **Pi TUI diagram rendering** is the only retained future UI direction: source-backed system diagram YAML may render as ASCII/Unicode while delegating all semantics to the CodeWiki API. The browser Control Room and status/board/map/product/system UI surfaces are deprecated.
-- **API facade** owns stable package/tool use-case entrypoints under `src/api/**` so adapters, scripts, UI, CLI/MCP wrappers, and future harnesses do not depend on old layer-first internals.
-- **Loop-first source roots** own pure CodeWiki loop engines, gates, tools, schemas, transitions, and invariants for decision, planning, implementation, telemetry, graph, knowledge, Git proof, Pi integration, project contracts, runtime, agency, and shared primitives.
-- **Pi integration** owns backend commands, tools, session integration, packaged skills, and resource discovery. Future adapters may translate other protocol surfaces, but adapters do not own CodeWiki semantics.
-- **Shared** owns minimal cross-cutting helpers and types that are truly common; it must not become a dumping ground for domain or application behavior.
+CodeWiki has three semantic loops:
 
-## Truth boundaries and compiler model
+1. **Decision** — approve intent, requirements, tradeoffs, risks, and KB impact.
+2. **Planning** — materialize approved intent into executable work units, ordering, conflicts, and verification strategy.
+3. **Implementation** — change code/docs/tests, record evidence, run checks, and produce content proof.
 
-Detailed truth-boundary and compiler-loop tables live in [System Truth and Compilers](system-truth-and-compilers.md). This overview keeps the main runtime boundaries and ownership seams compact.
+Gates are loop exits. They validate whether a loop can promote to the next state, but they are not a fourth validation loop. Publication is an implementation-stage concern unless a future accepted decision creates a separate publish loop.
 
-## Ownership seams
+## Source-of-truth model
 
-- [Diagram Raw Data](diagrams/README.md) owns the canonical diagram families and agent-editable YAML sources for system visualizations.
-- [Architecture Map](diagrams/architecture.yaml) is the canonical architecture diagram source; generated render/export files are non-canonical artifacts.
-- [File Structure](file-structure.md) owns the target repository and knowledge-base structure rules, including the concept-root source migration target and intended-vs-current drift categories.
-- [API](api.md) owns the harness-independent CodeWiki access contract.
-- [Terminal UI](terminal-ui.md) owns Pi-hosted command-triggered views and agent visual language semantics; richer TUI design remains future work.
-- [Extension](extension.md) owns packaged distribution and the current Pi extension surface.
-- [Adapters](adapters.md) owns harness translation boundaries for Pi today and CLI/MCP/future harnesses later.
-- [Agency Controller](agency.md) owns bounded roadmap automation through agency cycles and explicit gates.
-- [Compilers](compilers.md) owns the decision, planning, and implementation loops.
-- [Validation Gateway](validation-gateway.md) owns loop gate semantics and structured gate diagnostics/remediation.
-- [Audits](audits.md) owns compatibility deterministic evidence semantics until gate criteria naming fully replaces audit/check wording.
-- [Builds](builds.md) owns compatibility compiler-output artifact semantics during telemetry migration.
-- [Graph](graph.md) owns the generated state/graph representation contract.
-- [Alignment Model](alignment-model.md) owns cross-layer precedence and propagation semantics.
-- [Knowledge](knowledge.md) owns product/system knowledge-base structure and persistence semantics.
-- [Roadmap](roadmap.md) owns work truth: queue, priority, status, blockers, progress, and closure semantics.
+CodeWiki truth comes from:
 
-CodeWiki should not implement a general sandbox, hosted SaaS, duplicate Pi observability/eval packages, or standalone browser Control Room. It defines `.codewiki/` semantics and exposes them through a stable API and Pi-first distribution surface.
+- `.codewiki/kb/**` for current product/system knowledge;
+- `.codewiki/traces/TRACE-*.jsonl` for workflow and state truth;
+- source/tests for implementation content;
+- Git for cold history, restore refs, commits, trees, and publication proof.
 
-## Target package architecture
+Generated state lives under `.codewiki/views/**` and is disposable. Deprecated graph, roadmap, build, validation, telemetry, and session files may be read only as migration compatibility artifacts. They are not target truth roots.
 
-The package target moves from broad concept-root ownership to loop-first source ownership with a stable `src/api/**` facade and primitive-only `src/shared/**` helpers. Decision, planning, and implementation roots own loop compilers/gates/tools; telemetry, graph, knowledge, Git proof, Pi integration, project contracts, runtime, and agency own shared supporting concerns. Pi UI and skills call API/loop entrypoints and do not own semantics. No top-level `infrastructure/`, `src/domain/**`, or `src/application/**` layer should exist; `scripts/**` remains optional developer convenience.
+## Source roots
 
-Recreating layer-first owner paths now requires a new accepted decision with explicit temporary shim owner, expiry, and guard coverage.
+Target package roots are:
 
-## Knowledge-base organization rule
+- `src/decision/**`
+- `src/planning/**`
+- `src/implementation/**`
+- `src/traces/**`
+- `src/views/**`
+- `src/knowledge/**`
+- `src/git/**`
+- `src/runtime/**`
+- `src/pi/**`
+- `src/project/**`
+- `src/utils/**`
+- `src/api/**`
 
-Every CodeWiki knowledge base should use the same high-level structure:
+There is no target `src/views/**`, `src/traces/**`, `src/runtime/**`, `src/gateway/**`, `src/validation/**`, `src/state/**`, or `src/roadmap/**` root.
 
-```text
-.codewiki/kb/
-  product/
-    overview.md
-    users/
-    stories/
-    uis/
-  system/
-    overview.md
-    file-structure.md
-    <component>.md
-    diagrams/
-      README.md
-      context-map.yaml
-      component-map.yaml
-      key-flow.yaml
-      data-model.yaml
-      state-lifecycle.yaml
-```
+## Runtime model
 
-Product docs define users, user stories, and visual user interfaces. System docs define the technical architecture, API, adapters, distribution mechanisms, component ownership, and diagram raw data that implement product intent.
+Runtime coordinates execution. It owns boundaries, claims, leases, scheduling, automation policy, budgets, dispatch, lifecycle helpers, and temporary data. Runtime is not a semantic loop.
 
-System component docs should stay flat. Each major component should have one matching `.md` file under `system/`, and each component should map to the project file structure. Diagram raw data is the intended nested system exception and lives under `system/diagrams/**`. Avoid nested component folders and avoid `overview.md` files except `product/overview.md`, `system/overview.md`, and `system/diagrams/README.md`.
+Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Gate pass cleans loop temp after durable refs exist. Gate fail/block preserves loop temp for remediation. Superseding runs replace stale loop temp. Trace close cleans all remaining trace temp.
 
-## Change lifecycle
+Pi native compaction is the only active compaction mechanism during the rebuild. CodeWiki-owned refresh windows and automatic resume pickup remain disabled until explicitly reintroduced.
 
-Semantic work starts in the Decision Loop, propagates through Planning Loop and Implementation Loop, and exits each loop only through its gateway gate. Publication or release proof is implementation/content evidence, not a fourth loop. The detailed review and propagation rules live in [Change Lifecycle](change-lifecycle.md).
+## Generated views
+
+Generated views answer current-state questions quickly:
+
+- status
+- resume
+- work-plan
+- blockers
+- conflicts
+
+A terminal board or kanban display, if added later, renders the work-plan view. It is not a separate truth concept.
 
 ## Related docs
 
-- [Product](../product/overview.md)
-- [Lexicon](../lexicon.md)
-- [Architecture Map](diagrams/architecture.yaml)
 - [File Structure](file-structure.md)
-- [Alignment Model](alignment-model.md)
-- [Change Lifecycle](change-lifecycle.md)
-- [Audits](audits.md)
-- [API](api.md)
-- [Extension](extension.md)
-- [Agency Controller](agency.md)
+- [Traces](traces.md)
+- [Compilers](compilers.md)
+- [Runtime](runtime.md)
+- [Validation Gateway](validation-gateway.md)

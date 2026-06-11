@@ -1,176 +1,71 @@
 schema_version: 1
 id: spec.system.diagrams.state-lifecycle
-title: CodeWiki Three-Loop Trace Lifecycle
+title: CodeWiki Trace State Lifecycle
 kind: state_lifecycle
-purpose: Show how intent, loop trace files, gate verdicts, implementation evidence, and Git proof move through CodeWiki.
+purpose: Show target trace lifecycle states and cleanup boundaries.
 source_docs:
-  - .codewiki/kb/system/compilers.md
-  - .codewiki/kb/system/builds.md
-  - .codewiki/kb/system/roadmap.md
-  - .codewiki/kb/system/validation-gateway.md
-  - .codewiki/kb/system/graph.md
-  - .codewiki/kb/system/alignment-model.md
-  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/adapters.md
 renderer:
-  preferred: mermaid_state
-  fallback: custom_state
-transition_policy:
-  operational_source: graph-backed state machine
-  analytics_projection: Markov/MDP-style transition metrics are derived from graph snapshots, telemetry traces, gate verdicts, source fingerprints, and Git history; they do not replace the graph.
-  route_fields:
-    - failure_class
-    - recommended_next_loop
+  preferred: state_machine
+  fallback: mermaid_state
 states:
-  - id: user_intent
-    label: User intent captured
-    kind: input
-  - id: decision_rows_proposed
-    label: Decision rows proposed
-    kind: decision_gate
-  - id: decision_build_accepted
-    label: Decision trace passed decision gate
-    kind: loop_trace
-  - id: knowledge_updated
-    label: Knowledge updated
-    kind: durable_truth
-  - id: planning_build_accepted
-    label: Planning trace passed planning gate
-    kind: loop_trace
-  - id: task_todo
-    label: Roadmap task todo
-    kind: work
-  - id: task_in_progress
-    label: Task in progress
-    kind: work
-  - id: context_reset
-    label: Context reset and auto-pickup
-    kind: hygiene
-  - id: daemon_job_queued
-    label: Daemon job queued
-    kind: runtime
-  - id: daemon_run_active
-    label: Daemon run active and heartbeating
-    kind: runtime
-  - id: daemon_job_completed
-    label: Daemon job completed with handoff refs
-    kind: runtime
-  - id: daemon_job_blocked
-    label: Daemon job blocked with reason
-    kind: blocked
-  - id: task_verify
-    label: Task verify
-    kind: gate
-  - id: implementation_build_accepted
-    label: Implementation trace passed gate with Git proof
-    kind: loop_trace
-  - id: task_done
-    label: Task done
-    kind: closed
-  - id: task_blocked
-    label: Task blocked
-    kind: blocked
-  - id: follow_up_opened
-    label: Follow-up opened
-    kind: work
+  - id: decision_active
+    label: Decision active
+  - id: planning_active
+    label: Planning active
+  - id: implementation_active
+    label: Implementation active
+  - id: blocked
+    label: Blocked/remediation needed
+  - id: production_ready
+    label: Production ready
+  - id: published
+    label: Published
+  - id: closed
+    label: Closed/retained
 transitions:
-  - from: user_intent
-    to: decision_rows_proposed
-    trigger: decision compiler proposes rows
-  - from: decision_rows_proposed
-    to: knowledge_updated
-    trigger: user approves rows and decision compiler applies KB changes
-    gate: user decision
-  - from: knowledge_updated
-    to: decision_build_accepted
-    trigger: decision.json records row-to-KB and propagation evidence
-    gate: decision gate
-  - from: knowledge_updated
-    to: decision_rows_proposed
-    trigger: decision gate fails or blocks with decision ambiguity, missing approval, or incomplete semantic mapping
-    gate: failure_class and recommended_next_loop
-  - from: decision_build_accepted
-    to: planning_build_accepted
-    trigger: planning compiler creates/refines work and planning gate passes
-  - from: planning_build_accepted
-    to: planning_build_accepted
-    trigger: planning gate fails locally and planner emits superseding planning trace evidence
-    gate: failure_class and recommended_next_loop
-  - from: planning_build_accepted
-    to: decision_rows_proposed
-    trigger: planning gate reveals ambiguous intent, unapproved semantics, or missing risk approval
-    gate: failure_class and recommended_next_loop
-  - from: planning_build_accepted
-    to: task_todo
-    trigger: validated planning output makes roadmap task implementation-ready
-  - from: task_todo
-    to: task_in_progress
-    trigger: implementation resumes task
-  - from: task_in_progress
-    to: context_reset
-    trigger: agency or loop boundary requests CodeWiki-owned reset and agency level still allows continuation
-    gate: protocol-safe source-backed kickoff
-  - from: context_reset
-    to: task_in_progress
-    trigger: adapter delivers auto-pickup kickoff from resume context
-  - from: task_in_progress
-    to: daemon_job_queued
-    trigger: agency/runtime records a durable execution attempt without changing roadmap truth
-  - from: daemon_job_queued
-    to: daemon_run_active
-    trigger: worker claims artifact-status scopes and starts run
-  - from: daemon_run_active
-    to: daemon_job_completed
-    trigger: run outcome pass records trace, gate, content, and handoff refs
-    gate: compiler output and gate pass evidence
-  - from: daemon_run_active
-    to: daemon_job_blocked
-    trigger: run outcome fail, block, error, stale heartbeat, budget stop, conflict, or missing proof
-    gate: block_reason and retry_limit
-  - from: daemon_job_blocked
-    to: daemon_job_queued
-    trigger: blocker resolved and max_attempts permits retry of same execution request
-  - from: daemon_job_blocked
-    to: task_blocked
-    trigger: retry limit reached or user/policy input required
-  - from: daemon_job_completed
-    to: task_in_progress
-    trigger: handoff resumes compiler loop from source refs; roadmap remains canonical task truth
-  - from: task_in_progress
-    to: task_verify
-    trigger: acceptance evidence, linters, and tests are ready
-  - from: task_verify
-    to: implementation_build_accepted
-    trigger: implementation gate passes and Git proof is recorded
-    gate: implementation gate
-  - from: task_verify
-    to: task_in_progress
-    trigger: implementation gate fails locally and compiler emits superseding implementation trace evidence
-    gate: failure_class and recommended_next_loop
-  - from: task_verify
-    to: planning_build_accepted
-    trigger: implementation gate reveals a planning gap
-    gate: failure_class and recommended_next_loop
-  - from: task_verify
-    to: decision_rows_proposed
-    trigger: implementation gate reveals ambiguous intent, unapproved semantics, or missing risk approval
-    gate: failure_class and recommended_next_loop
-  - from: implementation_build_accepted
-    to: task_done
-    trigger: task closure evidence recorded
-  - from: task_verify
-    to: task_blocked
-    trigger: gate fails, blocks, policy requires stop, content proof is missing, or runtime conflict cannot proceed
-    gate: verifier or policy
-  - from: task_done
-    to: follow_up_opened
-    trigger: new accepted delta appears after closure
-  - from: task_blocked
-    to: task_in_progress
-    trigger: blocker resolved and task resumes
-ui_hints:
-  default_state: user_intent
-  terminal_states:
-    - task_done
-    - task_blocked
+  - from: decision_active
+    to: planning_active
+    trigger: decision gate pass
+    trace_event: decision.gate.pass
+    cleanup: clean decision tmp after durable refs exist
+  - from: decision_active
+    to: blocked
+    trigger: decision gate fail or block
+    trace_event: decision.gate.block
+    cleanup: preserve decision tmp
+  - from: planning_active
+    to: implementation_active
+    trigger: planning gate pass
+    trace_event: planning.gate.pass
+    cleanup: clean planning tmp after durable refs exist
+  - from: planning_active
+    to: blocked
+    trigger: planning gate fail or block
+    trace_event: planning.gate.block
+    cleanup: preserve planning tmp
+  - from: implementation_active
+    to: production_ready
+    trigger: implementation gate pass
+    trace_event: implementation.gate.pass
+    cleanup: clean implementation tmp after durable refs exist
+  - from: implementation_active
+    to: blocked
+    trigger: implementation gate fail or block
+    trace_event: implementation.gate.block
+    cleanup: preserve implementation tmp
+  - from: production_ready
+    to: published
+    trigger: optional implementation-stage publication proof
+    trace_event: implementation.publication.pass
+  - from: production_ready
+    to: closed
+    trigger: close without publication requirement
+    trace_event: trace.close
+    cleanup: delete all remaining trace tmp
+  - from: published
+    to: closed
+    trigger: close after publication proof
+    trace_event: trace.close
+    cleanup: delete all remaining trace tmp

@@ -9,29 +9,29 @@ diagram_refs:
   - file-structure-map:build_validation_gateway_wave
   - file-structure-map:publication_proof
 source_roots:
-  - src/telemetry/**
+  - src/traces/**
   - src/git/**
   - src/build/**
   - src/gc/**
 owners:
   - architecture
 updated: "2026-06-03"
-summary: Telemetry traces, compiler output, Git proof refs, and hot-artifact retention.
+summary: JSONL traces, compiler output, Git proof refs, and hot-artifact retention.
 ---
 
 # Telemetry and Git Proof Component
 
 ## Responsibility
 
-Telemetry traces capture compact workflow evidence between loop compilers and gates. Git proof records exact content through commits, trees, package digests, tags, and remote refs. Retention removes eligible hot details only after trace summaries and Git proof preserve recovery paths.
+JSONL traces capture compact workflow evidence between loop compilers and gates. Git proof records exact content through commits, trees, package digests, tags, and remote refs. Retention removes eligible hot details only after trace summaries and Git proof preserve recovery paths.
 
 ## Owned paths
 
-- Target `src/telemetry/**` owns trace read/write, normalization, and retention.
+- Target `src/traces/**` owns trace read/write, normalization, and retention.
 - Target `src/git/**` owns Git proof, worktree proof, publisher proof, and content ref helpers.
 - Compatibility `src/build/**` owns historic artifact writing and schemas until migration.
-- Compatibility `src/gc/**` owns current GC classification, ledgers, and purge behavior until retention moves into telemetry/Git proof.
-- Target state uses `.codewiki/telemetry/**`; compatibility state may still use `.codewiki/builds/**` and `.codewiki/validation/**`.
+- Compatibility `src/gc/**` owns current GC classification, ledgers, and purge behavior until retention moves into trace/Git proof.
+- Target state uses `.codewiki/traces/**`; compatibility state may still use `.codewiki/builds/**` and `.codewiki/validation/**`.
 
 ## Contracts
 

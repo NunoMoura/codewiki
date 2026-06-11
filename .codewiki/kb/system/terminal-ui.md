@@ -16,7 +16,7 @@ diagram_refs:
 
 CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated, including status panels/docks, Board, Map, Product/System navigation panels, and browser Control Room concepts.
 
-The only retained UI direction is future Pi TUI rendering of canonical system diagrams as ASCII/Unicode. Backend state remains available through `wiki_state`, graph lenses, roadmap/task state, lifecycle traces, validation reports, and source refs.
+The only retained UI direction is future Pi TUI rendering of canonical system diagrams as ASCII/Unicode. Backend state remains available through `wiki_state`, view lenses, roadmap/task state, lifecycle traces, validation reports, and source refs.
 
 ## Command-triggered surfaces
 
@@ -33,7 +33,7 @@ Active command direction is limited to backend actions and future diagram render
 
 ## Diagram rendering
 
-Canonical diagrams live under `.codewiki/kb/system/diagrams/**` as YAML. Terminal renderers read those YAML files or generated graph lenses derived from them.
+Canonical diagrams live under `.codewiki/kb/system/diagrams/**` as YAML. Terminal renderers read those YAML files or generated view lenses derived from them.
 
 Diagram rendering should prioritize interpretation over fidelity:
 

@@ -1,8 +1,7 @@
-import type { SourceRef } from "../shared/types.ts";
-
 export interface PlanningWorkItem {
 	id: string;
-	decisionRefs: SourceRef[];
+	decisionRefs: string[];
 	outcome: string;
 	acceptance: string[];
+	pathScopes: string[];
 }

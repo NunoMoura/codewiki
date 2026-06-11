@@ -2,17 +2,7 @@ export const CODEWIKI_EXTENSION_AVAILABLE = false as const;
 
 export const sourceLayout = {
 	loopRoots: ["decision", "planning", "implementation"],
-	supportRoots: [
-		"telemetry",
-		"graph",
-		"knowledge",
-		"git",
-		"pi",
-		"project",
-		"runtime",
-		"agency",
-		"shared",
-	],
+	supportRoots: ["traces", "views", "knowledge", "git", "pi", "runtime", "project", "utils"],
 } as const;
 
 export type SourceLayout = typeof sourceLayout;

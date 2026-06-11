@@ -20,7 +20,7 @@ owners:
   - architecture
   - product
 updated: "2026-06-03"
-summary: Decision, planning, and implementation loop engines that emit compact compiler output into telemetry traces.
+summary: Decision, planning, and implementation loop engines that emit compact compiler output into JSONL traces.
 ---
 
 # Compiler Loop Component
@@ -33,9 +33,9 @@ Compiler loops transform approved intent into the next loop's source-backed evid
 
 - Target source roots are `src/decision/**`, `src/planning/**`, and `src/implementation/**`.
 - Each loop root owns `compiler.ts`, loop-specific gate behavior, tool orchestration, and local types/helpers.
-- Top-level `src/build/**` is compatibility infrastructure until compiler output writing moves into telemetry/loop roots.
+- Top-level `src/build/**` is compatibility infrastructure until compiler output writing moves into `src/traces/**` and loop roots.
 - `skills/codewiki-decision/**`, `skills/codewiki-planning/**`, and `skills/codewiki-implementation/**` define agent loop workflow.
-- Target state stores compiler output inside `.codewiki/telemetry/<trace_id>/{decision,planning,implementation}.json`.
+- Target state stores compiler output inside `.codewiki/traces/TRACE-*.jsonl`.
 
 ## Contracts
 

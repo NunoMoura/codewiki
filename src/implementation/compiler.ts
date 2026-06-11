@@ -1,8 +1,6 @@
 import type { ImplementationChange } from "./types.ts";
 
-export function compileImplementation(
-	change: ImplementationChange,
-): ImplementationChange {
+export function compileImplementation(change: ImplementationChange): ImplementationChange {
 	return {
 		...change,
 		planningRefs: [...change.planningRefs],

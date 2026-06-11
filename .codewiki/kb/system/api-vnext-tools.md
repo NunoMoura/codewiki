@@ -25,7 +25,7 @@ The vNext user command surface is backend-first. User commands trigger backend a
 | `/wiki config` | Apply user CodeWiki preferences/configuration through command-adapter backend calls. |
 | `/wiki system <diagram type>` | Future Pi TUI rendering of canonical system diagram YAML as ASCII/Unicode. |
 
-Status UI commands such as `/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated. Product/Board/Map navigation commands are not active target surfaces. Backend state is read through `wiki_state`, graph lenses, roadmap state, lifecycle traces, validation reports, and source refs.
+Status UI commands such as `/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated. Product/Board/Map navigation commands are not active target surfaces. Backend state is read through `wiki_state`, view lenses, roadmap state, lifecycle traces, validation reports, and source refs.
 
 Legacy `/wiki-*` hyphen commands and standalone compatibility commands such as `/audit` may remain during migration as shims with deprecation metadata. They are not canonical user vocabulary.
 

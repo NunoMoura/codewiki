@@ -38,14 +38,14 @@ Terminal UX should provide source-backed visual views through Pi chat, Pi TUI pa
 - runtime Brain lease/job/block views,
 - decision row cards.
 
-Rendered terminal output is not canonical truth. Canonical truth remains in KB docs, roadmap state, builds, validation reports, source code/tests, generated graph state, runtime/session state, and Git proof.
+Rendered terminal output is not canonical truth. Canonical truth remains in KB docs, roadmap state, builds, validation reports, source code/tests, generated views, runtime/session state, and Git proof.
 
 ## Migration rules
 
 - Do not migrate deprecated web UI code to new diagram or graph contracts unless required for a removal-safe compatibility step.
 - Remove browser code/docs through a validated roadmap task with tests and package proof.
 - Keep immutable historical builds/validation/archive refs intact.
-- If shareable diagram exports are needed later, generate them from canonical YAML/graph state into generated/export paths, not KB source-truth paths.
+- If shareable diagram exports are needed later, generate them from canonical YAML/generated view state into generated/export paths, not KB source-truth paths.
 
 ## Related docs
 

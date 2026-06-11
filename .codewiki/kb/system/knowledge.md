@@ -59,7 +59,7 @@ Each major system component should have one matching `.md` file under `system/`.
 
 Knowledge docs should use minimal curated Markdown links for human navigation and intentional semantic dependencies. They should not try to manually encode the full relationship graph.
 
-The generated graph derives machine relationships from frontmatter, explicit references, curated Markdown links, build metadata, roadmap links, validation reports, code/test facts, and source fingerprints. If a relationship is mainly needed for routing, drift detection, freshness, or backlinks, it belongs in generated graph state rather than in hand-maintained prose links.
+The generated graph derives machine relationships from frontmatter, explicit references, curated Markdown links, build metadata, roadmap links, validation reports, code/test facts, and source fingerprints. If a relationship is mainly needed for routing, drift detection, freshness, or backlinks, it belongs in generated views rather than in hand-maintained prose links.
 
 Routine `code_paths` in knowledge frontmatter are deprecated as a required mapping mechanism. They duplicate graph responsibility and drift during source-root migrations. Knowledge docs should keep minimal semantic metadata and use `diagram_refs` when a system diagram node is the intended anchor. Exact code paths belong primarily in roadmap tasks, compiler output, gate evidence, file-structure/diagram mappings, or generated graph facts. A knowledge doc may still use frontmatter `code_paths` as an explicit override when it intentionally owns a precise code surface; when present, linters should verify the paths instead of treating them as generated truth.
 
@@ -71,7 +71,7 @@ Routine `code_paths` in knowledge frontmatter are deprecated as a required mappi
 - Use Git for historical recovery.
 - Use builds for temporary loop handoff briefs.
 - Use roadmap for active work truth.
-- Use graph state for generated reconciliation, routing, freshness, backlinks, doc-code mapping, and drift detection.
+- Use generated view state for generated reconciliation, routing, freshness, backlinks, doc-code mapping, and drift detection.
 - Use code/tests for executable truth.
 - Prefer sparse intentional links over exhaustive wiki-link meshes.
 - Store canonical diagram source as readable YAML specs under `system/diagrams/**`; treat Mermaid, Cytoscape element JSON, or SVG as renderer targets unless explicitly promoted.
