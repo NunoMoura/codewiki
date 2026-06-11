@@ -6,7 +6,7 @@ summary: System mechanism for bounded roadmap automation through agency cycles a
 owners:
   - architecture
   - engineering
-updated: "2026-06-07"
+updated: "2026-06-11"
 code_paths:
   - src/agency
   - src/runtime
@@ -142,9 +142,9 @@ A new decision introduced mid-roadmap becomes a parallel decision workstream whe
 
 ## Context reset and auto-pickup
 
-Context reset is agency hygiene, not an approval gate by itself. If the current agency level still authorizes the next unit of work, CodeWiki may reset context and automatically pick up from a bounded source-backed kickoff.
+Context reset is agency hygiene in the target design, but it is disabled for this repository during the rebuild. Pi native compaction is the only active compaction mechanism. CodeWiki-owned same-loop soft compaction, automatic source-backed kickoff injection, and auto-pickup from CodeWiki runtime state must not run until the extension is explicitly reintroduced.
 
-The kickoff is generated from `wiki_resume_context` or its trace-first successor and carries only the active trace pointer or task/sprint/roadmap contract, graph lens, source refs, current delta, gates, blockers, artifact status, budget, expected output, and content-evidence requirements. It should link to rules and source docs instead of restating broad process text. The agency runner consumes the source-backed resume packet plus visible tool-result refs, active task/build refs, budget use, approval cadence, and stop conditions before any auto-pickup is allowed. Same-session reset uses adapter compaction plus a protocol-safe custom kickoff message. Hard replacement-session reset uses adapter `new_session` when available and seeds the replacement session with the same kickoff; when the adapter cannot provide that context, the runner returns a visible fallback instead of auto-continuing. CodeWiki must not auto-continue from an assistant-leaf message and must not inject slash-command text as reset control.
+In the target design after explicit reintroduction, the kickoff is generated from `wiki_resume_context` or its trace-first successor and carries only the active trace pointer or task/sprint/roadmap contract, graph lens, source refs, current delta, gates, blockers, artifact status, budget, expected output, and content-evidence requirements. It should link to rules and source docs instead of restating broad process text. The agency runner consumes the source-backed resume packet plus visible tool-result refs, active task/build refs, budget use, approval cadence, and stop conditions before any auto-pickup is allowed. Same-session reset uses adapter compaction plus a protocol-safe custom kickoff message. Hard replacement-session reset uses adapter `new_session` when available and seeds the replacement session with the same kickoff; when the adapter cannot provide that context, the runner returns a visible fallback instead of auto-continuing. CodeWiki must not auto-continue from an assistant-leaf message and must not inject slash-command text as reset control.
 
 Context boundaries are role-free. Agency may request a boundary because of context bloat, fresh gate evaluation, parallel continuation, risk boundary, publication policy, or source-backed recovery, but runtime dispatch uses reason, trace scope, expected output, source refs, constraints, and budgets instead of canonical role labels.
 
