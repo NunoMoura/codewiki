@@ -19,6 +19,7 @@ export interface TraceEvent {
 	event: string;
 	refs: string[];
 	createdAt: IsoTimestamp;
+	data?: Record<string, unknown>;
 }
 
 export interface TailCheckpoint {
