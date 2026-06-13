@@ -171,6 +171,7 @@ components:
     tests:
       - tests/scaffold.test.mjs
       - tests/implementation/repo-proof.test.mjs
+      - tests/runtime/wiki-config.test.mjs
     role: project_boundary
   utils:
     doc: .codewiki/kb/system/file-structure.md

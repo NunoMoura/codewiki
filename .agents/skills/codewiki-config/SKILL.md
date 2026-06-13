@@ -5,12 +5,12 @@ description: Inspect and resolve CodeWiki configuration. Use when automation pol
 
 # CodeWiki Config
 
-Use this skill when a task depends on automation, host policy, runtime limits, retention, or adapter settings.
+Use this skill when a task depends on automation, agency, approval cadence, host policy, runtime limits, worktree isolation, retention, or adapter settings.
 
 ## Ground rules
 
 - In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
-- Config influences how loops and runtime coordinate; it does not replace trace truth.
+- Config influences how loops, runtime, archive, and host adapters coordinate; it does not replace trace truth.
 - Prefer previewing resolved config before changing behavior.
 - Keep policy explicit when user approval, destructive action, or host boundaries matter.
 
@@ -34,10 +34,26 @@ node --experimental-strip-types src/cli/index.ts config --input config.json
 {
   "patch": {
     "runtime": {
-      "maxWorkers": 2
+      "maxWorkers": 2,
+      "agency": "delegate",
+      "worktreeIsolation": "auto",
+      "budgets": {
+        "maxIterations": 2,
+        "maxChangedFiles": 12
+      },
+      "approval": {
+        "cadence": "on_risk",
+        "destructiveAction": "ask"
+      }
     },
     "retention": {
-      "hotTraces": 20
+      "hotTraceLimit": 20,
+      "requireCloseRecord": true
+    },
+    "hosts": {
+      "cli": { "enabled": true },
+      "pi": { "enabled": false },
+      "mcp": { "enabled": false }
     }
   }
 }
@@ -46,7 +62,7 @@ node --experimental-strip-types src/cli/index.ts config --input config.json
 ## Workflow
 
 1. Resolve current config before runtime, archive, or host-adapter work.
-2. Check worker limits, retention settings, and host options before planning automation.
+2. Check worker limits, agency level, approval cadence, budgets, retention settings, and host options before planning automation.
 3. Validate config output before assuming a policy is active.
 4. Keep user approval explicit for risky or irreversible operations.
 5. Update docs/tests with config behavior when adding new policy fields.

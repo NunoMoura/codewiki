@@ -75,17 +75,16 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
 | Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config with CLI-backed instructions. |
 | Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
-| P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Add config-driven isolation: `none`, `worktree`, or `auto`. Keep worktree helpers host-owned until orchestration stabilizes. |
+| P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config now declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution remains deferred. |
 | P1 | Project bootstrap/scaffold generation | Target package source is stable enough for core loops, but bootstrap remains unavailable. | Regenerate scaffold from target file-structure docs after active APIs stop moving. |
 | P2 | Roadmap archival note | Planning work units replace roadmap truth. Old roadmap files may need a recorded archival decision, not import by default. | Write a trace/KB note that old roadmap state is ignored or archived unless explicitly selected for import. |
-| P2 | Policy/config model | Exit-condition policy and agency behavior are mostly code-level options. | Consolidate automation, agency, worktree isolation, budgets, approvals, and retention settings in CodeWiki config. |
+| Done | Policy/config model | Exit-condition policy and agency behavior need one typed project config instead of scattered options. | `src/project/config.ts` now resolves automation, agency, worktree isolation, budgets, approvals, retention, and host adapter flags through `wiki_config`. |
 | P2 | Audit command | External Pi/LSP/lens validation is used during rebuild. | Package audit facade can wait until active CLI/API needs it. |
 
 ## Recommended next migration order
 
-1. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
-2. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
-3. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
+1. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
+2. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
 
 ## Stop condition for architecture work
 

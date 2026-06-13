@@ -55,7 +55,7 @@ The normal internal agent surface is small and phase-aligned.
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; append trace state. | Yes |
 | `wiki_runtime` | Inspect queue state, plan dispatch, claim/release work, and coordinate worker dispatch without creating a fourth loop. | Yes, for claim/release events |
 | `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. | Yes |
-| `wiki_config` | Read and update CodeWiki configuration for automation, policy, retention, skills, and host integration. | Yes |
+| `wiki_config` | Read and update CodeWiki configuration for automation, agency, approval, budgets, worktree isolation, retention, skills, and host integration. | Yes |
 
 There is no standalone target tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
 
@@ -67,7 +67,7 @@ The core reduced-tool facade shape now exists for the target tool set:
 - `runWikiImplement()` prepares repository snapshot data and working-tree content proof, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch.
 - `runWikiRuntime()` plans dispatch from the work queue and optionally appends runtime claim events.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
-- `runWikiConfig()` resolves and patches typed CodeWiki runtime/retention config.
+- `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
 
 Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The CLI adapter exposes `state`, `config`, `decide`, `plan`, `implement`, `runtime`, and `archive` commands over the same root facade surface. The run commands accept `--input <file|->` JSON and optional flag overrides for repository, mode, trace, sequence, expected bytes, and runtime worker count.
 

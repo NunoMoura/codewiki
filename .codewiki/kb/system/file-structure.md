@@ -178,7 +178,7 @@ src/
     assert.ts
 ```
 
-Loop roots own loop output shaping and exit-condition evaluation. `runtime` owns automation policy, scheduling, budgets, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `cli` and `pi` are host adapters over root core facades. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
+Loop roots own loop output shaping and exit-condition evaluation. `project/config.ts` owns resolved automation, agency, approval, budget, host, worktree, and retention settings. `runtime` owns scheduling, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `cli` and `pi` are host adapters over root core facades. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
 
 ## Roots to retire or merge
 
