@@ -154,6 +154,8 @@ src/
     lifecycle.ts
     tmp.ts
     types.ts
+  cli/                       # CLI host adapter over root core facades
+    index.ts
   pi/                        # Pi package surface, disabled until reintroduced
     extension.ts
     dispatcher.ts
@@ -176,7 +178,7 @@ src/
     assert.ts
 ```
 
-Loop roots own loop output shaping and exit-condition evaluation. `runtime` owns automation policy, scheduling, budgets, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
+Loop roots own loop output shaping and exit-condition evaluation. `runtime` owns automation policy, scheduling, budgets, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `cli` and `pi` are host adapters over root core facades. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
 
 ## Roots to retire or merge
 

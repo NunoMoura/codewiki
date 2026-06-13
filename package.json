@@ -9,6 +9,9 @@
 		"agent"
 	],
 	"type": "module",
+	"bin": {
+		"codewiki": "./src/cli/index.ts"
+	},
 	"scripts": {
 		"test": "npm run typecheck && npm run test:smoke",
 		"test:smoke": "node --experimental-strip-types --test ./tests/scaffold.test.mjs ./tests/decision/*.test.mjs ./tests/planning/*.test.mjs ./tests/implementation/*.test.mjs ./tests/knowledge/*.test.mjs ./tests/traces/*.test.mjs ./tests/views/*.test.mjs ./tests/runtime/*.test.mjs",

@@ -7,6 +7,7 @@ export const sourceLayout = {
 		"views",
 		"knowledge",
 		"git",
+		"cli",
 		"pi",
 		"runtime",
 		"project",

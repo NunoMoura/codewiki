@@ -143,6 +143,13 @@ components:
       - runtime.claim.cancelled
       - runtime.dispatch.planned
     role: outer_loop_coordination
+  cli:
+    doc: .codewiki/kb/system/api.md
+    source:
+      - src/cli/**
+    tests:
+      - tests/runtime/cli.test.mjs
+    role: host_adapter
   pi:
     doc: .codewiki/kb/system/extension.md
     source:

@@ -9,6 +9,7 @@ const expectedSupportRoots = [
 	"views",
 	"knowledge",
 	"git",
+	"cli",
 	"pi",
 	"runtime",
 	"project",

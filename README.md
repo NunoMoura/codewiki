@@ -27,6 +27,7 @@ src/
   knowledge/
   git/
   runtime/
+  cli/
   pi/
   project/
   utils/
@@ -44,6 +45,7 @@ Temporary trace scratch belongs under `.codewiki/runtime/tmp/<trace>/<loop>/`. I
 npm run typecheck
 npm test
 npm run test:pack
+node --experimental-strip-types src/cli/index.ts state --repo .
 ```
 
 ## Pi usage
