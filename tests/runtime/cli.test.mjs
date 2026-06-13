@@ -7,6 +7,12 @@ import { describe, it } from "node:test";
 import { runCodewikiCli } from "../../src/cli/index.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 
+async function writeJsonInput(root, name, value) {
+	const path = join(root, name);
+	await writeFile(path, JSON.stringify(value));
+	return path;
+}
+
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-cli-"));
 	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
@@ -80,5 +86,61 @@ describe("CLI adapter", () => {
 		const result = await runCodewikiCli(["config"]);
 		assert.equal(result.status, 0);
 		assert.match(result.stdout || "", /"project": "codewiki"/);
+	});
+
+	it("runs write facade commands from JSON input", async () => {
+		const root = await fixture();
+		try {
+			const traceHead = createTraceHead({
+				traceId: "TRACE-cli-command",
+				title: "CLI command fixture",
+				createdAt: "2026-06-12T00:00:00.000Z",
+			});
+			const commandInputs = {
+				decide: {
+					traceId: "TRACE-cli-command",
+					tableInput: { rows: [] },
+				},
+				plan: {
+					traceId: "TRACE-cli-command",
+					decisionEvents: [],
+				},
+				implement: {
+					repoRoot: root,
+					traceId: "TRACE-cli-command",
+					planningEvents: [],
+				},
+				runtime: {
+					queue: {
+						traceIds: [],
+						summary: {
+							backlog: 0,
+							waiting: 0,
+							ready: 0,
+							claimed: 0,
+							blocked: 0,
+							done: 0,
+						},
+						items: [],
+					},
+				},
+				archive: {
+					records: [traceHead],
+					gitRestoreRef: "refs/codewiki/archive/TRACE-cli-command",
+				},
+			};
+			for (const [command, input] of Object.entries(commandInputs)) {
+				const inputPath = await writeJsonInput(root, `${command}.json`, input);
+				const result = await runCodewikiCli([
+					command,
+					"--input",
+					inputPath,
+				]);
+				assert.equal(result.status, 0, `${command}: ${result.stderr || ""}`);
+				assert.equal(JSON.parse(result.stdout || "{}").mode, "preview");
+			}
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 });

@@ -69,7 +69,7 @@ The core reduced-tool facade shape now exists for the target tool set:
 - `runWikiArchive()` previews trace retention stubs and restore refs.
 - `runWikiConfig()` resolves and patches typed CodeWiki runtime/retention config.
 
-Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The CLI adapter begins with read-only `state` and `config` commands over the same root facade surface.
+Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The CLI adapter exposes `state`, `config`, `decide`, `plan`, `implement`, `runtime`, and `archive` commands over the same root facade surface. The run commands accept `--input <file|->` JSON and optional flag overrides for repository, mode, trace, sequence, expected bytes, and runtime worker count.
 
 ## `wiki_state` views
 

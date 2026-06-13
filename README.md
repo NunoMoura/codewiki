@@ -46,10 +46,12 @@ npm run typecheck
 npm test
 npm run test:pack
 node --experimental-strip-types src/cli/index.ts state --repo .
+node --experimental-strip-types src/cli/index.ts config
+node --experimental-strip-types src/cli/index.ts decide --input decision.json
 ```
 
 ## Pi usage
 
 Do not install this checkout as a Pi extension during the rebuild. If Pi was already running with an older CodeWiki extension, remove that package from Pi settings and reload Pi.
 
-Repo-local Pi settings currently load only `pi-lens`; CodeWiki itself is unavailable to Pi until a future explicit extension reintroduction.
+Repo-local Pi settings currently load only `pi-lens`; CodeWiki itself is unavailable to Pi until a future explicit extension reintroduction. Use the CLI as the first host adapter over the root core facades.

@@ -83,16 +83,15 @@ These old behaviors should stay out of active source unless a future accepted de
 
 ## Recommended next migration order
 
-1. **CLI wrapper** — expose the reduced tool set over root core APIs first, before Pi/MCP wrappers.
-2. **Skills refactor** — teach agents the new tools, trace truth, retention model, and no-roadmap/no-graph rules.
-3. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
-4. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
-5. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
-6. **Optional host integrations** — Pi extension commands/tools, CLI, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
+1. **Skills refactor** — teach agents the new tools, trace truth, retention model, and no-roadmap/no-graph rules.
+2. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
+3. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
+4. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
+5. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
 
 ## Stop condition for architecture work
 
-Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, and facade-only root exports now exist; remaining P0 work should wrap those APIs for users/agents.
+Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, and CLI wrapper now exist; remaining P0 work should teach users/agents how to operate those APIs safely.
 
 ## Distribution direction
 

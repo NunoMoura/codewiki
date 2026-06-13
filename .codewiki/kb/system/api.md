@@ -1,6 +1,6 @@
 # API
 
-`src/api/**` is the stable package/source facade. Root exports are reduced to the core `wiki_*` facades and stable types. `src/cli/index.ts` is the first host wrapper over that root facade.
+`src/api/**` is the stable package/source facade. Root exports are reduced to the core `wiki_*` facades and stable types. `src/cli/index.ts` is the first host wrapper over that root facade and exposes the same reduced tool set.
 
 Target facade roots:
 
