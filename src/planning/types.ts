@@ -6,12 +6,24 @@ export type PlanningResolutionKind =
 	| "knowledge-only"
 	| "non-executable";
 
+export interface AcceptanceCriterion {
+	id: string;
+	text: string;
+}
+
+export interface AcceptanceCriterionInput {
+	id?: string;
+	text?: string;
+}
+
 export interface PlanningWorkItem {
 	id: string;
 	title: string;
 	decisionRefs: string[];
 	outcome: string;
 	acceptance: string[];
+	acceptanceCriteria: AcceptanceCriterion[];
+	componentRefs: string[];
 	pathScopes: string[];
 	verification: string[];
 	dependsOn: string[];
@@ -24,6 +36,10 @@ export interface PlanningWorkItemInput {
 	decision_refs?: string[];
 	outcome?: string;
 	acceptance?: string[];
+	acceptanceCriteria?: AcceptanceCriterionInput[];
+	acceptance_criteria?: AcceptanceCriterionInput[];
+	componentRefs?: string[];
+	component_refs?: string[];
 	pathScopes?: string[];
 	path_scopes?: string[];
 	verification?: string[];

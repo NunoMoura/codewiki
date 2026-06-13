@@ -1,13 +1,3 @@
----
-id: spec.system.flows.resume-context-boundary
-title: Resume Context Boundary
-state: deprecated
-summary: Deprecated CodeWiki-owned resume/refresh flow; Pi native compaction is active during the rebuild.
-owners:
-  - architecture
-updated: "2026-06-11"
----
-
 # Resume Context Boundary
 
 The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.

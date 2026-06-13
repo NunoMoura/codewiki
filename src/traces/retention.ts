@@ -17,7 +17,9 @@ export interface TraceRetentionStubInput {
 	headRef?: string;
 }
 
-export function buildTraceRetentionStub(input: TraceRetentionStubInput): TraceRetentionStub {
+export function buildTraceRetentionStub(
+	input: TraceRetentionStubInput,
+): TraceRetentionStub {
 	const state = replayTrace(input.records);
 	const checkpoint = latestTailCheckpoint(input.records);
 	return {

@@ -2,8 +2,9 @@ schema_version: 1
 id: spec.system.diagrams.state-lifecycle
 title: CodeWiki Trace State Lifecycle
 kind: state_lifecycle
-purpose: Show target trace lifecycle states and cleanup boundaries.
+purpose: Show target trace lifecycle states, semantic loop iteration outcomes, runtime coordination, and cleanup boundaries.
 source_docs:
+  - .codewiki/kb/system/loop-model.md
   - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/runtime.md
 renderer:
@@ -17,48 +18,77 @@ states:
   - id: implementation_active
     label: Implementation active
   - id: blocked
-    label: Blocked/remediation needed
+    label: Blocked or waiting
+  - id: route_back
+    label: Route-back recorded
   - id: production_ready
     label: Production ready
   - id: published
     label: Published
   - id: closed
-    label: Closed/retained
+    label: Closed / retained
 transitions:
   - from: decision_active
     to: planning_active
-    trigger: decision gate pass
-    trace_event: decision.gate.pass
+    trigger: decision iteration exits
+    trace_event: decision.iteration
+    exit_status: exit
     cleanup: clean decision tmp after durable refs exist
   - from: decision_active
     to: blocked
-    trigger: decision gate fail or block
-    trace_event: decision.gate.block
-    cleanup: preserve decision tmp
+    trigger: decision iteration blocks or continues without progress
+    trace_event: decision.iteration
+    exit_status: blocked
+    cleanup: preserve decision tmp when remediation needs it
   - from: planning_active
     to: implementation_active
-    trigger: planning gate pass
-    trace_event: planning.gate.pass
+    trigger: planning iteration exits
+    trace_event: planning.iteration
+    exit_status: exit
     cleanup: clean planning tmp after durable refs exist
   - from: planning_active
+    to: route_back
+    trigger: planning needs decision authority
+    trace_event: planning.iteration
+    exit_status: route_back
+    cleanup: preserve planning tmp when useful
+  - from: planning_active
     to: blocked
-    trigger: planning gate fail or block
-    trace_event: planning.gate.block
-    cleanup: preserve planning tmp
+    trigger: planning blocks or continues without progress
+    trace_event: planning.iteration
+    exit_status: blocked
+    cleanup: preserve planning tmp when remediation needs it
   - from: implementation_active
     to: production_ready
-    trigger: implementation gate pass
-    trace_event: implementation.gate.pass
+    trigger: implementation iteration exits
+    trace_event: implementation.iteration
+    exit_status: exit
     cleanup: clean implementation tmp after durable refs exist
   - from: implementation_active
+    to: route_back
+    trigger: implementation needs planning or decision authority
+    trace_event: implementation.iteration
+    exit_status: route_back
+    cleanup: preserve implementation tmp when useful
+  - from: implementation_active
     to: blocked
-    trigger: implementation gate fail or block
-    trace_event: implementation.gate.block
-    cleanup: preserve implementation tmp
+    trigger: implementation blocks or continues without progress
+    trace_event: implementation.iteration
+    exit_status: blocked
+    cleanup: preserve implementation tmp when remediation needs it
+  - from: route_back
+    to: decision_active
+    trigger: target loop is decision
+    trace_event: decision.iteration
+  - from: route_back
+    to: planning_active
+    trigger: target loop is planning
+    trace_event: planning.iteration
   - from: production_ready
     to: published
-    trigger: optional implementation-stage publication proof
-    trace_event: implementation.publication.pass
+    trigger: optional publication proof recorded
+    trace_event: implementation.iteration
+    exit_status: exit
   - from: production_ready
     to: closed
     trigger: close without publication requirement

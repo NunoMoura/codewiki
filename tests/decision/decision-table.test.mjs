@@ -1,27 +1,33 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { compileDecision } from "../../src/decision/compiler.ts";
-import { evaluateDecisionGate } from "../../src/decision/gate.ts";
-import { decisionPropagationRefs, decisionStateDeltaGaps } from "../../src/decision/propagation.ts";
-import { applyDecisionRowActions, createDecisionTable } from "../../src/decision/table.ts";
+import { runDecisionIteration } from "../../src/decision/iteration.ts";
+import { evaluateDecisionExit } from "../../src/decision/exit.ts";
+import {
+	decisionPropagationRefs,
+	decisionStateDeltaGaps,
+} from "../../src/decision/propagation.ts";
+import {
+	applyDecisionRowActions,
+	createDecisionTable,
+} from "../../src/decision/table.ts";
 import { formatTraceLine } from "../../src/traces/writer.ts";
 import { parseTraceLine } from "../../src/traces/reader.ts";
 
 describe("decision tables", () => {
-	it("normalizes legacy row aliases into target decision rows", () => {
+	it("normalizes target decision row inputs", () => {
 		const table = createDecisionTable({
 			id: "DT-001",
 			createdAt: "2026-06-11T00:00:00.000Z",
 			rows: [
 				{
 					id: "DTR-001",
-					current_state: "Graph is treated as state truth.",
-					desired_state: "JSONL traces are workflow/state truth.",
+					currentState: "Graph is treated as state truth.",
+					desiredState: "JSONL traces are workflow/state truth.",
 					rationale: "Matches recovered traces-first decision.",
-					user_action: "accept",
-					affected_layers: ["system", "source"],
-					source_refs: ["kb:system/traces.md"],
-					change_class: "maintenance",
+					approval: "accept",
+					affectedLayers: ["system", "source"],
+					sourceRefs: ["kb:system/traces.md"],
+					changeType: "maintenance",
 				},
 			],
 		});
@@ -61,7 +67,7 @@ describe("decision tables", () => {
 	});
 });
 
-describe("decision gate and compiler", () => {
+describe("decision exit and iteration runner", () => {
 	it("blocks approved rows without traceability refs or no-impact rationale", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -75,9 +81,85 @@ describe("decision gate and compiler", () => {
 			],
 		});
 
-		const gate = evaluateDecisionGate(table);
-		assert.equal(gate.passed, false);
-		assert.deepEqual(gate.issues.map((issue) => issue.code), ["missing_traceability_ref"]);
+		const exit = evaluateDecisionExit(table);
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "fail");
+		assert.equal(exit.route, "decision");
+		assert.deepEqual(
+			exit.issues.map((issue) => issue.code),
+			[
+				"missing_current_state_packet",
+				"missing_traceability_ref",
+				"missing_knowledge_delta",
+			],
+		);
+		assert.equal(
+			exit.findings.some(
+				(finding) => finding.criterion === "missing_traceability_ref",
+			),
+			true,
+		);
+		assert.equal(exit.remediation[0].blocking, true);
+	});
+
+	it("blocks duplicate rows and weak refs", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-dup",
+					currentState: "Old",
+					desiredState: "New",
+					rationale: "Needed",
+					approval: "approved",
+					sourceRefs: ["not-a-ref"],
+				},
+				{
+					id: "DTR-dup",
+					currentState: "Old 2",
+					desiredState: "New 2",
+					rationale: "Needed",
+					approval: "approved",
+					sourceRefs: ["kb:system/traces.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table);
+		assert.equal(exit.passed, false);
+		assert.deepEqual(exit.issues.map((issue) => issue.code).sort(), [
+			"duplicate_decision_row_id",
+			"invalid_traceability_ref",
+			"missing_knowledge_delta",
+		]);
+	});
+
+	it("blocks incomplete or weak knowledge deltas", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-knowledge",
+					currentState: "Old KB contract",
+					desiredState: "New KB contract",
+					rationale: "Decision owns knowledge propagation.",
+					approval: "approved",
+					sourceRefs: ["kb:system/loop-contracts.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table, {
+			knowledgeDelta: {
+				updatedRefs: ["weak-ref"],
+				sections: ["Loop responsibilities"],
+				beforeDigest: "sha256:abc123",
+			},
+		});
+
+		assert.equal(exit.passed, false);
+		assert.deepEqual(exit.issues.map((issue) => issue.code).sort(), [
+			"incomplete_knowledge_digest",
+			"invalid_knowledge_ref",
+		]);
 	});
 
 	it("emits approved decision trace events for planning", () => {
@@ -98,10 +180,27 @@ describe("decision gate and compiler", () => {
 			],
 		});
 
-		const result = compileDecision({ traceId: "TRACE-20260611-decision", table });
+		const result = runDecisionIteration({
+			traceId: "TRACE-20260611-decision",
+			table,
+		});
 		assert.equal(result.readyForPlanning, true);
+		assert.equal(result.exit.verdict, "pass");
+		assert.equal(result.exit.route, "planning");
+		assert.equal(result.draftTraceEvents.length, 0);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "decision.row.approved");
+		assert.equal(result.traceEvents[0].event, "decision.iteration");
+		assert.deepEqual(result.output.currentStatePacket.refs, [
+			"kb:system/traces.md",
+		]);
+		assert.deepEqual(
+			result.traceEvents[0].data?.output?.approvedRows?.[0]?.currentStateRefs,
+			["kb:system/traces.md"],
+		);
+		assert.equal(result.traceEvents[0].data?.exit.status, "exit");
+		assert.equal(result.traceEvents[0].data?.exit.targetLoop, "planning");
+		assert.equal(result.checkpoint.type, "tail_checkpoint");
+		assert.equal(result.traceRecords.at(-1)?.type, "tail_checkpoint");
 		assert.deepEqual(decisionPropagationRefs(table), ["kb:system/traces.md"]);
 		assert.deepEqual(decisionStateDeltaGaps(table), []);
 

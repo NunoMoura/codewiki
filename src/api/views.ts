@@ -4,4 +4,5 @@ export * from "../views/resume.ts";
 export * from "../views/status.ts";
 export * from "../views/types.ts";
 export * from "../views/work-plan.ts";
+export * from "../views/work-queue.ts";
 export * from "../views/writer.ts";

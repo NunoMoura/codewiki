@@ -5,6 +5,7 @@ kind: file_structure_map
 purpose: "Show the target rebuild source layout and CodeWiki state roots: KB truth, JSONL trace truth, generated views, runtime tmp, and archived old implementation."
 source_docs:
   - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/source-map.md
   - .codewiki/kb/system/traces.md
 renderer:
   preferred: tree_projection
@@ -48,6 +49,97 @@ nodes:
       - src/pi/**
       - src/project/**
       - src/utils/**
+  - id: component.decision
+    label: Decision loop output and exit conditions
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/decision-loop.md
+      - .codewiki/kb/system/loop-model.md
+      - .codewiki/kb/system/loop-contracts.md
+    paths:
+      - src/decision/**
+      - src/api/decision.ts
+    test_paths:
+      - tests/decision/**
+  - id: component.planning
+    label: Planning loop output and exit conditions
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/planning-loop.md
+      - .codewiki/kb/system/loop-model.md
+      - .codewiki/kb/system/loop-contracts.md
+    paths:
+      - src/planning/**
+      - src/api/planning.ts
+    test_paths:
+      - tests/planning/**
+  - id: component.implementation
+    label: Implementation loop output and exit conditions
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/implementation-loop.md
+      - .codewiki/kb/system/loop-model.md
+      - .codewiki/kb/system/loop-contracts.md
+    paths:
+      - src/implementation/**
+      - src/api/implementation.ts
+    test_paths:
+      - tests/implementation/**
+  - id: component.traces
+    label: JSONL traces and recovery spine
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/traces.md
+      - .codewiki/kb/system/loop-contracts.md
+    paths:
+      - src/traces/**
+      - src/api/traces.ts
+    test_paths:
+      - tests/traces/**
+  - id: component.views
+    label: Trace-backed projections and views
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/traces.md
+      - .codewiki/kb/system/file-structure.md
+    paths:
+      - src/views/**
+      - src/api/views.ts
+    test_paths:
+      - tests/views/**
+  - id: component.knowledge
+    label: Knowledge parsing and file-structure contracts
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/file-structure.md
+      - .codewiki/kb/system/diagrams/file-structure-map.yaml
+    paths:
+      - src/knowledge/**
+      - .codewiki/kb/**
+    test_paths:
+      - tests/shared/**
+      - tests/scaffold.test.mjs
+  - id: component.runtime
+    label: Runtime boundaries, claims, and project helpers
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/file-structure.md
+      - .codewiki/kb/system/traces.md
+    paths:
+      - src/runtime/**
+      - src/project/**
+      - src/pi/**
+    test_paths:
+      - tests/runtime/**
+      - tests/pi/**
+      - tests/scaffold.test.mjs
   - id: test_roots
     label: Target tests
     group: source

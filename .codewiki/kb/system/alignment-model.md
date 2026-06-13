@@ -1,16 +1,6 @@
----
-id: spec.system.alignment-model
-title: Alignment Model
-state: active
-summary: Alignment model for KB truth, JSONL traces, generated views, source/tests, gates, and Git proof.
-owners:
-  - architecture
-updated: "2026-06-11"
----
-
 # Alignment Model
 
-Alignment means all durable sources tell the same story about current intent and implementation.
+Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.
 
 Durable sources:
 
@@ -21,18 +11,22 @@ Durable sources:
 
 Generated views under `.codewiki/views/**` are alignment outputs, not alignment truth.
 
+KB docs carry accepted semantic intent. JSONL traces carry workflow/state/recovery truth. Source, tests, and Git carry implementation truth. During an active trace, it is valid for KB to describe an accepted target state while the trace says planning or implementation remains pending.
+
 ## Loop alignment
 
 | Loop | Alignment evidence |
 | --- | --- |
-| Decision | Approved intent, requirements, risks, alternatives, and KB impact are recorded in trace events and KB refs. |
-| Planning | Every executable accepted row/question is materialized into work units, ordering, conflicts, and verification strategy. |
-| Implementation | Changed code/docs/tests, checks, and content proof satisfy planned acceptance. |
+| Decision | Approved intent, requirements, risks, alternatives, route-back answers, and KB impact are recorded in exited decision output and KB refs. |
+| Planning | Every executable accepted requirement/question is materialized into work units, ordering, conflicts, verification strategy, path scopes, and implementation handoff. |
+| Implementation | Changed code/docs/tests, checks, acceptance evidence, worker provenance, component/path alignment, and content proof satisfy planned acceptance. |
 
-Gates validate loop alignment and route remediation back to the originating loop. Gates do not form a separate loop.
+Exit conditions validate loop alignment and route remediation back to the owning loop. Exit conditions do not form a separate loop. Only outputs from iterations with `exit` are promoted for downstream consumption; continue, route-back, and blocked iterations stay as recovery provenance.
 
 ## Related docs
 
+- [Loop Model](loop-model.md)
+- [Decision Loop](decision-loop.md)
+- [Planning Loop](planning-loop.md)
+- [Implementation Loop](implementation-loop.md)
 - [Traces](traces.md)
-- [Compilers](compilers.md)
-- [Validation Gateway](validation-gateway.md)

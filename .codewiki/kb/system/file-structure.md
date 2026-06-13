@@ -1,15 +1,3 @@
----
-id: spec.system.file-structure
-title: File Structure
-state: active
-summary: Target repository, package-source, and CodeWiki state structure for the KB plus JSONL trace source-of-truth model.
-owners:
-  - architecture
-updated: "2026-06-11"
-diagram_refs:
-  - file-structure-map:intended_file_structure
----
-
 # File Structure
 
 ## Project boundary
@@ -20,9 +8,17 @@ This repository is intentionally not dogfooding the CodeWiki Pi extension during
 - Archived previous implementation: `_OLD_VERSION/**`, used only as migration reference.
 - Source-of-truth documentation: `.codewiki/kb/**`.
 - Future workflow/state truth: `.codewiki/traces/TRACE-*.jsonl`.
-- Legacy dogfood state: other `.codewiki/**` roots such as roadmap, builds, validation, runtime, session, telemetry, and generated graph files.
+- Archived dogfood state: other `.codewiki/**` roots from earlier migration phases.
 
 `package.json` must not expose `pi.extensions` or `pi.skills` while this rebuild is active. Pi should treat this checkout as normal project files plus KB documentation, not as a loaded CodeWiki package. Pi native compaction is the only active conversation-compaction mechanism.
+
+## Rebuild bootstrap boundary
+
+During this source rebuild, `.codewiki/kb/**` is the intended-design source of truth, but the surrounding dogfood `.codewiki/**` scaffold is not yet the final product output contract. Avoid large structural moves inside `.codewiki` until the package source, semantic loops, exit conditions, traces, views, and runtime queue are stable.
+
+`source-map.yaml` is the canonical machine-readable source ownership map. It links source roots, owning KB docs, tests, generated views, and trace/event responsibilities. KB Markdown must not use frontmatter.
+
+`diagrams/file-structure-map.yaml` currently remains a component/path registry for loop exit conditions during the rebuild. Its final replacement is `source-map.yaml`; parser/source migration should happen after loop-iteration APIs stabilize.
 
 ## Target `.codewiki` structure
 
@@ -35,6 +31,7 @@ Target CodeWiki project state has two canonical roots and one generated root:
     lexicon.md
     product/
     system/
+      source-map.yaml       # canonical doc/source/test ownership map
       diagrams/
   traces/                   # workflow/state truth
     TRACE-*.jsonl           # append-only Pi-session-like trace records
@@ -42,6 +39,7 @@ Target CodeWiki project state has two canonical roots and one generated root:
     status.json
     resume.json
     work-plan.json
+    work-queue.json
     blockers.json
     conflicts.json
 ```
@@ -49,15 +47,16 @@ Target CodeWiki project state has two canonical roots and one generated root:
 Rules:
 
 - `kb/**` owns current product/system knowledge truth.
-- `traces/TRACE-*.jsonl` owns workflow and state truth: decision approvals, planning work units and ordering, implementation evidence, runtime boundaries, worker claims, gates, lifecycle state, and retention refs.
+- `traces/TRACE-*.jsonl` owns workflow and state truth: semantic loop iterations, decision outputs, planning work units and ordering, implementation evidence, runtime boundaries, worker claims, exit-condition results, lifecycle state, and retention refs.
 - `views/**` owns no truth. Views are generated caches over KB, traces, source/tests, and Git refs.
 - Git is the cold historical/content source of truth.
 - Pi session transcripts remain in Pi storage; CodeWiki traces store only refs and concise summaries.
 - `config.json` is project policy/configuration, not lifecycle state.
+- `kb/system/source-map.yaml` owns doc/source/test/view/event mapping. Frontmatter does not.
 
 Deprecated graph terminology must not be used for target architecture. A graph, if ever needed for an algorithm or UI, is only an implementation detail behind a generated view. It is not a source root, truth root, or product mental model.
 
-Migration compatibility may still read legacy `.codewiki/roadmap/**`, `.codewiki/builds/**`, `.codewiki/validation/**`, `.codewiki/runtime/**`, `.codewiki/session/**`, `.codewiki/views/**`, and `.codewiki/traces/**` while old code is being migrated. Those paths must not be promoted as target truth roots.
+The active core reads `.codewiki/kb/**`, `.codewiki/traces/**`, and generated `.codewiki/views/**` only. Other historical `.codewiki/**` roots must not be promoted as target truth roots.
 
 ## Runtime temporary data
 
@@ -69,13 +68,13 @@ Temporary working data belongs under:
 
 Cleanup policy:
 
-- On loop gate pass, delete that loop's temporary data after durable trace, KB, source, test, or Git refs exist.
-- On loop fail/block, preserve that loop's temporary data for remediation.
+- On loop `exit`, delete that loop's temporary data after durable trace, KB, source, test, or Git refs exist.
+- On loop `continue`, `route_back`, or `blocked`, preserve that loop's temporary data when remediation needs it.
 - On a superseding same-loop run, delete or replace stale temporary data for the old run.
 - On trace close, delete all remaining temporary data for that trace.
-- Anything needed after gate pass must be promoted before cleanup.
+- Anything needed after loop exit must be promoted before cleanup.
 
-No accepted decision, durable requirement, task/work ownership, gate evidence, or implementation proof may live only in runtime temporary data.
+No accepted decision, durable requirement, work ownership, exit-condition evidence, or implementation proof may live only in runtime temporary data.
 
 ## Target package source structure
 
@@ -91,25 +90,27 @@ src/
     implementation.ts
     traces.ts
     views.ts
-  decision/                  # semantic approval loop
+  decision/                  # decision loop: output and exit conditions
     table.ts
-    compiler.ts
-    gate.ts
+    iteration.ts             # runs one durable decision iteration
+    exit.ts                  # evaluates decision exit conditions
     approval.ts
     propagation.ts
     types.ts
-  planning/                  # approved intent to executable work
-    compiler.ts
+  planning/                  # planning loop: output and exit conditions
+    iteration.ts             # runs one durable planning iteration
     materialization.ts
     ordering.ts
     conflicts.ts
-    gate.ts
+    exit.ts                  # evaluates planning exit conditions
     types.ts
-  implementation/            # code/docs/tests execution evidence
-    compiler.ts
+  implementation/            # implementation loop: output and exit conditions
+    claims.ts
+    iteration.ts             # runs one durable implementation iteration
     evidence.ts
+    workers.ts
     publication.ts
-    gate.ts
+    exit.ts                  # evaluates implementation exit conditions
     types.ts
   traces/                    # append-only JSONL trace engine
     schema.ts
@@ -124,13 +125,15 @@ src/
     status.ts
     resume.ts
     work-plan.ts
+    work-queue.ts
     blockers.ts
     conflicts.ts
     writer.ts
     types.ts
   knowledge/                 # KB parsing and refs
     markdown.ts
-    frontmatter.ts
+    source-map.ts
+    file-structure-map.ts
     diagrams.ts
     refs.ts
     types.ts
@@ -153,6 +156,7 @@ src/
     types.ts
   pi/                        # Pi package surface, disabled until reintroduced
     extension.ts
+    dispatcher.ts
     commands/
     tools/
     tui/
@@ -172,19 +176,19 @@ src/
     assert.ts
 ```
 
-Loop roots own their compiler engines and loop-specific gates. `runtime` owns automation policy, scheduling, budgets, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
+Loop roots own loop output shaping and exit-condition evaluation. `runtime` owns automation policy, scheduling, budgets, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
 
 ## Roots to retire or merge
 
 | Previous root | Target |
 | --- | --- |
 | `src/adapters/pi/**` | `src/pi/**`; Pi is the distribution surface, not a generic adapter. |
-| `src/build/**` | loop compiler output emitted as trace events under `src/traces/**`. |
+| Old artifact-output root | retired; loop outputs are semantic iteration data under `src/traces/**`. |
 | `src/roadmap/**` | `src/planning/**` and generated `views/work-plan.ts`. |
-| `src/audit/**`, `src/checks/**`, `src/policy/**`, `src/gateway/**` | loop-owned `gate.ts` modules plus runtime policy helpers when truly cross-loop. |
-| `src/validation/**` | removed; gates are loop exits, not a validation loop/root. |
+| Old audit/checks/policy/evaluation roots | loop-owned exit-condition modules plus runtime policy helpers when truly cross-loop. |
+| `src/validation/**` | removed; exit conditions are loop-local, not a validation loop/root. |
 | `src/state/**`, `src/graph/**` | `src/views/**` for generated projections; there is no graph root in the target model. |
-| `src/gc/**` | `src/traces/retention.ts` and Git-history-backed retention. |
+| `src/gc/**` | retired term; use retention/archive/hydrate/restore in `src/traces/retention.ts` and Git restore refs. |
 | `src/session/**` | `src/runtime/**`, `src/git/worktrees.ts`, or `src/pi/sessions.ts` depending on responsibility. |
 | `src/agency/**` | `src/runtime/**`; agency is runtime automation policy, not an architecture root. |
 | `src/telemetry/**` | `src/traces/**`; traces are product workflow/state truth, not observability telemetry. |
@@ -238,9 +242,10 @@ Project KB uses:
       data-model.yaml
       state-lifecycle.yaml
       file-structure-map.yaml
+    source-map.yaml
 ```
 
-Product docs define user-facing orientation. System docs define technical specs. Diagram YAML is canonical source, not generated render output. Semantic changes must update product/system KB and affected diagrams or include explicit no-impact rationale before gates can pass.
+Product docs define user-facing orientation. System docs define technical specs. Diagram YAML is canonical conceptual source, not generated render output. Source ownership lives in `source-map.yaml`, not Markdown frontmatter. Semantic changes must update product/system KB and affected diagrams or include explicit no-impact rationale before decision exit conditions can pass.
 
 ## Migration operation rules
 
@@ -254,6 +259,9 @@ Context compression belongs to Pi native compaction during this phase. CodeWiki-
 
 - [Traces](traces.md)
 - [Lexicon](../lexicon.md)
-- [Compilers](compilers.md)
-- [Validation Gateway](validation-gateway.md)
+- [Source Map](source-map.md)
+- [Loop Model](loop-model.md)
+- [Decision Loop](decision-loop.md)
+- [Planning Loop](planning-loop.md)
+- [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)

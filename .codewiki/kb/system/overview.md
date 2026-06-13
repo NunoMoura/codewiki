@@ -1,37 +1,42 @@
----
-id: spec.system.overview
-title: System Overview
-state: active
-summary: Target CodeWiki architecture during the rebuild: three compiler loops, JSONL traces, generated views, runtime coordination, Pi terminal surface, and Git content evidence.
-owners:
-  - architecture
-updated: "2026-06-11"
----
-
 # System Overview
 
-CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is disabled and archived under `_OLD_VERSION/**`. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module.
+CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is disabled and archived under `_OLD_VERSION/**`. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
 
 ## Target mental model
 
-CodeWiki has three semantic loops:
+CodeWiki has one runtime outer loop and three semantic loops.
 
-1. **Decision** — approve intent, requirements, tradeoffs, risks, and KB impact.
-2. **Planning** — materialize approved intent into executable work units, ordering, conflicts, and verification strategy.
-3. **Implementation** — change code/docs/tests, record evidence, run checks, and produce content proof.
+Runtime outer loop:
 
-Gates are loop exits. They validate whether a loop can promote to the next state, but they are not a fourth validation loop. Publication is an implementation-stage concern unless a future accepted decision creates a separate publish loop.
+```text
+fold traces -> choose next action -> run semantic iteration or runtime coordination -> append trace -> repeat
+```
+
+Semantic loops:
+
+1. **Decision** — accept intent, requirements, tradeoffs, risks, and KB impact.
+2. **Planning** — turn accepted decisions into executable work units, ordering, conflicts, path scopes, and verification strategy.
+3. **Implementation** — change code/docs/tests, record evidence, run checks, aggregate workers, and produce content proof.
+
+Each semantic loop is defined by:
+
+1. loop cycle;
+2. loop output;
+3. exit conditions.
+
+Older migration vocabulary must not define product concepts, source layout, or tool boundaries. Desired-state docs and tools use loop vocabulary.
 
 ## Source-of-truth model
 
 CodeWiki truth comes from:
 
-- `.codewiki/kb/**` for current product/system knowledge;
-- `.codewiki/traces/TRACE-*.jsonl` for workflow and state truth;
+- `.codewiki/kb/**` for hot product/system knowledge;
+- `.codewiki/traces/TRACE-*.jsonl` for append-only workflow and state truth;
+- `.codewiki/kb/system/source-map.yaml` for doc/source/test/view/event ownership mapping;
 - source/tests for implementation content;
 - Git for cold history, restore refs, commits, trees, and publication proof.
 
-Generated state lives under `.codewiki/views/**` and is disposable. Deprecated graph, roadmap, build, validation, telemetry, and session files may be read only as migration compatibility artifacts. They are not target truth roots.
+Generated state lives under `.codewiki/views/**` and is disposable. Runtime temp under `.codewiki/runtime/tmp/**` is scratch only. Historical dogfood files outside the active roots are not target truth roots.
 
 ## Source roots
 
@@ -50,13 +55,13 @@ Target package roots are:
 - `src/utils/**`
 - `src/api/**`
 
-There is no target `src/views/**`, `src/traces/**`, `src/runtime/**`, `src/gateway/**`, `src/validation/**`, `src/state/**`, or `src/roadmap/**` root.
+There is no target package root for split evaluation, stored state, graph projections as truth, roadmap state, or old artifact state.
 
 ## Runtime model
 
-Runtime coordinates execution. It owns boundaries, claims, leases, scheduling, automation policy, budgets, dispatch, lifecycle helpers, and temporary data. Runtime is not a semantic loop.
+Runtime coordinates execution. It owns boundaries, claims, leases, scheduling, automation policy, budgets, dispatch, lifecycle helpers, retention orchestration, and temporary data. Runtime is the outer control loop, not a semantic loop.
 
-Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Gate pass cleans loop temp after durable refs exist. Gate fail/block preserves loop temp for remediation. Superseding runs replace stale loop temp. Trace close cleans all remaining trace temp.
+Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Loop exit deletes loop temp after durable refs exist. Continue/blocked/route-back can preserve loop temp for remediation. Superseding iterations replace stale temp. Trace close cleans all remaining temp.
 
 Pi native compaction is the only active compaction mechanism during the rebuild. CodeWiki-owned refresh windows and automatic resume pickup remain disabled until explicitly reintroduced.
 
@@ -64,18 +69,29 @@ Pi native compaction is the only active compaction mechanism during the rebuild.
 
 Generated views answer current-state questions quickly:
 
-- status
-- resume
-- work-plan
-- blockers
-- conflicts
+- status;
+- resume;
+- work-plan;
+- work-queue;
+- blockers;
+- conflicts.
 
-A terminal board or kanban display, if added later, renders the work-plan view. It is not a separate truth concept.
+A terminal board or kanban display, if added later, renders trace-backed views. It is not a separate truth concept.
+
+## Loop contracts
+
+The decision loop owns semantic KB propagation. There is no separate knowledge-update loop between decision and planning. Decision loop output includes KB propagation or explicit no-impact rationale. Planning starts only from exited decision output plus updated KB refs.
+
+Loop output becomes downstream context only when exit conditions return `exit`. Continue, blocked, and route-back iterations record compact provenance and next actions, but they do not promote downstream-consumable truth.
 
 ## Related docs
 
-- [File Structure](file-structure.md)
+- [Loop Model](loop-model.md)
+- [Decision Loop](decision-loop.md)
+- [Planning Loop](planning-loop.md)
+- [Implementation Loop](implementation-loop.md)
 - [Traces](traces.md)
-- [Compilers](compilers.md)
 - [Runtime](runtime.md)
-- [Validation Gateway](validation-gateway.md)
+- [Migration Audit](migration-audit.md)
+- [Source Map](source-map.md)
+- [API vNext Tool Surface](api-vnext-tools.md)

@@ -2,7 +2,7 @@ import { mkdir, appendFile, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import type { TraceRecord } from "./types.ts";
 import { traceFilePath } from "./schema.ts";
-import { formatTraceLine } from "./writer.ts";
+import { formatTraceLine, formatTraceText } from "./writer.ts";
 
 export interface AppendPlan {
 	expectedBytes: number;
@@ -10,11 +10,25 @@ export interface AppendPlan {
 	record: TraceRecord;
 }
 
+export interface AppendBatchPlan {
+	expectedBytes: number;
+	text: string;
+	records: TraceRecord[];
+}
+
 export interface AppendTraceResult {
 	path: string;
 	previousBytes: number;
 	nextBytes: number;
 	line: string;
+}
+
+export interface AppendTraceBatchResult {
+	path: string;
+	previousBytes: number;
+	nextBytes: number;
+	text: string;
+	records: TraceRecord[];
 }
 
 export class TraceAppendConflictError extends Error {
@@ -40,6 +54,18 @@ export function planTraceAppend(
 	return { expectedBytes, line: formatTraceLine(record), record };
 }
 
+export function planTraceAppendBatch(
+	records: TraceRecord[],
+	expectedBytes: number,
+): AppendBatchPlan {
+	assertSingleTraceBatch(records);
+	return {
+		expectedBytes,
+		text: formatTraceText(records),
+		records: [...records],
+	};
+}
+
 export async function appendTraceRecordToFile(
 	path: string,
 	record: TraceRecord,
@@ -60,7 +86,28 @@ export async function appendTraceRecordToFile(
 	};
 }
 
-export async function appendTraceRecord(
+export async function appendTraceRecordsToFile(
+	path: string,
+	records: TraceRecord[],
+	expectedBytes: number,
+): Promise<AppendTraceBatchResult> {
+	const plan = planTraceAppendBatch(records, expectedBytes);
+	const previousBytes = await fileSize(path);
+	if (previousBytes !== plan.expectedBytes) {
+		throw new TraceAppendConflictError(path, plan.expectedBytes, previousBytes);
+	}
+	await mkdir(dirname(path), { recursive: true });
+	await appendFile(path, plan.text, "utf8");
+	return {
+		path,
+		previousBytes,
+		nextBytes: previousBytes + Buffer.byteLength(plan.text, "utf8"),
+		text: plan.text,
+		records: plan.records,
+	};
+}
+
+export function appendTraceRecord(
 	repoRoot: string,
 	record: TraceRecord,
 	expectedBytes: number,
@@ -70,6 +117,33 @@ export async function appendTraceRecord(
 		record,
 		expectedBytes,
 	);
+}
+
+export function appendTraceRecords(
+	repoRoot: string,
+	records: TraceRecord[],
+	expectedBytes: number,
+): Promise<AppendTraceBatchResult> {
+	assertSingleTraceBatch(records);
+	return appendTraceRecordsToFile(
+		resolve(repoRoot, traceFilePath(records[0].traceId)),
+		records,
+		expectedBytes,
+	);
+}
+
+function assertSingleTraceBatch(records: TraceRecord[]): void {
+	if (records.length === 0) {
+		throw new Error("Trace append batch requires at least one record.");
+	}
+	const traceId = records[0].traceId;
+	for (const record of records) {
+		if (record.traceId !== traceId) {
+			throw new Error(
+				`Trace append batch mixes trace ids: ${traceId} and ${record.traceId}.`,
+			);
+		}
+	}
 }
 
 async function fileSize(path: string): Promise<number> {

@@ -1,22 +1,8 @@
----
-id: spec.system.terminal-ui
-title: Pi TUI Diagram Rendering
-state: active
-summary: Narrow system contract for future Pi TUI ASCII/Unicode rendering of canonical system diagrams.
-owners:
-  - architecture
-  - design
-updated: "2026-06-06"
-diagram_refs:
-  - component-map:extension
-  - component-map:api
----
-
 # Pi TUI Diagram Rendering
 
 CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated, including status panels/docks, Board, Map, Product/System navigation panels, and browser Control Room concepts.
 
-The only retained UI direction is future Pi TUI rendering of canonical system diagrams as ASCII/Unicode. Backend state remains available through `wiki_state`, view lenses, roadmap/task state, lifecycle traces, validation reports, and source refs.
+The only retained UI direction is future Pi TUI rendering of canonical system diagrams as ASCII/Unicode. Backend state remains available through `wiki_state`, generated views, semantic loop traces, exit-condition results, and source refs.
 
 ## Command-triggered surfaces
 
@@ -25,11 +11,11 @@ Active command direction is limited to backend actions and future diagram render
 | Command family | Purpose |
 | --- | --- |
 | `/wiki bootstrap` | Start CodeWiki in a greenfield or brownfield repository through command-adapter backend setup/bootstrap calls. |
-| `/wiki resume` | Continue from the last known stable state using CodeWiki source refs and context-boundary evidence. |
+| `/wiki resume` | Continue from folded trace state, latest loop outputs, unmet exit conditions, and source refs. |
 | `/wiki config` | Apply CodeWiki preferences/configuration through backend command-adapter calls. |
 | `/wiki system <diagram type>` | Future Pi TUI rendering of canonical system diagram YAML as ASCII/Unicode. |
 
-`/wiki status`, `/wiki-status`, and `/wiki_status` are deprecated status UI commands. Product/Board/Map navigation commands are not active target surfaces.
+`/wiki status` may return later as a thin `wiki_state { view: "status" }` command. Legacy status docks, Product/Board/Map navigation commands, and hidden UI state are not active target surfaces.
 
 ## Diagram rendering
 
@@ -57,5 +43,5 @@ The renderer should use Unicode box drawing by default and ASCII fallback when n
 ## Related docs
 
 - [Product TUI Diagram Rendering](../product/uis/terminal.md)
-- [Deprecated Status UI](../product/uis/status-dock.md)
-- [Graph](graph.md)
+- [Loop Model](loop-model.md)
+- [API vNext Tool Surface](api-vnext-tools.md)

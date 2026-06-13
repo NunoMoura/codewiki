@@ -1,38 +1,21 @@
----
-id: spec.product.stories.automation
-title: Use Gated Agency
-state: active
-summary: CodeWiki should let agents advance roadmap work automatically inside explicit
-  user-visible gates.
-owners:
-- product
-updated: '2026-06-03'
-code_paths:
-- skills/codewiki-implementation/SKILL.md
-- skills/codewiki-decision/SKILL.md
-code_paths_mode: explicit_override
----
+# Use Loop-Governed Automation
 
-# Use Gated Agency
-
-As a user, I want an agent to advance roadmap work automatically while staying bounded by explicit gates, so progress can continue without losing alignment with my intent.
+As a user, I want an agent to advance CodeWiki work automatically while staying bounded by explicit loop, exit-condition, budget, and approval boundaries, so progress can continue without losing alignment with my intent.
 
 ## Acceptance signals
 
-- Agents can move through roadmap work automatically when the user allows it.
-- Users can choose the agency level: `task` stops for approval after one task, `sprint` continues through the active sprint, and `roadmap` continues through active roadmap work.
-- Context resets reduce context bloat and let the agent automatically pick up from CodeWiki source truth when the selected agency level still allows continuation.
-- Automation is gated by token budget, time budget, cost budget, write/session budget, risk level, model limits, approval requirements, gate verdicts, and policy boundaries.
-- The agent stops on ambiguity, unsafe work, failed gate criteria, budget exhaustion, or missing approval.
-- Users can see what the agent plans to do next, why it is safe, and which gate would stop it.
-- Parallel sessions can lease narrow change scopes, and automation can warn or stop when overlapping leases make work unsafe.
-- Context-heavy validation and research can run in isolated fresh contexts and return compact findings.
-- Durable truth remains separated by role: KB truth, telemetry traces, graph state, gate verdicts, Git proof, code, and tests.
+- Agents advance work through decision, planning, and implementation loop iterations.
+- Runtime coordinates automation but does not own product truth.
+- Users can configure automation mode, max parallel workers, worker isolation, budgets, and approval requirements.
+- The agent stops or routes back on ambiguity, unsafe work, unmet exit conditions, budget exhaustion, no-progress churn, or missing approval.
+- Users can see the next safe action, why it is safe, which exit condition controls it, and which refs prove it.
+- Parallel workers use runtime claims and optional worktree isolation to avoid unsafe overlap.
+- Context-heavy research or worker execution can run in fresh contexts and return compact loop-output evidence.
+- Durable truth remains separated: KB/source/Git for project truth, JSONL traces for workflow/state truth, generated views for projections.
 
 ## Related docs
 
 - [Agents](../users/agents.md)
-- [Board UI](../uis/board.md)
-- [Compilers](../../system/compilers.md)
-- [Validation Gateway](../../system/validation-gateway.md)
-- [Roadmap](../../system/roadmap.md)
+- [Loop Model](../../system/loop-model.md)
+- [Runtime](../../system/runtime.md)
+- [API vNext Tool Surface](../../system/api-vnext-tools.md)

@@ -1,34 +1,19 @@
----
-id: spec.product.stories.intent
-title: Maintain Fresh Intent
-state: active
-summary: CodeWiki should capture, challenge, and preserve current project intent so
-  future work starts from agreed solutions instead of chat archaeology.
-owners:
-- product
-updated: '2026-06-04'
-code_paths:
-- skills/codewiki-decision/SKILL.md
-code_paths_mode: explicit_override
----
-
 # Maintain Fresh Intent
 
-As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before downstream decision or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
+As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before planning or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
 
 ## Acceptance signals
 
 - Product and system knowledge describe the desired current state.
-- The decision loop surfaces tradeoffs, blind spots, pitfalls, simpler alternatives, and conflicts before intent is accepted.
-- Decision Tables show the decision question, current and desired project state, proposed change, rationale, affected layers, risk, options, evidence refs, and user action before canonical edits are applied.
-- Accepted decisions become trace decision evidence with KB mappings before planning.
-- Obsolete details are removed or converted into compact historical summaries.
-- Roadmap work records priority, status, blockers, progress, and closure while linking to accepted builds and specs instead of carrying full requirements briefs.
+- The decision loop surfaces tradeoffs, blind spots, pitfalls, simpler alternatives, and conflicts before intent exits.
+- Decision output records decision question, current and desired project state, proposed change, rationale, affected layers, risk, options, evidence refs, and user action before downstream work starts.
+- Exited decision output maps to KB/diagram refs before planning.
+- Obsolete details are removed or converted into compact historical summaries through retention.
+- Work state is represented through trace-backed planning output, work-plan views, and work-queue views, not roadmap truth.
 
 ## Related docs
 
 - [Maintainers](../users/maintainers.md)
 - [Product](../overview.md)
+- [Decision Loop](../../system/decision-loop.md)
 - [System Overview](../../system/overview.md)
-- [Compilers](../../system/compilers.md)
-- [Builds](../../system/builds.md)

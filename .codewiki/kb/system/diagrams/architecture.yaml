@@ -2,14 +2,16 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki System Architecture
 kind: architecture_map
-purpose: "Show the target CodeWiki architecture during the rebuild: KB truth, JSONL trace truth, loop compilers, runtime coordination, generated views, Pi terminal surface, and Git content evidence."
+purpose: "Show the target CodeWiki architecture during the rebuild: runtime outer loop, semantic loops, KB truth, JSONL trace truth, generated views, host adapters, and Git evidence."
 source_docs:
   - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/loop-model.md
+  - .codewiki/kb/system/decision-loop.md
+  - .codewiki/kb/system/planning-loop.md
+  - .codewiki/kb/system/implementation-loop.md
   - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/compilers.md
   - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/terminal-ui.md
+  - .codewiki/kb/system/api-vnext-tools.md
 renderer:
   preferred: layered_projection
   fallback: mermaid_flowchart
@@ -17,13 +19,13 @@ renderer:
   stable_ids: true
 groups:
   - id: surfaces
-    label: User surfaces
+    label: User and host surfaces
+  - id: runtime
+    label: Runtime outer loop
   - id: loops
     label: Semantic loops
   - id: truth
     label: Durable truth
-  - id: runtime
-    label: Runtime coordination
   - id: generated
     label: Generated views
   - id: evidence
@@ -33,76 +35,93 @@ nodes:
     label: User / agent intent
     group: surfaces
     kind: actor
-  - id: pi_tui
-    label: Pi terminal UI
+  - id: host_tools
+    label: CLI / Pi / MCP adapters
     group: surfaces
-    kind: terminal_ui
-    source: .codewiki/kb/system/terminal-ui.md
+    kind: host_adapter
+    source: .codewiki/kb/system/api-vnext-tools.md
+  - id: runtime
+    label: Runtime outer loop
+    group: runtime
+    kind: coordination
+    source: .codewiki/kb/system/runtime.md
   - id: decision
     label: Decision loop
     group: loops
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/decision-loop.md
   - id: planning
     label: Planning loop
     group: loops
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/planning-loop.md
   - id: implementation
     label: Implementation loop
     group: loops
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/implementation-loop.md
   - id: kb
-    label: Knowledge base
+    label: Hot knowledge base
     group: truth
     kind: durable_truth
-    source: .codewiki/kb/system/file-structure.md
+    source: .codewiki/kb/system/knowledge.md
   - id: traces
     label: JSONL traces
     group: truth
     kind: durable_truth
     source: .codewiki/kb/system/traces.md
-  - id: runtime
-    label: Runtime coordination
-    group: runtime
-    kind: coordination
-    source: .codewiki/kb/system/runtime.md
   - id: views
     label: Generated views
     group: generated
     kind: generated_projection
     source: .codewiki/kb/system/file-structure.md
   - id: git
-    label: Git content evidence
+    label: Git commits / trees / restore refs
     group: evidence
     kind: executable_truth
 edges:
   - from: user
-    to: pi_tui
-  - from: pi_tui
+    to: host_tools
+    label: invokes
+  - from: host_tools
+    to: runtime
+    label: asks for next action or loop iteration
+  - from: runtime
     to: decision
-  - from: decision
+    label: runs decision iteration
+  - from: runtime
     to: planning
-  - from: planning
+    label: runs planning iteration
+  - from: runtime
     to: implementation
+    label: runs implementation iteration or dispatches workers
   - from: decision
     to: kb
+    label: updates hot knowledge intent
   - from: decision
     to: traces
+    label: appends iteration output
   - from: planning
     to: traces
+    label: appends iteration output
   - from: implementation
     to: traces
-  - from: implementation
-    to: git
+    label: appends iteration output
   - from: runtime
     to: traces
+    label: appends coordination events
+  - from: implementation
+    to: git
+    label: produces content proof
   - from: traces
     to: views
+    label: projects state
   - from: kb
     to: views
+    label: enriches projections
   - from: git
     to: views
+    label: proves implementation state
   - from: views
-    to: pi_tui
+    to: host_tools
+    label: state/resume reads

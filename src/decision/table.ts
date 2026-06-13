@@ -32,10 +32,15 @@ export function createDecisionTable(input: DecisionTableInput): DecisionTable {
 	};
 }
 
-export function normalizeDecisionRows(rows: DecisionRowInput[] = []): DecisionRow[] {
+export function normalizeDecisionRows(
+	rows: DecisionRowInput[] = [],
+): DecisionRow[] {
 	return rows
 		.map((row, index) => normalizeDecisionRow(row, index))
-		.filter((row) => row.question || row.currentState || row.desiredState || row.rationale);
+		.filter(
+			(row) =>
+				row.question || row.currentState || row.desiredState || row.rationale,
+		);
 }
 
 export function applyDecisionRowActions(
@@ -68,32 +73,28 @@ export function approvedDecisionRows(table: DecisionTable): DecisionRow[] {
 	return table.rows.filter((row) => row.approval === "approved");
 }
 
-function normalizeDecisionRow(row: DecisionRowInput, index: number): DecisionRow {
+function normalizeDecisionRow(
+	row: DecisionRowInput,
+	index: number,
+): DecisionRow {
 	const id = text(row.id) || generatedRowId(index);
 	return {
 		id,
 		question: firstText(row.question, row.id, id),
-		currentState: firstText(row.currentState, row.current_state, row.current_project_state),
-		desiredState: firstText(
-			row.desiredState,
-			row.desired_state,
-			row.expected_final_state,
-			row.expected_outcome,
-			row.agreed_change,
-			row.proposed_change,
-		),
+		currentState: text(row.currentState),
+		desiredState: text(row.desiredState),
 		rationale: text(row.rationale),
-		affectedLayers: unique([...stringList(row.affectedLayers), ...stringList(row.affected_layers)]),
+		affectedLayers: unique(stringList(row.affectedLayers)),
 		risk: firstText(row.risk, "medium"),
-		approval: normalizeDecisionApprovalStatus(row.approval ?? row.status ?? row.user_action),
+		approval: normalizeDecisionApprovalStatus(row.approval),
 		alternatives: stringList(row.alternatives),
-		sourceRefs: unique([...stringList(row.sourceRefs), ...stringList(row.source_refs)]),
-		proofRefs: unique([...stringList(row.proofRefs), ...stringList(row.proof_refs)]),
-		changeType: normalizeChangeType(row.changeType ?? row.change_type ?? row.change_class),
+		sourceRefs: unique(stringList(row.sourceRefs)),
+		proofRefs: unique(stringList(row.proofRefs)),
+		changeType: normalizeChangeType(row.changeType),
 		traceabilityExemption: normalizeTraceabilityExemption(
-			row.traceabilityExemption ?? row.traceability_exemption,
+			row.traceabilityExemption,
 		),
-		noKbImpactReason: firstText(row.noKbImpactReason, row.no_kb_impact_reason) || undefined,
+		noKbImpactReason: text(row.noKbImpactReason) || undefined,
 	};
 }
 
@@ -102,20 +103,40 @@ function validateRowAction(
 	action: DecisionRowActionInput,
 ): DecisionRowActionFailure | null {
 	const rowId = text(action.rowId);
-	if (!rowId) return { rowId: "", action: action.action, error: "rowId is required." };
+	if (!rowId)
+		return { rowId: "", action: action.action, error: "rowId is required." };
 	const row = table.rows.find((item) => item.id === rowId);
-	if (!row) return { rowId, action: action.action, error: `Decision row not found: ${rowId}` };
+	if (!row)
+		return {
+			rowId,
+			action: action.action,
+			error: `Decision row not found: ${rowId}`,
+		};
 	if (action.action === "alternative" && !text(action.alternative)) {
-		return { rowId, action: action.action, error: "Alternative text is required." };
+		return {
+			rowId,
+			action: action.action,
+			error: "Alternative text is required.",
+		};
 	}
 	if (action.action === "edit") {
-		const [edited] = normalizeDecisionRows([{ ...row, ...(action.row || {}), id: row.id }]);
-		if (!edited) return { rowId, action: action.action, error: "Edit produced an invalid row." };
+		const [edited] = normalizeDecisionRows([
+			{ ...row, ...(action.row || {}), id: row.id },
+		]);
+		if (!edited)
+			return {
+				rowId,
+				action: action.action,
+				error: "Edit produced an invalid row.",
+			};
 	}
 	return null;
 }
 
-function applyRowAction(table: DecisionTable, action: DecisionRowActionInput): void {
+function applyRowAction(
+	table: DecisionTable,
+	action: DecisionRowActionInput,
+): void {
 	const row = table.rows.find((item) => item.id === action.rowId);
 	if (!row) return;
 	if (action.action === "accept") row.approval = "approved";
@@ -126,7 +147,9 @@ function applyRowAction(table: DecisionTable, action: DecisionRowActionInput): v
 		row.approval = "edited";
 	}
 	if (action.action === "edit") {
-		const [edited] = normalizeDecisionRows([{ ...row, ...(action.row || {}), id: row.id }]);
+		const [edited] = normalizeDecisionRows([
+			{ ...row, ...(action.row || {}), id: row.id },
+		]);
 		if (edited) Object.assign(row, edited);
 	}
 }
@@ -158,7 +181,9 @@ function text(value: unknown): string {
 }
 
 function stringList(value: unknown): string[] {
-	return Array.isArray(value) ? value.map((item) => text(item)).filter(Boolean) : [];
+	return Array.isArray(value)
+		? value.map((item) => text(item)).filter(Boolean)
+		: [];
 }
 
 function unique(values: string[]): string[] {

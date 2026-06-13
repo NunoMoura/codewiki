@@ -5,7 +5,9 @@ import { planningWorkItemsFromTrace } from "./work-plan.ts";
 
 export function buildConflictsView(conflicts: ConflictView[]): ConflictsView;
 export function buildConflictsView(input: TraceViewInput): ConflictsView;
-export function buildConflictsView(input: TraceViewInput | ConflictView[]): ConflictsView {
+export function buildConflictsView(
+	input: TraceViewInput | ConflictView[],
+): ConflictsView {
 	if (Array.isArray(input)) return { conflicts: input.map(normalizeConflict) };
 	return {
 		generatedAt: input.generatedAt,

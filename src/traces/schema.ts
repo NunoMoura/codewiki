@@ -1,4 +1,9 @@
-import type { TailCheckpoint, TraceEvent, TraceHead, TraceRecord } from "./types.ts";
+import type {
+	TailCheckpoint,
+	TraceEvent,
+	TraceHead,
+	TraceRecord,
+} from "./types.ts";
 
 export const TRACE_SCHEMA_VERSION = 1;
 export const TRACE_FILE_GLOB = ".codewiki/traces/TRACE-*.jsonl";
@@ -9,7 +14,11 @@ export const TRACE_RECORD_TYPE_VALUES = [
 	"tail_checkpoint",
 ] as const;
 
-export const TRACE_LOOP_VALUES = ["decision", "planning", "implementation"] as const;
+export const TRACE_LOOP_VALUES = [
+	"decision",
+	"planning",
+	"implementation",
+] as const;
 
 export interface TraceValidationIssue {
 	path: string;
@@ -42,16 +51,26 @@ export function isTraceId(value: unknown): value is string {
 	return typeof value === "string" && /^TRACE-[A-Za-z0-9._-]+$/.test(value);
 }
 
-export function validateTraceRecord(value: unknown): TraceValidationResult<TraceRecord> {
+export function validateTraceRecord(
+	value: unknown,
+): TraceValidationResult<TraceRecord> {
 	const issues: TraceValidationIssue[] = [];
-	if (!isRecord(value)) return invalid("$", "Trace record must be a JSON object.");
+	if (!isRecord(value))
+		return invalid("$", "Trace record must be a JSON object.");
 	if (!TRACE_RECORD_TYPE_VALUES.includes(value.type as never)) {
-		issue(issues, "$.type", "Trace record type must be trace_head, trace_event, or tail_checkpoint.");
+		issue(
+			issues,
+			"$.type",
+			"Trace record type must be trace_head, trace_event, or tail_checkpoint.",
+		);
 		return { ok: false, issues };
 	}
-	if (value.type === "trace_head") validateTraceHead(issues, value as Partial<TraceHead>);
-	if (value.type === "trace_event") validateTraceEvent(issues, value as Partial<TraceEvent>);
-	if (value.type === "tail_checkpoint") validateTailCheckpoint(issues, value as Partial<TailCheckpoint>);
+	if (value.type === "trace_head")
+		validateTraceHead(issues, value as Partial<TraceHead>);
+	if (value.type === "trace_event")
+		validateTraceEvent(issues, value as Partial<TraceEvent>);
+	if (value.type === "tail_checkpoint")
+		validateTailCheckpoint(issues, value as Partial<TailCheckpoint>);
 	return {
 		ok: issues.length === 0,
 		issues,
@@ -61,31 +80,50 @@ export function validateTraceRecord(value: unknown): TraceValidationResult<Trace
 
 export function assertValidTraceRecord(value: unknown): TraceRecord {
 	const result = validateTraceRecord(value);
-	if (!result.ok || !result.value) throw new TraceValidationError(result.issues);
+	if (!result.ok || !result.value)
+		throw new TraceValidationError(result.issues);
 	return result.value;
 }
 
-function validateTraceHead(issues: TraceValidationIssue[], value: Partial<TraceHead>): void {
+function validateTraceHead(
+	issues: TraceValidationIssue[],
+	value: Partial<TraceHead>,
+): void {
 	requireTraceId(issues, value.traceId, "$.traceId");
 	requireString(issues, value.title, "$.title");
 	requireString(issues, value.createdAt, "$.createdAt");
 }
 
-function validateTraceEvent(issues: TraceValidationIssue[], value: Partial<TraceEvent>): void {
+function validateTraceEvent(
+	issues: TraceValidationIssue[],
+	value: Partial<TraceEvent>,
+): void {
 	requireString(issues, value.id, "$.id");
 	requireNullableString(issues, value.parentId, "$.parentId");
 	requireTraceId(issues, value.traceId, "$.traceId");
 	if (!Number.isInteger(value.sequence) || Number(value.sequence) < 1) {
-		issue(issues, "$.sequence", "Trace event sequence must be a positive integer.");
+		issue(
+			issues,
+			"$.sequence",
+			"Trace event sequence must be a positive integer.",
+		);
 	}
 	if (!TRACE_LOOP_VALUES.includes(value.loop as never)) {
-		issue(issues, "$.loop", "Trace event loop must be decision, planning, or implementation.");
+		issue(
+			issues,
+			"$.loop",
+			"Trace event loop must be decision, planning, or implementation.",
+		);
 	}
 	requireString(issues, value.event, "$.event");
 	requireStringArray(issues, value.refs, "$.refs");
 	requireString(issues, value.createdAt, "$.createdAt");
 	if (value.data !== undefined && !isRecord(value.data)) {
-		issue(issues, "$.data", "Trace event data must be a JSON object when present.");
+		issue(
+			issues,
+			"$.data",
+			"Trace event data must be a JSON object when present.",
+		);
 	}
 }
 
@@ -100,7 +138,11 @@ function validateTailCheckpoint(
 	requireString(issues, value.summary, "$.summary");
 	requireString(issues, value.createdAt, "$.createdAt");
 	if (value.data !== undefined && !isRecord(value.data)) {
-		issue(issues, "$.data", "Tail checkpoint data must be a JSON object when present.");
+		issue(
+			issues,
+			"$.data",
+			"Tail checkpoint data must be a JSON object when present.",
+		);
 	}
 }
 
@@ -109,7 +151,8 @@ function requireTraceId(
 	value: unknown,
 	path: string,
 ): void {
-	if (!isTraceId(value)) issue(issues, path, "Trace id must start with TRACE- and be path-safe.");
+	if (!isTraceId(value))
+		issue(issues, path, "Trace id must start with TRACE- and be path-safe.");
 }
 
 function requireString(
@@ -141,14 +184,20 @@ function requireStringArray(
 		issue(issues, path, "Field must be an array of strings.");
 		return;
 	}
-	value.forEach((item, index) => requireString(issues, item, `${path}[${index}]`));
+	value.forEach((item, index) =>
+		requireString(issues, item, `${path}[${index}]`),
+	);
 }
 
 function invalid(path: string, message: string): TraceValidationResult<never> {
 	return { ok: false, issues: [{ path, message }] };
 }
 
-function issue(issues: TraceValidationIssue[], path: string, message: string): void {
+function issue(
+	issues: TraceValidationIssue[],
+	path: string,
+	message: string,
+): void {
 	issues.push({ path, message });
 }
 

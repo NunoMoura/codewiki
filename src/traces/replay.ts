@@ -1,4 +1,9 @@
-import type { TailCheckpoint, TraceEvent, TraceHead, TraceRecord } from "./types.ts";
+import type {
+	TailCheckpoint,
+	TraceEvent,
+	TraceHead,
+	TraceRecord,
+} from "./types.ts";
 
 export interface TraceReplayState {
 	head: TraceHead;
@@ -26,11 +31,15 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 				`Trace record ${traceRecordLabel(record)} belongs to ${record.traceId}, not ${head.traceId}.`,
 			);
 		}
-		if (record.type === "trace_head") throw new Error("Trace file contains multiple trace_head records.");
+		if (record.type === "trace_head")
+			throw new Error("Trace file contains multiple trace_head records.");
 		if (record.type === "trace_event") {
-			if (seenRecordIds.has(record.id)) throw new Error(`Duplicate trace record id: ${record.id}.`);
+			if (seenRecordIds.has(record.id))
+				throw new Error(`Duplicate trace record id: ${record.id}.`);
 			if (record.sequence <= lastSequence) {
-				throw new Error(`Trace event ${record.id} sequence must increase after ${lastSequence}.`);
+				throw new Error(
+					`Trace event ${record.id} sequence must increase after ${lastSequence}.`,
+				);
 			}
 			assertKnownParent(record, seenRecordIds);
 			seenRecordIds.add(record.id);
@@ -39,7 +48,8 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 			lastRecordId = record.id;
 		}
 		if (record.type === "tail_checkpoint") {
-			if (seenRecordIds.has(record.id)) throw new Error(`Duplicate trace record id: ${record.id}.`);
+			if (seenRecordIds.has(record.id))
+				throw new Error(`Duplicate trace record id: ${record.id}.`);
 			assertKnownParent(record, seenRecordIds);
 			seenRecordIds.add(record.id);
 			checkpoints.push(record);
@@ -63,8 +73,14 @@ export function replayEvents(records: TraceRecord[]): TraceEvent[] {
 		.sort((left, right) => left.sequence - right.sequence);
 }
 
-export function latestTailCheckpoint(records: TraceRecord[]): TailCheckpoint | undefined {
-	return records.filter((record): record is TailCheckpoint => record.type === "tail_checkpoint").at(-1);
+export function latestTailCheckpoint(
+	records: TraceRecord[],
+): TailCheckpoint | undefined {
+	return records
+		.filter(
+			(record): record is TailCheckpoint => record.type === "tail_checkpoint",
+		)
+		.at(-1);
 }
 
 function assertKnownParent(
@@ -73,7 +89,9 @@ function assertKnownParent(
 ): void {
 	if (record.parentId === null) return;
 	if (!seenRecordIds.has(record.parentId)) {
-		throw new Error(`Trace record ${record.id} has unknown parent ${record.parentId}.`);
+		throw new Error(
+			`Trace record ${record.id} has unknown parent ${record.parentId}.`,
+		);
 	}
 }
 
@@ -82,5 +100,7 @@ function traceRecordLabel(record: TraceRecord): string {
 }
 
 function unique(values: string[]): string[] {
-	return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
+	return Array.from(
+		new Set(values.map((value) => value.trim()).filter(Boolean)),
+	);
 }

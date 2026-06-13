@@ -2,6 +2,14 @@ import type { TraceLoop, TraceRecord } from "../traces/types.ts";
 
 export type ViewHealth = "green" | "yellow" | "red";
 export type WorkPlanCardStatus = "todo" | "blocked" | "active" | "done";
+export type WorkQueueItemStatus =
+	| "backlog"
+	| "waiting"
+	| "ready"
+	| "claimed"
+	| "blocked"
+	| "done";
+export type WorkQueueItemKind = "decision" | "work-unit";
 
 export interface TraceViewInput {
 	records: TraceRecord[];
@@ -22,6 +30,7 @@ export interface WorkPlanCard {
 	status: WorkPlanCardStatus;
 	traceRefs: string[];
 	decisionRefs: string[];
+	componentRefs: string[];
 	pathScopes: string[];
 	verification: string[];
 	dependsOn: string[];
@@ -33,6 +42,31 @@ export interface WorkPlanView {
 	generatedAt?: string;
 	traceId?: string;
 	cards: WorkPlanCard[];
+}
+
+export interface WorkQueueItem {
+	id: string;
+	kind: WorkQueueItemKind;
+	status: WorkQueueItemStatus;
+	traceId: string;
+	title: string;
+	traceRefs: string[];
+	decisionRefs: string[];
+	planningRefs: string[];
+	componentRefs: string[];
+	pathScopes: string[];
+	dependsOn: string[];
+	blockers: string[];
+	claimedBy?: string;
+	claimExpiresAt?: string;
+	sourceEventId?: string;
+}
+
+export interface WorkQueueView {
+	generatedAt?: string;
+	traceIds: string[];
+	summary: Record<WorkQueueItemStatus, number>;
+	items: WorkQueueItem[];
 }
 
 export interface StatusView {
@@ -64,7 +98,7 @@ export interface BlockerView {
 	id: string;
 	ownerRef: string;
 	routeBack: string;
-	kind: "deferred" | "route-back" | "conflict" | "gate";
+	kind: "deferred" | "route-back" | "conflict" | "exit";
 	message: string;
 	traceRefs: string[];
 	sourceEventId?: string;

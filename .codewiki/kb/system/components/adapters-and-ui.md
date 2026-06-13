@@ -1,21 +1,3 @@
----
-id: spec.system.components.adapters-and-ui
-title: Adapters and UI Component
-state: active
-component_id: adapters_ui
-diagram_refs:
-  - component-map:adapters
-  - component-map:terminal_ui
-  - file-structure-map:current_adapters
-  - file-structure-map:current_ui
-source_roots:
-  - src/adapters/**
-owners:
-  - architecture
-updated: "2026-06-01"
-summary: Host adapters and user interfaces that delegate CodeWiki semantics to the API facade.
----
-
 # Adapters and UI Component
 
 ## Responsibility

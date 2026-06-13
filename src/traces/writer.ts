@@ -26,7 +26,9 @@ export function createTraceHead(input: CreateTraceHeadInput): TraceHead {
 	};
 }
 
-export function createTailCheckpoint(input: CreateTailCheckpointInput): TailCheckpoint {
+export function createTailCheckpoint(
+	input: CreateTailCheckpointInput,
+): TailCheckpoint {
 	return {
 		type: "tail_checkpoint",
 		id: input.id.trim(),

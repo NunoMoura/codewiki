@@ -10,7 +10,10 @@ export function eventsForLoop(
 	);
 }
 
-export function eventsByName(records: TraceRecord[], eventName: string): TraceEvent[] {
+export function eventsByName(
+	records: TraceRecord[],
+	eventName: string,
+): TraceEvent[] {
 	return records.filter(
 		(record): record is TraceEvent =>
 			record.type === "trace_event" && record.event === eventName,
@@ -32,7 +35,10 @@ export function traceRefs(records: TraceRecord[]): string[] {
 	);
 }
 
-export function traceHasEvent(records: TraceRecord[], eventName: string): boolean {
+export function traceHasEvent(
+	records: TraceRecord[],
+	eventName: string,
+): boolean {
 	return eventsByName(records, eventName).length > 0;
 }
 
@@ -48,5 +54,7 @@ function stringList(value: unknown): string[] {
 }
 
 function unique(values: string[]): string[] {
-	return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
+	return Array.from(
+		new Set(values.map((value) => value.trim()).filter(Boolean)),
+	);
 }

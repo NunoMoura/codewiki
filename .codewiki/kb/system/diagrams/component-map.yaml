@@ -2,267 +2,161 @@ schema_version: 1
 id: spec.system.diagrams.component-map
 title: CodeWiki Component and Container Map
 kind: component_map
-purpose: Show major CodeWiki domain, application, UI, adapter, truth, and proof components with dependency direction.
+purpose: Show major CodeWiki domain, application, adapter, truth, runtime, view, and proof components with dependency direction.
 source_docs:
   - .codewiki/kb/system/overview.md
+  - .codewiki/kb/system/loop-model.md
+  - .codewiki/kb/system/api-vnext-tools.md
   - .codewiki/kb/system/file-structure.md
-  - .codewiki/kb/system/terminal-ui.md
-  - .codewiki/kb/system/api.md
-  - .codewiki/kb/system/graph.md
-  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/adapters.md
 renderer:
   preferred: layered_graph
   fallback: mermaid_flowchart
 groups:
   - id: surfaces
-    label: User surfaces
-  - id: ui_layer
-    label: UI layer
-  - id: adapter_layer
-    label: Adapters
-  - id: app_layer
-    label: Application layer
+    label: User and host surfaces
+  - id: api_layer
+    label: Tool/API layer
+  - id: runtime_layer
+    label: Runtime outer loop
+  - id: loop_layer
+    label: Semantic loops
   - id: truth_layer
     label: Truth and state
   - id: proof_layer
-    label: Proof and publication
+    label: Proof and retention
 nodes:
   - id: user_intent
     label: User / agent intent
     group: surfaces
     kind: actor
-  - id: terminal_ui
-    label: Pi-hosted CodeWiki surface
-    group: ui_layer
-    kind: ui
-    source: .codewiki/kb/system/terminal-ui.md
-  - id: extension
-    label: Pi package integration
-    group: adapter_layer
-    kind: runtime_surface
-    source: .codewiki/kb/system/extension.md
-  - id: adapters
-    label: Adapter compatibility
-    group: adapter_layer
-    kind: compatibility_adapter
-    source: .codewiki/kb/system/adapters.md
+  - id: host_adapters
+    label: CLI / Pi / MCP adapters
+    group: surfaces
+    kind: host_adapter
+    source: .codewiki/kb/system/api-vnext-tools.md
   - id: api
-    label: Application tools API
-    group: app_layer
+    label: CodeWiki core API
+    group: api_layer
     kind: application
     source: .codewiki/kb/system/api.md
-  - id: domain
-    label: Domain concepts
-    group: app_layer
-    kind: domain
-    source: .codewiki/kb/system/file-structure.md
-  - id: state_engine
-    label: Generated views
-    group: app_layer
-    kind: application
-    source: .codewiki/kb/system/graph.md
-  - id: resume_context
-    label: Resume context builder
-    group: app_layer
-    kind: application
-    source: .codewiki/kb/system/api.md
-  - id: agency
-    label: Agency controller
-    group: app_layer
-    kind: application
-    source: .codewiki/kb/system/agency.md
+  - id: wiki_tools
+    label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_runtime / wiki_archive / wiki_config
+    group: api_layer
+    kind: tool_surface
+    source: .codewiki/kb/system/api-vnext-tools.md
   - id: runtime
-    label: CodeWiki runtime / daemon
-    group: app_layer
-    kind: application
+    label: Runtime outer loop
+    group: runtime_layer
+    kind: coordination
     source: .codewiki/kb/system/runtime.md
-  - id: pi_code_foundation
-    label: Pi Code foundation
-    group: adapter_layer
-    kind: runtime_foundation
-    source: .codewiki/kb/system/runtime.md
-  - id: runtime_jobs
-    label: Daemon jobs and runs
-    group: truth_layer
-    kind: runtime_state
-    source: .codewiki/kb/system/runtime.md
-  - id: compilers
-    label: Compilers
-    group: app_layer
-    kind: workflow
-    source: .codewiki/kb/system/compilers.md
-  - id: validation_gateway
-    label: Gateway
-    group: app_layer
-    kind: workflow
-    source: .codewiki/kb/system/validation-gateway.md
-  - id: checks
-    label: Gate criteria and linters
-    group: app_layer
-    kind: application
-    source: .codewiki/kb/system/audits.md
+  - id: decision_loop
+    label: Decision loop
+    group: loop_layer
+    kind: semantic_loop
+    source: .codewiki/kb/system/decision-loop.md
+  - id: planning_loop
+    label: Planning loop
+    group: loop_layer
+    kind: semantic_loop
+    source: .codewiki/kb/system/planning-loop.md
+  - id: implementation_loop
+    label: Implementation loop
+    group: loop_layer
+    kind: semantic_loop
+    source: .codewiki/kb/system/implementation-loop.md
   - id: knowledge
-    label: Knowledge
+    label: Hot knowledge base
     group: truth_layer
     kind: durable_truth
     source: .codewiki/kb/system/knowledge.md
-  - id: roadmap
-    label: Roadmap
+  - id: traces
+    label: JSONL trace truth
     group: truth_layer
     kind: durable_truth
-    source: .codewiki/kb/system/roadmap.md
-  - id: builds
-    label: JSONL traces and compiler output
-    group: truth_layer
-    kind: traceability_truth
-    source: .codewiki/kb/system/builds.md
-  - id: graph
+    source: .codewiki/kb/system/traces.md
+  - id: views
     label: Generated views
     group: truth_layer
-    kind: generated_state
-    source: .codewiki/kb/system/graph.md
+    kind: generated_projection
+    source: .codewiki/kb/system/file-structure.md
+  - id: runtime_tmp
+    label: Runtime temp scratch
+    group: runtime_layer
+    kind: transient_state
+    source: .codewiki/kb/system/runtime.md
   - id: code_tests
-    label: Code + tests
+    label: Source + tests
     group: proof_layer
     kind: executable_truth
-  - id: publication
-    label: Publication support
+  - id: git
+    label: Git commits / trees / restore refs
     group: proof_layer
-    kind: publication
+    kind: content_proof
+  - id: retention
+    label: Retention / archive / hydrate / restore
+    group: proof_layer
+    kind: retention_pipeline
+    source: .codewiki/kb/system/traces.md
 edges:
   - from: user_intent
-    to: terminal_ui
-    label: observes and navigates
-  - from: user_intent
-    to: extension
-    label: invokes host commands/tools
-  - from: extension
-    to: adapters
-    label: registers host surfaces
-  - from: terminal_ui
+    to: host_adapters
+    label: requests work or state
+  - from: host_adapters
+    to: wiki_tools
+    label: exposes tool semantics
+  - from: wiki_tools
     to: api
-    label: delegates semantic reads/writes
-  - from: adapters
-    to: api
-    label: delegates semantic reads/writes
+    label: delegates to core APIs
   - from: api
-    to: domain
-    label: applies domain concepts
-  - from: api
-    to: state_engine
-    label: rebuilds/queries generated state
-  - from: api
-    to: resume_context
-    label: composes high-signal continuation packets
-  - from: resume_context
-    to: state_engine
-    label: reads graph/task context refs
-  - from: state_engine
-    to: graph
-    label: emits representation
-  - from: api
-    to: agency
-    label: plans and gates bounded automation
-  - from: agency
     to: runtime
-    label: authorizes one bounded step or daemon job
+    label: coordinates next actions
   - from: runtime
-    to: pi_code_foundation
-    label: builds on runtime/session primitives
+    to: decision_loop
+    label: runs decision iteration
   - from: runtime
-    to: runtime_jobs
-    label: records attempts and heartbeats
+    to: planning_loop
+    label: runs planning iteration
   - from: runtime
-    to: resume_context
-    label: requests role-free source-backed boundary packet
-  - from: runtime
-    to: roadmap
-    label: claims task/sprint/roadmap scopes
-  - from: runtime
-    to: compilers
-    label: invokes or schedules allowed compiler step
-  - from: runtime
-    to: validation_gateway
-    label: submits gateway preflight and routes pass/fail/block
-  - from: runtime_jobs
-    to: builds
-    label: carries trace and compiler output refs for loop attempts
-  - from: runtime_jobs
-    to: validation_gateway
-    label: carries gate refs and pass/fail/block outcomes
-  - from: runtime_jobs
-    to: roadmap
-    label: references tasks without replacing truth
-  - from: runtime_jobs
-    to: sessions
-    label: records session and claim refs without owning leases
-  - from: api
-    to: compilers
-    label: starts compiler loops
-  - from: api
-    to: validation_gateway
-    label: records/reads gate verdicts and diagnostics
-  - from: api
-    to: checks
-    label: exposes deterministic gate evidence
-  - from: validation_gateway
-    to: checks
-    label: requires gate criteria evidence
-  - from: checks
-    to: code_tests
-    label: inspects source/API contracts
-  - from: api
+    to: implementation_loop
+    label: runs implementation iteration or workers
+  - from: decision_loop
     to: knowledge
-    label: reads/writes intended truth
-  - from: api
-    to: roadmap
-    label: mutates work truth
-  - from: api
-    to: builds
-    label: writes trace entries
-  - from: compilers
-    to: builds
-    label: emit compiler output into traces
-  - from: compilers
-    to: knowledge
-    label: update intended truth
-  - from: compilers
-    to: roadmap
-    label: create/update work
-  - from: compilers
+    label: updates accepted intent
+  - from: decision_loop
+    to: traces
+    label: appends iteration
+  - from: planning_loop
+    to: traces
+    label: appends iteration
+  - from: implementation_loop
+    to: traces
+    label: appends iteration
+  - from: runtime
+    to: traces
+    label: appends coordination
+  - from: runtime
+    to: runtime_tmp
+    label: stores active scratch
+  - from: implementation_loop
     to: code_tests
-    label: implement executable truth
-  - from: validation_gateway
-    to: builds
-    label: records gate verdicts in traces
-  - from: validation_gateway
-    to: state_engine
-    label: uses generated-state context
+    label: changes and verifies
+  - from: implementation_loop
+    to: git
+    label: produces content proof
+  - from: traces
+    to: views
+    label: projects current state
   - from: knowledge
-    to: state_engine
-    label: source input
-  - from: roadmap
-    to: state_engine
-    label: source input
-  - from: builds
-    to: state_engine
-    label: source input
-  - from: code_tests
-    to: state_engine
-    label: source input
-  - from: builds
-    to: publication
-    label: publication evidence
-  - from: code_tests
-    to: publication
-    label: executable proof
-ui_hints:
-  default_layout: layered
-  edge_style: behind_nodes
-  inspector_fields:
-    - kind
-    - source
-    - group
-    - label
+    to: views
+    label: enriches current state
+  - from: git
+    to: views
+    label: proves closure
+  - from: retention
+    to: git
+    label: stores cold restore refs
+  - from: traces
+    to: retention
+    label: closes and archives

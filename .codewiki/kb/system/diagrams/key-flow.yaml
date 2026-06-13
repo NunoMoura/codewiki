@@ -2,11 +2,13 @@ schema_version: 1
 id: spec.system.diagrams.key-flow
 title: CodeWiki Intent-to-Implementation Flow
 kind: sequence_flow
-purpose: Show the target flow from user intent through decision, planning, implementation, JSONL traces, generated views, and Git evidence.
+purpose: Show target flow from user intent through semantic loop iterations, runtime coordination, JSONL traces, generated views, and Git evidence.
 source_docs:
-  - .codewiki/kb/system/compilers.md
+  - .codewiki/kb/system/loop-model.md
+  - .codewiki/kb/system/decision-loop.md
+  - .codewiki/kb/system/planning-loop.md
+  - .codewiki/kb/system/implementation-loop.md
   - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/validation-gateway.md
   - .codewiki/kb/system/runtime.md
 renderer:
   preferred: mermaid_sequence
@@ -15,22 +17,22 @@ participants:
   - id: user
     label: User
     kind: actor
+  - id: runtime
+    label: Runtime outer loop
+    kind: coordination
+    source: .codewiki/kb/system/runtime.md
   - id: decision
     label: Decision loop
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/decision-loop.md
   - id: planning
     label: Planning loop
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/planning-loop.md
   - id: implementation
     label: Implementation loop
-    kind: compiler_loop
-    source: .codewiki/kb/system/compilers.md
-  - id: runtime
-    label: Runtime coordination
-    kind: runtime
-    source: .codewiki/kb/system/runtime.md
+    kind: semantic_loop
+    source: .codewiki/kb/system/implementation-loop.md
   - id: traces
     label: JSONL traces
     kind: durable_truth
@@ -45,47 +47,51 @@ participants:
 steps:
   - id: capture_intent
     from: user
-    to: decision
+    to: runtime
     message: provides intent, constraints, alternatives, and approval needs
-  - id: approve_decision
+  - id: run_decision
+    from: runtime
+    to: decision
+    message: runs decision loop cycle and evaluates exit conditions
+  - id: append_decision
     from: decision
     to: traces
-    message: appends approved decision rows, risks, refs, and decision gate result
-  - id: materialize_work
-    from: traces
+    message: appends decision.iteration with output, exit status, conditions, progress, and refs
+  - id: run_planning
+    from: runtime
     to: planning
-    message: replays accepted decision events into work units, ordering, and verification plan
-  - id: planning_gate
+    message: runs planning loop from exited decision output
+  - id: append_planning
     from: planning
     to: traces
-    message: appends planning coverage, conflicts, work-plan ownership, and planning gate result
+    message: appends planning.iteration with work units, acceptance, path scopes, conditions, and refs
   - id: schedule_work
     from: traces
     to: runtime
-    message: derives runnable boundaries, budgets, claims, and temporary working paths
-  - id: implement
+    message: folds traces and derives runnable work queue, claims, budgets, and temp paths
+  - id: run_implementation
     from: runtime
     to: implementation
-    message: dispatches implementation work with source refs and content-evidence requirements
-  - id: record_implementation
+    message: runs implementation loop or dispatches workers with source refs and content-evidence requirements
+  - id: append_implementation
     from: implementation
     to: traces
-    message: appends changed paths, tests, checks, content proof, and implementation gate result
+    message: appends implementation.iteration with evidence, checks, worker provenance, proof, exit conditions, and refs
   - id: prove_content
     from: implementation
     to: git
-    message: commits or records exact working-tree/content evidence
+    message: records exact working-tree, tree, commit, restore, or publication evidence
   - id: project_views
     from: traces
     to: views
-    message: regenerates status, resume, work-plan, blockers, and conflicts views
-  - id: render_status
+    message: regenerates status, resume, work-plan, work-queue, blockers, and conflicts views
+  - id: render_state
     from: views
     to: user
-    message: shows terminal status/work-plan output
+    message: shows state, next action, and unresolved exit conditions
 ui_hints:
-  default_focus: capture_intent
-  show_gate_steps:
-    - approve_decision
-    - planning_gate
-    - record_implementation
+  default_focus: run_decision
+  show_exit_steps:
+    - append_decision
+    - append_planning
+    - append_implementation

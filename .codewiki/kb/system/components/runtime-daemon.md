@@ -1,47 +1,27 @@
----
-id: spec.system.components.runtime-daemon
-title: Runtime and Daemon Component
-state: active
-component_id: runtime
-diagram_refs:
-  - component-map:runtime
-  - file-structure-map:runtime_orchestration_boundary
-source_roots:
-  - src/runtime/**
-  - src/runtime/**
-owners:
-  - architecture
-  - engineering
-updated: "2026-06-01"
-summary: Bounded execution and daemon-dispatch layer for CodeWiki software-development loops.
----
-
-# Runtime and Daemon Component
+# Runtime Component
 
 ## Responsibility
 
-The runtime executes one bounded CodeWiki step after agency policy authorizes it. It coordinates claims, compiler/gateway preparation, context boundaries, daemon job attempts, worker lifecycle, and stop evidence without replacing roadmap, build, validation, or Git proof.
+Runtime folds traces, chooses the next safe action, coordinates claims and workers, enforces progress boundaries, manages temporary data, and orchestrates retention. It does not own semantic truth and is not a fourth semantic loop.
 
 ## Owned paths
 
-- `src/runtime/**` owns runner, dispatcher, ports, and runtime result types.
-- `src/runtime/**` owns agency planning and budget policy that the runtime consumes.
-- `.codewiki/runtime/**` stores dogfood runtime job state, not package source.
+- `src/runtime/**` owns scheduler, dispatcher, claims, leases, policy, budget, lifecycle, and temporary data helpers.
+- `.codewiki/runtime/tmp/**` stores active scratch only.
 
 ## Contracts
 
-- Runtime must stop on unavailable claims, unsupported harness capability, validation block, risk/user gate, publication/destructive gate, or budget exhaustion.
-- Daemon jobs are execution-attempt records only; they do not close roadmap tasks.
-- Pi Code is the first-class runtime foundation, and future runtimes must preserve CodeWiki truth and proof semantics.
+- Runtime may append coordination events, but semantic truth exits through decision, planning, or implementation iterations.
+- Runtime must stop or block on unsupported host capability, exhausted budgets, repeated no-progress iterations, stale claims, or required user approval.
+- Runtime temporary data must be deleted after loop exit or trace close once durable refs exist.
 
 ## Flow links
 
-- [Runtime daemon dispatch](../flows/runtime-daemon-dispatch.md)
+- [Runtime dispatch](../flows/runtime-daemon-dispatch.md)
 - [Artifact claim wait/wake](../flows/artifact-claim-wait-wake.md)
-- [Resume context boundary](../flows/resume-context-boundary.md)
 
 ## Related docs
 
-- [System overview](../overview.md)
-- [File structure](../file-structure.md)
-- [Component map](../diagrams/component-map.yaml)
+- [Runtime](../runtime.md)
+- [Loop Model](../loop-model.md)
+- [Traces](../traces.md)

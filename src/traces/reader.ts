@@ -14,7 +14,8 @@ export function parseTraceText(text: string): TraceRecord[] {
 	return lines.flatMap((line, index) => {
 		const isTrailingBlank = index === lines.length - 1 && line.trim() === "";
 		if (isTrailingBlank) return [];
-		if (line.trim() === "") throw new Error(`Trace line ${index + 1} is empty.`);
+		if (line.trim() === "")
+			throw new Error(`Trace line ${index + 1} is empty.`);
 		return [parseTraceLine(line)];
 	});
 }

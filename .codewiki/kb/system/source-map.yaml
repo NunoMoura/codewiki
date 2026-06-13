@@ -1,0 +1,167 @@
+schema_version: 1
+id: spec.system.source-map
+title: CodeWiki Source Ownership Map
+kind: source_map
+purpose: Canonical machine-readable mapping between source ownership roots, KB docs, tests, generated views, and trace/event responsibilities.
+updated: "2026-06-12"
+source_docs:
+  - .codewiki/kb/system/source-map.md
+  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/loop-model.md
+defaults:
+  inheritance: true
+  max_owner_depth: 2
+  excluded:
+    - _OLD_VERSION/**
+    - node_modules/**
+    - .pi/**
+    - .git/**
+    - coverage/**
+    - dist/**
+    - "**/*.d.ts"
+    - "**/*.tgz"
+rules:
+  - Source ownership is declared here; KB Markdown frontmatter is forbidden.
+  - Subpaths inherit the nearest owning component unless a more specific component entry exists.
+  - Every active source ownership root needs one owning doc and tests or an explicit no-test rationale.
+  - Diagrams map concepts; this file maps source ownership.
+components:
+  package:
+    doc: README.md
+    source:
+      - package.json
+      - package-lock.json
+      - tsconfig.json
+      - src/index.ts
+    tests:
+      - tests/scaffold.test.mjs
+    role: package_entrypoint
+  api:
+    doc: .codewiki/kb/system/api.md
+    source:
+      - src/api/**
+    tests:
+      - tests/scaffold.test.mjs
+      - tests/views/wiki-state.test.mjs
+      - tests/decision/wiki-decide.test.mjs
+      - tests/planning/wiki-plan.test.mjs
+      - tests/implementation/repo-proof.test.mjs
+      - tests/implementation/wiki-implement.test.mjs
+      - tests/runtime/wiki-runtime.test.mjs
+      - tests/runtime/wiki-config.test.mjs
+      - tests/traces/wiki-archive.test.mjs
+    role: public_facade
+  decision:
+    doc: .codewiki/kb/system/decision-loop.md
+    source:
+      - src/decision/**
+      - src/api/decision.ts
+    tests:
+      - tests/decision/**
+    trace_events:
+      - decision.iteration
+    role: semantic_loop
+  planning:
+    doc: .codewiki/kb/system/planning-loop.md
+    source:
+      - src/planning/**
+      - src/api/planning.ts
+    tests:
+      - tests/planning/**
+    generated_views:
+      - .codewiki/views/work-plan.json
+      - .codewiki/views/work-queue.json
+    trace_events:
+      - planning.iteration
+    role: semantic_loop
+  implementation:
+    doc: .codewiki/kb/system/implementation-loop.md
+    source:
+      - src/implementation/**
+      - src/api/implementation.ts
+    tests:
+      - tests/implementation/**
+    trace_events:
+      - implementation.iteration
+    role: semantic_loop
+  traces:
+    doc: .codewiki/kb/system/traces.md
+    source:
+      - src/traces/**
+      - src/api/traces.ts
+    tests:
+      - tests/traces/**
+    trace_events:
+      - trace_head
+      - trace_event
+      - tail_checkpoint
+      - trace.close
+    role: state_truth
+  views:
+    doc: .codewiki/kb/system/traces.md
+    source:
+      - src/views/**
+      - src/api/views.ts
+    tests:
+      - tests/views/**
+    generated_views:
+      - .codewiki/views/status.json
+      - .codewiki/views/resume.json
+      - .codewiki/views/work-plan.json
+      - .codewiki/views/work-queue.json
+      - .codewiki/views/blockers.json
+      - .codewiki/views/conflicts.json
+    role: generated_projection
+  knowledge:
+    doc: .codewiki/kb/system/knowledge.md
+    source:
+      - src/knowledge/**
+      - .codewiki/kb/**
+    tests:
+      - tests/knowledge/**
+      - tests/scaffold.test.mjs
+    role: hot_knowledge
+  git:
+    doc: .codewiki/kb/system/implementation-loop.md
+    source:
+      - src/git/**
+    tests:
+      - tests/implementation/**
+    role: content_proof
+  runtime:
+    doc: .codewiki/kb/system/runtime.md
+    source:
+      - src/runtime/**
+    tests:
+      - tests/runtime/**
+    trace_events:
+      - runtime.claim.acquired
+      - runtime.work.claimed
+      - runtime.claim.released
+      - runtime.work.released
+      - runtime.claim.expired
+      - runtime.claim.cancelled
+      - runtime.dispatch.planned
+    role: outer_loop_coordination
+  pi:
+    doc: .codewiki/kb/system/extension.md
+    source:
+      - src/pi/**
+    tests:
+      - tests/runtime/pi-dispatcher.test.mjs
+    role: host_adapter
+  project:
+    doc: .codewiki/kb/system/file-structure.md
+    source:
+      - src/project/**
+    tests:
+      - tests/scaffold.test.mjs
+      - tests/implementation/repo-proof.test.mjs
+    role: project_boundary
+  utils:
+    doc: .codewiki/kb/system/file-structure.md
+    source:
+      - src/utils/**
+    test_policy: inherited
+    test_rationale: Domain-free utilities are tested through owning consumers until a utility grows its own contract.
+    role: domain_free_primitives

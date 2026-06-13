@@ -1,23 +1,20 @@
----
-id: spec.system.knowledge
-title: Knowledge
-state: active
-summary: Durable product and system knowledge structure for CodeWiki projects.
-owners:
-  - architecture
-  - product
-updated: "2026-06-04"
----
-
 # Knowledge
 
 ## Responsibility
 
-Knowledge is the durable intended truth for product and system design. It is not a log, generated view, task archive, or code artifact store.
+Knowledge is the durable intended truth for product and system design. It is not a log, generated view, task archive, trace archive, or code artifact store.
+
+Hot knowledge lives in:
+
+```text
+.codewiki/kb/**
+```
+
+Cold history and restore detail live in Git.
 
 ## Product structure
 
-Product knowledge should define users, user stories, and visual user interfaces:
+Product knowledge defines users, user stories, product behavior, and visual user interfaces:
 
 ```text
 .codewiki/kb/product/
@@ -27,69 +24,65 @@ Product knowledge should define users, user stories, and visual user interfaces:
   uis/
 ```
 
-Product docs should avoid technical implementation detail unless it affects user value, user constraints, visual UI behavior, or a system constraint that changes what users can expect.
-
-Product-oriented decisions enter through product knowledge first. The decision compiler then records system-impact evidence and routes architecture, planning, or implementation work only when product intent requires lower-layer change.
+Product docs should avoid technical implementation detail unless it affects user value, user constraints, UI behavior, or a system constraint that changes what users can expect.
 
 ## System structure
 
-System knowledge should define the technical architecture that implements product intent:
+System knowledge defines technical architecture that implements product intent:
 
 ```text
 .codewiki/kb/system/
   overview.md
+  loop-model.md
+  decision-loop.md
+  planning-loop.md
+  implementation-loop.md
   file-structure.md
   <component>.md
   diagrams/
-    README.md
-    context-map.yaml
-    component-map.yaml
-    key-flow.yaml
-    data-model.yaml
-    state-lifecycle.yaml
 ```
 
-System-oriented decisions enter through system diagrams and system knowledge first. The decision compiler then records product-impact evidence and updates product knowledge when architecture constraints or workflow changes are user-visible.
+System diagrams are the navigation spine for system knowledge. Diagram raw data lives under `system/diagrams/**` as YAML so agents can edit it safely and renderers can transform it into Mermaid, Cytoscape, ASCII/Unicode, or custom views.
 
-System diagrams are the navigation spine for system knowledge. Each system `.md` file, except `system/overview.md` and `system/diagrams/README.md`, should map to at least one diagram ref once the vNext diagram-ref migration is enabled. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias. Valid refs may target components, adapters, flows, domain entities, lifecycles, policy boundaries, artifacts, actors, or external systems. Diagram nodes can set `requires_doc` when a detail doc is mandatory; not every diagram node needs a prose doc.
+## Decision-owned propagation
 
-Each major system component should have one matching `.md` file under `system/`. Each component doc should map to code, data, adapters, or generated artifacts in `file-structure.md`. Diagram raw data lives under `system/diagrams/**` as YAML so agents can edit it safely and renderers can transform it into Mermaid, Cytoscape, or custom SVG views. Diagrams may include external artifacts such as users, code/tests, or publication outputs when needed for context; those are not system component docs unless ownership moves into CodeWiki.
+The decision loop owns knowledge propagation. There is no separate knowledge loop.
 
-## Links and graph relationships
+A change can originate in any layer:
 
-Knowledge docs should use minimal curated Markdown links for human navigation and intentional semantic dependencies. They should not try to manually encode the full relationship graph.
+- product changes can require system and code changes;
+- system changes can require product documentation updates when user-visible;
+- implementation discoveries can route back to planning or decision;
+- source drift can create a decision question.
 
-The generated graph derives machine relationships from frontmatter, explicit references, curated Markdown links, build metadata, roadmap links, validation reports, code/test facts, and source fingerprints. If a relationship is mainly needed for routing, drift detection, freshness, or backlinks, it belongs in generated views rather than in hand-maintained prose links.
+The decision loop records accepted intent, KB impact, and diagram impact in decision output. It cannot exit unless required KB/diagram updates are made, explicitly not needed, blocked, or routed with owner and rationale.
 
-Routine `code_paths` in knowledge frontmatter are deprecated as a required mapping mechanism. They duplicate graph responsibility and drift during source-root migrations. Knowledge docs should keep minimal semantic metadata and use `diagram_refs` when a system diagram node is the intended anchor. Exact code paths belong primarily in roadmap tasks, compiler output, gate evidence, file-structure/diagram mappings, or generated graph facts. A knowledge doc may still use frontmatter `code_paths` as an explicit override when it intentionally owns a precise code surface; when present, linters should verify the paths instead of treating them as generated truth.
+Planning starts only from exited decision output and current KB refs.
+
+## Links and generated relationships
+
+Knowledge docs should use sparse intentional Markdown links for human navigation and semantic dependencies. They should not try to manually encode every relationship.
+
+Generated views derive machine relationships from explicit refs, curated Markdown links, trace iteration data, source-map ownership, source/test facts, and Git refs. If a relationship is mainly needed for routing, drift detection, freshness, backlinks, doc-code mapping, or current-state views, it belongs in generated views rather than hand-maintained prose.
+
+Markdown frontmatter is forbidden in the target model. Exact code/test/view ownership belongs in `system/source-map.yaml`. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs.
 
 ## Rules
 
-- Avoid nested `overview.md` files except `product/overview.md`, `system/overview.md`, and the diagram contract `system/diagrams/README.md`.
-- Avoid a folder per system component; `system/diagrams/**` is the intended nested system exception for diagram raw data.
 - Keep current intended truth in knowledge; do not accumulate old decisions as raw history.
 - Use Git for historical recovery.
-- Use builds for temporary loop handoff briefs.
-- Use roadmap for active work truth.
-- Use generated view state for generated reconciliation, routing, freshness, backlinks, doc-code mapping, and drift detection.
+- Use traces for workflow/state truth.
+- Use generated views for status, resume, routing, freshness, backlinks, and doc-code mapping.
 - Use code/tests for executable truth.
 - Prefer sparse intentional links over exhaustive wiki-link meshes.
-- Store canonical diagram source as readable YAML specs under `system/diagrams/**`; treat Mermaid, Cytoscape element JSON, or SVG as renderer targets unless explicitly promoted.
-
-## Change propagation
-
-A change can originate in any layer. Code changes can create decision drift. Refactoring ideas can start in decision and become implementation work. Product changes can require system and code changes.
-
-The decision compiler routes by abstraction entrypoint:
-
-- product-first changes update product truth, then preflight system/roadmap/code impact;
-- system-first changes update system diagrams and system truth, then preflight user-visible product impact;
-- mixed changes must name both owning docs and the propagation direction for each requirement.
-
-The decision loop should expose change proposals with Decision Tables before canonical knowledge edits are applied. Accepted Decision Table rows and knowledge edits compile together into trace decision evidence with row-to-KB and diagram-ref evidence. The lifecycle trace decision section is the semantic intent-to-knowledge handoff.
+- Store canonical diagram source as readable YAML specs under `system/diagrams/**`; treat Mermaid, Cytoscape element JSON, SVG, or ASCII renderings as renderer targets unless explicitly promoted.
+- Do not use historical roadmap, graph, artifact, validation, or telemetry roots as target truth.
 
 ## Related docs
 
 - [Product](../product/overview.md)
-- [Graph](graph.md)
-- [Roadmap](roadmap.md)
+- [Loop Model](loop-model.md)
+- [Decision Loop](decision-loop.md)
+- [Traces](traces.md)
+- [File Structure](file-structure.md)
+- [Source Map](source-map.md)

@@ -1,19 +1,3 @@
----
-id: spec.system.components.api-facade
-title: API Facade Component
-state: active
-component_id: api_facade
-diagram_refs:
-  - component-map:api
-  - file-structure-map:api_facade
-source_roots:
-  - src/api/**
-owners:
-  - architecture
-updated: "2026-06-01"
-summary: Stable harness-independent facade for CodeWiki tools and package API entrypoints.
----
-
 # API Facade Component
 
 ## Responsibility
@@ -23,23 +7,25 @@ The API facade is the stable boundary that exposes CodeWiki operations to adapte
 ## Owned paths
 
 - `src/api/**` re-exports stable use-case entrypoints.
-- Concept roots such as `src/state/**`, `src/roadmap/**`, `src/session/**`, `src/build/**`, `src/gateway/**`, `src/runtime/**`, and `src/gc/**` own behavior behind the facade.
+- `src/decision/**`, `src/planning/**`, `src/implementation/**`, `src/traces/**`, `src/views/**`, `src/runtime/**`, `src/knowledge/**`, `src/git/**`, and `src/project/**` own behavior behind the facade.
+
+There is no target API facade over old stored-state, roadmap, session, artifact-output, split-evaluation, or cleanup roots.
 
 ## Contracts
 
 - Public agent tools use the `wiki_<name>` convention.
-- Results should be compact envelopes with status, changed refs, artifact refs, next actions, and blocking questions.
-- Large machine payloads belong in source refs, not chat output.
-- Generated state is rebuilt through the state engine and is never hand-edited.
+- Results should be compact envelopes with exit status, changed refs, artifact refs, next actions, and blocking questions.
+- Large machine payloads belong in source refs or trace data, not chat output.
+- Generated views are rebuilt from truth sources and are never hand-edited.
 
 ## Flow links
 
 - [Decision to planning](../flows/decision-to-planning.md)
 - [Planning to implementation](../flows/planning-to-implementation.md)
-- [Resume context boundary](../flows/resume-context-boundary.md)
 
 ## Related docs
 
 - [System overview](../overview.md)
+- [Loop Model](../loop-model.md)
+- [API vNext Tool Surface](../api-vnext-tools.md)
 - [File structure](../file-structure.md)
-- [Component map](../diagrams/component-map.yaml)

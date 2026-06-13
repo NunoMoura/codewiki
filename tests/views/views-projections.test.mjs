@@ -3,10 +3,10 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { compileDecision } from "../../src/decision/compiler.ts";
+import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
-import { compileImplementation } from "../../src/implementation/compiler.ts";
-import { compilePlan } from "../../src/planning/compiler.ts";
+import { runImplementationIteration } from "../../src/implementation/iteration.ts";
+import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import {
 	buildBlockersView,
@@ -14,6 +14,7 @@ import {
 	buildResumeView,
 	buildStatusView,
 	buildWorkPlanView,
+	buildWorkQueueView,
 	formatViewJson,
 	viewFilePath,
 	writeNamedView,
@@ -36,11 +37,160 @@ function decisionEvents(traceId = "TRACE-views") {
 			},
 		],
 	});
-	return compileDecision({
+	return runDecisionIteration({
 		traceId,
 		table,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	}).traceEvents;
+}
+
+function approvedDecisionRef(events) {
+	const iteration = events.find(
+		(event) => event.event === "decision.iteration",
+	);
+	const row = iteration?.data?.output?.approvedRows?.[0];
+	assert.ok(iteration);
+	assert.ok(row);
+	return `trace:${iteration.id}#row:${row.id}`;
+}
+
+function planningWorkEvent(events, workUnitId) {
+	const iteration = events.find(
+		(event) => event.event === "planning.iteration",
+	);
+	const item = workUnitId
+		? iteration?.data?.output?.workItems?.find(
+				(candidate) => candidate.id === workUnitId,
+			)
+		: iteration?.data?.output?.workItems?.[0];
+	if (!iteration || !item) return undefined;
+	return {
+		...iteration,
+		id: `trace:${iteration.id}#work:${item.id}`,
+		event: "planning.iteration",
+		refs: [...(item.decisionRefs || []), ...(item.pathScopes || [])],
+		data: { ...item, workUnitId: item.id },
+	};
+}
+
+function nextSequence(events) {
+	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
+}
+
+function queueTrace(traceId, options = {}) {
+	const head = createTraceHead({
+		traceId,
+		title: options.title || traceId,
+		createdAt: "2026-06-11T00:00:00.000Z",
+	});
+	const decisions = decisionEvents(traceId);
+	const decisionRef = approvedDecisionRef(decisions);
+	const configuredWorkItemInputs =
+		typeof options.workItemInputs === "function"
+			? options.workItemInputs(decisionRef)
+			: options.workItemInputs;
+	const workItemInputs = configuredWorkItemInputs || [
+		{
+			id: options.workUnitId || "WU-queue",
+			title: options.workUnitTitle || "Queued work",
+			decisionRefs: [decisionRef],
+			outcome: "Queued work is executable.",
+			acceptance: ["Queued work has evidence."],
+			componentRefs: ["component.views"],
+			pathScopes: [options.pathScope || "src/views"],
+			verification: ["tests/views/views-projections.test.mjs"],
+			dependsOn: options.dependsOn || [],
+		},
+	];
+	const plan = options.unplanned
+		? undefined
+		: runPlanningIteration({
+				traceId,
+				decisionEvents: decisions,
+				startSequence: nextSequence(decisions),
+				createdAt: "2026-06-11T00:00:02.000Z",
+				workItemInputs,
+			});
+	const planningEvent = plan
+		? planningWorkEvent(plan.traceEvents, options.workUnitId)
+		: undefined;
+	const nextAfterPlan = nextSequence(plan?.traceEvents || decisions);
+	const implementation = options.implemented
+		? runImplementationIteration({
+				traceId,
+				planningEvents: plan?.traceEvents || [],
+				startSequence: nextAfterPlan,
+				createdAt: "2026-06-11T00:00:03.000Z",
+				changeInputs: [
+					{
+						id: "IC-queue",
+						planningRefs: [planningEvent.id],
+						codePaths: ["src/views/work-queue.ts"],
+						testPaths: ["tests/views/views-projections.test.mjs"],
+						checkResults: [{ command: "npm test", status: "pass" }],
+						acceptanceEvidenceItems: [
+							{
+								criterionId: "AC-001",
+								summary: "Queue projection test passed.",
+								evidenceRefs: ["tests/views/views-projections.test.mjs"],
+							},
+						],
+						contentProof: { workingTreeDigest: "sha256:456def" },
+					},
+				],
+			})
+		: undefined;
+	const claim = options.claimed
+		? [
+				{
+					type: "trace_event",
+					id: `${traceId}:runtime:claim:1`,
+					parentId: planningEvent.id,
+					traceId,
+					sequence: nextAfterPlan,
+					loop: "implementation",
+					event: "runtime.work.claimed",
+					refs: [planningEvent.id],
+					createdAt: "2026-06-11T00:00:03.000Z",
+					data: {
+						workerId: options.workerId || "worker-1",
+						...(options.claimExpiresAt
+							? { expiresAt: options.claimExpiresAt }
+							: {}),
+					},
+				},
+			]
+		: [];
+	const release = options.released
+		? [
+				{
+					type: "trace_event",
+					id: `${traceId}:runtime:release:1`,
+					parentId: planningEvent.id,
+					traceId,
+					sequence: nextAfterPlan + claim.length,
+					loop: "implementation",
+					event: "runtime.claim.released",
+					refs: [planningEvent.id],
+					createdAt: "2026-06-11T00:00:04.000Z",
+					data: { workerId: options.workerId || "worker-1" },
+				},
+			]
+		: [];
+	return {
+		head,
+		decisions,
+		plan,
+		implementation,
+		records: [
+			head,
+			...decisions,
+			...(plan?.traceEvents || []),
+			...claim,
+			...release,
+			...(implementation?.traceEvents || []),
+		],
+	};
 }
 
 function plannedTrace() {
@@ -51,24 +201,32 @@ function plannedTrace() {
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
 	const decisions = decisionEvents(traceId);
-	const plan = compilePlan({
+	const decisionRef = approvedDecisionRef(decisions);
+	const plan = runPlanningIteration({
 		traceId,
 		decisionEvents: decisions,
-		startSequence: 2,
+		startSequence: nextSequence(decisions),
 		createdAt: "2026-06-11T00:00:02.000Z",
 		workItemInputs: [
 			{
 				id: "WU-views",
-				title: "Build generated views",
-				decisionRefs: [decisions[0].id],
-				outcome: "Status, resume, blockers, conflicts, and work-plan views project traces.",
+				title: "Generate generated views",
+				decisionRefs: [decisionRef],
+				outcome:
+					"Status, resume, blockers, conflicts, and work-plan views project traces.",
 				acceptance: ["Views contain no durable truth."],
+				componentRefs: ["component.views"],
 				pathScopes: ["src/views"],
 				verification: ["tests/views/views-projections.test.mjs"],
 			},
 		],
 	});
-	return { head, decisions, plan, records: [head, ...decisions, ...plan.traceEvents] };
+	return {
+		head,
+		decisions,
+		plan,
+		records: [head, ...decisions, ...plan.traceEvents],
+	};
 }
 
 describe("trace-backed views", () => {
@@ -82,7 +240,9 @@ describe("trace-backed views", () => {
 		assert.equal(workPlan.traceId, "TRACE-views");
 		assert.equal(workPlan.cards[0].id, "WU-views");
 		assert.equal(workPlan.cards[0].status, "todo");
-		assert.equal(workPlan.cards[0].traceRefs.includes(plan.traceEvents[0].id), true);
+		const planningEvent = planningWorkEvent(plan.traceEvents);
+		assert.equal(workPlan.cards[0].traceRefs.includes(planningEvent.id), true);
+		assert.deepEqual(workPlan.cards[0].componentRefs, ["component.views"]);
 		assert.deepEqual(workPlan.cards[0].pathScopes, ["src/views"]);
 		assert.equal(status.health, "yellow");
 		assert.equal(status.currentLoop, "implementation");
@@ -92,33 +252,53 @@ describe("trace-backed views", () => {
 
 	it("marks work done when implementation evidence covers planning refs", () => {
 		const { head, decisions, plan } = plannedTrace();
-		const implementation = compileImplementation({
+		const planningEvent = planningWorkEvent(plan.traceEvents);
+		const implementation = runImplementationIteration({
 			traceId: head.traceId,
 			planningEvents: plan.traceEvents,
-			startSequence: 3,
+			startSequence: nextSequence(plan.traceEvents),
 			createdAt: "2026-06-11T00:00:03.000Z",
 			changeInputs: [
 				{
 					id: "IC-views",
-					planningRefs: [plan.traceEvents[0].id],
+					planningRefs: [planningEvent.id],
 					codePaths: ["src/views/work-plan.ts"],
 					testPaths: ["tests/views/views-projections.test.mjs"],
 					checks: ["npm test"],
+					checkResults: [{ command: "npm test", status: "pass" }],
 					acceptanceEvidence: ["View projection tests passed."],
-					contentProof: { workingTreeDigest: "sha256:views" },
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary: "View projection tests passed.",
+							evidenceRefs: ["tests/views/views-projections.test.mjs"],
+						},
+					],
+					contentProof: { workingTreeDigest: "sha256:123abc" },
 				},
 			],
 		});
-		const records = [head, ...decisions, ...plan.traceEvents, ...implementation.traceEvents];
+		const records = [
+			head,
+			...decisions,
+			...plan.traceEvents,
+			...implementation.traceEvents,
+		];
 		const workPlan = buildWorkPlanView({ records });
 		const status = buildStatusView({ records });
 		const resume = buildResumeView({ records });
 
 		assert.equal(workPlan.cards[0].status, "done");
-		assert.equal(workPlan.cards[0].implementationRefs.includes("sha256:views"), true);
+		assert.equal(
+			workPlan.cards[0].implementationRefs.includes("sha256:123abc"),
+			true,
+		);
 		assert.equal(status.health, "green");
 		assert.equal(status.readyForClosure, true);
-		assert.equal(resume.nextAction, "Close trace or publish implementation evidence.");
+		assert.equal(
+			resume.nextAction,
+			"Close trace or publish implementation evidence.",
+		);
 	});
 
 	it("projects planning conflicts and route-back blockers", () => {
@@ -129,15 +309,16 @@ describe("trace-backed views", () => {
 			createdAt: "2026-06-11T00:00:00.000Z",
 		});
 		const decisions = decisionEvents(traceId);
-		const plan = compilePlan({
+		const decisionRef = approvedDecisionRef(decisions);
+		const plan = runPlanningIteration({
 			traceId,
 			decisionEvents: decisions,
-			startSequence: 2,
+			startSequence: nextSequence(decisions),
 			workItemInputs: [
 				{
 					id: "WU-left",
 					title: "Left change",
-					decisionRefs: [decisions[0].id],
+					decisionRefs: [decisionRef],
 					outcome: "Left outcome",
 					acceptance: ["Left accepted"],
 					pathScopes: ["src/views"],
@@ -146,7 +327,7 @@ describe("trace-backed views", () => {
 				{
 					id: "WU-right",
 					title: "Right change",
-					decisionRefs: [decisions[0].id],
+					decisionRefs: [decisionRef],
 					outcome: "Right outcome",
 					acceptance: ["Right accepted"],
 					pathScopes: ["src/views"],
@@ -155,7 +336,7 @@ describe("trace-backed views", () => {
 			],
 			resolutionInputs: [
 				{
-					decisionRef: decisions[0].id,
+					decisionRef: decisionRef,
 					kind: "route-back",
 					evidenceRefs: ["kb:system/traces.md"],
 					owner: "architecture",
@@ -169,11 +350,115 @@ describe("trace-backed views", () => {
 		const blockers = buildBlockersView({ records }).blockers;
 		const status = buildStatusView({ records });
 
-		assert.deepEqual(conflicts.map((conflict) => conflict.pathScope), ["src/views"]);
-		assert.equal(blockers.some((blocker) => blocker.kind === "route-back"), true);
-		assert.equal(blockers.some((blocker) => blocker.kind === "conflict"), true);
+		assert.deepEqual(
+			conflicts.map((conflict) => conflict.pathScope),
+			["src/views"],
+		);
+		assert.equal(
+			blockers.some((blocker) => blocker.kind === "route-back"),
+			true,
+		);
+		assert.equal(
+			blockers.some((blocker) => blocker.kind === "conflict"),
+			true,
+		);
 		assert.equal(status.health, "red");
-		assert.equal(status.blockers.length, 2);
+		assert.equal(status.blockers.length, 3);
+	});
+
+	it("projects cross-trace work queue state from trace facts", () => {
+		const backlog = queueTrace("TRACE-queue-backlog", { unplanned: true });
+		const ready = queueTrace("TRACE-queue-ready", {
+			workUnitId: "WU-ready",
+		});
+		const waiting = queueTrace("TRACE-queue-waiting", {
+			workUnitId: "WU-waiting",
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-dependency",
+					decisionRefs: [decisionRef],
+					outcome: "Dependency is available for scheduling.",
+					acceptance: ["Dependency can run first."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+				},
+				{
+					id: "WU-waiting",
+					decisionRefs: [decisionRef],
+					outcome: "Waiting work depends on another work unit.",
+					acceptance: ["Waiting work waits."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					dependsOn: ["WU-dependency"],
+				},
+			],
+		});
+		const claimed = queueTrace("TRACE-queue-claimed", {
+			workUnitId: "WU-claimed",
+			claimed: true,
+			workerId: "worker-claimed",
+		});
+		const done = queueTrace("TRACE-queue-done", {
+			workUnitId: "WU-done",
+			implemented: true,
+		});
+		const records = [
+			...backlog.records,
+			...ready.records,
+			...waiting.records,
+			...claimed.records,
+			...done.records,
+		];
+		const queue = buildWorkQueueView({ records });
+		const byId = Object.fromEntries(queue.items.map((item) => [item.id, item]));
+
+		assert.equal(queue.traceIds.length, 5);
+		assert.equal(queue.summary.backlog, 1);
+		assert.equal(queue.summary.ready, 2);
+		assert.equal(queue.summary.waiting, 1);
+		assert.equal(queue.summary.claimed, 1);
+		assert.equal(queue.summary.done, 1);
+		assert.equal(byId["DTR-views"].status, "backlog");
+		assert.equal(byId["WU-ready"].status, "ready");
+		assert.equal(byId["WU-waiting"].status, "waiting");
+		assert.equal(byId["WU-claimed"].status, "claimed");
+		assert.equal(byId["WU-claimed"].claimedBy, "worker-claimed");
+		assert.equal(byId["WU-done"].status, "done");
+	});
+
+	it("ignores expired or released runtime claims in the work queue", () => {
+		const expired = queueTrace("TRACE-queue-expired", {
+			workUnitId: "WU-expired",
+			claimed: true,
+			claimExpiresAt: "2026-06-11T00:00:04.000Z",
+		});
+		const released = queueTrace("TRACE-queue-released", {
+			workUnitId: "WU-released",
+			claimed: true,
+			released: true,
+		});
+		const active = queueTrace("TRACE-queue-active-claim", {
+			workUnitId: "WU-active-claim",
+			claimed: true,
+			workerId: "worker-active",
+			claimExpiresAt: "2026-06-11T00:00:08.000Z",
+		});
+		const queue = buildWorkQueueView({
+			records: [...expired.records, ...released.records, ...active.records],
+			generatedAt: "2026-06-11T00:00:05.000Z",
+		});
+		const byId = Object.fromEntries(queue.items.map((item) => [item.id, item]));
+
+		assert.equal(byId["WU-expired"].status, "ready");
+		assert.equal(byId["WU-released"].status, "ready");
+		assert.equal(byId["WU-active-claim"].status, "claimed");
+		assert.equal(byId["WU-active-claim"].claimedBy, "worker-active");
+		assert.equal(
+			byId["WU-active-claim"].claimExpiresAt,
+			"2026-06-11T00:00:08.000Z",
+		);
 	});
 
 	it("formats and writes named disposable view files", async () => {
@@ -181,7 +466,14 @@ describe("trace-backed views", () => {
 		try {
 			const view = { health: "green", blockers: [] };
 			assert.equal(viewFilePath("status"), ".codewiki/views/status.json");
-			assert.equal(formatViewJson(view), '{\n  "health": "green",\n  "blockers": []\n}\n');
+			assert.equal(
+				viewFilePath("work-queue"),
+				".codewiki/views/work-queue.json",
+			);
+			assert.equal(
+				formatViewJson(view),
+				'{\n  "health": "green",\n  "blockers": []\n}\n',
+			);
 			const path = await writeNamedView(root, "status", view);
 			assert.equal(await readFile(path, "utf8"), formatViewJson(view));
 		} finally {

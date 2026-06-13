@@ -1,18 +1,3 @@
----
-id: spec.product.uis.terminal
-title: Pi TUI Diagram Rendering
-state: active
-summary: Narrow retained UI direction for Pi TUI ASCII/Unicode system diagram rendering.
-owners:
-  - product
-  - design
-updated: "2026-06-06"
-code_paths:
-  - src/adapters/pi/ui
-  - src/adapters/pi/commands
-code_paths_mode: explicit_override
----
-
 # Pi TUI Diagram Rendering
 
 CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The only retained UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode.
@@ -23,10 +8,10 @@ Pi TUI rendering may show focused diagrams from canonical YAML files under `.cod
 
 Allowed diagram outputs:
 
-- architecture/component lanes,
-- key-flow ordered steps,
-- file-structure trees,
-- state lifecycle transitions,
+- architecture/component lanes;
+- key-flow ordered steps;
+- file-structure trees;
+- state lifecycle transitions;
 - data-model entity cards and relationships.
 
 The renderer should read canonical diagram YAML and source refs. Renderer output is not canonical truth and must not create hidden UI-only state.
@@ -35,14 +20,14 @@ The renderer should read canonical diagram YAML and source refs. Renderer output
 
 The following are not active product surfaces in this wave:
 
-- status panel or status dock,
-- Board UI,
-- Map or graph navigation UI,
-- Product/System navigation panels,
-- browser Control Room,
-- `/wiki status`, `/wiki-status`, or `/wiki_status` status UI commands.
+- status panel or status dock;
+- Board UI;
+- Map or graph navigation UI;
+- Product/System navigation panels;
+- browser Control Room;
+- archived status UI commands.
 
-Backend status and continuation remain available through `wiki_state`, graph lenses, roadmap/task state, lifecycle traces, and validation reports.
+Backend status and continuation remain available through `wiki_state`, generated views, folded traces, loop outputs, and exit-condition results.
 
 ## Success signals
 
@@ -57,10 +42,9 @@ Backend status and continuation remain available through `wiki_state`, graph len
 - No status panel or dock UI.
 - No Board or Map product UI.
 - No product/system navigation panel work.
-- No broad graph visualizer.
+- No broad generated-view visualizer.
 
 ## Related docs
 
 - [System TUI Diagram Rendering](../../system/terminal-ui.md)
-- [Deprecated Status UI](status-dock.md)
-- [Graph](../../system/graph.md)
+- [Loop Model](../../system/loop-model.md)

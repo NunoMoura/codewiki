@@ -6,14 +6,26 @@ export interface PlanningConflict {
 	pathScopes: string[];
 }
 
-export function workItemsConflict(left: PlanningWorkItem, right: PlanningWorkItem): boolean {
-	return conflictPathScopes(left, right).length > 0 && !orderedByDependency(left, right);
+export function workItemsConflict(
+	left: PlanningWorkItem,
+	right: PlanningWorkItem,
+): boolean {
+	return (
+		conflictPathScopes(left, right).length > 0 &&
+		!orderedByDependency(left, right)
+	);
 }
 
-export function planningConflicts(items: PlanningWorkItem[]): PlanningConflict[] {
+export function planningConflicts(
+	items: PlanningWorkItem[],
+): PlanningConflict[] {
 	const conflicts: PlanningConflict[] = [];
 	for (let leftIndex = 0; leftIndex < items.length; leftIndex += 1) {
-		for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
+		for (
+			let rightIndex = leftIndex + 1;
+			rightIndex < items.length;
+			rightIndex += 1
+		) {
 			const left = items[leftIndex];
 			const right = items[rightIndex];
 			const pathScopes = conflictPathScopes(left, right);
@@ -25,11 +37,43 @@ export function planningConflicts(items: PlanningWorkItem[]): PlanningConflict[]
 	return conflicts;
 }
 
-function conflictPathScopes(left: PlanningWorkItem, right: PlanningWorkItem): string[] {
-	const rightScopes = new Set(right.pathScopes);
-	return left.pathScopes.filter((scope) => rightScopes.has(scope));
+function conflictPathScopes(
+	left: PlanningWorkItem,
+	right: PlanningWorkItem,
+): string[] {
+	const conflicts: string[] = [];
+	for (const leftScope of left.pathScopes) {
+		for (const rightScope of right.pathScopes) {
+			const overlap = overlappingScope(leftScope, rightScope);
+			if (overlap) conflicts.push(overlap);
+		}
+	}
+	return unique(conflicts);
 }
 
-function orderedByDependency(left: PlanningWorkItem, right: PlanningWorkItem): boolean {
+function overlappingScope(left: string, right: string): string | undefined {
+	const leftPath = normalizePathScope(left);
+	const rightPath = normalizePathScope(right);
+	if (!leftPath || !rightPath) return undefined;
+	if (leftPath === rightPath) return leftPath;
+	if (rightPath.startsWith(`${leftPath}/`)) return leftPath;
+	if (leftPath.startsWith(`${rightPath}/`)) return rightPath;
+	return undefined;
+}
+
+function orderedByDependency(
+	left: PlanningWorkItem,
+	right: PlanningWorkItem,
+): boolean {
 	return left.dependsOn.includes(right.id) || right.dependsOn.includes(left.id);
+}
+
+function normalizePathScope(pathScope: string): string {
+	return pathScope.trim().replace(/\\/g, "/").replace(/\/+$/, "");
+}
+
+function unique(values: string[]): string[] {
+	return Array.from(
+		new Set(values.map((value) => value.trim()).filter(Boolean)),
+	);
 }
