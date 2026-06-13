@@ -121,6 +121,13 @@ components:
       - tests/knowledge/**
       - tests/scaffold.test.mjs
     role: hot_knowledge
+  skills:
+    doc: .codewiki/kb/system/api-vnext-tools.md
+    source:
+      - .agents/skills/**
+    tests:
+      - tests/knowledge/skills.test.mjs
+    role: host_guidance
   git:
     doc: .codewiki/kb/system/implementation-loop.md
     source:

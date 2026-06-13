@@ -1,6 +1,6 @@
 # Pi Extension
 
-The active CodeWiki Pi extension is disabled during the rebuild. `package.json` must not expose `pi.extensions` or `pi.skills` until a future explicit decision reintroduces the extension.
+The active CodeWiki Pi extension is disabled during the rebuild. `package.json` must not expose `pi.extensions` or `pi.skills` until a future explicit decision reintroduces the extension. Project-local `.agents/skills/codewiki-*` skills may exist as CLI guidance, but they do not register package tools.
 
 Target Pi integration will live under `src/pi/**` and should expose terminal-first commands, tools, prompt assets, and TUI views only after the reduced core tool facade is stable. Pi is a primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
@@ -8,7 +8,7 @@ The target CodeWiki OS still needs `wiki_*` tools. They should return as thin Pi
 
 ## Rebuild rules
 
-- Do not use archived `wiki_*` tools in this repository while the extension is disabled.
+- Do not use archived `wiki_*` tools in this repository while the extension is disabled; use the CLI-backed root facades instead.
 - Do not run CodeWiki-owned compaction, resume injection, or auto-pickup.
 - Use Pi native compaction only.
 - Treat `_OLD_VERSION/**` as migration reference.

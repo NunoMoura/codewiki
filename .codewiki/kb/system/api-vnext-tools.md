@@ -119,7 +119,7 @@ Users may ask for decision, planning, implementation, or runtime work in chat. T
 
 Skills are as important as tools. Tools execute; skills tell agents when and how to use them.
 
-Target skills should be small, operational, and aligned to the new model:
+Project-local skills under `.agents/skills/codewiki-*` are small, operational, and aligned to the new model:
 
 - `codewiki-state`: inspect status/resume/work queue before acting;
 - `codewiki-decision`: run decision loop cycles, output, and exit conditions;
@@ -129,7 +129,7 @@ Target skills should be small, operational, and aligned to the new model:
 - `codewiki-archive`: close, retain, hydrate, and restore traces/knowledge;
 - `codewiki-config`: read automation and host policy.
 
-Do not reintroduce old skills that teach roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
+These skills point agents at the CLI-backed root facades while the Pi extension remains disabled. Do not reintroduce old skills that teach roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
 
 ## Distribution
 

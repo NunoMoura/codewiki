@@ -71,9 +71,9 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Orchestrator append facade | `appendSemanticLoopIteration()` runs one semantic loop iteration, verifies one target `<loop>.iteration` event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic producers and generated views now use iteration output directly. |
 | Done | `wiki_state` core facade | `buildWikiState()` folds trace records and source-map input into status, resume, work-plan, work-queue, blockers, conflicts, and source ownership projections without reading stored views as truth. | Host tools/commands can wrap this facade later. |
 | Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
-| P0 | User-facing status/resume surface | Core `wiki_state` exists, but old `/wiki status`, `/wiki resume`, and user-facing commands are not migrated. Users need a non-Pi or Pi-seam way to inspect traces. | CLI or Pi command wrappers over `buildWikiState()`. Pi command reintroduction remains deferred until core API is stable. |
+| Done | User-facing status/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi command reintroduction remains deferred until adapter policy is stable. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
-| P1 | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Replace archived skills with small skills for state, decision, planning, implementation, runtime, archive, and config. |
+| Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config with CLI-backed instructions. |
 | P1 | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | Expose retention/archive/hydrate/restore through `wiki_archive`. |
 | P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Add config-driven isolation: `none`, `worktree`, or `auto`. Keep worktree helpers host-owned until orchestration stabilizes. |
 | P1 | Project bootstrap/scaffold generation | Target package source is stable enough for core loops, but bootstrap remains unavailable. | Regenerate scaffold from target file-structure docs after active APIs stop moving. |
@@ -83,15 +83,14 @@ These old behaviors should stay out of active source unless a future accepted de
 
 ## Recommended next migration order
 
-1. **Skills refactor** — teach agents the new tools, trace truth, retention model, and no-roadmap/no-graph rules.
-2. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
-3. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
-4. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
-5. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
+1. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
+2. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
+3. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
+4. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
 
 ## Stop condition for architecture work
 
-Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, and CLI wrapper now exist; remaining P0 work should teach users/agents how to operate those APIs safely.
+Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, CLI wrapper, and local operating skills now exist; remaining work should deepen lifecycle behavior rather than add parallel architecture.
 
 ## Distribution direction
 
