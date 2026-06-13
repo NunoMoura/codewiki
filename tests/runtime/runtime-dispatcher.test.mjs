@@ -6,8 +6,8 @@ import { describe, it } from "node:test";
 import {
 	appendRuntimeDispatchClaims,
 	createRuntimeDispatchClaimEvents,
-	planRuntimeDispatch,
-} from "../../src/api/index.ts";
+} from "../../src/runtime/dispatcher.ts";
+import { planRuntimeDispatch } from "../../src/runtime/scheduler.ts";
 import {
 	TraceAppendConflictError,
 	appendTraceRecords,

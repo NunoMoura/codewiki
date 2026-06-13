@@ -70,7 +70,7 @@ These old behaviors should stay out of active source unless a future accepted de
 | --- | --- | --- | --- |
 | Done | Orchestrator append facade | `appendSemanticLoopIteration()` runs one semantic loop iteration, verifies one target `<loop>.iteration` event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic producers and generated views now use iteration output directly. |
 | Done | `wiki_state` core facade | `buildWikiState()` folds trace records and source-map input into status, resume, work-plan, work-queue, blockers, conflicts, and source ownership projections without reading stored views as truth. | Host tools/commands can wrap this facade later. |
-| Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist; add host/CLI/Pi wrappers over the reduced set after API naming settles. |
+| Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
 | P0 | User-facing status/resume surface | Core `wiki_state` exists, but old `/wiki status`, `/wiki resume`, and user-facing commands are not migrated. Users need a non-Pi or Pi-seam way to inspect traces. | CLI or Pi command wrappers over `buildWikiState()`. Pi command reintroduction remains deferred until core API is stable. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
 | P1 | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Replace archived skills with small skills for state, decision, planning, implementation, runtime, archive, and config. |
@@ -83,7 +83,7 @@ These old behaviors should stay out of active source unless a future accepted de
 
 ## Recommended next migration order
 
-1. **Host/CLI/Pi wrappers** — expose the reduced tool set over core APIs after facade shapes settle.
+1. **CLI wrapper** — expose the reduced tool set over root core APIs first, before Pi/MCP wrappers.
 2. **Skills refactor** — teach agents the new tools, trace truth, retention model, and no-roadmap/no-graph rules.
 3. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
 4. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
@@ -92,7 +92,7 @@ These old behaviors should stay out of active source unless a future accepted de
 
 ## Stop condition for architecture work
 
-Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade and read-only `wiki_state` core facade now exist; remaining P0 work should wrap those APIs for users/agents or harden implementation inputs.
+Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, and facade-only root exports now exist; remaining P0 work should wrap those APIs for users/agents.
 
 ## Distribution direction
 

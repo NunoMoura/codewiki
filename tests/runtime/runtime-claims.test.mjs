@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
-} from "../../src/api/index.ts";
+} from "../../src/runtime/claims.ts";
 import { assertValidTraceRecord } from "../../src/api/traces.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 

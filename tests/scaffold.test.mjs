@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../src/index.ts";
+import * as publicApi from "../src/api/index.ts";
 import { traceTmpPath } from "../src/runtime/tmp.ts";
 
 const expectedSupportRoots = [
@@ -29,6 +30,24 @@ describe("fresh scaffold", () => {
 		assert.equal(sourceLayout.supportRoots.includes("graph"), false);
 		assert.equal(sourceLayout.supportRoots.includes("telemetry"), false);
 		assert.equal(sourceLayout.supportRoots.includes("agency"), false);
+	});
+
+	it("keeps the package API surface facade-only", () => {
+		assert.deepEqual(Object.keys(publicApi).sort(), [
+			"CODEWIKI_EXTENSION_AVAILABLE",
+			"DEFAULT_WIKI_CONFIG",
+			"buildWikiState",
+			"resolveWikiConfig",
+			"runWikiArchive",
+			"runWikiConfig",
+			"runWikiDecide",
+			"runWikiImplement",
+			"runWikiPlan",
+			"runWikiRuntime",
+			"sourceLayout",
+			"validateWikiConfig",
+			"wikiStateSourceOwner",
+		]);
 	});
 
 	it("keeps temporary trace scratch under runtime tmp", () => {

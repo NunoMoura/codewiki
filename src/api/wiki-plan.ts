@@ -1,8 +1,15 @@
+import type { FileStructureMapContract } from "../knowledge/file-structure-map.ts";
 import {
 	runPlanningIteration,
 	type PlanningIterationInput,
 	type PlanningIterationResult,
 } from "../planning/iteration.ts";
+import type {
+	PlanningDecisionResolution,
+	PlanningDecisionResolutionInput,
+	PlanningWorkItem,
+	PlanningWorkItemInput,
+} from "../planning/types.ts";
 import {
 	appendSemanticLoopIteration,
 	assertSemanticLoopIterationBatch,
@@ -12,9 +19,16 @@ import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiPlanMode = "preview" | "append";
 
-export interface RunWikiPlanInput
-	extends Omit<PlanningIterationInput, "traceId" | "startSequence"> {
+export interface RunWikiPlanInput {
 	traceId: string;
+	decisionEvents: TraceEvent[];
+	workItems?: PlanningWorkItem[];
+	workItemInputs?: PlanningWorkItemInput[];
+	resolutions?: PlanningDecisionResolution[];
+	resolutionInputs?: PlanningDecisionResolutionInput[];
+	componentMap?: FileStructureMapContract;
+	parentId?: string | null;
+	createdAt?: string;
 	mode?: WikiPlanMode;
 	repoRoot?: string;
 	expectedBytes?: number;

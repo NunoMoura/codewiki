@@ -4,11 +4,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
-	collectProjectSnapshot,
 	createWorkingTreeContentProof,
 	createWorkingTreeDigest,
 	workingTreeDigestFiles,
-} from "../../src/api/index.ts";
+} from "../../src/git/content-proof.ts";
+import { collectProjectSnapshot } from "../../src/project/snapshot.ts";
 
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-proof-"));

@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
 	createPiWorkerPrompt,
-	createRuntimeDispatchClaimEvents,
 	dispatchPiWorkers,
-	planRuntimeDispatch,
-} from "../../src/api/index.ts";
+} from "../../src/pi/dispatcher.ts";
+import { createRuntimeDispatchClaimEvents } from "../../src/runtime/dispatcher.ts";
+import { planRuntimeDispatch } from "../../src/runtime/scheduler.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope) {

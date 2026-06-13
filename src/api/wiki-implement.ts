@@ -2,6 +2,7 @@ import {
 	createWorkingTreeContentProof,
 	type ContentProof,
 } from "../git/content-proof.ts";
+import type { FileStructureMapContract } from "../knowledge/file-structure-map.ts";
 import {
 	changedPaths as implementationChangedPaths,
 	normalizeImplementationChanges,
@@ -14,8 +15,12 @@ import {
 import type {
 	ImplementationChange,
 	ImplementationChangeInput,
+	ImplementationWorkerClaim,
 } from "../implementation/types.ts";
-import { aggregateImplementationWorkerResults } from "../implementation/workers.ts";
+import {
+	aggregateImplementationWorkerResults,
+	type ImplementationWorkerResultInput,
+} from "../implementation/workers.ts";
 import {
 	collectProjectSnapshot,
 	type ProjectSnapshot,
@@ -29,13 +34,19 @@ import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiImplementMode = "preview" | "append";
 
-export interface RunWikiImplementInput
-	extends Omit<
-		ImplementationIterationInput,
-		"traceId" | "startSequence" | "existingPaths" | "aggregateContentProof"
-	> {
+export interface RunWikiImplementInput {
 	repoRoot: string;
 	traceId: string;
+	planningEvents: TraceEvent[];
+	changes?: ImplementationChange[];
+	changeInputs?: ImplementationChangeInput[];
+	workerResults?: ImplementationWorkerResultInput[];
+	workerClaims?: ImplementationWorkerClaim[];
+	claimEvents?: TraceEvent[];
+	componentMap?: FileStructureMapContract;
+	requireTddEvidence?: boolean;
+	parentId?: string | null;
+	createdAt?: string;
 	mode?: WikiImplementMode;
 	expectedBytes?: number;
 	nextSequence?: number;

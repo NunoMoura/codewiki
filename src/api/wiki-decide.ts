@@ -3,6 +3,12 @@ import {
 	type DecisionIterationInput,
 	type DecisionIterationResult,
 } from "../decision/iteration.ts";
+import type {
+	CurrentStatePacket,
+	DecisionTable,
+	DecisionTableInput,
+	KnowledgeDelta,
+} from "../decision/types.ts";
 import {
 	appendSemanticLoopIteration,
 	assertSemanticLoopIterationBatch,
@@ -12,9 +18,15 @@ import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiDecideMode = "preview" | "append";
 
-export interface RunWikiDecideInput
-	extends Omit<DecisionIterationInput, "traceId" | "startSequence"> {
+export interface RunWikiDecideInput {
 	traceId: string;
+	table?: DecisionTable;
+	tableInput?: DecisionTableInput;
+	knowledgeDelta?: KnowledgeDelta;
+	currentStatePacket?: CurrentStatePacket;
+	requirementIds?: string[];
+	parentId?: string | null;
+	createdAt?: string;
 	mode?: WikiDecideMode;
 	repoRoot?: string;
 	expectedBytes?: number;
