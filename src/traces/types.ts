@@ -1,8 +1,12 @@
 import type { IsoTimestamp } from "../utils/time.ts";
 
 export type TraceLoop = "decision" | "planning" | "implementation";
-export type TraceRecordType = "trace_head" | "trace_event" | "tail_checkpoint";
-export type TraceRecord = TraceHead | TraceEvent | TailCheckpoint;
+export type TraceRecordType =
+	| "trace_head"
+	| "trace_event"
+	| "tail_checkpoint"
+	| "trace_close";
+export type TraceRecord = TraceHead | TraceEvent | TailCheckpoint | TraceClose;
 
 export interface TraceHead {
 	type: "trace_head";
@@ -31,6 +35,19 @@ export interface TailCheckpoint {
 	traceId: string;
 	firstKeptRecordId: string;
 	summary: string;
+	createdAt: IsoTimestamp;
+	data?: Record<string, unknown>;
+}
+
+export interface TraceClose {
+	type: "trace_close";
+	id: string;
+	parentId: string | null;
+	traceId: string;
+	reason: string;
+	gitRestoreRef: string;
+	headRef: string;
+	refs: string[];
 	createdAt: IsoTimestamp;
 	data?: Record<string, unknown>;
 }

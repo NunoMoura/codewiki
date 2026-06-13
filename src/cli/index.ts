@@ -87,8 +87,12 @@ async function decideCommand(
 	);
 }
 
-async function planCommand(flags: Record<string, string[]>): Promise<CliResult> {
-	return jsonResult(await runWikiPlan(await requiredInput<RunWikiPlanInput>(flags)));
+async function planCommand(
+	flags: Record<string, string[]>,
+): Promise<CliResult> {
+	return jsonResult(
+		await runWikiPlan(await requiredInput<RunWikiPlanInput>(flags)),
+	);
 }
 
 async function implementCommand(
@@ -110,7 +114,9 @@ async function runtimeCommand(
 async function archiveCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
-	return jsonResult(runWikiArchive(await requiredInput<RunWikiArchiveInput>(flags)));
+	return jsonResult(
+		await runWikiArchive(await requiredInput<RunWikiArchiveInput>(flags)),
+	);
 }
 
 async function readProjectTraceRecords(
@@ -149,17 +155,13 @@ async function readSourceMap(repoRoot: string) {
 	}
 }
 
-async function requiredInput<T>(
-	flags: Record<string, string[]>,
-): Promise<T> {
+async function requiredInput<T>(flags: Record<string, string[]>): Promise<T> {
 	const inputPath = one(flags.input);
 	if (!inputPath) throw new Error("Command requires --input <file|->.");
 	return withOverrides(JSON.parse(await readInput(inputPath)), flags) as T;
 }
 
-async function optionalInput<T>(
-	flags: Record<string, string[]>,
-): Promise<T> {
+async function optionalInput<T>(flags: Record<string, string[]>): Promise<T> {
 	const inputPath = one(flags.input);
 	const input = inputPath ? JSON.parse(await readInput(inputPath)) : {};
 	return withOverrides(input, flags) as T;

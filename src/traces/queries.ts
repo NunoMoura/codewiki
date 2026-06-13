@@ -29,9 +29,12 @@ export function lastEventForLoop(
 
 export function traceRefs(records: TraceRecord[]): string[] {
 	return unique(
-		records.flatMap((record) =>
-			record.type === "trace_event" ? record.refs : checkpointRefs(record),
-		),
+		records.flatMap((record) => {
+			if (record.type === "trace_event" || record.type === "trace_close") {
+				return record.refs;
+			}
+			return checkpointRefs(record);
+		}),
 	);
 }
 

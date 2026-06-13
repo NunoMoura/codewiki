@@ -1,5 +1,6 @@
 import type {
 	TailCheckpoint,
+	TraceClose,
 	TraceEvent,
 	TraceHead,
 	TraceRecord,
@@ -9,6 +10,8 @@ export interface TraceReplayState {
 	head: TraceHead;
 	events: TraceEvent[];
 	checkpoints: TailCheckpoint[];
+	close?: TraceClose;
+	closed: boolean;
 	latestCheckpoint?: TailCheckpoint;
 	lastRecordId: string;
 	lastSequence: number;
@@ -22,6 +25,7 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 	}
 	const events: TraceEvent[] = [];
 	const checkpoints: TailCheckpoint[] = [];
+	let close: TraceClose | undefined;
 	const seenRecordIds = new Set<string>();
 	let lastSequence = 0;
 	let lastRecordId = head.traceId;
@@ -33,6 +37,7 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 		}
 		if (record.type === "trace_head")
 			throw new Error("Trace file contains multiple trace_head records.");
+		if (close) throw new Error("Trace file contains records after trace_close.");
 		if (record.type === "trace_event") {
 			if (seenRecordIds.has(record.id))
 				throw new Error(`Duplicate trace record id: ${record.id}.`);
@@ -55,11 +60,21 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 			checkpoints.push(record);
 			lastRecordId = record.id;
 		}
+		if (record.type === "trace_close") {
+			if (seenRecordIds.has(record.id))
+				throw new Error(`Duplicate trace record id: ${record.id}.`);
+			assertKnownParent(record, seenRecordIds);
+			seenRecordIds.add(record.id);
+			close = record;
+			lastRecordId = record.id;
+		}
 	}
 	return {
 		head,
 		events,
 		checkpoints,
+		close,
+		closed: Boolean(close),
 		latestCheckpoint: checkpoints.at(-1),
 		lastRecordId,
 		lastSequence,
@@ -84,7 +99,7 @@ export function latestTailCheckpoint(
 }
 
 function assertKnownParent(
-	record: TraceEvent | TailCheckpoint,
+	record: TraceEvent | TailCheckpoint | TraceClose,
 	seenRecordIds: Set<string>,
 ): void {
 	if (record.parentId === null) return;

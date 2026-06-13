@@ -14,7 +14,7 @@ Hot trace files live under:
 .codewiki/traces/TRACE-*.jsonl
 ```
 
-Each line is one JSON object with a `type` field. The first line is always `trace_head`. Later lines are ordered trace events or checkpoints.
+Each line is one JSON object with a `type` field. The first line is always `trace_head`. Later lines are ordered trace events, checkpoints, or a final close record.
 
 ```text
 trace_head
@@ -22,6 +22,7 @@ trace_event          # semantic loop iteration or runtime coordination
 tail_checkpoint
 trace_event
 tail_checkpoint
+trace_close          # optional final lifecycle record
 ```
 
 The trace file is its own hot catalog entry. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog.
@@ -82,6 +83,24 @@ Derived compact state for fast resume and view generation. Replay from `trace_he
   "traceId": "TRACE-20260611-example",
   "firstKeptRecordId": "evt-0001",
   "summary": "Decision exited; planning is next.",
+  "createdAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+### `trace_close`
+
+Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later.
+
+```json
+{
+  "type": "trace_close",
+  "id": "TRACE-20260611-example:archive:close:4",
+  "parentId": "tail-0001",
+  "traceId": "TRACE-20260611-example",
+  "reason": "Trace finished and retained.",
+  "gitRestoreRef": "refs/codewiki/archive/TRACE-20260611-example",
+  "headRef": "TRACE-20260611-example",
+  "refs": ["TRACE-20260611-example", "refs/codewiki/archive/TRACE-20260611-example"],
   "createdAt": "2026-06-11T00:00:00.000Z"
 }
 ```
@@ -206,6 +225,8 @@ Runtime temp is not truth.
 ## Retention
 
 Closed traces can be compacted only after required evidence is committed and no active policy depends on the full hot record. Retention keeps enough hot information to discover the trace and enough Git restore refs to hydrate cold detail on demand.
+
+`wiki_archive` supports retention stubs, trace-close records, and hydrate plans. Close appends a `trace_close` record with expected-byte compare-and-swap. Hydrate verifies archived records against the retained stub and returns the records and restore refs needed to restore hot detail.
 
 The retention model avoids separate canonical catalogs. The trace stub plus Git history is the catalog.
 

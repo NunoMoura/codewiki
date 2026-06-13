@@ -2,7 +2,7 @@
 
 CodeWiki is midway through a rebuild from `_OLD_VERSION/src/**` into the clean `src/**` scaffold. `_OLD_VERSION/**` remains reference-only code. It must not be re-enabled wholesale, and it must not reintroduce the archived Pi extension, graph truth roots, roadmap truth roots, validation roots, or CodeWiki-owned compaction.
 
-The roadmap product concept is deprecated. Active work state is a projection over traces, especially `work-plan` and `work-queue`. Legacy roadmap files are archive/reference material unless a future accepted decision explicitly imports selected facts.
+The roadmap product concept is deprecated. Active work state is a projection over traces, especially `work-plan` and `work-queue`. Historical roadmap files are archive/reference material unless a future accepted decision explicitly imports selected facts.
 
 This audit records the current migration state after the pivot to runtime outer loop, semantic loop iterations, loop outputs, exit conditions, runtime claims, worker aggregation, claim correlation, and aggregate content proof.
 
@@ -17,17 +17,17 @@ This audit records the current migration state after the pivot to runtime outer 
 | Output artifacts | 7 old files | semantic loop internals | Replaced | Loop output and runtime-temp scratch replace the old artifact model. Historical artifact files are not target truth. |
 | Decision | 5 files | 6 files | Migrated core | Decision table, iteration runner, exit evaluation, propagation, and approval helpers exist in target source. |
 | Validation roots | 7 files | loop exit conditions | Replaced | There is no target validation root. Exit conditions live with the three semantic loops. |
-| GC/retention | 3 files | trace retention stub | Partial / deferred | Trace retention exists, but destructive purge and restore-ledger workflows are deferred. |
+| Retention/archive | 3 old files | trace retention lifecycle | Migrated core | Trace retention stubs, `trace_close`, and hydrate plans exist. Destructive purge remains out of target normal workflow. |
 | Knowledge parsing | 2 files | 8 files | Expanded core | Markdown headings/body, diagram YAML, source-map, and file-structure map parsing exist. Markdown frontmatter is intentionally forbidden. Deep scaffold refactor remains deferred. |
 | Policy/risk | 4 files | exit-condition inputs/runtime stubs | Partial | Policy is currently encoded as deterministic exit-condition options and runtime stubs, not a standalone policy subsystem. |
 | Project bootstrap/context | 9 files | 4 files | Partial | Root/config/types exist; bootstrap remains unavailable while extension is disabled. |
-| Roadmap/tasks | 8 files | planning/work-queue | Deprecated / replaced | Planning work units and work-queue projections replace roadmap truth. Legacy roadmap files remain archive/reference state, not active workflow truth. |
+| Roadmap/tasks | 8 files | planning/work-queue | Deprecated / replaced | Planning work units and work-queue projections replace roadmap truth. Historical roadmap files remain archive/reference state, not active workflow truth. |
 | Runtime | 3 files | 10 files | Migrated core | Scheduler, claims, dispatcher batches, leases/budget/policy stubs, and tmp helpers exist. |
 | Session/worktree dispatch | 11 files | runtime + implementation + git stubs | Partial | Claims, worker dispatch seam, worker result aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
-| Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Legacy lock/ports helpers are not migrated wholesale. |
+| Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Historical lock/ports helpers are not migrated wholesale. |
 | State/graph/resume | 21 files | traces + views | Replaced core, product surface missing | JSONL traces and generated views replace graph/state roots. Status/resume projections exist, but no user-facing command/tool facade is active. |
-| Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints carry lifecycle facts. Legacy telemetry roots are not target truth. |
-| Workflow composite tool | 1 file | core facades complete | Core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`. Host wrappers are still deferred. Standalone `wiki_gate` and `wiki_build` should not return as normal tools. |
+| Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints/close records carry lifecycle facts. Historical telemetry roots are not target truth. |
+| Workflow composite tool | 1 file | core facades complete | Core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`. CLI wrapper exists; Pi/MCP wrappers remain deferred. Standalone split-output and split-evaluation tools should not return as normal tools. |
 
 ## Stabilized target spine
 
@@ -74,7 +74,7 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | User-facing status/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi command reintroduction remains deferred until adapter policy is stable. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
 | Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config with CLI-backed instructions. |
-| P1 | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | Expose retention/archive/hydrate/restore through `wiki_archive`. |
+| Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
 | P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Add config-driven isolation: `none`, `worktree`, or `auto`. Keep worktree helpers host-owned until orchestration stabilizes. |
 | P1 | Project bootstrap/scaffold generation | Target package source is stable enough for core loops, but bootstrap remains unavailable. | Regenerate scaffold from target file-structure docs after active APIs stop moving. |
 | P2 | Roadmap archival note | Planning work units replace roadmap truth. Old roadmap files may need a recorded archival decision, not import by default. | Write a trace/KB note that old roadmap state is ignored or archived unless explicitly selected for import. |
@@ -83,10 +83,9 @@ These old behaviors should stay out of active source unless a future accepted de
 
 ## Recommended next migration order
 
-1. **Retention/archive pipeline** — close, archive, hydrate, and restore traces/knowledge through Git refs.
-2. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
-3. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
-4. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
+1. **Config model** — consolidate automation/agency, worktree isolation, budgets, approval policy, and retention settings.
+2. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
+3. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
 
 ## Stop condition for architecture work
 

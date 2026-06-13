@@ -1,5 +1,6 @@
 import type {
 	TailCheckpoint,
+	TraceClose,
 	TraceEvent,
 	TraceHead,
 	TraceRecord,
@@ -12,6 +13,7 @@ export const TRACE_RECORD_TYPE_VALUES = [
 	"trace_head",
 	"trace_event",
 	"tail_checkpoint",
+	"trace_close",
 ] as const;
 
 export const TRACE_LOOP_VALUES = [
@@ -61,7 +63,7 @@ export function validateTraceRecord(
 		issue(
 			issues,
 			"$.type",
-			"Trace record type must be trace_head, trace_event, or tail_checkpoint.",
+			"Trace record type must be trace_head, trace_event, tail_checkpoint, or trace_close.",
 		);
 		return { ok: false, issues };
 	}
@@ -71,6 +73,8 @@ export function validateTraceRecord(
 		validateTraceEvent(issues, value as Partial<TraceEvent>);
 	if (value.type === "tail_checkpoint")
 		validateTailCheckpoint(issues, value as Partial<TailCheckpoint>);
+	if (value.type === "trace_close")
+		validateTraceClose(issues, value as Partial<TraceClose>);
 	return {
 		ok: issues.length === 0,
 		issues,
@@ -142,6 +146,27 @@ function validateTailCheckpoint(
 			issues,
 			"$.data",
 			"Tail checkpoint data must be a JSON object when present.",
+		);
+	}
+}
+
+function validateTraceClose(
+	issues: TraceValidationIssue[],
+	value: Partial<TraceClose>,
+): void {
+	requireString(issues, value.id, "$.id");
+	requireNullableString(issues, value.parentId, "$.parentId");
+	requireTraceId(issues, value.traceId, "$.traceId");
+	requireString(issues, value.reason, "$.reason");
+	requireString(issues, value.gitRestoreRef, "$.gitRestoreRef");
+	requireString(issues, value.headRef, "$.headRef");
+	requireStringArray(issues, value.refs, "$.refs");
+	requireString(issues, value.createdAt, "$.createdAt");
+	if (value.data !== undefined && !isRecord(value.data)) {
+		issue(
+			issues,
+			"$.data",
+			"Trace close data must be a JSON object when present.",
 		);
 	}
 }

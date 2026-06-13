@@ -21,7 +21,9 @@ Use this skill when active trace or knowledge state needs a retention stub, rest
 node --experimental-strip-types src/cli/index.ts archive --input archive.json
 ```
 
-## Input shape
+## Input shapes
+
+Retention stub preview:
 
 ```json
 {
@@ -33,14 +35,46 @@ node --experimental-strip-types src/cli/index.ts archive --input archive.json
 }
 ```
 
+Trace close append:
+
+```json
+{
+  "action": "close",
+  "mode": "append",
+  "repoRoot": ".",
+  "expectedBytes": 0,
+  "records": [],
+  "gitRestoreRef": "refs/codewiki/archive/TRACE-...",
+  "reason": "Trace finished and retained."
+}
+```
+
+Hydrate plan:
+
+```json
+{
+  "action": "hydrate",
+  "mode": "preview",
+  "stub": {
+    "traceId": "TRACE-...",
+    "title": "Archived trace",
+    "headRef": "TRACE-...",
+    "gitRestoreRef": "refs/codewiki/archive/TRACE-...",
+    "createdAt": "2026-06-11T00:00:00.000Z"
+  },
+  "archivedRecords": []
+}
+```
+
 ## Workflow
 
 1. Run `codewiki state` and identify trace lifecycle status.
 2. Confirm no active semantic or runtime work still needs hot records.
 3. Preview retention stubs from trace records and restore refs.
-4. Preserve trace head, first kept record, checkpoint summary, and Git restore ref.
-5. Treat generated views as disposable and reproducible from hot or hydrated traces.
-6. Record any restore/hydrate requirements before deleting or moving hot artifacts.
+4. Append `trace_close` only with expected-byte preflight.
+5. Preserve trace head, first kept record, checkpoint summary, close reason, and Git restore ref.
+6. Treat generated views as disposable and reproducible from hot or hydrated traces.
+7. Record any restore/hydrate requirements before deleting or moving hot artifacts.
 
 ## Stop conditions
 

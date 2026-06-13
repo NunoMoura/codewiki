@@ -14,7 +14,7 @@ Target facade roots:
 
 The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, or validation roots. Read-only state is exposed as `src/api/state.ts`, which folds traces and source-map input into view-shaped projections without treating stored views as truth.
 
-The API exposes reduced core facades for the target `wiki_*` surface: `buildWikiState()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiRuntime()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, planning, and implementation facades preview or append one semantic loop iteration safely. Runtime appends coordination claim events only; it is not a fourth semantic loop.
+The API exposes reduced core facades for the target `wiki_*` surface: `buildWikiState()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiRuntime()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, planning, and implementation facades preview or append one semantic loop iteration safely. Runtime appends coordination claim events only; it is not a fourth semantic loop. Archive previews retention stubs, appends `trace_close` lifecycle records, and plans hydrate/restore from retained trace refs.
 
 Pi extension entrypoints remain disabled until a future explicit decision reintroduces them.
 
