@@ -9,6 +9,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function tableInput(id = "DT-wiki-decide") {
 	return {
@@ -21,6 +22,7 @@ function tableInput(id = "DT-wiki-decide") {
 				currentState: "Decision callers use iteration runner directly.",
 				desiredState: "wiki_decide wraps decision output and append safely.",
 				rationale: "Avoid split output/exit public workflow.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/decision-loop.md"],
 			},

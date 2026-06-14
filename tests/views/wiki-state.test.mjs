@@ -7,6 +7,7 @@ import { createDecisionTable } from "../../src/decision/table.ts";
 import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -39,6 +40,7 @@ function traceRecords(traceId = "TRACE-state") {
 				currentState: "State reads could depend on stored view files.",
 				desiredState: "State reads project traces and source-map inputs.",
 				rationale: "Views are disposable projections, not truth.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/api-vnext-tools.md"],
 			},

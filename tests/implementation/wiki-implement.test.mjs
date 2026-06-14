@@ -12,6 +12,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
@@ -62,6 +63,7 @@ function planningEvents(traceId) {
 				currentState: "Implementation callers wire proof manually.",
 				desiredState: "wiki_implement prepares proof and appends safely.",
 				rationale: "Avoid partial or weak implementation trace writes.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/implementation-loop.md"],
 			},

@@ -10,6 +10,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -43,6 +44,7 @@ async function decision(traceId, options = {}) {
 					currentState: "Planning callers use iteration runner directly.",
 					desiredState: "wiki_plan wraps planning output and append safely.",
 					rationale: "Avoid split output/exit public workflow.",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["kb:system/planning-loop.md"],
 				},

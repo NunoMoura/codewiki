@@ -10,6 +10,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const head = createTraceHead({
@@ -30,6 +31,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 					currentState: "Retention stub built manually.",
 					desiredState: "wiki_archive previews retention refs.",
 					rationale: "Archive must preserve restore refs.",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["kb:system/traces.md"],
 				},

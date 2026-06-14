@@ -20,6 +20,18 @@ export type DecisionExitIssueCode =
 	| "missing_current_state"
 	| "missing_desired_state"
 	| "missing_rationale"
+	| "missing_user_impact"
+	| "missing_maintainer_impact"
+	| "missing_effort"
+	| "invalid_effort"
+	| "missing_recommendation"
+	| "invalid_recommendation"
+	| "recommendation_not_approve"
+	| "missing_recommendation_rationale"
+	| "missing_agent_assessment"
+	| "agent_assessment_not_aligned"
+	| "missing_high_risk_approval"
+	| "invalid_approval_ref"
 	| "missing_current_state_packet"
 	| "invalid_current_state_ref"
 	| "missing_traceability_ref"
@@ -81,13 +93,20 @@ export function evaluateDecisionExit(
 	for (const row of approvedRows) {
 		issues.push(
 			...approvedRowIssues(row),
+			...recommendationQualityIssues(row),
+			...agentAssessmentQualityIssues(row),
 			...highRiskQualityIssues(row),
 			...traceabilityRefIssues(row),
 		);
 	}
 	issues.push(...knowledgeDeltaIssues(approvedRows, options.knowledgeDelta));
 	const qualityStandards = decisionQualityStandards(issues, approvedRows);
-	const verdict = issues.length === 0 ? "pass" : "fail";
+	const verdict =
+		blockedIssues(issues).length > 0
+			? "block"
+			: issues.length === 0
+				? "pass"
+				: "fail";
 	return {
 		passed: verdict === "pass",
 		verdict,
@@ -96,7 +115,12 @@ export function evaluateDecisionExit(
 		qualityStandards,
 		findings: issues.map(issueFinding),
 		remediation: issues.map(issueRemediation),
-		route: verdict === "pass" ? "planning" : "decision",
+		route:
+			verdict === "pass"
+				? "planning"
+				: verdict === "block"
+					? "user"
+					: "decision",
 		approvedRowIds: approvedRows.map((row) => row.id),
 	};
 }
@@ -126,6 +150,33 @@ function approvedRowIssues(row: DecisionRow): DecisionExitIssue[] {
 			code: "missing_rationale",
 			rowId: row.id,
 			message: `Decision row ${row.id} is missing rationale.`,
+		});
+	}
+	if (!row.userImpact) {
+		issues.push({
+			code: "missing_user_impact",
+			rowId: row.id,
+			message: `Decision row ${row.id} must explain user impact.`,
+		});
+	}
+	if (!row.maintainerImpact) {
+		issues.push({
+			code: "missing_maintainer_impact",
+			rowId: row.id,
+			message: `Decision row ${row.id} must explain maintainer impact.`,
+		});
+	}
+	if (!row.effort) {
+		issues.push({
+			code: "missing_effort",
+			rowId: row.id,
+			message: `Decision row ${row.id} must estimate effort.`,
+		});
+	} else if (!isAllowed(row.effort, ["low", "medium", "high"])) {
+		issues.push({
+			code: "invalid_effort",
+			rowId: row.id,
+			message: `Decision row ${row.id} has invalid effort ${row.effort}.`,
 		});
 	}
 	if (row.sourceRefs.length === 0 && !row.noKbImpactReason) {
@@ -164,6 +215,47 @@ function decisionQualityStandards(
 				"missing_desired_state",
 				"missing_rationale",
 			],
+		}),
+		standard({
+			id: "user_value_clear",
+			description:
+				"Approved rows explain how the intention benefits users or improves user outcomes.",
+			issues,
+			codes: ["missing_user_impact"],
+		}),
+		standard({
+			id: "cost_understood",
+			description:
+				"Approved rows expose maintainer impact and a bounded effort estimate.",
+			issues,
+			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
+		}),
+		standard({
+			id: "recommendation_justified",
+			description:
+				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
+			issues,
+			codes: [
+				"missing_recommendation",
+				"invalid_recommendation",
+				"recommendation_not_approve",
+				"missing_recommendation_rationale",
+			],
+		}),
+		standard({
+			id: "intention_validated",
+			description:
+				"The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests.",
+			mode: "agent",
+			issues,
+			codes: ["missing_agent_assessment", "agent_assessment_not_aligned"],
+		}),
+		standard({
+			id: "approval_safety",
+			description:
+				"High-risk approved rows have explicit user approval authority and a canonical approval ref.",
+			issues,
+			codes: ["missing_high_risk_approval", "invalid_approval_ref"],
 		}),
 		standard({
 			id: "current_state_grounded",
@@ -218,12 +310,20 @@ function standard(input: {
 	issues: DecisionExitIssue[];
 	codes: DecisionExitIssueCode[];
 	evidenceRefs?: string[];
+	mode?: LoopQualityStandardResult["mode"];
 }): LoopQualityStandardResult {
-	const matched = input.issues.filter((issue) => input.codes.includes(issue.code));
+	const matched = input.issues.filter((issue) =>
+		input.codes.includes(issue.code),
+	);
 	return {
 		id: input.id,
-		status: matched.length > 0 ? "unmet" : "met",
-		mode: "deterministic",
+		status:
+			matched.length > 0 && matched.some(isBlockingIssue)
+				? "blocked"
+				: matched.length > 0
+					? "unmet"
+					: "met",
+		mode: input.mode || "deterministic",
 		description: input.description,
 		...(matched.length > 0
 			? { message: matched.map((issue) => issue.message).join(" ") }
@@ -242,7 +342,12 @@ function criteriaFromQualityStandards(
 ): ExitCriterionResult[] {
 	return standards.map((standard) => ({
 		id: standard.id,
-		status: standard.status === "met" ? "pass" : "fail",
+		status:
+			standard.status === "met"
+				? "pass"
+				: standard.status === "blocked"
+					? "block"
+					: "fail",
 		...(standard.message ? { message: standard.message } : {}),
 		...(standard.refs ? { refs: standard.refs } : {}),
 	}));
@@ -321,6 +426,71 @@ function traceabilityRefIssues(row: DecisionRow): DecisionExitIssue[] {
 	}));
 }
 
+function recommendationQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+	const issues: DecisionExitIssue[] = [];
+	if (!row.recommendation) {
+		issues.push({
+			code: "missing_recommendation",
+			rowId: row.id,
+			message: `Decision row ${row.id} must include an agent recommendation.`,
+		});
+	} else if (
+		!isAllowed(row.recommendation, ["approve", "reject", "defer", "ask_user"])
+	) {
+		issues.push({
+			code: "invalid_recommendation",
+			rowId: row.id,
+			message: `Decision row ${row.id} has invalid recommendation ${row.recommendation}.`,
+		});
+	} else if (row.recommendation !== "approve") {
+		issues.push({
+			code: "recommendation_not_approve",
+			rowId: row.id,
+			message: `Approved decision row ${row.id} must be recommended for approval by the agent.`,
+		});
+	}
+	if (!row.recommendationRationale) {
+		issues.push({
+			code: "missing_recommendation_rationale",
+			rowId: row.id,
+			message: `Decision row ${row.id} must justify the agent recommendation.`,
+		});
+	}
+	return issues;
+}
+
+function agentAssessmentQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+	const assessment = row.agentAssessment;
+	const missingStance = !assessment.stance;
+	const missingUserAlignment = !assessment.userAlignment;
+	const missingProjectBenefit = !assessment.projectBenefit;
+	const missingRationale = !assessment.rationale;
+	if (
+		missingStance ||
+		missingUserAlignment ||
+		missingProjectBenefit ||
+		missingRationale
+	) {
+		return [
+			{
+				code: "missing_agent_assessment",
+				rowId: row.id,
+				message: `Decision row ${row.id} needs an agent assessment of user alignment, project benefit, and rationale.`,
+			},
+		];
+	}
+	if (assessment.stance !== "aligned") {
+		return [
+			{
+				code: "agent_assessment_not_aligned",
+				rowId: row.id,
+				message: `Agent assessment for decision row ${row.id} does not validate the intention as aligned.`,
+			},
+		];
+	}
+	return [];
+}
+
 function highRiskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 	if (!isHighRisk(row)) return [];
 	const issues: DecisionExitIssue[] = [];
@@ -345,11 +515,32 @@ function highRiskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 			message: `High-risk decision row ${row.id} needs proof refs for research, prior art, validation, or explicit user guidance.`,
 		});
 	}
+	if (row.approvalAuthority !== "user" || !row.approvalRef) {
+		issues.push({
+			code: "missing_high_risk_approval",
+			rowId: row.id,
+			message: `High-risk decision row ${row.id} requires explicit user approval authority and approval ref.`,
+		});
+	} else {
+		const [invalidApprovalRef] = invalidTraceRefs([row.approvalRef]);
+		if (invalidApprovalRef) {
+			issues.push({
+				code: "invalid_approval_ref",
+				rowId: row.id,
+				ref: invalidApprovalRef,
+				message: `High-risk decision row ${row.id} has non-canonical approval ref ${invalidApprovalRef}.`,
+			});
+		}
+	}
 	return issues;
 }
 
 function isHighRisk(row: DecisionRow): boolean {
-	return String(row.risk || "").trim().toLowerCase() === "high";
+	return (
+		String(row.risk || "")
+			.trim()
+			.toLowerCase() === "high"
+	);
 }
 
 function knowledgeDeltaIssues(
@@ -425,6 +616,28 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	missing_desired_state: "State the desired target state for the decision row.",
 	missing_rationale:
 		"Add rationale explaining why this decision should be accepted.",
+	missing_user_impact:
+		"Explain how the intention benefits users or user outcomes.",
+	missing_maintainer_impact:
+		"Explain maintainer cost, operational impact, or complexity impact.",
+	missing_effort: "Add a low, medium, or high effort estimate.",
+	invalid_effort: "Use effort low, medium, or high.",
+	missing_recommendation:
+		"Add an agent recommendation: approve, reject, defer, or ask_user.",
+	invalid_recommendation:
+		"Use recommendation approve, reject, defer, or ask_user.",
+	recommendation_not_approve:
+		"Keep approved rows only when the agent recommends approval; otherwise route to user with alternatives.",
+	missing_recommendation_rationale:
+		"Explain why the agent recommendation follows from the evidence.",
+	missing_agent_assessment:
+		"Add agent assessment for user alignment, project benefit, and rationale.",
+	agent_assessment_not_aligned:
+		"Route to the user with concerns or alternatives before planning.",
+	missing_high_risk_approval:
+		"Capture explicit user approval authority and a canonical approval ref for high-risk rows.",
+	invalid_approval_ref:
+		"Replace weak approval refs with canonical trace, KB, Git, digest, source, or test refs.",
 	missing_current_state_packet:
 		"Attach canonical current-state refs: KB, source/test path, trace event, Git ref, or digest.",
 	invalid_current_state_ref:
@@ -450,6 +663,22 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 
 function decisionRemediationAction(issue: DecisionExitIssue): string {
 	return DECISION_REMEDIATION[issue.code];
+}
+
+function blockedIssues(issues: DecisionExitIssue[]): DecisionExitIssue[] {
+	return issues.filter(isBlockingIssue);
+}
+
+function isBlockingIssue(issue: DecisionExitIssue): boolean {
+	return (
+		issue.code === "agent_assessment_not_aligned" ||
+		issue.code === "missing_high_risk_approval" ||
+		issue.code === "invalid_approval_ref"
+	);
+}
+
+function isAllowed(value: string, allowed: string[]): boolean {
+	return allowed.includes(value.trim().toLowerCase());
 }
 
 function unique(values: string[]): string[] {

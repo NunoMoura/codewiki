@@ -13,6 +13,7 @@ import {
 } from "../../src/implementation/evidence.ts";
 import { evaluateImplementationExit } from "../../src/implementation/exit.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function planningEvents() {
 	const table = createDecisionTable({
@@ -26,6 +27,7 @@ function planningEvents() {
 				currentState: "Implementation iteration files own evidence.",
 				desiredState: "Implementation trace events own evidence refs.",
 				rationale: "Matches traces-first model.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/traces.md"],
 			},

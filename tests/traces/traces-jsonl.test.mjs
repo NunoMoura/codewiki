@@ -23,6 +23,7 @@ import {
 	buildTraceRetentionStub,
 	TRACE_LOOP_VALUES,
 } from "../../src/api/traces.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function sampleRecords() {
 	const head = createTraceHead({
@@ -180,6 +181,7 @@ describe("trace JSONL core", () => {
 						currentState: "Loop writes are assembled before append.",
 						desiredState: "Loop iteration append is one checked batch.",
 						rationale: "Avoid partial durable semantic state.",
+						...decisionQualityFields(),
 						approval: "approved",
 						sourceRefs: ["kb:system/traces.md"],
 					},

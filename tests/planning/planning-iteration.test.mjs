@@ -8,6 +8,7 @@ import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { evaluatePlanningExit } from "../../src/planning/exit.ts";
 import { normalizePlanningWorkItems } from "../../src/planning/materialization.ts";
 import { orderWorkItems } from "../../src/planning/ordering.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function decisionEvents() {
 	const table = createDecisionTable({
@@ -21,6 +22,7 @@ function decisionEvents() {
 				currentState: "Generated graph owns workflow state.",
 				desiredState: "JSONL traces own workflow state.",
 				rationale: "Matches Pi session-inspired model.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/traces.md"],
 			},
@@ -272,6 +274,7 @@ describe("planning iteration runner", () => {
 					owner: "runtime migration",
 					trigger: "after traces module lands",
 					rationale: "Runtime needs trace append primitives first.",
+					...decisionQualityFields(),
 					evidenceRefs: ["kb:system/traces.md"],
 				},
 			],

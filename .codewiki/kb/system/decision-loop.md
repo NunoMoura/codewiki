@@ -59,12 +59,17 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | --- | --- |
 | decision_table_ready | At least one approved row exists, approval state is explicit, and row ids are stable. |
 | intention_understood | Approved rows state the user intention as current state, desired state, and rationale. |
+| user_value_clear | Approved rows explain how the intention benefits users or improves user outcomes. |
+| cost_understood | Approved rows expose maintainer impact and a bounded effort estimate. |
+| recommendation_justified | The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed. |
+| intention_validated | The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests. This is an agent-judgment standard, not a deterministic fact. |
+| approval_safety | High-risk approved rows have explicit user approval authority and a canonical approval ref. |
 | current_state_grounded | Current KB/source/trace/Git/test baseline refs are present and canonical. |
 | evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk rows need explicit proof refs for research, prior art, validation, or user guidance. |
 | risks_and_alternatives_considered | High-risk intentions identify affected layers and at least one viable alternative before planning. |
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
 
-The initial implementation keeps these standards deterministic. Later review/approval standards may be added when their quality value outweighs token and UX cost.
+Deterministic standards stay fast and repeatable. Agent-judgment standards are used when structural checks are not enough to protect user/project alignment. User-approval standards are reserved for high-risk decisions where UX cost is justified.
 
 ## Exit statuses
 

@@ -12,6 +12,7 @@ import {
 } from "../../src/decision/table.ts";
 import { formatTraceLine } from "../../src/traces/writer.ts";
 import { parseTraceLine } from "../../src/traces/reader.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 describe("decision tables", () => {
 	it("normalizes target decision row inputs", () => {
@@ -24,6 +25,7 @@ describe("decision tables", () => {
 					currentState: "Graph is treated as state truth.",
 					desiredState: "JSONL traces are workflow/state truth.",
 					rationale: "Matches recovered traces-first decision.",
+					...decisionQualityFields(),
 					approval: "accept",
 					affectedLayers: ["system", "source"],
 					sourceRefs: ["kb:system/traces.md"],
@@ -47,6 +49,7 @@ describe("decision tables", () => {
 					currentState: "Old model",
 					desiredState: "New model",
 					rationale: "Needed",
+					...decisionQualityFields(),
 				},
 			],
 		});
@@ -76,6 +79,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Implicit source roots",
 					desiredState: "Explicit traces-first roots",
 					rationale: "Avoid stale graph model",
+					...decisionQualityFields(),
 					approval: "approved",
 				},
 			],
@@ -110,6 +114,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Old",
 					desiredState: "New",
 					rationale: "Needed",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["not-a-ref"],
 				},
@@ -118,6 +123,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Old 2",
 					desiredState: "New 2",
 					rationale: "Needed",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["kb:system/traces.md"],
 				},
@@ -133,6 +139,45 @@ describe("decision exit and iteration runner", () => {
 		]);
 	});
 
+	it("blocks agent-judged misalignment before planning", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-agent",
+					currentState: "User wants a risky shortcut.",
+					desiredState: "Shortcut becomes accepted product direction.",
+					rationale: "The user is acting in good faith but may lack system context.",
+					...decisionQualityFields({
+						agentAssessment: {
+							stance: "concerns",
+							userAlignment: "The request reflects the user's stated goal.",
+							projectBenefit: "Benefit is unclear compared with safer alternatives.",
+							rationale: "The agent cannot validate alignment without user clarification.",
+							concerns: ["Could reduce project safety."],
+						},
+					}),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table);
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "block");
+		assert.equal(exit.route, "user");
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+		assert.equal(standards.intention_validated.mode, "agent");
+		assert.equal(standards.intention_validated.status, "blocked");
+		assert.equal(
+			exit.criteria.find((criterion) => criterion.id === "intention_validated")
+				?.status,
+			"block",
+		);
+	});
+
 	it("blocks high-risk decisions without quality evidence", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -141,6 +186,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Runtime may dispatch work automatically.",
 					desiredState: "Runtime may apply high-risk changes automatically.",
 					rationale: "User asked to explore automation.",
+					...decisionQualityFields(),
 					approval: "approved",
 					risk: "high",
 					sourceRefs: ["kb:system/runtime.md"],
@@ -156,19 +202,18 @@ describe("decision exit and iteration runner", () => {
 				.filter((code) => code.startsWith("missing_high_risk"))
 				.sort(),
 			[
-					"missing_high_risk_alternative",
-					"missing_high_risk_evidence",
-					"missing_high_risk_scope",
+				"missing_high_risk_alternative",
+				"missing_high_risk_approval",
+				"missing_high_risk_evidence",
+				"missing_high_risk_scope",
 			],
 		);
 		const standards = Object.fromEntries(
 			exit.qualityStandards.map((standard) => [standard.id, standard]),
 		);
-		assert.equal(
-			standards.risks_and_alternatives_considered.status,
-			"unmet",
-		);
+		assert.equal(standards.risks_and_alternatives_considered.status, "unmet");
 		assert.equal(standards.evidence_sufficient.status, "unmet");
+		assert.equal(standards.approval_safety.status, "blocked");
 	});
 
 	it("blocks incomplete or weak knowledge deltas", () => {
@@ -179,6 +224,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Old KB contract",
 					desiredState: "New KB contract",
 					rationale: "Decision owns knowledge propagation.",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["kb:system/loop-contracts.md"],
 				},
@@ -212,6 +258,7 @@ describe("decision exit and iteration runner", () => {
 					currentState: "Graph/root state owns workflow state.",
 					desiredState: "Trace JSONL owns workflow state.",
 					rationale: "Matches Pi session model.",
+					...decisionQualityFields(),
 					approval: "approved",
 					sourceRefs: ["kb:system/traces.md"],
 				},
@@ -236,7 +283,9 @@ describe("decision exit and iteration runner", () => {
 			["kb:system/traces.md"],
 		);
 		assert.equal(
-			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			result.exit.qualityStandards.every(
+				(standard) => standard.status === "met",
+			),
 			true,
 		);
 		assert.deepEqual(
@@ -246,6 +295,11 @@ describe("decision exit and iteration runner", () => {
 			[
 				"decision_table_ready",
 				"intention_understood",
+				"user_value_clear",
+				"cost_understood",
+				"recommendation_justified",
+				"intention_validated",
+				"approval_safety",
 				"current_state_grounded",
 				"evidence_sufficient",
 				"risks_and_alternatives_considered",

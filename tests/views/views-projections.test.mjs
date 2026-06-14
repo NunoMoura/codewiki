@@ -19,6 +19,7 @@ import {
 	viewFilePath,
 	writeNamedView,
 } from "../../src/api/views.ts";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
 	const table = createDecisionTable({
@@ -32,6 +33,7 @@ function decisionEvents(traceId = "TRACE-views") {
 				currentState: "Old graph/roadmap state owns generated status.",
 				desiredState: "Generated views project trace records.",
 				rationale: "Views are disposable caches.",
+				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: ["kb:system/traces.md"],
 			},
@@ -342,6 +344,7 @@ describe("trace-backed views", () => {
 					owner: "architecture",
 					trigger: "Need user decision.",
 					rationale: "Conflicting path ownership needs route-back.",
+					...decisionQualityFields(),
 				},
 			],
 		});

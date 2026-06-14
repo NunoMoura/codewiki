@@ -84,9 +84,17 @@ function normalizeDecisionRow(
 		currentState: text(row.currentState),
 		desiredState: text(row.desiredState),
 		rationale: text(row.rationale),
+		userImpact: text(row.userImpact),
+		maintainerImpact: text(row.maintainerImpact),
+		effort: text(row.effort),
 		affectedLayers: unique(stringList(row.affectedLayers)),
 		risk: firstText(row.risk, "medium"),
 		approval: normalizeDecisionApprovalStatus(row.approval),
+		approvalAuthority: text(row.approvalAuthority),
+		approvalRef: text(row.approvalRef) || undefined,
+		recommendation: text(row.recommendation),
+		recommendationRationale: text(row.recommendationRationale),
+		agentAssessment: normalizeAgentAssessment(row.agentAssessment),
 		alternatives: stringList(row.alternatives),
 		sourceRefs: unique(stringList(row.sourceRefs)),
 		proofRefs: unique(stringList(row.proofRefs)),
@@ -158,9 +166,25 @@ function cloneDecisionRow(row: DecisionRow): DecisionRow {
 	return {
 		...row,
 		affectedLayers: [...row.affectedLayers],
+		agentAssessment: {
+			...row.agentAssessment,
+			concerns: [...row.agentAssessment.concerns],
+		},
 		alternatives: [...row.alternatives],
 		sourceRefs: [...row.sourceRefs],
 		proofRefs: [...row.proofRefs],
+	};
+}
+
+function normalizeAgentAssessment(
+	value: DecisionRowInput["agentAssessment"],
+): DecisionRow["agentAssessment"] {
+	return {
+		stance: text(value?.stance),
+		userAlignment: text(value?.userAlignment),
+		projectBenefit: text(value?.projectBenefit),
+		rationale: text(value?.rationale),
+		concerns: stringList(value?.concerns),
 	};
 }
 
