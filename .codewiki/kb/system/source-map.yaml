@@ -170,6 +170,7 @@ components:
       - src/project/**
     tests:
       - tests/scaffold.test.mjs
+      - tests/project/**
       - tests/implementation/repo-proof.test.mjs
       - tests/runtime/wiki-config.test.mjs
     role: project_boundary

@@ -1,10 +1,18 @@
 import assert from "node:assert/strict";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
 	DEFAULT_WIKI_CONFIG,
 	resolveWikiConfig,
 	runWikiConfig,
 } from "../../src/api/wiki-config.ts";
+import {
+	loadWikiConfigFile,
+	resolveWikiConfigFile,
+	updateWikiConfigFile,
+} from "../../src/project/config-file.ts";
 
 describe("wiki_config core facade", () => {
 	it("resolves defaults and deep patches config", () => {
@@ -69,6 +77,55 @@ describe("wiki_config core facade", () => {
 		assert.equal(config.hosts.cli.enabled, true);
 		assert.equal(config.hosts.pi.enabled, true);
 		assert.equal(config.hosts.mcp.enabled, true);
+	});
+
+	it("loads and saves project config files", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-config-"));
+		try {
+			const missing = await loadWikiConfigFile(root);
+			assert.equal(missing.project, "codewiki");
+
+			await mkdir(join(root, ".codewiki"), { recursive: true });
+			await writeFile(
+				join(root, ".codewiki", "config.json"),
+				JSON.stringify({
+					project_name: "legacy-demo",
+					codewiki: {
+						agency: {
+							parallelism: { max_sessions: 4 },
+							approval_cadence: "risk",
+							stop_gates: ["semantic_decision", "risk_escalation"],
+						},
+					},
+				}),
+			);
+			const loaded = await loadWikiConfigFile(root);
+			assert.equal(loaded.project, "legacy-demo");
+			assert.equal(loaded.runtime.maxWorkers, 4);
+			assert.equal(loaded.runtime.approval.cadence, "on_risk");
+			assert.deepEqual(loaded.runtime.stopConditions, [
+				"semantic_decision",
+				"risk_escalation",
+			]);
+
+			const resolved = await resolveWikiConfigFile(root, {
+				patch: { retention: { hotTraceLimit: 7 } },
+			});
+			assert.equal(resolved.written, false);
+			assert.equal(resolved.config.retention.hotTraceLimit, 7);
+
+			const saved = await updateWikiConfigFile(root, {
+				patch: { runtime: { automation: "assist" } },
+			});
+			assert.equal(saved.written, true);
+			const disk = JSON.parse(
+				await readFile(join(root, ".codewiki", "config.json"), "utf8"),
+			);
+			assert.equal(disk.project, "legacy-demo");
+			assert.equal(disk.runtime.automation, "assist");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("rejects invalid runtime, approval, retention, and host settings", () => {

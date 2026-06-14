@@ -1,6 +1,6 @@
 # API
 
-`src/api/**` is the stable package/source facade. Root exports are reduced to the core `wiki_*` facades and stable types. `src/cli/index.ts` is the first host wrapper over that root facade and exposes the same reduced tool set.
+`src/api/**` is the stable package/source facade. Root exports are reduced to the core `wiki_*` facades and stable types. `src/cli/index.ts` is the first host wrapper over that root facade and exposes the same reduced tool set plus host-local bootstrap/config-file commands.
 
 Target facade roots:
 
@@ -14,7 +14,7 @@ Target facade roots:
 
 The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, or validation roots. Read-only state is exposed as `src/api/state.ts`, which folds traces and source-map input into view-shaped projections without treating stored views as truth.
 
-The API exposes reduced core facades for the target `wiki_*` surface: `buildWikiState()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiRuntime()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, planning, and implementation facades preview or append one semantic loop iteration safely. Runtime appends coordination claim events only; it is not a fourth semantic loop. Archive previews retention stubs, appends `trace_close` lifecycle records, and plans hydrate/restore from retained trace refs. Config resolution lives in `src/project/config.ts` and is exposed through the API facade.
+The API exposes reduced core facades for the target `wiki_*` surface: `buildWikiState()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiRuntime()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, planning, and implementation facades preview or append one semantic loop iteration safely. Runtime appends coordination claim events only; it is not a fourth semantic loop. Archive previews retention stubs, appends `trace_close` lifecycle records, and plans hydrate/restore from retained trace refs. Config resolution lives in `src/project/config.ts` and is exposed through the API facade; config file load/save lives in `src/project/config-file.ts` for host adapters.
 
 Pi extension entrypoints remain disabled until a future explicit decision reintroduces them.
 

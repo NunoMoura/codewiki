@@ -18,6 +18,11 @@ import {
 	type TraceRecord,
 } from "../api/index.ts";
 import { parseSourceMapYaml } from "../knowledge/source-map.ts";
+import { bootstrapCodewiki } from "../project/bootstrap.ts";
+import {
+	resolveWikiConfigFile,
+	updateWikiConfigFile,
+} from "../project/config-file.ts";
 import { readTraceFile } from "../traces/reader.ts";
 
 export interface CliResult {
@@ -39,6 +44,7 @@ export async function runCodewikiCli(argv: string[]): Promise<CliResult> {
 		}
 		if (parsed.command === "state") return stateCommand(parsed.flags);
 		if (parsed.command === "config") return configCommand(parsed.flags);
+		if (parsed.command === "bootstrap") return bootstrapCommand(parsed.flags);
 		if (parsed.command === "decide") return decideCommand(parsed.flags);
 		if (parsed.command === "plan") return planCommand(parsed.flags);
 		if (parsed.command === "implement") return implementCommand(parsed.flags);
@@ -76,7 +82,27 @@ async function configCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
 	const input = await optionalInput<RunWikiConfigInput>(flags);
+	const repoRoot = one(flags.repo);
+	if (flags.write?.length) {
+		return jsonResult(
+			await updateWikiConfigFile(repoRoot || process.cwd(), input),
+		);
+	}
+	if (repoRoot) {
+		return jsonResult(await resolveWikiConfigFile(repoRoot, input));
+	}
 	return jsonResult(runWikiConfig(input));
+}
+
+async function bootstrapCommand(
+	flags: Record<string, string[]>,
+): Promise<CliResult> {
+	return jsonResult(
+		await bootstrapCodewiki(one(flags.repo) || process.cwd(), {
+			projectName: one(flags.project),
+			force: flags.force?.length ? true : false,
+		}),
+	);
 }
 
 async function decideCommand(
@@ -260,18 +286,22 @@ function helpText(): string {
 		"",
 		"Commands:",
 		"  state   Print wiki_state JSON from .codewiki/traces and source-map.",
-		"  config     Resolve wiki_config JSON. Use --input <file|-> for patch input.",
+		"  config     Resolve wiki_config JSON. Use --repo to load .codewiki/config.json; --write to save.",
+		"  bootstrap  Create target .codewiki scaffold for a repository.",
 		"  decide     Run wiki_decide from --input <file|-> JSON.",
 		"  plan       Run wiki_plan from --input <file|-> JSON.",
 		"  implement  Run wiki_implement from --input <file|-> JSON.",
 		"  runtime    Run wiki_runtime from --input <file|-> JSON.",
 		"  archive    Run wiki_archive from --input <file|-> JSON.",
 		"",
-		"State options:",
+		"State/bootstrap/config options:",
 		"  --repo <path>          Repository root. Defaults to cwd.",
 		"  --trace <trace-id>     Select one trace for per-trace views.",
 		"  --source <path>        Include source ownership for a path. Repeatable.",
 		"  --generated-at <iso>   Generated timestamp for views.",
+		"  --project <name>       Bootstrap project name.",
+		"  --force                Bootstrap overwrites scaffold files.",
+		"  --write                Config command writes .codewiki/config.json.",
 		"",
 		"Common input options:",
 		"  --input <file|->       JSON input object for all run commands.",

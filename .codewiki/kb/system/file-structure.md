@@ -14,7 +14,7 @@ This repository is intentionally not dogfooding the CodeWiki Pi extension during
 
 ## Rebuild bootstrap boundary
 
-During this source rebuild, `.codewiki/kb/**` is the intended-design source of truth, but the surrounding dogfood `.codewiki/**` scaffold is not yet the final product output contract. Avoid large structural moves inside `.codewiki` until the package source, semantic loops, exit conditions, traces, views, and runtime queue are stable.
+During this source rebuild, `.codewiki/kb/**` is the intended-design source of truth, but the surrounding dogfood `.codewiki/**` roots outside `kb`, `traces`, `views`, and `config.json` are legacy migration state. The bootstrap command now writes only the target scaffold for new repositories.
 
 `source-map.yaml` is the canonical machine-readable source ownership map. It links source roots, owning KB docs, tests, generated views, and trace/event responsibilities. KB Markdown must not use frontmatter.
 
@@ -168,6 +168,7 @@ src/
   project/                   # root/config/bootstrap contracts
     root.ts
     config.ts
+    config-file.ts
     bootstrap.ts
     types.ts
   utils/                     # domain-free primitives only
@@ -211,6 +212,7 @@ tests/
   traces/
   views/
   runtime/
+  project/
   pi/
   shared/
     fixtures/

@@ -20,7 +20,7 @@ This audit records the current migration state after the pivot to runtime outer 
 | Retention/archive | 3 old files | trace retention lifecycle | Migrated core | Trace retention stubs, `trace_close`, and hydrate plans exist. Destructive purge remains out of target normal workflow. |
 | Knowledge parsing | 2 files | 8 files | Expanded core | Markdown headings/body, diagram YAML, source-map, and file-structure map parsing exist. Markdown frontmatter is intentionally forbidden. Deep scaffold refactor remains deferred. |
 | Policy/risk | 4 files | exit-condition inputs/runtime stubs | Partial | Policy is currently encoded as deterministic exit-condition options and runtime stubs, not a standalone policy subsystem. |
-| Project bootstrap/context | 9 files | 4 files | Partial | Root/config/types exist; bootstrap remains unavailable while extension is disabled. |
+| Project bootstrap/context | 9 files | 5 files | Core migrated | Root/config/config-file/bootstrap/types exist. Bootstrap writes target KB/traces/views/config scaffold without old graph or roadmap truth roots. |
 | Roadmap/tasks | 8 files | planning/work-queue | Deprecated / replaced | Planning work units and work-queue projections replace roadmap truth. Historical roadmap files remain archive/reference state, not active workflow truth. |
 | Runtime | 3 files | 10 files | Migrated core | Scheduler, claims, dispatcher batches, leases/budget/policy stubs, and tmp helpers exist. |
 | Session/worktree dispatch | 11 files | runtime + implementation + git stubs | Partial | Claims, worker dispatch seam, worker result aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
@@ -76,15 +76,15 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config with CLI-backed instructions. |
 | Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
 | P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config now declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution remains deferred. |
-| P1 | Project bootstrap/scaffold generation | Target package source is stable enough for core loops, but bootstrap remains unavailable. | Regenerate scaffold from target file-structure docs after active APIs stop moving. |
+| Done | Project bootstrap/scaffold generation | New repositories need target `.codewiki` structure without old graph/roadmap/gateway roots. | `src/project/bootstrap.ts` now writes config, KB, traces, views, and source-map scaffold; CLI exposes `codewiki bootstrap`. |
 | P2 | Roadmap archival note | Planning work units replace roadmap truth. Old roadmap files may need a recorded archival decision, not import by default. | Write a trace/KB note that old roadmap state is ignored or archived unless explicitly selected for import. |
-| Done | Policy/config model | Exit-condition policy and agency behavior need one typed project config instead of scattered options. | `src/project/config.ts` now resolves automation, agency, worktree isolation, budgets, approvals, retention, and host adapter flags through `wiki_config`. |
+| Done | Policy/config model | Exit-condition policy and agency behavior need one typed project config instead of scattered options. | `src/project/config.ts` now resolves automation, agency, worktree isolation, budgets, approvals, retention, and host adapter flags through `wiki_config`; `src/project/config-file.ts` loads and saves `.codewiki/config.json`. |
 | P2 | Audit command | External Pi/LSP/lens validation is used during rebuild. | Package audit facade can wait until active CLI/API needs it. |
 
 ## Recommended next migration order
 
-1. **Project bootstrap/scaffold rebuild** — update `.codewiki` scaffold once source layout and APIs stop shifting.
-2. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, session lifecycle, and audit after core package APIs are stable.
+1. **Exit criteria hardening** — review old gateway/gate checks and migrate only loop-owned conditions into `decision/exit.ts`, `planning/exit.ts`, and `implementation/exit.ts`.
+2. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, and session lifecycle after core package APIs are stable.
 
 ## Stop condition for architecture work
 

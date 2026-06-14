@@ -88,6 +88,36 @@ describe("CLI adapter", () => {
 		assert.match(result.stdout || "", /"project": "codewiki"/);
 	});
 
+	it("bootstraps and writes config through CLI", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-cli-bootstrap-"));
+		try {
+			await writeFile(join(root, "package.json"), '{"name":"cli-bootstrap"}\n');
+			const bootstrap = await runCodewikiCli(["bootstrap", "--repo", root]);
+			assert.equal(bootstrap.status, 0, bootstrap.stderr || "");
+			const bootstrapOutput = JSON.parse(bootstrap.stdout || "{}");
+			assert.equal(bootstrapOutput.project, "cli-bootstrap");
+			assert.ok(bootstrapOutput.created.includes(".codewiki/config.json"));
+
+			const inputPath = await writeJsonInput(root, "config-patch.json", {
+				patch: { runtime: { maxWorkers: 2 } },
+			});
+			const config = await runCodewikiCli([
+				"config",
+				"--repo",
+				root,
+				"--input",
+				inputPath,
+				"--write",
+			]);
+			assert.equal(config.status, 0, config.stderr || "");
+			const configOutput = JSON.parse(config.stdout || "{}");
+			assert.equal(configOutput.written, true);
+			assert.equal(configOutput.config.runtime.maxWorkers, 2);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("runs write facade commands from JSON input", async () => {
 		const root = await fixture();
 		try {
@@ -131,11 +161,7 @@ describe("CLI adapter", () => {
 			};
 			for (const [command, input] of Object.entries(commandInputs)) {
 				const inputPath = await writeJsonInput(root, `${command}.json`, input);
-				const result = await runCodewikiCli([
-					command,
-					"--input",
-					inputPath,
-				]);
+				const result = await runCodewikiCli([command, "--input", inputPath]);
 				assert.equal(result.status, 0, `${command}: ${result.stderr || ""}`);
 				assert.equal(JSON.parse(result.stdout || "{}").mode, "preview");
 			}

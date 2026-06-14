@@ -46,8 +46,10 @@ Temporary trace scratch belongs under `.codewiki/runtime/tmp/<trace>/<loop>/`. I
 npm run typecheck
 npm test
 npm run test:pack
+node --experimental-strip-types src/cli/index.ts bootstrap --repo /path/to/repo
 node --experimental-strip-types src/cli/index.ts state --repo .
-node --experimental-strip-types src/cli/index.ts config
+node --experimental-strip-types src/cli/index.ts config --repo .
+node --experimental-strip-types src/cli/index.ts config --repo . --input config-patch.json --write
 node --experimental-strip-types src/cli/index.ts decide --input decision.json
 ```
 
