@@ -94,12 +94,24 @@ export interface LoopIterationData {
 export type ExitVerdict = "pass" | "fail" | "block";
 export type ExitRoute = TraceLoop | "user" | "observe" | "close";
 export type ExitCriterionStatus = ExitVerdict;
+export type LoopQualityStandardStatus = "met" | "unmet" | "blocked";
+export type LoopQualityStandardMode = "deterministic" | "agent" | "user";
 
 export interface ExitCriterionResult {
 	id: string;
 	status: ExitCriterionStatus;
 	message?: string;
 	refs?: string[];
+}
+
+export interface LoopQualityStandardResult {
+	id: string;
+	status: LoopQualityStandardStatus;
+	mode: LoopQualityStandardMode;
+	description: string;
+	message?: string;
+	refs?: string[];
+	evidenceRefs?: string[];
 }
 
 export interface ExitFinding {
@@ -121,6 +133,7 @@ export interface ExitRemediationItem {
 export interface ExitDetails {
 	verdict: ExitVerdict;
 	criteria: ExitCriterionResult[];
+	qualityStandards?: LoopQualityStandardResult[];
 	findings: ExitFinding[];
 	remediation: ExitRemediationItem[];
 	route: ExitRoute;

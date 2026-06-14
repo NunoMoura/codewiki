@@ -4,6 +4,7 @@ import type {
 	ExitDetails,
 	ExitFinding,
 	ExitRemediationItem,
+	LoopQualityStandardResult,
 } from "../traces/types.ts";
 import { approvedDecisionRows } from "./table.ts";
 import type {
@@ -22,6 +23,9 @@ export type DecisionExitIssueCode =
 	| "missing_current_state_packet"
 	| "invalid_current_state_ref"
 	| "missing_traceability_ref"
+	| "missing_high_risk_scope"
+	| "missing_high_risk_alternative"
+	| "missing_high_risk_evidence"
 	| "duplicate_decision_row_id"
 	| "invalid_traceability_ref"
 	| "missing_knowledge_delta"
@@ -75,15 +79,21 @@ export function evaluateDecisionExit(
 		}),
 	);
 	for (const row of approvedRows) {
-		issues.push(...approvedRowIssues(row), ...traceabilityRefIssues(row));
+		issues.push(
+			...approvedRowIssues(row),
+			...highRiskQualityIssues(row),
+			...traceabilityRefIssues(row),
+		);
 	}
 	issues.push(...knowledgeDeltaIssues(approvedRows, options.knowledgeDelta));
+	const qualityStandards = decisionQualityStandards(issues, approvedRows);
 	const verdict = issues.length === 0 ? "pass" : "fail";
 	return {
 		passed: verdict === "pass",
 		verdict,
 		issues,
-		criteria: decisionCriteria(issues),
+		criteria: criteriaFromQualityStandards(qualityStandards),
+		qualityStandards,
 		findings: issues.map(issueFinding),
 		remediation: issues.map(issueRemediation),
 		route: verdict === "pass" ? "planning" : "decision",
@@ -128,47 +138,114 @@ function approvedRowIssues(row: DecisionRow): DecisionExitIssue[] {
 	return issues;
 }
 
-function decisionCriteria(issues: DecisionExitIssue[]): ExitCriterionResult[] {
+function decisionQualityStandards(
+	issues: DecisionExitIssue[],
+	approvedRows: DecisionRow[],
+): LoopQualityStandardResult[] {
 	return [
-		criterion("decision_rows", issues, [
-			"no_decision_rows",
-			"duplicate_decision_row_id",
-		]),
-		criterion("approval", issues, ["no_approved_rows"]),
-		criterion("semantic_fields", issues, [
-			"missing_current_state",
-			"missing_desired_state",
-			"missing_rationale",
-		]),
-		criterion("current_state_packet", issues, [
-			"missing_current_state_packet",
-			"invalid_current_state_ref",
-		]),
-		criterion("traceability_refs", issues, [
-			"missing_traceability_ref",
-			"invalid_traceability_ref",
-		]),
-		criterion("knowledge_delta", issues, [
-			"missing_knowledge_delta",
-			"invalid_knowledge_ref",
-			"incomplete_knowledge_digest",
-		]),
+		standard({
+			id: "decision_table_ready",
+			description:
+				"Decision table has at least one approved row and stable row ids.",
+			issues,
+			codes: [
+				"no_decision_rows",
+				"no_approved_rows",
+				"duplicate_decision_row_id",
+			],
+		}),
+		standard({
+			id: "intention_understood",
+			description:
+				"Approved rows state the user intention as current state, desired state, and rationale.",
+			issues,
+			codes: [
+				"missing_current_state",
+				"missing_desired_state",
+				"missing_rationale",
+			],
+		}),
+		standard({
+			id: "current_state_grounded",
+			description:
+				"Current state is grounded in canonical source, KB, trace, Git, digest, or test refs.",
+			issues,
+			codes: ["missing_current_state_packet", "invalid_current_state_ref"],
+			evidenceRefs: approvedRows.flatMap((row) => [
+				...row.sourceRefs,
+				...row.proofRefs,
+			]),
+		}),
+		standard({
+			id: "evidence_sufficient",
+			description:
+				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk rows.",
+			issues,
+			codes: [
+				"missing_traceability_ref",
+				"missing_high_risk_evidence",
+				"invalid_traceability_ref",
+			],
+			evidenceRefs: approvedRows.flatMap((row) => [
+				...row.sourceRefs,
+				...row.proofRefs,
+			]),
+		}),
+		standard({
+			id: "risks_and_alternatives_considered",
+			description:
+				"Approved high-risk intentions identify affected layers and alternatives before implementation work is planned.",
+			issues,
+			codes: ["missing_high_risk_scope", "missing_high_risk_alternative"],
+		}),
+		standard({
+			id: "knowledge_impact_accounted",
+			description:
+				"Knowledge impact is recorded as updated refs or explicit no-impact rationale.",
+			issues,
+			codes: [
+				"missing_knowledge_delta",
+				"invalid_knowledge_ref",
+				"incomplete_knowledge_digest",
+			],
+		}),
 	];
 }
 
-function criterion(
-	id: string,
-	issues: DecisionExitIssue[],
-	codes: DecisionExitIssueCode[],
-): ExitCriterionResult {
-	const matched = issues.filter((issue) => codes.includes(issue.code));
+function standard(input: {
+	id: string;
+	description: string;
+	issues: DecisionExitIssue[];
+	codes: DecisionExitIssueCode[];
+	evidenceRefs?: string[];
+}): LoopQualityStandardResult {
+	const matched = input.issues.filter((issue) => input.codes.includes(issue.code));
 	return {
-		id,
-		status: matched.length > 0 ? "fail" : "pass",
+		id: input.id,
+		status: matched.length > 0 ? "unmet" : "met",
+		mode: "deterministic",
+		description: input.description,
 		...(matched.length > 0
 			? { message: matched.map((issue) => issue.message).join(" ") }
 			: {}),
+		...(matched.length > 0
+			? { refs: unique(matched.flatMap((issue) => issueRefs(issue))) }
+			: {}),
+		...(input.evidenceRefs && input.evidenceRefs.length > 0
+			? { evidenceRefs: unique(input.evidenceRefs) }
+			: {}),
 	};
+}
+
+function criteriaFromQualityStandards(
+	standards: LoopQualityStandardResult[],
+): ExitCriterionResult[] {
+	return standards.map((standard) => ({
+		id: standard.id,
+		status: standard.status === "met" ? "pass" : "fail",
+		...(standard.message ? { message: standard.message } : {}),
+		...(standard.refs ? { refs: standard.refs } : {}),
+	}));
 }
 
 function issueFinding(issue: DecisionExitIssue): ExitFinding {
@@ -242,6 +319,37 @@ function traceabilityRefIssues(row: DecisionRow): DecisionExitIssue[] {
 		ref,
 		message: `Decision row ${row.id} has non-canonical ref ${ref}.`,
 	}));
+}
+
+function highRiskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+	if (!isHighRisk(row)) return [];
+	const issues: DecisionExitIssue[] = [];
+	if (row.affectedLayers.length === 0) {
+		issues.push({
+			code: "missing_high_risk_scope",
+			rowId: row.id,
+			message: `High-risk decision row ${row.id} must name affected layers.`,
+		});
+	}
+	if (row.alternatives.length === 0) {
+		issues.push({
+			code: "missing_high_risk_alternative",
+			rowId: row.id,
+			message: `High-risk decision row ${row.id} must record at least one alternative.`,
+		});
+	}
+	if (row.proofRefs.length === 0) {
+		issues.push({
+			code: "missing_high_risk_evidence",
+			rowId: row.id,
+			message: `High-risk decision row ${row.id} needs proof refs for research, prior art, validation, or explicit user guidance.`,
+		});
+	}
+	return issues;
+}
+
+function isHighRisk(row: DecisionRow): boolean {
+	return String(row.risk || "").trim().toLowerCase() === "high";
 }
 
 function knowledgeDeltaIssues(
@@ -323,6 +431,12 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"Replace weak current-state refs with canonical KB, trace, Git, digest, source, or test refs.",
 	missing_traceability_ref:
 		"Attach canonical source refs or an explicit no-KB-impact rationale.",
+	missing_high_risk_scope:
+		"Name affected layers so reviewers can reason about blast radius.",
+	missing_high_risk_alternative:
+		"Add at least one viable alternative for the high-risk intention.",
+	missing_high_risk_evidence:
+		"Attach proof refs for research, prior art, validation, or explicit user guidance.",
 	duplicate_decision_row_id: "Give every decision row a stable unique id.",
 	invalid_traceability_ref:
 		"Replace weak refs with canonical KB, trace, Git, digest, source, or test refs.",
@@ -336,4 +450,10 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 
 function decisionRemediationAction(issue: DecisionExitIssue): string {
 	return DECISION_REMEDIATION[issue.code];
+}
+
+function unique(values: string[]): string[] {
+	return Array.from(
+		new Set(values.map((value) => value.trim()).filter(Boolean)),
+	);
 }

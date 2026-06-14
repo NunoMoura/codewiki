@@ -133,6 +133,44 @@ describe("decision exit and iteration runner", () => {
 		]);
 	});
 
+	it("blocks high-risk decisions without quality evidence", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-risk",
+					currentState: "Runtime may dispatch work automatically.",
+					desiredState: "Runtime may apply high-risk changes automatically.",
+					rationale: "User asked to explore automation.",
+					approval: "approved",
+					risk: "high",
+					sourceRefs: ["kb:system/runtime.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table);
+		assert.equal(exit.passed, false);
+		assert.deepEqual(
+			exit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.startsWith("missing_high_risk"))
+				.sort(),
+			[
+					"missing_high_risk_alternative",
+					"missing_high_risk_evidence",
+					"missing_high_risk_scope",
+			],
+		);
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+		assert.equal(
+			standards.risks_and_alternatives_considered.status,
+			"unmet",
+		);
+		assert.equal(standards.evidence_sufficient.status, "unmet");
+	});
+
 	it("blocks incomplete or weak knowledge deltas", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -196,6 +234,23 @@ describe("decision exit and iteration runner", () => {
 		assert.deepEqual(
 			result.traceEvents[0].data?.output?.approvedRows?.[0]?.currentStateRefs,
 			["kb:system/traces.md"],
+		);
+		assert.equal(
+			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			true,
+		);
+		assert.deepEqual(
+			result.traceEvents[0].data?.output?.qualityStandards?.map(
+				(standard) => standard.id,
+			),
+			[
+				"decision_table_ready",
+				"intention_understood",
+				"current_state_grounded",
+				"evidence_sufficient",
+				"risks_and_alternatives_considered",
+				"knowledge_impact_accounted",
+			],
 		);
 		assert.equal(result.traceEvents[0].data?.exit.status, "exit");
 		assert.equal(result.traceEvents[0].data?.exit.targetLoop, "planning");

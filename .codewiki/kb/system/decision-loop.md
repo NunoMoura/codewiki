@@ -51,20 +51,20 @@ Decision loop output is the high-signal packet planning needs:
 
 Decision output should not include task breakdowns, implementation plans, test commands, or worker instructions.
 
-## Exit conditions
+## Exit quality standards
 
-The decision loop can exit only when these conditions are met or explicitly deferred with authority:
+The decision loop can exit only when loop-owned quality standards are met. Research, uncertainty handling, and blind-spot review are not separate top-level concepts; they are evidence for these standards.
 
-| Condition | Required signal |
+| Quality standard | Required signal |
 | --- | --- |
-| intent_accepted | The user intent or accepted decision facts are explicit. |
-| requirements_clear | Requirements, non-goals, and assumptions are clear enough for planning. |
-| current_state_grounded | Current KB/source/trace/Git baseline refs are present. |
-| kb_propagation_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
-| risk_assessed | Product/system risk, migration impact, and approval needs are recorded. |
-| alternatives_considered | Relevant alternatives/tradeoffs are captured when material. |
-| route_back_answered | Questions from planning/implementation are answered or intentionally deferred. |
-| planning_handoff_ready | Planning has enough accepted facts, refs, and questions to start. |
+| decision_table_ready | At least one approved row exists, approval state is explicit, and row ids are stable. |
+| intention_understood | Approved rows state the user intention as current state, desired state, and rationale. |
+| current_state_grounded | Current KB/source/trace/Git/test baseline refs are present and canonical. |
+| evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk rows need explicit proof refs for research, prior art, validation, or user guidance. |
+| risks_and_alternatives_considered | High-risk intentions identify affected layers and at least one viable alternative before planning. |
+| knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
+
+The initial implementation keeps these standards deterministic. Later review/approval standards may be added when their quality value outweighs token and UX cost.
 
 ## Exit statuses
 
@@ -87,6 +87,7 @@ Decision iterations should record compact facts:
     "output": {
       "decisions": [],
       "requirements": [],
+      "qualityStandards": [],
       "kbPropagation": [],
       "planningQuestions": []
     },

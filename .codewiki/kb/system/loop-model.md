@@ -86,9 +86,9 @@ A loop output must not contain:
 
 The loop output is high-signal because exit conditions force it to be high-signal. If required signal is missing, the loop continues or routes back.
 
-## Exit conditions
+## Exit quality standards
 
-Exit conditions are the loop's quality and safety contract. They answer:
+Exit conditions are the loop's quality and safety contract. In source, they are represented as loop-owned quality standards. They answer:
 
 ```text
 Can this loop safely exit?
@@ -96,7 +96,9 @@ Can the next loop trust this output?
 If not, what exact condition is unmet?
 ```
 
-Exit condition results use four statuses:
+Quality standards should be deterministic when possible. Agent-judgment standards and user-approval standards are allowed only when their quality value is worth the token and UX cost.
+
+Loop exit results use four statuses:
 
 | Status | Meaning |
 | --- | --- |
@@ -105,7 +107,7 @@ Exit condition results use four statuses:
 | `route_back` | Earlier loop authority is required. |
 | `blocked` | External user, resource, policy, or runtime wait is required. |
 
-Exit conditions should be deterministic when possible. Semantic uncertainty becomes an explicit route-back or user-approval condition, not hidden confidence.
+Semantic uncertainty becomes an explicit unmet quality standard, route-back, or user-approval block, not hidden confidence.
 
 ## Progress boundaries
 

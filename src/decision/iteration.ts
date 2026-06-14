@@ -199,6 +199,7 @@ function decisionTraceEvents(input: {
 				approvedRowIds: output.approvedRowIds,
 				currentStatePacket: output.currentStatePacket,
 				knowledgeDelta: output.knowledgeDelta,
+				qualityStandards: exit.qualityStandards,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
 			exit: loopExitFromEvaluation("decision", exit),
