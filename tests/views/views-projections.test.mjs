@@ -21,6 +21,7 @@ import {
 } from "../../src/api/views.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
 	const table = createDecisionTable({
@@ -140,6 +141,7 @@ function queueTrace(traceId, options = {}) {
 							},
 						],
 						contentProof: { workingTreeDigest: "sha256:456def" },
+						...implementationQualityFields(),
 					},
 				],
 			})
@@ -280,6 +282,7 @@ describe("trace-backed views", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:123abc" },
+					...implementationQualityFields(),
 				},
 			],
 		});

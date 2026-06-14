@@ -27,6 +27,13 @@ export type PlanningWorkUnitSize =
 	| "too_small"
 	| string;
 
+export type PlanningUncertaintyOwner =
+	| "none"
+	| "planning"
+	| "decision"
+	| "user"
+	| string;
+
 export interface PlanningWorkAssessmentInput {
 	stance?: PlanningAssessmentStance;
 	workUnitSize?: PlanningWorkUnitSize;
@@ -36,6 +43,11 @@ export interface PlanningWorkAssessmentInput {
 	independence?: string;
 	implementationReadiness?: string;
 	implementation_readiness?: string;
+	uncertainties?: string[];
+	uncertaintyOwner?: PlanningUncertaintyOwner;
+	uncertainty_owner?: PlanningUncertaintyOwner;
+	uncertaintyResolution?: string;
+	uncertainty_resolution?: string;
 	rationale?: string;
 	concerns?: string[];
 }
@@ -46,6 +58,9 @@ export interface PlanningWorkAssessment {
 	rightSizing: string;
 	independence: string;
 	implementationReadiness: string;
+	uncertainties: string[];
+	uncertaintyOwner: PlanningUncertaintyOwner;
+	uncertaintyResolution: string;
 	rationale: string;
 	concerns: string[];
 }

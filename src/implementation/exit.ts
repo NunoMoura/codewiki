@@ -10,6 +10,8 @@ import type {
 	ExitCriterionResult,
 	ExitFinding,
 	ExitRemediationItem,
+	ExitRoute,
+	LoopQualityStandardResult,
 } from "../traces/types.ts";
 import {
 	acceptanceEvidenceRefs,
@@ -29,7 +31,32 @@ import type {
 export function evaluateImplementationExit(
 	input: ImplementationExitInput,
 ): ImplementationExitResult {
-	const issues = [
+	const issues = collectImplementationExitIssues(input);
+	const qualityStandards = implementationQualityStandards(issues);
+	const verdict =
+		issues.length === 0
+			? "pass"
+			: blockedIssues(issues).length > 0
+				? "block"
+				: "fail";
+	return {
+		passed: verdict === "pass",
+		verdict,
+		issues,
+		criteria: criteriaFromQualityStandards(qualityStandards),
+		qualityStandards,
+		findings: issues.map(issueFinding),
+		remediation: issues.map(issueRemediation),
+		route: implementationRoute(verdict, issues),
+		coveredPlanningRefs: coveredPlanningRefs(input),
+		changeIds: input.changes.map((change) => change.id),
+	};
+}
+
+function collectImplementationExitIssues(
+	input: ImplementationExitInput,
+): ImplementationExitIssue[] {
+	return [
 		...coverageIssues(input),
 		...unknownPlanningRefIssues(input),
 		...workerResultIssues(input),
@@ -41,25 +68,11 @@ export function evaluateImplementationExit(
 		...componentAlignmentIssues(input),
 		...pathExistenceIssues(input),
 		...contentProofIssues(input),
+		...implementationAssessmentIssues(input.changes),
+		...sensitiveSurfaceIssues(input.changes),
+		...releaseSafetyIssues(input.changes),
 		...traceabilityRefIssues(input),
 	];
-	const verdict =
-		issues.length === 0
-			? "pass"
-			: issues.some((issue) => issue.code === "worker_blocked")
-				? "block"
-				: "fail";
-	return {
-		passed: verdict === "pass",
-		verdict,
-		issues,
-		criteria: implementationCriteria(issues),
-		findings: issues.map(issueFinding),
-		remediation: issues.map(issueRemediation),
-		route: verdict === "pass" ? "close" : "implementation",
-		coveredPlanningRefs: coveredPlanningRefs(input),
-		changeIds: input.changes.map((change) => change.id),
-	};
 }
 
 export function implementationHasValidationInputs(
@@ -841,6 +854,154 @@ function uniqueStrings(values: string[]): string[] {
 	);
 }
 
+function implementationAssessmentIssues(
+	changes: ImplementationChange[],
+): ImplementationExitIssue[] {
+	return changes.flatMap((change): ImplementationExitIssue[] => {
+		const assessment = change.implementationAssessment;
+		const missingAssessment =
+			!assessment.stance ||
+			!assessment.maintainability ||
+			!assessment.simplicity ||
+			!assessment.projectStyle ||
+			!assessment.errorHandling ||
+			!assessment.rationale;
+		const issues: ImplementationExitIssue[] = [];
+		if (missingAssessment) {
+			issues.push({
+				code: "missing_implementation_assessment",
+				changeId: change.id,
+				message: `Implementation change ${change.id} needs agent production-quality assessment.`,
+			});
+		} else if (assessment.stance !== "production_ready") {
+			issues.push({
+				code: "implementation_not_production_ready",
+				changeId: change.id,
+				message: `Implementation change ${change.id} is assessed as ${assessment.stance}, not production_ready.`,
+			});
+		}
+		if (!assessment.uncertaintyResolution) {
+			issues.push({
+				code: "missing_implementation_uncertainty_resolution",
+				changeId: change.id,
+				message: `Implementation change ${change.id} must state that uncertainty is resolved or routed.`,
+			});
+		}
+		if (assessment.uncertainties.length > 0) {
+			issues.push({
+				code: "unresolved_implementation_uncertainty",
+				changeId: change.id,
+				route: uncertaintyRoute(assessment.uncertaintyOwner),
+				message: `Implementation change ${change.id} has unresolved uncertainty: ${assessment.uncertainties.join("; ")}.`,
+			});
+		}
+		return issues;
+	});
+}
+
+function sensitiveSurfaceIssues(
+	changes: ImplementationChange[],
+): ImplementationExitIssue[] {
+	return changes.flatMap((change): ImplementationExitIssue[] => [
+		...securityPrivacyIssues(change),
+		...accessibilityIssues(change),
+		...dependencyRiskIssues(change),
+	]);
+}
+
+function securityPrivacyIssues(
+	change: ImplementationChange,
+): ImplementationExitIssue[] {
+	if (!needsSecurityPrivacyReview(change)) return [];
+	const assessment = change.sensitiveSurfaceAssessment;
+	if (assessment.security && assessment.privacy && assessment.rationale) return [];
+	return [
+		{
+			code: "missing_security_privacy_assessment" as const,
+			changeId: change.id,
+			message: `Implementation change ${change.id} touches security/privacy-sensitive surface and needs review evidence.`,
+		},
+	];
+}
+
+function accessibilityIssues(change: ImplementationChange): ImplementationExitIssue[] {
+	if (!needsAccessibilityReview(change)) return [];
+	const assessment = change.sensitiveSurfaceAssessment;
+	if (assessment.accessibility && assessment.rationale) return [];
+	return [
+		{
+			code: "missing_accessibility_assessment" as const,
+			changeId: change.id,
+			message: `Implementation change ${change.id} touches UI/page surface and needs accessibility review evidence.`,
+		},
+	];
+}
+
+function dependencyRiskIssues(change: ImplementationChange): ImplementationExitIssue[] {
+	if (!needsDependencyReview(change)) return [];
+	const assessment = change.sensitiveSurfaceAssessment;
+	if (assessment.dependencyRisk && assessment.rationale) return [];
+	return [
+		{
+			code: "missing_dependency_risk_assessment" as const,
+			changeId: change.id,
+			message: `Implementation change ${change.id} touches dependency surface and needs dependency risk assessment.`,
+		},
+	];
+}
+
+function releaseSafetyIssues(
+	changes: ImplementationChange[],
+): ImplementationExitIssue[] {
+	return changes.flatMap((change): ImplementationExitIssue[] => {
+		if (change.publicationRefs.length === 0) return [];
+		if (change.approvalAuthority !== "user" || !change.approvalRef) {
+			return [
+				{
+					code: "missing_release_approval" as const,
+					changeId: change.id,
+					route: "user",
+					message: `Implementation change ${change.id} has release/publication refs and needs explicit user approval.`,
+				},
+			];
+		}
+		const [invalidApprovalRef] = invalidTraceRefs([change.approvalRef]);
+		return invalidApprovalRef
+			? [
+					{
+						code: "invalid_release_approval_ref" as const,
+						changeId: change.id,
+						ref: invalidApprovalRef,
+						route: "user",
+						message: `Implementation change ${change.id} has non-canonical approval ref ${invalidApprovalRef}.`,
+					},
+				]
+			: [];
+	});
+}
+
+function needsSecurityPrivacyReview(change: ImplementationChange): boolean {
+	return changedPaths(change).some((path) =>
+		/(auth|security|privacy|secret|token|credential|session|permission|policy)/i.test(
+			path,
+		),
+	);
+}
+
+function needsAccessibilityReview(change: ImplementationChange): boolean {
+	return changedPaths(change).some((path) =>
+		/(ui|page|screen|view|component|tsx|jsx|html|css)/i.test(path),
+	);
+}
+
+function needsDependencyReview(change: ImplementationChange): boolean {
+	return changedPaths(change).some((path) =>
+		/^(package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$/.test(
+			path,
+		),
+	);
+}
+
 function traceabilityRefIssues(
 	input: ImplementationExitInput,
 ): ImplementationExitIssue[] {
@@ -916,76 +1077,242 @@ function coveredPlanningRefs(input: ImplementationExitInput): string[] {
 	);
 }
 
-function implementationCriteria(
+function implementationQualityStandards(
 	issues: ImplementationExitIssue[],
-): ExitCriterionResult[] {
+): LoopQualityStandardResult[] {
 	return [
-		criterion("planning_coverage", issues, ["missing_planning_coverage"]),
-		criterion("planning_refs", issues, ["unknown_planning_ref"]),
-		criterion("worker_results", issues, [
-			"worker_failed",
-			"worker_blocked",
-			"missing_worker_claim",
-			"unknown_worker_claim",
-			"inactive_worker_claim",
-			"worker_claim_mismatch",
-		]),
-		criterion("changes", issues, ["invalid_change", "duplicate_change_id"]),
-		criterion("check_results", issues, [
-			"missing_check_results",
-			"invalid_check_result",
-			"failed_check",
-		]),
-		criterion("tdd_evidence", issues, [
-			"invalid_tdd_evidence",
-			"missing_tdd_red_evidence",
-			"missing_tdd_green_evidence",
-			"unknown_tdd_criterion",
-		]),
-		criterion("acceptance_evidence", issues, [
-			"missing_acceptance_evidence",
-			"invalid_acceptance_evidence",
-			"missing_acceptance_criterion_coverage",
-			"unknown_acceptance_criterion",
-		]),
-		criterion("component_alignment", issues, [
-			"missing_component_ref",
-			"unknown_component_ref",
-			"invalid_component_contract",
-			"path_outside_component_scope",
-			"missing_component_test_coverage",
-		]),
-		criterion("path_existence", issues, [
-			"missing_changed_path",
-			"missing_evidence_path",
-		]),
-		criterion("content_proof", issues, [
-			"missing_content_proof",
-			"missing_aggregate_content_proof",
-		]),
-		criterion("traceability_refs", issues, ["invalid_traceability_ref"]),
+		standard({
+			id: "planning_coverage_complete",
+			description:
+				"Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced.",
+			issues,
+			codes: ["missing_planning_coverage", "unknown_planning_ref"],
+		}),
+		standard({
+			id: "scope_controlled",
+			description:
+				"Implementation changes stay inside planned component/path scope and existing repo paths.",
+			issues,
+			codes: [
+				"invalid_change",
+				"duplicate_change_id",
+				"path_outside_component_scope",
+				"missing_changed_path",
+			],
+		}),
+		standard({
+			id: "acceptance_evidence_complete",
+			description:
+				"Every planned acceptance criterion is covered by structured evidence refs.",
+			issues,
+			codes: [
+				"missing_acceptance_evidence",
+				"invalid_acceptance_evidence",
+				"missing_acceptance_criterion_coverage",
+				"unknown_acceptance_criterion",
+			],
+		}),
+		standard({
+			id: "verification_passed",
+			description:
+				"Required implementation checks are structured, present, and passing.",
+			issues,
+			codes: ["missing_check_results", "invalid_check_result", "failed_check"],
+		}),
+		standard({
+			id: "tdd_evidence_valid",
+			description:
+				"Required red/green TDD evidence is mapped to planned acceptance criteria.",
+			issues,
+			codes: [
+				"invalid_tdd_evidence",
+				"missing_tdd_red_evidence",
+				"missing_tdd_green_evidence",
+				"unknown_tdd_criterion",
+			],
+		}),
+		standard({
+			id: "content_proof_recorded",
+			description:
+				"Implementation output has change-level and aggregate content proof when required.",
+			issues,
+			codes: ["missing_content_proof", "missing_aggregate_content_proof"],
+		}),
+		standard({
+			id: "worker_claims_correlated",
+			description:
+				"Worker-produced evidence is tied to active runtime claims and completed worker results.",
+			issues,
+			codes: [
+				"worker_failed",
+				"worker_blocked",
+				"missing_worker_claim",
+				"unknown_worker_claim",
+				"inactive_worker_claim",
+				"worker_claim_mismatch",
+			],
+		}),
+		standard({
+			id: "source_ownership_aligned",
+			description:
+				"Changed source/test paths align with file-structure component ownership and test coverage.",
+			issues,
+			codes: [
+				"missing_component_ref",
+				"unknown_component_ref",
+				"invalid_component_contract",
+				"missing_component_test_coverage",
+				"missing_evidence_path",
+			],
+		}),
+		standard({
+			id: "production_quality_reviewed",
+			description:
+				"Agent assessment confirms maintainability, simplicity, project style, and error handling are production-ready.",
+			mode: "agent",
+			issues,
+			codes: [
+				"missing_implementation_assessment",
+				"implementation_not_production_ready",
+			],
+		}),
+		standard({
+			id: "uncertainty_resolved",
+			description:
+				"No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting.",
+			mode: "agent",
+			issues,
+			codes: [
+				"missing_implementation_uncertainty_resolution",
+				"unresolved_implementation_uncertainty",
+			],
+		}),
+		standard({
+			id: "security_privacy_reviewed",
+			description:
+				"Security/privacy-sensitive changes include explicit review evidence.",
+			mode: "agent",
+			issues,
+			codes: ["missing_security_privacy_assessment"],
+		}),
+		standard({
+			id: "accessibility_ui_reviewed",
+			description:
+				"UI/page changes include accessibility review evidence.",
+			mode: "agent",
+			issues,
+			codes: ["missing_accessibility_assessment"],
+		}),
+		standard({
+			id: "dependency_risk_controlled",
+			description:
+				"Dependency-surface changes include risk review evidence.",
+			mode: "agent",
+			issues,
+			codes: ["missing_dependency_risk_assessment"],
+		}),
+		standard({
+			id: "release_safety_approved",
+			description:
+				"Release, publication, destructive, or externally visible implementation refs require explicit user approval.",
+			mode: "user",
+			issues,
+			codes: ["missing_release_approval", "invalid_release_approval_ref"],
+		}),
+		standard({
+			id: "traceability_refs_canonical",
+			description:
+				"Implementation refs are canonical trace, KB, Git, digest, source, or test refs.",
+			issues,
+			codes: ["invalid_traceability_ref"],
+		}),
 	];
 }
 
-function criterion(
-	id: string,
-	issues: ImplementationExitIssue[],
-	codes: ImplementationExitIssue["code"][],
-): ExitCriterionResult {
-	const matched = issues.filter((issue) => codes.includes(issue.code));
+function standard(input: {
+	id: string;
+	description: string;
+	issues: ImplementationExitIssue[];
+	codes: ImplementationExitIssue["code"][];
+	mode?: LoopQualityStandardResult["mode"];
+}): LoopQualityStandardResult {
+	const matched = input.issues.filter((issue) => input.codes.includes(issue.code));
 	return {
-		id,
-		status: matched.length > 0 ? "fail" : "pass",
+		id: input.id,
+		status:
+			matched.length > 0 && matched.some((issue) => issue.route === "user")
+				? "blocked"
+				: matched.length > 0
+					? "unmet"
+					: "met",
+		mode: input.mode || "deterministic",
+		description: input.description,
 		...(matched.length > 0
 			? { message: matched.map((issue) => issue.message).join(" ") }
+			: {}),
+		...(matched.length > 0
+			? { refs: uniqueStrings(matched.flatMap((issue) => issueRefs(issue))) }
 			: {}),
 	};
 }
 
-function issueFinding(issue: ImplementationExitIssue): ExitFinding {
-	const refs = [issue.planningRef, issue.changeId, issue.claimId, issue.ref]
+function criteriaFromQualityStandards(
+	standards: LoopQualityStandardResult[],
+): ExitCriterionResult[] {
+	return standards.map((standard) => ({
+		id: standard.id,
+		status:
+			standard.status === "met"
+				? "pass"
+				: standard.status === "blocked"
+					? "block"
+					: "fail",
+		...(standard.message ? { message: standard.message } : {}),
+		...(standard.refs ? { refs: standard.refs } : {}),
+	}));
+}
+
+function implementationRoute(
+	verdict: ImplementationExitVerdict,
+	issues: ImplementationExitIssue[],
+): ExitRoute {
+	if (verdict === "pass") return "close";
+	const [explicitRoute] = issues
+		.map((issue) => issue.route)
+		.filter((route): route is ExitRoute => Boolean(route));
+	if (explicitRoute) return explicitRoute;
+	return "implementation";
+}
+
+function blockedIssues(issues: ImplementationExitIssue[]): ImplementationExitIssue[] {
+	return issues.filter(
+		(issue) => issue.route === "user" || issue.code === "worker_blocked",
+	);
+}
+
+function uncertaintyRoute(owner: string): ExitRoute {
+	if (owner === "planning") return "planning";
+	if (owner === "decision") return "decision";
+	if (owner === "user") return "user";
+	return "implementation";
+}
+
+type ImplementationExitVerdict = "pass" | "fail" | "block";
+
+function issueRefs(issue: ImplementationExitIssue): string[] {
+	return [
+		issue.planningRef,
+		issue.changeId,
+		issue.claimId,
+		issue.ref,
+		issue.componentRef,
+	]
 		.map((ref) => String(ref || "").trim())
 		.filter(Boolean);
+}
+
+function issueFinding(issue: ImplementationExitIssue): ExitFinding {
+	const refs = issueRefs(issue);
 	return {
 		id: `implementation:${issue.code}:${refs[0] || "change"}`,
 		severity: "error",
@@ -998,9 +1325,7 @@ function issueFinding(issue: ImplementationExitIssue): ExitFinding {
 }
 
 function issueRemediation(issue: ImplementationExitIssue): ExitRemediationItem {
-	const refs = [issue.planningRef, issue.changeId, issue.claimId, issue.ref]
-		.map((ref) => String(ref || "").trim())
-		.filter(Boolean);
+	const refs = issueRefs(issue);
 	return {
 		action: implementationRemediationAction(issue),
 		route: "implementation",
@@ -1068,6 +1393,24 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Refresh the repo snapshot or attach evidence refs that exist in the repository.",
 	invalid_traceability_ref:
 		"Replace weak refs with canonical KB, trace, Git, digest, source, or test refs.",
+	missing_implementation_assessment:
+		"Add agent production-quality assessment for maintainability, simplicity, style, error handling, and rationale.",
+	implementation_not_production_ready:
+		"Continue implementation until the agent assesses the change as production-ready.",
+	missing_implementation_uncertainty_resolution:
+		"State whether implementation uncertainty is resolved locally or routed to planning/decision/user authority.",
+	unresolved_implementation_uncertainty:
+		"Resolve uncertainty in implementation, route back, or block for user clarification before closure.",
+	missing_security_privacy_assessment:
+		"Add security/privacy assessment evidence for sensitive paths.",
+	missing_accessibility_assessment:
+		"Add accessibility assessment evidence for UI/page changes.",
+	missing_dependency_risk_assessment:
+		"Add dependency risk assessment for package/dependency changes.",
+	missing_release_approval:
+		"Capture explicit user approval for release, publication, or externally visible implementation refs.",
+	invalid_release_approval_ref:
+		"Replace weak release approval refs with canonical trace, KB, Git, digest, source, or test refs.",
 	missing_content_proof:
 		"Attach fresh content proof: commit, tree, or working-tree digest.",
 	missing_aggregate_content_proof:

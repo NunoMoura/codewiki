@@ -20,6 +20,71 @@ export interface AcceptanceEvidenceItem {
 	evidenceRefs: string[];
 }
 
+export type ImplementationAssessmentStance =
+	| "production_ready"
+	| "concerns"
+	| "blocked"
+	| string;
+export type ImplementationUncertaintyOwner =
+	| "none"
+	| "implementation"
+	| "planning"
+	| "decision"
+	| "user"
+	| string;
+export type ImplementationApprovalAuthority =
+	| "user"
+	| "maintainer"
+	| "agent"
+	| string;
+
+export interface ImplementationQualityAssessmentInput {
+	stance?: ImplementationAssessmentStance;
+	maintainability?: string;
+	simplicity?: string;
+	projectStyle?: string;
+	project_style?: string;
+	errorHandling?: string;
+	error_handling?: string;
+	uncertainties?: string[];
+	uncertaintyOwner?: ImplementationUncertaintyOwner;
+	uncertainty_owner?: ImplementationUncertaintyOwner;
+	uncertaintyResolution?: string;
+	uncertainty_resolution?: string;
+	rationale?: string;
+	concerns?: string[];
+}
+
+export interface ImplementationQualityAssessment {
+	stance: ImplementationAssessmentStance;
+	maintainability: string;
+	simplicity: string;
+	projectStyle: string;
+	errorHandling: string;
+	uncertainties: string[];
+	uncertaintyOwner: ImplementationUncertaintyOwner;
+	uncertaintyResolution: string;
+	rationale: string;
+	concerns: string[];
+}
+
+export interface SensitiveSurfaceAssessmentInput {
+	security?: string;
+	privacy?: string;
+	accessibility?: string;
+	dependencyRisk?: string;
+	dependency_risk?: string;
+	rationale?: string;
+}
+
+export interface SensitiveSurfaceAssessment {
+	security: string;
+	privacy: string;
+	accessibility: string;
+	dependencyRisk: string;
+	rationale: string;
+}
+
 export interface AcceptanceRequirement {
 	planningRef: string;
 	criterionId: string;
@@ -76,6 +141,10 @@ export interface ImplementationChange {
 	acceptanceEvidence: string[];
 	acceptanceEvidenceItems: AcceptanceEvidenceItem[];
 	contentProof?: ContentProof;
+	implementationAssessment: ImplementationQualityAssessment;
+	sensitiveSurfaceAssessment: SensitiveSurfaceAssessment;
+	approvalAuthority: ImplementationApprovalAuthority;
+	approvalRef?: string;
 	publicationRefs: string[];
 }
 
@@ -132,6 +201,14 @@ export interface ImplementationChangeInput {
 	acceptance_evidence_items?: AcceptanceEvidenceInput[];
 	contentProof?: ContentProof;
 	content_proof?: ContentProof;
+	implementationAssessment?: ImplementationQualityAssessmentInput;
+	implementation_assessment?: ImplementationQualityAssessmentInput;
+	sensitiveSurfaceAssessment?: SensitiveSurfaceAssessmentInput;
+	sensitive_surface_assessment?: SensitiveSurfaceAssessmentInput;
+	approvalAuthority?: ImplementationApprovalAuthority;
+	approval_authority?: ImplementationApprovalAuthority;
+	approvalRef?: string;
+	approval_ref?: string;
 	publicationRefs?: string[];
 	publication_refs?: string[];
 }
@@ -166,6 +243,15 @@ export type ImplementationExitIssueCode =
 	| "missing_evidence_path"
 	| "missing_content_proof"
 	| "missing_aggregate_content_proof"
+	| "missing_implementation_assessment"
+	| "implementation_not_production_ready"
+	| "missing_implementation_uncertainty_resolution"
+	| "unresolved_implementation_uncertainty"
+	| "missing_security_privacy_assessment"
+	| "missing_accessibility_assessment"
+	| "missing_dependency_risk_assessment"
+	| "missing_release_approval"
+	| "invalid_release_approval_ref"
 	| "duplicate_change_id"
 	| "invalid_traceability_ref";
 
@@ -175,6 +261,7 @@ export interface ImplementationExitIssue {
 	changeId?: string;
 	ref?: string;
 	componentRef?: string;
+	route?: import("../traces/types.ts").ExitRoute;
 	workerId?: string;
 	claimId?: string;
 	message: string;

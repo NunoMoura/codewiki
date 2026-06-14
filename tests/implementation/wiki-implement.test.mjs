@@ -14,6 +14,7 @@ import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
@@ -120,6 +121,7 @@ function changeInput(planningRef) {
 				evidenceRefs: ["tests/feature.test.mjs"],
 			},
 		],
+		...implementationQualityFields(),
 	};
 }
 

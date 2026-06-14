@@ -47,7 +47,7 @@ Planning loop output is the high-signal packet implementation and runtime need:
 - dependencies and ordering constraints;
 - conflict notes and scheduling holds;
 - verification strategy;
-- worker profile and agent assessment of independence, implementation readiness, and right sizing;
+- worker profile and agent assessment of independence, implementation readiness, right sizing, and uncertainty resolution;
 - deferrals with owner, trigger, and expiry when allowed;
 - route-back questions for decision when authority is missing;
 - canonical refs proving the output.
@@ -65,6 +65,7 @@ The planning loop can exit only when loop-owned quality standards are met or exp
 | technical_requirements_complete | deterministic | Each work item breaks decision intent into concrete implementation requirements. |
 | acceptance_and_verification_testable | deterministic | Acceptance criteria have stable ids/text and verification refs or commands are present. |
 | worker_assignment_ready | agent | Agent assesses the unit as independent and implementation-ready, and a worker profile is declared. |
+| uncertainty_resolved | agent | No unresolved planning uncertainty remains; decision or user authority is routed instead of leaking into implementation. |
 | work_unit_right_sized | agent | Unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch. |
 | source_ownership_aligned | deterministic | Component refs exist in the file-structure map and cover declared paths/tests. |
 | dependency_order_clear | deterministic | Dependencies exist, are acyclic, and order overlapping path scopes. |

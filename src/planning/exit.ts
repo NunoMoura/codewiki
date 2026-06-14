@@ -12,6 +12,7 @@ import type {
 	ExitDetails,
 	ExitFinding,
 	ExitRemediationItem,
+	ExitRoute,
 	LoopQualityStandardResult,
 } from "../traces/types.ts";
 import { planningConflicts } from "./conflicts.ts";
@@ -27,6 +28,8 @@ export type PlanningExitIssueCode =
 	| "missing_worker_profile"
 	| "missing_planning_assessment"
 	| "planning_assessment_not_worker_ready"
+	| "missing_uncertainty_resolution"
+	| "unresolved_planning_uncertainty"
 	| "missing_right_sizing"
 	| "work_unit_not_right_sized"
 	| "invalid_resolution"
@@ -49,6 +52,7 @@ export interface PlanningExitIssue {
 	workItemId?: string;
 	ref?: string;
 	componentRef?: string;
+	route?: ExitRoute;
 	message: string;
 }
 
@@ -85,12 +89,7 @@ export function evaluatePlanningExit(
 		qualityStandards,
 		findings: issues.map(issueFinding),
 		remediation: issues.map(issueRemediation),
-		route:
-			verdict === "pass"
-				? "implementation"
-				: verdict === "block"
-					? "user"
-					: "planning",
+		route: planningRoute(verdict, issues),
 		coveredDecisionRefs: coveredDecisionRefs(input),
 		workUnitIds: input.workItems.map((item) => item.id),
 	};
@@ -108,6 +107,7 @@ function collectPlanningExitIssues(
 		...verificationIssues(input.workItems),
 		...workerProfileIssues(input.workItems),
 		...planningAssessmentIssues(input.workItems),
+		...planningUncertaintyIssues(input.workItems),
 		...rightSizingIssues(input.workItems),
 		...acceptanceCriterionIssues(input.workItems),
 		...componentAlignmentIssues(input),
@@ -126,6 +126,7 @@ export function planningItemIsExecutable(item: PlanningWorkItem): boolean {
 			...verificationIssues([item]),
 			...workerProfileIssues([item]),
 			...planningAssessmentIssues([item]),
+			...planningUncertaintyIssues([item]),
 			...rightSizingIssues([item]),
 		].length === 0
 	);
@@ -258,6 +259,31 @@ function planningAssessmentIssues(
 			];
 		}
 		return [];
+	});
+}
+
+function planningUncertaintyIssues(
+	items: PlanningWorkItem[],
+): PlanningExitIssue[] {
+	return items.flatMap((item): PlanningExitIssue[] => {
+		const assessment = item.planningAssessment;
+		const issues: PlanningExitIssue[] = [];
+		if (!assessment.uncertaintyResolution) {
+			issues.push({
+				code: "missing_uncertainty_resolution",
+				workItemId: item.id,
+				message: `Planning work item ${item.id} must state that uncertainty is resolved or name where it is routed.`,
+			});
+		}
+		if (assessment.uncertainties.length > 0) {
+			issues.push({
+				code: "unresolved_planning_uncertainty",
+				workItemId: item.id,
+				route: uncertaintyRoute(assessment.uncertaintyOwner),
+				message: `Planning work item ${item.id} has unresolved uncertainty: ${assessment.uncertainties.join("; ")}.`,
+			});
+		}
+		return issues;
 	});
 }
 
@@ -649,6 +675,17 @@ function planningQualityStandards(
 			],
 		}),
 		standard({
+			id: "uncertainty_resolved",
+			description:
+				"No unresolved planning uncertainty remains; decision or user authority is routed instead of leaking into implementation.",
+			mode: "agent",
+			issues,
+			codes: [
+				"missing_uncertainty_resolution",
+				"unresolved_planning_uncertainty",
+			],
+		}),
+		standard({
 			id: "work_unit_right_sized",
 			description:
 				"Each worker unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch.",
@@ -705,7 +742,12 @@ function standard(input: {
 	);
 	return {
 		id: input.id,
-		status: matched.length > 0 ? "unmet" : "met",
+		status:
+			matched.length > 0 && matched.some((issue) => issue.route === "user")
+				? "blocked"
+				: matched.length > 0
+					? "unmet"
+					: "met",
 		mode: input.mode || "deterministic",
 		description: input.description,
 		...(matched.length > 0
@@ -722,15 +764,40 @@ function criteriaFromQualityStandards(
 ): ExitCriterionResult[] {
 	return standards.map((standard) => ({
 		id: standard.id,
-		status: standard.status === "met" ? "pass" : "fail",
+		status:
+			standard.status === "met"
+				? "pass"
+				: standard.status === "blocked"
+					? "block"
+					: "fail",
 		...(standard.message ? { message: standard.message } : {}),
 		...(standard.refs ? { refs: standard.refs } : {}),
 	}));
 }
 
-function blockedIssues(_issues: PlanningExitIssue[]): PlanningExitIssue[] {
-	return [];
+function planningRoute(
+	verdict: PlanningExitVerdict,
+	issues: PlanningExitIssue[],
+): ExitRoute {
+	if (verdict === "pass") return "implementation";
+	const [explicitRoute] = issues
+		.map((issue) => issue.route)
+		.filter((route): route is ExitRoute => Boolean(route));
+	if (explicitRoute) return explicitRoute;
+	return "planning";
 }
+
+function blockedIssues(issues: PlanningExitIssue[]): PlanningExitIssue[] {
+	return issues.filter((issue) => issue.route === "user");
+}
+
+function uncertaintyRoute(owner: string): ExitRoute {
+	if (owner === "decision") return "decision";
+	if (owner === "user") return "user";
+	return "planning";
+}
+
+type PlanningExitVerdict = "pass" | "fail" | "block";
 
 function issueFinding(issue: PlanningExitIssue): ExitFinding {
 	const refs = issueRefs(issue);
@@ -784,6 +851,10 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Add agent assessment proving the work item is independent and implementation-ready.",
 	planning_assessment_not_worker_ready:
 		"Split or clarify the work item until the agent assesses it as worker-ready.",
+	missing_uncertainty_resolution:
+		"State whether planning uncertainty is resolved locally or routed to decision/user authority.",
+	unresolved_planning_uncertainty:
+		"Resolve uncertainty in planning, route back to decision, or block for user clarification before implementation.",
 	missing_right_sizing:
 		"Add agent assessment that the work item is neither sprint-sized nor tiny busywork.",
 	work_unit_not_right_sized:

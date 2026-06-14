@@ -10,6 +10,8 @@ import type {
 	CheckStatus,
 	ImplementationChange,
 	ImplementationChangeInput,
+	ImplementationQualityAssessment,
+	SensitiveSurfaceAssessment,
 	PlanningImplementationScope,
 } from "./types.ts";
 
@@ -75,6 +77,14 @@ export function normalizeImplementationChanges(
 			...objectList<AcceptanceEvidenceInput>(change.acceptance_evidence_items),
 		]),
 		contentProof: change.contentProof ?? change.content_proof,
+		implementationAssessment: normalizeImplementationAssessment(
+			change.implementationAssessment ?? change.implementation_assessment,
+		),
+		sensitiveSurfaceAssessment: normalizeSensitiveSurfaceAssessment(
+			change.sensitiveSurfaceAssessment ?? change.sensitive_surface_assessment,
+		),
+		approvalAuthority: text(change.approvalAuthority ?? change.approval_authority),
+		approvalRef: text(change.approvalRef ?? change.approval_ref) || undefined,
 		publicationRefs: unique([
 			...stringList(change.publicationRefs),
 			...stringList(change.publication_refs),
@@ -181,6 +191,37 @@ function objectRecord(value: unknown): Record<string, unknown> {
 	return typeof value === "object" && value !== null
 		? (value as Record<string, unknown>)
 		: {};
+}
+
+function normalizeImplementationAssessment(
+	value: ImplementationChangeInput["implementationAssessment"],
+): ImplementationQualityAssessment {
+	return {
+		stance: text(value?.stance),
+		maintainability: text(value?.maintainability),
+		simplicity: text(value?.simplicity),
+		projectStyle: text(value?.projectStyle ?? value?.project_style),
+		errorHandling: text(value?.errorHandling ?? value?.error_handling),
+		uncertainties: stringList(value?.uncertainties),
+		uncertaintyOwner: text(value?.uncertaintyOwner ?? value?.uncertainty_owner),
+		uncertaintyResolution: text(
+			value?.uncertaintyResolution ?? value?.uncertainty_resolution,
+		),
+		rationale: text(value?.rationale),
+		concerns: stringList(value?.concerns),
+	};
+}
+
+function normalizeSensitiveSurfaceAssessment(
+	value: ImplementationChangeInput["sensitiveSurfaceAssessment"],
+): SensitiveSurfaceAssessment {
+	return {
+		security: text(value?.security),
+		privacy: text(value?.privacy),
+		accessibility: text(value?.accessibility),
+		dependencyRisk: text(value?.dependencyRisk ?? value?.dependency_risk),
+		rationale: text(value?.rationale),
+	};
 }
 
 function normalizeCheckResults(results: CheckResultInput[]): CheckResult[] {

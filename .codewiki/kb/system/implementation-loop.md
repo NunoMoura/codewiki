@@ -50,29 +50,34 @@ Implementation loop output is the high-signal packet needed to close or publish 
 - component/path alignment evidence;
 - final aggregate content proof for worker or parallel outputs;
 - residual issue coverage or explicit blockers;
-- publication refs when configured;
+- publication refs and approval refs when configured;
+- agent production-quality assessment for maintainability, simplicity, style, error handling, sensitive surfaces, and uncertainty resolution;
 - route-back questions for planning or decision when authority is missing;
 - canonical refs proving the output.
 
 Implementation output should not include full logs, private scratch, unbounded diffs, or product decisions made during coding.
 
-## Exit conditions
+## Exit quality standards
 
-The implementation loop can exit only when these conditions are met or explicitly blocked with routeable evidence:
+The implementation loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
 
-| Condition | Required signal |
-| --- | --- |
-| planning_coverage | Every executable planning work unit and acceptance criterion is covered or explicitly blocked. |
-| changed_paths_valid | Changed paths are canonical and within planned component/path scopes. |
-| test_evidence_valid | Code changes have matching test evidence in allowed test paths. |
-| checks_valid | Required checks pass; failed checks are allowed only as explicit red-phase TDD proof. |
-| acceptance_evidence_valid | Evidence maps to known planning acceptance criterion ids. |
-| tdd_valid | Required red/green proof exists for each relevant criterion. |
-| worker_claims_valid | Worker results reference active claims matching worker id, work-unit id, and planning refs. |
-| worker_results_resolved | Worker failures/blockers are resolved, routed back, or explicitly blocked. |
-| aggregate_content_proof_valid | Final merged content proof exists when worker/parallel changes are involved. |
-| residuals_owned | Remaining actionable issues are fixed, owned, deferred with authority, or blocked. |
-| publication_ready | Publication requirements are met when configured. |
+| Quality standard | Mode | Required signal |
+| --- | --- | --- |
+| planning_coverage_complete | deterministic | Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced. |
+| scope_controlled | deterministic | Changed paths stay inside planned component/path scope and existing repo paths. |
+| acceptance_evidence_complete | deterministic | Every planned acceptance criterion is covered by structured evidence refs. |
+| verification_passed | deterministic | Required checks are structured, present, and passing. |
+| tdd_evidence_valid | deterministic | Required red/green proof maps to planned acceptance criteria. |
+| content_proof_recorded | deterministic | Change-level and aggregate content proof exists when required. |
+| worker_claims_correlated | deterministic | Worker-produced evidence ties to active runtime claims and completed worker results. |
+| source_ownership_aligned | deterministic | Changed source/test paths align with file-structure ownership and component test coverage. |
+| production_quality_reviewed | agent | Agent assesses maintainability, simplicity, project style, and error handling as production-ready. |
+| uncertainty_resolved | agent | No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting. |
+| security_privacy_reviewed | agent, conditional | Security/privacy-sensitive changes include explicit review evidence. |
+| accessibility_ui_reviewed | agent, conditional | UI/page changes include accessibility review evidence. |
+| dependency_risk_controlled | agent, conditional | Dependency-surface changes include risk review evidence. |
+| release_safety_approved | user, conditional | Release, publication, destructive, or externally visible refs require explicit user approval. |
+| traceability_refs_canonical | deterministic | Implementation refs are canonical trace, KB, Git, digest, source, or test refs. |
 
 ## Exit statuses
 
@@ -141,7 +146,8 @@ Implementation iterations should record compact facts:
       "checks": [],
       "acceptanceEvidence": [],
       "workerResults": [],
-      "aggregateContentProof": null
+      "aggregateContentProof": null,
+      "qualityStandards": []
     },
     "exit": {
       "status": "exit",

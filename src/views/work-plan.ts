@@ -198,6 +198,9 @@ function planningAssessment(
 		rightSizing: text(record.rightSizing),
 		independence: text(record.independence),
 		implementationReadiness: text(record.implementationReadiness),
+		uncertainties: stringList(record.uncertainties),
+		uncertaintyOwner: text(record.uncertaintyOwner),
+		uncertaintyResolution: text(record.uncertaintyResolution),
 		rationale: text(record.rationale),
 		concerns: stringList(record.concerns),
 	};

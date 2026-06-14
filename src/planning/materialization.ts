@@ -133,6 +133,11 @@ export function normalizePlanningAssessment(
 		implementationReadiness: text(
 			value?.implementationReadiness ?? value?.implementation_readiness,
 		),
+		uncertainties: stringList(value?.uncertainties),
+		uncertaintyOwner: text(value?.uncertaintyOwner ?? value?.uncertainty_owner),
+		uncertaintyResolution: text(
+			value?.uncertaintyResolution ?? value?.uncertainty_resolution,
+		),
 		rationale: text(value?.rationale),
 		concerns: stringList(value?.concerns),
 	};

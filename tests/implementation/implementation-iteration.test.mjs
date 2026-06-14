@@ -15,6 +15,7 @@ import { evaluateImplementationExit } from "../../src/implementation/exit.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function planningEvents() {
 	const table = createDecisionTable({
@@ -155,6 +156,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abcdef" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -181,6 +183,32 @@ describe("implementation iteration runner", () => {
 				"Implementation iteration runner test passed.",
 			),
 			false,
+		);
+		assert.deepEqual(
+			result.traceEvents[0].data?.output?.qualityStandards?.map(
+				(standard) => standard.id,
+			),
+			[
+				"planning_coverage_complete",
+				"scope_controlled",
+				"acceptance_evidence_complete",
+				"verification_passed",
+				"tdd_evidence_valid",
+				"content_proof_recorded",
+				"worker_claims_correlated",
+				"source_ownership_aligned",
+				"production_quality_reviewed",
+				"uncertainty_resolved",
+				"security_privacy_reviewed",
+				"accessibility_ui_reviewed",
+				"dependency_risk_controlled",
+				"release_safety_approved",
+				"traceability_refs_canonical",
+			],
+		);
+		assert.equal(
+			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			true,
 		);
 	});
 
@@ -226,10 +254,94 @@ describe("implementation iteration runner", () => {
 				"missing_check_results",
 				"missing_acceptance_evidence",
 				"missing_content_proof",
+				"missing_implementation_assessment",
+				"missing_implementation_uncertainty_resolution",
 			],
 		);
-		assert.equal(exit.findings.length, 3);
+		assert.equal(exit.findings.length, 5);
 		assert.deepEqual(contentProofRefs(change), []);
+	});
+
+	it("blocks unresolved implementation uncertainty to user authority", () => {
+		const planningEvent = planningWorkEvent(planningEvents());
+		const changes = normalizeImplementationChanges([
+			{
+				id: "IC-uncertain",
+				planningRefs: [planningEvent.id],
+				codePaths: ["src/implementation/exit.ts"],
+				checkResults: [{ command: "npm test", status: "pass" }],
+				acceptanceEvidenceItems: [
+					{
+						criterionId: "AC-001",
+						summary: "Evidence exists.",
+						evidenceRefs: [
+							"tests/implementation/implementation-iteration.test.mjs",
+						],
+					},
+				],
+				contentProof: { workingTreeDigest: "sha256:abc123" },
+				...implementationQualityFields({
+					implementationAssessment: {
+						stance: "concerns",
+						maintainability: "Change is local.",
+						simplicity: "Change is simple.",
+						projectStyle: "Style matches.",
+						errorHandling: "Error handling is acceptable.",
+						uncertainties: ["User-facing behavior needs clarification."],
+						uncertaintyOwner: "user",
+						uncertaintyResolution: "Block for user clarification before closure.",
+						rationale: "Project should not ship unresolved user-facing ambiguity.",
+					},
+				}),
+			},
+		]);
+		const exit = evaluateImplementationExit({
+			planningRefs: [planningEvent.id],
+			changes,
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "block");
+		assert.equal(exit.route, "user");
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+		assert.equal(standards.production_quality_reviewed.status, "unmet");
+		assert.equal(standards.uncertainty_resolved.status, "blocked");
+	});
+
+	it("blocks release/publication without user approval", () => {
+		const planningEvent = planningWorkEvent(planningEvents());
+		const changes = normalizeImplementationChanges([
+			{
+				id: "IC-release",
+				planningRefs: [planningEvent.id],
+				docPaths: ["README.md"],
+				checkResults: [{ command: "npm test", status: "pass" }],
+				acceptanceEvidenceItems: [
+					{
+						criterionId: "AC-001",
+						summary: "Release notes updated.",
+						evidenceRefs: ["README.md"],
+					},
+				],
+				contentProof: { workingTreeDigest: "sha256:abc123" },
+				publicationRefs: ["git:release/v1"],
+				...implementationQualityFields(),
+			},
+		]);
+		const exit = evaluateImplementationExit({
+			planningRefs: [planningEvent.id],
+			changes,
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "block");
+		assert.equal(exit.route, "user");
+		assert.equal(
+			exit.issues.some((issue) => issue.code === "missing_release_approval"),
+			true,
+		);
 	});
 
 	it("blocks duplicate implementation change ids", () => {
@@ -252,6 +364,7 @@ describe("implementation iteration runner", () => {
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:a" },
+				...implementationQualityFields(),
 			},
 			{
 				id: "IC-dup",
@@ -270,6 +383,7 @@ describe("implementation iteration runner", () => {
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:b" },
+				...implementationQualityFields(),
 			},
 		]);
 		const exit = evaluateImplementationExit({
@@ -303,6 +417,7 @@ describe("implementation iteration runner", () => {
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:abc123" },
+				...implementationQualityFields(),
 			},
 		]);
 		const exit = evaluateImplementationExit({
@@ -335,6 +450,7 @@ describe("implementation iteration runner", () => {
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:abc123" },
+				...implementationQualityFields(),
 			},
 		]);
 		const exit = evaluateImplementationExit({
@@ -399,6 +515,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abc123" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -448,6 +565,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abc123" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -502,6 +620,7 @@ describe("implementation iteration runner", () => {
 								},
 							],
 							contentProof: { workingTreeDigest: "sha256:abc123" },
+							...implementationQualityFields(),
 						},
 					],
 				},
@@ -571,6 +690,7 @@ describe("implementation iteration runner", () => {
 								},
 							],
 							contentProof: { workingTreeDigest: "sha256:workerlocal" },
+							...implementationQualityFields(),
 						},
 					],
 				},
@@ -667,6 +787,7 @@ describe("implementation iteration runner", () => {
 								},
 							],
 							contentProof: { workingTreeDigest: "sha256:abc123" },
+							...implementationQualityFields(),
 						},
 					],
 				},
@@ -732,6 +853,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abc123" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -772,6 +894,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:def456" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -814,6 +937,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abcdef" },
+					...implementationQualityFields(),
 				},
 			],
 		});
@@ -851,6 +975,7 @@ describe("implementation iteration runner", () => {
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:abc123" },
+				...implementationQualityFields(),
 			},
 		]);
 		const exit = evaluateImplementationExit({
@@ -887,6 +1012,7 @@ describe("implementation iteration runner", () => {
 						},
 					],
 					content_proof: { commit: "abc123", tree: "def456" },
+					...implementationQualityFields(),
 				},
 			],
 		});

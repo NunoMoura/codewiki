@@ -25,6 +25,7 @@ import {
 } from "../../src/api/traces.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function sampleRecords() {
 	const head = createTraceHead({

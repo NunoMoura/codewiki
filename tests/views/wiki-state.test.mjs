@@ -9,6 +9,7 @@ import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;

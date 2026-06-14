@@ -220,6 +220,7 @@ function implementationTraceEvents(args: {
 				workerClaims,
 				aggregateContentProof,
 				changes: changes.map(implementationChangeData),
+				qualityStandards: exit.qualityStandards,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
 			exit: loopExitFromEvaluation("implementation", exit),
@@ -277,6 +278,10 @@ function implementationChangeData(
 		acceptanceEvidence: change.acceptanceEvidence,
 		acceptanceEvidenceItems: change.acceptanceEvidenceItems,
 		contentProof: change.contentProof,
+		implementationAssessment: change.implementationAssessment,
+		sensitiveSurfaceAssessment: change.sensitiveSurfaceAssessment,
+		approvalAuthority: change.approvalAuthority,
+		approvalRef: change.approvalRef,
 		publicationRefs: change.publicationRefs,
 	};
 }

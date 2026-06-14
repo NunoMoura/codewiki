@@ -108,6 +108,7 @@ describe("planning iteration runner", () => {
 				"technical_requirements_complete",
 				"acceptance_and_verification_testable",
 				"worker_assignment_ready",
+				"uncertainty_resolved",
 				"work_unit_right_sized",
 				"source_ownership_aligned",
 				"dependency_order_clear",
@@ -258,6 +259,49 @@ describe("planning iteration runner", () => {
 				"planning_assessment_not_worker_ready",
 				"work_unit_not_right_sized",
 			],
+		);
+	});
+
+	it("routes unresolved planning uncertainty to user authority", () => {
+		const decisionRef = approvedDecisionRef(decisionEvents());
+		const exit = evaluatePlanningExit({
+			decisionRefs: [decisionRef],
+			workItems: normalizePlanningWorkItems([
+				{
+					id: "WU-uncertain",
+					decisionRefs: [decisionRef],
+					outcome: "User authority must resolve scope.",
+					...planningQualityFields({
+						planningAssessment: {
+							stance: "worker_ready",
+							workUnitSize: "right_sized",
+							rightSizing: "Size is acceptable if user confirms scope.",
+							independence: "Worker can proceed after authority is clarified.",
+							implementationReadiness: "Implementation details are clear.",
+							uncertainties: ["User-facing scope is ambiguous."],
+							uncertaintyOwner: "user",
+							uncertaintyResolution: "Block for user clarification before implementation.",
+							rationale: "Planning must not leak user authority ambiguity downstream.",
+						},
+					}),
+					acceptance: ["Done"],
+					pathScopes: ["src/planning"],
+				},
+			]),
+			resolutions: [],
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "block");
+		assert.equal(exit.route, "user");
+		const uncertainty = exit.qualityStandards.find(
+			(standard) => standard.id === "uncertainty_resolved",
+		);
+		assert.equal(uncertainty?.status, "blocked");
+		assert.equal(
+			exit.criteria.find((criterion) => criterion.id === "uncertainty_resolved")
+				?.status,
+			"block",
 		);
 	});
 
