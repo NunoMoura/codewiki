@@ -11,6 +11,7 @@ import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -59,6 +60,7 @@ function workItemInput(decisionEventId) {
 		title: "Run wiki_plan",
 		decisionRefs: [decisionEventId],
 		outcome: "Planning facade runs and appends safely.",
+		...planningQualityFields(),
 		acceptance: ["wiki_plan appends planning iteration."],
 		componentRefs: ["api"],
 		pathScopes: ["src/api/wiki-plan.ts"],

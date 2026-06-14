@@ -90,6 +90,7 @@ function acceptedPlanningWorkItemsFromTrace(
 				title: text(item.title) || id,
 				decisionRefs: stringList(item.decisionRefs),
 				outcome: text(item.outcome),
+				technicalRequirements: stringList(item.technicalRequirements),
 				acceptance,
 				acceptanceCriteria: acceptanceCriteriaList(
 					item.acceptanceCriteria,
@@ -98,6 +99,8 @@ function acceptedPlanningWorkItemsFromTrace(
 				componentRefs: stringList(item.componentRefs),
 				pathScopes: stringList(item.pathScopes),
 				verification: stringList(item.verification),
+				workerProfile: text(item.workerProfile),
+				planningAssessment: planningAssessment(item.planningAssessment),
 				dependsOn: stringList(item.dependsOn),
 			};
 		}),
@@ -183,6 +186,21 @@ function normalizeCard(card: WorkPlanCard): WorkPlanCard {
 
 function iterationSubref(event: TraceEvent, kind: string, id: string): string {
 	return `trace:${event.id}#${kind}:${id || event.id}`;
+}
+
+function planningAssessment(
+	value: unknown,
+): TracePlanningWorkItem["planningAssessment"] {
+	const record = objectRecord(value);
+	return {
+		stance: text(record.stance),
+		workUnitSize: text(record.workUnitSize),
+		rightSizing: text(record.rightSizing),
+		independence: text(record.independence),
+		implementationReadiness: text(record.implementationReadiness),
+		rationale: text(record.rationale),
+		concerns: stringList(record.concerns),
+	};
 }
 
 function acceptanceCriteriaList(

@@ -8,6 +8,7 @@ import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -63,6 +64,7 @@ function traceRecords(traceId = "TRACE-state") {
 				title: "Create wiki_state facade",
 				decisionRefs: [decisionRef],
 				outcome: "wiki_state returns derived projections.",
+				...planningQualityFields(),
 				acceptance: ["State derives from traces and source-map."],
 				componentRefs: ["api"],
 				pathScopes: ["src/api/state.ts"],

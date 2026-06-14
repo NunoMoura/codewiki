@@ -14,6 +14,7 @@ import {
 import { evaluateImplementationExit } from "../../src/implementation/exit.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function planningEvents() {
 	const table = createDecisionTable({
@@ -48,6 +49,7 @@ function planningEvents() {
 				title: "Implement trace-backed evidence",
 				decisionRefs: [decisionRef],
 				outcome: "Implementation evidence emits trace events.",
+				...planningQualityFields(),
 				acceptance: ["Changed paths, checks, and proof refs are recorded."],
 				componentRefs: ["component.implementation"],
 				pathScopes: ["src/implementation"],

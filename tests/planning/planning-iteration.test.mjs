@@ -9,6 +9,7 @@ import { evaluatePlanningExit } from "../../src/planning/exit.ts";
 import { normalizePlanningWorkItems } from "../../src/planning/materialization.ts";
 import { orderWorkItems } from "../../src/planning/ordering.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function decisionEvents() {
 	const table = createDecisionTable({
@@ -69,6 +70,7 @@ describe("planning iteration runner", () => {
 					title: "Implement trace storage",
 					decision_refs: [decisionRef],
 					outcome: "Trace JSONL storage exists.",
+					...planningQualityFields(),
 					acceptance: ["Append and replay trace records."],
 					path_scopes: ["src/traces"],
 					verification: ["tests/planning/planning-iteration.test.mjs"],
@@ -95,6 +97,27 @@ describe("planning iteration runner", () => {
 		assert.deepEqual(
 			result.traceEvents[0].data?.output?.workItems?.[0]?.acceptanceCriteria,
 			[{ id: "AC-001", text: "Append and replay trace records." }],
+		);
+		assert.deepEqual(
+			result.traceEvents[0].data?.output?.qualityStandards?.map(
+				(standard) => standard.id,
+			),
+			[
+				"decision_coverage_complete",
+				"worker_units_self_contained",
+				"technical_requirements_complete",
+				"acceptance_and_verification_testable",
+				"worker_assignment_ready",
+				"work_unit_right_sized",
+				"source_ownership_aligned",
+				"dependency_order_clear",
+				"resolutions_accounted",
+				"traceability_refs_canonical",
+			],
+		);
+		assert.equal(
+			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			true,
 		);
 	});
 
@@ -133,6 +156,7 @@ describe("planning iteration runner", () => {
 					id: "WU-component",
 					decisionRefs: [decisionRef],
 					outcome: "Planning component is aligned.",
+					...planningQualityFields(),
 					acceptance: ["Component refs and test scope are explicit."],
 					componentRefs: ["component.planning"],
 					pathScopes: ["src/planning"],
@@ -165,6 +189,7 @@ describe("planning iteration runner", () => {
 					id: "WU-component-drift",
 					decisionRefs: [decisionRef],
 					outcome: "Component drift is blocked.",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					componentRefs: ["component.planning"],
 					pathScopes: ["src/implementation"],
@@ -189,6 +214,53 @@ describe("planning iteration runner", () => {
 		);
 	});
 
+	it("blocks worker units without implementation-ready agent assessment", () => {
+		const decisionRef = approvedDecisionRef(decisionEvents());
+		const exit = evaluatePlanningExit({
+			decisionRefs: [decisionRef],
+			workItems: normalizePlanningWorkItems([
+				{
+					id: "WU-handoff",
+					decisionRefs: [decisionRef],
+					outcome: "Worker handoff is blocked until right-sized.",
+					...planningQualityFields({
+						planningAssessment: {
+							stance: "needs_split",
+							workUnitSize: "too_large",
+							rightSizing: "This is sprint-sized and should be split.",
+							independence: "Worker needs more decomposition before implementation.",
+							implementationReadiness: "Requirements span multiple source areas.",
+							rationale: "One worker would need to make multiple unrelated changes.",
+						},
+					}),
+					acceptance: ["Done"],
+					pathScopes: ["src/planning"],
+				},
+			]),
+			resolutions: [],
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "fail");
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+		assert.equal(standards.worker_assignment_ready.mode, "agent");
+		assert.equal(standards.worker_assignment_ready.status, "unmet");
+		assert.equal(standards.work_unit_right_sized.mode, "agent");
+		assert.equal(standards.work_unit_right_sized.status, "unmet");
+		assert.deepEqual(
+			exit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.includes("worker") || code.includes("sized"))
+				.sort(),
+			[
+				"planning_assessment_not_worker_ready",
+				"work_unit_not_right_sized",
+			],
+		);
+	});
+
 	it("blocks invalid or duplicate acceptance criteria", () => {
 		const decisionRef = approvedDecisionRef(decisionEvents());
 		const [item] = normalizePlanningWorkItems([
@@ -196,6 +268,7 @@ describe("planning iteration runner", () => {
 				id: "WU-criteria",
 				decisionRefs: [decisionRef],
 				outcome: "Criterion ids are stable.",
+				...planningQualityFields(),
 				acceptanceCriteria: [
 					{ id: "AC-001", text: "First" },
 					{ id: "AC-001", text: "Second" },
@@ -295,6 +368,7 @@ describe("planning iteration runner", () => {
 				id: "WU-001",
 				decisionRefs: [decisionRef],
 				outcome: "First change",
+				...planningQualityFields(),
 				acceptance: ["Done"],
 				pathScopes: ["src/traces"],
 			},
@@ -302,6 +376,7 @@ describe("planning iteration runner", () => {
 				id: "WU-002",
 				decisionRefs: [decisionRef],
 				outcome: "Second change",
+				...planningQualityFields(),
 				acceptance: ["Done"],
 				pathScopes: ["src/traces"],
 			},
@@ -342,6 +417,7 @@ describe("planning iteration runner", () => {
 					id: "WU-parent",
 					decisionRefs: [decisionRef],
 					outcome: "Parent scope",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/views"],
 					dependsOn: ["WU-missing"],
@@ -350,6 +426,7 @@ describe("planning iteration runner", () => {
 					id: "WU-child",
 					decisionRefs: [decisionRef],
 					outcome: "Child scope",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/views/status.ts"],
 				},
@@ -377,6 +454,7 @@ describe("planning iteration runner", () => {
 					id: "WU-ref",
 					decisionRefs: [decisionRef],
 					outcome: "Use canonical refs",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["weak/path"],
 				},
@@ -400,6 +478,7 @@ describe("planning iteration runner", () => {
 					id: "WU-a",
 					decisionRefs: [decisionRef],
 					outcome: "A",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/a"],
 					dependsOn: ["WU-b"],
@@ -408,6 +487,7 @@ describe("planning iteration runner", () => {
 					id: "WU-b",
 					decisionRefs: [decisionRef],
 					outcome: "B",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/b"],
 					dependsOn: ["WU-a"],
@@ -416,6 +496,7 @@ describe("planning iteration runner", () => {
 					id: "WU-c",
 					decisionRefs: [decisionRef],
 					outcome: "C",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/c"],
 				},
@@ -423,6 +504,7 @@ describe("planning iteration runner", () => {
 					id: "WU-c",
 					decisionRefs: [decisionRef],
 					outcome: "C duplicate",
+					...planningQualityFields(),
 					acceptance: ["Done"],
 					pathScopes: ["src/d"],
 				},

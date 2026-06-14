@@ -12,6 +12,7 @@ import type {
 	ExitDetails,
 	ExitFinding,
 	ExitRemediationItem,
+	LoopQualityStandardResult,
 } from "../traces/types.ts";
 import { planningConflicts } from "./conflicts.ts";
 import { workItemsForDecisionRef } from "./materialization.ts";
@@ -21,6 +22,13 @@ export type PlanningExitIssueCode =
 	| "missing_decision_coverage"
 	| "unknown_decision_ref"
 	| "invalid_work_item"
+	| "missing_technical_requirements"
+	| "missing_verification"
+	| "missing_worker_profile"
+	| "missing_planning_assessment"
+	| "planning_assessment_not_worker_ready"
+	| "missing_right_sizing"
+	| "work_unit_not_right_sized"
 	| "invalid_resolution"
 	| "path_conflict"
 	| "duplicate_work_item_id"
@@ -61,11 +69,46 @@ export interface PlanningExitResult extends ExitDetails {
 export function evaluatePlanningExit(
 	input: PlanningExitInput,
 ): PlanningExitResult {
-	const issues = [
+	const issues = collectPlanningExitIssues(input);
+	const qualityStandards = planningQualityStandards(issues);
+	const verdict =
+		blockedIssues(issues).length > 0
+			? "block"
+			: issues.length === 0
+				? "pass"
+				: "fail";
+	return {
+		passed: verdict === "pass",
+		verdict,
+		issues,
+		criteria: criteriaFromQualityStandards(qualityStandards),
+		qualityStandards,
+		findings: issues.map(issueFinding),
+		remediation: issues.map(issueRemediation),
+		route:
+			verdict === "pass"
+				? "implementation"
+				: verdict === "block"
+					? "user"
+					: "planning",
+		coveredDecisionRefs: coveredDecisionRefs(input),
+		workUnitIds: input.workItems.map((item) => item.id),
+	};
+}
+
+function collectPlanningExitIssues(
+	input: PlanningExitInput,
+): PlanningExitIssue[] {
+	return [
 		...coverageIssues(input),
 		...unknownDecisionRefIssues(input),
 		...duplicateWorkItemIssues(input.workItems),
 		...workItemIssues(input.workItems),
+		...technicalRequirementIssues(input.workItems),
+		...verificationIssues(input.workItems),
+		...workerProfileIssues(input.workItems),
+		...planningAssessmentIssues(input.workItems),
+		...rightSizingIssues(input.workItems),
 		...acceptanceCriterionIssues(input.workItems),
 		...componentAlignmentIssues(input),
 		...dependencyIssues(input.workItems),
@@ -73,22 +116,19 @@ export function evaluatePlanningExit(
 		...resolutionIssues(input.resolutions),
 		...conflictIssues(input.workItems),
 	];
-	const verdict = issues.length === 0 ? "pass" : "fail";
-	return {
-		passed: verdict === "pass",
-		verdict,
-		issues,
-		criteria: planningCriteria(issues),
-		findings: issues.map(issueFinding),
-		remediation: issues.map(issueRemediation),
-		route: verdict === "pass" ? "implementation" : "planning",
-		coveredDecisionRefs: coveredDecisionRefs(input),
-		workUnitIds: input.workItems.map((item) => item.id),
-	};
 }
 
 export function planningItemIsExecutable(item: PlanningWorkItem): boolean {
-	return workItemIssues([item]).length === 0;
+	return (
+		[
+			...workItemIssues([item]),
+			...technicalRequirementIssues([item]),
+			...verificationIssues([item]),
+			...workerProfileIssues([item]),
+			...planningAssessmentIssues([item]),
+			...rightSizingIssues([item]),
+		].length === 0
+	);
 }
 
 function coverageIssues(input: PlanningExitInput): PlanningExitIssue[] {
@@ -141,6 +181,108 @@ function workItemIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
 				message: `Planning work item ${item.id || "<missing>"} is missing ${missing.join(", ")}.`,
 			},
 		];
+	});
+}
+
+function technicalRequirementIssues(
+	items: PlanningWorkItem[],
+): PlanningExitIssue[] {
+	return items.flatMap((item) => {
+		if (item.technicalRequirements.length > 0) return [];
+		return [
+			{
+				code: "missing_technical_requirements" as const,
+				workItemId: item.id,
+				message: `Planning work item ${item.id} needs technical requirements for implementation handoff.`,
+			},
+		];
+	});
+}
+
+function verificationIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
+	return items.flatMap((item) => {
+		if (item.verification.length > 0) return [];
+		return [
+			{
+				code: "missing_verification" as const,
+				workItemId: item.id,
+				message: `Planning work item ${item.id} needs verification refs or commands.`,
+			},
+		];
+	});
+}
+
+function workerProfileIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
+	return items.flatMap((item) => {
+		if (item.workerProfile) return [];
+		return [
+			{
+				code: "missing_worker_profile" as const,
+				workItemId: item.id,
+				message: `Planning work item ${item.id} needs a worker profile for assignment.`,
+			},
+		];
+	});
+}
+
+function planningAssessmentIssues(
+	items: PlanningWorkItem[],
+): PlanningExitIssue[] {
+	return items.flatMap((item): PlanningExitIssue[] => {
+		const assessment = item.planningAssessment;
+		const missingStance = !assessment.stance;
+		const missingIndependence = !assessment.independence;
+		const missingImplementationReadiness = !assessment.implementationReadiness;
+		const missingRationale = !assessment.rationale;
+		if (
+			missingStance ||
+			missingIndependence ||
+			missingImplementationReadiness ||
+			missingRationale
+		) {
+			return [
+				{
+					code: "missing_planning_assessment" as const,
+					workItemId: item.id,
+					message: `Planning work item ${item.id} needs agent assessment for independence and implementation readiness.`,
+				},
+			];
+		}
+		if (assessment.stance !== "worker_ready") {
+			return [
+				{
+					code: "planning_assessment_not_worker_ready" as const,
+					workItemId: item.id,
+					message: `Planning work item ${item.id} is not assessed as worker-ready.`,
+				},
+			];
+		}
+		return [];
+	});
+}
+
+function rightSizingIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
+	return items.flatMap((item): PlanningExitIssue[] => {
+		const assessment = item.planningAssessment;
+		if (!assessment.workUnitSize || !assessment.rightSizing) {
+			return [
+				{
+					code: "missing_right_sizing" as const,
+					workItemId: item.id,
+					message: `Planning work item ${item.id} needs right-sizing assessment so sprint-sized or tiny busywork is not assigned as a worker unit.`,
+				},
+			];
+		}
+		if (assessment.workUnitSize !== "right_sized") {
+			return [
+				{
+					code: "work_unit_not_right_sized" as const,
+					workItemId: item.id,
+					message: `Planning work item ${item.id} is assessed as ${assessment.workUnitSize}, not right_sized.`,
+				},
+			];
+		}
+		return [];
 	});
 }
 
@@ -458,52 +600,140 @@ function coveredDecisionRefs(input: PlanningExitInput): string[] {
 	);
 }
 
-function planningCriteria(issues: PlanningExitIssue[]): ExitCriterionResult[] {
+function planningQualityStandards(
+	issues: PlanningExitIssue[],
+): LoopQualityStandardResult[] {
 	return [
-		criterion("decision_coverage", issues, ["missing_decision_coverage"]),
-		criterion("decision_refs", issues, ["unknown_decision_ref"]),
-		criterion("work_items", issues, [
-			"invalid_work_item",
-			"duplicate_work_item_id",
-			"invalid_acceptance_criterion",
-			"duplicate_acceptance_criterion_id",
-		]),
-		criterion("component_alignment", issues, [
-			"missing_component_ref",
-			"unknown_component_ref",
-			"invalid_component_contract",
-			"path_outside_component_scope",
-			"verification_outside_component_tests",
-		]),
-		criterion("dependencies", issues, [
-			"unknown_dependency",
-			"dependency_cycle",
-		]),
-		criterion("resolutions", issues, ["invalid_resolution"]),
-		criterion("path_conflicts", issues, ["path_conflict"]),
-		criterion("traceability_refs", issues, ["invalid_traceability_ref"]),
+		standard({
+			id: "decision_coverage_complete",
+			description:
+				"Every accepted decision ref is covered by a work unit or explicit resolution.",
+			issues,
+			codes: ["missing_decision_coverage", "unknown_decision_ref"],
+		}),
+		standard({
+			id: "worker_units_self_contained",
+			description:
+				"Each work item has enough bounded context to be claimed by one implementation worker.",
+			issues,
+			codes: ["invalid_work_item", "duplicate_work_item_id"],
+		}),
+		standard({
+			id: "technical_requirements_complete",
+			description:
+				"Each work item breaks decision intent into concrete technical requirements.",
+			issues,
+			codes: ["missing_technical_requirements"],
+		}),
+		standard({
+			id: "acceptance_and_verification_testable",
+			description:
+				"Each work item has stable acceptance criteria and verification refs or commands.",
+			issues,
+			codes: [
+				"invalid_acceptance_criterion",
+				"duplicate_acceptance_criterion_id",
+				"missing_verification",
+			],
+		}),
+		standard({
+			id: "worker_assignment_ready",
+			description:
+				"Each work item declares worker profile and agent judgment that the unit is independent and implementation-ready.",
+			mode: "agent",
+			issues,
+			codes: [
+				"missing_worker_profile",
+				"missing_planning_assessment",
+				"planning_assessment_not_worker_ready",
+			],
+		}),
+		standard({
+			id: "work_unit_right_sized",
+			description:
+				"Each worker unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch.",
+			mode: "agent",
+			issues,
+			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
+		}),
+		standard({
+			id: "source_ownership_aligned",
+			description:
+				"Component refs, path scopes, and verification refs align with source ownership contracts.",
+			issues,
+			codes: [
+				"missing_component_ref",
+				"unknown_component_ref",
+				"invalid_component_contract",
+				"path_outside_component_scope",
+				"verification_outside_component_tests",
+			],
+		}),
+		standard({
+			id: "dependency_order_clear",
+			description:
+				"Dependencies are known, acyclic, and order overlapping work before implementation.",
+			issues,
+			codes: ["unknown_dependency", "dependency_cycle", "path_conflict"],
+		}),
+		standard({
+			id: "resolutions_accounted",
+			description:
+				"Non-executable, deferred, route-back, knowledge-only, or already-implemented decisions carry required evidence.",
+			issues,
+			codes: ["invalid_resolution"],
+		}),
+		standard({
+			id: "traceability_refs_canonical",
+			description:
+				"Planning refs are canonical trace, KB, Git, digest, source, or test refs.",
+			issues,
+			codes: ["invalid_traceability_ref"],
+		}),
 	];
 }
 
-function criterion(
-	id: string,
-	issues: PlanningExitIssue[],
-	codes: PlanningExitIssueCode[],
-): ExitCriterionResult {
-	const matched = issues.filter((issue) => codes.includes(issue.code));
+function standard(input: {
+	id: string;
+	description: string;
+	issues: PlanningExitIssue[];
+	codes: PlanningExitIssueCode[];
+	mode?: LoopQualityStandardResult["mode"];
+}): LoopQualityStandardResult {
+	const matched = input.issues.filter((issue) =>
+		input.codes.includes(issue.code),
+	);
 	return {
-		id,
-		status: matched.length > 0 ? "fail" : "pass",
+		id: input.id,
+		status: matched.length > 0 ? "unmet" : "met",
+		mode: input.mode || "deterministic",
+		description: input.description,
 		...(matched.length > 0
 			? { message: matched.map((issue) => issue.message).join(" ") }
+			: {}),
+		...(matched.length > 0
+			? { refs: uniqueStrings(matched.flatMap((issue) => issueRefs(issue))) }
 			: {}),
 	};
 }
 
+function criteriaFromQualityStandards(
+	standards: LoopQualityStandardResult[],
+): ExitCriterionResult[] {
+	return standards.map((standard) => ({
+		id: standard.id,
+		status: standard.status === "met" ? "pass" : "fail",
+		...(standard.message ? { message: standard.message } : {}),
+		...(standard.refs ? { refs: standard.refs } : {}),
+	}));
+}
+
+function blockedIssues(_issues: PlanningExitIssue[]): PlanningExitIssue[] {
+	return [];
+}
+
 function issueFinding(issue: PlanningExitIssue): ExitFinding {
-	const refs = [issue.decisionRef, issue.workItemId, issue.ref]
-		.map((ref) => String(ref || "").trim())
-		.filter(Boolean);
+	const refs = issueRefs(issue);
 	return {
 		id: `planning:${issue.code}:${refs[0] || "plan"}`,
 		severity: "error",
@@ -516,15 +746,19 @@ function issueFinding(issue: PlanningExitIssue): ExitFinding {
 }
 
 function issueRemediation(issue: PlanningExitIssue): ExitRemediationItem {
-	const refs = [issue.decisionRef, issue.workItemId, issue.ref]
-		.map((ref) => String(ref || "").trim())
-		.filter(Boolean);
+	const refs = issueRefs(issue);
 	return {
 		action: planningRemediationAction(issue),
 		route: "planning",
 		refs,
 		blocking: true,
 	};
+}
+
+function issueRefs(issue: PlanningExitIssue): string[] {
+	return [issue.decisionRef, issue.workItemId, issue.ref, issue.componentRef]
+		.map((ref) => String(ref || "").trim())
+		.filter(Boolean);
 }
 
 function uniqueStrings(values: string[]): string[] {
@@ -540,6 +774,20 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Replace the unknown decision ref with a passed decision event ref.",
 	invalid_work_item:
 		"Complete work item id, decision refs, outcome, acceptance, and path scopes.",
+	missing_technical_requirements:
+		"Break the work item into concrete technical requirements for implementation.",
+	missing_verification:
+		"Add verification refs or commands that implementation must run or satisfy.",
+	missing_worker_profile:
+		"Declare the worker profile needed to claim this unit of work.",
+	missing_planning_assessment:
+		"Add agent assessment proving the work item is independent and implementation-ready.",
+	planning_assessment_not_worker_ready:
+		"Split or clarify the work item until the agent assesses it as worker-ready.",
+	missing_right_sizing:
+		"Add agent assessment that the work item is neither sprint-sized nor tiny busywork.",
+	work_unit_not_right_sized:
+		"Split, merge, or reframe the work item until it is right-sized for one worker.",
 	duplicate_work_item_id: "Give every planning work item a stable unique id.",
 	invalid_acceptance_criterion:
 		"Give every planning acceptance criterion a stable id and testable text.",

@@ -24,6 +24,7 @@ import {
 	TRACE_LOOP_VALUES,
 } from "../../src/api/traces.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function sampleRecords() {
 	const head = createTraceHead({

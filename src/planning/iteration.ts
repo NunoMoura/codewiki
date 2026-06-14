@@ -140,6 +140,7 @@ function planningTraceEvents(args: {
 				decisionRefs,
 				workItems: workItems.map(planningWorkItemData),
 				resolutions: resolutions.map(planningResolutionData),
+				qualityStandards: exit.qualityStandards,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
 			exit: loopExitFromEvaluation("planning", exit),
@@ -182,11 +183,14 @@ function planningWorkItemData(item: PlanningWorkItem): Record<string, unknown> {
 		title: item.title,
 		decisionRefs: item.decisionRefs,
 		outcome: item.outcome,
+		technicalRequirements: item.technicalRequirements,
 		acceptance: item.acceptance,
 		acceptanceCriteria: item.acceptanceCriteria,
 		componentRefs: item.componentRefs,
 		pathScopes: item.pathScopes,
 		verification: item.verification,
+		workerProfile: item.workerProfile,
+		planningAssessment: item.planningAssessment,
 		dependsOn: item.dependsOn,
 	};
 }

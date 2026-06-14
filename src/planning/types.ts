@@ -16,16 +16,53 @@ export interface AcceptanceCriterionInput {
 	text?: string;
 }
 
+export type PlanningAssessmentStance =
+	| "worker_ready"
+	| "needs_split"
+	| "concerns"
+	| string;
+export type PlanningWorkUnitSize =
+	| "right_sized"
+	| "too_large"
+	| "too_small"
+	| string;
+
+export interface PlanningWorkAssessmentInput {
+	stance?: PlanningAssessmentStance;
+	workUnitSize?: PlanningWorkUnitSize;
+	work_unit_size?: PlanningWorkUnitSize;
+	rightSizing?: string;
+	right_sizing?: string;
+	independence?: string;
+	implementationReadiness?: string;
+	implementation_readiness?: string;
+	rationale?: string;
+	concerns?: string[];
+}
+
+export interface PlanningWorkAssessment {
+	stance: PlanningAssessmentStance;
+	workUnitSize: PlanningWorkUnitSize;
+	rightSizing: string;
+	independence: string;
+	implementationReadiness: string;
+	rationale: string;
+	concerns: string[];
+}
+
 export interface PlanningWorkItem {
 	id: string;
 	title: string;
 	decisionRefs: string[];
 	outcome: string;
+	technicalRequirements: string[];
 	acceptance: string[];
 	acceptanceCriteria: AcceptanceCriterion[];
 	componentRefs: string[];
 	pathScopes: string[];
 	verification: string[];
+	workerProfile: string;
+	planningAssessment: PlanningWorkAssessment;
 	dependsOn: string[];
 }
 
@@ -35,6 +72,8 @@ export interface PlanningWorkItemInput {
 	decisionRefs?: string[];
 	decision_refs?: string[];
 	outcome?: string;
+	technicalRequirements?: string[];
+	technical_requirements?: string[];
 	acceptance?: string[];
 	acceptanceCriteria?: AcceptanceCriterionInput[];
 	acceptance_criteria?: AcceptanceCriterionInput[];
@@ -43,6 +82,10 @@ export interface PlanningWorkItemInput {
 	pathScopes?: string[];
 	path_scopes?: string[];
 	verification?: string[];
+	workerProfile?: string;
+	worker_profile?: string;
+	planningAssessment?: PlanningWorkAssessmentInput;
+	planning_assessment?: PlanningWorkAssessmentInput;
 	dependsOn?: string[];
 	depends_on?: string[];
 }

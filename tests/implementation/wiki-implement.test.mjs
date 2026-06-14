@@ -13,6 +13,7 @@ import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
@@ -86,6 +87,7 @@ function planningEvents(traceId) {
 				title: "Run wiki_implement",
 				decisionRefs: [decisionRef],
 				outcome: "Implementation facade runs and appends safely.",
+				...planningQualityFields(),
 				acceptance: ["wiki_implement appends implementation iteration."],
 				componentRefs: ["api"],
 				pathScopes: ["src/feature.ts"],

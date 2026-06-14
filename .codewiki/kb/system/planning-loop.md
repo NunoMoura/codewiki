@@ -40,33 +40,36 @@ Planning loop output is the high-signal packet implementation and runtime need:
 
 - work units with stable ids;
 - decision refs each work unit covers;
+- concrete technical requirements for implementation;
 - acceptance criteria with stable ids;
 - component refs from the file-structure map;
 - code/docs/test path scopes;
 - dependencies and ordering constraints;
 - conflict notes and scheduling holds;
 - verification strategy;
+- worker profile and agent assessment of independence, implementation readiness, and right sizing;
 - deferrals with owner, trigger, and expiry when allowed;
 - route-back questions for decision when authority is missing;
 - canonical refs proving the output.
 
 Planning output should not include code changes, test results, or worker-local execution evidence.
 
-## Exit conditions
+## Exit quality standards
 
-The planning loop can exit only when these conditions are met or explicitly deferred with authority:
+The planning loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
 
-| Condition | Required signal |
-| --- | --- |
-| decision_coverage | Every accepted decision requirement/question is mapped to work, deferral, no-work rationale, or existing implementation evidence. |
-| work_units_valid | Work units have stable ids, titles, summaries, and owner loop context. |
-| acceptance_defined | Each executable work unit has stable acceptance criterion ids and text. |
-| dependencies_valid | Dependencies exist, are acyclic, and explain required ordering. |
-| path_scopes_valid | Path scopes are canonical, bounded, and conflict-aware. |
-| components_valid | Component refs exist in the file-structure map and cover declared paths/tests. |
-| verification_ready | Test/check strategy is explicit enough for implementation. |
-| scheduling_ready | Runtime can classify work as waiting, ready, blocked, or deferrable. |
-| decision_routebacks_resolved | Missing product/system authority routes back to decision instead of leaking into implementation. |
+| Quality standard | Mode | Required signal |
+| --- | --- | --- |
+| decision_coverage_complete | deterministic | Every accepted decision ref is covered by a work unit or explicit resolution. |
+| worker_units_self_contained | deterministic | Work units have stable ids, decision refs, outcome, acceptance criteria, and bounded path scopes. |
+| technical_requirements_complete | deterministic | Each work item breaks decision intent into concrete implementation requirements. |
+| acceptance_and_verification_testable | deterministic | Acceptance criteria have stable ids/text and verification refs or commands are present. |
+| worker_assignment_ready | agent | Agent assesses the unit as independent and implementation-ready, and a worker profile is declared. |
+| work_unit_right_sized | agent | Unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch. |
+| source_ownership_aligned | deterministic | Component refs exist in the file-structure map and cover declared paths/tests. |
+| dependency_order_clear | deterministic | Dependencies exist, are acyclic, and order overlapping path scopes. |
+| resolutions_accounted | deterministic | Deferred/non-executable/route-back/knowledge-only/already-implemented decisions carry required evidence. |
+| traceability_refs_canonical | deterministic | Planning refs are canonical trace, KB, Git, digest, source, or test refs. |
 
 ## Exit statuses
 
@@ -97,10 +100,11 @@ Planning iterations should record compact facts:
     "iteration": 1,
     "trigger": "decision_exit",
     "output": {
-      "workUnits": [],
+      "workItems": [],
+      "resolutions": [],
+      "qualityStandards": [],
       "dependencies": [],
-      "conflicts": [],
-      "deferrals": []
+      "conflicts": []
     },
     "exit": {
       "status": "exit",

@@ -39,6 +39,10 @@ export function normalizePlanningWorkItems(
 				...stringList(item.decision_refs),
 			]),
 			outcome: text(item.outcome),
+			technicalRequirements: unique([
+				...stringList(item.technicalRequirements),
+				...stringList(item.technical_requirements),
+			]),
 			acceptance,
 			acceptanceCriteria: normalizeAcceptanceCriteria({
 				itemId: text(item.id),
@@ -57,6 +61,10 @@ export function normalizePlanningWorkItems(
 				...stringList(item.path_scopes),
 			]),
 			verification: stringList(item.verification),
+			workerProfile: text(item.workerProfile ?? item.worker_profile),
+			planningAssessment: normalizePlanningAssessment(
+				item.planningAssessment ?? item.planning_assessment,
+			),
 			dependsOn: unique([
 				...stringList(item.dependsOn),
 				...stringList(item.depends_on),
@@ -114,9 +122,23 @@ export function workItemsForDecisionRef(
 	return items.filter((item) => materializesDecisionRef(item, decisionRef));
 }
 
-export function normalizeResolutionKind(
-	value: unknown,
-): PlanningResolutionKind {
+export function normalizePlanningAssessment(
+	value: PlanningWorkItemInput["planningAssessment"],
+): PlanningWorkItem["planningAssessment"] {
+	return {
+		stance: text(value?.stance),
+		workUnitSize: text(value?.workUnitSize ?? value?.work_unit_size),
+		rightSizing: text(value?.rightSizing ?? value?.right_sizing),
+		independence: text(value?.independence),
+		implementationReadiness: text(
+			value?.implementationReadiness ?? value?.implementation_readiness,
+		),
+		rationale: text(value?.rationale),
+		concerns: stringList(value?.concerns),
+	};
+}
+
+function normalizeResolutionKind(value: unknown): PlanningResolutionKind {
 	const normalized = text(value).toLowerCase().replace(/_/g, "-");
 	return resolutionAliases.get(normalized) ?? "work-unit";
 }

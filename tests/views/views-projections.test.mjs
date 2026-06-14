@@ -20,6 +20,7 @@ import {
 	writeNamedView,
 } from "../../src/api/views.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
 	const table = createDecisionTable({
@@ -97,6 +98,7 @@ function queueTrace(traceId, options = {}) {
 			title: options.workUnitTitle || "Queued work",
 			decisionRefs: [decisionRef],
 			outcome: "Queued work is executable.",
+			...planningQualityFields(),
 			acceptance: ["Queued work has evidence."],
 			componentRefs: ["component.views"],
 			pathScopes: [options.pathScope || "src/views"],
@@ -216,6 +218,7 @@ function plannedTrace() {
 				decisionRefs: [decisionRef],
 				outcome:
 					"Status, resume, blockers, conflicts, and work-plan views project traces.",
+				...planningQualityFields(),
 				acceptance: ["Views contain no durable truth."],
 				componentRefs: ["component.views"],
 				pathScopes: ["src/views"],
@@ -322,6 +325,7 @@ describe("trace-backed views", () => {
 					title: "Left change",
 					decisionRefs: [decisionRef],
 					outcome: "Left outcome",
+					...planningQualityFields(),
 					acceptance: ["Left accepted"],
 					pathScopes: ["src/views"],
 					verification: ["npm test"],
@@ -331,6 +335,7 @@ describe("trace-backed views", () => {
 					title: "Right change",
 					decisionRefs: [decisionRef],
 					outcome: "Right outcome",
+					...planningQualityFields(),
 					acceptance: ["Right accepted"],
 					pathScopes: ["src/views"],
 					verification: ["npm test"],
@@ -381,6 +386,7 @@ describe("trace-backed views", () => {
 					id: "WU-dependency",
 					decisionRefs: [decisionRef],
 					outcome: "Dependency is available for scheduling.",
+					...planningQualityFields(),
 					acceptance: ["Dependency can run first."],
 					componentRefs: ["component.views"],
 					pathScopes: ["src/views"],
@@ -390,6 +396,7 @@ describe("trace-backed views", () => {
 					id: "WU-waiting",
 					decisionRefs: [decisionRef],
 					outcome: "Waiting work depends on another work unit.",
+					...planningQualityFields(),
 					acceptance: ["Waiting work waits."],
 					componentRefs: ["component.views"],
 					pathScopes: ["src/views"],
