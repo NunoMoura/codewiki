@@ -164,9 +164,12 @@ function releaseNoteChecks(
 				: change.checks.map((command) => ({ command, status: "not-run" })),
 		),
 		(check) =>
-			[check.command, check.status, check.outputRef || "", check.summary || ""].join(
-				"\0",
-			),
+			[
+				check.command,
+				check.status,
+				check.outputRef || "",
+				check.summary || "",
+			].join("\0"),
 	);
 }
 
@@ -195,7 +198,9 @@ function renderCheck(check: TraceReleaseNoteCheck): string {
 	return `- [${check.status}] ${check.command}${check.outputRef ? ` (${check.outputRef})` : ""}`;
 }
 
-function changedPathsFromReleaseChange(change: TraceReleaseNoteChange): string[] {
+function changedPathsFromReleaseChange(
+	change: TraceReleaseNoteChange,
+): string[] {
 	return unique([...change.codePaths, ...change.docPaths, ...change.testPaths]);
 }
 

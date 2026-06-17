@@ -93,7 +93,10 @@ try {
 	);
 	assert.match(stateNotice.message, /To do/);
 	assert.match(stateNotice.message, /├/);
-	assert.equal(messages.some((message) => message.type === "agent_start"), false);
+	assert.equal(
+		messages.some((message) => message.type === "agent_start"),
+		false,
+	);
 	assert.doesNotMatch(
 		stderrRef.value,
 		/failed to load|cannot find module|error loading/i,

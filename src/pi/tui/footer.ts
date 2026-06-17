@@ -18,8 +18,9 @@ export function setCodewikiFooterStatus(
 	status: string,
 ): void {
 	const ui = ctx.ui as
-		| ({ setStatus?: (key: string, value: string | undefined) => void } &
-				Record<string, unknown>)
+		| ({
+				setStatus?: (key: string, value: string | undefined) => void;
+		  } & Record<string, unknown>)
 		| undefined;
 	ui?.setStatus?.(CODEWIKI_FOOTER_STATUS_KEY, status);
 }

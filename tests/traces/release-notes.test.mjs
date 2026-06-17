@@ -4,7 +4,10 @@ import {
 	buildTraceCloseReleaseNotes,
 	renderTraceCloseReleaseNotes,
 } from "../../src/traces/release-notes.ts";
-import { createTraceHead, createTailCheckpoint } from "../../src/traces/writer.ts";
+import {
+	createTraceHead,
+	createTailCheckpoint,
+} from "../../src/traces/writer.ts";
 
 function releaseRecords() {
 	const traceId = "TRACE-release-notes";
@@ -45,7 +48,8 @@ function releaseRecords() {
 						acceptanceEvidenceItems: [
 							{
 								criterionId: "AC-001",
-								summary: "Trace-close release notes summarize implementation evidence.",
+								summary:
+									"Trace-close release notes summarize implementation evidence.",
 								evidenceRefs: ["tests/traces/release-notes.test.mjs"],
 							},
 						],
@@ -119,7 +123,10 @@ describe("trace-close release notes", () => {
 			buildTraceCloseReleaseNotes(releaseRecords()),
 		);
 
-		assert.match(markdown, /^# Release Notes: Generate trace-close release notes/);
+		assert.match(
+			markdown,
+			/^# Release Notes: Generate trace-close release notes/,
+		);
 		assert.match(markdown, /- Status: closed/);
 		assert.match(markdown, /- \[pass\] npm test/);
 		assert.match(markdown, /## Evidence Refs/);

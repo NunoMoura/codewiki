@@ -51,7 +51,8 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 		id: "current_dogfood_guidance",
 		scope: "operating_guidance",
 		pattern: /extension is disabled|while the extension is disabled|hosts\.cli/,
-		message: "Docs and skills must use current repo-local dogfood gating wording.",
+		message:
+			"Docs and skills must use current repo-local dogfood gating wording.",
 	},
 ];
 

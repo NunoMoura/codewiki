@@ -28,7 +28,8 @@ describe("knowledge drift linter", () => {
 			},
 			{
 				path: ".agents/skills/codewiki-state/SKILL.md",
-				content: "Do this while the extension is disabled; hosts.cli is legacy.",
+				content:
+					"Do this while the extension is disabled; hosts.cli is legacy.",
 				scopes: ["operating_guidance"],
 			},
 		]);
