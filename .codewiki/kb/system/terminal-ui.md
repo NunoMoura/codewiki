@@ -12,7 +12,7 @@ Active command direction is intentionally small:
 | --- | --- |
 | `/wiki state [flags]` | Compact state summary; flags can render board, quality, blockers, detail, or JSON. |
 | `/wiki resume` | Continue from folded trace state, latest loop outputs, unmet exit conditions, and source refs. |
-| `/wiki explain [target]` | Explain the whole project, a component, a flow, or a path from KB/source-map/views. |
+| `/wiki explain [target]` | Explain the whole project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki bootstrap` | Start CodeWiki in a greenfield or brownfield repository through explicit backend setup/bootstrap calls. |
 | `/wiki config` | Inspect CodeWiki preferences/configuration; writes require explicit confirmation. |
 

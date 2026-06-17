@@ -1,11 +1,17 @@
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
+import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
 import {
 	sourceMapComponentById,
 	sourceMapOwnerForPath,
 	type SourceMapComponent,
+	type SourceMapContract,
 } from "../knowledge/source-map.ts";
-import { readProjectSourceMap } from "./state-file.ts";
+import { foldProjectTraceRecords } from "../traces/project.ts";
+import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { buildQualityView } from "../views/quality.ts";
+import type { QualityIterationSummary } from "../views/types.ts";
+import { readProjectSourceMap, readProjectTraceRecords } from "./state-file.ts";
 
 export type ProjectExplainKind =
 	| "project"
@@ -19,6 +25,30 @@ export interface ProjectExplainSection {
 	items: string[];
 }
 
+export interface ProjectExplainOwnerSummary {
+	componentId: string;
+	doc: string;
+	sourcePatterns: string[];
+	testPatterns: string[];
+	generatedViews: string[];
+	traceEvents: string[];
+	role?: string;
+	testPolicy?: string;
+	testRationale?: string;
+}
+
+export interface ProjectExplainQualitySummary {
+	traceId: string;
+	loop: string;
+	eventId: string;
+	ready: boolean;
+	met: number;
+	unmet: number;
+	blocked: number;
+	missing: number;
+	blockers: string[];
+}
+
 export interface ProjectExplainView {
 	target?: string;
 	kind: ProjectExplainKind;
@@ -26,9 +56,12 @@ export interface ProjectExplainView {
 	summary: string;
 	refs: string[];
 	sections: ProjectExplainSection[];
+	owner?: ProjectExplainOwnerSummary;
+	traceRefs?: string[];
+	quality?: ProjectExplainQualitySummary[];
 }
 
-export interface BuildProjectExplainInput {
+interface BuildProjectExplainInput {
 	repoRoot: string;
 	target?: string;
 }
@@ -47,9 +80,11 @@ export async function buildProjectExplainView(
 		: undefined;
 	if (component) return componentExplain(component);
 	if (looksLikePath(target)) {
+		const records = await readProjectTraceRecords(input.repoRoot);
 		return pathExplain(
 			target,
-			sourceMap ? sourceMapOwnerForPath(sourceMap, target) : undefined,
+			sourceMap ? sourceMapOwnerForExplainPath(sourceMap, target) : undefined,
+			records,
 		);
 	}
 	return unknownExplain(
@@ -125,9 +160,10 @@ function componentExplain(component: SourceMapComponent): ProjectExplainView {
 		title: `Component: ${component.id}`,
 		summary: component.role || `Source-map component ${component.id}.`,
 		refs: [component.doc],
+		owner: ownerSummary(component),
 		sections: [
 			{ title: "Source", items: component.sourcePatterns },
-			{ title: "Tests", items: component.testPatterns },
+			{ title: "Tests", items: testItems(component) },
 			{ title: "Generated views", items: component.generatedViews },
 			{ title: "Trace events", items: component.traceEvents },
 		].filter((section) => section.items.length > 0),
@@ -137,20 +173,27 @@ function componentExplain(component: SourceMapComponent): ProjectExplainView {
 function pathExplain(
 	target: string,
 	owner: SourceMapComponent | undefined,
+	records: TraceRecord[],
 ): ProjectExplainView {
+	const traceRefs = traceRefsForPath(records, target, owner);
+	const quality = qualityForPath(records, target, owner, traceRefs);
 	if (!owner) {
 		return {
 			target,
 			kind: "path",
 			title: `Path: ${target}`,
 			summary: "No source-map owner was found for this path.",
-			refs: [".codewiki/kb/system/source-map.yaml"],
+			refs: unique([".codewiki/kb/system/source-map.yaml", ...traceRefs]),
+			traceRefs,
+			quality,
 			sections: [
 				{
 					title: "Next",
 					items: ["Add or adjust source-map ownership before broad edits."],
 				},
-			],
+				{ title: "Trace refs", items: traceRefs },
+				{ title: "Quality", items: qualityItems(quality) },
+			].filter((section) => section.items.length > 0),
 		};
 	}
 	return {
@@ -158,12 +201,17 @@ function pathExplain(
 		kind: "path",
 		title: `Path: ${target}`,
 		summary: `Owned by component ${owner.id}.`,
-		refs: [owner.doc, ".codewiki/kb/system/source-map.yaml"],
+		refs: unique([owner.doc, ".codewiki/kb/system/source-map.yaml", ...traceRefs]),
+		owner: ownerSummary(owner),
+		traceRefs,
+		quality,
 		sections: [
-			{ title: "Component", items: [owner.id] },
+			{ title: "Owner", items: ownerItems(owner) },
 			{ title: "Relevant docs", items: [owner.doc] },
-			{ title: "Tests", items: owner.testPatterns },
+			{ title: "Tests", items: testItems(owner) },
 			{ title: "Trace events", items: owner.traceEvents },
+			{ title: "Trace refs", items: traceRefs },
+			{ title: "Quality", items: qualityItems(quality) },
 		].filter((section) => section.items.length > 0),
 	};
 }
@@ -223,6 +271,271 @@ async function readFlowSummaries(repoRoot: string): Promise<FlowSummary[]> {
 	);
 }
 
+function sourceMapOwnerForExplainPath(
+	map: SourceMapContract,
+	target: string,
+): SourceMapComponent | undefined {
+	return (
+		sourceMapOwnerForPath(map, target) ||
+		map.components
+			.filter((component) =>
+				matchesAnyPattern(target, [
+					component.doc,
+					...component.testPatterns,
+					...component.generatedViews,
+				]),
+			)
+			.sort(
+				(left, right) =>
+					componentExplainSpecificity(right) - componentExplainSpecificity(left),
+			)[0]
+	);
+}
+
+function componentExplainSpecificity(component: SourceMapComponent): number {
+	return Math.max(
+		0,
+		...[component.doc, ...component.testPatterns, ...component.generatedViews].map(
+			(pattern) => pattern.replace(/\*/g, "").length,
+		),
+	);
+}
+
+function traceRefsForPath(
+	records: TraceRecord[],
+	target: string,
+	owner: SourceMapComponent | undefined,
+): string[] {
+	const fold = foldProjectTraceRecords(records);
+	return unique(
+		fold.events.flatMap((event) => eventTraceRefsForPath(event, target, owner)),
+	);
+}
+
+function eventTraceRefsForPath(
+	event: TraceEvent,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): string[] {
+	return unique([
+		...(refsTouchPath(event.refs, target, owner) ? [`trace:${event.id}`] : []),
+		...decisionRowRefsForPath(event, target, owner),
+		...planningWorkRefsForPath(event, target, owner),
+		...implementationChangeRefsForPath(event, target, owner),
+	]);
+}
+
+function decisionRowRefsForPath(
+	event: TraceEvent,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): string[] {
+	if (event.event !== "decision.iteration") return [];
+	const output = objectRecord(event.data?.output);
+	return [
+		...objectList(output.approvedRows),
+		...objectList(output.rejectedRows),
+		...objectList(output.deferredRows),
+	]
+		.filter((row) => refsTouchPath(stringList(row.sourceRefs), target, owner))
+		.map((row) => `trace:${event.id}#row:${text(row.id) || "unknown"}`);
+}
+
+function planningWorkRefsForPath(
+	event: TraceEvent,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): string[] {
+	if (event.event !== "planning.iteration") return [];
+	return objectList(objectRecord(event.data?.output).workItems)
+		.filter((item) => planningWorkTouchesPath(item, target, owner))
+		.map((item) => `trace:${event.id}#work:${text(item.id) || "unknown"}`);
+}
+
+function implementationChangeRefsForPath(
+	event: TraceEvent,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): string[] {
+	if (event.event !== "implementation.iteration") return [];
+	return objectList(objectRecord(event.data?.output).changes)
+		.filter((change) => implementationChangeTouchesPath(change, target, owner))
+		.map((change) =>
+			`trace:${event.id}#change:${text(change.id) || "unknown"}`,
+		);
+}
+
+function planningWorkTouchesPath(
+	item: Record<string, unknown>,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): boolean {
+	return (
+		componentRefsTouchOwner(
+			stringList(item.componentRefs ?? item.component_refs),
+			owner,
+		) ||
+		refsTouchPath(
+			[
+				...stringList(item.pathScopes ?? item.path_scopes),
+				...stringList(item.verification),
+			],
+			target,
+			owner,
+		)
+	);
+}
+
+function implementationChangeTouchesPath(
+	change: Record<string, unknown>,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): boolean {
+	return refsTouchPath(
+		[
+			...stringList(change.codePaths ?? change.code_paths),
+			...stringList(change.docPaths ?? change.doc_paths),
+			...stringList(change.testPaths ?? change.test_paths),
+			...stringList(change.publicationRefs ?? change.publication_refs),
+		],
+		target,
+		owner,
+	);
+}
+
+function qualityForPath(
+	records: TraceRecord[],
+	target: string,
+	owner: SourceMapComponent | undefined,
+	traceRefs: string[],
+): ProjectExplainQualitySummary[] {
+	const fold = foldProjectTraceRecords(records);
+	const eventIds = new Set(traceRefs.map(eventIdFromTraceRef).filter(Boolean));
+	return fold.traceIds.flatMap((traceId) =>
+		buildQualityView({ records: fold.recordsByTrace[traceId] || [] }).iterations
+			.filter(
+				(iteration) =>
+					eventIds.has(iteration.eventId) ||
+					refsTouchPath(iteration.refs, target, owner),
+			)
+			.map(qualitySummary),
+	);
+}
+
+function qualitySummary(
+	iteration: QualityIterationSummary,
+): ProjectExplainQualitySummary {
+	return {
+		traceId: iteration.traceId,
+		loop: iteration.loop,
+		eventId: iteration.eventId,
+		ready: iteration.ready,
+		met: iteration.standards.filter((standard) => standard.status === "met")
+			.length,
+		unmet: iteration.standards.filter((standard) => standard.status === "unmet")
+			.length,
+		blocked: iteration.standards.filter(
+			(standard) => standard.status === "blocked",
+		).length,
+		missing: iteration.standards.filter(
+			(standard) => standard.status === "missing",
+		).length,
+		blockers: [...iteration.blockers],
+	};
+}
+
+function ownerSummary(component: SourceMapComponent): ProjectExplainOwnerSummary {
+	return {
+		componentId: component.id,
+		doc: component.doc,
+		sourcePatterns: [...component.sourcePatterns],
+		testPatterns: [...component.testPatterns],
+		generatedViews: [...component.generatedViews],
+		traceEvents: [...component.traceEvents],
+		...(component.role ? { role: component.role } : {}),
+		...(component.testPolicy ? { testPolicy: component.testPolicy } : {}),
+		...(component.testRationale
+			? { testRationale: component.testRationale }
+			: {}),
+	};
+}
+
+function ownerItems(component: SourceMapComponent): string[] {
+	return [
+		component.id,
+		...(component.role ? [`role: ${component.role}`] : []),
+		...(component.testPolicy ? [`test policy: ${component.testPolicy}`] : []),
+	];
+}
+
+function testItems(component: SourceMapComponent): string[] {
+	return [
+		...component.testPatterns,
+		...(component.testRationale
+			? [`test rationale: ${component.testRationale}`]
+			: []),
+	];
+}
+
+function qualityItems(quality: ProjectExplainQualitySummary[]): string[] {
+	return quality.map((item) => {
+		const status = item.ready ? "ready" : "blocked";
+		const blockers = item.blockers.length
+			? ` — ${item.blockers.slice(0, 2).join("; ")}`
+			: "";
+		return `${item.traceId} ${item.loop}: ${status} (${item.met} met, ${item.unmet} unmet, ${item.blocked} blocked, ${item.missing} missing)${blockers}`;
+	});
+}
+
+function refsTouchPath(
+	refs: string[],
+	target: string,
+	owner: SourceMapComponent | undefined,
+): boolean {
+	return refs.some((ref) => refTouchesPath(ref, target, owner));
+}
+
+function refTouchesPath(
+	ref: string,
+	target: string,
+	owner: SourceMapComponent | undefined,
+): boolean {
+	const normalized = ref.trim();
+	if (!normalized) return false;
+	if (normalized === target) return true;
+	if (pathMatchesPattern(target, normalized)) return true;
+	if (pathMatchesPattern(normalized, target)) return true;
+	if (!owner) return false;
+	if (normalized === owner.id || normalized === `component.${owner.id}`) {
+		return true;
+	}
+	if (normalized === owner.doc) return true;
+	return matchesAnyPattern(normalized, [
+		...owner.sourcePatterns,
+		...owner.testPatterns,
+		...owner.generatedViews,
+	]);
+}
+
+function componentRefsTouchOwner(
+	componentRefs: string[],
+	owner: SourceMapComponent | undefined,
+): boolean {
+	if (!owner) return false;
+	return componentRefs.some(
+		(ref) => ref === owner.id || ref === `component.${owner.id}`,
+	);
+}
+
+function matchesAnyPattern(path: string, patterns: string[]): boolean {
+	return patterns.some((pattern) => pathMatchesPattern(path, pattern));
+}
+
+function eventIdFromTraceRef(ref: string): string {
+	if (!ref.startsWith("trace:")) return "";
+	return ref.slice("trace:".length).split("#")[0] || "";
+}
+
 async function readKbSummary(repoRoot: string, path: string): Promise<string> {
 	try {
 		return firstParagraph(await readFile(join(repoRoot, path), "utf8"));
@@ -261,6 +574,37 @@ function looksLikePath(target: string): boolean {
 		target.includes("/") ||
 		target.startsWith(".") ||
 		/\.[a-z0-9]+$/i.test(target)
+	);
+}
+
+function objectRecord(value: unknown): Record<string, unknown> {
+	return typeof value === "object" && value !== null
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function objectList(value: unknown): Record<string, unknown>[] {
+	return Array.isArray(value)
+		? value.filter(
+				(item): item is Record<string, unknown> =>
+					typeof item === "object" && item !== null,
+			)
+		: [];
+}
+
+function stringList(value: unknown): string[] {
+	return Array.isArray(value)
+		? value.map((item) => text(item)).filter(Boolean)
+		: [];
+}
+
+function text(value: unknown): string {
+	return String(value || "").trim();
+}
+
+function unique(values: string[]): string[] {
+	return Array.from(
+		new Set(values.map((value) => text(value)).filter(Boolean)),
 	);
 }
 

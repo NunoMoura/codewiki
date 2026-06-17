@@ -107,7 +107,7 @@ Slash commands are host UX, not workflow semantics. Use `/wiki` as the short use
 | --- | --- |
 | `/wiki state` | Compact state summary from `wiki_state`; flags can request board, quality, blockers, detail, or JSON. |
 | `/wiki resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
-| `/wiki explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB/source-map/views. |
+| `/wiki explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. |
 | `/wiki config` | Effective config summary; writes require explicit user confirmation. |
 
