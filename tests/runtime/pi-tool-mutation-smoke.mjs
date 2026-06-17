@@ -46,9 +46,12 @@ function decisionTableInput() {
 		rows: [
 			{
 				id: "DTR-pi-mutation-smoke",
-				currentState: "Pi tools are mutation-capable but need guarded append smoke coverage.",
-				desiredState: "Pi tool append proves expected-byte and sequence guarded mutation.",
-				rationale: "Dogfooding must prove safe trace writes before broader mutation use.",
+				currentState:
+					"Pi tools are mutation-capable but need guarded append smoke coverage.",
+				desiredState:
+					"Pi tool append proves expected-byte and sequence guarded mutation.",
+				rationale:
+					"Dogfooding must prove safe trace writes before broader mutation use.",
 				...decisionQualityFields(),
 				approval: "approved",
 				sourceRefs: [".codewiki/kb/system/api-tools.md"],
@@ -170,7 +173,8 @@ try {
 	const readBack = await readTrace(tracePath);
 	assert.equal(
 		readBack.records.some(
-			(record) => record.type === "trace_event" && record.event === "decision.iteration",
+			(record) =>
+				record.type === "trace_event" && record.event === "decision.iteration",
 		),
 		true,
 	);

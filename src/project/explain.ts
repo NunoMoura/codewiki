@@ -201,7 +201,11 @@ function pathExplain(
 		kind: "path",
 		title: `Path: ${target}`,
 		summary: `Owned by component ${owner.id}.`,
-		refs: unique([owner.doc, ".codewiki/kb/system/source-map.yaml", ...traceRefs]),
+		refs: unique([
+			owner.doc,
+			".codewiki/kb/system/source-map.yaml",
+			...traceRefs,
+		]),
 		owner: ownerSummary(owner),
 		traceRefs,
 		quality,
@@ -287,7 +291,8 @@ function sourceMapOwnerForExplainPath(
 			)
 			.sort(
 				(left, right) =>
-					componentExplainSpecificity(right) - componentExplainSpecificity(left),
+					componentExplainSpecificity(right) -
+					componentExplainSpecificity(left),
 			)[0]
 	);
 }
@@ -295,9 +300,11 @@ function sourceMapOwnerForExplainPath(
 function componentExplainSpecificity(component: SourceMapComponent): number {
 	return Math.max(
 		0,
-		...[component.doc, ...component.testPatterns, ...component.generatedViews].map(
-			(pattern) => pattern.replace(/\*/g, "").length,
-		),
+		...[
+			component.doc,
+			...component.testPatterns,
+			...component.generatedViews,
+		].map((pattern) => pattern.replace(/\*/g, "").length),
 	);
 }
 
@@ -360,8 +367,8 @@ function implementationChangeRefsForPath(
 	if (event.event !== "implementation.iteration") return [];
 	return objectList(objectRecord(event.data?.output).changes)
 		.filter((change) => implementationChangeTouchesPath(change, target, owner))
-		.map((change) =>
-			`trace:${event.id}#change:${text(change.id) || "unknown"}`,
+		.map(
+			(change) => `trace:${event.id}#change:${text(change.id) || "unknown"}`,
 		);
 }
 
@@ -412,8 +419,8 @@ function qualityForPath(
 	const fold = foldProjectTraceRecords(records);
 	const eventIds = new Set(traceRefs.map(eventIdFromTraceRef).filter(Boolean));
 	return fold.traceIds.flatMap((traceId) =>
-		buildQualityView({ records: fold.recordsByTrace[traceId] || [] }).iterations
-			.filter(
+		buildQualityView({ records: fold.recordsByTrace[traceId] || [] })
+			.iterations.filter(
 				(iteration) =>
 					eventIds.has(iteration.eventId) ||
 					refsTouchPath(iteration.refs, target, owner),
@@ -444,7 +451,9 @@ function qualitySummary(
 	};
 }
 
-function ownerSummary(component: SourceMapComponent): ProjectExplainOwnerSummary {
+function ownerSummary(
+	component: SourceMapComponent,
+): ProjectExplainOwnerSummary {
 	return {
 		componentId: component.id,
 		doc: component.doc,
