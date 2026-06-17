@@ -27,6 +27,7 @@
 		"test:pack": "npm pack --dry-run && node tests/runtime/package-install-smoke.mjs",
 		"test:pi-install": "node tests/runtime/pi-install-smoke.mjs",
 		"test:pi-rpc": "node tests/runtime/pi-rpc-smoke.mjs",
+		"test:pi-dogfood": "npm run build && node tests/runtime/pi-dogfood-smoke.mjs",
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
 		"typecheck": "tsc --noEmit"
 	},

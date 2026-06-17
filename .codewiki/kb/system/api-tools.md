@@ -143,7 +143,7 @@ Project-local skills under `.agents/skills/codewiki-*` are small, operational, a
 - `codewiki-archive`: close, retain, hydrate, and restore traces/knowledge;
 - `codewiki-config`: read automation and host policy.
 
-Once repo-local dogfooding is explicitly enabled, these skills should point agents at the Pi-owned `wiki_*` tools. Until then, skills must not dogfood CodeWiki workflow or reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
+Repo-local dogfooding is enabled, so these skills may point agents at Pi-owned `wiki_*` tools for read-only state and explanation work. Mutation workflows must still require explicit expected byte/sequence checks and must not reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
 
 ## Distribution
 

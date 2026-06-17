@@ -1,6 +1,6 @@
 # System Overview
 
-CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is archived under `_OLD_VERSION/**`; the new Pi extension is package-installable, while repo-local dogfooding remains explicitly gated. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
+CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is archived under `_OLD_VERSION/**`; the new Pi extension is package-installable and repo-local read-only dogfooding is enabled. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
 
 ## Target mental model
 

@@ -41,7 +41,7 @@ function assertNoPattern(paths, pattern, message) {
 }
 
 describe("install readiness checklist", () => {
-	it("exposes package install metadata without repo-local enablement", () => {
+	it("exposes package install metadata for repo-local dogfooding", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
@@ -92,9 +92,11 @@ describe("install readiness checklist", () => {
 		assert.equal(codewikiConfig.hosts.mcp.enabled, false);
 	});
 
-	it("does not enable CodeWiki through repo-local Pi settings", () => {
+	it("enables this checkout for repo-local Pi dogfooding", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
+		assert.equal(packages.includes("npm:pi-lens"), true);
+		assert.equal(packages.includes(".."), true);
 		assert.deepEqual(
 			packages.filter((entry) => JSON.stringify(entry).includes("codewiki")),
 			[],

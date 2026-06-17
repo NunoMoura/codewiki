@@ -7,7 +7,7 @@ The previous Pi extension, workflow skills, scripts, and tool pipeline have been
 ## Current posture
 
 - Package metadata exposes the Pi extension for external Pi installs through `pi.extensions`.
-- Repo-local Pi settings do not enable CodeWiki in this checkout yet; do not dogfood it here until the external smoke passes.
+- Repo-local Pi settings now enable this checkout for initial CodeWiki dogfooding through Pi.
 - Project-local `.agents/skills/codewiki-*` skills are migration guidance only; they do not enable archived tools.
 - `.codewiki/kb/**` remains source-of-truth documentation for intended product/system design.
 - `.codewiki/traces/TRACE-*.jsonl` is the intended workflow/state truth model, following Pi's session JSONL pattern.
@@ -54,15 +54,16 @@ npm test
 npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
+npm run test:pi-dogfood
 npm run test:readiness
 ```
 
-`npm run test:pi-install` performs an isolated Pi install smoke using temporary Pi settings. It must not mutate repo-local or global Pi settings. `npm run test:pi-rpc` performs an external temp-project Pi RPC smoke, runs `/wiki bootstrap` and `/wiki state --board`, and verifies rendered notification output without starting a model turn. `npm run test:readiness` checks package enablement, CodeWiki state shape, repo-local Pi settings, and stale public wording before repo dogfooding.
+`npm run test:pi-install` performs an isolated Pi install smoke using temporary Pi settings. It must not mutate repo-local or global Pi settings. `npm run test:pi-rpc` performs an external temp-project Pi RPC smoke, runs `/wiki bootstrap` and `/wiki state --board`, and verifies rendered notification output without starting a model turn. `npm run test:pi-dogfood` builds `dist/**` and verifies this repo's `.pi/settings.json` can load `/wiki state --board` without a model turn. `npm run test:readiness` checks package enablement, CodeWiki state shape, repo-local Pi settings, and stale public wording for dogfood safety.
 
 `src/cli/index.ts` exists only as a temporary development/test harness while the Pi adapter stabilizes. It is not the intended agent-facing CodeWiki OS, and the npm package currently does not expose a CLI binary.
 
 ## Pi usage
 
-Do not install or enable this checkout in repo-local Pi settings yet. If Pi was already running with an older CodeWiki extension, remove that package from Pi settings and reload Pi.
+Repo-local Pi settings load `pi-lens` and this checkout (`..`) for initial CodeWiki dogfooding. Build `dist/**` before starting Pi from a fresh checkout because the package manifest points at `dist/pi/extension.js`.
 
-Repo-local Pi settings currently load only `pi-lens`; CodeWiki itself remains unavailable in this checkout until a future explicit dogfood step. Installed package use should be through Pi-owned `/wiki ...` commands and `wiki_*` tools, not through the transitional CLI or archived tools.
+Installed package use should be through Pi-owned `/wiki ...` commands and `wiki_*` tools, not through the transitional CLI or archived tools. Prefer read-only `/wiki state` and `/wiki explain` during early dogfooding; mutation-capable tools still require explicit expected byte/sequence checks.

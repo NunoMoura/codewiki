@@ -22,7 +22,7 @@ Target constraints:
 - Worktree Git mutations require an explicit host call and injected command runner.
 - Final implementation closure requires aggregate content proof after worker outputs are merged.
 - Pi session history is referenced, not copied into CodeWiki truth.
-- No `wiki_resume_context`, CodeWiki-owned compaction, or auto-pickup runs before repo-local dogfooding is explicitly enabled.
+- No `wiki_resume_context`, CodeWiki-owned compaction, or auto-pickup runs during initial repo-local dogfooding.
 
 ## Related docs
 

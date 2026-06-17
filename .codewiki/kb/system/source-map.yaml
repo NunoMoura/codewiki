@@ -170,6 +170,7 @@ components:
       - src/pi/**
     tests:
       - tests/runtime/pi-dispatcher.test.mjs
+      - tests/runtime/pi-dogfood-smoke.mjs
       - tests/runtime/pi-extension.test.mjs
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-process-session.test.mjs

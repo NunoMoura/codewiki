@@ -254,9 +254,9 @@ Product docs define user-facing orientation. System docs define technical specs.
 
 ## Migration operation rules
 
-This refactor is bootstrapped without repo-local CodeWiki Pi dogfooding. Agents must not use CodeWiki `wiki_*` tools, CodeWiki-owned compaction, generated roadmap state, or generated views as active workflow truth in this repository until repo-local dogfooding is explicitly enabled.
+This refactor now permits repo-local CodeWiki Pi dogfooding for read-only state and explanation work. Agents must not use CodeWiki-owned compaction, generated roadmap state, or generated views as active workflow truth. Mutation workflows still require explicit expected byte/sequence evidence.
 
-Migrate code from `_OLD_VERSION/**` into `src/**` one module at a time: decision, then planning, then implementation, then traces/views/runtime support. Each migration should keep tests local to the migrated module and should not re-enable Pi extension metadata until explicitly approved.
+Migrate code from `_OLD_VERSION/**` into `src/**` one module at a time: decision, then planning, then implementation, then traces/views/runtime support. Each migration should keep tests local to the migrated module and avoid reintroducing archived Pi extension internals.
 
 Context compression belongs to Pi native compaction during this phase. CodeWiki-owned refresh windows, context-boundary injection, and automatic `wiki_resume_context` pickup are disabled until a future explicit decision reintroduces them.
 

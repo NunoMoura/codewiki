@@ -10,7 +10,7 @@ This audit records the current migration state after the pivot to runtime outer 
 
 | Area | Old source | New source | Migration state | Notes |
 | --- | ---: | ---: | --- | --- |
-| Pi adapter and commands | 36 files | 13 files | Package metadata enabled / repo dogfood gated | `src/pi/**` exposes tools, `/wiki`, prompt/TUI seams, process/session worker transport, and package install/RPC smoke coverage without importing the Pi SDK into core source. |
+| Pi adapter and commands | 36 files | 13 files | Package metadata enabled / read-only repo dogfood | `src/pi/**` exposes tools, `/wiki`, prompt/TUI seams, process/session worker transport, and package install/RPC smoke coverage without importing the Pi SDK into core source. |
 | Agency | 5 files | 0 files | Intentionally dropped for now | Role/agency scheduling is not a target concept during the rebuild. Runtime scheduling uses work-queue projections and claims. |
 | Public API facade | 2 files | 8 files | Core facades complete | Reduced core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`; the Pi wrapper is package-installable while MCP remains deferred. |
 | Audit/checks | 8 files | 0 files | Partially replaced | Deterministic checks move into semantic loop exit conditions where relevant. Packaged audit tooling is not migrated. |
@@ -55,7 +55,7 @@ The following source is now stable enough to be treated as the active migration 
 These old behaviors should stay out of active source unless a future accepted decision explicitly reintroduces them:
 
 - automatic CodeWiki compaction, context projection, or prompt injection;
-- repo-local Pi extension loading before explicit dogfooding approval;
+- mutation-heavy repo-local Pi dogfooding without fresh expected byte/sequence evidence;
 - graph files as canonical truth;
 - historical roadmap/artifact/validation/session/telemetry roots as active workflow truth;
 - role-based agency scheduling as a first-class workflow axis;
@@ -71,7 +71,7 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Orchestrator append facade | `appendSemanticLoopIteration()` runs one semantic loop iteration, verifies one target `<loop>.iteration` event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic producers and generated views now use iteration output directly. |
 | Done | `wiki_state` core facade | `buildWikiState()` folds trace records and source-map input into status, resume, work-plan, work-queue, blockers, conflicts, and source ownership projections without reading stored views as truth. | Host tools/commands can wrap this facade later. |
 | Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
-| Done | User-facing state/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki state` and `/wiki resume` are package-installable; repo-local dogfooding remains gated. |
+| Done | User-facing state/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki state` and `/wiki resume` are package-installable; repo-local read-only dogfooding is enabled. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
 | Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config; they must point at Pi-owned tools once the extension is explicitly enabled. |
 | Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
@@ -98,7 +98,7 @@ CodeWiki should distribute as a harness-agnostic core with thin host adapters:
 codewiki core package -> Pi extension adapter -> future MCP adapter
 ```
 
-Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is now package-installable after the reduced tool facade stabilized; repo-local dogfooding remains a separate opt-in. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
+Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is now package-installable after the reduced tool facade stabilized, and repo-local read-only dogfooding is enabled. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
 
 ## Tool-surface direction
 
