@@ -3,6 +3,10 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
+import {
+	formatKnowledgeDriftIssues,
+	lintKnowledgeDrift,
+} from "../../src/knowledge/drift-linter.ts";
 import { piExtensionAvailable } from "../../src/pi/extension.ts";
 
 const packageJson = jsonFile("package.json");
@@ -31,13 +35,16 @@ function filesUnder(root) {
 	return files;
 }
 
-function assertNoPattern(paths, pattern, message) {
-	const matches = [];
-	for (const path of paths) {
-		const content = readFileSync(path, "utf8");
-		if (pattern.test(content)) matches.push(path);
-	}
-	assert.deepEqual(matches, [], message);
+function knowledgeDriftFiles() {
+	const productPaths = new Set(productDocumentationFiles);
+	return Array.from(new Set(operatingGuidanceFiles)).map((path) => ({
+		path,
+		content: readFileSync(path, "utf8"),
+		scopes: [
+			...(productPaths.has(path) ? ["product_documentation"] : []),
+			"operating_guidance",
+		],
+	}));
 }
 
 describe("install readiness checklist", () => {
@@ -104,30 +111,9 @@ describe("install readiness checklist", () => {
 	});
 
 	it("has no stale public command or trace wording in docs", () => {
-		assertNoPattern(
-			productDocumentationFiles,
-			/\/codewiki(?:\s|$)/,
-			"docs must use /wiki, not /codewiki",
-		);
-		assertNoPattern(
-			productDocumentationFiles,
-			/\bcodewiki\s+(?:<command>|state|bootstrap)\b/,
-			"docs must not advertise the transitional CLI as product UX",
-		);
-		assertNoPattern(
-			productDocumentationFiles,
-			/\btrace\.close\b/,
-			"docs must use trace_close event wording",
-		);
-		assertNoPattern(
-			productDocumentationFiles,
-			/\bwiki_status\b|\/wiki\s+status\b/,
-			"public UX must use state, not status",
-		);
-		assertNoPattern(
-			operatingGuidanceFiles,
-			/extension is disabled|while the extension is disabled|hosts\.cli/,
-			"docs/skills must use current repo-local dogfood gating wording",
+		assert.deepEqual(
+			formatKnowledgeDriftIssues(lintKnowledgeDrift(knowledgeDriftFiles())),
+			[],
 		);
 	});
 });
