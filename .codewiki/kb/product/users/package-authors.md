@@ -24,6 +24,6 @@ They need stable semantics for:
 ## Related docs
 
 - [CodeWiki API](../../system/api.md)
-- [API vNext Tool Surface](../../system/api-vnext-tools.md)
+- [API Tool Surface](../../system/api-tools.md)
 - [Loop Model](../../system/loop-model.md)
 - [Extension](../../system/extension.md)

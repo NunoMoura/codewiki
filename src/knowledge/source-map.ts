@@ -1,4 +1,4 @@
-import yaml from "js-yaml";
+import { parse as parseYaml } from "yaml";
 import { pathMatchesPattern } from "./file-structure-map.ts";
 
 export interface SourceMapDefaults {
@@ -56,7 +56,7 @@ export interface SourceMapValidationInput {
 }
 
 export function parseSourceMapYaml(source: string): SourceMapContract {
-	return sourceMapFromUnknown(yaml.load(source));
+	return sourceMapFromUnknown(parseYaml(source));
 }
 
 export function sourceMapFromUnknown(value: unknown): SourceMapContract {

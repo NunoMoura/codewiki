@@ -37,7 +37,8 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 		}
 		if (record.type === "trace_head")
 			throw new Error("Trace file contains multiple trace_head records.");
-		if (close) throw new Error("Trace file contains records after trace_close.");
+		if (close)
+			throw new Error("Trace file contains records after trace_close.");
 		if (record.type === "trace_event") {
 			if (seenRecordIds.has(record.id))
 				throw new Error(`Duplicate trace record id: ${record.id}.`);

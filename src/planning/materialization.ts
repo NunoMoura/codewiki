@@ -143,9 +143,13 @@ export function normalizePlanningAssessment(
 	};
 }
 
-function normalizeResolutionKind(value: unknown): PlanningResolutionKind {
-	const normalized = text(value).toLowerCase().replace(/_/g, "-");
-	return resolutionAliases.get(normalized) ?? "work-unit";
+function normalizeResolutionKind(
+	value: unknown,
+): PlanningResolutionKind | string {
+	const raw = text(value);
+	if (!raw) return "work-unit";
+	const normalized = raw.toLowerCase().replace(/_/g, "-");
+	return resolutionAliases.get(normalized) ?? normalized;
 }
 
 function normalizeAcceptanceCriteria(input: {

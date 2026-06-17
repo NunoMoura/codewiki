@@ -9,7 +9,7 @@ Use this skill when the user request changes intended behavior, source-of-truth 
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Decision owns semantic intent and knowledge impact.
 - Planning owns executable work items.
 - Implementation owns source/docs/tests changes.

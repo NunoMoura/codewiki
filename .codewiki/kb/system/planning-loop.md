@@ -48,8 +48,9 @@ Planning loop output is the high-signal packet implementation and runtime need:
 - conflict notes and scheduling holds;
 - verification strategy;
 - worker profile and agent assessment of independence, implementation readiness, right sizing, and uncertainty resolution;
-- deferrals with owner, trigger, and expiry when allowed;
-- route-back questions for decision when authority is missing;
+- resolutions using known kinds: work-unit, deferred, already-implemented, route-back, knowledge-only, or non-executable;
+- deferrals with owner, trigger, rationale, and evidence when allowed;
+- route-back resolutions with owner, trigger, rationale, and evidence when decision authority is missing;
 - canonical refs proving the output.
 
 Planning output should not include code changes, test results, or worker-local execution evidence.
@@ -69,7 +70,7 @@ The planning loop can exit only when loop-owned quality standards are met or exp
 | work_unit_right_sized | agent | Unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch. |
 | source_ownership_aligned | deterministic | Component refs exist in the file-structure map and cover declared paths/tests. |
 | dependency_order_clear | deterministic | Dependencies exist, are acyclic, and order overlapping path scopes. |
-| resolutions_accounted | deterministic | Deferred/non-executable/route-back/knowledge-only/already-implemented decisions carry required evidence. |
+| resolutions_accounted | deterministic | Resolutions use known kinds and carry required evidence; route-back resolutions carry evidence and return to decision authority before implementation. |
 | traceability_refs_canonical | deterministic | Planning refs are canonical trace, KB, Git, digest, source, or test refs. |
 
 ## Exit statuses

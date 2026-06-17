@@ -32,9 +32,12 @@ components:
       - package.json
       - package-lock.json
       - tsconfig.json
+      - tsconfig.build.json
       - src/index.ts
     tests:
       - tests/scaffold.test.mjs
+      - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/readiness-checklist.test.mjs
     role: package_entrypoint
   api:
     doc: .codewiki/kb/system/api.md
@@ -71,6 +74,7 @@ components:
     generated_views:
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
+      - .codewiki/views/quality.json
     trace_events:
       - planning.iteration
     role: semantic_loop
@@ -95,7 +99,7 @@ components:
       - trace_head
       - trace_event
       - tail_checkpoint
-      - trace.close
+      - trace_close
     role: state_truth
   views:
     doc: .codewiki/kb/system/traces.md
@@ -109,6 +113,7 @@ components:
       - .codewiki/views/resume.json
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
+      - .codewiki/views/quality.json
       - .codewiki/views/blockers.json
       - .codewiki/views/conflicts.json
     role: generated_projection
@@ -122,7 +127,7 @@ components:
       - tests/scaffold.test.mjs
     role: hot_knowledge
   skills:
-    doc: .codewiki/kb/system/api-vnext-tools.md
+    doc: .codewiki/kb/system/api-tools.md
     source:
       - .agents/skills/**
     tests:
@@ -134,6 +139,8 @@ components:
       - src/git/**
     tests:
       - tests/implementation/**
+      - tests/runtime/git-status.test.mjs
+      - tests/runtime/worktrees.test.mjs
     role: content_proof
   runtime:
     doc: .codewiki/kb/system/runtime.md
@@ -156,13 +163,19 @@ components:
       - src/cli/**
     tests:
       - tests/runtime/cli.test.mjs
-    role: host_adapter
+    role: temporary_development_harness
   pi:
     doc: .codewiki/kb/system/extension.md
     source:
       - src/pi/**
     tests:
       - tests/runtime/pi-dispatcher.test.mjs
+      - tests/runtime/pi-extension.test.mjs
+      - tests/runtime/pi-install-smoke.mjs
+      - tests/runtime/pi-process-session.test.mjs
+      - tests/runtime/pi-rpc-smoke.mjs
+      - tests/runtime/pi-worker-results.test.mjs
+      - tests/runtime/package-install-smoke.mjs
     role: host_adapter
   project:
     doc: .codewiki/kb/system/file-structure.md

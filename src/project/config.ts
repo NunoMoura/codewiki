@@ -25,6 +25,7 @@ export interface WikiApprovalPolicyConfig {
 export interface WikiRuntimeConfig {
 	maxWorkers: number;
 	worktreeIsolation: WikiConfigWorktreeIsolation;
+	worktreeSetupCommands: string[];
 	automation: WikiConfigAutomationMode;
 	agency: WikiConfigAgencyLevel;
 	budgets: WikiRuntimeBudgetConfig;
@@ -41,7 +42,6 @@ export interface WikiRetentionConfig {
 }
 
 export interface WikiHostConfig {
-	cli: { enabled: boolean };
 	pi: { enabled: boolean };
 	mcp: { enabled: boolean };
 }
@@ -78,7 +78,6 @@ export type PartialRuntimeConfig = Partial<
 };
 
 export type PartialHostConfig = {
-	cli?: Partial<WikiHostConfig["cli"]>;
 	pi?: Partial<WikiHostConfig["pi"]>;
 	mcp?: Partial<WikiHostConfig["mcp"]>;
 };
@@ -88,6 +87,7 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 	runtime: {
 		maxWorkers: 1,
 		worktreeIsolation: "none",
+		worktreeSetupCommands: [],
 		automation: "manual",
 		agency: "assist",
 		budgets: {
@@ -116,7 +116,6 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 		hydrateOnDemand: true,
 	},
 	hosts: {
-		cli: { enabled: true },
 		pi: { enabled: false },
 		mcp: { enabled: false },
 	},
@@ -156,10 +155,6 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 			...(input.retention || {}),
 		},
 		hosts: {
-			cli: {
-				...DEFAULT_WIKI_CONFIG.hosts.cli,
-				...(input.hosts?.cli || {}),
-			},
 			pi: {
 				...DEFAULT_WIKI_CONFIG.hosts.pi,
 				...(input.hosts?.pi || {}),
@@ -189,6 +184,16 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	}
 	validateBudgets(config.runtime.budgets);
 	validateApproval(config.runtime.approval);
+	config.runtime.worktreeSetupCommands = uniqueStringList(
+		config.runtime.worktreeSetupCommands,
+	);
+	for (const command of config.runtime.worktreeSetupCommands) {
+		if (command.includes("\n") || command.includes("\r")) {
+			throw new Error(
+				"wiki_config runtime.worktreeSetupCommands must be single-line commands.",
+			);
+		}
+	}
 	const stopConditions = uniqueStringList(config.runtime.stopConditions);
 	if (!config.retention.archiveRefPrefix.trim()) {
 		throw new Error("wiki_config retention.archiveRefPrefix is required.");
@@ -211,7 +216,6 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 			archiveRefPrefix: config.retention.archiveRefPrefix.trim(),
 		},
 		hosts: {
-			cli: { ...config.hosts.cli },
 			pi: { ...config.hosts.pi },
 			mcp: { ...config.hosts.mcp },
 		},
@@ -238,7 +242,6 @@ function mergeWikiConfigPatch(
 		},
 		retention: { ...current.retention, ...(patch.retention || {}) },
 		hosts: {
-			cli: { ...current.hosts.cli, ...(patch.hosts?.cli || {}) },
 			pi: { ...current.hosts.pi, ...(patch.hosts?.pi || {}) },
 			mcp: { ...current.hosts.mcp, ...(patch.hosts?.mcp || {}) },
 		},

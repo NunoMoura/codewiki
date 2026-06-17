@@ -36,6 +36,8 @@ export type DecisionExitIssueCode =
 	| "agent_assessment_not_aligned"
 	| "missing_high_risk_approval"
 	| "invalid_approval_ref"
+	| "missing_risk"
+	| "invalid_risk"
 	| "missing_current_state_packet"
 	| "invalid_current_state_ref"
 	| "missing_traceability_ref"
@@ -78,6 +80,7 @@ export function evaluateDecisionExit(
 		});
 	}
 	const approvedRows = approvedDecisionRows(table);
+	issues.push(...tableTraceabilityRefIssues(table));
 	if (table.rows.length > 0 && approvedRows.length === 0) {
 		issues.push({
 			code: "no_approved_rows",
@@ -99,6 +102,7 @@ export function evaluateDecisionExit(
 			...approvedRowIssues(row),
 			...recommendationQualityIssues(row),
 			...agentAssessmentQualityIssues(row),
+			...riskQualityIssues(row),
 			...highRiskQualityIssues(row),
 			...traceabilityRefIssues(row),
 		);
@@ -257,6 +261,14 @@ function duplicateRowIssues(rows: DecisionRow[]): DecisionExitIssue[] {
 		}));
 }
 
+function tableTraceabilityRefIssues(table: DecisionTable): DecisionExitIssue[] {
+	return invalidTraceRefs(table.sourceRefs).map((ref) => ({
+		code: "invalid_traceability_ref" as const,
+		ref,
+		message: `Decision table ${table.id} has non-canonical source ref ${ref}.`,
+	}));
+}
+
 function traceabilityRefIssues(row: DecisionRow): DecisionExitIssue[] {
 	return invalidTraceRefs([...row.sourceRefs, ...row.proofRefs]).map((ref) => ({
 		code: "invalid_traceability_ref" as const,
@@ -325,6 +337,28 @@ function agentAssessmentQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 				code: "agent_assessment_not_aligned",
 				rowId: row.id,
 				message: `Agent assessment for decision row ${row.id} does not validate the intention as aligned.`,
+			},
+		];
+	}
+	return [];
+}
+
+function riskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+	if (!row.risk) {
+		return [
+			{
+				code: "missing_risk" as const,
+				rowId: row.id,
+				message: `Decision row ${row.id} must declare risk as low, medium, or high.`,
+			},
+		];
+	}
+	if (!isAllowed(row.risk, ["low", "medium", "high"])) {
+		return [
+			{
+				code: "invalid_risk" as const,
+				rowId: row.id,
+				message: `Decision row ${row.id} has invalid risk ${row.risk}.`,
 			},
 		];
 	}
@@ -436,7 +470,7 @@ function knowledgeDeltaIssues(
 function issueRemediation(issue: DecisionExitIssue): ExitRemediationItem {
 	return {
 		action: decisionRemediationAction(issue),
-		route: "decision",
+		route: isBlockingDecisionIssue(issue) ? "user" : "decision",
 		refs: decisionIssueRefs(issue),
 		blocking: true,
 	};
@@ -470,6 +504,8 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"Route to the user with concerns or alternatives before planning.",
 	missing_high_risk_approval:
 		"Capture explicit user approval authority and a canonical approval ref for high-risk rows.",
+	missing_risk: "Declare decision risk as low, medium, or high.",
+	invalid_risk: "Use risk low, medium, or high.",
 	invalid_approval_ref:
 		"Replace weak approval refs with canonical trace, KB, Git, digest, source, or test refs.",
 	missing_current_state_packet:

@@ -42,9 +42,15 @@ export function implementationQualityStandards(
 		standard({
 			id: "verification_passed",
 			description:
-				"Required implementation checks are structured, present, and passing.",
+				"Required implementation checks are structured, present, passing, cover planned verification, and package changes include pack verification.",
 			issues,
-			codes: ["missing_check_results", "invalid_check_result", "failed_check"],
+			codes: [
+				"missing_check_results",
+				"invalid_check_result",
+				"failed_check",
+				"missing_planned_verification",
+				"missing_package_pack_check",
+			],
 		}),
 		standard({
 			id: "tdd_evidence_valid",
@@ -63,7 +69,12 @@ export function implementationQualityStandards(
 			description:
 				"Implementation output has change-level and aggregate content proof when required.",
 			issues,
-			codes: ["missing_content_proof", "missing_aggregate_content_proof"],
+			codes: [
+				"missing_content_proof",
+				"missing_aggregate_content_proof",
+				"worker_proof_failed",
+				"worker_proof_conflict",
+			],
 		}),
 		standard({
 			id: "worker_claims_correlated",

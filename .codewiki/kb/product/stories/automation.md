@@ -18,4 +18,4 @@ As a user, I want an agent to advance CodeWiki work automatically while staying 
 - [Agents](../users/agents.md)
 - [Loop Model](../../system/loop-model.md)
 - [Runtime](../../system/runtime.md)
-- [API vNext Tool Surface](../../system/api-vnext-tools.md)
+- [API Tool Surface](../../system/api-tools.md)

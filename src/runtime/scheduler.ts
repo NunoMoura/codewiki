@@ -1,3 +1,4 @@
+import type { WorktreeRef } from "../git/worktrees.ts";
 import type { WorkQueueItem, WorkQueueView } from "../views/types.ts";
 
 export type RuntimeDispatchHoldReason = "capacity" | "path_conflict";
@@ -14,6 +15,7 @@ export interface RuntimeDispatchItem {
 	componentRefs: string[];
 	pathScopes: string[];
 	traceRefs: string[];
+	worktree?: WorktreeRef;
 	sourceEventId?: string;
 }
 

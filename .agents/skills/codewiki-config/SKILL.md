@@ -9,7 +9,7 @@ Use this skill when a task depends on automation, agency, approval cadence, host
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Config influences how loops, runtime, archive, and host adapters coordinate; it does not replace trace truth.
 - Prefer previewing resolved config before changing behavior.
 - Keep policy explicit when user approval, destructive action, or host boundaries matter.
@@ -51,7 +51,6 @@ node --experimental-strip-types src/cli/index.ts config --input config.json
       "requireCloseRecord": true
     },
     "hosts": {
-      "cli": { "enabled": true },
       "pi": { "enabled": false },
       "mcp": { "enabled": false }
     }

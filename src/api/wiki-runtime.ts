@@ -5,9 +5,15 @@ import {
 	type RuntimeDispatchClaimBatch,
 } from "../runtime/dispatcher.ts";
 import {
+	evaluateRuntimeDispatchPolicy,
+	type RuntimeDispatchPolicyDecision,
+} from "../runtime/policy.ts";
+import {
 	planRuntimeDispatch,
 	type RuntimeDispatchPlan,
 } from "../runtime/scheduler.ts";
+import type { WorktreeRef } from "../git/worktrees.ts";
+import type { PartialWikiConfig, WikiConfig } from "../project/config.ts";
 import type { WorkQueueView } from "../views/types.ts";
 
 export type WikiRuntimeMode = "preview" | "append";
@@ -26,12 +32,18 @@ export interface RunWikiRuntimeInput {
 	workerIdPrefix?: string;
 	claimIdPrefix?: string;
 	workerIds?: Record<string, string>;
+	config?: PartialWikiConfig | WikiConfig;
+	worktreeRoot?: string;
+	baseRef?: string;
+	baseSha?: string;
+	dirtyPaths?: string[];
 }
 
 export interface RunWikiRuntimeResult {
 	action: WikiRuntimeAction;
 	mode: WikiRuntimeMode;
 	plan: RuntimeDispatchPlan;
+	policy: RuntimeDispatchPolicyDecision;
 	batch?: RuntimeDispatchClaimBatch;
 	append?: RuntimeDispatchClaimAppendResult;
 }
@@ -44,8 +56,29 @@ export async function runWikiRuntime(
 		throw new Error(`Unsupported wiki_runtime action ${action}.`);
 	const mode = input.mode || "preview";
 	const plan = planRuntimeDispatch(input.queue, {
-		maxWorkers: input.maxWorkers,
+		maxWorkers: input.maxWorkers ?? input.config?.runtime?.maxWorkers,
 	});
+	const policy = evaluateRuntimeDispatchPolicy({
+		mode,
+		queue: input.queue,
+		plan,
+		config: input.config,
+		maxWorkers: input.maxWorkers,
+		nextSequenceByTrace: input.nextSequenceByTrace,
+		expectedBytesByTrace: input.expectedBytesByTrace,
+		repoRoot: input.repoRoot,
+		worktreeRoot: input.worktreeRoot,
+		baseRef: input.baseRef,
+		baseSha: input.baseSha,
+		dirtyPaths: input.dirtyPaths,
+		workerIdPrefix: input.workerIdPrefix,
+		workerIds: input.workerIds,
+	});
+	if (mode === "append" && !policy.appendAllowed) {
+		throw new Error(
+			`wiki_runtime append blocked by policy: ${policy.blockers.join(" ")}`,
+		);
+	}
 	const batch = input.nextSequenceByTrace
 		? createRuntimeDispatchClaimEvents(plan, {
 				createdAt: input.createdAt || new Date().toISOString(),
@@ -54,6 +87,7 @@ export async function runWikiRuntime(
 				workerIdPrefix: input.workerIdPrefix,
 				claimIdPrefix: input.claimIdPrefix,
 				workerIds: input.workerIds,
+				worktreesByWorkUnit: worktreesByWorkUnit(policy.worktrees),
 			})
 		: undefined;
 	if (mode === "append") {
@@ -61,9 +95,19 @@ export async function runWikiRuntime(
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			expectedBytesByTrace: requiredBytesByTrace(input.expectedBytesByTrace),
 		});
-		return { action, mode, plan, batch, append };
+		return { action, mode, plan, policy, batch, append };
 	}
-	return { action, mode, plan, ...(batch ? { batch } : {}) };
+	return { action, mode, plan, policy, ...(batch ? { batch } : {}) };
+}
+
+function worktreesByWorkUnit(
+	worktrees: RuntimeDispatchPolicyDecision["worktrees"],
+): Record<string, WorktreeRef> {
+	return Object.fromEntries(
+		worktrees.flatMap((plan) =>
+			plan.worktree ? [[plan.workUnitId, plan.worktree]] : [],
+		),
+	);
 }
 
 function requiredBatch(

@@ -92,10 +92,10 @@ transitions:
   - from: production_ready
     to: closed
     trigger: close without publication requirement
-    trace_event: trace.close
+    trace_event: trace_close
     cleanup: delete all remaining trace tmp
   - from: published
     to: closed
     trigger: close after publication proof
-    trace_event: trace.close
+    trace_event: trace_close
     cleanup: delete all remaining trace tmp

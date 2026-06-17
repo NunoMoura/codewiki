@@ -9,7 +9,7 @@ Use this skill after decision output exits successfully and needs executable wor
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Planning consumes `decision.iteration` output and emits `planning.iteration` output.
 - Work items are referenced as `trace:<iteration-id>#work:<work-id>`.
 - Work items need path scopes, acceptance criteria, verification refs, dependency refs, and component/source ownership alignment.

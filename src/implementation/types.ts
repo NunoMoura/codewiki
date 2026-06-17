@@ -123,6 +123,7 @@ export interface ImplementationWorkerSummary {
 	refs: string[];
 	sessionId?: string;
 	sessionFile?: string;
+	proof?: import("./worker-proof.ts").ImplementationWorkerProof;
 }
 
 export interface ImplementationChange {
@@ -222,10 +223,14 @@ export type ImplementationExitIssueCode =
 	| "unknown_worker_claim"
 	| "inactive_worker_claim"
 	| "worker_claim_mismatch"
+	| "worker_proof_failed"
+	| "worker_proof_conflict"
 	| "invalid_change"
 	| "missing_check_results"
 	| "invalid_check_result"
 	| "failed_check"
+	| "missing_planned_verification"
+	| "missing_package_pack_check"
 	| "invalid_tdd_evidence"
 	| "missing_tdd_red_evidence"
 	| "missing_tdd_green_evidence"
@@ -277,6 +282,9 @@ export interface ImplementationExitInput {
 	requireTddEvidence?: boolean;
 	aggregateContentProof?: ContentProof;
 	workerResults?: ImplementationWorkerSummary[];
+	workerProofs?: import("./worker-proof.ts").ImplementationWorkerProof[];
+	workerProofConflicts?: import("./worker-proof.ts").ImplementationWorkerProofConflict[];
+	expectedWorkerBaseSha?: string;
 	workerClaims?: ImplementationWorkerClaim[];
 }
 

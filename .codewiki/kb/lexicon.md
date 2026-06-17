@@ -169,4 +169,4 @@ Deprecated terms may appear in `_OLD_VERSION/**` and this replacement table only
 - [Planning Loop](system/planning-loop.md)
 - [Implementation Loop](system/implementation-loop.md)
 - [Traces](system/traces.md)
-- [API vNext Tool Surface](system/api-vnext-tools.md)
+- [API Tool Surface](system/api-tools.md)

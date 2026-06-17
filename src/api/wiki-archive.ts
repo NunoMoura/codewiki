@@ -61,7 +61,12 @@ function retentionStubResult(
 		gitRestoreRef: requiredGitRestoreRef(input.gitRestoreRef),
 		headRef: input.headRef,
 	});
-	return { action: "retention_stub", mode, stub, refs: traceRetentionRefs(stub) };
+	return {
+		action: "retention_stub",
+		mode,
+		stub,
+		refs: traceRetentionRefs(stub),
+	};
 }
 
 async function closeResult(
@@ -140,7 +145,9 @@ function requiredArchivedRecords(
 	return records;
 }
 
-function requiredStub(stub: TraceRetentionStub | undefined): TraceRetentionStub {
+function requiredStub(
+	stub: TraceRetentionStub | undefined,
+): TraceRetentionStub {
 	if (!stub) throw new Error("wiki_archive hydrate requires stub.");
 	return stub;
 }

@@ -88,7 +88,7 @@ function normalizeDecisionRow(
 		maintainerImpact: text(row.maintainerImpact),
 		effort: text(row.effort),
 		affectedLayers: unique(stringList(row.affectedLayers)),
-		risk: firstText(row.risk, "medium"),
+		risk: text(row.risk),
 		approval: normalizeDecisionApprovalStatus(row.approval),
 		approvalAuthority: text(row.approvalAuthority),
 		approvalRef: text(row.approvalRef) || undefined,

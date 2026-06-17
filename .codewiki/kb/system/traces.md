@@ -89,7 +89,7 @@ Derived compact state for fast resume and view generation. Replay from `trace_he
 
 ### `trace_close`
 
-Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later.
+Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from dispatchable work.
 
 ```json
 {
@@ -176,13 +176,14 @@ Generated views are disposable projections over traces, KB, source/tests, and Gi
 .codewiki/views/resume.json
 .codewiki/views/work-plan.json
 .codewiki/views/work-queue.json
+.codewiki/views/quality.json
 .codewiki/views/blockers.json
 .codewiki/views/conflicts.json
 ```
 
 Views answer questions quickly. They do not own truth and must be rebuildable from traces and sources.
 
-`work-plan` is the per-trace planning projection. `work-queue` is the cross-trace runtime scheduling projection. A terminal board or kanban display renders views; it is not its own truth root.
+`work-plan` is the per-trace planning projection. `work-queue` is the cross-trace runtime scheduling projection. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board or kanban display renders views; it is not its own truth root.
 
 ## Trace data and refs
 

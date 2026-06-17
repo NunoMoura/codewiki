@@ -207,7 +207,9 @@ describe("implementation iteration runner", () => {
 			],
 		);
 		assert.equal(
-			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			result.exit.qualityStandards.every(
+				(standard) => standard.status === "met",
+			),
 			true,
 		);
 	});
@@ -289,8 +291,10 @@ describe("implementation iteration runner", () => {
 						errorHandling: "Error handling is acceptable.",
 						uncertainties: ["User-facing behavior needs clarification."],
 						uncertaintyOwner: "user",
-						uncertaintyResolution: "Block for user clarification before closure.",
-						rationale: "Project should not ship unresolved user-facing ambiguity.",
+						uncertaintyResolution:
+							"Block for user clarification before closure.",
+						rationale:
+							"Project should not ship unresolved user-facing ambiguity.",
 					},
 				}),
 			},
@@ -342,6 +346,105 @@ describe("implementation iteration runner", () => {
 			exit.issues.some((issue) => issue.code === "missing_release_approval"),
 			true,
 		);
+		assert.equal(
+			exit.remediation.find((item) => item.action.includes("approval"))?.route,
+			"user",
+		);
+	});
+
+	it("requires implementation evidence to cover planned verification", () => {
+		const planning = planningEvents();
+		const planningEvent = planningWorkEvent(planning);
+		const result = runImplementationIteration({
+			traceId: "TRACE-implementation",
+			planningEvents: planning,
+			changeInputs: [
+				{
+					id: "IC-missing-planned-verification",
+					planningRefs: [planningEvent.id],
+					codePaths: ["src/implementation/exit.ts"],
+					checkResults: [{ command: "npm run typecheck", status: "pass" }],
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary:
+								"Implementation evidence exists but omits planned verification.",
+							evidenceRefs: ["src/implementation/exit.ts"],
+						},
+					],
+					contentProof: { workingTreeDigest: "sha256:abc123" },
+					...implementationQualityFields(),
+				},
+			],
+		});
+
+		assert.equal(result.readyForClosure, false);
+		assert.equal(
+			result.exit.issues.some(
+				(issue) => issue.code === "missing_planned_verification",
+			),
+			true,
+		);
+		assert.equal(
+			result.exit.qualityStandards.find(
+				(standard) => standard.id === "verification_passed",
+			)?.status,
+			"unmet",
+		);
+	});
+
+	it("requires package pack verification for package changes", () => {
+		const planningEvent = planningWorkEvent(planningEvents());
+		const baseChange = {
+			id: "IC-package",
+			planningRefs: [planningEvent.id],
+			codePaths: ["package.json"],
+			checkResults: [{ command: "npm test", status: "pass" }],
+			acceptanceEvidenceItems: [
+				{
+					criterionId: "AC-001",
+					summary: "Package metadata updated.",
+					evidenceRefs: ["package.json"],
+				},
+			],
+			contentProof: { workingTreeDigest: "sha256:abc123" },
+			...implementationQualityFields(),
+		};
+		const [missingPack] = normalizeImplementationChanges([baseChange]);
+		const missingExit = evaluateImplementationExit({
+			planningRefs: [planningEvent.id],
+			changes: [missingPack],
+		});
+
+		assert.equal(missingExit.passed, false);
+		assert.equal(
+			missingExit.issues.some(
+				(issue) => issue.code === "missing_package_pack_check",
+			),
+			true,
+		);
+		assert.equal(
+			missingExit.qualityStandards.find(
+				(standard) => standard.id === "verification_passed",
+			)?.status,
+			"unmet",
+		);
+
+		const [withPack] = normalizeImplementationChanges([
+			{
+				...baseChange,
+				checkResults: [
+					{ command: "npm test", status: "pass" },
+					{ command: "npm run test:pack", status: "pass" },
+				],
+			},
+		]);
+		const passingExit = evaluateImplementationExit({
+			planningRefs: [planningEvent.id],
+			changes: [withPack],
+		});
+
+		assert.equal(passingExit.passed, true);
 	});
 
 	it("blocks duplicate implementation change ids", () => {
@@ -655,7 +758,150 @@ describe("implementation iteration runner", () => {
 			result.traceEvents[0].data?.output?.workerResults[0].workerId,
 			"worker-1",
 		);
+		assert.match(
+			result.workerAggregation.workerProofs[0].digest,
+			/^sha256:[a-f0-9]{64}$/,
+		);
+		assert.equal(
+			result.traceEvents[0].data?.output?.workerProofs[0].workerId,
+			"worker-1",
+		);
 		assert.equal(result.traceEvents[0].refs.includes("sha256:abcd1234"), true);
+	});
+
+	it("fills worker change content proof from normalized worker proof", () => {
+		const planning = planningEvents();
+		const planningEvent = planningWorkEvent(planning);
+		const claim = runtimeClaimEvent(planningEvent, {
+			claimId: "claim-proof-fill",
+			workerId: "worker-proof-fill",
+		});
+		const result = runImplementationIteration({
+			traceId: "TRACE-implementation",
+			planningEvents: planning,
+			claimEvents: [claim],
+			aggregateContentProof: { workingTreeDigest: "sha256:abcdef" },
+			workerResults: [
+				{
+					workerId: "worker-proof-fill",
+					workUnitId: "WU-001",
+					claimId: "claim-proof-fill",
+					planningRefs: [planningEvent.id],
+					headSha: "abc1234",
+					treeSha: "def5678",
+					changedFiles: ["src/implementation/workers.ts"],
+					checksRun: ["npm test"],
+					changeInputs: [
+						{
+							id: "IC-worker-proof-fill",
+							testPaths: [
+								"tests/implementation/implementation-iteration.test.mjs",
+							],
+							checkResults: [{ command: "npm test", status: "pass" }],
+							acceptanceEvidenceItems: [
+								{
+									criterionId: "AC-001",
+									summary: "Worker proof supplies content proof.",
+									evidenceRefs: [
+										"tests/implementation/implementation-iteration.test.mjs",
+									],
+								},
+							],
+							...implementationQualityFields(),
+						},
+					],
+				},
+			],
+		});
+
+		assert.equal(result.exit.passed, true);
+		assert.deepEqual(result.changes[0].codePaths, [
+			"src/implementation/workers.ts",
+		]);
+		assert.deepEqual(result.changes[0].contentProof, {
+			commit: "abc1234",
+			tree: "def5678",
+		});
+		assert.equal(result.workerAggregation.workerProofs[0].headSha, "abc1234");
+	});
+
+	it("blocks overlapping worker proof conflicts before aggregate closure", () => {
+		const planningEvent = planningWorkEvent(planningEvents());
+		const result = evaluateImplementationExit({
+			planningRefs: [
+				"trace:TRACE-implementation:planning:iteration:1#work:WU-a",
+				"trace:TRACE-implementation:planning:iteration:1#work:WU-b",
+			],
+			aggregateContentProof: { workingTreeDigest: "sha256:abcdef" },
+			changes: normalizeImplementationChanges([
+				{
+					id: "IC-worker-a",
+					planningRefs: [
+						"trace:TRACE-implementation:planning:iteration:1#work:WU-a",
+					],
+					codePaths: ["src/implementation/workers.ts"],
+					checkResults: [{ command: "npm test", status: "pass" }],
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary: "Worker A evidence.",
+							evidenceRefs: [
+								"tests/implementation/implementation-iteration.test.mjs",
+							],
+						},
+					],
+					contentProof: { workingTreeDigest: "sha256:aaa111" },
+					...implementationQualityFields(),
+				},
+				{
+					id: "IC-worker-b",
+					planningRefs: [
+						"trace:TRACE-implementation:planning:iteration:1#work:WU-b",
+					],
+					codePaths: ["src/implementation/workers.ts"],
+					checkResults: [{ command: "npm test", status: "pass" }],
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary: "Worker B evidence.",
+							evidenceRefs: [
+								"tests/implementation/implementation-iteration.test.mjs",
+							],
+						},
+					],
+					contentProof: { workingTreeDigest: "sha256:bbb222" },
+					...implementationQualityFields(),
+				},
+			]),
+			workerProofs: [
+				{
+					workerId: "worker-a",
+					workUnitId: "WU-a",
+					planningRefs: [planningEvent.id],
+					changedPaths: ["src/implementation/workers.ts"],
+					checks: ["npm test"],
+					validationVerdict: "pass",
+					clean: true,
+					digest: "sha256:aaaa",
+				},
+				{
+					workerId: "worker-b",
+					workUnitId: "WU-b",
+					planningRefs: [planningEvent.id],
+					changedPaths: ["src/implementation/workers.ts"],
+					checks: ["npm test"],
+					validationVerdict: "pass",
+					clean: true,
+					digest: "sha256:bbbb",
+				},
+			],
+		});
+
+		assert.equal(result.passed, false);
+		assert.deepEqual(
+			result.issues.map((issue) => issue.code),
+			["worker_proof_conflict"],
+		);
 	});
 
 	it("requires final aggregate proof for worker-produced evidence", () => {

@@ -3,6 +3,12 @@ import { replayTrace } from "../traces/replay.ts";
 import type { TraceLoop, TraceRecord } from "../traces/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
 import { conflictsFromTrace } from "./conflicts.ts";
+import {
+	buildQualityView,
+	loopIterationQualityComplete,
+	planningIterationDispatchable,
+	qualityBlockersFromTrace,
+} from "./quality.ts";
 import type { StatusView, TraceViewInput, ViewHealth } from "./types.ts";
 import { workPlanCardsFromTrace } from "./work-plan.ts";
 
@@ -11,32 +17,55 @@ export function buildStatusView(input: TraceViewInput): StatusView {
 	const cards = workPlanCardsFromTrace(input.records);
 	const blockers = blockersFromTrace(input.records);
 	const conflicts = conflictsFromTrace(input.records);
-	const currentLoop = nextLoop(input.records, {
-		allWorkDone:
-			cards.length > 0 && cards.every((card) => card.status === "done"),
-	});
-	const blockerMessages = blockers.map((blocker) => blocker.message);
+	const closed = state.closed;
+	const currentLoop = closed
+		? null
+		: nextLoop(input.records, {
+				allWorkDone:
+					cards.length > 0 && cards.every((card) => card.status === "done"),
+			});
+	const quality = buildQualityView(input);
+	const blockerMessages = closed
+		? []
+		: blockers.map((blocker) => blocker.message);
+	const qualityBlockers = closed
+		? []
+		: qualityBlockersFromTrace(input.records).map((blocker) => blocker.message);
+	const activeBlockerCount = closed ? 0 : blockers.length;
+	const activeConflictCount = closed ? 0 : conflicts.length;
 	return {
 		generatedAt: input.generatedAt,
 		traceId: state.head.traceId,
 		title: state.head.title,
 		health: statusHealth({
-			blockers: blockers.length,
-			conflicts: conflicts.length,
+			blockers: activeBlockerCount,
+			conflicts: activeConflictCount,
 			currentLoop,
 		}),
 		currentLoop,
 		readyForClosure:
-			currentLoop === null && blockers.length === 0 && conflicts.length === 0,
+			!closed &&
+			currentLoop === null &&
+			activeBlockerCount === 0 &&
+			activeConflictCount === 0,
+		...(closed
+			? {
+					closed: true,
+					closedAt: state.close?.createdAt,
+					closeReason: state.close?.reason,
+				}
+			: {}),
 		lastEventId: state.lastRecordId,
 		summary: {
 			decisionEvents: decisionCount(input.records),
 			workUnits: cards.length,
 			implementationChanges: implementationChangeCount(input.records),
-			blockers: blockers.length,
-			conflicts: conflicts.length,
+			blockers: activeBlockerCount,
+			conflicts: activeConflictCount,
 		},
 		blockers: blockerMessages,
+		qualityBlockers,
+		quality,
 		sourceRefs: traceRefs(input.records),
 	};
 }
@@ -78,29 +107,35 @@ function implementationChangeCount(records: TraceRecord[]): number {
 }
 
 function decisionRefs(records: TraceRecord[]): string[] {
-	return eventsByName(records, "decision.iteration").flatMap((event) =>
-		objectList(objectRecord(event.data?.output).approvedRows).map((row) =>
-			iterationSubref(event, "row", text(row.id)),
-		),
-	);
+	return eventsByName(records, "decision.iteration")
+		.filter(loopIterationQualityComplete)
+		.flatMap((event) =>
+			objectList(objectRecord(event.data?.output).approvedRows).map((row) =>
+				iterationSubref(event, "row", text(row.id)),
+			),
+		);
 }
 
 function planningWorkItems(
 	records: TraceRecord[],
 ): Array<{ decisionRefs: string[] }> {
-	return eventsByName(records, "planning.iteration").flatMap((event) =>
-		objectList(objectRecord(event.data?.output).workItems).map((item) => ({
-			decisionRefs: stringList(item.decisionRefs),
-		})),
-	);
+	return eventsByName(records, "planning.iteration")
+		.filter(planningIterationDispatchable)
+		.flatMap((event) =>
+			objectList(objectRecord(event.data?.output).workItems).map((item) => ({
+				decisionRefs: stringList(item.decisionRefs),
+			})),
+		);
 }
 
 function planningResolutions(records: TraceRecord[]): string[] {
-	return eventsByName(records, "planning.iteration").flatMap((event) =>
-		objectList(objectRecord(event.data?.output).resolutions).map((resolution) =>
-			text(resolution.decisionRef),
-		),
-	);
+	return eventsByName(records, "planning.iteration")
+		.filter(planningIterationDispatchable)
+		.flatMap((event) =>
+			objectList(objectRecord(event.data?.output).resolutions).map(
+				(resolution) => text(resolution.decisionRef),
+			),
+		);
 }
 
 function iterationSubref(

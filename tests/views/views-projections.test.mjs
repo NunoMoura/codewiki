@@ -7,10 +7,12 @@ import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { createTraceCloseRecord } from "../../src/traces/retention.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import {
 	buildBlockersView,
 	buildConflictsView,
+	buildQualityView,
 	buildResumeView,
 	buildStatusView,
 	buildWorkPlanView,
@@ -374,7 +376,93 @@ describe("trace-backed views", () => {
 			true,
 		);
 		assert.equal(status.health, "red");
-		assert.equal(status.blockers.length, 3);
+		assert.equal(status.blockers.length, 4);
+		assert.equal(status.qualityBlockers.length, 1);
+	});
+
+	it("treats closed traces as terminal in active views", () => {
+		const trace = queueTrace("TRACE-queue-closed", {
+			workUnitId: "WU-closed",
+		});
+		const close = createTraceCloseRecord({
+			records: trace.records,
+			gitRestoreRef: "refs/codewiki/archive/TRACE-queue-closed",
+			reason: "Trace finished and retained.",
+			createdAt: "2026-06-11T00:00:05.000Z",
+		});
+		const records = [...trace.records, close];
+		const status = buildStatusView({ records });
+		const resume = buildResumeView({ records });
+		const queue = buildWorkQueueView({ records });
+
+		assert.equal(status.closed, true);
+		assert.equal(status.closedAt, "2026-06-11T00:00:05.000Z");
+		assert.equal(status.health, "green");
+		assert.equal(status.currentLoop, null);
+		assert.equal(status.readyForClosure, false);
+		assert.equal(resume.closed, true);
+		assert.equal(resume.nextAction, "Trace is closed.");
+		assert.deepEqual(queue.traceIds, []);
+		assert.deepEqual(queue.items, []);
+		assert.deepEqual(queue.summary, {
+			backlog: 0,
+			waiting: 0,
+			ready: 0,
+			claimed: 0,
+			blocked: 0,
+			done: 0,
+		});
+	});
+
+	it("projects quality standards for all semantic loops", () => {
+		const trace = queueTrace("TRACE-quality-all", {
+			workUnitId: "WU-quality-all",
+			implemented: true,
+		});
+		const decision = trace.records.find(
+			(record) => record.event === "decision.iteration",
+		);
+		const implementation = trace.records.find(
+			(record) => record.event === "implementation.iteration",
+		);
+		decision.data.output.qualityStandards =
+			decision.data.output.qualityStandards.map((standard) =>
+				standard.id === "knowledge_impact_accounted"
+					? {
+							...standard,
+							status: "unmet",
+							message: "Decision knowledge impact is incomplete.",
+							refs: ["DTR-views"],
+						}
+					: standard,
+			);
+		implementation.data.output.qualityStandards =
+			implementation.data.output.qualityStandards.map((standard) =>
+				standard.id === "release_safety_approved"
+					? {
+							...standard,
+							status: "blocked",
+							message: "User approval required before release.",
+							refs: ["IC-queue"],
+						}
+					: standard,
+			);
+		const input = { records: trace.records };
+		const quality = buildQualityView(input);
+		const status = buildStatusView(input);
+		const resume = buildResumeView(input);
+
+		assert.equal(quality.iterations.length, 3);
+		assert.equal(quality.summary.decision.unmet, 1);
+		assert.equal(quality.summary.implementation.blocked, 1);
+		assert.equal(
+			quality.blockers.includes("User approval required before release."),
+			true,
+		);
+		assert.equal(status.health, "red");
+		assert.equal(status.readyForClosure, false);
+		assert.equal(status.quality?.summary.implementation.blocked, 1);
+		assert.equal(resume.quality?.summary.decision.unmet, 1);
 	});
 
 	it("projects cross-trace work queue state from trace facts", () => {
@@ -441,6 +529,46 @@ describe("trace-backed views", () => {
 		assert.equal(byId["WU-done"].status, "done");
 	});
 
+	it("exposes planning quality blockers in views", () => {
+		const trace = queueTrace("TRACE-queue-quality", {
+			workUnitId: "WU-quality",
+		});
+		const planning = trace.records.find(
+			(record) => record.event === "planning.iteration",
+		);
+		planning.data.output.qualityStandards =
+			planning.data.output.qualityStandards.map((standard) =>
+				standard.id === "uncertainty_resolved"
+					? {
+							...standard,
+							status: "blocked",
+							mode: "user",
+							message: "User must resolve planning uncertainty.",
+							refs: ["WU-quality"],
+						}
+					: standard,
+			);
+		const input = { records: trace.records };
+		const queue = buildWorkQueueView(input);
+		const workPlan = buildWorkPlanView(input);
+		const status = buildStatusView(input);
+		const resume = buildResumeView(input);
+		const queuedWork = queue.items.find((item) => item.id === "WU-quality");
+
+		assert.equal(queuedWork.status, "blocked");
+		assert.equal(queuedWork.qualityBlockers.length, 1);
+		assert.equal(workPlan.cards[0].status, "blocked");
+		assert.equal(
+			workPlan.cards[0].qualityStandards.some(
+				(standard) => standard.status === "blocked",
+			),
+			true,
+		);
+		assert.equal(status.qualityBlockers.length, 1);
+		assert.equal(resume.qualityBlockers.length, 1);
+		assert.equal(resume.nextAction.startsWith("Resolve blocker:"), true);
+	});
+
 	it("ignores expired or released runtime claims in the work queue", () => {
 		const expired = queueTrace("TRACE-queue-expired", {
 			workUnitId: "WU-expired",
@@ -483,6 +611,7 @@ describe("trace-backed views", () => {
 				viewFilePath("work-queue"),
 				".codewiki/views/work-queue.json",
 			);
+			assert.equal(viewFilePath("quality"), ".codewiki/views/quality.json");
 			assert.equal(
 				formatViewJson(view),
 				'{\n  "health": "green",\n  "blockers": []\n}\n',

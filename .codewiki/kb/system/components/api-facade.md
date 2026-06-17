@@ -27,5 +27,5 @@ There is no target API facade over old stored-state, roadmap, session, artifact-
 
 - [System overview](../overview.md)
 - [Loop Model](../loop-model.md)
-- [API vNext Tool Surface](../api-vnext-tools.md)
+- [API Tool Surface](../api-tools.md)
 - [File structure](../file-structure.md)

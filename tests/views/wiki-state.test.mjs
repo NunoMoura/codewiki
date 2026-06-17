@@ -9,7 +9,6 @@ import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
-import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -44,7 +43,7 @@ function traceRecords(traceId = "TRACE-state") {
 				rationale: "Views are disposable projections, not truth.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/api-vnext-tools.md"],
+				sourceRefs: ["kb:system/api-tools.md"],
 			},
 		],
 	});
@@ -96,6 +95,7 @@ describe("wiki_state core facade", () => {
 			"Implement planned work unit WU-state.",
 		);
 		assert.equal(state.workPlan?.cards[0].id, "WU-state");
+		assert.equal(state.quality?.summary.planning.met, 11);
 		assert.equal(state.workQueue.summary.ready, 1);
 		assert.equal(state.sourceOwners[0].componentId, "views");
 		assert.equal(state.sourceOwners[0].doc, ".codewiki/kb/system/traces.md");

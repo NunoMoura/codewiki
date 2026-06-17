@@ -1,4 +1,4 @@
-export const CODEWIKI_EXTENSION_AVAILABLE = false as const;
+export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
 
 export const sourceLayout = {
 	loopRoots: ["decision", "planning", "implementation"],

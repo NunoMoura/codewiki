@@ -107,7 +107,7 @@ export interface PlanningWorkItemInput {
 
 export interface PlanningDecisionResolution {
 	decisionRef: string;
-	kind: PlanningResolutionKind;
+	kind: PlanningResolutionKind | string;
 	workUnitIds: string[];
 	evidenceRefs: string[];
 	owner?: string;

@@ -7,17 +7,28 @@ export function buildResumeView(input: TraceViewInput): ResumeView {
 	const state = replayTrace(input.records);
 	const status = buildStatusView(input);
 	const cards = workPlanCardsFromTrace(input.records);
-	const activeCard = selectActiveCard(cards);
+	const activeCard = status.closed ? undefined : selectActiveCard(cards);
 	return {
 		generatedAt: input.generatedAt,
 		traceId: state.head.traceId,
 		title: state.head.title,
-		nextAction: nextAction(status.blockers, status.currentLoop, activeCard),
+		nextAction: status.closed
+			? "Trace is closed."
+			: nextAction(status.blockers, status.currentLoop, activeCard),
 		currentLoop: status.currentLoop,
+		...(status.closed
+			? {
+					closed: true,
+					closedAt: status.closedAt,
+					closeReason: status.closeReason,
+				}
+			: {}),
 		...(activeCard ? { activeWorkUnitId: activeCard.id } : {}),
 		lastEventId: status.lastEventId,
 		sourceRefs: status.sourceRefs,
 		blockers: status.blockers,
+		qualityBlockers: status.qualityBlockers,
+		...(status.quality ? { quality: status.quality } : {}),
 	};
 }
 

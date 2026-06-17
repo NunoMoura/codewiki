@@ -102,9 +102,14 @@ export function decisionQualityStandards(
 		standard({
 			id: "risks_and_alternatives_considered",
 			description:
-				"Approved high-risk intentions identify affected layers and alternatives before implementation work is planned.",
+				"Approved rows declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
 			issues,
-			codes: ["missing_high_risk_scope", "missing_high_risk_alternative"],
+			codes: [
+				"missing_risk",
+				"invalid_risk",
+				"missing_high_risk_scope",
+				"missing_high_risk_alternative",
+			],
 		}),
 		standard({
 			id: "knowledge_impact_accounted",

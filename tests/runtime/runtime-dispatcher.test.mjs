@@ -7,6 +7,7 @@ import {
 	appendRuntimeDispatchClaims,
 	createRuntimeDispatchClaimEvents,
 } from "../../src/runtime/dispatcher.ts";
+import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
 import { planRuntimeDispatch } from "../../src/runtime/scheduler.ts";
 import {
 	TraceAppendConflictError,
@@ -33,6 +34,7 @@ function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
 		data: {
 			exit: { status: "exit", targetLoop: "implementation" },
 			output: {
+				qualityStandards: planningQualityStandards([]),
 				workItems: [
 					{
 						id: workUnitId,
@@ -122,6 +124,45 @@ describe("runtime dispatcher claim batch", () => {
 		assert.deepEqual(batch.events[0].data?.componentRefs, [
 			"component.runtime",
 		]);
+	});
+
+	it("does not dispatch work when planning quality standards are missing or blocked", () => {
+		const missing = planningEvent(
+			"TRACE-quality-missing",
+			"WU-quality-missing",
+			"src/runtime",
+		);
+		delete missing.data.output.qualityStandards;
+		const blocked = planningEvent(
+			"TRACE-quality-blocked",
+			"WU-quality-blocked",
+			"src/views",
+		);
+		blocked.data.output.qualityStandards =
+			blocked.data.output.qualityStandards.map((standard) =>
+				standard.id === "uncertainty_resolved"
+					? {
+							...standard,
+							status: "blocked",
+							mode: "user",
+							message: "User must resolve planning uncertainty.",
+							refs: ["WU-quality-blocked"],
+						}
+					: standard,
+			);
+		const queue = buildWorkQueueView({ records: [missing, blocked] });
+		const plan = planRuntimeDispatch(queue, { maxWorkers: 2 });
+		const byId = Object.fromEntries(queue.items.map((item) => [item.id, item]));
+
+		assert.equal(byId["WU-quality-missing"].status, "blocked");
+		assert.equal(byId["WU-quality-blocked"].status, "blocked");
+		assert.equal(
+			byId["WU-quality-missing"].qualityStandards.some(
+				(standard) => standard.status === "missing",
+			),
+			true,
+		);
+		assert.deepEqual(plan.dispatch, []);
 	});
 
 	it("marks dispatched work claimed when events are folded back into the queue", () => {

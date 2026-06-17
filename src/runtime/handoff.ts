@@ -1,0 +1,356 @@
+import type { WorktreeRef } from "../git/worktrees.ts";
+import type { PiWorkerSessionInput } from "../pi/dispatcher.ts";
+import { createPiWorkerPrompt } from "../pi/dispatcher.ts";
+import type {
+	RuntimeDispatchClaimAppendResult,
+	RuntimeDispatchClaimBatch,
+} from "./dispatcher.ts";
+import type { RuntimeDispatchPolicyDecision } from "./policy.ts";
+import type { RuntimeDispatchItem, RuntimeDispatchPlan } from "./scheduler.ts";
+import type { TraceEvent } from "../traces/types.ts";
+
+export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v1";
+export type RuntimeDisposableWorkerState =
+	| "starting"
+	| "running"
+	| "completed"
+	| "failed"
+	| "blocked"
+	| "detached";
+
+export interface RuntimeWorkerStatusRemediation {
+	reason: string;
+	route: string;
+	blockers: string[];
+	refs: string[];
+	suggestedActions: string[];
+}
+
+export interface RuntimeDisposableWorkerStatus {
+	workerId: string;
+	workUnitId: string;
+	traceId: string;
+	state: RuntimeDisposableWorkerState;
+	claimId?: string;
+	pid?: number;
+	sessionId?: string;
+	sessionFile?: string;
+	outputRef?: string;
+	lastActivityAt?: string;
+	remediation?: RuntimeWorkerStatusRemediation;
+}
+export type RuntimeHandoffAction =
+	| "runtime.claims"
+	| "worktree.prepare"
+	| "worker.start"
+	| "worker.collect_completion"
+	| "wiki.implement"
+	| "runtime.release"
+	| "worktree.cleanup";
+
+export interface RuntimeHandoffRuntimeResult {
+	action: "dispatch";
+	mode: "preview" | "append";
+	plan: RuntimeDispatchPlan;
+	policy: RuntimeDispatchPolicyDecision;
+	batch?: RuntimeDispatchClaimBatch;
+	append?: RuntimeDispatchClaimAppendResult;
+}
+
+export interface CreateRuntimeHandoffManifestOptions {
+	runtime: RuntimeHandoffRuntimeResult;
+	claimEvents?: TraceEvent[];
+	promptPrefix?: string;
+	promptSuffix?: string;
+}
+
+export interface RuntimeHandoffManifest {
+	schemaVersion: RuntimeHandoffSchemaVersion;
+	kind: "runtime_handoff";
+	runtime: RuntimeHandoffSummary;
+	claimEvents: TraceEvent[];
+	workers: RuntimeHandoffWorker[];
+	workerStatuses: RuntimeDisposableWorkerStatus[];
+	expectedCompletion: RuntimeHandoffCompletionContract;
+	release: RuntimeHandoffReleaseInstructions;
+	actions: RuntimeHandoffAction[];
+}
+
+export interface RuntimeHandoffSummary {
+	action: "dispatch";
+	mode: "preview" | "append";
+	appendAllowed: boolean;
+	blockers: string[];
+	dispatchCount: number;
+	heldCount: number;
+	claimEventCount: number;
+}
+
+export interface RuntimeHandoffWorker {
+	workUnitId: string;
+	workerId: string;
+	traceId: string;
+	title: string;
+	claimId?: string;
+	planningRefs: string[];
+	componentRefs: string[];
+	pathScopes: string[];
+	worktree?: WorktreeRef;
+	worktreeCommands: RuntimeHandoffWorktreeCommands;
+	sessionInput: PiWorkerSessionInput;
+	completionFeeds: "collectPiWorkerResults";
+	implementationInput: "workerResults";
+}
+
+export interface RuntimeHandoffWorktreeCommands {
+	execute: "host_explicit_only";
+	dryRunDefault: true;
+	worktreePrepare: string[];
+	worktreeVerify: string[];
+	worktreeCleanup: string[];
+}
+
+export interface RuntimeHandoffCompletionContract {
+	collector: "collectPiWorkerResults";
+	statusValues: ["completed", "blocked", "failed"];
+	requiredFields: string[];
+	proofFields: string[];
+	example: Record<string, unknown>;
+}
+
+export interface RuntimeHandoffReleaseInstructions {
+	failedStart: {
+		helper: "createRuntimeFailedWorkerStartReleaseEvents";
+		timing: "after_worker_start_failure";
+	};
+	completion: {
+		helper: "createRuntimeWorkerCompletionReleaseEvents";
+		timing: "after_wiki_implement_consumes_worker_results";
+	};
+}
+
+export function createRuntimeHandoffManifest(
+	options: CreateRuntimeHandoffManifestOptions,
+): RuntimeHandoffManifest {
+	const claimEvents = handoffClaimEvents(options);
+	const claimMetadata = claimMetadataByWorkUnit(claimEvents);
+	const worktrees = worktreePlanByWorkUnit(options.runtime.policy.worktrees);
+	const workers = options.runtime.plan.dispatch.map((item) =>
+		handoffWorker({ item, claimMetadata, worktrees, options }),
+	);
+	return {
+		schemaVersion: "codewiki.runtime.handoff.v1",
+		kind: "runtime_handoff",
+		runtime: runtimeSummary(options.runtime, claimEvents),
+		claimEvents,
+		workers,
+		workerStatuses: handoffWorkerStatuses(workers),
+		expectedCompletion: expectedCompletionContract(),
+		release: releaseInstructions(),
+		actions: handoffActions(workers),
+	};
+}
+
+function handoffWorker(input: {
+	item: RuntimeDispatchItem;
+	claimMetadata: Map<string, RuntimeHandoffClaimMetadata>;
+	worktrees: Map<string, RuntimeDispatchPolicyDecision["worktrees"][number]>;
+	options: CreateRuntimeHandoffManifestOptions;
+}): RuntimeHandoffWorker {
+	const claim = input.claimMetadata.get(input.item.workUnitId);
+	const worktreePlan = input.worktrees.get(input.item.workUnitId);
+	const workerId =
+		claim?.workerId || worktreePlan?.workerId || input.item.workUnitId;
+	const worktree = claim?.worktree || worktreePlan?.worktree;
+	const promptItem = {
+		...input.item,
+		...(worktree ? { worktree } : {}),
+	};
+	const prompt = createPiWorkerPrompt(promptItem, input.options);
+	return {
+		workUnitId: input.item.workUnitId,
+		workerId,
+		traceId: input.item.traceId,
+		title: input.item.title,
+		...(claim?.claimId ? { claimId: claim.claimId } : {}),
+		planningRefs: [...input.item.planningRefs],
+		componentRefs: [...input.item.componentRefs],
+		pathScopes: [...input.item.pathScopes],
+		...(worktree ? { worktree } : {}),
+		worktreeCommands: {
+			execute: "host_explicit_only",
+			dryRunDefault: true,
+			worktreePrepare: [...(worktreePlan?.commands.worktreePrepare || [])],
+			worktreeVerify: [...(worktreePlan?.commands.worktreeVerify || [])],
+			worktreeCleanup: [...(worktreePlan?.commands.worktreeCleanup || [])],
+		},
+		sessionInput: {
+			workerId,
+			workUnitId: input.item.workUnitId,
+			traceId: input.item.traceId,
+			planningRefs: [...input.item.planningRefs],
+			pathScopes: [...input.item.pathScopes],
+			componentRefs: [...input.item.componentRefs],
+			...(worktree ? { worktree } : {}),
+			prompt,
+		},
+		completionFeeds: "collectPiWorkerResults",
+		implementationInput: "workerResults",
+	};
+}
+
+function handoffWorkerStatuses(
+	workers: RuntimeHandoffWorker[],
+): RuntimeDisposableWorkerStatus[] {
+	return workers.map((worker) => ({
+		workerId: worker.workerId,
+		workUnitId: worker.workUnitId,
+		traceId: worker.traceId,
+		state: "starting",
+		...(worker.claimId ? { claimId: worker.claimId } : {}),
+	}));
+}
+
+function handoffClaimEvents(
+	options: CreateRuntimeHandoffManifestOptions,
+): TraceEvent[] {
+	return [
+		...(options.claimEvents ||
+			options.runtime.append?.events ||
+			options.runtime.batch?.events ||
+			[]),
+	];
+}
+
+function runtimeSummary(
+	runtime: RuntimeHandoffRuntimeResult,
+	claimEvents: TraceEvent[],
+): RuntimeHandoffSummary {
+	return {
+		action: runtime.action,
+		mode: runtime.mode,
+		appendAllowed: runtime.policy.appendAllowed,
+		blockers: [...runtime.policy.blockers],
+		dispatchCount: runtime.plan.dispatch.length,
+		heldCount: runtime.plan.held.length,
+		claimEventCount: claimEvents.length,
+	};
+}
+
+function handoffActions(
+	workers: RuntimeHandoffWorker[],
+): RuntimeHandoffAction[] {
+	return [
+		"runtime.claims",
+		...(workers.some(
+			(worker) => worker.worktreeCommands.worktreePrepare.length > 0,
+		)
+			? ["worktree.prepare" as const]
+			: []),
+		"worker.start",
+		"worker.collect_completion",
+		"wiki.implement",
+		"runtime.release",
+		...(workers.some(
+			(worker) => worker.worktreeCommands.worktreeCleanup.length > 0,
+		)
+			? ["worktree.cleanup" as const]
+			: []),
+	];
+}
+
+function expectedCompletionContract(): RuntimeHandoffCompletionContract {
+	return {
+		collector: "collectPiWorkerResults",
+		statusValues: ["completed", "blocked", "failed"],
+		requiredFields: ["status", "changes", "checks", "acceptanceEvidence"],
+		proofFields: [
+			"changed_files",
+			"checks_run",
+			"head_sha",
+			"tree_sha",
+			"working_tree_digest",
+			"validation_ref",
+		],
+		example: {
+			status: "completed",
+			changed_files: ["src/example.ts", "tests/example.test.mjs"],
+			checks_run: ["node --test tests/example.test.mjs"],
+			changes: [
+				{
+					id: "IC-worker-001",
+					checkResults: [{ command: "npm test", status: "pass" }],
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary: "Worker evidence satisfies acceptance criterion.",
+							evidenceRefs: ["tests/example.test.mjs"],
+						},
+					],
+				},
+			],
+		},
+	};
+}
+
+function releaseInstructions(): RuntimeHandoffReleaseInstructions {
+	return {
+		failedStart: {
+			helper: "createRuntimeFailedWorkerStartReleaseEvents",
+			timing: "after_worker_start_failure",
+		},
+		completion: {
+			helper: "createRuntimeWorkerCompletionReleaseEvents",
+			timing: "after_wiki_implement_consumes_worker_results",
+		},
+	};
+}
+
+interface RuntimeHandoffClaimMetadata {
+	workerId: string;
+	claimId?: string;
+	worktree?: WorktreeRef;
+}
+
+function claimMetadataByWorkUnit(
+	claimEvents: TraceEvent[],
+): Map<string, RuntimeHandoffClaimMetadata> {
+	const metadata = new Map<string, RuntimeHandoffClaimMetadata>();
+	for (const event of claimEvents) {
+		const workUnitId = text(event.data?.workUnitId);
+		const workerId = text(event.data?.workerId);
+		if (!workUnitId || !workerId) continue;
+		const worktree = worktreeRef(event.data?.worktree);
+		metadata.set(workUnitId, {
+			workerId,
+			...(text(event.data?.claimId)
+				? { claimId: text(event.data?.claimId) }
+				: {}),
+			...(worktree ? { worktree } : {}),
+		});
+	}
+	return metadata;
+}
+
+function worktreePlanByWorkUnit(
+	plans: RuntimeDispatchPolicyDecision["worktrees"],
+): Map<string, RuntimeDispatchPolicyDecision["worktrees"][number]> {
+	return new Map(plans.map((plan) => [plan.workUnitId, plan]));
+}
+
+function worktreeRef(value: unknown): WorktreeRef | undefined {
+	if (!value || typeof value !== "object") return undefined;
+	const record = value as Record<string, unknown>;
+	const path = text(record.path);
+	if (!path) return undefined;
+	return {
+		path,
+		...(text(record.branch) ? { branch: text(record.branch) } : {}),
+		...(text(record.baseRef) ? { baseRef: text(record.baseRef) } : {}),
+		...(text(record.baseSha) ? { baseSha: text(record.baseSha) } : {}),
+	};
+}
+
+function text(value: unknown): string {
+	return String(value || "").trim();
+}

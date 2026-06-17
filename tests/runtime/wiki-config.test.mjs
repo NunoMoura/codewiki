@@ -40,6 +40,7 @@ describe("wiki_config core facade", () => {
 		assert.equal(result.config.project, "demo");
 		assert.equal(result.config.runtime.maxWorkers, 3);
 		assert.equal(result.config.runtime.worktreeIsolation, "auto");
+		assert.deepEqual(result.config.runtime.worktreeSetupCommands, []);
 		assert.equal(result.config.runtime.automation, "assist");
 		assert.equal(result.config.runtime.agency, "assist");
 		assert.equal(result.config.runtime.approval.cadence, "on_risk");
@@ -52,6 +53,7 @@ describe("wiki_config core facade", () => {
 		const config = resolveWikiConfig({
 			runtime: {
 				agency: "delegate",
+				worktreeSetupCommands: ["npm install", "npm install", ""],
 				stopConditions: ["risk_escalation", "risk_escalation", ""],
 			},
 			retention: {
@@ -66,6 +68,7 @@ describe("wiki_config core facade", () => {
 		});
 
 		assert.equal(config.runtime.agency, "delegate");
+		assert.deepEqual(config.runtime.worktreeSetupCommands, ["npm install"]);
 		assert.deepEqual(config.runtime.stopConditions, ["risk_escalation"]);
 		assert.equal(
 			config.retention.archiveRefPrefix,
@@ -74,7 +77,7 @@ describe("wiki_config core facade", () => {
 		assert.equal(config.retention.hotTraceLimit, 3);
 		assert.equal(config.retention.requireCloseRecord, true);
 		assert.equal(config.retention.hydrateOnDemand, false);
-		assert.equal(config.hosts.cli.enabled, true);
+		assert.deepEqual(Object.keys(config.hosts).sort(), ["mcp", "pi"]);
 		assert.equal(config.hosts.pi.enabled, true);
 		assert.equal(config.hosts.mcp.enabled, true);
 	});
@@ -143,6 +146,13 @@ describe("wiki_config core facade", () => {
 		assert.throws(
 			() => resolveWikiConfig({ runtime: { agency: "owner" } }),
 			/runtime\.agency/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					runtime: { worktreeSetupCommands: ["npm install\nnpm test"] },
+				}),
+			/worktreeSetupCommands/,
 		);
 		assert.throws(
 			() =>

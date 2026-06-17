@@ -176,6 +176,8 @@ nodes:
       - .codewiki/views/status.json
       - .codewiki/views/resume.json
       - .codewiki/views/work-plan.json
+      - .codewiki/views/work-queue.json
+      - .codewiki/views/quality.json
       - .codewiki/views/blockers.json
       - .codewiki/views/conflicts.json
   - id: runtime_tmp

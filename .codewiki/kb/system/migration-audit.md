@@ -10,9 +10,9 @@ This audit records the current migration state after the pivot to runtime outer 
 
 | Area | Old source | New source | Migration state | Notes |
 | --- | ---: | ---: | --- | --- |
-| Pi adapter and commands | 36 files | 8 files | Deferred / seam only | The extension is intentionally disabled. Current `src/pi/**` exposes disabled surfaces and an injected worker dispatcher seam without importing the Pi SDK. |
+| Pi adapter and commands | 36 files | 13 files | Package metadata enabled / repo dogfood gated | `src/pi/**` exposes tools, `/wiki`, prompt/TUI seams, process/session worker transport, and package install/RPC smoke coverage without importing the Pi SDK into core source. |
 | Agency | 5 files | 0 files | Intentionally dropped for now | Role/agency scheduling is not a target concept during the rebuild. Runtime scheduling uses work-queue projections and claims. |
-| Public API facade | 2 files | 8 files | Core facades complete | Reduced core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`; host wrappers remain deferred. |
+| Public API facade | 2 files | 8 files | Core facades complete | Reduced core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`; the Pi wrapper is package-installable while MCP remains deferred. |
 | Audit/checks | 8 files | 0 files | Partially replaced | Deterministic checks move into semantic loop exit conditions where relevant. Packaged audit tooling is not migrated. |
 | Output artifacts | 7 old files | semantic loop internals | Replaced | Loop output and runtime-temp scratch replace the old artifact model. Historical artifact files are not target truth. |
 | Decision | 5 files | 6 files | Migrated core | Decision table, iteration runner, exit evaluation, propagation, and approval helpers exist in target source. |
@@ -25,9 +25,9 @@ This audit records the current migration state after the pivot to runtime outer 
 | Runtime | 3 files | 10 files | Migrated core | Scheduler, claims, dispatcher batches, leases/budget/policy stubs, and tmp helpers exist. |
 | Session/worktree dispatch | 11 files | runtime + implementation + git stubs | Partial | Claims, worker dispatch seam, worker result aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
 | Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Historical lock/ports helpers are not migrated wholesale. |
-| State/graph/resume | 21 files | traces + views | Replaced core, product surface missing | JSONL traces and generated views replace graph/state roots. Status/resume projections exist, but no user-facing command/tool facade is active. |
+| State/graph/resume | 21 files | traces + views | Replaced core, Pi surface active | JSONL traces and generated views replace graph/state roots. State/resume projections are exposed through core facades and `/wiki` commands. |
 | Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints/close records carry lifecycle facts. Historical telemetry roots are not target truth. |
-| Workflow composite tool | 1 file | core facades complete | Core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`. CLI wrapper exists; Pi/MCP wrappers remain deferred. Standalone split-output and split-evaluation tools should not return as normal tools. |
+| Workflow composite tool | 1 file | core facades complete | Core facades exist for `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, `wiki_archive`, and `wiki_config`. CLI wrapper exists as a temporary development harness; Pi wrapper is package-installable; MCP remains deferred. Standalone split-output and split-evaluation tools should not return as normal tools. |
 
 ## Stabilized target spine
 
@@ -38,7 +38,7 @@ The following source is now stable enough to be treated as the active migration 
 - trace append/replay/query/project folding helpers;
 - compact semantic iteration/checkpoint trace events;
 - canonical trace refs and validation of traceability refs;
-- work-plan, work-queue, status, resume, blockers, and conflicts projections;
+- work-plan, work-queue, quality, status, resume, blockers, and conflicts projections;
 - runtime scheduler, claim/release events, and append preflight for dispatch claims;
 - injected Pi worker dispatcher seam with no hard Pi dependency;
 - worker result aggregation into implementation changes;
@@ -55,7 +55,7 @@ The following source is now stable enough to be treated as the active migration 
 These old behaviors should stay out of active source unless a future accepted decision explicitly reintroduces them:
 
 - automatic CodeWiki compaction, context projection, or prompt injection;
-- repo-local Pi extension loading while the extension is disabled;
+- repo-local Pi extension loading before explicit dogfooding approval;
 - graph files as canonical truth;
 - historical roadmap/artifact/validation/session/telemetry roots as active workflow truth;
 - role-based agency scheduling as a first-class workflow axis;
@@ -71,34 +71,34 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Orchestrator append facade | `appendSemanticLoopIteration()` runs one semantic loop iteration, verifies one target `<loop>.iteration` event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic producers and generated views now use iteration output directly. |
 | Done | `wiki_state` core facade | `buildWikiState()` folds trace records and source-map input into status, resume, work-plan, work-queue, blockers, conflicts, and source ownership projections without reading stored views as truth. | Host tools/commands can wrap this facade later. |
 | Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
-| Done | User-facing status/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi command reintroduction remains deferred until adapter policy is stable. |
+| Done | User-facing state/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki state` and `/wiki resume` are package-installable; repo-local dogfooding remains gated. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
-| Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config with CLI-backed instructions. |
+| Done | Skills refactor | Tools execute the OS, but agents need concise operational skills to use the new loop/output/exit-condition/runtime model correctly. | Project-local `.agents/skills/codewiki-*` skills cover state, decision, planning, implementation, runtime, archive, and config; they must point at Pi-owned tools once the extension is explicitly enabled. |
 | Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
-| P1 | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config now declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution remains deferred. |
-| Done | Project bootstrap/scaffold generation | New repositories need target `.codewiki` structure without old graph/roadmap/gateway roots. | `src/project/bootstrap.ts` now writes config, KB, traces, views, and source-map scaffold; CLI exposes `codewiki bootstrap`. |
+| Done | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution is dry-run by default, explicit-runner only, and includes optional setup hooks. |
+| Done | Project bootstrap/scaffold generation | New repositories need target `.codewiki` structure without old graph/roadmap/gateway roots. | `src/project/bootstrap.ts` now writes config, KB, traces, views, and source-map scaffold; `/wiki bootstrap` is the target Pi command, while the CLI remains a temporary harness. |
 | P2 | Roadmap archival note | Planning work units replace roadmap truth. Old roadmap files may need a recorded archival decision, not import by default. | Write a trace/KB note that old roadmap state is ignored or archived unless explicitly selected for import. |
 | Done | Policy/config model | Exit-condition policy and agency behavior need one typed project config instead of scattered options. | `src/project/config.ts` now resolves automation, agency, worktree isolation, budgets, approvals, retention, and host adapter flags through `wiki_config`; `src/project/config-file.ts` loads and saves `.codewiki/config.json`. |
 | P2 | Audit command | External Pi/LSP/lens validation is used during rebuild. | Package audit facade can wait until active CLI/API needs it. |
 
 ## Recommended next migration order
 
-1. **Exit criteria hardening** — review old gateway/gate checks and migrate only loop-owned conditions into `decision/exit.ts`, `planning/exit.ts`, and `implementation/exit.ts`.
-2. **Optional host integrations** — Pi extension commands/tools, MCP, worktree isolation, and session lifecycle after core package APIs are stable.
+1. **Exit criteria hardening** — continue reviewing old validation lessons and migrate only loop-owned conditions into `decision/exit.ts`, `planning/exit.ts`, and `implementation/exit.ts`. Decision rows now require explicit low/medium/high risk tiers; decision table source refs are validated before entering current-state evidence; user-authority decision blockers remediate to the user; planning resolutions now preserve and reject unknown kinds; implementation evidence now must cover planned verification refs/commands; package/dependency changes now require pack verification inside `implementation/exit.ts`; complete planning route-back resolutions now return to decision authority instead of implementation; `trace_close` now terminates appends and active queue/status/resume behavior; package metadata keeps installed runtime support at Node.js `>=20.6.0`, and packages build `dist/**` before packing so installed bins do not execute TypeScript from `node_modules`.
+2. **Optional host integrations** — Pi extension commands/tools and MCP after core package APIs are stable.
 
 ## Stop condition for architecture work
 
-Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to state/status views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, CLI wrapper, and local operating skills now exist; remaining work should deepen lifecycle behavior rather than add parallel architecture.
+Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to `wiki_state` summary/views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, temporary source CLI harness, and local operating skills now exist; remaining work should deepen lifecycle behavior rather than add parallel architecture.
 
 ## Distribution direction
 
-CodeWiki should distribute as a harness-agnostic core with thin adapters:
+CodeWiki should distribute as a harness-agnostic core with thin host adapters:
 
 ```text
-codewiki core package -> CLI adapter -> Pi extension adapter -> MCP adapter
+codewiki core package -> Pi extension adapter -> future MCP adapter
 ```
 
-Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension should return after the reduced tool facade is stable. CLI and MCP adapters should expose the same tool semantics so other harnesses can operate CodeWiki without reimplementing the OS model.
+Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is now package-installable after the reduced tool facade stabilized; repo-local dogfooding remains a separate opt-in. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
 
 ## Tool-surface direction
 

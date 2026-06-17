@@ -1,16 +1,17 @@
-import { mkdir, appendFile, stat } from "node:fs/promises";
+import { mkdir, appendFile, readFile, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import type { TraceRecord } from "./types.ts";
+import { parseTraceText } from "./reader.ts";
 import { traceFilePath } from "./schema.ts";
 import { formatTraceLine, formatTraceText } from "./writer.ts";
 
-export interface AppendPlan {
+interface AppendPlan {
 	expectedBytes: number;
 	line: string;
 	record: TraceRecord;
 }
 
-export interface AppendBatchPlan {
+interface AppendBatchPlan {
 	expectedBytes: number;
 	text: string;
 	records: TraceRecord[];
@@ -47,18 +48,35 @@ export class TraceAppendConflictError extends Error {
 	}
 }
 
-export function planTraceAppend(
+export class TraceClosedAppendError extends Error {
+	readonly path: string;
+	readonly traceId: string;
+	readonly closeId: string;
+
+	constructor(path: string, traceId: string, closeId: string) {
+		super(
+			`Trace ${traceId} is closed by ${closeId}; append is not allowed for ${path}.`,
+		);
+		this.name = "TraceClosedAppendError";
+		this.path = path;
+		this.traceId = traceId;
+		this.closeId = closeId;
+	}
+}
+
+function planTraceAppend(
 	record: TraceRecord,
 	expectedBytes: number,
 ): AppendPlan {
 	return { expectedBytes, line: formatTraceLine(record), record };
 }
 
-export function planTraceAppendBatch(
+function planTraceAppendBatch(
 	records: TraceRecord[],
 	expectedBytes: number,
 ): AppendBatchPlan {
 	assertSingleTraceBatch(records);
+	assertTerminalClosePosition(records);
 	return {
 		expectedBytes,
 		text: formatTraceText(records),
@@ -66,7 +84,7 @@ export function planTraceAppendBatch(
 	};
 }
 
-export async function appendTraceRecordToFile(
+async function appendTraceRecordToFile(
 	path: string,
 	record: TraceRecord,
 	expectedBytes: number,
@@ -76,6 +94,7 @@ export async function appendTraceRecordToFile(
 	if (previousBytes !== plan.expectedBytes) {
 		throw new TraceAppendConflictError(path, plan.expectedBytes, previousBytes);
 	}
+	await assertTraceOpenForAppend(path, previousBytes);
 	await mkdir(dirname(path), { recursive: true });
 	await appendFile(path, plan.line, "utf8");
 	return {
@@ -86,7 +105,7 @@ export async function appendTraceRecordToFile(
 	};
 }
 
-export async function appendTraceRecordsToFile(
+async function appendTraceRecordsToFile(
 	path: string,
 	records: TraceRecord[],
 	expectedBytes: number,
@@ -96,6 +115,7 @@ export async function appendTraceRecordsToFile(
 	if (previousBytes !== plan.expectedBytes) {
 		throw new TraceAppendConflictError(path, plan.expectedBytes, previousBytes);
 	}
+	await assertTraceOpenForAppend(path, previousBytes);
 	await mkdir(dirname(path), { recursive: true });
 	await appendFile(path, plan.text, "utf8");
 	return {
@@ -144,6 +164,28 @@ function assertSingleTraceBatch(records: TraceRecord[]): void {
 			);
 		}
 	}
+}
+
+function assertTerminalClosePosition(records: TraceRecord[]): void {
+	const closeIndex = records.findIndex(
+		(record) => record.type === "trace_close",
+	);
+	if (closeIndex === -1 || closeIndex === records.length - 1) return;
+	throw new Error(
+		"Trace append batch must not include records after trace_close.",
+	);
+}
+
+async function assertTraceOpenForAppend(
+	path: string,
+	previousBytes: number,
+): Promise<void> {
+	if (previousBytes === 0) return;
+	const close = parseTraceText(await readFile(path, "utf8")).find(
+		(record) => record.type === "trace_close",
+	);
+	if (!close || close.type !== "trace_close") return;
+	throw new TraceClosedAppendError(path, close.traceId, close.id);
 }
 
 async function fileSize(path: string): Promise<number> {

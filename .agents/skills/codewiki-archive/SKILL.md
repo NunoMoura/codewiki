@@ -9,7 +9,7 @@ Use this skill when active trace or knowledge state needs a retention stub, rest
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Archive work is a retention pipeline, not destructive cleanup.
 - Never rewrite old trace lines.
 - Keep enough refs to hydrate or restore archived state.

@@ -1,6 +1,6 @@
 # System Overview
 
-CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is disabled and archived under `_OLD_VERSION/**`. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
+CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is archived under `_OLD_VERSION/**`; the new Pi extension is package-installable, while repo-local dogfooding remains explicitly gated. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
 
 ## Target mental model
 
@@ -73,6 +73,7 @@ Generated views answer current-state questions quickly:
 - resume;
 - work-plan;
 - work-queue;
+- quality;
 - blockers;
 - conflicts.
 
@@ -94,4 +95,4 @@ Loop output becomes downstream context only when exit conditions return `exit`. 
 - [Runtime](runtime.md)
 - [Migration Audit](migration-audit.md)
 - [Source Map](source-map.md)
-- [API vNext Tool Surface](api-vnext-tools.md)
+- [API Tool Surface](api-tools.md)

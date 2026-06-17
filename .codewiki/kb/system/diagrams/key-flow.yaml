@@ -84,7 +84,7 @@ steps:
   - id: project_views
     from: traces
     to: views
-    message: regenerates status, resume, work-plan, work-queue, blockers, and conflicts views
+    message: regenerates status, resume, work-plan, work-queue, quality, blockers, and conflicts views
   - id: render_state
     from: views
     to: user

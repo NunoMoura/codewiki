@@ -37,7 +37,7 @@ The scheduler emits a dispatch plan only:
 work-queue -> dispatch[] + held[]
 ```
 
-It does not spawn workers, mutate traces, or write claims. The dispatcher claim helper converts an accepted dispatch plan into runtime claim trace events with per-trace sequence numbers. The claim append helper groups those events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
+It does not spawn workers, mutate traces, or write claims. Runtime policy then decides whether the plan may become appended claim events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a dispatch candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel dispatch and dirty working-tree overlap. The dispatcher claim helper converts an accepted dispatch plan into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. The claim append helper groups those events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
 
 ## Claim events
 
@@ -48,6 +48,7 @@ Runtime claim helpers create canonical trace events for worker leases without in
 - Claim refs include canonical planning refs and path scopes. Worker ids, claim ids, reasons, and expiry timestamps belong in `data`, not `refs`.
 - `expiresAt` lets the work queue ignore stale claims and return work to `ready`.
 - Dispatch claim batches require the next sequence per trace before creating claim events.
+- Append mode requires automation policy that allows coordination writes; preview mode may still show the plan and policy blockers.
 - Cross-trace claim append preflights every affected trace before writing. Filesystem-level multi-file atomicity remains host/runtime concern.
 
 ## Pi worker dispatch seam
@@ -55,10 +56,14 @@ Runtime claim helpers create canonical trace events for worker leases without in
 CodeWiki integrates with Pi through an adapter boundary rather than importing the Pi SDK directly in core source. The seam requires a session factory compatible with Pi SDK sessions:
 
 ```text
-create session -> prompt(worker prompt) -> optional dispose
+runWikiRuntime(append) -> durable claim events -> create session -> prompt(worker prompt) -> optional dispose
 ```
 
-Worker prompts include work-unit id, trace id, planning refs, component refs, path scopes, claim id, and evidence rules. The worker owns local TDD and produces evidence. Worker results are normalized into implementation loop output with claim, worker, and session provenance. After workers finish, the implementation loop supplies final aggregate content proof for the merged output.
+The host adapter is a one-shot orchestrator, not a daemon loop. It appends trace-owned claims first, starts one independent session per appended claim, returns session refs, and then stops. Sessions continue independently unless the host explicitly disposes them. If session creation or prompting fails before a worker starts, the host prepares a trace-owned failed-start release batch with failure provenance; appending that batch remains an explicit host follow-up. Monitoring, completion collection, and retries remain host/runtime follow-up work, while semantic closure still happens through the implementation loop.
+
+The host handoff manifest is a disposable JSON bundle for adapters. It combines the runtime dispatch result, claim events, inert worktree command steps, Pi-compatible worker session inputs and prompts, expected completion shape, and release helper instructions. It does not execute commands, spawn sessions, mutate Git, or append traces by itself. `previewRuntimeHostHandoff()` is the preview-only host helper that can optionally collect read-only Git status, run `wiki_runtime` in preview mode, and return this manifest; it rejects append mode and never starts sessions or executes worktree commands. `runRuntimeHostOnce()` is the append-mode helper: it appends claims, dry-runs required worktree prepare/verify commands by default, starts sessions through an injected factory, asks an injected collector for completion evidence, previews `wiki_implement`, dry-runs required worktree cleanup commands, then returns a `releaseCheck` plus a prepared `releaseBatch` only when implementation exit passes. Real worktree command execution requires `worktreeCommandMode: "execute"` or `worktreeCleanupMode: "execute"` plus an injected runner. By default it does not append implementation results or release events; hosts must opt in with `appendImplementation` and `appendReleases`. Release append uses expected bytes derived from the prior append in the same host call unless the host supplies explicit expected bytes.
+
+Worker prompts include work-unit id, trace id, planning refs, component refs, path scopes, optional worktree refs, and evidence rules. The worker owns local TDD and produces structured completion evidence. The host adapter normalizes completion output into implementation `workerResults` with claim, worker, and session provenance. After `wiki_implement` consumes worker evidence, runtime runs a release check. The check reports `ready` when implementation exit passes, or when a worker reached a terminal `blocked`/`failed` status that should release the active claim without closing implementation. The prepared release batch contains normal completion releases (`worker_completed`, `worker_blocked`, or `worker_failed`). Terminal worker releases may be appended with `appendReleases`, but `appendImplementation` remains disabled unless implementation exit passes. When the host cannot close the cycle, it returns a remediation packet with a route (`retry_worker`, `planning`, `decision`, or `user`), blockers, refs, and suggested actions. Remediation is guidance, not trace truth, and does not append anything by itself. The implementation loop supplies final aggregate content proof for the merged output.
 
 A future extension/host layer can implement the injected factory with Pi SDK sessions. That host layer also owns observing session refs and spawning/disposing sessions. Core remains testable and free of hard Pi SDK imports.
 
@@ -109,6 +114,8 @@ Runtime code lives under `src/runtime/**`:
 - `policy.ts`
 - `budget.ts`
 - `dispatcher.ts`
+- `handoff.ts`
+- `host-runner.ts`
 - `lifecycle.ts`
 - `tmp.ts`
 - `types.ts`

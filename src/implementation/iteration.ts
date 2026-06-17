@@ -26,6 +26,7 @@ import {
 	planningScopesFromEvents,
 } from "./evidence.ts";
 import { evaluateImplementationExit } from "./exit.ts";
+import { workerProofRefs } from "./worker-proof.ts";
 import type {
 	ImplementationWorkerAggregation,
 	ImplementationWorkerResultInput,
@@ -48,6 +49,7 @@ export interface ImplementationIterationInput {
 	workerResults?: ImplementationWorkerResultInput[];
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
+	expectedWorkerBaseSha?: string;
 	componentMap?: FileStructureMapContract;
 	aggregateContentProof?: ContentProof;
 	existingPaths?: string[];
@@ -107,6 +109,9 @@ export function runImplementationIteration(
 		requireTddEvidence: input.requireTddEvidence,
 		aggregateContentProof,
 		workerResults: workerAggregation.workerResults,
+		workerProofs: workerAggregation.workerProofs,
+		workerProofConflicts: workerAggregation.workerProofConflicts,
+		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		workerClaims,
 		changes,
 	});
@@ -129,6 +134,7 @@ export function runImplementationIteration(
 		planningRefs,
 		changes,
 		planningScopes,
+		workerAggregation,
 		aggregateContentProof,
 		input.componentMap,
 	);
@@ -198,6 +204,7 @@ function implementationTraceEvents(args: {
 		planningRefs,
 		changes,
 		planningScopes,
+		workerAggregation,
 		aggregateContentProof,
 		input.componentMap,
 	);
@@ -217,6 +224,8 @@ function implementationTraceEvents(args: {
 				acceptanceRequirements,
 				planningScopes,
 				workerResults: workerAggregation.workerResults,
+				workerProofs: workerAggregation.workerProofs,
+				workerProofConflicts: workerAggregation.workerProofConflicts,
 				workerClaims,
 				aggregateContentProof,
 				changes: changes.map(implementationChangeData),
@@ -233,6 +242,7 @@ function implementationOutputRefs(
 	planningRefs: string[],
 	changes: ImplementationChange[],
 	planningScopes: PlanningImplementationScope[],
+	workerAggregation: ImplementationWorkerAggregation,
 	aggregateContentProof?: ContentProof,
 	componentMap?: FileStructureMapContract,
 ): string[] {
@@ -240,6 +250,7 @@ function implementationOutputRefs(
 		...planningRefs,
 		...changes.flatMap((change) => changedPaths(change)),
 		...changes.flatMap((change) => implementationEvidenceRefs(change)),
+		...workerAggregation.workerProofs.flatMap(workerProofRefs),
 		...contentProofRefList(aggregateContentProof),
 		...componentMapRefs(planningScopes, componentMap),
 	]);

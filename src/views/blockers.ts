@@ -2,6 +2,7 @@ import { eventsByName } from "../traces/queries.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import type { BlockerView, BlockersView, TraceViewInput } from "./types.ts";
 import { conflictsFromTrace } from "./conflicts.ts";
+import { qualityBlockersFromTrace } from "./quality.ts";
 
 const BLOCKING_RESOLUTION_KINDS = new Set(["deferred", "route-back"]);
 
@@ -22,6 +23,7 @@ export function blockersFromTrace(records: TraceRecord[]): BlockerView[] {
 	return [
 		...resolutionBlockers(records),
 		...iterationBlockers(records),
+		...qualityBlockersFromTrace(records),
 		...conflictBlockers(records),
 	];
 }

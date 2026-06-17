@@ -83,7 +83,9 @@ export function normalizeImplementationChanges(
 		sensitiveSurfaceAssessment: normalizeSensitiveSurfaceAssessment(
 			change.sensitiveSurfaceAssessment ?? change.sensitive_surface_assessment,
 		),
-		approvalAuthority: text(change.approvalAuthority ?? change.approval_authority),
+		approvalAuthority: text(
+			change.approvalAuthority ?? change.approval_authority,
+		),
 		approvalRef: text(change.approvalRef ?? change.approval_ref) || undefined,
 		publicationRefs: unique([
 			...stringList(change.publicationRefs),

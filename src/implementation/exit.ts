@@ -23,6 +23,7 @@ import {
 	implementationQualityStandards,
 	implementationIssueRefs,
 } from "./quality-standards.ts";
+import { detectImplementationWorkerProofConflicts } from "./worker-proof.ts";
 import type {
 	CheckResult,
 	ImplementationChange,
@@ -63,9 +64,12 @@ function collectImplementationExitIssues(
 		...coverageIssues(input),
 		...unknownPlanningRefIssues(input),
 		...workerResultIssues(input),
+		...workerProofIssues(input),
 		...duplicateChangeIssues(input.changes),
 		...changeIssues(input.changes),
 		...checkResultIssues(input.changes),
+		...plannedVerificationIssues(input),
+		...packagePackCheckIssues(input.changes),
 		...tddEvidenceIssues(input),
 		...acceptanceEvidenceIssues(input),
 		...componentAlignmentIssues(input),
@@ -153,6 +157,52 @@ function workerStatusIssues(
 				`Implementation worker ${worker.workerId} ${worker.status} for ${worker.workUnitId}.`,
 		},
 	];
+}
+
+function workerProofIssues(
+	input: ImplementationExitInput,
+): ImplementationExitIssue[] {
+	const proofs = input.workerProofs || [];
+	const conflicts = uniqueWorkerProofConflicts([
+		...(input.workerProofConflicts || []),
+		...detectImplementationWorkerProofConflicts(
+			proofs,
+			input.expectedWorkerBaseSha,
+		),
+	]);
+	return [
+		...proofs.flatMap((proof) => {
+			if (["pass", "unknown"].includes(proof.validationVerdict)) return [];
+			return [
+				{
+					code: "worker_proof_failed" as const,
+					workerId: proof.workerId,
+					claimId: proof.claimId,
+					planningRef: proof.planningRefs[0],
+					ref: proof.validationRef || proof.digest,
+					message: `Implementation worker ${proof.workerId} proof verdict is ${proof.validationVerdict}.`,
+				},
+			];
+		}),
+		...conflicts.map((conflict) => ({
+			code: "worker_proof_conflict" as const,
+			workerId: conflict.workerIds[0],
+			ref: conflict.refs[0] || conflict.files[0],
+			message: conflict.message,
+		})),
+	];
+}
+
+function uniqueWorkerProofConflicts(
+	conflicts: NonNullable<ImplementationExitInput["workerProofConflicts"]>,
+): NonNullable<ImplementationExitInput["workerProofConflicts"]> {
+	const seen = new Set<string>();
+	return conflicts.filter((conflict) => {
+		const key = `${conflict.kind}\0${conflict.message}`;
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	});
 }
 
 function workerClaimIssues(
@@ -1010,6 +1060,115 @@ function needsDependencyReview(change: ImplementationChange): boolean {
 	);
 }
 
+function plannedVerificationIssues(
+	input: ImplementationExitInput,
+): ImplementationExitIssue[] {
+	return (input.planningScopes || []).flatMap((scope) => {
+		const changes = input.changes.filter((change) =>
+			change.planningRefs.includes(scope.planningRef),
+		);
+		if (changes.length === 0) return [];
+		return uniqueStrings(scope.verification).flatMap((verification) => {
+			if (
+				changes.some((change) =>
+					changeSatisfiesPlannedVerification(change, verification),
+				)
+			) {
+				return [];
+			}
+			return [
+				{
+					code: "missing_planned_verification" as const,
+					planningRef: scope.planningRef,
+					ref: verification,
+					message: `Implementation does not include passing verification for ${verification} from ${scope.planningRef}.`,
+				},
+			];
+		});
+	});
+}
+
+function changeSatisfiesPlannedVerification(
+	change: ImplementationChange,
+	verification: string,
+): boolean {
+	const normalizedVerification = normalizePath(verification).toLowerCase();
+	const evidenceRefs = new Set(
+		[
+			...change.testPaths,
+			...change.checkResults
+				.filter((check) => check.status === "pass")
+				.map((check) => check.outputRef || ""),
+			...acceptanceEvidenceRefs(change),
+		]
+			.map((ref) => normalizePath(ref).toLowerCase())
+			.filter(Boolean),
+	);
+	if (evidenceRefs.has(normalizedVerification)) return true;
+	return change.checkResults.some(
+		(check) =>
+			check.status === "pass" &&
+			commandSatisfiesPlannedVerification(
+				check.command,
+				normalizedVerification,
+			),
+	);
+}
+
+function commandSatisfiesPlannedVerification(
+	command: string,
+	normalizedVerification: string,
+): boolean {
+	const normalizedCommand = command.trim().toLowerCase();
+	if (!normalizedCommand || !normalizedVerification) return false;
+	if (
+		normalizedCommand === normalizedVerification ||
+		normalizedCommand.includes(normalizedVerification)
+	) {
+		return true;
+	}
+	return (
+		normalizedVerification.startsWith("tests/") &&
+		/^(npm test|npm run test(?::(?:smoke|features))?|pnpm test|yarn test|node --test)(\s|$)/.test(
+			normalizedCommand,
+		)
+	);
+}
+
+function packagePackCheckIssues(
+	changes: ImplementationChange[],
+): ImplementationExitIssue[] {
+	return changes.flatMap((change) => {
+		if (!needsDependencyReview(change) || hasPassingPackagePackCheck(change)) {
+			return [];
+		}
+		return [
+			{
+				code: "missing_package_pack_check" as const,
+				changeId: change.id,
+				ref: "package.json",
+				message: `Implementation change ${change.id} touches package/dependency files and needs passing package pack verification.`,
+			},
+		];
+	});
+}
+
+function hasPassingPackagePackCheck(change: ImplementationChange): boolean {
+	return change.checkResults.some(
+		(check) => check.status === "pass" && isPackagePackCommand(check.command),
+	);
+}
+
+function isPackagePackCommand(command: string): boolean {
+	const normalized = command.trim().toLowerCase();
+	return (
+		/\bnpm\s+run\s+test:pack\b/.test(normalized) ||
+		/\bnpm\s+pack\b.*--dry-run/.test(normalized) ||
+		/\bpnpm\s+pack\b.*--dry-run/.test(normalized) ||
+		/\byarn\s+pack\b.*--dry-run/.test(normalized)
+	);
+}
+
 function traceabilityRefIssues(
 	input: ImplementationExitInput,
 ): ImplementationExitIssue[] {
@@ -1131,7 +1290,7 @@ function issueRemediation(issue: ImplementationExitIssue): ExitRemediationItem {
 	const refs = implementationIssueRefs(issue);
 	return {
 		action: implementationRemediationAction(issue),
-		route: "implementation",
+		route: issue.route || "implementation",
 		refs,
 		blocking: true,
 	};
@@ -1157,6 +1316,10 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Reacquire the work claim before accepting worker evidence.",
 	worker_claim_mismatch:
 		"Align worker id, work unit id, and planning refs with the runtime claim.",
+	worker_proof_failed:
+		"Fix failed worker proof checks or route the worker result as blocked/failed.",
+	worker_proof_conflict:
+		"Resolve overlapping worker proof paths, duplicate worker proofs, or base-SHA mismatch before aggregate closure.",
 	invalid_change: "Complete change id, planning refs, and changed paths.",
 	duplicate_change_id: "Give every implementation change a stable unique id.",
 	missing_check_results:
@@ -1164,6 +1327,10 @@ const IMPLEMENTATION_REMEDIATION: Record<
 	invalid_check_result: "Complete each check result with command and status.",
 	failed_check:
 		"Fix or route failed/blocked checks before implementation closure.",
+	missing_planned_verification:
+		"Run or record passing evidence for each verification item required by planning.",
+	missing_package_pack_check:
+		"Run package pack verification, such as npm run test:pack or npm pack --dry-run, for package/dependency changes.",
 	invalid_tdd_evidence:
 		"Record red TDD checks as failing before implementation and green checks as passing after implementation.",
 	missing_tdd_red_evidence:

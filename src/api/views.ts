@@ -1,5 +1,6 @@
 export * from "../views/blockers.ts";
 export * from "../views/conflicts.ts";
+export * from "../views/quality.ts";
 export * from "../views/resume.ts";
 export * from "../views/status.ts";
 export * from "../views/types.ts";

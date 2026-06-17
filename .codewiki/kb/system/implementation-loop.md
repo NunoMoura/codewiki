@@ -43,10 +43,11 @@ Implementation loop output is the high-signal packet needed to close or publish 
 
 - covered planning refs;
 - changed code/docs/test paths;
-- check results with commands, status, phases, and criterion ids when relevant;
+- check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
 - acceptance evidence mapped to planning acceptance criterion ids;
 - TDD red/green proof when policy requires it;
 - worker result summaries and claim/session provenance;
+- normalized worker proof digests, changed-path sets, validation refs, and conflict findings;
 - component/path alignment evidence;
 - final aggregate content proof for worker or parallel outputs;
 - residual issue coverage or explicit blockers;
@@ -66,9 +67,9 @@ The implementation loop can exit only when loop-owned quality standards are met 
 | planning_coverage_complete | deterministic | Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced. |
 | scope_controlled | deterministic | Changed paths stay inside planned component/path scope and existing repo paths. |
 | acceptance_evidence_complete | deterministic | Every planned acceptance criterion is covered by structured evidence refs. |
-| verification_passed | deterministic | Required checks are structured, present, and passing. |
+| verification_passed | deterministic | Required checks are structured, present, passing, cover planned verification refs/commands, and package/dependency changes include pack verification. |
 | tdd_evidence_valid | deterministic | Required red/green proof maps to planned acceptance criteria. |
-| content_proof_recorded | deterministic | Change-level and aggregate content proof exists when required. |
+| content_proof_recorded | deterministic | Change-level proof, worker proof verdict/conflict checks, and aggregate content proof exist when required. |
 | worker_claims_correlated | deterministic | Worker-produced evidence ties to active runtime claims and completed worker results. |
 | source_ownership_aligned | deterministic | Changed source/test paths align with file-structure ownership and component test coverage. |
 | production_quality_reviewed | agent | Agent assesses maintainability, simplicity, project style, and error handling as production-ready. |
@@ -112,7 +113,7 @@ Runtime coordinates implementation work but does not own implementation evidence
 work-queue -> runtime claim -> worker session -> worker result -> implementation output
 ```
 
-Worker-local proof is provenance. The implementation loop still needs final aggregate content proof after merging worker outputs.
+Worker-local proof is provenance normalized by the implementation loop: changed paths are deduplicated, validation refs and checks are summarized, proof digests are stable, and overlap/base conflicts block aggregate closure. The implementation loop still needs final aggregate content proof after merging worker outputs.
 
 ## Repository snapshot and content proof
 
@@ -126,9 +127,10 @@ Core helpers provide these facts without making Git history or generated views t
 - `collectProjectSnapshot()` lists normalized active repo paths for path-existence checks;
 - `createWorkingTreeDigest()` hashes selected file contents deterministically;
 - `createWorkingTreeContentProof()` wraps the digest as implementation content proof;
-- `runWikiImplement()` combines snapshot, proof, implementation loop output, exit evaluation, and optional append into one core facade.
+- `createImplementationMergeContentProof()` derives final merged proof paths from changes plus worker proof metadata and hashes the merged working tree unless a host supplies an explicit Git/content proof;
+- `runWikiImplement()` combines snapshot, merge proof, implementation loop output, exit evaluation, and optional append into one core facade.
 
-The digest should cover changed paths and evidence paths, not runtime temp or stored generated views. Direct local changes without per-change proof may receive the generated working-tree proof. Worker-local proof remains provenance; worker/parallel implementations still require final aggregate content proof.
+The digest should cover changed paths and evidence paths, not runtime temp or stored generated views. Direct local changes without per-change proof may receive the generated working-tree proof. Worker-local proof remains provenance; worker/parallel implementations still require final aggregate content proof over the merged output.
 
 ## Trace iteration data
 
@@ -146,6 +148,8 @@ Implementation iterations should record compact facts:
       "checks": [],
       "acceptanceEvidence": [],
       "workerResults": [],
+      "workerProofs": [],
+      "workerProofConflicts": [],
       "aggregateContentProof": null,
       "qualityStandards": []
     },

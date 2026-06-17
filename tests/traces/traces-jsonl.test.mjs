@@ -7,6 +7,7 @@ import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import {
 	TraceAppendConflictError,
+	TraceClosedAppendError,
 	appendSemanticLoopIteration,
 	appendTraceRecord,
 	appendTraceRecords,
@@ -21,11 +22,10 @@ import {
 	traceHasEvent,
 	traceRefs,
 	buildTraceRetentionStub,
+	createTraceCloseRecord,
 	TRACE_LOOP_VALUES,
 } from "../../src/api/traces.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
-import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function sampleRecords() {
 	const head = createTraceHead({
@@ -229,6 +229,31 @@ describe("trace JSONL core", () => {
 							}),
 					}),
 				/exactly one planning\.iteration/,
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("rejects appends after trace close", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-trace-closed-"));
+		try {
+			const records = sampleRecords();
+			const close = createTraceCloseRecord({
+				records,
+				gitRestoreRef: "refs/codewiki/archive/TRACE-20260611-traces",
+				createdAt: "2026-06-11T00:00:03.000Z",
+			});
+			await assert.rejects(
+				() => appendTraceRecords(root, [...records, close, records[1]], 0),
+				/after trace_close/,
+			);
+			const first = await appendTraceRecords(root, records, 0);
+			const closed = await appendTraceRecord(root, close, first.nextBytes);
+
+			await assert.rejects(
+				() => appendTraceRecord(root, records[1], closed.nextBytes),
+				TraceClosedAppendError,
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });

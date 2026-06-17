@@ -16,7 +16,9 @@ export interface WikiConfigFileResult extends RunWikiConfigResult {
 	written: boolean;
 }
 
-export async function loadWikiConfigFile(repoRoot: string): Promise<WikiConfig> {
+export async function loadWikiConfigFile(
+	repoRoot: string,
+): Promise<WikiConfig> {
 	const raw = await readOptionalJson(configPath(repoRoot));
 	return resolveWikiConfig(configFileToPartialWikiConfig(raw));
 }
@@ -51,7 +53,9 @@ export async function updateWikiConfigFile(
 	return { ...result, written: true };
 }
 
-export function configFileToPartialWikiConfig(value: unknown): PartialWikiConfig {
+export function configFileToPartialWikiConfig(
+	value: unknown,
+): PartialWikiConfig {
 	const record = objectRecord(value);
 	const runtime = objectRecord(record.runtime);
 	const codewiki = objectRecord(record.codewiki);
@@ -64,10 +68,11 @@ export function configFileToPartialWikiConfig(value: unknown): PartialWikiConfig
 		runtime: {
 			...runtime,
 			...(number(parallelism.max_sessions) !== undefined &&
-				runtime.maxWorkers === undefined
+			runtime.maxWorkers === undefined
 				? { maxWorkers: number(parallelism.max_sessions) }
 				: {}),
-			...(approvalCadence && objectRecord(runtime.approval).cadence === undefined
+			...(approvalCadence &&
+			objectRecord(runtime.approval).cadence === undefined
 				? { approval: { cadence: cadenceFromLegacy(approvalCadence) } }
 				: {}),
 			...(stopConditions.length > 0 && runtime.stopConditions === undefined
@@ -92,7 +97,9 @@ async function readOptionalJson(path: string): Promise<unknown> {
 	}
 }
 
-function cadenceFromLegacy(value: string): "always" | "per_iteration" | "on_risk" | "never" {
+function cadenceFromLegacy(
+	value: string,
+): "always" | "per_iteration" | "on_risk" | "never" {
 	if (value === "never") return "never";
 	if (value === "risk" || value === "on_risk") return "on_risk";
 	return "per_iteration";

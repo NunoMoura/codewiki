@@ -9,7 +9,7 @@ Use this skill when work needs scheduling, dispatch, claims, releases, or worker
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Runtime is the outer control loop, not a semantic loop.
 - Runtime may append coordination events, but semantic truth remains in decision, planning, and implementation iterations.
 - Dispatch only ready work from the work queue.

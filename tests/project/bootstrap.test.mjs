@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import {
+	mkdir,
+	mkdtemp,
+	readdir,
+	readFile,
+	rm,
+	writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { describe, it } from "node:test";
@@ -33,6 +40,74 @@ async function collectFiles(root, current = root) {
 }
 
 describe("project bootstrap", () => {
+	it("audits brownfield state and stale roots without deleting them", async () => {
+		const root = await fixture();
+		try {
+			await mkdir(join(root, ".codewiki", "roadmap"), { recursive: true });
+			await writeFile(join(root, ".codewiki", "roadmap", "queue.json"), "{}\n");
+
+			const result = await bootstrapCodewiki(root);
+
+			assert.equal(result.audit.projectKind, "brownfield");
+			assert.equal(result.brownfield, true);
+			assert.equal(result.audit.existing.codewiki, true);
+			assert.deepEqual(result.audit.staleRoots, [".codewiki/roadmap"]);
+			assert.equal(
+				await readFile(
+					join(root, ".codewiki", "roadmap", "queue.json"),
+					"utf8",
+				),
+				"{}\n",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("preserves existing KB and trace files by default", async () => {
+		const root = await fixture();
+		try {
+			await mkdir(join(root, ".codewiki", "kb"), { recursive: true });
+			await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
+			const existingKb = "# Existing Lexicon\n\nKeep curated knowledge.\n";
+			const existingTrace = "existing trace content\n";
+			await writeFile(join(root, ".codewiki", "kb", "lexicon.md"), existingKb);
+			await writeFile(
+				join(root, ".codewiki", "traces", "TRACE-existing.jsonl"),
+				existingTrace,
+			);
+
+			const result = await bootstrapCodewiki(root);
+
+			assert.equal(result.audit.existing.kb, true);
+			assert.equal(result.audit.existing.traces, true);
+			assert.ok(result.preserved.includes(".codewiki/kb"));
+			assert.ok(result.preserved.includes(".codewiki/traces"));
+			assert.ok(result.skipped.includes(".codewiki/kb/lexicon.md"));
+			assert.equal(
+				await readFile(join(root, ".codewiki", "kb", "lexicon.md"), "utf8"),
+				existingKb,
+			);
+			assert.equal(
+				await readFile(
+					join(root, ".codewiki", "traces", "TRACE-existing.jsonl"),
+					"utf8",
+				),
+				existingTrace,
+			);
+			assert.equal(
+				result.created.includes(".codewiki/traces/TRACE-existing.jsonl"),
+				false,
+			);
+			assert.equal(
+				result.updated.includes(".codewiki/traces/TRACE-existing.jsonl"),
+				false,
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("writes target scaffold without frontmatter or legacy truth roots", async () => {
 		const root = await fixture();
 		try {
@@ -41,8 +116,14 @@ describe("project bootstrap", () => {
 			assert.equal(result.brownfield, true);
 			assert.ok(result.created.includes(".codewiki/config.json"));
 			assert.ok(result.created.includes(".codewiki/kb/system/source-map.yaml"));
-			assert.equal(result.created.some((path) => path.includes("roadmap")), false);
-			assert.equal(result.created.some((path) => path.includes("index_graph")), false);
+			assert.equal(
+				result.created.some((path) => path.includes("roadmap")),
+				false,
+			);
+			assert.equal(
+				result.created.some((path) => path.includes("index_graph")),
+				false,
+			);
 
 			const config = await loadWikiConfigFile(root);
 			assert.equal(config.project, "bootstrap-fixture");
@@ -53,13 +134,20 @@ describe("project bootstrap", () => {
 				"utf8",
 			);
 			const sourceMap = parseSourceMapYaml(sourceMapText);
-			assert.equal(sourceMapOwnerForPath(sourceMap, "src/index.ts")?.id, "source");
+			assert.equal(
+				sourceMapOwnerForPath(sourceMap, "src/index.ts")?.id,
+				"source",
+			);
 			const files = await collectFiles(root);
 			const markdown = files
-				.filter((path) => path.startsWith(".codewiki/kb/") && path.endsWith(".md"))
+				.filter(
+					(path) => path.startsWith(".codewiki/kb/") && path.endsWith(".md"),
+				)
 				.map(async (path) => ({
 					path,
-					hasFrontmatter: (await readFile(join(root, path), "utf8")).startsWith("---\n"),
+					hasFrontmatter: (await readFile(join(root, path), "utf8")).startsWith(
+						"---\n",
+					),
 				}));
 			const issues = validateSourceMap(sourceMap, {
 				artifactPaths: files,

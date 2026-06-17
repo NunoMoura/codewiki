@@ -38,6 +38,7 @@ function activeArtifactPaths() {
 		"package.json",
 		"package-lock.json",
 		"tsconfig.json",
+		"tsconfig.build.json",
 	]);
 }
 

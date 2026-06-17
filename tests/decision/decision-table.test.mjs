@@ -106,6 +106,38 @@ describe("decision exit and iteration runner", () => {
 		assert.equal(exit.remediation[0].blocking, true);
 	});
 
+	it("blocks table-level weak source refs", () => {
+		const table = createDecisionTable({
+			sourceRefs: ["not-a-ref"],
+			rows: [
+				{
+					id: "DTR-table-ref",
+					currentState:
+						"Decision table source refs can seed current-state packets.",
+					desiredState: "Only canonical source refs enter decision evidence.",
+					rationale: "Trace-backed consumers need stable refs.",
+					...decisionQualityFields(),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table, {
+			knowledgeDelta: {
+				updatedRefs: ["kb:system/decision-loop.md"],
+				sections: [],
+			},
+		});
+
+		assert.equal(exit.passed, false);
+		assert.deepEqual(
+			exit.issues.map((issue) => issue.code),
+			["invalid_traceability_ref"],
+		);
+		assert.deepEqual(exit.findings[0].refs, ["not-a-ref"]);
+	});
+
 	it("blocks duplicate rows and weak refs", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -146,13 +178,16 @@ describe("decision exit and iteration runner", () => {
 					id: "DTR-agent",
 					currentState: "User wants a risky shortcut.",
 					desiredState: "Shortcut becomes accepted product direction.",
-					rationale: "The user is acting in good faith but may lack system context.",
+					rationale:
+						"The user is acting in good faith but may lack system context.",
 					...decisionQualityFields({
 						agentAssessment: {
 							stance: "concerns",
 							userAlignment: "The request reflects the user's stated goal.",
-							projectBenefit: "Benefit is unclear compared with safer alternatives.",
-							rationale: "The agent cannot validate alignment without user clarification.",
+							projectBenefit:
+								"Benefit is unclear compared with safer alternatives.",
+							rationale:
+								"The agent cannot validate alignment without user clarification.",
 							concerns: ["Could reduce project safety."],
 						},
 					}),
@@ -175,6 +210,55 @@ describe("decision exit and iteration runner", () => {
 			exit.criteria.find((criterion) => criterion.id === "intention_validated")
 				?.status,
 			"block",
+		);
+	});
+
+	it("blocks approved rows without explicit valid risk tier", () => {
+		const missingRisk = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-risk-missing",
+					currentState: "Risk defaults could hide authority needs.",
+					desiredState: "Decision rows declare risk explicitly.",
+					rationale: "Planning needs trusted risk metadata.",
+					...decisionQualityFields({ risk: undefined }),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+		const invalidRisk = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-risk-invalid",
+					currentState: "Risk can be free text.",
+					desiredState: "Risk tier is canonical.",
+					rationale: "Approval handling depends on the tier.",
+					...decisionQualityFields({ risk: "severe" }),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+
+		const missing = evaluateDecisionExit(missingRisk);
+		const invalid = evaluateDecisionExit(invalidRisk);
+
+		assert.equal(missing.passed, false);
+		assert.equal(
+			missing.issues.some((issue) => issue.code === "missing_risk"),
+			true,
+		);
+		assert.equal(invalid.passed, false);
+		assert.equal(
+			invalid.issues.some((issue) => issue.code === "invalid_risk"),
+			true,
+		);
+		assert.equal(
+			missing.qualityStandards.find(
+				(standard) => standard.id === "risks_and_alternatives_considered",
+			)?.status,
+			"unmet",
 		);
 	});
 
@@ -214,6 +298,10 @@ describe("decision exit and iteration runner", () => {
 		assert.equal(standards.risks_and_alternatives_considered.status, "unmet");
 		assert.equal(standards.evidence_sufficient.status, "unmet");
 		assert.equal(standards.approval_safety.status, "blocked");
+		assert.equal(
+			exit.remediation.find((item) => item.action.includes("approval"))?.route,
+			"user",
+		);
 	});
 
 	it("blocks incomplete or weak knowledge deltas", () => {

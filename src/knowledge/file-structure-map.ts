@@ -1,4 +1,4 @@
-import yaml from "js-yaml";
+import { parse as parseYaml } from "yaml";
 
 export interface FileStructureComponent {
 	id: string;
@@ -17,12 +17,10 @@ export interface FileStructureMapContract {
 export function parseFileStructureMapYaml(
 	source: string,
 ): FileStructureMapContract {
-	return fileStructureMapFromUnknown(yaml.load(source));
+	return fileStructureMapFromUnknown(parseYaml(source));
 }
 
-export function fileStructureMapFromUnknown(
-	value: unknown,
-): FileStructureMapContract {
+function fileStructureMapFromUnknown(value: unknown): FileStructureMapContract {
 	const document = objectRecord(value);
 	return {
 		id: text(document.id) || undefined,
@@ -83,17 +81,7 @@ export function componentSupportsTestPath(
 	return matchesAnyPattern(path, component.testPatterns);
 }
 
-export function componentSupportsChangedPath(
-	component: FileStructureComponent,
-	path: string,
-): boolean {
-	return (
-		componentSupportsSourcePath(component, path) ||
-		componentSupportsTestPath(component, path)
-	);
-}
-
-export function matchesAnyPattern(path: string, patterns: string[]): boolean {
+function matchesAnyPattern(path: string, patterns: string[]): boolean {
 	return patterns.some((pattern) => pathMatchesPattern(path, pattern));
 }
 

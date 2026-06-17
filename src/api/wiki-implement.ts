@@ -1,12 +1,6 @@
-import {
-	createWorkingTreeContentProof,
-	type ContentProof,
-} from "../git/content-proof.ts";
+import type { ContentProof } from "../git/content-proof.ts";
 import type { FileStructureMapContract } from "../knowledge/file-structure-map.ts";
-import {
-	changedPaths as implementationChangedPaths,
-	normalizeImplementationChanges,
-} from "../implementation/evidence.ts";
+import { normalizeImplementationChanges } from "../implementation/evidence.ts";
 import {
 	runImplementationIteration,
 	type ImplementationIterationInput,
@@ -17,6 +11,7 @@ import type {
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
 } from "../implementation/types.ts";
+import { createImplementationMergeContentProof } from "../implementation/merge-proof.ts";
 import {
 	aggregateImplementationWorkerResults,
 	type ImplementationWorkerResultInput,
@@ -43,6 +38,7 @@ export interface RunWikiImplementInput {
 	workerResults?: ImplementationWorkerResultInput[];
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
+	expectedWorkerBaseSha?: string;
 	componentMap?: FileStructureMapContract;
 	requireTddEvidence?: boolean;
 	parentId?: string | null;
@@ -84,16 +80,17 @@ export async function runWikiImplement(
 		exclude: input.snapshotExclude,
 	});
 	const changes = implementationChangesForRun(input);
-	const proofPaths = implementationProofPaths(input, changes);
-	const aggregateContentProof =
-		input.aggregateContentProof ??
-		(proofPaths.length > 0
-			? await createWorkingTreeContentProof({
-					root: input.repoRoot,
-					paths: proofPaths,
-					exclude: input.snapshotExclude,
-				})
-			: undefined);
+	const mergeProof = await createImplementationMergeContentProof({
+		repoRoot: input.repoRoot,
+		changes,
+		workerResults: input.workerResults,
+		proofPaths: input.proofPaths,
+		changedPaths: input.changedPaths,
+		evidencePaths: input.evidencePaths,
+		exclude: input.snapshotExclude,
+		aggregateContentProof: input.aggregateContentProof,
+	});
+	const { proofPaths, aggregateContentProof } = mergeProof;
 	const loopInput = implementationIterationInput(input, {
 		changes: changesWithLocalProof(changes, aggregateContentProof),
 		existingPaths: snapshot.paths,
@@ -157,6 +154,7 @@ function implementationIterationInput(
 		workerResults: input.workerResults,
 		workerClaims: input.workerClaims,
 		claimEvents: input.claimEvents,
+		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		componentMap: input.componentMap,
 		requireTddEvidence: input.requireTddEvidence,
 		parentId: input.parentId,
@@ -187,36 +185,9 @@ function changesWithLocalProof(
 	});
 }
 
-function implementationProofPaths(
-	input: RunWikiImplementInput,
-	changes: ImplementationChange[],
-): string[] {
-	return normalizePaths(
-		input.proofPaths ?? [
-			...(input.changedPaths || []),
-			...changes.flatMap(implementationChangedPaths),
-			...(input.evidencePaths || []),
-		],
-	);
-}
-
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
 		throw new Error("wiki_implement append mode requires expectedBytes >= 0.");
 	}
 	return value;
-}
-
-function normalizePaths(values: string[]): string[] {
-	return Array.from(
-		new Set(values.map((value) => normalizePath(value)).filter(Boolean)),
-	).sort((left, right) => left.localeCompare(right));
-}
-
-function normalizePath(path: string): string {
-	return path
-		.replace(/\\/g, "/")
-		.replace(/^\.\//, "")
-		.replace(/\/$/, "")
-		.trim();
 }

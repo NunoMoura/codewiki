@@ -1,4 +1,5 @@
 node_modules/
+dist/
 .DS_Store
 *.log
 .pi-lens/
@@ -6,3 +7,5 @@ node_modules/
 .codewiki/runtime/
 .codewiki/session/queue.json
 .tmp-worktrees/
+_OLD_VERSION/**
+!_OLD_VERSION/tsconfig.json

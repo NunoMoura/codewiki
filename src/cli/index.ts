@@ -1,8 +1,8 @@
-#!/usr/bin/env -S node --experimental-strip-types
-import { readFile, readdir } from "node:fs/promises";
-import { join } from "node:path";
+#!/usr/bin/env node
+import { realpathSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import {
-	buildWikiState,
 	runWikiArchive,
 	runWikiConfig,
 	runWikiDecide,
@@ -15,15 +15,18 @@ import {
 	type RunWikiImplementInput,
 	type RunWikiPlanInput,
 	type RunWikiRuntimeInput,
-	type TraceRecord,
 } from "../api/index.ts";
-import { parseSourceMapYaml } from "../knowledge/source-map.ts";
 import { bootstrapCodewiki } from "../project/bootstrap.ts";
 import {
+	findCodewikiProjectRoot,
+	resolveCodewikiProjectRoot,
+} from "../project/root.ts";
+import {
+	loadWikiConfigFile,
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../project/config-file.ts";
-import { readTraceFile } from "../traces/reader.ts";
+import { buildProjectWikiState } from "../project/state-file.ts";
 
 export interface CliResult {
 	status: number;
@@ -65,14 +68,11 @@ export async function runCodewikiCli(argv: string[]): Promise<CliResult> {
 async function stateCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
-	const repoRoot = one(flags.repo) || process.cwd();
-	const records = await readProjectTraceRecords(repoRoot);
-	const sourceMap = await readSourceMap(repoRoot);
-	const snapshot = buildWikiState({
-		records,
+	const repoRoot = await resolveCodewikiProjectRoot(one(flags.repo));
+	const snapshot = await buildProjectWikiState({
+		repoRoot,
 		traceId: one(flags.trace),
 		generatedAt: one(flags["generated-at"]),
-		sourceMap,
 		sourcePaths: flags.source || [],
 	});
 	return jsonResult(snapshot);
@@ -82,10 +82,14 @@ async function configCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
 	const input = await optionalInput<RunWikiConfigInput>(flags);
-	const repoRoot = one(flags.repo);
+	const explicitRepoRoot = one(flags.repo);
+	const repoRoot = explicitRepoRoot || (await findCodewikiProjectRoot());
 	if (flags.write?.length) {
 		return jsonResult(
-			await updateWikiConfigFile(repoRoot || process.cwd(), input),
+			await updateWikiConfigFile(
+				repoRoot || (await resolveCodewikiProjectRoot(undefined)),
+				input,
+			),
 		);
 	}
 	if (repoRoot) {
@@ -132,9 +136,11 @@ async function implementCommand(
 async function runtimeCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
-	return jsonResult(
-		await runWikiRuntime(await requiredInput<RunWikiRuntimeInput>(flags)),
-	);
+	const input = await requiredInput<RunWikiRuntimeInput>(flags);
+	if (!input.config && input.repoRoot) {
+		input.config = await loadWikiConfigFile(input.repoRoot);
+	}
+	return jsonResult(await runWikiRuntime(input));
 }
 
 async function archiveCommand(
@@ -143,42 +149,6 @@ async function archiveCommand(
 	return jsonResult(
 		await runWikiArchive(await requiredInput<RunWikiArchiveInput>(flags)),
 	);
-}
-
-async function readProjectTraceRecords(
-	repoRoot: string,
-): Promise<TraceRecord[]> {
-	const tracesDir = join(repoRoot, ".codewiki", "traces");
-	let files: string[];
-	try {
-		files = await readdir(tracesDir);
-	} catch (error) {
-		if (isNotFound(error)) return [];
-		throw error;
-	}
-	const records = await Promise.all(
-		files
-			.filter((file) => file.endsWith(".jsonl"))
-			.sort()
-			.map((file) => readTraceFile(join(tracesDir, file))),
-	);
-	return records.flat();
-}
-
-async function readSourceMap(repoRoot: string) {
-	const sourceMapPath = join(
-		repoRoot,
-		".codewiki",
-		"kb",
-		"system",
-		"source-map.yaml",
-	);
-	try {
-		return parseSourceMapYaml(await readFile(sourceMapPath, "utf8"));
-	} catch (error) {
-		if (isNotFound(error)) return undefined;
-		throw error;
-	}
 }
 
 async function requiredInput<T>(flags: Record<string, string[]>): Promise<T> {
@@ -286,8 +256,8 @@ function helpText(): string {
 		"",
 		"Commands:",
 		"  state   Print wiki_state JSON from .codewiki/traces and source-map.",
-		"  config     Resolve wiki_config JSON. Use --repo to load .codewiki/config.json; --write to save.",
-		"  bootstrap  Create target .codewiki scaffold for a repository.",
+		"  config     Resolve wiki_config JSON from the current CodeWiki project.",
+		"  bootstrap  Create target .codewiki scaffold in the current repository.",
 		"  decide     Run wiki_decide from --input <file|-> JSON.",
 		"  plan       Run wiki_plan from --input <file|-> JSON.",
 		"  implement  Run wiki_implement from --input <file|-> JSON.",
@@ -295,7 +265,6 @@ function helpText(): string {
 		"  archive    Run wiki_archive from --input <file|-> JSON.",
 		"",
 		"State/bootstrap/config options:",
-		"  --repo <path>          Repository root. Defaults to cwd.",
 		"  --trace <trace-id>     Select one trace for per-trace views.",
 		"  --source <path>        Include source ownership for a path. Repeatable.",
 		"  --generated-at <iso>   Generated timestamp for views.",
@@ -305,7 +274,6 @@ function helpText(): string {
 		"",
 		"Common input options:",
 		"  --input <file|->       JSON input object for all run commands.",
-		"  --repo <path>          Override repoRoot.",
 		"  --mode <preview|append> Override mode.",
 		"  --trace <trace-id>     Override traceId.",
 		"  --next-sequence <n>    Override nextSequence.",
@@ -314,18 +282,20 @@ function helpText(): string {
 	].join("\n");
 }
 
-function isNotFound(error: unknown): boolean {
-	return Boolean(
-		error &&
-			typeof error === "object" &&
-			"code" in error &&
-			(error as { code?: unknown }).code === "ENOENT",
-	);
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isCliEntrypoint()) {
 	const result = await runCodewikiCli(process.argv.slice(2));
 	if (result.stdout) process.stdout.write(result.stdout);
 	if (result.stderr) process.stderr.write(result.stderr);
 	process.exitCode = result.status;
+}
+
+function isCliEntrypoint(): boolean {
+	const entrypoint = process.argv[1];
+	if (!entrypoint) return false;
+	const modulePath = fileURLToPath(import.meta.url);
+	try {
+		return realpathSync(entrypoint) === realpathSync(modulePath);
+	} catch {
+		return entrypoint === modulePath;
+	}
 }

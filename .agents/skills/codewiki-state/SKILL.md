@@ -9,7 +9,7 @@ Use this skill before decision, planning, implementation, runtime dispatch, arch
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Treat `.codewiki/traces/TRACE-*.jsonl` as workflow/state truth.
 - Treat `.codewiki/kb/**` and `src/**` as active source truth.
 - Treat generated views as disposable projections.

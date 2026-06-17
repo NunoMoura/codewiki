@@ -4,14 +4,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
+import { collectPiWorkerResults } from "../../src/pi/worker-results.ts";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
+import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/dispatcher.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
+import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
@@ -159,6 +163,91 @@ describe("wiki_implement core facade", () => {
 				/^sha256:[a-f0-9]{64}$/,
 			);
 			assert.equal(result.snapshot.files.includes("src/feature.ts"), true);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("previews implementation from normalized Pi worker completion", async () => {
+		const root = await fixture();
+		try {
+			const traceId = "TRACE-wiki-implement-worker";
+			const events = planningEvents(traceId);
+			const planningRef = planningWorkRef(events);
+			const claim = createRuntimeClaimEvent({
+				traceId,
+				id: `${traceId}:runtime:claim:WU-implement:8`,
+				parentId: planningRef,
+				sequence: 8,
+				createdAt: "2026-06-11T00:00:02.500Z",
+				claimId: "claim-WU-implement-001",
+				workerId: "pi-worker-001",
+				workUnitId: "WU-implement",
+				planningRefs: [planningRef],
+				pathScopes: ["src/feature.ts"],
+			});
+			const workerResults = collectPiWorkerResults([
+				{
+					dispatch: {
+						workerId: "pi-worker-001",
+						workUnitId: "WU-implement",
+						traceId,
+						planningRefs: [planningRef],
+						claimId: "claim-WU-implement-001",
+						sessionId: "session-pi-worker-001",
+						sessionFile: "/tmp/pi-worker-001.jsonl",
+						status: "started",
+					},
+					output: {
+						status: "completed",
+						message: "Worker finished implementation.",
+						changed_files: ["src/feature.ts", "tests/feature.test.mjs"],
+						checks_run: ["node --test tests/feature.test.mjs"],
+						working_tree_digest: "sha256:abc123",
+						changes: [changeInput(planningRef)],
+					},
+				},
+			]);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				planningEvents: events,
+				claimEvents: [claim],
+				workerResults,
+				nextSequence: 9,
+				createdAt: "2026-06-11T00:00:03.000Z",
+			});
+
+			assert.equal(result.loopResult.readyForClosure, true);
+			assert.equal(result.loopResult.changes[0].workerId, "pi-worker-001");
+			assert.equal(
+				result.loopResult.changes[0].claimId,
+				"claim-WU-implement-001",
+			);
+			assert.equal(
+				result.loopResult.workerAggregation.workerResults[0].sessionId,
+				"session-pi-worker-001",
+			);
+			assert.match(
+				result.aggregateContentProof?.workingTreeDigest,
+				/^sha256:[a-f0-9]{64}$/,
+			);
+			const release = createRuntimeWorkerCompletionReleaseEvents(
+				workerResults,
+				[claim],
+				{
+					createdAt: "2026-06-11T00:00:04.000Z",
+					nextSequenceByTrace: { [traceId]: 10 },
+				},
+			).events[0];
+			const queue = buildWorkQueueView({
+				records: [...events, claim, result.iterationEvent, release],
+			});
+			assert.equal(
+				queue.items.find((item) => item.id === "WU-implement")?.status,
+				"done",
+			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

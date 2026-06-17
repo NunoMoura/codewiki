@@ -1,6 +1,7 @@
 import {
 	buildBlockersView,
 	buildConflictsView,
+	buildQualityView,
 	buildResumeView,
 	buildStatusView,
 	buildWorkPlanView,
@@ -16,6 +17,7 @@ import type { TraceRecord } from "../traces/types.ts";
 import type {
 	BlockersView,
 	ConflictsView,
+	QualityView,
 	ResumeView,
 	StatusView,
 	WorkPlanView,
@@ -53,6 +55,7 @@ export interface WikiStateSnapshot {
 	workQueue: WorkQueueView;
 	blockers?: BlockersView;
 	conflicts?: ConflictsView;
+	quality?: QualityView;
 	sourceOwners: WikiStateSourceOwner[];
 }
 
@@ -76,6 +79,7 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 					workPlan: buildWorkPlanView(traceViewInput),
 					blockers: buildBlockersView(traceViewInput),
 					conflicts: buildConflictsView(traceViewInput),
+					quality: buildQualityView(traceViewInput),
 				}
 			: {}),
 		workQueue: buildWorkQueueView({

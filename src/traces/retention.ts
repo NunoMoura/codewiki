@@ -71,7 +71,8 @@ export function buildTraceRetentionStub(
 
 export function createTraceCloseRecord(input: TraceCloseInput): TraceClose {
 	const state = replayTrace(input.records);
-	if (state.closed) throw new Error(`Trace ${state.head.traceId} is already closed.`);
+	if (state.closed)
+		throw new Error(`Trace ${state.head.traceId} is already closed.`);
 	const gitRestoreRef = input.gitRestoreRef.trim();
 	if (!gitRestoreRef) throw new Error("Trace close requires gitRestoreRef.");
 	const headRef = input.headRef?.trim() || state.head.traceId;

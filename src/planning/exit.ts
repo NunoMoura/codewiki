@@ -36,6 +36,8 @@ export type PlanningExitIssueCode =
 	| "missing_right_sizing"
 	| "work_unit_not_right_sized"
 	| "invalid_resolution"
+	| "invalid_resolution_kind"
+	| "route_back_resolution"
 	| "path_conflict"
 	| "duplicate_work_item_id"
 	| "invalid_acceptance_criterion"
@@ -58,6 +60,15 @@ export interface PlanningExitIssue {
 	route?: ExitRoute;
 	message: string;
 }
+
+const KNOWN_RESOLUTION_KINDS = new Set<string>([
+	"work-unit",
+	"deferred",
+	"already-implemented",
+	"route-back",
+	"knowledge-only",
+	"non-executable",
+]);
 
 export interface PlanningExitInput {
 	decisionRefs: string[];
@@ -116,7 +127,9 @@ function collectPlanningExitIssues(
 		...componentAlignmentIssues(input),
 		...dependencyIssues(input.workItems),
 		...traceabilityRefIssues(input),
+		...resolutionKindIssues(input.resolutions),
 		...resolutionIssues(input.resolutions),
+		...routeBackResolutionIssues(input.resolutions),
 		...conflictIssues(input.workItems),
 	];
 }
@@ -579,6 +592,21 @@ function traceabilityRefIssues(input: PlanningExitInput): PlanningExitIssue[] {
 	}));
 }
 
+function resolutionKindIssues(
+	resolutions: PlanningDecisionResolution[],
+): PlanningExitIssue[] {
+	return resolutions.flatMap((resolution) => {
+		if (KNOWN_RESOLUTION_KINDS.has(resolution.kind)) return [];
+		return [
+			{
+				code: "invalid_resolution_kind" as const,
+				decisionRef: resolution.decisionRef,
+				message: `Planning resolution for ${resolution.decisionRef} has invalid kind ${resolution.kind}.`,
+			},
+		];
+	});
+}
+
 function resolutionIssues(
 	resolutions: PlanningDecisionResolution[],
 ): PlanningExitIssue[] {
@@ -598,9 +626,10 @@ function resolutionIssues(
 function requiredResolutionFields(
 	resolution: PlanningDecisionResolution,
 ): string[] {
+	if (!KNOWN_RESOLUTION_KINDS.has(resolution.kind)) return [];
 	if (resolution.kind === "work-unit")
 		return resolution.workUnitIds.length ? [] : ["workUnitIds"];
-	if (resolution.kind === "deferred") {
+	if (["deferred", "route-back"].includes(resolution.kind)) {
 		return [
 			resolution.owner ? "" : "owner",
 			resolution.trigger ? "" : "trigger",
@@ -609,6 +638,27 @@ function requiredResolutionFields(
 		].filter(Boolean);
 	}
 	return resolution.evidenceRefs.length ? [] : ["evidenceRefs"];
+}
+
+function routeBackResolutionIssues(
+	resolutions: PlanningDecisionResolution[],
+): PlanningExitIssue[] {
+	return resolutions.flatMap((resolution) => {
+		if (
+			resolution.kind !== "route-back" ||
+			requiredResolutionFields(resolution).length > 0
+		) {
+			return [];
+		}
+		return [
+			{
+				code: "route_back_resolution" as const,
+				decisionRef: resolution.decisionRef,
+				route: "decision" as const,
+				message: `Planning resolution for ${resolution.decisionRef} routes authority back to decision before implementation can proceed.`,
+			},
+		];
+	});
 }
 
 function conflictIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
@@ -670,7 +720,7 @@ function issueRemediation(issue: PlanningExitIssue): ExitRemediationItem {
 	const refs = planningIssueRefs(issue);
 	return {
 		action: planningRemediationAction(issue),
-		route: "planning",
+		route: issue.route || "planning",
 		refs,
 		blocking: true,
 	};
@@ -730,6 +780,10 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Replace weak refs with canonical KB, trace, Git, digest, source, or test refs.",
 	invalid_resolution:
 		"Complete resolution evidence, owner, trigger, rationale, or work-unit links as required by its kind.",
+	invalid_resolution_kind:
+		"Use resolution kind work-unit, deferred, already-implemented, route-back, knowledge-only, or non-executable.",
+	route_back_resolution:
+		"Continue in the decision loop before planning hands work to implementation.",
 	path_conflict:
 		"Order conflicting work units with a real dependency or split the path scopes.",
 };

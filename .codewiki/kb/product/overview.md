@@ -21,13 +21,15 @@ All previous product UI surfaces are deprecated for now, including status panels
 
 The only retained UI direction is future Pi TUI support. That direction is intentionally narrow: Pi TUI may render source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
 
-Backend status and continuation remain available through tools and APIs such as `wiki_state`, generated views, folded traces, loop outputs, and exit-condition results. `/wiki status` may return later as a thin `wiki_state { view: "status" }` command.
+Backend state and continuation remain available through tools and APIs such as `wiki_state`, generated views, folded traces, loop outputs, and exit-condition results. `/wiki state` is the preferred command shape for summary output; no separate status command is planned.
 
 ## Product boundaries
 
-Tools, commands, skills, CLI access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [API vNext Tool Surface](../system/api-vnext-tools.md), and [Extension](../system/extension.md).
+Tools, commands, skills, temporary CLI harness access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [API Tool Surface](../system/api-tools.md), and [Extension](../system/extension.md).
 
-CodeWiki core is harness-agnostic. Pi is a primary host adapter, not the core. CLI and MCP adapters should expose the same semantics when added.
+CodeWiki core is harness-agnostic. Pi is a primary host adapter, not the core. MCP adapters should expose the same semantics when added. The source CLI remains a temporary development/test harness and is not a product host.
+
+CodeWiki should optimize for the best achievable code quality with the least useful token spend. Ceremony that does not improve quality, recovery, or agent efficiency should be questioned instead of preserved by default.
 
 ## Success signals
 
@@ -35,6 +37,7 @@ CodeWiki core is harness-agnostic. Pi is a primary host adapter, not the core. C
 - Product stories map to semantic loops and system components without duplicating technical design.
 - Backend state is inspectable through `wiki_state` and generated views.
 - Loop outputs are high-signal enough for downstream loops without chat archaeology.
+- Workflow ceremony improves code quality or token efficiency; otherwise it is removed or challenged.
 - Exit conditions make next actions, blockers, and route-backs explicit.
 - System diagrams can be rendered in Pi TUI as ASCII/Unicode from canonical YAML.
 - Historical recovery relies on Git, harness session storage, compact trace iterations, and retained refs rather than product doc event logs.

@@ -94,9 +94,13 @@ export function planningQualityStandards(
 		standard({
 			id: "resolutions_accounted",
 			description:
-				"Non-executable, deferred, route-back, knowledge-only, or already-implemented decisions carry required evidence.",
+				"Planning resolutions use a known kind, carry required evidence, and route-back resolutions return to decision authority before implementation.",
 			issues,
-			codes: ["invalid_resolution"],
+			codes: [
+				"invalid_resolution",
+				"invalid_resolution_kind",
+				"route_back_resolution",
+			],
 		}),
 		standard({
 			id: "traceability_refs_canonical",
@@ -154,7 +158,11 @@ function standard(input: {
 			? { message: matched.map((issue) => issue.message).join(" ") }
 			: {}),
 		...(matched.length > 0
-			? { refs: uniqueStrings(matched.flatMap((issue) => planningIssueRefs(issue))) }
+			? {
+					refs: uniqueStrings(
+						matched.flatMap((issue) => planningIssueRefs(issue)),
+					),
+				}
 			: {}),
 	};
 }

@@ -6,6 +6,8 @@ import type {
 import { eventsByName } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { blockersFromTrace } from "./blockers.ts";
+import { loopQualityReadiness } from "./quality.ts";
 import type { TraceViewInput, WorkPlanCard, WorkPlanView } from "./types.ts";
 
 export function buildWorkPlanView(cards: WorkPlanCard[]): WorkPlanView;
@@ -23,6 +25,8 @@ export function buildWorkPlanView(
 
 interface TracePlanningWorkItem extends PlanningWorkItem {
 	traceEventId: string;
+	qualityStandards: WorkPlanCard["qualityStandards"];
+	qualityBlockers: string[];
 }
 
 export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
@@ -40,6 +44,9 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 			...messages,
 		]);
 	}
+	const traceBlockers = blockersFromTrace(records).filter(
+		(blocker) => blocker.kind !== "conflict",
+	);
 	const implementationRefs = implementationRefsByPlanningRef(records);
 	const runtimeRefs = activeRuntimeRefs(records);
 	return items.map((item) => {
@@ -47,7 +54,11 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 		const implementedBy = unique(
 			itemTraceRefs.flatMap((ref) => implementationRefs.get(ref) || []),
 		);
-		const blockers = blockedIds.get(item.id) || [];
+		const blockers = unique([
+			...(blockedIds.get(item.id) || []),
+			...blockersForRefs(traceBlockers, itemTraceRefs),
+			...item.qualityBlockers,
+		]);
 		return {
 			id: item.id,
 			title: item.title,
@@ -65,6 +76,8 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 			dependsOn: [...item.dependsOn],
 			implementationRefs: implementedBy,
 			blockers,
+			qualityStandards: item.qualityStandards,
+			qualityBlockers: item.qualityBlockers,
 		};
 	});
 }
@@ -73,38 +86,58 @@ export function planningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): PlanningWorkItem[] {
 	return acceptedPlanningWorkItemsFromTrace(records).map(
-		({ traceEventId: _traceEventId, ...item }) => item,
+		({
+			traceEventId: _traceEventId,
+			qualityStandards: _qualityStandards,
+			qualityBlockers: _qualityBlockers,
+			...item
+		}) => item,
 	);
 }
 
 function acceptedPlanningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): TracePlanningWorkItem[] {
-	return eventsByName(records, "planning.iteration").flatMap((event) =>
-		objectList(objectRecord(event.data?.output).workItems).map((item) => {
-			const id = text(item.id) || `${event.id}:work-item`;
-			const acceptance = stringList(item.acceptance);
-			return {
-				id,
-				traceEventId: iterationSubref(event, "work", id),
-				title: text(item.title) || id,
-				decisionRefs: stringList(item.decisionRefs),
-				outcome: text(item.outcome),
-				technicalRequirements: stringList(item.technicalRequirements),
-				acceptance,
-				acceptanceCriteria: acceptanceCriteriaList(
-					item.acceptanceCriteria,
+	return eventsByName(records, "planning.iteration").flatMap((event) => {
+		const quality = loopQualityReadiness(event);
+		return objectList(objectRecord(event.data?.output).workItems).map(
+			(item) => {
+				const id = text(item.id) || `${event.id}:work-item`;
+				const acceptance = stringList(item.acceptance);
+				return {
+					id,
+					traceEventId: iterationSubref(event, "work", id),
+					title: text(item.title) || id,
+					decisionRefs: stringList(item.decisionRefs),
+					outcome: text(item.outcome),
+					technicalRequirements: stringList(item.technicalRequirements),
 					acceptance,
-				),
-				componentRefs: stringList(item.componentRefs),
-				pathScopes: stringList(item.pathScopes),
-				verification: stringList(item.verification),
-				workerProfile: text(item.workerProfile),
-				planningAssessment: planningAssessment(item.planningAssessment),
-				dependsOn: stringList(item.dependsOn),
-			};
-		}),
-	);
+					acceptanceCriteria: acceptanceCriteriaList(
+						item.acceptanceCriteria,
+						acceptance,
+					),
+					componentRefs: stringList(item.componentRefs),
+					pathScopes: stringList(item.pathScopes),
+					verification: stringList(item.verification),
+					workerProfile: text(item.workerProfile),
+					planningAssessment: planningAssessment(item.planningAssessment),
+					dependsOn: stringList(item.dependsOn),
+					qualityStandards: quality.standards,
+					qualityBlockers: quality.blockers,
+				};
+			},
+		);
+	});
+}
+
+function blockersForRefs(
+	blockers: { message: string; traceRefs: string[] }[],
+	refs: string[],
+): string[] {
+	const refSet = new Set(refs);
+	return blockers
+		.filter((blocker) => blocker.traceRefs.some((ref) => refSet.has(ref)))
+		.map((blocker) => blocker.message);
 }
 
 function conflictMessages(conflict: {
@@ -181,6 +214,8 @@ function normalizeCard(card: WorkPlanCard): WorkPlanCard {
 		dependsOn: [...(card.dependsOn || [])],
 		implementationRefs: [...(card.implementationRefs || [])],
 		blockers: [...(card.blockers || [])],
+		qualityStandards: [...(card.qualityStandards || [])],
+		qualityBlockers: [...(card.qualityBlockers || [])],
 	};
 }
 

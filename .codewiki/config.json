@@ -1,183 +1,39 @@
 {
-  "version": 3,
-  "project_name": "codewiki",
-  "template": {
-    "name": "codewiki-starter",
-    "version": 1,
-    "generated_on": "2026-04-29"
-  },
-  "index_title": "codewiki Index",
-  "docs_root": ".codewiki/kb",
-  "specs_root": ".codewiki/kb",
-  "roadmap_path": ".codewiki/roadmap/queue.json",
-  "roadmap_retention": {
-    "closed_task_limit": 0,
-    "archive_path": ".codewiki/roadmap/archive.jsonl",
-    "compress_archive": false
-  },
-  "meta_root": ".codewiki",
-  "views_root": ".codewiki/views",
-  "sources_root": ".codewiki/sources",
-  "generated_files": [
-    ".codewiki/index_graph.json"
-  ],
-  "lint": {
-    "repo_markdown": [
-      "README.md"
-    ],
-    "forbidden_headings": [
-      "## Purpose",
-      "## When To Read",
-      "## Content",
-      "## Summary",
-      "## How To Use This Doc"
-    ],
-    "word_count_warn": 1600,
-    "word_count_exempt": []
-  },
-  "codewiki": {
-    "name": "codewiki codebase wiki",
-    "self_drift_scope": {
-      "include": [
-        ".codewiki/kb/**/*.md",
-        ".codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/tasks/**",
-        ".codewiki/sources/**",
-        ".codewiki/research/**"
-      ],
-      "exclude": []
-    },
-    "code_drift_scope": {
-      "docs": [
-        ".codewiki/kb/**/*.md"
-      ],
-      "repo_docs": [
-        "README.md"
-      ],
-      "code": [
-        "src/**",
-        "skills/**",
-        "scripts/**",
-        "tests/**"
-      ]
-    },
-    "gateway": {
-      "enabled": true,
-      "mode": "read-only",
-      "allow_paths": [
-        ".codewiki/kb/**",
-        ".codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/tasks/**",
-        ".codewiki/sources/**",
-        ".codewiki/research/**",
-        ".codewiki/session/queue.json",
-        ".codewiki/index_graph.json"
-      ],
-      "write_paths": [
-        ".codewiki/kb/**",
-        ".codewiki/sources/**",
-        ".codewiki/research/**"
-      ],
-      "generated_readonly_paths": [
-        ".codewiki/index_graph.json",
-        ".codewiki/roadmap/tasks/**"
-      ],
-      "deny_paths": [
-        "**/.env*",
-        "**/*secret*",
-        ".codewiki/sources/private/**"
-      ],
-      "network": false,
-      "max_stdout_bytes": 12000,
-      "max_read_bytes": 200000,
-      "max_write_bytes": 50000
-    },
-    "runtime": {
-      "adapter": "codewiki-gateway-v2",
-      "future_executor": "think-code",
-      "notes": ".codewiki owns hot project knowledge and artifacts; cold history is Git-backed and legacy dot-wiki paths are deprecated.",
-      "patch_schema": "codewiki.patch.v1"
-    },
-    "rebuild": {
-      "quiet": true,
-      "freshness_check": true,
-      "debounce_ms": 250
-    },
-    "agency": {
-      "default_scope": {
-        "kind": "roadmap"
-      },
-      "budgets": {
-        "default": {
-          "maxCycles": 3,
-          "maxWallSeconds": 600,
-          "maxTokens": 60000,
-          "maxCostUsd": 3,
-          "maxWrites": 24,
-          "maxSessions": 2,
-          "risk": "medium"
-        },
-        "roadmap": {
-          "maxCycles": 16,
-          "maxWallSeconds": 7200,
-          "maxTokens": 320000,
-          "maxCostUsd": 20,
-          "maxWrites": 160,
-          "maxSessions": 8,
-          "risk": "medium"
-        },
-        "sprint": {
-          "maxCycles": 8,
-          "maxWallSeconds": 2400,
-          "maxTokens": 160000,
-          "maxCostUsd": 10,
-          "maxWrites": 80,
-          "maxSessions": 4,
-          "risk": "medium"
-        },
-        "task": {
-          "maxCycles": 2,
-          "maxWallSeconds": 300,
-          "maxTokens": 25000,
-          "maxCostUsd": 1,
-          "maxWrites": 12,
-          "maxSessions": 1,
-          "risk": "medium"
-        }
-      },
-      "parallelism": {
-        "max_sessions": 8,
-        "session_per_sprint": true,
-        "require_claims": true
-      },
-      "level": "sprint",
-      "approval_cadence": "sprint",
-      "context_reset": {
-        "enabled": true,
-        "auto_pickup": true,
-        "strategy": "soft-first",
-        "max_resets_per_run": 16,
-        "require_source_backed_kickoff": true,
-        "require_idle_boundary": true
-      },
-      "stop_gates": [
-        "semantic_decision",
-        "validation_block",
-        "artifact_conflict",
-        "risk_escalation",
-        "publication",
-        "destructive_action",
-        "unsafe_reset_boundary"
-      ]
-    },
-    "gc": {
-      "hot_days": 7,
-      "warm_days": 30,
-      "cold_days": 90,
-      "purge_days": 180,
-      "sprint_close_hook": true
-    }
-  },
-  "schema_version": 4,
-  "research_root": ".codewiki/research"
+	"project": "codewiki",
+	"runtime": {
+		"maxWorkers": 1,
+		"worktreeIsolation": "none",
+		"worktreeSetupCommands": [],
+		"automation": "manual",
+		"agency": "assist",
+		"budgets": {
+			"maxIterations": 1
+		},
+		"approval": {
+			"cadence": "per_iteration",
+			"destructiveAction": "ask",
+			"riskEscalation": "ask",
+			"requireExpectedBytes": true
+		},
+		"stopConditions": [
+			"semantic_decision",
+			"risk_escalation",
+			"destructive_action"
+		]
+	},
+	"retention": {
+		"enabled": true,
+		"archiveRefPrefix": "refs/codewiki/archive/",
+		"hotTraceLimit": 20,
+		"requireCloseRecord": true,
+		"hydrateOnDemand": true
+	},
+	"hosts": {
+		"pi": {
+			"enabled": false
+		},
+		"mcp": {
+			"enabled": false
+		}
+	}
 }

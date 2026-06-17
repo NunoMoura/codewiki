@@ -14,7 +14,7 @@ This repository is intentionally not dogfooding the CodeWiki Pi extension during
 
 ## Rebuild bootstrap boundary
 
-During this source rebuild, `.codewiki/kb/**` is the intended-design source of truth, but the surrounding dogfood `.codewiki/**` roots outside `kb`, `traces`, `views`, and `config.json` are legacy migration state. The bootstrap command now writes only the target scaffold for new repositories.
+During this source rebuild, `.codewiki/kb/**` is the intended-design source of truth, while `.codewiki/traces/**` may contain preserved workflow history. Surrounding dogfood `.codewiki/**` roots outside `kb`, `traces`, `views`, and `config.json` are legacy migration state. The bootstrap command audits the current repository, preserves existing KB/traces, reports stale roots, and writes only missing target scaffold files.
 
 `source-map.yaml` is the canonical machine-readable source ownership map. It links source roots, owning KB docs, tests, generated views, and trace/event responsibilities. KB Markdown must not use frontmatter.
 
@@ -40,6 +40,7 @@ Target CodeWiki project state has two canonical roots and one generated root:
     resume.json
     work-plan.json
     work-queue.json
+    quality.json
     blockers.json
     conflicts.json
 ```
@@ -154,7 +155,7 @@ src/
     lifecycle.ts
     tmp.ts
     types.ts
-  cli/                       # CLI host adapter over root core facades
+  cli/                       # temporary development/test harness
     index.ts
   pi/                        # Pi package surface, disabled until reintroduced
     extension.ts
@@ -179,7 +180,7 @@ src/
     assert.ts
 ```
 
-Loop roots own loop output shaping and exit-condition evaluation. `project/config.ts` owns resolved automation, agency, approval, budget, host, worktree, and retention settings. `runtime` owns scheduling, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `cli` and `pi` are host adapters over root core facades. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
+Loop roots own loop output shaping and exit-condition evaluation. `project/config.ts` owns resolved automation, agency, approval, budget, host, worktree, and retention settings. `runtime` owns scheduling, boundaries, claims, leases, dispatch, lifecycle helpers, and temporary data. `pi` is the primary host adapter over root core facades; `cli` is only a temporary development/test harness and is not part of host config. `pi/tui` is the only UI family because CodeWiki is terminal/Pi-first. `utils` must remain domain-free; if a helper knows CodeWiki semantics, it belongs in an owning root.
 
 ## Roots to retire or merge
 
@@ -253,7 +254,7 @@ Product docs define user-facing orientation. System docs define technical specs.
 
 ## Migration operation rules
 
-This refactor is bootstrapped without the CodeWiki Pi extension. Agents must not use `wiki_*` tools, CodeWiki skills, CodeWiki-owned compaction, generated roadmap state, or generated views as active workflow truth in this repository while the extension is disabled.
+This refactor is bootstrapped without repo-local CodeWiki Pi dogfooding. Agents must not use CodeWiki `wiki_*` tools, CodeWiki-owned compaction, generated roadmap state, or generated views as active workflow truth in this repository until repo-local dogfooding is explicitly enabled.
 
 Migrate code from `_OLD_VERSION/**` into `src/**` one module at a time: decision, then planning, then implementation, then traces/views/runtime support. Each migration should keep tests local to the migrated module and should not re-enable Pi extension metadata until explicitly approved.
 

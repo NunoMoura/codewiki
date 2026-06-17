@@ -1,4 +1,9 @@
-import type { TraceLoop, TraceRecord } from "../traces/types.ts";
+import type {
+	LoopQualityStandardMode,
+	LoopQualityStandardStatus,
+	TraceLoop,
+	TraceRecord,
+} from "../traces/types.ts";
 
 export type ViewHealth = "green" | "yellow" | "red";
 export type WorkPlanCardStatus = "todo" | "blocked" | "active" | "done";
@@ -10,6 +15,47 @@ export type WorkQueueItemStatus =
 	| "blocked"
 	| "done";
 export type WorkQueueItemKind = "decision" | "work-unit";
+export type QualityStandardSummaryStatus =
+	| LoopQualityStandardStatus
+	| "missing";
+
+export interface QualityStandardSummary {
+	id: string;
+	status: QualityStandardSummaryStatus;
+	mode: LoopQualityStandardMode;
+	description: string;
+	message?: string;
+	refs: string[];
+	evidenceRefs?: string[];
+}
+
+export interface LoopQualitySummary {
+	total: number;
+	met: number;
+	unmet: number;
+	blocked: number;
+	missing: number;
+}
+
+export interface QualityIterationSummary {
+	loop: TraceLoop;
+	traceId: string;
+	eventId: string;
+	exitStatus: string;
+	ready: boolean;
+	standards: QualityStandardSummary[];
+	blockers: string[];
+	refs: string[];
+	sourceEventId: string;
+}
+
+export interface QualityView {
+	generatedAt?: string;
+	traceId?: string;
+	summary: Record<TraceLoop, LoopQualitySummary>;
+	iterations: QualityIterationSummary[];
+	blockers: string[];
+}
 
 export interface TraceViewInput {
 	records: TraceRecord[];
@@ -36,6 +82,8 @@ export interface WorkPlanCard {
 	dependsOn: string[];
 	implementationRefs: string[];
 	blockers: string[];
+	qualityStandards: QualityStandardSummary[];
+	qualityBlockers: string[];
 }
 
 export interface WorkPlanView {
@@ -57,6 +105,8 @@ export interface WorkQueueItem {
 	pathScopes: string[];
 	dependsOn: string[];
 	blockers: string[];
+	qualityStandards: QualityStandardSummary[];
+	qualityBlockers: string[];
 	claimedBy?: string;
 	claimExpiresAt?: string;
 	sourceEventId?: string;
@@ -76,9 +126,14 @@ export interface StatusView {
 	health: ViewHealth;
 	currentLoop: TraceLoop | null;
 	readyForClosure: boolean;
+	closed?: boolean;
+	closedAt?: string;
+	closeReason?: string;
 	lastEventId?: string;
 	summary: ViewSummary;
 	blockers: string[];
+	qualityBlockers: string[];
+	quality?: QualityView;
 	sourceRefs: string[];
 }
 
@@ -88,10 +143,15 @@ export interface ResumeView {
 	title?: string;
 	nextAction: string;
 	currentLoop: TraceLoop | null;
+	closed?: boolean;
+	closedAt?: string;
+	closeReason?: string;
 	activeWorkUnitId?: string;
 	lastEventId?: string;
 	sourceRefs: string[];
 	blockers: string[];
+	qualityBlockers: string[];
+	quality?: QualityView;
 }
 
 export interface BlockerView {

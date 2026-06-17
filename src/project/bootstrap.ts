@@ -1,4 +1,11 @@
-import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import {
+	access,
+	mkdir,
+	readdir,
+	readFile,
+	stat,
+	writeFile,
+} from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { resolveWikiConfig } from "./config.ts";
 import { WIKI_CONFIG_PATH } from "./config-file.ts";
@@ -13,13 +20,29 @@ export interface BootstrapBoundary {
 	kind: "source" | "tests" | "docs";
 }
 
+export type BootstrapProjectKind = "empty" | "brownfield";
+
+export interface BootstrapAudit {
+	projectKind: BootstrapProjectKind;
+	existing: {
+		codewiki: boolean;
+		config: boolean;
+		kb: boolean;
+		traces: boolean;
+		views: boolean;
+	};
+	staleRoots: string[];
+}
+
 export interface BootstrapResult {
 	repoRoot: string;
 	project: string;
 	created: string[];
 	updated: string[];
 	skipped: string[];
+	preserved: string[];
 	brownfield: boolean;
+	audit: BootstrapAudit;
 	boundaries: BootstrapBoundary[];
 }
 
@@ -37,6 +60,7 @@ const TARGET_DIRECTORIES = [
 	".codewiki/traces",
 	".codewiki/views",
 ];
+const TARGET_CODEWIKI_ROOTS = new Set(["config.json", "kb", "traces", "views"]);
 
 const SOURCE_ROOT_CANDIDATES = [
 	"src",
@@ -65,20 +89,29 @@ export async function bootstrapCodewiki(
 ): Promise<BootstrapResult> {
 	const project = await bootstrapProjectName(repoRoot, options.projectName);
 	const plan = await buildBootstrapPlan(repoRoot, project);
+	const audit = await auditBootstrapState(repoRoot, plan.boundaries);
 	const result: BootstrapResult = {
 		repoRoot,
 		project,
 		created: [],
 		updated: [],
 		skipped: [],
-		brownfield: plan.boundaries.length > 0,
+		preserved: preservedBootstrapPaths(audit, options.force === true),
+		brownfield: audit.projectKind === "brownfield",
+		audit,
 		boundaries: plan.boundaries,
 	};
 	for (const directory of plan.directories) {
 		await mkdir(join(repoRoot, directory), { recursive: true });
 	}
 	for (const [path, content] of Object.entries(plan.files)) {
-		await writeBootstrapFile(repoRoot, path, content, options.force === true, result);
+		await writeBootstrapFile(
+			repoRoot,
+			path,
+			content,
+			options.force === true,
+			result,
+		);
 	}
 	return result;
 }
@@ -93,6 +126,45 @@ export async function buildBootstrapPlan(
 		files: starterFiles(project, boundaries),
 		boundaries,
 	};
+}
+
+export async function auditBootstrapState(
+	repoRoot: string,
+	boundaries: BootstrapBoundary[] = [],
+): Promise<BootstrapAudit> {
+	const codewikiPath = join(repoRoot, ".codewiki");
+	const codewiki = await isDirectory(codewikiPath);
+	const entries = codewiki ? await safeReaddir(codewikiPath) : [];
+	const staleRoots = entries
+		.map((entry) => entry.name)
+		.filter((name) => !TARGET_CODEWIKI_ROOTS.has(name))
+		.map((name) => `.codewiki/${name}`)
+		.sort();
+	const existing = {
+		codewiki,
+		config: await pathExists(join(repoRoot, WIKI_CONFIG_PATH)),
+		kb: await isDirectory(join(repoRoot, ".codewiki", "kb")),
+		traces: await isDirectory(join(repoRoot, ".codewiki", "traces")),
+		views: await isDirectory(join(repoRoot, ".codewiki", "views")),
+	};
+	return {
+		projectKind:
+			boundaries.length > 0 || existing.codewiki ? "brownfield" : "empty",
+		existing,
+		staleRoots,
+	};
+}
+
+function preservedBootstrapPaths(
+	audit: BootstrapAudit,
+	force: boolean,
+): string[] {
+	return [
+		audit.existing.config && !force ? WIKI_CONFIG_PATH : "",
+		audit.existing.kb ? ".codewiki/kb" : "",
+		audit.existing.traces ? ".codewiki/traces" : "",
+		audit.existing.views ? ".codewiki/views" : "",
+	].filter(Boolean);
 }
 
 export async function detectBootstrapBoundaries(
@@ -292,7 +364,10 @@ function sourceMapYaml(boundaries: BootstrapBoundary[]): string {
 					"    tests:",
 					...(testPatterns.length > 0
 						? testPatterns.map((pattern) => `      - ${pattern}`)
-						: ["    test_policy: inherited", "    test_rationale: No test root detected during bootstrap."]),
+						: [
+								"    test_policy: inherited",
+								"    test_rationale: No test root detected during bootstrap.",
+							]),
 					"    role: implementation_source",
 				]
 			: []),
@@ -317,7 +392,9 @@ async function bootstrapProjectName(
 ): Promise<string> {
 	const explicit = text(projectName);
 	if (explicit) return explicit;
-	const packageJson = objectRecord(await readOptionalJson(join(repoRoot, "package.json")));
+	const packageJson = objectRecord(
+		await readOptionalJson(join(repoRoot, "package.json")),
+	);
 	return text(packageJson.name) || basename(repoRoot) || "codewiki-project";
 }
 

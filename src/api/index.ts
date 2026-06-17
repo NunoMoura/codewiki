@@ -19,9 +19,12 @@ export type {
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
 } from "../implementation/types.ts";
+export type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 export type {
-	ImplementationWorkerResultInput,
-} from "../implementation/workers.ts";
+	ImplementationWorkerProof,
+	ImplementationWorkerProofConflict,
+	ImplementationWorkerProofInput,
+} from "../implementation/worker-proof.ts";
 export type {
 	PlanningDecisionResolution,
 	PlanningDecisionResolutionInput,
@@ -42,7 +45,31 @@ export type {
 	SourceMapValidationIssueCode,
 } from "../knowledge/source-map.ts";
 export type { ContentProof } from "../git/content-proof.ts";
+export type {
+	GitStatusSnapshot,
+	GitStatusSnapshotInput,
+	RuntimeWorktreeGitInputs,
+} from "../git/status.ts";
+export type {
+	ExecuteRuntimeWorktreeCommandsOptions,
+	RuntimeWorktreePlan,
+	WorktreeCommandExecutionRecord,
+	WorktreeCommandExecutionResult,
+	WorktreeCommandRunner,
+	WorktreeCommandStep,
+	WorktreeRef,
+} from "../git/worktrees.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
+export type { RuntimeDispatchPolicyDecision } from "../runtime/policy.ts";
+export type {
+	CreateRuntimeHandoffManifestOptions,
+	RuntimeHandoffAction,
+	RuntimeHandoffCompletionContract,
+	RuntimeHandoffManifest,
+	RuntimeHandoffReleaseInstructions,
+	RuntimeHandoffRuntimeResult,
+	RuntimeHandoffWorker,
+} from "../runtime/handoff.ts";
 export type { TraceEvent, TraceRecord } from "../traces/types.ts";
 export type {
 	BlockersView,

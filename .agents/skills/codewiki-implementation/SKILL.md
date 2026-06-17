@@ -9,7 +9,7 @@ Use this skill when executing a planning work item in source, tests, or KB docs.
 
 ## Ground rules
 
-- In this repository, use the CLI adapter. Do not call archived `wiki_*` tools while the extension is disabled.
+- In this repository, use the CLI adapter until repo-local CodeWiki dogfooding is explicitly enabled. Do not call CodeWiki `wiki_*` tools from this checkout before that step.
 - Implementation consumes `planning.iteration` output and emits `implementation.iteration` output.
 - Changes are referenced as `trace:<iteration-id>#change:<change-id>`.
 - Edit only files required by the selected work item and its acceptance criteria.

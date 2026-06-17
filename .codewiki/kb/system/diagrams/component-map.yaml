@@ -6,7 +6,7 @@ purpose: Show major CodeWiki domain, application, adapter, truth, runtime, view,
 source_docs:
   - .codewiki/kb/system/overview.md
   - .codewiki/kb/system/loop-model.md
-  - .codewiki/kb/system/api-vnext-tools.md
+  - .codewiki/kb/system/api-tools.md
   - .codewiki/kb/system/file-structure.md
   - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/runtime.md
@@ -35,7 +35,7 @@ nodes:
     label: CLI / Pi / MCP adapters
     group: surfaces
     kind: host_adapter
-    source: .codewiki/kb/system/api-vnext-tools.md
+    source: .codewiki/kb/system/api-tools.md
   - id: api
     label: CodeWiki core API
     group: api_layer
@@ -45,7 +45,7 @@ nodes:
     label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_runtime / wiki_archive / wiki_config
     group: api_layer
     kind: tool_surface
-    source: .codewiki/kb/system/api-vnext-tools.md
+    source: .codewiki/kb/system/api-tools.md
   - id: runtime
     label: Runtime outer loop
     group: runtime_layer

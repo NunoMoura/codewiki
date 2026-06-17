@@ -66,7 +66,7 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | approval_safety | High-risk approved rows have explicit user approval authority and a canonical approval ref. |
 | current_state_grounded | Current KB/source/trace/Git/test baseline refs are present and canonical. |
 | evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk rows need explicit proof refs for research, prior art, validation, or user guidance. |
-| risks_and_alternatives_considered | High-risk intentions identify affected layers and at least one viable alternative before planning. |
+| risks_and_alternatives_considered | Approved rows declare a low/medium/high risk tier; high-risk intentions identify affected layers and at least one viable alternative before planning. |
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
 
 Deterministic standards stay fast and repeatable. Agent-judgment standards are used when structural checks are not enough to protect user/project alignment. User-approval standards are reserved for high-risk decisions where UX cost is justified.

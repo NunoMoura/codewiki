@@ -117,7 +117,9 @@ describe("planning iteration runner", () => {
 			],
 		);
 		assert.equal(
-			result.exit.qualityStandards.every((standard) => standard.status === "met"),
+			result.exit.qualityStandards.every(
+				(standard) => standard.status === "met",
+			),
 			true,
 		);
 	});
@@ -229,9 +231,12 @@ describe("planning iteration runner", () => {
 							stance: "needs_split",
 							workUnitSize: "too_large",
 							rightSizing: "This is sprint-sized and should be split.",
-							independence: "Worker needs more decomposition before implementation.",
-							implementationReadiness: "Requirements span multiple source areas.",
-							rationale: "One worker would need to make multiple unrelated changes.",
+							independence:
+								"Worker needs more decomposition before implementation.",
+							implementationReadiness:
+								"Requirements span multiple source areas.",
+							rationale:
+								"One worker would need to make multiple unrelated changes.",
 						},
 					}),
 					acceptance: ["Done"],
@@ -255,10 +260,7 @@ describe("planning iteration runner", () => {
 				.map((issue) => issue.code)
 				.filter((code) => code.includes("worker") || code.includes("sized"))
 				.sort(),
-			[
-				"planning_assessment_not_worker_ready",
-				"work_unit_not_right_sized",
-			],
+			["planning_assessment_not_worker_ready", "work_unit_not_right_sized"],
 		);
 	});
 
@@ -280,8 +282,10 @@ describe("planning iteration runner", () => {
 							implementationReadiness: "Implementation details are clear.",
 							uncertainties: ["User-facing scope is ambiguous."],
 							uncertaintyOwner: "user",
-							uncertaintyResolution: "Block for user clarification before implementation.",
-							rationale: "Planning must not leak user authority ambiguity downstream.",
+							uncertaintyResolution:
+								"Block for user clarification before implementation.",
+							rationale:
+								"Planning must not leak user authority ambiguity downstream.",
 						},
 					}),
 					acceptance: ["Done"],
@@ -403,6 +407,80 @@ describe("planning iteration runner", () => {
 			complete.traceEvents[0].data?.output?.resolutions?.[0]?.kind,
 			"deferred",
 		);
+	});
+
+	it("blocks unknown planning resolution kinds", () => {
+		const decisions = decisionEvents();
+		const decisionRef = approvedDecisionRef(decisions);
+		const result = runPlanningIteration({
+			traceId: "TRACE-planning",
+			decisionEvents: decisions,
+			resolutionInputs: [
+				{
+					decisionRef,
+					kind: "routeback",
+					evidenceRefs: ["kb:system/planning-loop.md"],
+				},
+			],
+		});
+
+		assert.equal(result.readyForImplementation, false);
+		assert.equal(result.exit.verdict, "fail");
+		assert.equal(result.resolutions[0].kind, "routeback");
+		assert.deepEqual(
+			result.exit.issues.map((issue) => issue.code),
+			["invalid_resolution_kind"],
+		);
+		assert.equal(
+			result.exit.qualityStandards.find(
+				(standard) => standard.id === "resolutions_accounted",
+			)?.status,
+			"unmet",
+		);
+	});
+
+	it("routes complete route-back resolutions to decision authority", () => {
+		const decisions = decisionEvents();
+		const decisionRef = approvedDecisionRef(decisions);
+		const incomplete = runPlanningIteration({
+			traceId: "TRACE-planning",
+			decisionEvents: decisions,
+			resolutionInputs: [
+				{
+					decisionRef,
+					kind: "route-back",
+					evidenceRefs: ["kb:system/planning-loop.md"],
+				},
+			],
+		});
+		assert.equal(incomplete.readyForImplementation, false);
+		assert.equal(incomplete.exit.route, "planning");
+		assert.equal(incomplete.exit.issues[0].code, "invalid_resolution");
+
+		const routed = runPlanningIteration({
+			traceId: "TRACE-planning",
+			decisionEvents: decisions,
+			resolutionInputs: [
+				{
+					decisionRef,
+					kind: "route-back",
+					owner: "decision",
+					trigger: "decision authority needed before implementation",
+					rationale: "Accepted intent changed beyond planning authority.",
+					evidenceRefs: ["kb:system/planning-loop.md"],
+				},
+			],
+		});
+
+		assert.equal(routed.readyForImplementation, false);
+		assert.equal(routed.exit.verdict, "fail");
+		assert.equal(routed.exit.route, "decision");
+		assert.deepEqual(
+			routed.exit.issues.map((issue) => issue.code),
+			["route_back_resolution"],
+		);
+		assert.equal(routed.traceEvents[0].data?.exit.status, "route_back");
+		assert.equal(routed.traceEvents[0].data?.exit.targetLoop, "decision");
 	});
 
 	it("detects conflicting path scopes unless dependency orders the work", () => {

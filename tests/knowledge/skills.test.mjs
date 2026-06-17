@@ -24,6 +24,10 @@ const bannedSkillTerms = [
 	/wiki_gate/,
 	/wiki_roadmap/,
 	/wiki_gc/,
+	/extension is disabled/,
+	/while the extension is disabled/,
+	/hosts\.cli/,
+	/"cli"\s*:\s*\{\s*"enabled"/,
 	/decision_build/,
 	/planning_build/,
 	/implementation_build/,
@@ -50,11 +54,12 @@ function parseFrontmatter(text) {
 }
 
 describe("CodeWiki project skills", () => {
-	it("provides the target local skill set without package metadata", () => {
+	it("provides the target local skill set without packaging skills", () => {
 		const actual = readdirSync(skillRoot).sort();
 		assert.deepEqual(actual, expectedSkills);
 		const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
-		assert.equal(packageJson.pi, undefined);
+		assert.deepEqual(packageJson.pi.extensions, ["dist/pi/extension.js"]);
+		assert.equal(packageJson.pi.skills, undefined);
 	});
 
 	it("uses valid frontmatter and current loop vocabulary", () => {
