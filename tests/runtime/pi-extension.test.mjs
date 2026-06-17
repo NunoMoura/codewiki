@@ -606,8 +606,16 @@ describe("Pi extension adapter", () => {
 				{
 					input: {
 						mode: "preview",
+						config: {
+							runtime: {
+								automation: "assist",
+								worktreeIsolation: "auto",
+							},
+						},
 						queue: queue("TRACE-pi-preview"),
 						maxWorkers: 1,
+						workerIdPrefix: "pi-worker",
+						dirtyPaths: ["src/pi/tools/index.ts"],
 						nextSequenceByTrace: { "TRACE-pi-preview": 1 },
 					},
 				},
@@ -619,10 +627,25 @@ describe("Pi extension adapter", () => {
 				runtimeResult,
 				/wiki_runtime: completed preview run\./,
 			);
-			const runtimeRender = renderToolResult(runtimeTool, runtimeResult);
+			const runtimeRender = renderToolResult(runtimeTool, runtimeResult, {
+				expanded: true,
+			});
 			assert.match(runtimeRender, /CodeWiki Runtime ◇ preview/);
 			assert.match(runtimeRender, /To do\s+│ Doing\s+│ Done/);
+			assert.match(runtimeRender, /Worktrees/);
+			assert.match(runtimeRender, /dirty_working_tree_overlap/);
+			assert.match(
+				runtimeRender,
+				/codewiki\/TRACE-pi-preview\/WU-pi-preview\/pi-worker-001/,
+			);
+			assert.match(runtimeRender, /Dry-run commands/);
+			assert.match(runtimeRender, /git worktree add/);
 			assert.equal(runtime.plan.dispatch.length, 1);
+			assert.equal(runtime.policy.worktrees[0].required, true);
+			assert.equal(
+				runtime.batch.events[0].data.worktree.branch,
+				"codewiki/TRACE-pi-preview/WU-pi-preview/pi-worker-001",
+			);
 			assert.equal(runtime.append, undefined);
 
 			const archiveTool = toolByName(pi, "wiki_archive");

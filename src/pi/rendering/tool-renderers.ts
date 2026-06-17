@@ -128,11 +128,13 @@ function renderRuntime(
 	const plan = record(result.plan);
 	const dispatch = arrayOfRecords(plan.dispatch);
 	const policy = record(result.policy);
+	const worktrees = arrayOfRecords(policy.worktrees);
 	const blockers = arrayOfStrings(policy.blockers);
 	return linesComponent([
 		`${toolTitle("wiki_runtime")} ${modeBadge(result.mode)}`,
 		"",
 		...boardTable({ todo: [], doing: dispatch.map(dispatchLabel), done: [] }),
+		...runtimeWorktreeLines(worktrees, options),
 		...qualityFooter(
 			blockers.length
 				? blockers.map((blocker) => ({ id: blocker, status: "blocked" }))
@@ -288,6 +290,49 @@ function archiveReasonLines(
 		stringValue(stub.closeReason, ""),
 	);
 	return reason ? ["", "Reason", `• ${reason}`] : [];
+}
+
+function runtimeWorktreeLines(
+	worktrees: Record<string, unknown>[],
+	options: RenderOptions,
+): string[] {
+	const required = worktrees.filter((plan) => plan.required === true);
+	if (required.length === 0) return [];
+	return [
+		"",
+		"Worktrees",
+		...tableLines(
+			["Work", "Reason", "Branch"],
+			required.map((plan) => {
+				const worktree = record(plan.worktree);
+				return [
+					stringValue(plan.workUnitId, "work"),
+					stringValue(plan.reason, "required"),
+					stringValue(worktree.branch, "—"),
+				];
+			}),
+		),
+		...runtimeWorktreeCommandLines(required, options),
+	];
+}
+
+function runtimeWorktreeCommandLines(
+	worktrees: Record<string, unknown>[],
+	options: RenderOptions,
+): string[] {
+	if (!options.expanded) return [];
+	const commands = unique(
+		worktrees.flatMap((plan) => {
+			const commands = record(plan.commands);
+			return [
+				...arrayOfStrings(commands.worktreePrepare),
+				...arrayOfStrings(commands.worktreeCleanup),
+			];
+		}),
+	);
+	return commands.length
+		? ["", "Dry-run commands", ...commands.map((command) => `• ${command}`)]
+		: [];
 }
 
 function boardTable(columns: {

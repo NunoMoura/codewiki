@@ -473,7 +473,7 @@ function claimEventForDispatchItem(input: {
 	return createRuntimeClaimEvent({
 		traceId: input.item.traceId,
 		id: `${input.item.traceId}:runtime:claim:${input.item.workUnitId}:${sequence}`,
-		parentId: input.item.sourceEventId || input.item.planningRefs[0] || null,
+		parentId: parentIdForDispatchItem(input.item),
 		sequence,
 		createdAt: input.options.createdAt,
 		claimId,
@@ -492,6 +492,39 @@ function claimEventForDispatchItem(input: {
 				: {}),
 		},
 	});
+}
+
+function parentIdForDispatchItem(item: RuntimeDispatchItem): string | null {
+	for (const ref of [
+		item.sourceEventId,
+		...item.planningRefs,
+		...item.traceRefs,
+	]) {
+		const parentId = parentEventId(ref);
+		if (parentId) return parentId;
+	}
+	return null;
+}
+
+function parentEventId(value: unknown): string | undefined {
+	const ref = text(value);
+	if (!ref) return undefined;
+	if (ref.startsWith("trace:")) {
+		const candidate = ref.slice("trace:".length).split("#")[0];
+		return looksLikeTraceEventId(candidate) ? candidate : undefined;
+	}
+	if (ref.includes("#")) {
+		const candidate = ref.split("#")[0];
+		return looksLikeTraceEventId(candidate) ? candidate : undefined;
+	}
+	return looksLikeTraceEventId(ref) ? ref : undefined;
+}
+
+function looksLikeTraceEventId(value: string): boolean {
+	return (
+		/:(decision|planning|implementation):iteration:/.test(value) ||
+		/:runtime:(claim|release):/.test(value)
+	);
 }
 
 function nextTraceSequence(

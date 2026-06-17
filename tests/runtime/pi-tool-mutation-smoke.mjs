@@ -13,6 +13,7 @@ import codewikiExtension from "../../src/pi/extension.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
+import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
@@ -219,6 +220,7 @@ try {
 	codewikiExtension(pi.api);
 	const decideTool = toolByName(pi, "wiki_decide");
 	const planTool = toolByName(pi, "wiki_plan");
+	const runtimeTool = toolByName(pi, "wiki_runtime");
 	const implementTool = toolByName(pi, "wiki_implement");
 	const archiveTool = toolByName(pi, "wiki_archive");
 	const wikiCommand = commandByName(pi, "wiki");
@@ -309,6 +311,103 @@ try {
 	);
 	assert.equal(planned.loopResult.exit.passed, true);
 
+	const afterPlan = await readTrace(tracePath);
+	const runtimeQueue = buildWorkQueueView({
+		records: afterPlan.records,
+		generatedAt: "2026-06-17T00:00:02.500Z",
+	});
+	const runtimeConfig = {
+		runtime: {
+			automation: "assist",
+			maxWorkers: 1,
+			worktreeIsolation: "auto",
+		},
+	};
+	const beforeRuntimePreview = await readFile(tracePath, "utf8");
+	assert.equal(runtimeQueue.summary.ready, 1);
+	const runtimePreview = assertToolResult(
+		await runtimeTool.execute(
+			"tool-call-mutation-preview-runtime",
+			{
+				input: {
+					mode: "preview",
+					config: runtimeConfig,
+					queue: runtimeQueue,
+					workerIdPrefix: "mutation-worker",
+					dirtyPaths: ["src/pi/tool.ts"],
+					nextSequenceByTrace: { [traceId]: 3 },
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_runtime: completed preview run\./,
+	);
+	assert.equal(runtimePreview.append, undefined);
+	assert.equal(runtimePreview.policy.worktrees[0].required, true);
+	assert.equal(
+		runtimePreview.policy.worktrees[0].reason,
+		"dirty_working_tree_overlap",
+	);
+	assert.equal(
+		runtimePreview.batch.events[0].data.worktree.branch,
+		"codewiki/TRACE-pi-tool-mutation-smoke/WU-pi-mutation-smoke/mutation-worker-001",
+	);
+	assert.equal(await readFile(tracePath, "utf8"), beforeRuntimePreview);
+
+	await assert.rejects(
+		() =>
+			runtimeTool.execute(
+				"tool-call-mutation-runtime-unguarded",
+				{
+					input: {
+						mode: "append",
+						config: runtimeConfig,
+						queue: runtimeQueue,
+						nextSequenceByTrace: { [traceId]: 3 },
+					},
+				},
+				undefined,
+				undefined,
+				ctx,
+			),
+		/wiki_runtime append mode requires expectedBytesByTrace\./,
+	);
+
+	const runtime = assertToolResult(
+		await runtimeTool.execute(
+			"tool-call-mutation-append-runtime",
+			{
+				input: {
+					mode: "append",
+					config: runtimeConfig,
+					queue: runtimeQueue,
+					createdAt: "2026-06-17T00:00:03.000Z",
+					workerIdPrefix: "mutation-worker",
+					dirtyPaths: ["src/pi/tool.ts"],
+					nextSequenceByTrace: { [traceId]: 3 },
+					expectedBytesByTrace: {
+						[traceId]: await expectedBytes(tracePath),
+					},
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_runtime: completed append run\./,
+	);
+	const claimEvent = runtime.append.events[0];
+	assert.equal(claimEvent.event, "runtime.work.claimed");
+	assert.equal(claimEvent.sequence, 3);
+	assert.equal(runtime.batch.nextSequenceByTrace[traceId], 4);
+	const claimedState = await wikiCommand.handler(
+		`state --board --trace ${traceId} --json`,
+		ctx,
+	);
+	assert.equal(claimedState.data.workQueue.summary.claimed, 1);
+
 	const planningRef = planningWorkRef(planned.loopResult.traceEvents);
 	const implemented = assertToolResult(
 		await implementTool.execute(
@@ -318,10 +417,11 @@ try {
 					traceId,
 					mode: "append",
 					expectedBytes: await expectedBytes(tracePath),
-					nextSequence: 3,
-					createdAt: "2026-06-17T00:00:03.000Z",
+					nextSequence: runtime.batch.nextSequenceByTrace[traceId],
+					createdAt: "2026-06-17T00:00:04.000Z",
 					planningEvents: planned.loopResult.traceEvents,
-					parentId: `${traceId}:planning:checkpoint:2`,
+					claimEvents: runtime.append.events,
+					parentId: claimEvent.id,
 					changeInputs: [changeInput(planningRef)],
 				},
 			},
@@ -332,7 +432,15 @@ try {
 		/wiki_implement: completed append run\./,
 	);
 	assert.equal(implemented.loopResult.readyForClosure, true);
-	assert.equal(implemented.aggregateContentProof?.workingTreeDigest?.startsWith("sha256:"), true);
+	assert.equal(
+		implemented.aggregateContentProof?.workingTreeDigest?.startsWith("sha256:"),
+		true,
+	);
+	const implementedState = await wikiCommand.handler(
+		`state --board --trace ${traceId} --json`,
+		ctx,
+	);
+	assert.equal(implementedState.data.workQueue.summary.done, 1);
 
 	const beforeClose = await readTrace(tracePath);
 	const closed = assertToolResult(
@@ -346,10 +454,10 @@ try {
 					expectedBytes: await expectedBytes(tracePath),
 					gitRestoreRef: "refs/codewiki/archive/TRACE-pi-tool-mutation-smoke",
 					headRef: traceId,
-					parentId: `${traceId}:implementation:checkpoint:3`,
+					parentId: `${traceId}:implementation:checkpoint:4`,
 					reason: "Pi tool guarded mutation smoke completed.",
-					refs: [traceId, decisionRef, planningRef],
-					createdAt: "2026-06-17T00:00:04.000Z",
+					refs: [traceId, decisionRef, planningRef, claimEvent.id],
+					createdAt: "2026-06-17T00:00:05.000Z",
 				},
 			},
 			undefined,
@@ -361,6 +469,14 @@ try {
 	assert.equal(closed.closeRecord.type, "trace_close");
 
 	const readBack = await readTrace(tracePath);
+	assert.equal(
+		readBack.records.some(
+			(record) =>
+				record.type === "trace_event" &&
+				record.event === "runtime.work.claimed",
+		),
+		true,
+	);
 	assert.equal(
 		readBack.records.some(
 			(record) =>
@@ -390,6 +506,7 @@ try {
 				traceId,
 				decisionAppendRecords: decided.append.records.length,
 				planningAppendRecords: planned.append.records.length,
+				runtimeAppendRecords: runtime.append.events.length,
 				implementationAppendRecords: implemented.append.records.length,
 				closed: state.data.resume.closed,
 			},

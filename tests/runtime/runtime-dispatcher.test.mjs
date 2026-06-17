@@ -118,7 +118,7 @@ describe("runtime dispatcher claim batch", () => {
 			"TRACE-dispatch-b": 5,
 		});
 		const firstWorkRef = planningWorkRef(first, "WU-a");
-		assert.equal(batch.events[0].parentId, firstWorkRef);
+		assert.equal(batch.events[0].parentId, first.id);
 		assert.deepEqual(batch.events[0].refs, [firstWorkRef, "src/runtime"]);
 		assert.equal(batch.events[0].refs.includes("impl-worker-001"), false);
 		assert.deepEqual(batch.events[0].data?.componentRefs, [
