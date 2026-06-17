@@ -95,6 +95,7 @@ export function evaluatePlanningExit(
 			: issues.length === 0
 				? "pass"
 				: "fail";
+	const workUnitIds = input.workItems.map((item) => item.id);
 	return {
 		passed: verdict === "pass",
 		verdict,
@@ -103,9 +104,9 @@ export function evaluatePlanningExit(
 		qualityStandards,
 		findings: issues.map(issueFinding),
 		remediation: issues.map(issueRemediation),
-		route: planningRoute(verdict, issues),
+		route: planningRoute(verdict, issues, workUnitIds),
 		coveredDecisionRefs: coveredDecisionRefs(input),
-		workUnitIds: input.workItems.map((item) => item.id),
+		workUnitIds,
 	};
 }
 
@@ -132,20 +133,6 @@ function collectPlanningExitIssues(
 		...routeBackResolutionIssues(input.resolutions),
 		...conflictIssues(input.workItems),
 	];
-}
-
-export function planningItemIsExecutable(item: PlanningWorkItem): boolean {
-	return (
-		[
-			...workItemIssues([item]),
-			...technicalRequirementIssues([item]),
-			...verificationIssues([item]),
-			...workerProfileIssues([item]),
-			...planningAssessmentIssues([item]),
-			...planningUncertaintyIssues([item]),
-			...rightSizingIssues([item]),
-		].length === 0
-	);
 }
 
 function coverageIssues(input: PlanningExitInput): PlanningExitIssue[] {
@@ -682,8 +669,9 @@ function coveredDecisionRefs(input: PlanningExitInput): string[] {
 function planningRoute(
 	verdict: PlanningExitVerdict,
 	issues: PlanningExitIssue[],
+	workUnitIds: string[],
 ): ExitRoute {
-	if (verdict === "pass") return "implementation";
+	if (verdict === "pass") return workUnitIds.length ? "implementation" : "close";
 	const [explicitRoute] = issues
 		.map((issue) => issue.route)
 		.filter((route): route is ExitRoute => Boolean(route));

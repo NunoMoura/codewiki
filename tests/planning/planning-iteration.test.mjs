@@ -402,7 +402,9 @@ describe("planning iteration runner", () => {
 		});
 		assert.equal(complete.readyForImplementation, true);
 		assert.equal(complete.exit.verdict, "pass");
+		assert.equal(complete.exit.route, "close");
 		assert.equal(complete.traceEvents[0].event, "planning.iteration");
+		assert.equal(complete.traceEvents[0].data?.exit.targetLoop, null);
 		assert.equal(
 			complete.traceEvents[0].data?.output?.resolutions?.[0]?.kind,
 			"deferred",
