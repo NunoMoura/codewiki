@@ -32,8 +32,10 @@ import type {
 	CodewikiToolResult,
 } from "../types.ts";
 
+const WIKI_STATE_TOOL_NAME = "wiki_state";
+
 export const CODEWIKI_TOOL_NAMES = [
-	"wiki_state",
+	WIKI_STATE_TOOL_NAME,
 	"wiki_config",
 	"wiki_decide",
 	"wiki_plan",
@@ -44,7 +46,7 @@ export const CODEWIKI_TOOL_NAMES = [
 
 type WikiStateToolView = "summary" | "board" | "quality" | "blockers" | "all";
 
-const READ_ONLY_TOOL_NAMES = new Set<string>(["wiki_state"]);
+const READ_ONLY_TOOL_NAMES = new Set<string>([WIKI_STATE_TOOL_NAME]);
 const WIKI_STATE_TOOL_VIEWS = new Set<string>([
 	"summary",
 	"board",
@@ -126,7 +128,7 @@ function codewikiTools(): CodewikiToolDefinition[] {
 
 function wikiStateTool(): CodewikiToolDefinition {
 	return {
-		name: "wiki_state",
+		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
 			"Read CodeWiki trace-backed status, resume, work-plan, work-queue, blockers, conflicts, quality, and source ownership views for the current project.",
@@ -137,9 +139,9 @@ function wikiStateTool(): CodewikiToolDefinition {
 			"wiki_state does not write files and should not be replaced by shelling out to the transitional CodeWiki CLI.",
 		],
 		executionMode: "parallel",
-		renderCall: (args) => renderCodewikiToolCall("wiki_state", args),
+		renderCall: (args) => renderCodewikiToolCall(WIKI_STATE_TOOL_NAME, args),
 		renderResult: (result, options) =>
-			renderCodewikiToolResult("wiki_state", result, options),
+			renderCodewikiToolResult(WIKI_STATE_TOOL_NAME, result, options),
 		parameters: Type.Object(
 			{
 				view: Type.Optional(
@@ -179,16 +181,16 @@ function wikiStateTool(): CodewikiToolDefinition {
 		),
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const root = await requireCodewikiRoot(ctx);
-			const input = paramsObject("wiki_state", params, [
+			const input = paramsObject(WIKI_STATE_TOOL_NAME, params, [
 				"view",
 				"traceId",
 				"generatedAt",
 				"sourcePaths",
 			]);
-			assertOptionalStateView("wiki_state", input, "view");
-			assertOptionalString("wiki_state", input, "traceId");
-			assertOptionalString("wiki_state", input, "generatedAt");
-			assertOptionalStringArray("wiki_state", input, "sourcePaths");
+			assertOptionalStateView(WIKI_STATE_TOOL_NAME, input, "view");
+			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "traceId");
+			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "generatedAt");
+			assertOptionalStringArray(WIKI_STATE_TOOL_NAME, input, "sourcePaths");
 			const snapshot = await buildProjectWikiState({
 				repoRoot: root,
 				traceId: optionalString(input.traceId),
