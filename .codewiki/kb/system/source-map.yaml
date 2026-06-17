@@ -178,6 +178,7 @@ components:
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-process-session.test.mjs
       - tests/runtime/pi-rpc-smoke.mjs
+      - tests/runtime/pi-tool-mutation-smoke.mjs
       - tests/runtime/pi-worker-results.test.mjs
       - tests/runtime/package-install-smoke.mjs
     role: host_adapter

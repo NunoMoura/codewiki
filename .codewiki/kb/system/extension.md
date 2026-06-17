@@ -12,9 +12,22 @@ Mocked extension tests cover the intended package surface: `wiki_*` tools, `/wik
 
 `npm run test:pi-rpc` is the external command smoke. It uses a temp project and temp Pi settings, installs the packed package, starts Pi RPC mode, runs `/wiki bootstrap` and `/wiki state --board`, and verifies the rendered notification output without starting a model turn.
 
-`npm run test:pi-dogfood` is the repo-local dogfood smoke. It builds `dist/**`, starts Pi RPC mode from this checkout using `.pi/settings.json`, runs `/wiki state --board`, and verifies rendered output without starting a model turn.
+`npm run test:pi-mutation` is the isolated tool mutation smoke. It uses a temp
+project, exercises a Pi-registered `wiki_decide` tool with preview first, rejects
+unguarded append, appends only with expected byte and sequence checks, and
+verifies `/wiki state` reflects the appended decision.
 
-`npm run test:readiness` is the repo-local readiness checklist. It verifies package metadata is present, Pi is not bundled as a runtime dependency, `.codewiki` top-level state has the target shape, repo-local Pi settings enable this checkout, CLI is absent from product host config, and docs do not contain stale public command, CLI, legacy trace-close, or state/status command wording. `npm run audit:codewiki` runs the full validation/readiness/package/Pi/audit sequence serially.
+`npm run test:pi-dogfood` is the repo-local dogfood smoke. It builds `dist/**`,
+starts Pi RPC mode from this checkout using `.pi/settings.json`, runs
+`/wiki state --board`, and verifies rendered output without starting a model turn.
+
+`npm run test:readiness` is the repo-local readiness checklist. It verifies
+package metadata is present, Pi is not bundled as a runtime dependency,
+`.codewiki` top-level state has the target shape, repo-local Pi settings enable
+this checkout, CLI is absent from product host config, and docs do not contain
+stale public command, CLI, legacy trace-close, or state/status command wording.
+`npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
+audit sequence serially.
 
 ## Rebuild rules
 

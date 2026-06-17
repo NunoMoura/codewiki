@@ -79,8 +79,8 @@ function lintKnowledgeDriftFile(
 	rule: KnowledgeDriftRule,
 ): KnowledgeDriftIssue[] {
 	if (!file.scopes.includes(rule.scope)) return [];
-	const pattern = statelessPattern(rule.pattern);
-	const match = pattern.exec(file.content)?.[0];
+	rule.pattern.lastIndex = 0;
+	const match = rule.pattern.exec(file.content)?.[0];
 	if (!match) return [];
 	return [
 		{
@@ -90,8 +90,4 @@ function lintKnowledgeDriftFile(
 			match,
 		},
 	];
-}
-
-function statelessPattern(pattern: RegExp): RegExp {
-	return new RegExp(pattern.source, pattern.flags.replace(/g/g, ""));
 }

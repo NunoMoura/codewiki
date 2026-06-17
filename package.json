@@ -27,9 +27,10 @@
 		"test:pack": "npm pack --dry-run && node tests/runtime/package-install-smoke.mjs",
 		"test:pi-install": "node tests/runtime/pi-install-smoke.mjs",
 		"test:pi-rpc": "node tests/runtime/pi-rpc-smoke.mjs",
+		"test:pi-mutation": "node --experimental-strip-types tests/runtime/pi-tool-mutation-smoke.mjs",
 		"test:pi-dogfood": "npm run build && node tests/runtime/pi-dogfood-smoke.mjs",
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
-		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-dogfood && npm run test:readiness && npm audit --omit=dev && git diff --check",
+		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-mutation && npm run test:pi-dogfood && npm run test:readiness && npm audit --omit=dev && git diff --check",
 		"typecheck": "tsc --noEmit"
 	},
 	"license": "MIT",
