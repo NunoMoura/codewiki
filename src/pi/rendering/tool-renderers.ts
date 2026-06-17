@@ -250,7 +250,10 @@ function renderArchive(
 			[
 				[
 					stringValue(stub.traceId, stringValue(result.traceId, "—")),
-					stringValue(stub.gitRestoreRef, stringValue(result.gitRestoreRef, "—")),
+					stringValue(
+						stub.gitRestoreRef,
+						stringValue(result.gitRestoreRef, "—"),
+					),
 					result.append ? "✓ yes" : "— preview",
 				],
 			],
