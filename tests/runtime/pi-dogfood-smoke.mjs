@@ -77,22 +77,51 @@ try {
 		true,
 	);
 
-	send({ id: "state", type: "prompt", message: "/wiki state --board" });
-	const stateNotice = await waitFor(
-		messages,
-		(message) =>
-			message.type === "extension_ui_request" &&
-			message.method === "notify" &&
-			message.message.includes("CodeWiki Board"),
-		stderrRef,
-	);
-	await waitFor(
-		messages,
-		(message) => message.type === "response" && message.id === "state",
-		stderrRef,
+	async function prompt(id, message, notificationPattern) {
+		send({ id, type: "prompt", message });
+		const notice = await waitFor(
+			messages,
+			(event) =>
+				event.type === "extension_ui_request" &&
+				event.method === "notify" &&
+				notificationPattern.test(event.message),
+			stderrRef,
+		);
+		await waitFor(
+			messages,
+			(event) => event.type === "response" && event.id === id,
+			stderrRef,
+		);
+		return notice;
+	}
+
+	const stateNotice = await prompt(
+		"state",
+		"/wiki state --board",
+		/CodeWiki Board/,
 	);
 	assert.match(stateNotice.message, /To do/);
 	assert.match(stateNotice.message, /├/);
+	const qualityNotice = await prompt(
+		"quality",
+		"/wiki state --quality --trace TRACE-repo-local-mutation-dogfood",
+		/CodeWiki Quality/,
+	);
+	assert.match(qualityNotice.message, /decision/);
+	assert.match(qualityNotice.message, /planning/);
+	assert.match(qualityNotice.message, /├/);
+	const resumeNotice = await prompt(
+		"resume",
+		"/wiki resume --trace TRACE-repo-local-mutation-dogfood",
+		/CodeWiki Resume/,
+	);
+	assert.match(resumeNotice.message, /Trace is closed/);
+	const explainNotice = await prompt(
+		"explain",
+		"/wiki explain src/pi/rendering/tool-renderers.ts",
+		/CodeWiki Explain/,
+	);
+	assert.match(explainNotice.message, /Owner|Refs/);
 	assert.equal(
 		messages.some((message) => message.type === "agent_start"),
 		false,

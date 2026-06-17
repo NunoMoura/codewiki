@@ -26,8 +26,9 @@ The primary real-time observability layer is custom rendering of `wiki_*` tool c
 
 Renderers use consistent table-first layouts:
 
-- decision alignment table: current state, desired state, quality verdict;
-- board table: To do, Doing, Done;
+- decision alignment table: row id, current state, desired state, quality verdict;
+- planning work/resolution tables: work, outcome, paths, and explicit non-work resolutions;
+- runtime board table: To do, Doing, Done;
 - implementation matrix: work, code, tests, publish;
 - quality footer: `✓` met, `⚠` unmet/uncertain, `✗` blocked.
 

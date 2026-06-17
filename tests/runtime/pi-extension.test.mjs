@@ -494,7 +494,7 @@ describe("Pi extension adapter", () => {
 			assert.match(decisionRender, /CodeWiki Decision ◇ preview/);
 			assert.match(
 				decisionRender,
-				/Current state\s+│ Desired state\s+│ Quality verdict/,
+				/Row\s+│ Current state\s+│ Desired state\s+│ Quality/,
 			);
 			assert.match(decisionRender, /├/);
 			assert.match(decisionRender, /Quality/);
@@ -524,11 +524,44 @@ describe("Pi extension adapter", () => {
 				/wiki_plan: completed preview run\./,
 			);
 			const planRender = renderToolResult(planTool, plannedResult);
-			assert.match(planRender, /CodeWiki Board ◇ preview/);
-			assert.match(planRender, /To do\s+│ Doing\s+│ Done/);
+			assert.match(planRender, /CodeWiki Planning ◇ preview/);
+			assert.match(planRender, /Work\s+│ Outcome\s+│ Paths/);
 			assert.match(planRender, /├/);
 			assert.equal(planned.iterationEvent.event, "planning.iteration");
 			assert.equal(planned.append, undefined);
+
+			const resolvedPlanResult = await planTool.execute(
+				"tool-call-plan-resolution-preview",
+				{
+					input: {
+						traceId: "TRACE-pi-preview",
+						mode: "preview",
+						decisionEvents: decided.loopResult.traceEvents,
+						nextSequence: nextSequence(decided.loopResult.traceEvents),
+						createdAt: "2026-06-17T00:00:02.000Z",
+						resolutionInputs: [
+							{
+								decisionRef,
+								kind: "non-executable",
+								evidenceRefs: [decisionRef, "tests/feature.test.mjs"],
+								rationale: "Preview-only UX validation needs no work unit.",
+							},
+						],
+					},
+				},
+				undefined,
+				undefined,
+				ctx,
+			);
+			const resolvedPlan = assertToolResult(
+				resolvedPlanResult,
+				/wiki_plan: completed preview run\./,
+			);
+			const resolvedPlanRender = renderToolResult(planTool, resolvedPlanResult);
+			assert.match(resolvedPlanRender, /Resolutions/);
+			assert.match(resolvedPlanRender, /Decision\s+│ Kind\s+│ Evidence/);
+			assert.match(resolvedPlanRender, /non-executable/);
+			assert.equal(resolvedPlan.loopResult.exit.route, "close");
 
 			const planningRef = planningWorkRef(planned.loopResult.traceEvents);
 			const implementTool = toolByName(pi, "wiki_implement");
@@ -619,6 +652,7 @@ describe("Pi extension adapter", () => {
 			const archiveRender = renderToolResult(archiveTool, archiveResult);
 			assert.match(archiveRender, /CodeWiki Archive ◇ preview/);
 			assert.match(archiveRender, /Trace\s+│ Restore ref\s+│ Applied/);
+			assert.match(archiveRender, /refs\/codewiki\/archive\/TRACE/);
 			assert.equal(archive.stub.traceId, "TRACE-pi-preview");
 			assert.equal(archive.append, undefined);
 			assert.equal(await readFile(tracePath, "utf8"), before);

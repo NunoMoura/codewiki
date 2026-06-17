@@ -671,7 +671,8 @@ function planningRoute(
 	issues: PlanningExitIssue[],
 	workUnitIds: string[],
 ): ExitRoute {
-	if (verdict === "pass") return workUnitIds.length ? "implementation" : "close";
+	if (verdict === "pass")
+		return workUnitIds.length ? "implementation" : "close";
 	const [explicitRoute] = issues
 		.map((issue) => issue.route)
 		.filter((route): route is ExitRoute => Boolean(route));

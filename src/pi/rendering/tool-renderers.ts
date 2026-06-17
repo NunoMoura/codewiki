@@ -9,7 +9,7 @@ const TOOL_TITLES: Record<string, string> = {
 	wiki_state: "CodeWiki State",
 	wiki_config: "CodeWiki Config",
 	wiki_decide: "CodeWiki Decision",
-	wiki_plan: "CodeWiki Board",
+	wiki_plan: "CodeWiki Planning",
 	wiki_implement: "CodeWiki Implementation",
 	wiki_runtime: "CodeWiki Runtime",
 	wiki_archive: "CodeWiki Archive",
@@ -56,8 +56,9 @@ function renderDecision(
 		`${toolTitle("wiki_decide")} ${modeBadge(result.mode)}`,
 		"",
 		...tableLines(
-			["Current state", "Desired state", "Quality verdict"],
+			["Row", "Current state", "Desired state", "Quality"],
 			rows.map((row) => [
+				stringValue(row.id, "row"),
 				stringValue(row.currentState, "—"),
 				stringValue(row.desiredState, "—"),
 				qualityVerdict(quality),
@@ -75,11 +76,21 @@ function renderPlan(
 	const result = record(payload);
 	const loopResult = record(result.loopResult);
 	const workItems = arrayOfRecords(loopResult.workItems);
+	const resolutions = arrayOfRecords(loopResult.resolutions);
 	const quality = qualityRows(record(loopResult.exit).qualityStandards);
 	return linesComponent([
 		`${toolTitle("wiki_plan")} ${modeBadge(result.mode)}`,
 		"",
-		...boardTable({ todo: workItems.map(workItemLabel), doing: [], done: [] }),
+		"Work units",
+		...tableLines(
+			["Work", "Outcome", "Paths"],
+			workItems.map((item) => [
+				workItemLabel(item),
+				stringValue(item.outcome, "—"),
+				arrayOfStrings(item.pathScopes).join(", ") || "—",
+			]),
+		),
+		...resolutionLines(resolutions),
 		...qualityFooter(quality, options),
 	]);
 }
@@ -239,12 +250,41 @@ function renderArchive(
 			[
 				[
 					stringValue(stub.traceId, stringValue(result.traceId, "—")),
-					stringValue(stub.restoreRef, stringValue(result.gitRestoreRef, "—")),
+					stringValue(stub.gitRestoreRef, stringValue(result.gitRestoreRef, "—")),
 					result.append ? "✓ yes" : "— preview",
 				],
 			],
 		),
+		...archiveReasonLines(result, stub),
 	]);
+}
+
+function resolutionLines(resolutions: Record<string, unknown>[]): string[] {
+	if (resolutions.length === 0) return [];
+	return [
+		"",
+		"Resolutions",
+		...tableLines(
+			["Decision", "Kind", "Evidence"],
+			resolutions.map((resolution) => [
+				stringValue(resolution.decisionRef, "decision"),
+				stringValue(resolution.kind, "—"),
+				arrayOfStrings(resolution.evidenceRefs).join(", ") || "—",
+			]),
+		),
+	];
+}
+
+function archiveReasonLines(
+	result: Record<string, unknown>,
+	stub: Record<string, unknown>,
+): string[] {
+	const closeRecord = record(result.closeRecord);
+	const reason = stringValue(
+		closeRecord.reason,
+		stringValue(stub.closeReason, ""),
+	);
+	return reason ? ["", "Reason", `• ${reason}`] : [];
 }
 
 function boardTable(columns: {
