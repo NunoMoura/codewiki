@@ -241,6 +241,14 @@ describe("runtime worktree planning", () => {
 				dirtyPaths: ["src/runtime/policy.ts"],
 			},
 		);
+		const dirtyGlobSolo = planRuntimeDispatchWorktrees(
+			[item("WU-one", ["src/pi/**"])],
+			{
+				mode: "auto",
+				repoRoot: "/tmp/repo/codewiki",
+				dirtyPaths: ["src/pi/rendering/tool-renderers.ts"],
+			},
+		);
 
 		assert.deepEqual(
 			parallel.map((plan) => plan.reason),
@@ -249,5 +257,6 @@ describe("runtime worktree planning", () => {
 		assert.equal(cleanSolo[0].required, false);
 		assert.equal(cleanSolo[0].commands.worktreePrepare.length, 0);
 		assert.equal(dirtySolo[0].reason, "dirty_working_tree_overlap");
+		assert.equal(dirtyGlobSolo[0].reason, "dirty_working_tree_overlap");
 	});
 });

@@ -1,4 +1,5 @@
 import { dirname, resolve } from "node:path";
+import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
 import type { RuntimeDispatchItem } from "../runtime/scheduler.ts";
 
@@ -26,7 +27,7 @@ export interface RuntimeWorktreePlan {
 	commands: WorktreeCommandPlan;
 }
 
-export interface RuntimeWorktreePlanOptions {
+interface RuntimeWorktreePlanOptions {
 	mode: WikiConfigWorktreeIsolation;
 	repoRoot?: string;
 	projectName?: string;
@@ -135,7 +136,7 @@ export async function executeRuntimeWorktreeCommands(
 	return { dryRun, steps: [...steps], records };
 }
 
-export function planRuntimeDispatchWorktree(
+function planRuntimeDispatchWorktree(
 	item: RuntimeDispatchItem,
 	index: number,
 	items: RuntimeDispatchItem[],
@@ -340,9 +341,20 @@ function pathsOverlap(left: string, right: string): boolean {
 	const rightPath = normalizePath(right);
 	if (!leftPath || !rightPath) return false;
 	if (leftPath === rightPath) return true;
-	return (
-		leftPath.startsWith(`${rightPath}/`) || rightPath.startsWith(`${leftPath}/`)
-	);
+	if (pathMatchesPattern(leftPath, rightPath)) return true;
+	if (pathMatchesPattern(rightPath, leftPath)) return true;
+	return rootsOverlap(globRoot(leftPath), globRoot(rightPath));
+}
+
+function rootsOverlap(left: string, right: string): boolean {
+	if (!left || !right) return false;
+	return left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`);
+}
+
+function globRoot(path: string): string {
+	const wildcardIndex = path.indexOf("*");
+	const root = wildcardIndex === -1 ? path : path.slice(0, wildcardIndex);
+	return root.replace(/\/[^/]*$/, "").replace(/\/$/, "");
 }
 
 function normalizePath(path: string): string {

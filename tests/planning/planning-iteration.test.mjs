@@ -144,6 +144,23 @@ describe("planning iteration runner", () => {
 				?.testPatterns.includes("tests/implementation/**"),
 			true,
 		);
+		assert.deepEqual(
+			map.components.find((component) => component.id === "component.git")
+				?.pathPatterns,
+			["src/git/**"],
+		);
+		assert.equal(
+			map.components
+				.find((component) => component.id === "component.git")
+				?.testPatterns.includes("tests/runtime/worktrees.test.mjs"),
+			true,
+		);
+		assert.equal(
+			map.components
+				.find((component) => component.id === "component.knowledge")
+				?.testPatterns.includes("tests/knowledge/**"),
+			true,
+		);
 	});
 
 	it("links planning work to file-structure components", () => {

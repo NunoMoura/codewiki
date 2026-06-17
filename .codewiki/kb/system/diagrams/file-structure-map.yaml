@@ -100,6 +100,19 @@ nodes:
       - src/api/traces.ts
     test_paths:
       - tests/traces/**
+  - id: component.git
+    label: Git content proof and worktree isolation
+    group: source
+    kind: component
+    kb_refs:
+      - .codewiki/kb/system/implementation-loop.md
+      - .codewiki/kb/system/worktree-isolation.md
+    paths:
+      - src/git/**
+    test_paths:
+      - tests/implementation/**
+      - tests/runtime/git-status.test.mjs
+      - tests/runtime/worktrees.test.mjs
   - id: component.views
     label: Trace-backed projections and views
     group: source
@@ -123,6 +136,7 @@ nodes:
       - src/knowledge/**
       - .codewiki/kb/**
     test_paths:
+      - tests/knowledge/**
       - tests/shared/**
       - tests/scaffold.test.mjs
   - id: component.runtime
