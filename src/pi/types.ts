@@ -8,6 +8,7 @@ export interface CodewikiToolResult {
 export interface CodewikiExtensionUi {
 	width?: number;
 	notify(message: string, level?: "info" | "warning" | "error" | string): void;
+	setStatus?(key: string, value: string | undefined): void;
 }
 
 export interface CodewikiExtensionContext {

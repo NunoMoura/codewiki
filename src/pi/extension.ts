@@ -1,6 +1,7 @@
 import { registerCodewikiCommands } from "./commands/index.ts";
 import { registerCodewikiPromptHooks } from "./prompt/index.ts";
 import { registerCodewikiTools } from "./tools/index.ts";
+import { registerCodewikiFooter } from "./tui/index.ts";
 import type { CodewikiExtensionApi } from "./types.ts";
 
 /**
@@ -17,4 +18,5 @@ export function registerCodewikiExtension(pi: CodewikiExtensionApi): void {
 	registerCodewikiTools(pi);
 	registerCodewikiCommands(pi);
 	registerCodewikiPromptHooks(pi);
+	registerCodewikiFooter(pi);
 }

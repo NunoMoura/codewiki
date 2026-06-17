@@ -99,13 +99,32 @@ assert.deepEqual(tools, [
 	"wiki_runtime",
 	"wiki_archive",
 ]);
+assert.deepEqual(events.map((event) => event.eventName), [
+	"before_agent_start",
+	"session_start",
+]);
+const promptHook = events.find((event) => event.eventName === "before_agent_start");
+const footerHook = events.find((event) => event.eventName === "session_start");
+const statuses = [];
+await footerHook.handler(
+	{ reason: "startup" },
+	{
+		cwd: process.cwd(),
+		ui: {
+			notify() {},
+			setStatus(key, value) {
+				statuses.push({ key, value });
+			},
+		},
+	},
+);
+assert.deepEqual(statuses, [{ key: "codewiki", value: "CodeWiki: /wiki state" }]);
 assert.deepEqual(commands, ["wiki"]);
-assert.deepEqual(events.map((event) => event.eventName), ["before_agent_start"]);
-const injected = await events[0].handler({ systemPrompt: "base" }, { cwd: process.cwd() });
+const injected = await promptHook.handler({ systemPrompt: "base" }, { cwd: process.cwd() });
 assert.match(injected.systemPrompt, /CodeWiki Pi guidance/);
 assert.equal(injected.systemPrompt.includes("wiki_*"), true);
 assert.equal(injected.systemPrompt.includes("/wiki"), true);
-assert.deepEqual(await events[0].handler({ systemPrompt: injected.systemPrompt }, { cwd: process.cwd() }), {});
+assert.deepEqual(await promptHook.handler({ systemPrompt: injected.systemPrompt }, { cwd: process.cwd() }), {});
 `,
 	);
 	run(process.execPath, [smokeScript], { cwd: installRoot });

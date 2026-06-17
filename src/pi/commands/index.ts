@@ -6,10 +6,12 @@ import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
 import {
 	renderBootstrapCommand,
+	renderCodewikiStateFooterStatus,
 	renderConfigCommand,
 	renderExplainCommand,
 	renderResumeCommand,
 	renderStateCommand,
+	setCodewikiFooterStatus,
 	type CommandRenderOptions,
 } from "../tui/index.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
@@ -67,6 +69,7 @@ async function stateCommand(
 			? `CodeWiki state ${options.view}: JSON returned.`
 			: rendered.join("\n"),
 	);
+	setCodewikiFooterStatus(ctx, renderCodewikiStateFooterStatus(snapshot));
 	return {
 		command: "state",
 		view: options.view,

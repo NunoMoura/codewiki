@@ -17,6 +17,7 @@ import {
 } from "../../src/pi/prompt/index.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 import {
+	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
 	renderStateCommand,
 } from "../../src/pi/tui/index.ts";
@@ -261,7 +262,7 @@ describe("Pi extension adapter", () => {
 		);
 		assert.deepEqual(
 			pi.events.map((event) => event.eventName),
-			["before_agent_start"],
+			["before_agent_start", "session_start"],
 		);
 		assert.equal(codewikiPromptHooksAvailable, true);
 		assert.equal(codewikiTuiRenderersAvailable, true);
@@ -276,6 +277,30 @@ describe("Pi extension adapter", () => {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+	});
+
+	it("sets a CodeWiki footer status when Pi event hooks exist", async () => {
+		const pi = mockPi();
+		codewikiExtension(pi.api);
+		const hook = pi.events.find((event) => event.eventName === "session_start");
+		assert.ok(hook);
+		const statuses = [];
+
+		await hook.handler(
+			{ reason: "startup" },
+			{
+				ui: {
+					notify() {},
+					setStatus(key, value) {
+						statuses.push({ key, value });
+					},
+				},
+			},
+		);
+
+		assert.deepEqual(statuses, [
+			{ key: CODEWIKI_FOOTER_STATUS_KEY, value: "CodeWiki: /wiki state" },
+		]);
 	});
 
 	it("injects CodeWiki prompt guidance once when Pi event hooks exist", async () => {
@@ -642,6 +667,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const notifications = [];
+			const statuses = [];
 			const pi = mockPi();
 			codewikiExtension(pi.api);
 			const command = pi.commands.find(
@@ -650,7 +676,10 @@ describe("Pi extension adapter", () => {
 
 			const board = await command.handler("state --board", {
 				cwd: root,
-				ui: { notify: (message) => notifications.push(message) },
+				ui: {
+					notify: (message) => notifications.push(message),
+					setStatus: (key, value) => statuses.push({ key, value }),
+				},
 			});
 			assert.equal(board.command, "state");
 			assert.equal(board.view, "board");
@@ -663,6 +692,12 @@ describe("Pi extension adapter", () => {
 			]);
 			assert.match(notifications.at(-1), /CodeWiki Board/);
 			assert.match(notifications.at(-1), /├/);
+			assert.deepEqual(statuses, [
+				{
+					key: CODEWIKI_FOOTER_STATUS_KEY,
+					value: "CodeWiki: 1 trace(s) · ready 0 · blocked 0 · open",
+				},
+			]);
 
 			const narrow = await command.handler("state --board", {
 				cwd: root,

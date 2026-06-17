@@ -22,7 +22,7 @@ There is no separate public `status` name; CodeWiki standardizes on `state` for 
 
 The primary real-time observability layer is custom rendering of `wiki_*` tool calls/results. This keeps the chat timeline focused on immediate agent action while showing the CodeWiki semantic effect next to the tool that caused it.
 
-`src/pi/tui/index.ts` is a pure renderer facade for command and tool renderers. It may be imported by commands/tests without enabling the extension, writing state, or depending on the Pi SDK.
+`src/pi/tui/index.ts` is a pure renderer facade for command and tool renderers plus the CodeWiki footer status helper. It may be imported by commands/tests without writing state or depending on the Pi SDK. The footer is UI-only: it summarizes the latest CodeWiki state command and must not become workflow truth.
 
 Renderers use consistent table-first layouts:
 
