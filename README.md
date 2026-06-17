@@ -56,9 +56,10 @@ npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-dogfood
 npm run test:readiness
+npm run audit:codewiki
 ```
 
-`npm run test:pi-install` performs an isolated Pi install smoke using temporary Pi settings. It must not mutate repo-local or global Pi settings. `npm run test:pi-rpc` performs an external temp-project Pi RPC smoke, runs `/wiki bootstrap` and `/wiki state --board`, and verifies rendered notification output without starting a model turn. `npm run test:pi-dogfood` builds `dist/**` and verifies this repo's `.pi/settings.json` can load `/wiki state --board` without a model turn. `npm run test:readiness` checks package enablement, CodeWiki state shape, repo-local Pi settings, and stale public wording for dogfood safety.
+`npm run test:pi-install` performs an isolated Pi install smoke using temporary Pi settings. It must not mutate repo-local or global Pi settings. `npm run test:pi-rpc` performs an external temp-project Pi RPC smoke, runs `/wiki bootstrap` and `/wiki state --board`, and verifies rendered notification output without starting a model turn. `npm run test:pi-dogfood` builds `dist/**` and verifies this repo's `.pi/settings.json` can load `/wiki state --board` without a model turn. `npm run test:readiness` checks package enablement, CodeWiki state shape, repo-local Pi settings, and stale public wording for dogfood safety. `npm run audit:codewiki` runs the full validation/readiness/package/Pi/audit sequence serially.
 
 `src/cli/index.ts` exists only as a temporary development/test harness while the Pi adapter stabilizes. It is not the intended agent-facing CodeWiki OS, and the npm package currently does not expose a CLI binary.
 

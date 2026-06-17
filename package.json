@@ -29,6 +29,7 @@
 		"test:pi-rpc": "node tests/runtime/pi-rpc-smoke.mjs",
 		"test:pi-dogfood": "npm run build && node tests/runtime/pi-dogfood-smoke.mjs",
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
+		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-dogfood && npm run test:readiness && npm audit --omit=dev && git diff --check",
 		"typecheck": "tsc --noEmit"
 	},
 	"license": "MIT",

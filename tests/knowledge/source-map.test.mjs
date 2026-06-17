@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
+import { pathMatchesPattern } from "../../src/knowledge/file-structure-map.ts";
 import {
 	parseSourceMapYaml,
 	sourceMapExcluded,
@@ -80,5 +81,19 @@ describe("source ownership map", () => {
 		});
 
 		assert.deepEqual(issues, []);
+	});
+
+	it("maps every active test file to at least one component", () => {
+		const map = parseSourceMapYaml(sourceMapText);
+		const unmappedTests = collectFiles("tests").filter(
+			(path) =>
+				map.components.some((component) =>
+					component.testPatterns.some((pattern) =>
+						pathMatchesPattern(path, pattern),
+					),
+				) === false,
+		);
+
+		assert.deepEqual(unmappedTests, []);
 	});
 });

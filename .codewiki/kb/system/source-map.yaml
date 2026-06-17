@@ -61,6 +61,7 @@ components:
       - src/api/decision.ts
     tests:
       - tests/decision/**
+      - tests/helpers/decision-row.mjs
     trace_events:
       - decision.iteration
     role: semantic_loop
@@ -71,6 +72,7 @@ components:
       - src/api/planning.ts
     tests:
       - tests/planning/**
+      - tests/helpers/planning-work.mjs
     generated_views:
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
@@ -85,6 +87,7 @@ components:
       - src/api/implementation.ts
     tests:
       - tests/implementation/**
+      - tests/helpers/implementation-change.mjs
     trace_events:
       - implementation.iteration
     role: semantic_loop
