@@ -1,5 +1,9 @@
 import { appendTraceRecord, type AppendTraceResult } from "../traces/append.ts";
 import {
+	buildTraceCloseReleaseNotes,
+	type TraceCloseReleaseNotes,
+} from "../traces/release-notes.ts";
+import {
 	buildTraceHydrationPlan,
 	buildTraceRetentionStub,
 	createTraceCloseRecord,
@@ -36,6 +40,7 @@ export interface RunWikiArchiveResult {
 	stub?: TraceRetentionStub;
 	closeRecord?: TraceClose;
 	hydration?: TraceHydrationPlan;
+	releaseNotes?: TraceCloseReleaseNotes;
 	refs: string[];
 	append?: AppendTraceResult;
 }
@@ -85,11 +90,13 @@ async function closeResult(
 		createdAt: input.createdAt,
 		data: input.data,
 	});
+	const closedRecords = [...records, closeRecord];
 	const stub = buildTraceRetentionStub({
-		records: [...records, closeRecord],
+		records: closedRecords,
 		gitRestoreRef: closeRecord.gitRestoreRef,
 		headRef: closeRecord.headRef,
 	});
+	const releaseNotes = buildTraceCloseReleaseNotes(closedRecords);
 	const append =
 		mode === "append"
 			? await appendTraceRecord(
@@ -103,6 +110,7 @@ async function closeResult(
 		mode,
 		stub,
 		closeRecord,
+		releaseNotes,
 		refs: closeRecord.refs,
 		...(append ? { append } : {}),
 	};

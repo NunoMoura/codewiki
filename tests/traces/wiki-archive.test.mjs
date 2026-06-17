@@ -80,6 +80,8 @@ describe("wiki_archive core facade", () => {
 		assert.equal(close.closeRecord?.type, "trace_close");
 		assert.equal(close.closeRecord?.reason, "Trace finished and retained.");
 		assert.equal(close.stub?.closedAt, "2026-06-11T00:00:03.000Z");
+		assert.equal(close.releaseNotes?.closed, true);
+		assert.equal(close.releaseNotes?.closeReason, "Trace finished and retained.");
 
 		const hydrate = await runWikiArchive({
 			action: "hydrate",

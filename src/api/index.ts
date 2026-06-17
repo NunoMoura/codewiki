@@ -70,6 +70,11 @@ export type {
 	RuntimeHandoffRuntimeResult,
 	RuntimeHandoffWorker,
 } from "../runtime/handoff.ts";
+export type {
+	TraceCloseReleaseNotes,
+	TraceReleaseNoteChange,
+	TraceReleaseNoteCheck,
+} from "../traces/release-notes.ts";
 export type { TraceEvent, TraceRecord } from "../traces/types.ts";
 export type {
 	BlockersView,
