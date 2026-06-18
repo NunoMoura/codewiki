@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
@@ -26,13 +25,14 @@ describe("Pi process session factory", () => {
 			args: ["--mode", "json", "-p"],
 			cwd: "/repo/codewiki",
 			env: { CODEWIKI_TEST: "1" },
-			outputFile: (input) => `/tmp/${input.workerId}.jsonl`,
+			outputFile: (input) =>
+				`/repo/codewiki/.codewiki/runtime/tmp/${input.traceId}/runtime/pi-workers/${input.workerId}.jsonl`,
 			runner(input) {
 				calls.push(input);
 				return {
 					pid: 12345,
 					sessionId: `session-${input.workerId}`,
-					sessionFile: `/tmp/${input.workerId}.session.jsonl`,
+					sessionFile: `/repo/codewiki/.codewiki/runtime/tmp/${input.traceId}/runtime/pi-workers/${input.workerId}.session.jsonl`,
 					outputFile: input.outputFile,
 					exitCode: 0,
 				};
@@ -53,11 +53,40 @@ describe("Pi process session factory", () => {
 		assert.equal(calls[0].cwd, "/repo/codewiki");
 		assert.equal(calls[0].env.CODEWIKI_TEST, "1");
 		assert.equal(calls[0].detached, false);
-		assert.equal(calls[0].outputFile, "/tmp/pi-worker-001.jsonl");
+		assert.equal(
+			calls[0].outputFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/pi-worker-001.jsonl",
+		);
 		assert.equal(session.pid, 12345);
 		assert.equal(session.sessionId, "session-pi-worker-001");
-		assert.equal(session.sessionFile, "/tmp/pi-worker-001.session.jsonl");
-		assert.equal(session.outputFile, "/tmp/pi-worker-001.jsonl");
+		assert.equal(
+			session.sessionFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/pi-worker-001.session.jsonl",
+		);
+		assert.equal(
+			session.outputFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/pi-worker-001.jsonl",
+		);
+	});
+
+	it("defaults worker output under project runtime tmp", async () => {
+		const calls = [];
+		const factory = createPiProcessSessionFactory({
+			cwd: "/repo/codewiki",
+			runner(input) {
+				calls.push(input);
+				return { pid: 123, outputFile: input.outputFile, exitCode: 0 };
+			},
+		});
+		const session = await factory.create(sessionInput());
+
+		await session.prompt("Use project-local tmp.");
+
+		assert.equal(
+			calls[0].outputFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/TRACE-process-pi-worker-001.jsonl",
+		);
+		assert.equal(session.outputFile, calls[0].outputFile);
 	});
 
 	it("supports detached no-session starts", async () => {
@@ -65,7 +94,8 @@ describe("Pi process session factory", () => {
 		const factory = createPiProcessSessionFactory({
 			detached: true,
 			noSession: true,
-			outputFile: "/tmp/detached-worker.jsonl",
+			outputFile:
+				"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/detached-worker.jsonl",
 			runner(input) {
 				calls.push(input);
 				return { pid: 222, outputFile: input.outputFile };
@@ -83,7 +113,10 @@ describe("Pi process session factory", () => {
 			"--no-session",
 		]);
 		assert.equal(session.pid, 222);
-		assert.equal(session.outputFile, "/tmp/detached-worker.jsonl");
+		assert.equal(
+			session.outputFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/detached-worker.jsonl",
+		);
 	});
 
 	it("revives session refs through an optional resume runner", async () => {
@@ -106,15 +139,20 @@ describe("Pi process session factory", () => {
 			workUnitId: "WU-process",
 			traceId: "TRACE-process",
 			sessionId: "session-1",
-			sessionFile: "/tmp/session.jsonl",
-			outputFile: "/tmp/output.jsonl",
+			sessionFile:
+				"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/session.jsonl",
+			outputFile:
+				"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/output.jsonl",
 		});
 
 		assert.equal(calls.length, 1);
 		assert.equal(result.state, "running");
 		assert.equal(result.pid, 333);
 		assert.equal(result.sessionId, "session-1");
-		assert.equal(result.outputFile, "/tmp/output.jsonl");
+		assert.equal(
+			result.outputFile,
+			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/output.jsonl",
+		);
 	});
 
 	it("marks sessions detached when no resume runner is configured", async () => {
@@ -148,7 +186,9 @@ describe("Pi process session factory", () => {
 	});
 
 	it("runs the default command runner and writes process output", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-pi-process-"));
+		const base = join(process.cwd(), ".tmp-worktrees/pi-process-session");
+		await mkdir(base, { recursive: true });
+		const root = await mkdtemp(join(base, "run-"));
 		try {
 			const outputFile = join(root, "worker.jsonl");
 			const factory = createPiProcessSessionFactory({
@@ -168,6 +208,7 @@ describe("Pi process session factory", () => {
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
+			await rm(base, { recursive: true, force: true });
 		}
 	});
 });

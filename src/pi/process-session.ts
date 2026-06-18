@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { traceTmpPath } from "../runtime/tmp.ts";
 import type {
 	PiWorkerSession,
 	PiWorkerSessionFactory,
@@ -136,8 +136,19 @@ function outputFileForSession(
 		return options.outputFile(input);
 	if (typeof options.outputFile === "string") return options.outputFile;
 	return join(
-		options.outputDir || join(tmpdir(), "codewiki-pi-workers"),
+		options.outputDir || defaultOutputDir(input, options),
 		`${safeSegment(input.traceId)}-${safeSegment(input.workerId)}.jsonl`,
+	);
+}
+
+function defaultOutputDir(
+	input: PiWorkerSessionInput,
+	options: PiProcessSessionFactoryOptions,
+): string {
+	return resolve(
+		options.cwd || process.cwd(),
+		traceTmpPath(input.traceId, "runtime"),
+		"pi-workers",
 	);
 }
 
