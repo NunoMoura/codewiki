@@ -38,7 +38,7 @@ async function collectPiWorkerOutputFile(
 	if (!dispatch.outputFile) {
 		return {
 			dispatch,
-			error: "Worker completion output file is missing.",
+			error: `Worker completion output file is missing for worker ${dispatch.workerId}.`,
 		};
 	}
 	try {
@@ -47,7 +47,10 @@ async function collectPiWorkerOutputFile(
 			output: await readFile(dispatch.outputFile, "utf8"),
 		};
 	} catch (error) {
-		return { dispatch, error };
+		return {
+			dispatch,
+			error: `Worker completion output file is unreadable: ${dispatch.outputFile}: ${errorMessage(error)}`,
+		};
 	}
 }
 

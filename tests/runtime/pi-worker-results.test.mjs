@@ -267,11 +267,32 @@ describe("Pi worker completion normalization", () => {
 				"src/pi/worker-results.ts",
 			]);
 			assert.equal(results[1].status, "failed");
+			assert.match(
+				results[1].message,
+				/Worker completion output file is unreadable:/,
+			);
 			assert.match(results[1].message, /ENOENT/);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 			await rm(base, { recursive: true, force: true });
 		}
+	});
+
+	it("fails collection when a worker did not provide an output file", async () => {
+		const completions = await collectPiWorkerOutputFiles([
+			dispatch({ workerId: "worker-no-output", outputFile: undefined }),
+		]);
+		const results = collectPiWorkerResults(completions);
+
+		assert.equal(
+			completions[0].error,
+			"Worker completion output file is missing for worker worker-no-output.",
+		);
+		assert.equal(results[0].status, "failed");
+		assert.equal(
+			results[0].message,
+			"Worker completion output file is missing for worker worker-no-output.",
+		);
 	});
 
 	it("collects multiple completions in dispatch order", () => {

@@ -270,6 +270,31 @@ function sessionFactory(created, events = []) {
 	};
 }
 
+function outputFileSessionFactory(root, reportForInput) {
+	return {
+		async create(input) {
+			const outputRoot = join(root, ".codewiki/runtime/tmp/test-pi-workers");
+			await mkdir(outputRoot, { recursive: true });
+			const outputFile = join(outputRoot, `${input.workerId}.out`);
+			await writeFile(outputFile, reportForInput(input));
+			return {
+				sessionId: `session-${input.workerId}`,
+				sessionFile: join(outputRoot, `${input.workerId}.session.jsonl`),
+				outputFile,
+				async prompt(text) {
+					assert.equal(text, input.prompt);
+				},
+			};
+		},
+	};
+}
+
+function fencedWorkerReport(report) {
+	return ["```codewiki-worker-report", JSON.stringify(report), "```"].join(
+		"\n",
+	);
+}
+
 function completedWorkerOutput(fixture, worker) {
 	return {
 		dispatch: worker,
@@ -575,18 +600,14 @@ describe("runtime host one-shot execution", () => {
 	it("collects Pi process-session output files by default", async () => {
 		const fixture = await runtimeFixture();
 		try {
-			const workerReport = [
-				"```codewiki-worker-report",
-				JSON.stringify({
-					status: "completed",
-					message: "Process session worker finished.",
-					changed_files: ["src/feature.ts", "tests/feature.test.mjs"],
-					checks_run: ["node --test tests/feature.test.mjs"],
-					working_tree_digest: "sha256:abc123",
-					changes: [changeInput(fixture.planningRef)],
-				}),
-				"```",
-			].join("\n");
+			const workerReport = fencedWorkerReport({
+				status: "completed",
+				message: "Process session worker finished.",
+				changed_files: ["src/feature.ts", "tests/feature.test.mjs"],
+				checks_run: ["node --test tests/feature.test.mjs"],
+				working_tree_digest: "sha256:abc123",
+				changes: [changeInput(fixture.planningRef)],
+			});
 			const result = await runRuntimeHostOnce({
 				runtime: {
 					mode: "append",
@@ -644,6 +665,219 @@ describe("runtime host one-shot execution", () => {
 				reason: "implementation_exit_passed",
 				blockers: [],
 			});
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("routes missing default worker output files to retry remediation", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: sessionFactory([]),
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "missing-output-release",
+			});
+
+			assert.equal(result.workerResults[0].status, "failed");
+			assert.equal(
+				result.workerResults[0].message,
+				"Worker completion output file is missing for worker host-worker-001.",
+			);
+			assert.deepEqual(result.releaseCheck, {
+				status: "ready",
+				reason: "worker_failed",
+				blockers: [],
+			});
+			assert.equal(result.remediation.route, "retry_worker");
+			assert.equal(result.releaseBatch.events[0].data.reason, "worker_failed");
+			assert.equal(result.releaseAppend.events.length, 1);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("routes malformed real output files to retry remediation", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: createPiProcessSessionFactory({
+					cwd: fixture.root,
+					command: process.execPath,
+					args: ["-e", "process.stdout.write('not a worker report');"],
+				}),
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "malformed-output-release",
+			});
+
+			assert.equal(result.workerResults[0].status, "failed");
+			assert.equal(
+				result.workerResults[0].message,
+				"Worker completion output is missing a codewiki-worker-report block. not a worker report",
+			);
+			assert.equal(result.releaseCheck.reason, "worker_failed");
+			assert.equal(result.remediation.route, "retry_worker");
+			assert.equal(result.releaseAppend.events.length, 1);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("routes blocked reports from real output files back to planning", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const workerReport = fencedWorkerReport({
+				status: "blocked",
+				message: "Need clarified planning scope.",
+				blockers: [{ message: "Need clarified planning scope." }],
+			});
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: createPiProcessSessionFactory({
+					cwd: fixture.root,
+					command: process.execPath,
+					args: [
+						"-e",
+						`process.stdout.write(${JSON.stringify(workerReport)});`,
+					],
+				}),
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "blocked-output-release",
+			});
+
+			assert.equal(result.workerResults[0].status, "blocked");
+			assert.equal(result.releaseCheck.reason, "worker_blocked");
+			assert.equal(result.remediation.route, "planning");
+			assert.match(result.remediation.blockers[0], /Need clarified/);
+			assert.equal(result.releaseAppend.events.length, 1);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("preserves completed evidence from mixed real output files", async () => {
+		const fixture = await multiTraceRuntimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					createdAt: "2026-06-15T00:00:03.000Z",
+					config: { runtime: { automation: "assist", maxWorkers: 2 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: {
+						[fixture.firstTraceId]: 1,
+						[fixture.secondTraceId]: 1,
+					},
+					expectedBytesByTrace: {
+						[fixture.firstTraceId]: fixture.firstHeadAppend.nextBytes,
+						[fixture.secondTraceId]: fixture.secondHeadAppend.nextBytes,
+					},
+				},
+				implementationInputs: [
+					{
+						repoRoot: fixture.root,
+						traceId: fixture.firstTraceId,
+						planningEvents: fixture.firstPlanningEvents,
+						nextSequence: 2,
+						createdAt: "2026-06-15T00:00:04.000Z",
+					},
+				],
+				sessionFactory: outputFileSessionFactory(fixture.root, (input) =>
+					input.workUnitId === "WU-host-a"
+						? fencedWorkerReport({
+								status: "completed",
+								message: "First worker finished.",
+								changed_files: [
+									"src/feature-a.ts",
+									"tests/feature-a.test.mjs",
+								],
+								checks_run: ["node --test tests/feature-a.test.mjs"],
+								working_tree_digest:
+									"sha256:1111111111111111111111111111111111111111111111111111111111111111",
+								changes: [
+									changeInput(fixture.firstPlanningRef, {
+										codePaths: ["src/feature-a.ts"],
+										testPaths: ["tests/feature-a.test.mjs"],
+										checkResults: [
+											{
+												command: "node --test tests/feature-a.test.mjs",
+												status: "pass",
+												phase: "green",
+												criterionId: "AC-001",
+												outputRef: "tests/feature-a.test.mjs",
+											},
+										],
+										acceptanceEvidenceItems: [
+											{
+												criterionId: "AC-001",
+												summary: "Feature A test passes.",
+												evidenceRefs: ["tests/feature-a.test.mjs"],
+											},
+										],
+									}),
+								],
+							})
+						: fencedWorkerReport({
+								status: "failed",
+								message: "Second worker crashed.",
+							}),
+				),
+				appendImplementation: true,
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:05.000Z",
+				releaseIdPrefix: "mixed-output-release",
+			});
+
+			assert.equal(result.releaseCheck.reason, "worker_failed");
+			assert.equal(result.workerResults[0].status, "completed");
+			assert.equal(result.workerResults[1].status, "failed");
+			assert.equal(result.implementationAppends.length, 1);
+			assert.equal(result.releaseAppend.events.length, 2);
+			assert.equal(
+				result.releaseBatch.events[0].data.reason,
+				"worker_completed",
+			);
+			assert.equal(result.releaseBatch.events[1].data.reason, "worker_failed");
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}
