@@ -21,6 +21,12 @@ verifies `/wiki state` reflects the appended decision.
 starts Pi RPC mode from this checkout using `.pi/settings.json`, runs
 `/wiki state --board`, and verifies rendered output without starting a model turn.
 
+`npm run test:external-dogfood` is the fresh-project package dogfood smoke. It
+packs and installs CodeWiki outside this checkout, runs `/wiki bootstrap`, drives
+guarded decision/planning/runtime/implementation/archive writes, collects a real
+worker output file through the runtime host runner, releases the claim, and closes
+the trace.
+
 `npm run test:readiness` is the repo-local readiness checklist. It verifies
 package metadata is present, Pi is not bundled as a runtime dependency,
 `.codewiki` top-level state has the target shape, repo-local Pi settings enable

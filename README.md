@@ -56,6 +56,7 @@ npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-mutation
 npm run test:pi-dogfood
+npm run test:external-dogfood
 npm run test:readiness
 npm run audit:codewiki
 ```
@@ -70,6 +71,9 @@ Smoke command roles:
   and verifies `/wiki state`.
 - `npm run test:pi-dogfood`: builds `dist/**` and verifies repo-local
   `.pi/settings.json` loads `/wiki state --board` without a model turn.
+- `npm run test:external-dogfood`: packs and installs CodeWiki into a fresh
+  external project, runs `/wiki bootstrap`, guarded lifecycle appends, runtime
+  host worker-output collection, release, and archive close.
 - `npm run test:readiness`: package, state-shape, dogfood, and stale wording
   checks.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence

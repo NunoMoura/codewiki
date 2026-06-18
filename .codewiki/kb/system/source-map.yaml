@@ -37,6 +37,7 @@ components:
     tests:
       - tests/scaffold.test.mjs
       - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/external-package-dogfood-smoke.mjs
       - tests/runtime/readiness-checklist.test.mjs
     role: package_entrypoint
   api:
@@ -181,6 +182,7 @@ components:
       - tests/runtime/pi-tool-mutation-smoke.mjs
       - tests/runtime/pi-worker-results.test.mjs
       - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/external-package-dogfood-smoke.mjs
     role: host_adapter
   project:
     doc: .codewiki/kb/system/file-structure.md
