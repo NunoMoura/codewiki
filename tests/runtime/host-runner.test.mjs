@@ -1192,6 +1192,49 @@ describe("runtime host one-shot execution", () => {
 		}
 	});
 
+	it("blocks completed worker release when implementation preview is missing", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: sessionFactory([]),
+				completionCollector({ workers }) {
+					return [completedWorkerOutput(fixture, workers[0])];
+				},
+				appendReleases: true,
+			});
+
+			assert.deepEqual(result.releaseCheck, {
+				status: "blocked",
+				reason: "implementation_preview_missing",
+				blockers: [
+					"No implementation preview was produced for worker completion.",
+				],
+			});
+			assert.equal(result.releaseBatch, undefined);
+			assert.equal(result.releaseAppend, undefined);
+			assert.equal(result.remediation.route, "user");
+			assert.equal(
+				result.remediation.suggestedActions.some((action) =>
+					action.includes("Provide implementationInputs"),
+				),
+				true,
+			);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
 	it("prepares and can append release for blocked worker without implementation append", async () => {
 		const fixture = await runtimeFixture();
 		try {

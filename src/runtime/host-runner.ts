@@ -765,6 +765,9 @@ function remediationForHostCompletion(
 	if (releaseCheck.reason === "worker_blocked") {
 		return terminalWorkerRemediation(releaseCheck, workerResults, "planning");
 	}
+	if (releaseCheck.reason === "implementation_preview_missing") {
+		return missingImplementationPreviewRemediation(releaseCheck);
+	}
 	if (releaseCheck.status === "blocked") {
 		return implementationPreviewRemediation(
 			releaseCheck,
@@ -772,6 +775,21 @@ function remediationForHostCompletion(
 		);
 	}
 	return undefined;
+}
+
+function missingImplementationPreviewRemediation(
+	releaseCheck: RuntimeHostReleaseCheck,
+): RuntimeHostRemediation {
+	return {
+		reason: releaseCheck.reason,
+		route: "user",
+		blockers: [...releaseCheck.blockers],
+		refs: [],
+		suggestedActions: [
+			"Provide implementationInputs for each claimed trace before completing workers.",
+			"Rerun the host action so worker evidence is checked by wiki_implement before claims release.",
+		],
+	};
 }
 
 function implementationPreviewRemediation(
@@ -945,6 +963,15 @@ function workerStatus(
 function releaseCheckForImplementation(
 	implementationPreviews: RunWikiImplementResult[],
 ): RuntimeHostReleaseCheck {
+	if (implementationPreviews.length === 0) {
+		return {
+			status: "blocked",
+			reason: "implementation_preview_missing",
+			blockers: [
+				"No implementation preview was produced for worker completion.",
+			],
+		};
+	}
 	const blockers = implementationPreviews.flatMap((preview) =>
 		preview.loopResult.exit.passed
 			? []
