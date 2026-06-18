@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
+	collectPiWorkerOutputFiles,
 	collectPiWorkerResults,
 	normalizePiWorkerCompletion,
 } from "../../src/pi/worker-results.ts";
@@ -13,7 +16,8 @@ function dispatch(overrides = {}) {
 		planningRefs: ["trace:TRACE-pi-a:planning:iteration:1#work:WU-a"],
 		claimId: "claim-WU-a-001",
 		sessionId: "session-pi-worker-001",
-		sessionFile: "/tmp/pi-worker-001.jsonl",
+		sessionFile:
+			".codewiki/runtime/tmp/TRACE-pi-a/runtime/pi-workers/pi-worker-001.session.jsonl",
 		status: "started",
 		...overrides,
 	};
@@ -52,7 +56,10 @@ describe("Pi worker completion normalization", () => {
 		assert.equal(result.workUnitId, "WU-a");
 		assert.equal(result.claimId, "claim-WU-a-001");
 		assert.equal(result.sessionId, "session-pi-worker-001");
-		assert.equal(result.sessionFile, "/tmp/pi-worker-001.jsonl");
+		assert.equal(
+			result.sessionFile,
+			".codewiki/runtime/tmp/TRACE-pi-a/runtime/pi-workers/pi-worker-001.session.jsonl",
+		);
 		assert.equal(result.status, "completed");
 		assert.deepEqual(result.planningRefs, [
 			"trace:TRACE-pi-a:planning:iteration:1#work:WU-a",
@@ -222,6 +229,49 @@ describe("Pi worker completion normalization", () => {
 			result.message,
 			"completion_guard: completed worker produced no implementation evidence. Looks done.",
 		);
+	});
+
+	it("collects worker output files in dispatch order", async () => {
+		const base = join(process.cwd(), ".tmp-worktrees/pi-worker-results");
+		await mkdir(base, { recursive: true });
+		const root = await mkdtemp(join(base, "run-"));
+		try {
+			const firstOutput = join(root, "first.jsonl");
+			const missingOutput = join(root, "missing.jsonl");
+			await writeFile(
+				firstOutput,
+				`\`\`\`codewiki-worker-report\n${JSON.stringify({
+					status: "completed",
+					changedFiles: ["src/pi/worker-results.ts"],
+				})}\n\`\`\``,
+			);
+
+			const completions = await collectPiWorkerOutputFiles([
+				dispatch({
+					workUnitId: "WU-a",
+					workerId: "worker-a",
+					outputFile: firstOutput,
+				}),
+				dispatch({
+					workUnitId: "WU-b",
+					workerId: "worker-b",
+					outputFile: missingOutput,
+				}),
+			]);
+			const results = collectPiWorkerResults(completions);
+
+			assert.equal(completions[0].output.includes("codewiki-worker-report"), true);
+			assert.equal(completions[1].dispatch.outputFile, missingOutput);
+			assert.equal(results[0].status, "completed");
+			assert.deepEqual(results[0].changedFiles, [
+				"src/pi/worker-results.ts",
+			]);
+			assert.equal(results[1].status, "failed");
+			assert.match(results[1].message, /ENOENT/);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+			await rm(base, { recursive: true, force: true });
+		}
 	});
 
 	it("collects multiple completions in dispatch order", () => {

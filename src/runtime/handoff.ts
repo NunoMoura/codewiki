@@ -98,7 +98,7 @@ export interface RuntimeHandoffWorker {
 	worktree?: WorktreeRef;
 	worktreeCommands: RuntimeHandoffWorktreeCommands;
 	sessionInput: PiWorkerSessionInput;
-	completionFeeds: "collectPiWorkerResults";
+	completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerResults";
 	implementationInput: "workerResults";
 }
 
@@ -111,7 +111,7 @@ export interface RuntimeHandoffWorktreeCommands {
 }
 
 export interface RuntimeHandoffCompletionContract {
-	collector: "collectPiWorkerResults";
+	collector: "collectPiWorkerOutputFiles -> collectPiWorkerResults";
 	statusValues: ["completed", "blocked", "failed"];
 	requiredFields: string[];
 	proofFields: string[];
@@ -194,7 +194,7 @@ function handoffWorker(input: {
 			...(worktree ? { worktree } : {}),
 			prompt,
 		},
-		completionFeeds: "collectPiWorkerResults",
+		completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerResults",
 		implementationInput: "workerResults",
 	};
 }
@@ -261,7 +261,7 @@ function handoffActions(
 
 function expectedCompletionContract(): RuntimeHandoffCompletionContract {
 	return {
-		collector: "collectPiWorkerResults",
+		collector: "collectPiWorkerOutputFiles -> collectPiWorkerResults",
 		statusValues: ["completed", "blocked", "failed"],
 		requiredFields: [
 			"status",

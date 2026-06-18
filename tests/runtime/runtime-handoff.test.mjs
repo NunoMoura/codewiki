@@ -139,11 +139,14 @@ describe("runtime handoff manifest", () => {
 			manifest.workers[0].sessionInput.prompt.endsWith("HANDOFF_SUFFIX"),
 			true,
 		);
-		assert.equal(manifest.workers[0].completionFeeds, "collectPiWorkerResults");
+		assert.equal(
+			manifest.workers[0].completionFeeds,
+			"collectPiWorkerOutputFiles -> collectPiWorkerResults",
+		);
 		assert.equal(manifest.workers[0].implementationInput, "workerResults");
 		assert.equal(
 			manifest.expectedCompletion.collector,
-			"collectPiWorkerResults",
+			"collectPiWorkerOutputFiles -> collectPiWorkerResults",
 		);
 		assert.deepEqual(manifest.expectedCompletion.statusValues, [
 			"completed",

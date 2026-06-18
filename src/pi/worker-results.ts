@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import type { ImplementationChangeInput } from "../implementation/types.ts";
 import type {
 	ImplementationWorkerBlockerInput,
@@ -19,10 +20,35 @@ interface ParsedCompletionOutput {
 const WORKER_REPORT_FENCE =
 	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/gi;
 
+export async function collectPiWorkerOutputFiles(
+	workers: PiWorkerDispatchResult[],
+): Promise<PiWorkerCompletionInput[]> {
+	return Promise.all(workers.map(collectPiWorkerOutputFile));
+}
+
 export function collectPiWorkerResults(
 	inputs: PiWorkerCompletionInput[],
 ): ImplementationWorkerResultInput[] {
 	return inputs.map(normalizePiWorkerCompletion);
+}
+
+async function collectPiWorkerOutputFile(
+	dispatch: PiWorkerDispatchResult,
+): Promise<PiWorkerCompletionInput> {
+	if (!dispatch.outputFile) {
+		return {
+			dispatch,
+			error: "Worker completion output file is missing.",
+		};
+	}
+	try {
+		return {
+			dispatch,
+			output: await readFile(dispatch.outputFile, "utf8"),
+		};
+	} catch (error) {
+		return { dispatch, error };
+	}
 }
 
 export function normalizePiWorkerCompletion(
