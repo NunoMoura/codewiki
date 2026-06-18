@@ -1,5 +1,6 @@
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
+import { traceTmpPath } from "../runtime/tmp.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
 import type { RuntimeDispatchItem } from "../runtime/scheduler.ts";
 
@@ -287,19 +288,27 @@ function worktreePath(
 	item: RuntimeDispatchItem,
 	workerId: string,
 ): string {
-	const root = options.worktreeRoot || defaultWorktreeRoot(options);
+	if (options.worktreeRoot) {
+		return resolve(
+			options.worktreeRoot,
+			safeSegment(item.traceId, "trace"),
+			safeSegment(item.workUnitId, "work"),
+			safeSegment(workerId, "worker"),
+		);
+	}
 	return resolve(
-		root,
-		safeSegment(item.traceId, "trace"),
+		defaultWorktreeRoot(options, item),
 		safeSegment(item.workUnitId, "work"),
 		safeSegment(workerId, "worker"),
 	);
 }
 
-function defaultWorktreeRoot(options: RuntimeWorktreePlanOptions): string {
+function defaultWorktreeRoot(
+	options: RuntimeWorktreePlanOptions,
+	item: RuntimeDispatchItem,
+): string {
 	const repoRoot = resolve(options.repoRoot || ".");
-	const project = safeSegment(options.projectName || "repo", "repo");
-	return resolve(dirname(repoRoot), ".codewiki-worktrees", project);
+	return resolve(repoRoot, traceTmpPath(item.traceId, "worktree"));
 }
 
 function commandPlan(

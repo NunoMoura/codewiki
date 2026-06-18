@@ -34,7 +34,7 @@ describe("runtime worktree planning", () => {
 		assert.equal(plan.workerId, "worker-custom");
 		assert.equal(
 			plan.worktree?.path,
-			"/tmp/repo/.codewiki-worktrees/codewiki/TRACE-worktree/WU-one/worker-custom",
+			"/tmp/repo/codewiki/.codewiki/runtime/tmp/TRACE-worktree/worktree/WU-one/worker-custom",
 		);
 		assert.equal(
 			plan.worktree?.branch,
@@ -43,8 +43,22 @@ describe("runtime worktree planning", () => {
 		assert.equal(plan.worktree?.baseRef, "abc1234");
 		assert.equal(plan.worktree?.baseSha, "abc1234");
 		assert.deepEqual(plan.commands.worktreePrepare, [
-			'git worktree add -B "codewiki/TRACE-worktree/WU-one/worker-custom" "/tmp/repo/.codewiki-worktrees/codewiki/TRACE-worktree/WU-one/worker-custom" "abc1234"',
+			'git worktree add -B "codewiki/TRACE-worktree/WU-one/worker-custom" "/tmp/repo/codewiki/.codewiki/runtime/tmp/TRACE-worktree/worktree/WU-one/worker-custom" "abc1234"',
 		]);
+	});
+
+	it("keeps explicit worktree roots available for custom hosts", () => {
+		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+			mode: "worktree",
+			repoRoot: "/tmp/repo/codewiki",
+			worktreeRoot: "/sandbox/custom-worktrees",
+			workerIds: { "WU-one": "worker-custom" },
+		});
+
+		assert.equal(
+			plan.worktree?.path,
+			"/sandbox/custom-worktrees/TRACE-worktree/WU-one/worker-custom",
+		);
 	});
 
 	it("adds optional setup commands to explicit worktree prepare", async () => {
