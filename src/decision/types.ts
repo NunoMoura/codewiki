@@ -18,6 +18,15 @@ export const DECISION_APPROVAL_STATUS_VALUES = [
 	"deferred",
 	"edited",
 ] as const;
+export const DECISION_KIND_VALUES = [
+	"debug",
+	"fix",
+	"harden",
+	"improve",
+	"migrate",
+	"docs",
+	"release",
+] as const;
 export const DECISION_RECOMMENDATION_VALUES = [
 	"approve",
 	"reject",
@@ -42,6 +51,7 @@ export type TraceabilityExemption =
 	(typeof TRACEABILITY_EXEMPTION_VALUES)[number];
 export type DecisionApprovalStatus =
 	(typeof DECISION_APPROVAL_STATUS_VALUES)[number];
+export type DecisionKind = (typeof DECISION_KIND_VALUES)[number];
 export type DecisionRecommendation =
 	(typeof DECISION_RECOMMENDATION_VALUES)[number];
 export type DecisionEffort = (typeof DECISION_EFFORT_VALUES)[number];
@@ -69,6 +79,7 @@ export interface DecisionAgentAssessment {
 export interface DecisionRowInput {
 	id?: string;
 	question?: string;
+	decisionKind?: DecisionKind | string;
 	currentState?: string;
 	desiredState?: string;
 	rationale?: string;
@@ -89,11 +100,34 @@ export interface DecisionRowInput {
 	changeType?: ChangeType | string;
 	traceabilityExemption?: TraceabilityExemption | string;
 	noKbImpactReason?: string;
+	targetRefs?: string[];
+	hypothesis?: string;
+	invariant?: string;
+	probe?: string;
+	expectedSafeBehavior?: string;
+	stopCondition?: string;
+	reproduction?: string;
+	expectedBehavior?: string;
+	regressionPlan?: string;
+	safetyBoundary?: string;
+	failureModes?: string[];
+	negativeTestPlan?: string;
+	compatibilityImpact?: string;
+	currentPain?: string;
+	desiredOutcome?: string;
+	successSignal?: string;
+	nonGoals?: string[];
+	sourceBehavior?: string;
+	targetBehavior?: string;
+	preservedInvariants?: string[];
+	equivalenceProof?: string;
+	rollbackPlan?: string;
 }
 
 export interface DecisionRow {
 	id: string;
 	question: string;
+	decisionKind: DecisionKind | string;
 	currentState: string;
 	desiredState: string;
 	rationale: string;
@@ -114,6 +148,28 @@ export interface DecisionRow {
 	changeType: ChangeType | string;
 	traceabilityExemption?: TraceabilityExemption | string;
 	noKbImpactReason?: string;
+	targetRefs: string[];
+	hypothesis?: string;
+	invariant?: string;
+	probe?: string;
+	expectedSafeBehavior?: string;
+	stopCondition?: string;
+	reproduction?: string;
+	expectedBehavior?: string;
+	regressionPlan?: string;
+	safetyBoundary?: string;
+	failureModes: string[];
+	negativeTestPlan?: string;
+	compatibilityImpact?: string;
+	currentPain?: string;
+	desiredOutcome?: string;
+	successSignal?: string;
+	nonGoals: string[];
+	sourceBehavior?: string;
+	targetBehavior?: string;
+	preservedInvariants: string[];
+	equivalenceProof?: string;
+	rollbackPlan?: string;
 }
 
 export interface DecisionTableInput {

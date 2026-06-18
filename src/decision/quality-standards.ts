@@ -9,7 +9,7 @@ export function decisionQualityStandards(
 	issues: DecisionExitIssue[],
 	approvedRows: DecisionRow[],
 ): LoopQualityStandardResult[] {
-	return [
+	const standards = [
 		standard({
 			id: "decision_table_ready",
 			description:
@@ -123,6 +123,123 @@ export function decisionQualityStandards(
 			],
 		}),
 	];
+	return [...standards, ...decisionKindQualityStandards(issues, approvedRows)];
+}
+
+function decisionKindQualityStandards(
+	issues: DecisionExitIssue[],
+	approvedRows: DecisionRow[],
+): LoopQualityStandardResult[] {
+	const standards: LoopQualityStandardResult[] = [];
+	if (
+		approvedRows.length > 0 ||
+		hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
+	) {
+		standards.push(
+			standard({
+				id: "decision_kind_classified",
+				description:
+					"Approved rows classify the decision kind so kind-specific quality can apply inside the decision loop.",
+				issues,
+				codes: ["missing_decision_kind", "invalid_decision_kind"],
+			}),
+		);
+	}
+	if (
+		hasKind(approvedRows, "debug") ||
+		hasCodePrefix(issues, "missing_debug_")
+	) {
+		standards.push(
+			standard({
+				id: "debug_decision_focused",
+				description:
+					"Debug decisions name target, hypothesis, invariant, probe, expected safe behavior, and stop condition.",
+				issues,
+				codes: [
+					"missing_debug_target",
+					"missing_debug_hypothesis",
+					"missing_debug_invariant",
+					"missing_debug_probe",
+					"missing_debug_expected_safe_behavior",
+					"missing_debug_stop_condition",
+				],
+			}),
+		);
+	}
+	if (hasKind(approvedRows, "fix") || hasCodePrefix(issues, "missing_fix_")) {
+		standards.push(
+			standard({
+				id: "fix_decision_reproducible",
+				description:
+					"Fix decisions identify reproduction, expected behavior, and regression coverage.",
+				issues,
+				codes: [
+					"missing_fix_reproduction",
+					"missing_fix_expected_behavior",
+					"missing_fix_regression_plan",
+				],
+			}),
+		);
+	}
+	if (
+		hasKind(approvedRows, "harden") ||
+		hasCodePrefix(issues, "missing_harden_")
+	) {
+		standards.push(
+			standard({
+				id: "harden_decision_boundary",
+				description:
+					"Hardening decisions define the safety boundary, failure modes, negative tests, and compatibility impact.",
+				issues,
+				codes: [
+					"missing_harden_boundary",
+					"missing_harden_failure_modes",
+					"missing_harden_negative_test_plan",
+					"missing_harden_compatibility_impact",
+				],
+			}),
+		);
+	}
+	if (
+		hasKind(approvedRows, "improve") ||
+		hasCodePrefix(issues, "missing_improve_")
+	) {
+		standards.push(
+			standard({
+				id: "improve_decision_outcome",
+				description:
+					"Improvement decisions describe current pain, desired outcome, success signal, and non-goals.",
+				issues,
+				codes: [
+					"missing_improve_current_pain",
+					"missing_improve_desired_outcome",
+					"missing_improve_success_signal",
+					"missing_improve_non_goals",
+				],
+			}),
+		);
+	}
+	if (
+		hasKind(approvedRows, "migrate") ||
+		hasCodePrefix(issues, "missing_migrate_")
+	) {
+		standards.push(
+			standard({
+				id: "migrate_decision_equivalent",
+				description:
+					"Migration decisions describe source/target behavior, preserved invariants, equivalence proof, and rollback strategy.",
+				issues,
+				codes: [
+					"missing_migrate_source_behavior",
+					"missing_migrate_target_behavior",
+					"missing_migrate_preserved_invariants",
+					"missing_migrate_equivalence_proof",
+					"missing_migrate_rollback_plan",
+				],
+			}),
+		);
+	}
+	return standards;
 }
 
 export function criteriaFromQualityStandards(
@@ -153,6 +270,21 @@ export function isBlockingDecisionIssue(issue: DecisionExitIssue): boolean {
 		issue.code === "missing_high_risk_approval" ||
 		issue.code === "invalid_approval_ref"
 	);
+}
+
+function hasAnyIssue(
+	issues: DecisionExitIssue[],
+	codes: DecisionExitIssueCode[],
+): boolean {
+	return issues.some((issue) => codes.includes(issue.code));
+}
+
+function hasKind(rows: DecisionRow[], kind: string): boolean {
+	return rows.some((row) => row.decisionKind === kind);
+}
+
+function hasCodePrefix(issues: DecisionExitIssue[], prefix: string): boolean {
+	return issues.some((issue) => issue.code.startsWith(prefix));
 }
 
 function standard(input: {

@@ -7,6 +7,7 @@ The decision loop owns product and system intent. It turns user goals, current p
 The decision loop owns:
 
 - user intent and approvals;
+- decision kind classification (`debug`, `fix`, `harden`, `improve`, `migrate`, `docs`, or `release`);
 - requirements and non-goals;
 - product/system tradeoffs;
 - risk tier and approval needs;
@@ -51,6 +52,18 @@ Decision loop output is the high-signal packet planning needs:
 
 Decision output should not include task breakdowns, implementation plans, test commands, or worker instructions.
 
+Decision rows carry shared intent fields plus a `decisionKind`. Kind-specific fields shape the row without creating another loop:
+
+| decisionKind | Additional required signal |
+| --- | --- |
+| debug | Target refs, hypothesis, invariant/failure boundary, probe or repro plan, expected safe behavior, and stop condition. |
+| fix | Known reproduction, expected behavior, and regression coverage plan. |
+| harden | Safety boundary, failure/abuse modes, negative test plan, and compatibility impact. |
+| improve | Current pain, desired outcome, success signal, and non-goals. |
+| migrate | Source behavior, target behavior, preserved invariants, equivalence proof, and rollback or containment plan. |
+
+`docs` and `release` rows currently use the shared decision standards only unless a narrower kind better describes the decision.
+
 ## Exit quality standards
 
 The decision loop can exit only when loop-owned quality standards are met. Research, uncertainty handling, and blind-spot review are not separate top-level concepts; they are evidence for these standards.
@@ -68,6 +81,12 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk rows need explicit proof refs for research, prior art, validation, or user guidance. |
 | risks_and_alternatives_considered | Approved rows declare a low/medium/high risk tier; high-risk intentions identify affected layers and at least one viable alternative before planning. |
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
+| decision_kind_classified | Approved rows classify the decision kind so kind-specific standards can apply inside the decision loop. |
+| debug_decision_focused | Debug rows include target, hypothesis, invariant, probe, expected safe behavior, and stop condition. |
+| fix_decision_reproducible | Fix rows include reproduction, expected behavior, and regression coverage. |
+| harden_decision_boundary | Hardening rows include safety boundary, failure modes, negative tests, and compatibility impact. |
+| improve_decision_outcome | Improvement rows include current pain, desired outcome, success signal, and non-goals. |
+| migrate_decision_equivalent | Migration rows include source/target behavior, preserved invariants, equivalence proof, and rollback strategy. |
 
 Deterministic standards stay fast and repeatable. Agent-judgment standards are used when structural checks are not enough to protect user/project alignment. User-approval standards are reserved for high-risk decisions where UX cost is justified.
 

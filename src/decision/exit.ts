@@ -11,11 +11,12 @@ import {
 	decisionQualityStandards,
 	isBlockingDecisionIssue,
 } from "./quality-standards.ts";
-import type {
-	CurrentStatePacket,
-	DecisionRow,
-	DecisionTable,
-	KnowledgeDelta,
+import {
+	DECISION_KIND_VALUES,
+	type CurrentStatePacket,
+	type DecisionRow,
+	type DecisionTable,
+	type KnowledgeDelta,
 } from "./types.ts";
 
 export type DecisionExitIssueCode =
@@ -24,6 +25,30 @@ export type DecisionExitIssueCode =
 	| "missing_current_state"
 	| "missing_desired_state"
 	| "missing_rationale"
+	| "missing_decision_kind"
+	| "invalid_decision_kind"
+	| "missing_debug_target"
+	| "missing_debug_hypothesis"
+	| "missing_debug_invariant"
+	| "missing_debug_probe"
+	| "missing_debug_expected_safe_behavior"
+	| "missing_debug_stop_condition"
+	| "missing_fix_reproduction"
+	| "missing_fix_expected_behavior"
+	| "missing_fix_regression_plan"
+	| "missing_harden_boundary"
+	| "missing_harden_failure_modes"
+	| "missing_harden_negative_test_plan"
+	| "missing_harden_compatibility_impact"
+	| "missing_improve_current_pain"
+	| "missing_improve_desired_outcome"
+	| "missing_improve_success_signal"
+	| "missing_improve_non_goals"
+	| "missing_migrate_source_behavior"
+	| "missing_migrate_target_behavior"
+	| "missing_migrate_preserved_invariants"
+	| "missing_migrate_equivalence_proof"
+	| "missing_migrate_rollback_plan"
 	| "missing_user_impact"
 	| "missing_maintainer_impact"
 	| "missing_effort"
@@ -100,6 +125,7 @@ export function evaluateDecisionExit(
 	for (const row of approvedRows) {
 		issues.push(
 			...approvedRowIssues(row),
+			...decisionKindQualityIssues(row),
 			...recommendationQualityIssues(row),
 			...agentAssessmentQualityIssues(row),
 			...riskQualityIssues(row),
@@ -195,6 +221,221 @@ function approvedRowIssues(row: DecisionRow): DecisionExitIssue[] {
 		});
 	}
 	return issues;
+}
+
+function decisionKindQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+	const issues: DecisionExitIssue[] = [];
+	if (!row.decisionKind) {
+		issues.push({
+			code: "missing_decision_kind",
+			rowId: row.id,
+			message: `Decision row ${row.id} must declare decisionKind.`,
+		});
+		return issues;
+	}
+	if (!isAllowed(row.decisionKind, [...DECISION_KIND_VALUES])) {
+		issues.push({
+			code: "invalid_decision_kind",
+			rowId: row.id,
+			message: `Decision row ${row.id} has invalid decisionKind ${row.decisionKind}.`,
+		});
+		return issues;
+	}
+	if (row.decisionKind === "debug") {
+		if (row.targetRefs.length === 0) {
+			issues.push(kindIssue(row, "missing_debug_target", "name target refs"));
+		}
+		if (!row.hypothesis) {
+			issues.push(
+				kindIssue(row, "missing_debug_hypothesis", "state a hypothesis"),
+			);
+		}
+		if (!row.invariant) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_debug_invariant",
+					"state an invariant or failure boundary",
+				),
+			);
+		}
+		if (!row.probe) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_debug_probe",
+					"define a probe or reproduction plan",
+				),
+			);
+		}
+		if (!row.expectedSafeBehavior) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_debug_expected_safe_behavior",
+					"state expected safe behavior",
+				),
+			);
+		}
+		if (!row.stopCondition) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_debug_stop_condition",
+					"state a stop condition",
+				),
+			);
+		}
+	}
+	if (row.decisionKind === "fix") {
+		if (!row.reproduction) {
+			issues.push(
+				kindIssue(row, "missing_fix_reproduction", "describe the reproduction"),
+			);
+		}
+		if (!row.expectedBehavior) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_fix_expected_behavior",
+					"state expected behavior",
+				),
+			);
+		}
+		if (!row.regressionPlan) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_fix_regression_plan",
+					"define a regression test plan",
+				),
+			);
+		}
+	}
+	if (row.decisionKind === "harden") {
+		if (!row.safetyBoundary) {
+			issues.push(
+				kindIssue(row, "missing_harden_boundary", "name the safety boundary"),
+			);
+		}
+		if (row.failureModes.length === 0) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_harden_failure_modes",
+					"list failure or abuse modes",
+				),
+			);
+		}
+		if (!row.negativeTestPlan) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_harden_negative_test_plan",
+					"define negative test coverage",
+				),
+			);
+		}
+		if (!row.compatibilityImpact) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_harden_compatibility_impact",
+					"state compatibility impact",
+				),
+			);
+		}
+	}
+	if (row.decisionKind === "improve") {
+		if (!row.currentPain) {
+			issues.push(
+				kindIssue(row, "missing_improve_current_pain", "describe current pain"),
+			);
+		}
+		if (!row.desiredOutcome) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_improve_desired_outcome",
+					"state desired outcome",
+				),
+			);
+		}
+		if (!row.successSignal) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_improve_success_signal",
+					"define success signal",
+				),
+			);
+		}
+		if (row.nonGoals.length === 0) {
+			issues.push(
+				kindIssue(row, "missing_improve_non_goals", "list non-goals"),
+			);
+		}
+	}
+	if (row.decisionKind === "migrate") {
+		if (!row.sourceBehavior) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_migrate_source_behavior",
+					"describe source behavior",
+				),
+			);
+		}
+		if (!row.targetBehavior) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_migrate_target_behavior",
+					"describe target behavior",
+				),
+			);
+		}
+		if (row.preservedInvariants.length === 0) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_migrate_preserved_invariants",
+					"list preserved invariants",
+				),
+			);
+		}
+		if (!row.equivalenceProof) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_migrate_equivalence_proof",
+					"define equivalence proof",
+				),
+			);
+		}
+		if (!row.rollbackPlan) {
+			issues.push(
+				kindIssue(
+					row,
+					"missing_migrate_rollback_plan",
+					"state rollback or containment plan",
+				),
+			);
+		}
+	}
+	return issues;
+}
+
+function kindIssue(
+	row: DecisionRow,
+	code: DecisionExitIssueCode,
+	requirement: string,
+): DecisionExitIssue {
+	return {
+		code,
+		rowId: row.id,
+		message: `${row.decisionKind} decision row ${row.id} must ${requirement}.`,
+	};
 }
 
 function issueFinding(issue: DecisionExitIssue): ExitFinding {
@@ -484,6 +725,54 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	missing_desired_state: "State the desired target state for the decision row.",
 	missing_rationale:
 		"Add rationale explaining why this decision should be accepted.",
+	missing_decision_kind:
+		"Classify the decision row as debug, fix, harden, improve, migrate, docs, or release.",
+	invalid_decision_kind:
+		"Use decisionKind debug, fix, harden, improve, migrate, docs, or release.",
+	missing_debug_target:
+		"For debug decisions, name the component or path being investigated.",
+	missing_debug_hypothesis:
+		"For debug decisions, state the hypothesis being tested.",
+	missing_debug_invariant:
+		"For debug decisions, state the invariant or failure boundary.",
+	missing_debug_probe:
+		"For debug decisions, define the probe, repro command, or observation plan.",
+	missing_debug_expected_safe_behavior:
+		"For debug decisions, state the expected safe behavior.",
+	missing_debug_stop_condition:
+		"For debug decisions, state when debugging should stop.",
+	missing_fix_reproduction:
+		"For fix decisions, describe the known reproduction or failing scenario.",
+	missing_fix_expected_behavior:
+		"For fix decisions, state the expected behavior.",
+	missing_fix_regression_plan:
+		"For fix decisions, define the regression coverage plan.",
+	missing_harden_boundary:
+		"For hardening decisions, name the safety boundary being protected.",
+	missing_harden_failure_modes:
+		"For hardening decisions, list relevant failure or abuse modes.",
+	missing_harden_negative_test_plan:
+		"For hardening decisions, define negative test coverage.",
+	missing_harden_compatibility_impact:
+		"For hardening decisions, state compatibility impact.",
+	missing_improve_current_pain:
+		"For improvement decisions, describe current user or maintainer pain.",
+	missing_improve_desired_outcome:
+		"For improvement decisions, state the desired outcome.",
+	missing_improve_success_signal:
+		"For improvement decisions, define a success signal.",
+	missing_improve_non_goals:
+		"For improvement decisions, list non-goals to bound scope.",
+	missing_migrate_source_behavior:
+		"For migration decisions, describe current/source behavior.",
+	missing_migrate_target_behavior:
+		"For migration decisions, describe target behavior.",
+	missing_migrate_preserved_invariants:
+		"For migration decisions, list invariants that must be preserved.",
+	missing_migrate_equivalence_proof:
+		"For migration decisions, define equivalence proof or checks.",
+	missing_migrate_rollback_plan:
+		"For migration decisions, state rollback or containment strategy.",
 	missing_user_impact:
 		"Explain how the intention benefits users or user outcomes.",
 	missing_maintainer_impact:

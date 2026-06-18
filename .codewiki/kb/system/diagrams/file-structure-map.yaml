@@ -62,6 +62,7 @@ nodes:
       - src/api/decision.ts
     test_paths:
       - tests/decision/**
+      - tests/helpers/decision-row.mjs
   - id: component.planning
     label: Planning loop output and exit conditions
     group: source
@@ -135,6 +136,7 @@ nodes:
     paths:
       - src/knowledge/**
       - .codewiki/kb/**
+      - .agents/skills/**
     test_paths:
       - tests/knowledge/**
       - tests/shared/**

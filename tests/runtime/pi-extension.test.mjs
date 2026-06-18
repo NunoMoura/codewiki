@@ -494,7 +494,7 @@ describe("Pi extension adapter", () => {
 			assert.match(decisionRender, /CodeWiki Decision ◇ preview/);
 			assert.match(
 				decisionRender,
-				/Row\s+│ Current state\s+│ Desired state\s+│ Quality/,
+				/Row\s+│ Kind\s+│ Pain\s+│ Outcome\s+│ Success/,
 			);
 			assert.match(decisionRender, /├/);
 			assert.match(decisionRender, /Quality/);

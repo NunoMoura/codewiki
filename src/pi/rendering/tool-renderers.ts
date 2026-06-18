@@ -52,21 +52,110 @@ function renderDecision(
 	const table = record(loopResult.table);
 	const rows = arrayOfRecords(table.rows);
 	const quality = qualityRows(record(loopResult.exit).qualityStandards);
+	const decisionTable = decisionKindTable(rows, qualityVerdict(quality));
 	return linesComponent([
 		`${toolTitle("wiki_decide")} ${modeBadge(result.mode)}`,
 		"",
-		...tableLines(
-			["Row", "Current state", "Desired state", "Quality"],
-			rows.map((row) => [
-				stringValue(row.id, "row"),
-				stringValue(row.currentState, "—"),
-				stringValue(row.desiredState, "—"),
-				qualityVerdict(quality),
-			]),
-		),
+		...tableLines(decisionTable.headers, decisionTable.rows),
 		...agentJudgementLines(rows, options),
 		...qualityFooter(quality, options),
 	]);
+}
+
+function decisionKindTable(
+	rows: Record<string, unknown>[],
+	quality: string,
+): { headers: string[]; rows: string[][] } {
+	const kind = dominantDecisionKind(rows);
+	if (kind === "debug") {
+		return {
+			headers: ["Row", "Kind", "Target", "Hypothesis", "Probe", "Quality"],
+			rows: rows.map((row) => [
+				stringValue(row.id, "row"),
+				stringValue(row.decisionKind, "—"),
+				arrayOfStrings(row.targetRefs).join(", ") || "—",
+				stringValue(row.hypothesis, "—"),
+				stringValue(row.probe, "—"),
+				quality,
+			]),
+		};
+	}
+	if (kind === "fix") {
+		return {
+			headers: ["Row", "Kind", "Repro", "Expected", "Regression", "Quality"],
+			rows: rows.map((row) => [
+				stringValue(row.id, "row"),
+				stringValue(row.decisionKind, "—"),
+				stringValue(row.reproduction, "—"),
+				stringValue(row.expectedBehavior, "—"),
+				stringValue(row.regressionPlan, "—"),
+				quality,
+			]),
+		};
+	}
+	if (kind === "harden") {
+		return {
+			headers: [
+				"Row",
+				"Kind",
+				"Boundary",
+				"Failure modes",
+				"Negative tests",
+				"Quality",
+			],
+			rows: rows.map((row) => [
+				stringValue(row.id, "row"),
+				stringValue(row.decisionKind, "—"),
+				stringValue(row.safetyBoundary, "—"),
+				arrayOfStrings(row.failureModes).join(", ") || "—",
+				stringValue(row.negativeTestPlan, "—"),
+				quality,
+			]),
+		};
+	}
+	if (kind === "improve") {
+		return {
+			headers: ["Row", "Kind", "Pain", "Outcome", "Success", "Quality"],
+			rows: rows.map((row) => [
+				stringValue(row.id, "row"),
+				stringValue(row.decisionKind, "—"),
+				stringValue(row.currentPain, "—"),
+				stringValue(row.desiredOutcome, "—"),
+				stringValue(row.successSignal, "—"),
+				quality,
+			]),
+		};
+	}
+	if (kind === "migrate") {
+		return {
+			headers: ["Row", "Kind", "Source", "Target", "Proof", "Quality"],
+			rows: rows.map((row) => [
+				stringValue(row.id, "row"),
+				stringValue(row.decisionKind, "—"),
+				stringValue(row.sourceBehavior, "—"),
+				stringValue(row.targetBehavior, "—"),
+				stringValue(row.equivalenceProof, "—"),
+				quality,
+			]),
+		};
+	}
+	return {
+		headers: ["Row", "Kind", "Current state", "Desired state", "Quality"],
+		rows: rows.map((row) => [
+			stringValue(row.id, "row"),
+			stringValue(row.decisionKind, "—"),
+			stringValue(row.currentState, "—"),
+			stringValue(row.desiredState, "—"),
+			quality,
+		]),
+	};
+}
+
+function dominantDecisionKind(rows: Record<string, unknown>[]): string {
+	const kinds = unique(
+		rows.map((row) => stringValue(row.decisionKind, "")).filter(Boolean),
+	);
+	return kinds.length === 1 ? kinds[0] : "mixed";
 }
 
 function renderPlan(

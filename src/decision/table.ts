@@ -81,6 +81,7 @@ function normalizeDecisionRow(
 	return {
 		id,
 		question: firstText(row.question, row.id, id),
+		decisionKind: normalizeDecisionKind(row.decisionKind),
 		currentState: text(row.currentState),
 		desiredState: text(row.desiredState),
 		rationale: text(row.rationale),
@@ -103,6 +104,28 @@ function normalizeDecisionRow(
 			row.traceabilityExemption,
 		),
 		noKbImpactReason: text(row.noKbImpactReason) || undefined,
+		targetRefs: unique(stringList(row.targetRefs)),
+		hypothesis: text(row.hypothesis) || undefined,
+		invariant: text(row.invariant) || undefined,
+		probe: text(row.probe) || undefined,
+		expectedSafeBehavior: text(row.expectedSafeBehavior) || undefined,
+		stopCondition: text(row.stopCondition) || undefined,
+		reproduction: text(row.reproduction) || undefined,
+		expectedBehavior: text(row.expectedBehavior) || undefined,
+		regressionPlan: text(row.regressionPlan) || undefined,
+		safetyBoundary: text(row.safetyBoundary) || undefined,
+		failureModes: unique(stringList(row.failureModes)),
+		negativeTestPlan: text(row.negativeTestPlan) || undefined,
+		compatibilityImpact: text(row.compatibilityImpact) || undefined,
+		currentPain: text(row.currentPain) || undefined,
+		desiredOutcome: text(row.desiredOutcome) || undefined,
+		successSignal: text(row.successSignal) || undefined,
+		nonGoals: unique(stringList(row.nonGoals)),
+		sourceBehavior: text(row.sourceBehavior) || undefined,
+		targetBehavior: text(row.targetBehavior) || undefined,
+		preservedInvariants: unique(stringList(row.preservedInvariants)),
+		equivalenceProof: text(row.equivalenceProof) || undefined,
+		rollbackPlan: text(row.rollbackPlan) || undefined,
 	};
 }
 
@@ -173,6 +196,10 @@ function cloneDecisionRow(row: DecisionRow): DecisionRow {
 		alternatives: [...row.alternatives],
 		sourceRefs: [...row.sourceRefs],
 		proofRefs: [...row.proofRefs],
+		targetRefs: [...row.targetRefs],
+		failureModes: [...row.failureModes],
+		nonGoals: [...row.nonGoals],
+		preservedInvariants: [...row.preservedInvariants],
 	};
 }
 
@@ -190,6 +217,18 @@ function normalizeAgentAssessment(
 
 function generatedRowId(index: number): string {
 	return `DTR-${String(index + 1).padStart(3, "0")}`;
+}
+
+function normalizeDecisionKind(value: unknown): string {
+	const normalized = text(value).toLowerCase();
+	if (normalized === "debugging") return "debug";
+	if (["bug", "bugfix", "defect"].includes(normalized)) return "fix";
+	if (["security", "safety"].includes(normalized)) return "harden";
+	if (["enhance", "enhancement"].includes(normalized)) return "improve";
+	if (["migration", "refactor", "refactoring"].includes(normalized)) {
+		return "migrate";
+	}
+	return normalized;
 }
 
 function firstText(...values: unknown[]): string {

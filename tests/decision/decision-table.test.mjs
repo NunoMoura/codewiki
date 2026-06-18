@@ -37,6 +37,7 @@ describe("decision tables", () => {
 		assert.equal(table.rows.length, 1);
 		assert.equal(table.rows[0].approval, "approved");
 		assert.equal(table.rows[0].changeType, "code");
+		assert.equal(table.rows[0].decisionKind, "improve");
 		assert.deepEqual(table.rows[0].affectedLayers, ["system", "source"]);
 	});
 
@@ -262,6 +263,99 @@ describe("decision exit and iteration runner", () => {
 		);
 	});
 
+	it("adds kind-specific standards for debug decisions", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-debug",
+					decisionKind: "debug",
+					currentState: "Runtime completion behavior is uncertain.",
+					desiredState: "Runtime completion behavior is verified.",
+					rationale: "Availability requires known safety boundaries.",
+					...decisionQualityFields({
+						decisionKind: "debug",
+						currentPain: undefined,
+						desiredOutcome: undefined,
+						successSignal: undefined,
+						nonGoals: undefined,
+					}),
+					approval: "approved",
+					sourceRefs: ["kb:system/runtime.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table, {
+			knowledgeDelta: {
+				updatedRefs: ["kb:system/runtime.md"],
+				sections: [],
+			},
+		});
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+
+		assert.equal(exit.passed, false);
+		assert.deepEqual(
+			exit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.startsWith("missing_debug_"))
+				.sort(),
+			[
+				"missing_debug_expected_safe_behavior",
+				"missing_debug_hypothesis",
+				"missing_debug_invariant",
+				"missing_debug_probe",
+				"missing_debug_stop_condition",
+				"missing_debug_target",
+			],
+		);
+		assert.equal(standards.decision_kind_classified.status, "met");
+		assert.equal(standards.debug_decision_focused.status, "unmet");
+	});
+
+	it("passes kind-specific standards for a complete migration decision", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-migrate",
+					currentState: "Decision rows are untyped.",
+					desiredState: "Decision rows carry kind-specific intent.",
+					rationale: "Planning can trust better structured intent.",
+					...decisionQualityFields({
+						decisionKind: "refactor",
+						currentPain: undefined,
+						desiredOutcome: undefined,
+						successSignal: undefined,
+						nonGoals: undefined,
+					}),
+					sourceBehavior: "Rows use only shared decision fields.",
+					targetBehavior:
+						"Rows include shared fields plus kind-specific fields.",
+					preservedInvariants: ["Decision remains the only intent loop."],
+					equivalenceProof: "Existing shared standards still pass.",
+					rollbackPlan: "Treat decisionKind as optional metadata if needed.",
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table, {
+			knowledgeDelta: {
+				updatedRefs: ["kb:system/decision-loop.md"],
+				sections: [],
+			},
+		});
+		const standards = Object.fromEntries(
+			exit.qualityStandards.map((standard) => [standard.id, standard]),
+		);
+
+		assert.equal(table.rows[0].decisionKind, "migrate");
+		assert.equal(exit.passed, true);
+		assert.equal(standards.migrate_decision_equivalent.status, "met");
+	});
+
 	it("blocks high-risk decisions without quality evidence", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -392,6 +486,8 @@ describe("decision exit and iteration runner", () => {
 				"evidence_sufficient",
 				"risks_and_alternatives_considered",
 				"knowledge_impact_accounted",
+				"decision_kind_classified",
+				"improve_decision_outcome",
 			],
 		);
 		assert.equal(result.traceEvents[0].data?.exit.status, "exit");

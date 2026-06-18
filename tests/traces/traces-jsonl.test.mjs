@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
+import { invalidTraceRefs } from "../../src/traces/refs.ts";
 import {
 	TraceAppendConflictError,
 	TraceClosedAppendError,
@@ -95,6 +96,13 @@ describe("trace JSONL core", () => {
 			"src/traces/schema.ts",
 			"git:tree:abc123",
 		]);
+	});
+
+	it("treats active agent skill paths as canonical refs", () => {
+		assert.deepEqual(
+			invalidTraceRefs([".agents/skills/codewiki-decision/SKILL.md"]),
+			[],
+		);
 	});
 
 	it("creates target loop iteration trace events", () => {
