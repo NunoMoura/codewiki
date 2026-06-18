@@ -69,6 +69,10 @@ describe("install readiness checklist", () => {
 			packageJson.scripts["test:external-dogfood"],
 			"node tests/runtime/external-package-dogfood-smoke.mjs",
 		);
+		assert.equal(
+			packageJson.scripts["test:external-failures"],
+			"node tests/runtime/external-package-failures-smoke.mjs",
+		);
 	});
 
 	it("does not bundle Pi as a runtime dependency", () => {

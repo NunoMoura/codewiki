@@ -27,6 +27,11 @@ guarded decision/planning/runtime/implementation/archive writes, collects a real
 worker output file through the runtime host runner, releases the claim, and closes
 the trace.
 
+`npm run test:external-failures` is the fresh-project package failure smoke. It
+packs and installs CodeWiki outside this checkout, then verifies missing,
+malformed, blocked, mixed-outcome, worktree-prepare, and worktree-cleanup runtime
+failure paths through installed package artifacts.
+
 `npm run test:readiness` is the repo-local readiness checklist. It verifies
 package metadata is present, Pi is not bundled as a runtime dependency,
 `.codewiki` top-level state has the target shape, repo-local Pi settings enable
