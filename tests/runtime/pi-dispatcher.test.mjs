@@ -68,6 +68,12 @@ function plannedDispatch() {
 	return { plan, claimBatch, queue };
 }
 
+function workerReportExample(prompt) {
+	const match = /```codewiki-worker-report\n([\s\S]*?)\n```/.exec(prompt);
+	assert.ok(match?.[1]);
+	return JSON.parse(match[1]);
+}
+
 describe("Pi worker dispatcher seam", () => {
 	it("creates scoped implementation worker prompts", () => {
 		const { plan } = plannedDispatch();
@@ -91,6 +97,25 @@ describe("Pi worker dispatcher seam", () => {
 		assert.equal(prompt.includes("codewiki-worker-report"), true);
 		assert.equal(prompt.includes("Worker output is evidence only"), true);
 		assert.equal(prompt.endsWith("SUFFIX"), true);
+		const report = workerReportExample(prompt);
+		assert.equal(report.status, "completed");
+		assert.equal(
+			report.workUnitRef,
+			"trace:<planning-iteration>#work:WU-a",
+		);
+		assert.deepEqual(report.changedFiles, [
+			"src/example.ts",
+			"tests/example.test.mjs",
+		]);
+		assert.deepEqual(report.checksRun, [
+			"node --test tests/example.test.mjs",
+		]);
+		assert.equal(report.changes[0].id, "IC-WU-a");
+		assert.equal(report.changes[0].checkResults[0].status, "pass");
+		assert.equal(
+			report.changes[0].acceptanceEvidenceItems[0].criterionId,
+			"AC-001",
+		);
 	});
 
 	it("includes worktree refs from runtime claims in prompts", async () => {

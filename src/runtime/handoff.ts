@@ -263,23 +263,46 @@ function expectedCompletionContract(): RuntimeHandoffCompletionContract {
 	return {
 		collector: "collectPiWorkerResults",
 		statusValues: ["completed", "blocked", "failed"],
-		requiredFields: ["status", "changes", "checks", "acceptanceEvidence"],
+		requiredFields: [
+			"status",
+			"workUnitRef",
+			"changedFiles",
+			"checksRun",
+			"changes[].checkResults",
+			"changes[].acceptanceEvidenceItems",
+		],
 		proofFields: [
-			"changed_files",
-			"checks_run",
-			"head_sha",
-			"tree_sha",
-			"working_tree_digest",
-			"validation_ref",
+			"changedFiles",
+			"checksRun",
+			"contentProofRefs",
+			"headSha",
+			"treeSha",
+			"workingTreeDigest",
+			"validationRef",
 		],
 		example: {
 			status: "completed",
-			changed_files: ["src/example.ts", "tests/example.test.mjs"],
-			checks_run: ["node --test tests/example.test.mjs"],
+			workUnitRef: "trace:<planning-iteration>#work:<work-unit-id>",
+			changedFiles: ["src/example.ts", "tests/example.test.mjs"],
+			checksRun: ["node --test tests/example.test.mjs"],
+			contentProofRefs: ["sha256:<working-tree-digest>"],
+			residualRisks: [],
+			blockers: [{ message: "", refs: [] }],
+			notes: "",
 			changes: [
 				{
 					id: "IC-worker-001",
-					checkResults: [{ command: "npm test", status: "pass" }],
+					planningRefs: [
+						"trace:<planning-iteration>#work:<work-unit-id>",
+					],
+					codePaths: ["src/example.ts"],
+					testPaths: ["tests/example.test.mjs"],
+					checkResults: [
+						{
+							command: "node --test tests/example.test.mjs",
+							status: "pass",
+						},
+					],
 					acceptanceEvidenceItems: [
 						{
 							criterionId: "AC-001",

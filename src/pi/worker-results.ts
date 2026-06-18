@@ -139,10 +139,8 @@ function completionStatus(
 		return "failed";
 	}
 	const status = text(parsed.data.status).toLowerCase();
-	if (["completed", "blocked", "failed"].includes(status)) {
-		return status as ImplementationWorkerResultInput["status"];
-	}
-	return "completed";
+	if (isWorkerStatus(status)) return status;
+	return status ? "failed" : "completed";
 }
 
 function completionPlanningRefs(
@@ -180,6 +178,7 @@ function completionMessage(
 ): Partial<ImplementationWorkerResultInput> {
 	const message = [
 		parsed.parseError,
+		invalidStatusMessage(data.status),
 		text(data.message ?? data.summary),
 		text(data.notes),
 		...stringList(data.residualRisks),
@@ -258,6 +257,18 @@ function completionBlockers(
 ): Partial<ImplementationWorkerResultInput> {
 	const blockers = objectList<ImplementationWorkerBlockerInput>(data.blockers);
 	return blockers.length > 0 ? { blockers } : {};
+}
+
+function invalidStatusMessage(value: unknown): string {
+	const original = text(value);
+	const status = original.toLowerCase();
+	return status && !isWorkerStatus(status)
+		? `Worker completion status "${original}" is invalid.`
+		: "";
+}
+
+function isWorkerStatus(status: string): status is "completed" | "blocked" | "failed" {
+	return ["completed", "blocked", "failed"].includes(status);
 }
 
 function optionalTextField<Key extends string>(

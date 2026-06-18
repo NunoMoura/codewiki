@@ -87,6 +87,20 @@ describe("Pi worker completion normalization", () => {
 					{
 						id: "IC-worker-report",
 						planningRefs: [planningRef],
+						checkResults: [
+							{
+								command:
+									"node --test tests/runtime/pi-worker-results.test.mjs",
+								status: "pass",
+							},
+						],
+						acceptanceEvidenceItems: [
+							{
+								criterionId: "AC-001",
+								summary: "Report evidence normalized.",
+								evidenceRefs: ["tests/runtime/pi-worker-results.test.mjs"],
+							},
+						],
 					},
 				],
 			})}\n\`\`\``,
@@ -104,6 +118,11 @@ describe("Pi worker completion normalization", () => {
 			"Implemented worker report parsing. Implementation loop must still evaluate exit. No runtime process adapter yet.",
 		);
 		assert.equal(result.changeInputs[0].id, "IC-worker-report");
+		assert.equal(result.changeInputs[0].checkResults[0].status, "pass");
+		assert.equal(
+			result.changeInputs[0].acceptanceEvidenceItems[0].criterionId,
+			"AC-001",
+		);
 	});
 
 	it("normalizes blocked and failed completions without log refs", () => {
@@ -173,6 +192,22 @@ describe("Pi worker completion normalization", () => {
 		assert.match(
 			result.message,
 			/Worker completion output contains multiple codewiki-worker-report blocks\./,
+		);
+	});
+
+	it("fails worker reports with invalid status values", () => {
+		const result = normalizePiWorkerCompletion({
+			dispatch: dispatch(),
+			output: `\`\`\`codewiki-worker-report\n${JSON.stringify({
+				status: "completed | blocked | failed",
+				changedFiles: ["src/pi/worker-results.ts"],
+			})}\n\`\`\``,
+		});
+
+		assert.equal(result.status, "failed");
+		assert.match(
+			result.message,
+			/Worker completion status "completed \| blocked \| failed" is invalid\./,
 		);
 	});
 

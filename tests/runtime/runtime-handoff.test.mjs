@@ -150,6 +150,28 @@ describe("runtime handoff manifest", () => {
 			"blocked",
 			"failed",
 		]);
+		assert.deepEqual(manifest.expectedCompletion.requiredFields, [
+			"status",
+			"workUnitRef",
+			"changedFiles",
+			"checksRun",
+			"changes[].checkResults",
+			"changes[].acceptanceEvidenceItems",
+		]);
+		assert.deepEqual(manifest.expectedCompletion.proofFields, [
+			"changedFiles",
+			"checksRun",
+			"contentProofRefs",
+			"headSha",
+			"treeSha",
+			"workingTreeDigest",
+			"validationRef",
+		]);
+		assert.equal(
+			manifest.expectedCompletion.example.changes[0]
+				.acceptanceEvidenceItems[0].criterionId,
+			"AC-001",
+		);
 		assert.equal(
 			manifest.release.failedStart.helper,
 			"createRuntimeFailedWorkerStartReleaseEvents",
