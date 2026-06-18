@@ -6,6 +6,8 @@ import {
 	assertProjectLocalMutationAllowed,
 	isProjectLocalCodewikiInstall,
 	PROJECT_LOCAL_INSTALL_REQUIRED_MESSAGE,
+	PROJECT_LOCAL_INSTALL_WARNING_MESSAGE,
+	projectLocalInstallWarning,
 	stripNonProjectInstallOverride,
 } from "../../src/pi/install-scope.ts";
 
@@ -48,6 +50,10 @@ describe("Pi project-local install guard", () => {
 		);
 
 		assert.equal(isProjectLocalCodewikiInstall(moduleUrl, projectRoot), false);
+		assert.equal(
+			projectLocalInstallWarning(moduleUrl, projectRoot),
+			PROJECT_LOCAL_INSTALL_WARNING_MESSAGE,
+		);
 		assert.throws(
 			() =>
 				assertProjectLocalMutationAllowed({

@@ -69,6 +69,20 @@ After `wiki_implement` consumes worker evidence, runtime runs a release check. T
 
 A future extension/host layer can implement the injected factory with Pi SDK sessions. That host layer also owns observing session refs and spawning/disposing sessions. Core remains testable and free of hard Pi SDK imports.
 
+## Automation gates
+
+Runtime automation remains supervised until production gates are met. Unattended
+worker dispatch, auto-merge, and auto-publish stay disabled until CodeWiki has
+multiple successful external project dogfoods, passing package failure-path
+smokes, no project-root ambiguity, no `.codewiki/runtime` scratch leakage after
+checks, green archive/hydrate validation, and explicit approval policy for
+destructive or externally visible actions.
+
+Worker completion is transport evidence only. Runtime may coordinate claims,
+worker starts, output collection, and releases, but semantic success still
+requires `wiki_implement` preview/append evidence and passing implementation exit
+standards.
+
 ## Progress boundaries
 
 Runtime should detect motion versus churn. It can stop, block, or ask for approval when iterations consume budget without moving exit conditions toward `exit`.

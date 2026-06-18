@@ -7,6 +7,9 @@ export const NON_PROJECT_INSTALL_OVERRIDE_FIELD = "allowNonProjectInstall";
 export const PROJECT_LOCAL_INSTALL_REQUIRED_MESSAGE =
 	"CodeWiki mutation requires a project-local Pi package installation. Install in this repository with: pi install -l npm:codewiki";
 
+export const PROJECT_LOCAL_INSTALL_WARNING_MESSAGE =
+	"CodeWiki is not loaded from this project's local Pi package install. Read-only commands are allowed, but mutation is disabled until you install in this repository with: pi install -l npm:codewiki";
+
 export interface ProjectLocalInstallGuardInput {
 	toolName: string;
 	ctx: CodewikiExtensionContext;
@@ -47,6 +50,16 @@ export function isProjectLocalCodewikiInstall(
 	if (modulePath.startsWith(projectPiRoot)) return true;
 	if (isSourceCheckoutPath(modulePath)) return true;
 	return modulePath.startsWith(root) && !isNodeModulesPackagePath(modulePath);
+}
+
+export function projectLocalInstallWarning(
+	moduleUrl: string,
+	projectRoot: string | undefined,
+): string | undefined {
+	if (!projectRoot) return undefined;
+	return isProjectLocalCodewikiInstall(moduleUrl, projectRoot)
+		? undefined
+		: PROJECT_LOCAL_INSTALL_WARNING_MESSAGE;
 }
 
 function modulePathFromUrl(moduleUrl: string): string {

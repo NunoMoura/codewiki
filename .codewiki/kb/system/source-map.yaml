@@ -37,6 +37,7 @@ components:
     tests:
       - tests/scaffold.test.mjs
       - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/project-local-install-smoke.mjs
       - tests/runtime/external-package-dogfood-smoke.mjs
       - tests/runtime/external-package-failures-smoke.mjs
       - tests/runtime/readiness-checklist.test.mjs
@@ -184,6 +185,7 @@ components:
       - tests/runtime/pi-tool-mutation-smoke.mjs
       - tests/runtime/pi-worker-results.test.mjs
       - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/project-local-install-smoke.mjs
       - tests/runtime/external-package-dogfood-smoke.mjs
       - tests/runtime/external-package-failures-smoke.mjs
     role: host_adapter

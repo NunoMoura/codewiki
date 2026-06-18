@@ -23,6 +23,11 @@ verifies `/wiki state` reflects the appended decision.
 starts Pi RPC mode from this checkout using `.pi/settings.json`, runs
 `/wiki state --board`, and verifies rendered output without starting a model turn.
 
+`npm run test:project-local-install` is the project-local package smoke. It
+installs the packed package under a fresh project's `.pi/npm/node_modules/codewiki`
+path and verifies bootstrap, config write, and guarded decision append without
+controlled-test overrides.
+
 `npm run test:external-dogfood` is the fresh-project package dogfood smoke. It
 packs and installs CodeWiki outside this checkout, runs `/wiki bootstrap`, drives
 guarded decision/planning/runtime/implementation/archive writes, collects a real
@@ -41,6 +46,20 @@ this checkout, CLI is absent from product host config, and docs do not contain
 stale public command, CLI, legacy trace-close, or state/status command wording.
 `npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
 audit sequence serially.
+
+## Production readiness gates
+
+Supported now: project-local package installs, supervised `/wiki` and `wiki_*`
+flows, guarded expected-byte/sequence mutation, and external sandbox
+compatibility. Gated before production automation: unattended runtime dispatch,
+auto-merge, auto-publish, global/user installs for normal mutation, and treating
+worker completion as truth without implementation preview.
+
+Before enabling unattended dispatch or auto-merge, require multiple successful
+external project dogfoods, passing package failure-path smokes, no project-root
+ambiguity, no `.codewiki/runtime` scratch leakage after checks, green
+archive/hydrate validation, and explicit user approval policy for destructive or
+externally visible actions.
 
 ## Rebuild rules
 

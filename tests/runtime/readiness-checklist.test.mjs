@@ -66,6 +66,10 @@ describe("install readiness checklist", () => {
 			"node tests/runtime/pi-install-smoke.mjs",
 		);
 		assert.equal(
+			packageJson.scripts["test:project-local-install"],
+			"node tests/runtime/project-local-install-smoke.mjs",
+		);
+		assert.equal(
 			packageJson.scripts["test:external-dogfood"],
 			"node tests/runtime/external-package-dogfood-smoke.mjs",
 		);
@@ -113,10 +117,15 @@ describe("install readiness checklist", () => {
 			".codewiki/kb/system/extension.md",
 			"utf8",
 		);
+		const runtimeDoc = readFileSync(".codewiki/kb/system/runtime.md", "utf8");
 		assert.match(readme, /pi install -l npm:codewiki/);
 		assert.match(extensionDoc, /pi install -l npm:codewiki/);
 		assert.match(readme, /Avoid global\/user installs/);
 		assert.match(extensionDoc, /Global\/user installs are discouraged/);
+		assert.match(readme, /Production readiness and automation gates/);
+		assert.match(extensionDoc, /Production readiness gates/);
+		assert.match(runtimeDoc, /Automation gates/);
+		assert.match(runtimeDoc, /Unattended\s+worker dispatch/i);
 	});
 
 	it("enables this checkout for repo-local Pi dogfooding", () => {

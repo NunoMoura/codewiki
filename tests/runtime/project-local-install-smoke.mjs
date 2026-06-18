@@ -1,0 +1,222 @@
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
+import { mkdir, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import { decisionQualityFields } from "../helpers/decision-row.mjs";
+
+function run(command, args, options = {}) {
+	const result = spawnSync(command, args, {
+		encoding: "utf8",
+		stdio: ["ignore", "pipe", "pipe"],
+		...options,
+	});
+	assert.equal(
+		result.status,
+		0,
+		`${command} ${args.join(" ")} failed\nSTDOUT:\n${result.stdout}\nSTDERR:\n${result.stderr}`,
+	);
+	return result;
+}
+
+function mockPi() {
+	const tools = [];
+	const commands = [];
+	return {
+		tools,
+		commands,
+		api: {
+			registerTool(tool) {
+				tools.push(tool);
+			},
+			registerCommand(name, command) {
+				commands.push({ name, command });
+			},
+			on() {},
+		},
+	};
+}
+
+function toolByName(pi, name) {
+	const tool = pi.tools.find((candidate) => candidate.name === name);
+	assert.ok(tool, `missing tool ${name}`);
+	return tool;
+}
+
+function commandByName(pi, name) {
+	const command = pi.commands.find((candidate) => candidate.name === name);
+	assert.ok(command, `missing command ${name}`);
+	return command.command;
+}
+
+function assertToolResult(result, pattern) {
+	assert.match(result.content[0].text, pattern);
+	assert.ok(result.details.result);
+	assert.equal(result.details.warnings, undefined);
+	return result.details.result;
+}
+
+async function expectedBytes(tracePath) {
+	return (await stat(tracePath)).size;
+}
+
+function traceHead(traceId, title, createdAt) {
+	return `${JSON.stringify({ type: "trace_head", traceId, title, createdAt })}\n`;
+}
+
+function decisionTableInput(createdAt) {
+	return {
+		id: "DT-project-local-install-smoke",
+		summary: "Prove project-local package install mutation.",
+		createdAt,
+		updatedAt: createdAt,
+		sourceRefs: ["README.md"],
+		rows: [
+			{
+				id: "DTR-project-local-install-smoke",
+				decisionKind: "harden",
+				currentState:
+					"Mutation guards require project-local package installs.",
+				desiredState:
+					"A package under the project's .pi/npm tree can bootstrap and append without override.",
+				rationale:
+					"This proves normal local installation works without controlled-test bypasses.",
+				...decisionQualityFields({
+					decisionKind: "harden",
+					safetyBoundary:
+						"Only project-local package installs may mutate without an explicit controlled-test override.",
+					failureModes: [
+						"Project-local package install is falsely rejected.",
+						"Mutation requires allowNonProjectInstall in normal local installs.",
+					],
+					negativeTestPlan:
+						"Install the package under .pi/npm and append a decision without allowNonProjectInstall.",
+					compatibilityImpact:
+						"Normal project-local installation remains the recommended path.",
+				}),
+				approval: "approved",
+				sourceRefs: ["README.md"],
+			},
+		],
+	};
+}
+
+const root = mkdtempSync(join(tmpdir(), "codewiki-project-local-install-"));
+try {
+	const packRoot = join(root, "pack");
+	const projectRoot = join(root, "project");
+	const projectPiNpmRoot = join(projectRoot, ".pi", "npm");
+	mkdirSync(packRoot, { recursive: true });
+	mkdirSync(projectPiNpmRoot, { recursive: true });
+	writeFileSync(
+		join(projectRoot, "package.json"),
+		`${JSON.stringify({ name: "codewiki-project-local-install", type: "module" }, null, "\t")}\n`,
+	);
+
+	const pack = run("npm", ["pack", "--pack-destination", packRoot]);
+	const tarball = pack.stdout.trim().split(/\r?\n/).at(-1);
+	assert.match(tarball, /^codewiki-.*\.tgz$/);
+	run("npm", ["install", "--prefix", projectPiNpmRoot, join(packRoot, tarball)]);
+	const packageRoot = join(projectPiNpmRoot, "node_modules", "codewiki");
+	assert.equal(existsSync(join(packageRoot, "dist", "pi", "extension.js")), true);
+
+	const { default: codewikiExtension } = await import(
+		pathToFileURL(join(packageRoot, "dist", "pi", "extension.js")).href
+	);
+	const pi = mockPi();
+	codewikiExtension(pi.api);
+	const wikiCommand = commandByName(pi, "wiki");
+	const decideTool = toolByName(pi, "wiki_decide");
+	const configTool = toolByName(pi, "wiki_config");
+	const notifications = [];
+	const ctx = {
+		cwd: projectRoot,
+		ui: {
+			notify(message, level) {
+				notifications.push({ message, level });
+			},
+		},
+	};
+
+	await assert.rejects(
+		() => toolByName(pi, "wiki_state").execute("pre-state", {}, undefined, undefined, ctx),
+		/No CodeWiki project found/,
+	);
+	await wikiCommand.handler("bootstrap --json", ctx);
+	assert.equal(existsSync(join(projectRoot, ".codewiki", "config.json")), true);
+	assert.equal(
+		notifications.some((notice) => notice.level === "warning"),
+		false,
+	);
+
+	const config = assertToolResult(
+		await configTool.execute(
+			"config-write",
+			{ input: { patch: { project: "project-local-install" } }, write: true },
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_config: resolved CodeWiki configuration\./,
+	);
+	assert.equal(config.config.project, "project-local-install");
+
+	const traceId = "TRACE-project-local-install-smoke";
+	const tracePath = join(projectRoot, ".codewiki", "traces", `${traceId}.jsonl`);
+	await mkdir(join(projectRoot, ".codewiki", "traces"), { recursive: true });
+	await writeFile(
+		tracePath,
+		traceHead(traceId, "Project local install smoke", "2026-06-18T14:00:00.000Z"),
+	);
+	const decided = assertToolResult(
+		await decideTool.execute(
+			"decide-append",
+			{
+				input: {
+					traceId,
+					mode: "append",
+					expectedBytes: await expectedBytes(tracePath),
+					nextSequence: 1,
+					createdAt: "2026-06-18T14:00:01.000Z",
+					tableInput: decisionTableInput("2026-06-18T14:00:01.000Z"),
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_decide: completed append run\./,
+	);
+	assert.equal(decided.loopResult.exit.passed, true);
+	assert.equal(decided.iterationEvent.data.exit.status, "exit");
+	assert.equal((await stat(tracePath)).size > 0, true);
+	const state = await wikiCommand.handler(`state --board --trace ${traceId} --json`, ctx);
+	assert.equal(state.data.workQueue.summary.ready, 0);
+	assert.equal(
+		notifications.some((notice) => notice.level === "warning"),
+		false,
+	);
+
+	console.log(
+		JSON.stringify(
+			{
+				ok: true,
+				packageRoot,
+				traceId,
+				mutatedWithoutOverride: true,
+			},
+			null,
+			2,
+		),
+	);
+} finally {
+	rmSync(root, { recursive: true, force: true });
+}

@@ -23,6 +23,7 @@ import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
 import {
 	assertProjectLocalMutationAllowed,
+	projectLocalInstallWarning,
 	stripNonProjectInstallOverride,
 } from "../install-scope.ts";
 import {
@@ -185,6 +186,7 @@ function wikiStateTool(): CodewikiToolDefinition {
 		),
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const root = await requireCodewikiRoot(ctx);
+			const warning = notifyInstallWarning(ctx, root);
 			const input = paramsObject(WIKI_STATE_TOOL_NAME, params, [
 				"view",
 				"traceId",
@@ -205,6 +207,7 @@ function wikiStateTool(): CodewikiToolDefinition {
 			return toolResult(
 				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${snapshot.workQueue.items.length} queued item(s).`,
 				stateToolPayload(snapshot, view),
+				warning,
 			);
 		},
 	};
@@ -266,6 +269,7 @@ function wikiConfigTool(): CodewikiToolDefinition {
 				args.input,
 			);
 			const root = await findCodewikiProjectRoot(ctx.cwd);
+			const warning = !args.write ? notifyInstallWarning(ctx, root) : undefined;
 			if (args.write) {
 				assertProjectLocalMutationAllowed({
 					toolName: "wiki_config",
@@ -285,6 +289,7 @@ function wikiConfigTool(): CodewikiToolDefinition {
 			return toolResult(
 				"wiki_config: resolved CodeWiki configuration.",
 				result,
+				warning,
 			);
 		},
 	};
@@ -337,6 +342,8 @@ function facadeTool<T extends object>(
 			const root = await findCodewikiProjectRoot(ctx.cwd);
 			const prepared = withRepoRoot(input, root);
 			assertAppendContract(name, prepared);
+			const warning =
+				prepared.mode === "append" ? undefined : notifyInstallWarning(ctx, root);
 			if (prepared.mode === "append") {
 				assertProjectLocalMutationAllowed({
 					toolName: name,
@@ -348,7 +355,11 @@ function facadeTool<T extends object>(
 			}
 			const coreInput = stripNonProjectInstallOverride(prepared);
 			const result = await run(coreInput as unknown as T, ctx);
-			return toolResult(`${name}: completed ${modeText(input)} run.`, result);
+			return toolResult(
+				`${name}: completed ${modeText(input)} run.`,
+				result,
+				warning,
+			);
 		},
 	};
 }
@@ -588,9 +599,22 @@ function modeText(input: object): string {
 	return typeof record.mode === "string" ? record.mode : "preview";
 }
 
-function toolResult(message: string, result: unknown): CodewikiToolResult {
+function notifyInstallWarning(
+	ctx: CodewikiExtensionContext,
+	projectRoot: string | undefined,
+): string | undefined {
+	const warning = projectLocalInstallWarning(import.meta.url, projectRoot);
+	if (warning) ctx.ui?.notify(warning, "warning");
+	return warning;
+}
+
+function toolResult(
+	message: string,
+	result: unknown,
+	warning?: string,
+): CodewikiToolResult {
 	return {
 		content: [{ type: "text", text: message }],
-		details: { result },
+		details: { result, ...(warning ? { warnings: [warning] } : {}) },
 	};
 }

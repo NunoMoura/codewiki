@@ -56,6 +56,7 @@ npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-mutation
 npm run test:pi-dogfood
+npm run test:project-local-install
 npm run test:external-dogfood
 npm run test:external-failures
 npm run test:readiness
@@ -72,6 +73,9 @@ Smoke command roles:
   and verifies `/wiki state`.
 - `npm run test:pi-dogfood`: builds `dist/**` and verifies repo-local
   `.pi/settings.json` loads `/wiki state --board` without a model turn.
+- `npm run test:project-local-install`: installs the packed package under a
+  fresh project's `.pi/npm/node_modules/codewiki` path and verifies bootstrap,
+  config write, and guarded decision append without controlled-test overrides.
 - `npm run test:external-dogfood`: packs and installs CodeWiki into a fresh
   external project, runs `/wiki bootstrap`, guarded lifecycle appends, runtime
   host worker-output collection, release, and archive close.
@@ -105,3 +109,28 @@ agent-harness isolation.
 Repo-local Pi settings load `pi-lens` and this checkout (`..`) for initial CodeWiki dogfooding. Build `dist/**` before starting Pi from a fresh checkout because the package manifest points at `dist/pi/extension.js`.
 
 Installed package use should be through Pi-owned `/wiki ...` commands and `wiki_*` tools, not through the transitional CLI or archived tools. Prefer read-only `/wiki state` and `/wiki explain` during early dogfooding; mutation-capable tools still require explicit expected byte/sequence checks.
+
+## Production readiness and automation gates
+
+Current supported posture:
+
+- Project-local package installation with `pi install -l npm:codewiki`.
+- Supervised `/wiki` and `wiki_*` use inside the repository being documented.
+- Guarded trace mutation with expected byte and sequence checks.
+- Runtime worker output treated as untrusted transport until `wiki_implement`
+  validates implementation evidence.
+- External sandbox, worktree, container, or agent-harness isolation supplied by
+  the user or host environment.
+
+Still gated before production automation:
+
+- Unattended runtime worker dispatch.
+- Auto-merge or auto-publish.
+- Treating worker completion as semantic truth without implementation preview.
+- Global/user CodeWiki installs for normal mutation workflows.
+
+Before enabling unattended dispatch or auto-merge, require: multiple successful
+external project dogfoods, passing failure-path package smokes, no project-root
+ambiguity, no `.codewiki/runtime` scratch leakage after checks, archive/hydrate
+validation green, and explicit user approval policy for destructive or externally
+visible actions.

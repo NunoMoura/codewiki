@@ -4,7 +4,10 @@ import { resolveWikiConfigFile } from "../../project/config-file.ts";
 import { buildProjectExplainView } from "../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
-import { assertProjectLocalMutationAllowed } from "../install-scope.ts";
+import {
+	assertProjectLocalMutationAllowed,
+	projectLocalInstallWarning,
+} from "../install-scope.ts";
 import {
 	renderBootstrapCommand,
 	renderCodewikiStateFooterStatus,
@@ -57,6 +60,7 @@ async function stateCommand(
 ): Promise<unknown> {
 	const options = parseStateOptions(args);
 	const root = await requireCodewikiRoot(ctx);
+	notifyInstallWarning(ctx, root);
 	const snapshot = await buildProjectWikiState({
 		repoRoot: root,
 		traceId: options.traceId,
@@ -86,6 +90,7 @@ async function resumeCommand(
 ): Promise<unknown> {
 	const options = parseTraceJsonOptions("resume", args);
 	const root = await requireCodewikiRoot(ctx);
+	notifyInstallWarning(ctx, root);
 	const snapshot = await buildProjectWikiState({
 		repoRoot: root,
 		traceId: options.traceId,
@@ -120,6 +125,7 @@ async function explainCommand(
 ): Promise<unknown> {
 	const options = parseExplainOptions(args);
 	const root = await requireCodewikiRoot(ctx);
+	notifyInstallWarning(ctx, root);
 	const view = await buildProjectExplainView({
 		repoRoot: root,
 		target: options.target,
@@ -138,6 +144,7 @@ async function configCommand(
 ): Promise<unknown> {
 	const options = parseTraceJsonOptions("config", args);
 	const root = await findCodewikiProjectRoot(ctx.cwd);
+	notifyInstallWarning(ctx, root);
 	const config = root
 		? await resolveWikiConfigFile(root, {})
 		: runWikiConfig({});
@@ -292,6 +299,14 @@ function notifyUsage(ctx: CodewikiExtensionContext): void {
 
 function notify(ctx: CodewikiExtensionContext, message: string): void {
 	ctx.ui?.notify(message, "info");
+}
+
+function notifyInstallWarning(
+	ctx: CodewikiExtensionContext,
+	projectRoot: string | undefined,
+): void {
+	const warning = projectLocalInstallWarning(import.meta.url, projectRoot);
+	if (warning) ctx.ui?.notify(warning, "warning");
 }
 
 function commandRenderOptions(
