@@ -95,6 +95,28 @@ describe("wiki_archive core facade", () => {
 		assert.equal(hydrate.action, "hydrate");
 		assert.equal(hydrate.hydration?.traceId, "TRACE-wiki-archive-close");
 		assert.equal(hydrate.hydration?.records.length, records.length + 1);
+
+		await assert.rejects(
+			() =>
+				runWikiArchive({
+					action: "hydrate",
+					stub: {
+						...close.stub,
+						gitRestoreRef: "refs/codewiki/archive/wrong-trace",
+					},
+					archivedRecords: [...records, close.closeRecord],
+				}),
+			/Hydration restore ref mismatch/,
+		);
+		await assert.rejects(
+			() =>
+				runWikiArchive({
+					action: "hydrate",
+					stub: close.stub,
+					archivedRecords: records,
+				}),
+			/Hydration close mismatch/,
+		);
 	});
 
 	it("appends trace close records with byte preflight", async () => {

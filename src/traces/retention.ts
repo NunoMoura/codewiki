@@ -118,12 +118,48 @@ export function buildTraceHydrationPlan(
 			`Hydration trace mismatch: ${state.head.traceId} does not match ${input.stub.traceId}.`,
 		);
 	}
+	assertHydrationStubMatchesTrace(input.stub, state);
 	return {
 		traceId: input.stub.traceId,
 		gitRestoreRef: input.stub.gitRestoreRef,
 		records: [...input.archivedRecords],
 		refs: traceRetentionRefs(input.stub),
 	};
+}
+
+function assertHydrationStubMatchesTrace(
+	stub: TraceRetentionStub,
+	state: ReturnType<typeof replayTrace>,
+): void {
+	const close = state.close;
+	if (!close) {
+		if (stub.closedAt || stub.closeReason) {
+			throw new Error(
+				`Hydration close mismatch: stub for ${stub.traceId} is closed but archived records are open.`,
+			);
+		}
+		return;
+	}
+	if (close.gitRestoreRef.trim() !== stub.gitRestoreRef.trim()) {
+		throw new Error(
+			`Hydration restore ref mismatch: ${close.gitRestoreRef} does not match ${stub.gitRestoreRef}.`,
+		);
+	}
+	if (close.headRef.trim() !== stub.headRef.trim()) {
+		throw new Error(
+			`Hydration head ref mismatch: ${close.headRef} does not match ${stub.headRef}.`,
+		);
+	}
+	if (stub.closedAt && close.createdAt !== stub.closedAt) {
+		throw new Error(
+			`Hydration close time mismatch: ${close.createdAt} does not match ${stub.closedAt}.`,
+		);
+	}
+	if (stub.closeReason && close.reason !== stub.closeReason) {
+		throw new Error(
+			`Hydration close reason mismatch: ${close.reason} does not match ${stub.closeReason}.`,
+		);
+	}
 }
 
 export function traceRetentionRefs(stub: TraceRetentionStub): string[] {
