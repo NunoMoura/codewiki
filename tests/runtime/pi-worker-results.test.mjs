@@ -139,11 +139,40 @@ describe("Pi worker completion normalization", () => {
 			dispatch: dispatch(),
 			output: "```codewiki-worker-report\nnot json\n```",
 		});
+		const arrayReport = normalizePiWorkerCompletion({
+			dispatch: dispatch(),
+			output: "```codewiki-worker-report\n[]\n```",
+		});
 
 		assert.equal(result.status, "failed");
 		assert.match(
 			result.message,
 			/Worker codewiki-worker-report is not valid JSON\./,
+		);
+		assert.equal(arrayReport.status, "failed");
+		assert.match(
+			arrayReport.message,
+			/Worker codewiki-worker-report is not valid JSON\./,
+		);
+	});
+
+	it("fails ambiguous completions with multiple worker reports", () => {
+		const result = normalizePiWorkerCompletion({
+			dispatch: dispatch(),
+			output: [
+				"```codewiki-worker-report",
+				JSON.stringify({ status: "completed", changedFiles: ["src/a.ts"] }),
+				"```",
+				"```json codewiki-worker-report",
+				JSON.stringify({ status: "failed", message: "Actually failed." }),
+				"```",
+			].join("\n"),
+		});
+
+		assert.equal(result.status, "failed");
+		assert.match(
+			result.message,
+			/Worker completion output contains multiple codewiki-worker-report blocks\./,
 		);
 	});
 

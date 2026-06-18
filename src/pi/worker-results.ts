@@ -17,7 +17,7 @@ interface ParsedCompletionOutput {
 }
 
 const WORKER_REPORT_FENCE =
-	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/i;
+	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/gi;
 
 export function collectPiWorkerResults(
 	inputs: PiWorkerCompletionInput[],
@@ -93,15 +93,22 @@ function parseCompletionText(output: string): ParsedCompletionOutput {
 	if (!trimmed) return { data: {} };
 	const parsedJson = parseJsonObject(trimmed);
 	if (parsedJson) return { data: parsedJson };
-	const reportMatch = WORKER_REPORT_FENCE.exec(trimmed);
-	if (!reportMatch?.[1]) {
+	const reportMatches = [...trimmed.matchAll(WORKER_REPORT_FENCE)];
+	if (reportMatches.length === 0 || !reportMatches[0]?.[1]) {
 		return {
 			data: { message: trimmed },
 			parseError:
 				"Worker completion output is missing a codewiki-worker-report block.",
 		};
 	}
-	const report = parseJsonObject(reportMatch[1].trim());
+	if (reportMatches.length > 1) {
+		return {
+			data: { message: trimmed },
+			parseError:
+				"Worker completion output contains multiple codewiki-worker-report blocks.",
+		};
+	}
+	const report = parseJsonObject(reportMatches[0][1].trim());
 	if (!report) {
 		return {
 			data: { message: trimmed },
@@ -114,7 +121,9 @@ function parseCompletionText(output: string): ParsedCompletionOutput {
 function parseJsonObject(value: string): Record<string, unknown> | undefined {
 	try {
 		const parsed = JSON.parse(value);
-		return typeof parsed === "object" && parsed !== null
+		return typeof parsed === "object" &&
+			parsed !== null &&
+			!Array.isArray(parsed)
 			? (parsed as Record<string, unknown>)
 			: undefined;
 	} catch {
