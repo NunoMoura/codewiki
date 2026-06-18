@@ -28,6 +28,7 @@ import {
 	type PiWorkerSessionFactory,
 } from "../pi/dispatcher.ts";
 import {
+	collectPiWorkerOutputFiles,
 	collectPiWorkerResults,
 	type PiWorkerCompletionInput,
 } from "../pi/worker-results.ts";
@@ -89,7 +90,7 @@ interface RunRuntimeHostOnceInput {
 	runtime: RunWikiRuntimeInput;
 	implementationInputs: RuntimeHostImplementationInput[];
 	sessionFactory: PiWorkerSessionFactory;
-	completionCollector: RuntimeHostCompletionCollector;
+	completionCollector?: RuntimeHostCompletionCollector;
 	gitStatus?: GitStatusSnapshotInput | GitStatusSnapshot | false;
 	promptPrefix?: string;
 	promptSuffix?: string;
@@ -443,11 +444,11 @@ async function completeRuntimeHostOnce(
 	dispatch: RuntimeHostDispatchContext,
 	workers: PiWorkerDispatchResult[],
 ): Promise<RunRuntimeHostOnceResult> {
-	const completions = await input.completionCollector({
-		runtime: dispatch.runtime,
-		handoff: dispatch.handoff,
+	const completions = await collectHostWorkerCompletions(
+		input,
+		dispatch,
 		workers,
-	});
+	);
 	const workerResults = collectPiWorkerResults(completions);
 	const implementationPreviews = await implementationPreviewsForHostOnce(
 		input,
@@ -461,6 +462,21 @@ async function completeRuntimeHostOnce(
 		workerResults,
 		implementationPreviews,
 	});
+}
+
+async function collectHostWorkerCompletions(
+	input: RunRuntimeHostOnceInput,
+	dispatch: RuntimeHostDispatchContext,
+	workers: PiWorkerDispatchResult[],
+): Promise<PiWorkerCompletionInput[]> {
+	if (input.completionCollector) {
+		return await input.completionCollector({
+			runtime: dispatch.runtime,
+			handoff: dispatch.handoff,
+			workers,
+		});
+	}
+	return await collectPiWorkerOutputFiles(workers);
 }
 
 async function resolveGitStatus(

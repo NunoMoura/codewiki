@@ -7,6 +7,7 @@ import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
 import {
 	previewRuntimeHostHandoff,
 	reviveRuntimeHostWorkerSessions,
@@ -566,6 +567,83 @@ describe("runtime host one-shot execution", () => {
 				"worker_completed",
 			);
 			assert.equal(result.implementationPreviews[0].append, undefined);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("collects Pi process-session output files by default", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const workerReport = [
+				"```codewiki-worker-report",
+				JSON.stringify({
+					status: "completed",
+					message: "Process session worker finished.",
+					changed_files: ["src/feature.ts", "tests/feature.test.mjs"],
+					checks_run: ["node --test tests/feature.test.mjs"],
+					working_tree_digest: "sha256:abc123",
+					changes: [changeInput(fixture.planningRef)],
+				}),
+				"```",
+			].join("\n");
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [
+					{
+						repoRoot: fixture.root,
+						traceId: fixture.traceId,
+						planningEvents: fixture.planningEvents,
+						nextSequence: 9,
+						createdAt: "2026-06-15T00:00:03.000Z",
+					},
+				],
+				sessionFactory: createPiProcessSessionFactory({
+					cwd: fixture.root,
+					command: process.execPath,
+					args: [
+						"-e",
+						`process.stdout.write(${JSON.stringify(workerReport)});`,
+					],
+				}),
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "release",
+			});
+
+			assert.equal(result.completions.length, 1);
+			assert.equal(
+				result.completions[0].output.includes("codewiki-worker-report"),
+				true,
+			);
+			assert.equal(
+				result.workers[0].outputFile.startsWith(
+					join(
+						fixture.root,
+						".codewiki/runtime/tmp/TRACE-host-once/runtime/pi-workers",
+					),
+				),
+				true,
+			);
+			assert.equal(result.workerResults[0].status, "completed");
+			assert.equal(
+				result.implementationPreviews[0].loopResult.readyForClosure,
+				true,
+			);
+			assert.deepEqual(result.releaseCheck, {
+				status: "ready",
+				reason: "implementation_exit_passed",
+				blockers: [],
+			});
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}
