@@ -365,7 +365,10 @@ try {
 		() => stateTool.execute("pre-bootstrap-state", {}, undefined, undefined, ctx),
 		/No CodeWiki project found/,
 	);
-	const bootstrap = await wikiCommand.handler("bootstrap --json", ctx);
+	const bootstrap = await wikiCommand.handler(
+		"bootstrap --allow-non-project-install --json",
+		ctx,
+	);
 	assert.equal(bootstrap.data.created.includes(".codewiki/config.json"), true);
 	const emptyState = await wikiCommand.handler("state --board --json", ctx);
 	assert.equal(emptyState.data.workQueue.summary.ready, 0);
@@ -388,6 +391,7 @@ try {
 			{
 				traceId,
 				mode: "append",
+				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				createdAt: "2026-06-18T09:00:01.000Z",
@@ -407,6 +411,7 @@ try {
 			{
 				traceId,
 				mode: "append",
+				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 2,
 				createdAt: "2026-06-18T09:00:02.000Z",
@@ -497,6 +502,7 @@ try {
 			{
 				action: "close",
 				mode: "append",
+				allowNonProjectInstall: true,
 				records: recordsBeforeClose,
 				expectedBytes: await expectedBytes(tracePath),
 				gitRestoreRef: "refs/codewiki/archive/TRACE-external-package-dogfood",

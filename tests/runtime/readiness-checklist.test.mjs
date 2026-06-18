@@ -107,6 +107,18 @@ describe("install readiness checklist", () => {
 		assert.equal(codewikiConfig.hosts.mcp.enabled, false);
 	});
 
+	it("recommends project-local CodeWiki installation", () => {
+		const readme = readFileSync("README.md", "utf8");
+		const extensionDoc = readFileSync(
+			".codewiki/kb/system/extension.md",
+			"utf8",
+		);
+		assert.match(readme, /pi install -l npm:codewiki/);
+		assert.match(extensionDoc, /pi install -l npm:codewiki/);
+		assert.match(readme, /Avoid global\/user installs/);
+		assert.match(extensionDoc, /Global\/user installs are discouraged/);
+	});
+
 	it("enables this checkout for repo-local Pi dogfooding", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);

@@ -58,7 +58,7 @@ try {
 		PI_CODING_AGENT_SESSION_DIR: join(root, "sessions"),
 		PI_OFFLINE: "1",
 	};
-	run("pi", ["install", packageRoot], { cwd: projectRoot, env });
+	run("pi", ["install", "-l", packageRoot], { cwd: projectRoot, env });
 
 	child = spawn(
 		"pi",
@@ -110,7 +110,11 @@ try {
 		true,
 	);
 
-	send({ id: "bootstrap", type: "prompt", message: "/wiki bootstrap" });
+	send({
+		id: "bootstrap",
+		type: "prompt",
+		message: "/wiki bootstrap --allow-non-project-install",
+	});
 	const bootstrapNotice = await waitFor(
 		messages,
 		(message) =>

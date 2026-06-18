@@ -4,6 +4,7 @@ import { resolveWikiConfigFile } from "../../project/config-file.ts";
 import { buildProjectExplainView } from "../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
+import { assertProjectLocalMutationAllowed } from "../install-scope.ts";
 import {
 	renderBootstrapCommand,
 	renderCodewikiStateFooterStatus,
@@ -152,7 +153,17 @@ async function bootstrapCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 ): Promise<unknown> {
-	const options = parseTraceJsonOptions("bootstrap", args);
+	const options = parseTraceJsonOptions("bootstrap", args, {
+		allowNonProjectInstall: true,
+	});
+	assertProjectLocalMutationAllowed({
+		toolName: "/wiki bootstrap",
+		ctx,
+		moduleUrl: import.meta.url,
+		input: {
+			allowNonProjectInstall: options.allowNonProjectInstall,
+		},
+	});
 	const result = await bootstrapCodewiki(ctx.cwd);
 	const rendered = renderBootstrapCommand(result, commandRenderOptions(ctx));
 	notify(
@@ -198,8 +209,13 @@ function parseStateOptions(args: string[]): StateCommandOptions {
 function parseTraceJsonOptions(
 	command: string,
 	args: string[],
-): { json: boolean; traceId?: string } {
-	const options: { json: boolean; traceId?: string } = { json: false };
+	flags: { allowNonProjectInstall?: boolean } = {},
+): { json: boolean; traceId?: string; allowNonProjectInstall?: boolean } {
+	const options: {
+		json: boolean;
+		traceId?: string;
+		allowNonProjectInstall?: boolean;
+	} = { json: false };
 	for (let index = 0; index < args.length; index++) {
 		const arg = args[index];
 		if (arg === "--json") {
@@ -208,6 +224,10 @@ function parseTraceJsonOptions(
 		}
 		if (arg === "--trace") {
 			options.traceId = requiredFlagValue(command, arg, args[++index]);
+			continue;
+		}
+		if (arg === "--allow-non-project-install" && flags.allowNonProjectInstall) {
+			options.allowNonProjectInstall = true;
 			continue;
 		}
 		throw new Error(`Unsupported /wiki ${command} option: ${arg}`);

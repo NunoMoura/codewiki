@@ -22,6 +22,10 @@ import {
 import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
 import {
+	assertProjectLocalMutationAllowed,
+	stripNonProjectInstallOverride,
+} from "../install-scope.ts";
+import {
 	renderCodewikiToolCall,
 	renderCodewikiToolResult,
 } from "../rendering/tool-renderers.ts";
@@ -224,6 +228,12 @@ function wikiConfigTool(): CodewikiToolDefinition {
 			renderCodewikiToolResult("wiki_config", result, options),
 		parameters: Type.Object(
 			{
+				allowNonProjectInstall: Type.Optional(
+					Type.Boolean({
+						description:
+							"Controlled-test override for write mode when CodeWiki is not loaded from this project's .pi install.",
+					}),
+				),
 				input: Type.Optional(
 					Type.Object(
 						{},
@@ -244,13 +254,29 @@ function wikiConfigTool(): CodewikiToolDefinition {
 			{ additionalProperties: false },
 		),
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-			const args = paramsObject("wiki_config", params, ["input", "write"]);
+			const args = paramsObject("wiki_config", params, [
+				"allowNonProjectInstall",
+				"input",
+				"write",
+			]);
+			assertOptionalBoolean("wiki_config", args, "allowNonProjectInstall");
 			assertOptionalBoolean("wiki_config", args, "write");
 			const input = optionalInput<RunWikiConfigInput>(
 				"wiki_config",
 				args.input,
 			);
 			const root = await findCodewikiProjectRoot(ctx.cwd);
+			if (args.write) {
+				assertProjectLocalMutationAllowed({
+					toolName: "wiki_config",
+					ctx,
+					projectRoot: root,
+					moduleUrl: import.meta.url,
+					input: {
+						allowNonProjectInstall: args.allowNonProjectInstall,
+					},
+				});
+			}
 			const result = args.write
 				? await writeConfig(root, input)
 				: root
@@ -311,7 +337,17 @@ function facadeTool<T extends object>(
 			const root = await findCodewikiProjectRoot(ctx.cwd);
 			const prepared = withRepoRoot(input, root);
 			assertAppendContract(name, prepared);
-			const result = await run(prepared as unknown as T, ctx);
+			if (prepared.mode === "append") {
+				assertProjectLocalMutationAllowed({
+					toolName: name,
+					ctx,
+					projectRoot: root,
+					moduleUrl: import.meta.url,
+					input: prepared,
+				});
+			}
+			const coreInput = stripNonProjectInstallOverride(prepared);
+			const result = await run(coreInput as unknown as T, ctx);
 			return toolResult(`${name}: completed ${modeText(input)} run.`, result);
 		},
 	};

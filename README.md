@@ -87,6 +87,21 @@ Smoke command roles:
 
 ## Pi usage
 
+Install CodeWiki project-locally so the CodeWiki package, Pi settings, and
+`.codewiki/**` state all belong to the repository being documented:
+
+```bash
+pi install -l npm:codewiki
+```
+
+Avoid global/user installs such as `pi install npm:codewiki` for normal use.
+Mutation-capable `/wiki` commands and `wiki_*` tools enforce project-local Pi
+installation by default and point users back to `pi install -l npm:codewiki`.
+
+CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` state
+and is intended to be compatible with external sandbox, worktree, container, or
+agent-harness isolation.
+
 Repo-local Pi settings load `pi-lens` and this checkout (`..`) for initial CodeWiki dogfooding. Build `dist/**` before starting Pi from a fresh checkout because the package manifest points at `dist/pi/extension.js`.
 
 Installed package use should be through Pi-owned `/wiki ...` commands and `wiki_*` tools, not through the transitional CLI or archived tools. Prefer read-only `/wiki state` and `/wiki explain` during early dogfooding; mutation-capable tools still require explicit expected byte/sequence checks.

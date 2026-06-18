@@ -6,6 +6,8 @@ Target Pi integration lives under `src/pi/**` and exposes terminal-first command
 
 The target CodeWiki OS still needs `wiki_*` tools. They should return as thin Pi adapter registrations over the harness-agnostic core APIs, not as a restoration of the old extension internals. The user-facing slash namespace is `/wiki`. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
 
+CodeWiki should be installed project-locally with `pi install -l npm:codewiki` so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. Global/user installs are discouraged for normal use. Mutation-capable `/wiki` commands and `wiki_*` tools enforce project-local Pi installation by default; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
+
 Mocked extension tests cover the intended package surface: `wiki_*` tools, `/wiki` commands, pure TUI renderers, and a prompt-guidance hook. Prompt guidance is additive system-prompt context only; it must not create workflow truth or replace explicit tool/trace evidence.
 
 `npm run test:pi-install` is the reproducible install smoke. It packs CodeWiki, installs the tarball into a temp npm prefix, installs that package through Pi with temp `PI_CODING_AGENT_DIR`/session dirs, and verifies Pi can resolve the package without writing repo-local or global Pi settings.

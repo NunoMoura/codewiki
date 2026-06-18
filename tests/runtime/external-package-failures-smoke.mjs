@@ -396,7 +396,7 @@ async function newProject(root, installed, name) {
 		plan: toolByName(pi, "wiki_plan"),
 	};
 	const ctx = { cwd: projectRoot, ui: { notify() {} } };
-	await commands.wiki.handler("bootstrap --json", ctx);
+	await commands.wiki.handler("bootstrap --allow-non-project-install --json", ctx);
 	return { projectRoot, ctx, commands, tools };
 }
 
@@ -429,6 +429,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 			{
 				traceId,
 				mode: "append",
+				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				createdAt: "2026-06-18T11:00:01.000Z",
@@ -446,6 +447,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 			{
 				traceId,
 				mode: "append",
+				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 2,
 				createdAt: "2026-06-18T11:00:02.000Z",
