@@ -219,9 +219,9 @@ export async function runRuntimeHostOnce(
 		return worktreeFailureHostResult(input, dispatch, WORKTREE_PREPARE_PHASE);
 	}
 	const workers = await startHostWorkers(input, dispatch);
+	const failedStartResult = await failedStartHostResult(input, dispatch, workers);
 	const result =
-		failedStartHostResult(input, dispatch, workers) ||
-		(await completeRuntimeHostOnce(input, dispatch, workers));
+		failedStartResult || (await completeRuntimeHostOnce(input, dispatch, workers));
 	return await withWorktreeCleanup(input, dispatch, result);
 }
 
@@ -387,11 +387,11 @@ function worktreeFailureHostResult(
 	});
 }
 
-function failedStartHostResult(
+async function failedStartHostResult(
 	input: RunRuntimeHostOnceInput,
 	dispatch: RuntimeHostDispatchContext,
 	workers: PiWorkerDispatchResult[],
-): RunRuntimeHostOnceResult | undefined {
+): Promise<RunRuntimeHostOnceResult | undefined> {
 	const failedStartReleaseBatch = failedStartBatch(
 		input,
 		dispatch.runtime,
@@ -400,6 +400,11 @@ function failedStartHostResult(
 	);
 	if (!failedStartReleaseBatch) return undefined;
 	const releaseCheck = failedStartReleaseCheck(workers);
+	const releaseAppend = await maybeAppendFailedStartReleases(
+		input,
+		dispatch,
+		failedStartReleaseBatch,
+	);
 	return hostOnceResult(input, {
 		gitStatus: dispatch.gitStatus,
 		runtime: dispatch.runtime,
@@ -414,6 +419,22 @@ function failedStartHostResult(
 		releaseCheck,
 		remediation: failedStartRemediation(releaseCheck, workers),
 		failedStartReleaseBatch,
+		...(releaseAppend ? { releaseAppend } : {}),
+	});
+}
+
+async function maybeAppendFailedStartReleases(
+	input: RunRuntimeHostOnceInput,
+	dispatch: RuntimeHostDispatchContext,
+	releaseBatch: RuntimeDispatchClaimBatch,
+): Promise<RuntimeDispatchClaimAppendResult | undefined> {
+	if (!input.appendReleases) return undefined;
+	return await appendRuntimeDispatchClaims(releaseBatch, {
+		repoRoot: requiredRepoRoot(
+			input.runtime.repoRoot,
+			"failed-start release append",
+		),
+		expectedBytesByTrace: releaseExpectedBytesByTrace(input, dispatch.runtime),
 	});
 }
 

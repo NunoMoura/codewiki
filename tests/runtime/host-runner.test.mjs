@@ -558,6 +558,67 @@ describe("runtime host one-shot execution", () => {
 				result.failedStartReleaseBatch.events[0].data.reason,
 				"worker_start_failed",
 			);
+			assert.equal(result.releaseAppend, undefined);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("optionally appends failed-start releases so claims return ready", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					createdAt: "2026-06-15T00:00:03.000Z",
+					config: { runtime: { automation: "assist", maxWorkers: 1 } },
+					queue: fixture.queue,
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: {
+					async create() {
+						throw new Error("session factory down");
+					},
+				},
+				completionCollector() {
+					assert.fail("completion collector should not run after failed start");
+				},
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "failed-start-release",
+			});
+			const trace = await readTrace(
+				join(fixture.root, traceFilePath(fixture.traceId)),
+			);
+			const events = trace.records.filter(
+				(record) => record.type === "trace_event",
+			);
+			const queue = buildWorkQueueView({
+				records: [...fixture.planningEvents, ...events],
+				generatedAt: "2026-06-15T00:00:05.000Z",
+			});
+
+			assert.equal(result.releaseCheck.status, "blocked");
+			assert.equal(result.releaseCheck.reason, "worker_start_failed");
+			assert.equal(result.failedStartReleaseBatch.events[0].sequence, 2);
+			assert.equal(result.releaseAppend.events.length, 1);
+			assert.equal(
+				result.releaseAppend.events[0].data.reason,
+				"worker_start_failed",
+			);
+			assert.deepEqual(
+				events.map((event) => event.event),
+				["runtime.work.claimed", "runtime.claim.released"],
+			);
+			assert.equal(
+				queue.items.find((item) => item.id === "WU-host-once")?.status,
+				"ready",
+			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}
@@ -791,6 +852,78 @@ describe("runtime host one-shot execution", () => {
 				"worktree.cleanup",
 				"worktree.cleanup",
 			]);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("reports cleanup failure after appending a completed-worker release", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					createdAt: "2026-06-15T00:00:03.000Z",
+					config: {
+						project: "host-runner-fixture",
+						runtime: {
+							automation: "assist",
+							maxWorkers: 1,
+							worktreeIsolation: "worktree",
+						},
+					},
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [
+					{
+						repoRoot: fixture.root,
+						traceId: fixture.traceId,
+						planningEvents: fixture.planningEvents,
+						nextSequence: 9,
+					},
+				],
+				sessionFactory: sessionFactory([]),
+				completionCollector({ workers }) {
+					return [completedWorkerOutput(fixture, workers[0])];
+				},
+				worktreeCommandMode: "execute",
+				worktreeCleanupMode: "execute",
+				worktreeRunner(_command, context) {
+					return context.step === "worktree.cleanup"
+						? { stderr: "cleanup refused", exitCode: 2 }
+						: { exitCode: 0, stdout: context.step };
+				},
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
+				releaseIdPrefix: "cleanup-failure-release",
+			});
+			const trace = await readTrace(
+				join(fixture.root, traceFilePath(fixture.traceId)),
+			);
+			const events = trace.records.filter(
+				(record) => record.type === "trace_event",
+			);
+
+			assert.equal(result.releaseCheck.reason, "implementation_exit_passed");
+			assert.equal(result.releaseAppend.events.length, 1);
+			assert.equal(
+				result.releaseAppend.events[0].data.reason,
+				"worker_completed",
+			);
+			assert.equal(result.worktreeCleanup, undefined);
+			assert.equal(result.remediation.route, "user");
+			assert.equal(result.remediation.reason, "worktree_cleanup_failed");
+			assert.match(result.remediation.blockers[0], /cleanup refused/);
+			assert.deepEqual(
+				events.map((event) => event.event),
+				["runtime.work.claimed", "runtime.claim.released"],
+			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}
