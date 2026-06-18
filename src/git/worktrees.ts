@@ -353,7 +353,8 @@ function rootsOverlap(left: string, right: string): boolean {
 
 function globRoot(path: string): string {
 	const wildcardIndex = path.indexOf("*");
-	const root = wildcardIndex === -1 ? path : path.slice(0, wildcardIndex);
+	if (wildcardIndex === -1) return path;
+	const root = path.slice(0, wildcardIndex);
 	return root.replace(/\/[^/]*$/, "").replace(/\/$/, "");
 }
 

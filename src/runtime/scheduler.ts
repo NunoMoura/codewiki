@@ -1,11 +1,8 @@
 import type { WorktreeRef } from "../git/worktrees.ts";
+import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
 import type { WorkQueueItem, WorkQueueView } from "../views/types.ts";
 
-export type RuntimeDispatchHoldReason = "capacity" | "path_conflict";
-
-export interface RuntimeSchedulerOptions {
-	maxWorkers?: number;
-}
+type RuntimeDispatchHoldReason = "capacity" | "path_conflict";
 
 export interface RuntimeDispatchItem {
 	workUnitId: string;
@@ -34,7 +31,7 @@ export interface RuntimeDispatchPlan {
 
 export function planRuntimeDispatch(
 	queue: WorkQueueView,
-	options: RuntimeSchedulerOptions = {},
+	options: { maxWorkers?: number } = {},
 ): RuntimeDispatchPlan {
 	const maxWorkers = Math.max(0, options.maxWorkers ?? 1);
 	const activeClaims = queue.items
@@ -110,11 +107,31 @@ function scopesOverlap(left: string, right: string): boolean {
 	const rightPath = normalizePathScope(right);
 	if (!leftPath || !rightPath) return false;
 	if (leftPath === rightPath) return true;
+	if (pathMatchesPattern(leftPath, rightPath)) return true;
+	if (pathMatchesPattern(rightPath, leftPath)) return true;
+	return rootsOverlap(globRoot(leftPath), globRoot(rightPath));
+}
+
+function rootsOverlap(left: string, right: string): boolean {
+	if (!left || !right) return false;
 	return (
-		leftPath.startsWith(`${rightPath}/`) || rightPath.startsWith(`${leftPath}/`)
+		left === right ||
+		left.startsWith(`${right}/`) ||
+		right.startsWith(`${left}/`)
 	);
 }
 
+function globRoot(pathScope: string): string {
+	const wildcardIndex = pathScope.indexOf("*");
+	if (wildcardIndex === -1) return pathScope;
+	const root = pathScope.slice(0, wildcardIndex);
+	return root.replace(/\/[^/]*$/, "").replace(/\/$/, "");
+}
+
 function normalizePathScope(pathScope: string): string {
-	return pathScope.trim().replace(/\\/g, "/").replace(/\/+$/, "");
+	return pathScope
+		.trim()
+		.replace(/\\/g, "/")
+		.replace(/^\.\//, "")
+		.replace(/\/+$/, "");
 }

@@ -75,6 +75,25 @@ describe("runtime scheduler", () => {
 		assert.equal(plan.held[0].conflictsWith, "WU-parent");
 	});
 
+	it("holds glob path conflicts against selected work", () => {
+		const plan = planRuntimeDispatch(
+			queue([
+				{ id: "WU-glob", pathScopes: ["src/pi/**"] },
+				{ id: "WU-file", pathScopes: ["src/pi/tools/index.ts"] },
+				{ id: "WU-safe", pathScopes: ["src/runtime/scheduler.ts"] },
+			]),
+			{ maxWorkers: 3 },
+		);
+
+		assert.deepEqual(
+			plan.dispatch.map((item) => item.workUnitId),
+			["WU-glob", "WU-safe"],
+		);
+		assert.equal(plan.held[0].workUnitId, "WU-file");
+		assert.equal(plan.held[0].reason, "path_conflict");
+		assert.equal(plan.held[0].conflictsWith, "WU-glob");
+	});
+
 	it("counts claimed work against capacity and path conflicts", () => {
 		const plan = planRuntimeDispatch(
 			queue([
