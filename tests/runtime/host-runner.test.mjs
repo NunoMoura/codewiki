@@ -90,7 +90,60 @@ async function runtimeFixture() {
 		records: planningEvents,
 		generatedAt: "2026-06-15T00:00:00.000Z",
 	});
-	const headAppend = await appendTraceRecord(
+	const headAppend = await seedTraceHead(root, traceId);
+	return { root, traceId, planningEvents, planningRef, queue, headAppend };
+}
+
+async function multiTraceRuntimeFixture() {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-host-runner-multi-"));
+	await mkdir(join(root, "src"), { recursive: true });
+	await mkdir(join(root, "tests"), { recursive: true });
+	await writeFile(
+		join(root, "src", "feature-a.ts"),
+		"export const featureA = true;\n",
+	);
+	await writeFile(
+		join(root, "src", "feature-b.ts"),
+		"export const featureB = true;\n",
+	);
+	await writeFile(join(root, "tests", "feature-a.test.mjs"), "assert.ok(true);\n");
+	await writeFile(join(root, "tests", "feature-b.test.mjs"), "assert.ok(true);\n");
+	const firstTraceId = "TRACE-host-multi-a";
+	const secondTraceId = "TRACE-host-multi-b";
+	const firstPlanningEvents = planningEventsForHostOnce(firstTraceId, {
+		workUnitId: "WU-host-a",
+		sourcePath: "src/feature-a.ts",
+		testPath: "tests/feature-a.test.mjs",
+	});
+	const secondPlanningEvents = planningEventsForHostOnce(secondTraceId, {
+		workUnitId: "WU-host-b",
+		sourcePath: "src/feature-b.ts",
+		testPath: "tests/feature-b.test.mjs",
+	});
+	const firstPlanningRef = planningWorkRef(firstPlanningEvents, "WU-host-a");
+	const secondPlanningRef = planningWorkRef(secondPlanningEvents, "WU-host-b");
+	const queue = buildWorkQueueView({
+		records: [...firstPlanningEvents, ...secondPlanningEvents],
+		generatedAt: "2026-06-15T00:00:00.000Z",
+	});
+	const firstHeadAppend = await seedTraceHead(root, firstTraceId);
+	const secondHeadAppend = await seedTraceHead(root, secondTraceId);
+	return {
+		root,
+		firstTraceId,
+		secondTraceId,
+		firstPlanningEvents,
+		secondPlanningEvents,
+		firstPlanningRef,
+		secondPlanningRef,
+		queue,
+		firstHeadAppend,
+		secondHeadAppend,
+	};
+}
+
+async function seedTraceHead(root, traceId) {
+	return await appendTraceRecord(
 		root,
 		createTraceHead({
 			traceId,
@@ -99,10 +152,12 @@ async function runtimeFixture() {
 		}),
 		0,
 	);
-	return { root, traceId, planningEvents, planningRef, queue, headAppend };
 }
 
-function planningEventsForHostOnce(traceId) {
+function planningEventsForHostOnce(traceId, options = {}) {
+	const workUnitId = options.workUnitId || "WU-host-once";
+	const sourcePath = options.sourcePath || "src/feature.ts";
+	const testPath = options.testPath || "tests/feature.test.mjs";
 	const table = createDecisionTable({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-15T00:00:01.000Z",
@@ -132,7 +187,7 @@ function planningEventsForHostOnce(traceId) {
 		createdAt: "2026-06-15T00:00:02.000Z",
 		workItemInputs: [
 			{
-				id: "WU-host-once",
+				id: workUnitId,
 				title: "Run host once",
 				decisionRefs: [decisionRef],
 				outcome: "Host one-shot starts worker and previews release readiness.",
@@ -141,8 +196,8 @@ function planningEventsForHostOnce(traceId) {
 					"Release check reports ready after implementation preview passes.",
 				],
 				componentRefs: ["runtime"],
-				pathScopes: ["src/feature.ts"],
-				verification: ["tests/feature.test.mjs"],
+				pathScopes: [sourcePath],
+				verification: [testPath],
 			},
 		],
 	}).traceEvents;
@@ -158,12 +213,12 @@ function approvedDecisionRef(events) {
 	return `trace:${iteration.id}#row:${row.id}`;
 }
 
-function planningWorkRef(events) {
+function planningWorkRef(events, workUnitId = "WU-host-once") {
 	const iteration = events.find(
 		(event) => event.event === "planning.iteration",
 	);
 	const item = iteration?.data?.output?.workItems?.find(
-		(candidate) => candidate.id === "WU-host-once",
+		(candidate) => candidate.id === workUnitId,
 	);
 	assert.ok(iteration);
 	assert.ok(item);
@@ -511,6 +566,136 @@ describe("runtime host one-shot execution", () => {
 				"worker_completed",
 			);
 			assert.equal(result.implementationPreviews[0].append, undefined);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("appends completed trace evidence while failed trace is released for retry", async () => {
+		const fixture = await multiTraceRuntimeFixture();
+		try {
+			const result = await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					createdAt: "2026-06-15T00:00:03.000Z",
+					config: { runtime: { automation: "assist", maxWorkers: 2 } },
+					queue: fixture.queue,
+					workerIdPrefix: "host-worker",
+					nextSequenceByTrace: {
+						[fixture.firstTraceId]: 1,
+						[fixture.secondTraceId]: 1,
+					},
+					expectedBytesByTrace: {
+						[fixture.firstTraceId]: fixture.firstHeadAppend.nextBytes,
+						[fixture.secondTraceId]: fixture.secondHeadAppend.nextBytes,
+					},
+				},
+				implementationInputs: [
+					{
+						repoRoot: fixture.root,
+						traceId: fixture.firstTraceId,
+						planningEvents: fixture.firstPlanningEvents,
+						nextSequence: 2,
+						createdAt: "2026-06-15T00:00:04.000Z",
+					},
+				],
+				sessionFactory: sessionFactory([]),
+				completionCollector({ workers }) {
+					assert.deepEqual(
+						workers.map((worker) => worker.workUnitId),
+						["WU-host-a", "WU-host-b"],
+					);
+					return [
+						{
+							dispatch: workers[0],
+							output: {
+								status: "completed",
+								message: "First worker finished.",
+								changed_files: [
+									"src/feature-a.ts",
+									"tests/feature-a.test.mjs",
+								],
+								checks_run: ["node --test tests/feature-a.test.mjs"],
+								working_tree_digest:
+									"sha256:1111111111111111111111111111111111111111111111111111111111111111",
+								changes: [
+									changeInput(fixture.firstPlanningRef, {
+										codePaths: ["src/feature-a.ts"],
+										testPaths: ["tests/feature-a.test.mjs"],
+										checkResults: [
+											{
+												command: "node --test tests/feature-a.test.mjs",
+												status: "pass",
+												phase: "green",
+												criterionId: "AC-001",
+												outputRef: "tests/feature-a.test.mjs",
+											},
+										],
+										acceptanceEvidenceItems: [
+											{
+												criterionId: "AC-001",
+												summary: "Feature A test passes.",
+												evidenceRefs: ["tests/feature-a.test.mjs"],
+											},
+										],
+									}),
+								],
+							},
+						},
+						terminalWorkerOutput(workers[1], "failed", "Second worker crashed."),
+					];
+				},
+				appendImplementation: true,
+				appendReleases: true,
+				releaseCreatedAt: "2026-06-15T00:00:05.000Z",
+				releaseIdPrefix: "mixed-release",
+			});
+			const firstTrace = await readTrace(
+				join(fixture.root, traceFilePath(fixture.firstTraceId)),
+			);
+			const secondTrace = await readTrace(
+				join(fixture.root, traceFilePath(fixture.secondTraceId)),
+			);
+			const firstEvents = firstTrace.records.filter(
+				(record) => record.type === "trace_event",
+			);
+			const secondEvents = secondTrace.records.filter(
+				(record) => record.type === "trace_event",
+			);
+			const queue = buildWorkQueueView({
+				records: [
+					...fixture.firstPlanningEvents,
+					...fixture.secondPlanningEvents,
+					...firstEvents,
+					...secondEvents,
+				],
+				generatedAt: "2026-06-15T00:00:06.000Z",
+			});
+
+			assert.equal(result.releaseCheck.reason, "worker_failed");
+			assert.equal(result.implementationAppends.length, 1);
+			assert.equal(result.releaseAppend.events.length, 2);
+			assert.deepEqual(
+				firstEvents.map((event) => event.event),
+				[
+					"runtime.work.claimed",
+					"implementation.iteration",
+					"runtime.claim.released",
+				],
+			);
+			assert.deepEqual(
+				secondEvents.map((event) => event.event),
+				["runtime.work.claimed", "runtime.claim.released"],
+			);
+			assert.equal(
+				queue.items.find((item) => item.id === "WU-host-a")?.status,
+				"done",
+			);
+			assert.equal(
+				queue.items.find((item) => item.id === "WU-host-b")?.status,
+				"ready",
+			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}

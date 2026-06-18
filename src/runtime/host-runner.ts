@@ -609,13 +609,13 @@ async function hostCompletionResult(
 async function maybeAppendImplementation(
 	input: RunRuntimeHostOnceInput,
 	dispatch: RuntimeHostDispatchContext,
-	completed: Pick<RunRuntimeHostOnceResult, "completions" | "workerResults">,
-	releaseCheck: RuntimeHostReleaseCheck,
+	completed: Pick<
+		RunRuntimeHostOnceResult,
+		"completions" | "workerResults" | "implementationPreviews"
+	>,
+	_releaseCheck: RuntimeHostReleaseCheck,
 ): Promise<RunWikiImplementResult[] | undefined> {
-	if (
-		releaseCheck.reason !== "implementation_exit_passed" ||
-		!input.appendImplementation
-	) {
+	if (!input.appendImplementation || !implementationPreviewsPassed(completed)) {
 		return undefined;
 	}
 	return await implementationAppendsForHostOnce(
@@ -624,6 +624,17 @@ async function maybeAppendImplementation(
 		dispatch.claimEvents,
 		completed.completions,
 		completed.workerResults,
+	);
+}
+
+function implementationPreviewsPassed(
+	completed: Pick<RunRuntimeHostOnceResult, "implementationPreviews">,
+): boolean {
+	return (
+		completed.implementationPreviews.length > 0 &&
+		completed.implementationPreviews.every(
+			(preview) => preview.loopResult.exit.passed,
+		)
 	);
 }
 
