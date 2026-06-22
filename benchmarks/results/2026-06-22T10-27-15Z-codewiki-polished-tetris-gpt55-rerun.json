@@ -1,0 +1,60 @@
+{
+	"schemaVersion": 1,
+	"runId": "2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun",
+	"taskId": "polished-tetris",
+	"system": "codewiki",
+	"model": "openai-codex/gpt-5.5",
+	"startedAt": "2026-06-22T10:27:26.205Z",
+	"completedAt": "2026-06-22T10:46:58.868Z",
+	"durationMs": 1175467,
+	"tokens": {
+		"input": 263787,
+		"output": 47278,
+		"cacheRead": 5009408,
+		"cacheWrite": 0,
+		"total": 5320473,
+		"costUsd": 5.241979
+	},
+	"productionReady": true,
+	"checks": [
+		{
+			"name": "logic tests",
+			"command": "npm test",
+			"status": "pass"
+		},
+		{
+			"name": "package dry run",
+			"command": "npm pack --dry-run",
+			"status": "pass"
+		},
+		{
+			"name": "local server smoke",
+			"command": "npm start + curl / and /src/game.js",
+			"status": "pass"
+		}
+	],
+	"scores": {
+		"functional": 5,
+		"visual": 4,
+		"ux": 4,
+		"maintainability": 4,
+		"traceability": 5
+	},
+	"artifacts": {
+		"repo": "benchmarks/artifacts/2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun/source.tgz",
+		"commit": "8bbf9cc359e05cbf647ea85b3cf4e0dffd68d776",
+		"preview": "npm start; open http://localhost:4173",
+		"screenshotOrVideo": "",
+		"traceRefs": [
+			"TRACE-polished-tetris"
+		],
+		"traceFile": "benchmarks/artifacts/2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun/TRACE-polished-tetris.jsonl",
+		"traceSha256": "b14b9f2c73a5e4bd612e53427f7453c384f0250df5a5f8e8d118bbb85e35079c",
+		"sourceSha256": "4fcfd7b80fcc4f403fd2aecc46d8a84f7f58ef2024d0e5ef57157083d38c5cf7",
+		"sessionRefs": [
+			"benchmarks/runs/2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun/sessions/2026-06-22T10-27-26-205Z_2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun.jsonl"
+		],
+		"sessionUsage": "benchmarks/artifacts/2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun/session-usage.json"
+	},
+	"notes": "Candidate CodeWiki run completed after rerun. Browser screenshot/video not captured; visual score is static code/CSS review plus local server smoke. Full session log remains local under benchmarks/runs and is not committed."
+}

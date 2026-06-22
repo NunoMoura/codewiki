@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 1,
+	"runId": "2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun",
+	"sessionFileLocal": "benchmarks/runs/2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun/sessions/2026-06-22T10-27-26-205Z_2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun.jsonl",
+	"assistantMessages": 78,
+	"startedAt": "2026-06-22T10:27:26.205Z",
+	"completedAt": "2026-06-22T10:46:58.868Z",
+	"usage": {
+		"input": 263787,
+		"output": 47278,
+		"cacheRead": 5009408,
+		"cacheWrite": 0,
+		"totalTokens": 5320473,
+		"cost": 5.241979
+	}
+}
