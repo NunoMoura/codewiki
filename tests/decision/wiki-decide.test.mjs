@@ -31,6 +31,21 @@ function tableInput(id = "DT-wiki-decide") {
 }
 
 describe("wiki_decide core facade", () => {
+	it("rejects natural-language shortcut input instead of silently producing empty output", async () => {
+		await assert.rejects(
+			() =>
+				runWikiDecide({
+					intent: "Build a benchmark app",
+					decision: "Proceed",
+				}),
+			/wiki_decide received unsupported input field intent/,
+		);
+		await assert.rejects(
+			() => runWikiDecide({ tableInput: tableInput() }),
+			/wiki_decide requires traceId/,
+		);
+	});
+
 	it("previews decision loop iterations", async () => {
 		const result = await runWikiDecide({
 			mode: "preview",

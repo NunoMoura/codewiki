@@ -1,4 +1,9 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import {
+	assertKnownInputKeys,
+	requiredArrayField,
+	requiredStringField,
+} from "./input-validation.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type { SourceMapContract } from "../knowledge/source-map.ts";
 import { normalizeImplementationChanges } from "../implementation/evidence.ts";
@@ -67,9 +72,47 @@ export interface RunWikiImplementResult {
 	append?: AppendSemanticLoopReportResult<ImplementationIterationResult>["append"];
 }
 
+const WIKI_IMPLEMENT_INPUT_KEYS = [
+	"repoRoot",
+	"traceId",
+	"planningEvents",
+	"changes",
+	"changeInputs",
+	"workerResults",
+	"workerClaims",
+	"claimEvents",
+	"expectedWorkerBaseSha",
+	"componentMap",
+	"requireTddEvidence",
+	"parentId",
+	"createdAt",
+	"mode",
+	"expectedBytes",
+	"nextSequence",
+	"expectedTraceId",
+	"snapshotRoots",
+	"snapshotExclude",
+	"proofPaths",
+	"changedPaths",
+	"evidencePaths",
+	"aggregateContentProof",
+] as const;
+
 export async function runWikiImplement(
 	input: RunWikiImplementInput,
 ): Promise<RunWikiImplementResult> {
+	assertKnownInputKeys(
+		"wiki_implement",
+		input as unknown as Record<string, unknown>,
+		WIKI_IMPLEMENT_INPUT_KEYS,
+	);
+	requiredStringField("wiki_implement", "repoRoot", input.repoRoot);
+	const traceId = requiredStringField(
+		"wiki_implement",
+		"traceId",
+		input.traceId,
+	);
+	requiredArrayField("wiki_implement", "planningEvents", input.planningEvents);
 	const mode = input.mode || "preview";
 	const nextSequence = input.nextSequence ?? 1;
 	if (!Number.isInteger(nextSequence) || nextSequence < 1) {
@@ -133,7 +176,7 @@ export async function runWikiImplement(
 		records: loopResult.traceRecords,
 		loop: "implementation",
 		nextSequence,
-		expectedTraceId: input.expectedTraceId ?? input.traceId,
+		expectedTraceId: input.expectedTraceId ?? traceId,
 	});
 	return {
 		mode,

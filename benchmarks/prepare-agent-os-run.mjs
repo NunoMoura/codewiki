@@ -163,11 +163,22 @@ Do not claim production readiness unless the result is shippable for this task.
 function codewikiInstructions() {
 	return `Use CodeWiki as the agent OS for the run.
 
-- Start from a fresh temporary project.
-- Install the current packed/local CodeWiki package project-locally in that
-  temporary project.
+- Run inside the fresh temporary project prepared by the benchmark host.
+- Use the project-local CodeWiki package already installed by the host. If the
+  package or /wiki-* tools are missing, report setup failure instead of falling
+  back to a global install.
 - Use CodeWiki's direct /wiki-* commands and wiki_* tools for decision,
   planning, implementation evidence, state, and archive where available.
+- Start or inspect one trace at .codewiki/traces/TRACE-<task-id>.jsonl.
+  If no trace exists, create only a trace_head record for that trace id, then
+  use wiki_decide/wiki_plan/wiki_implement append mode for semantic records.
+- wiki_decide input must be structured: { traceId, mode, expectedBytes,
+  nextSequence, tableInput: { id, createdAt, updatedAt, rows: [...] } }.
+  Do not pass shortcut fields such as intent, decision, or risks.
+- wiki_plan input must include traceId, decisionEvents, workItemInputs,
+  expectedBytes, and nextSequence.
+- wiki_implement input must include traceId, planningEvents, changeInputs,
+  expectedBytes, and nextSequence.
 - Preserve .codewiki/kb/** and .codewiki/traces/TRACE-*.jsonl as benchmark
   artifacts.
 - Runtime may coordinate worker work, but semantic completion must come from
@@ -179,7 +190,7 @@ function codewikiInstructions() {
 function plainPiInstructions() {
 	return `Use a normal Pi coding workflow without CodeWiki semantic loops.
 
-- Start from a fresh temporary project.
+- Run inside the fresh temporary project prepared by the benchmark host.
 - Do not install or load CodeWiki.
 - Do not create CodeWiki traces or KB files.
 - Use ordinary Pi tool use, local files, and tests to complete the task.

@@ -1,4 +1,9 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import {
+	assertKnownInputKeys,
+	requiredArrayField,
+	requiredStringField,
+} from "./input-validation.ts";
 import type { SourceMapContract } from "../knowledge/source-map.ts";
 import {
 	runPlanningIteration,
@@ -45,9 +50,33 @@ export interface RunWikiPlanResult {
 	append?: AppendSemanticLoopReportResult<PlanningIterationResult>["append"];
 }
 
+const WIKI_PLAN_INPUT_KEYS = [
+	"traceId",
+	"decisionEvents",
+	"workItems",
+	"workItemInputs",
+	"resolutions",
+	"resolutionInputs",
+	"componentMap",
+	"parentId",
+	"createdAt",
+	"mode",
+	"repoRoot",
+	"expectedBytes",
+	"nextSequence",
+	"expectedTraceId",
+] as const;
+
 export async function runWikiPlan(
 	input: RunWikiPlanInput,
 ): Promise<RunWikiPlanResult> {
+	assertKnownInputKeys(
+		"wiki_plan",
+		input as unknown as Record<string, unknown>,
+		WIKI_PLAN_INPUT_KEYS,
+	);
+	const traceId = requiredStringField("wiki_plan", "traceId", input.traceId);
+	requiredArrayField("wiki_plan", "decisionEvents", input.decisionEvents);
 	const mode = input.mode || "preview";
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
 	const loopInput = planningIterationInput(input);
@@ -77,7 +106,7 @@ export async function runWikiPlan(
 		records: loopResult.traceRecords,
 		loop: "planning",
 		nextSequence,
-		expectedTraceId: input.expectedTraceId ?? input.traceId,
+		expectedTraceId: input.expectedTraceId ?? traceId,
 	});
 	return {
 		mode,
@@ -91,7 +120,7 @@ function planningIterationInput(
 	input: RunWikiPlanInput,
 ): PlanningIterationInput {
 	return {
-		traceId: input.traceId,
+		traceId: requiredStringField("wiki_plan", "traceId", input.traceId),
 		decisionEvents: input.decisionEvents,
 		workItems: input.workItems,
 		workItemInputs: input.workItemInputs,

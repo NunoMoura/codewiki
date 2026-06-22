@@ -69,6 +69,17 @@ function workItemInput(decisionEventId) {
 }
 
 describe("wiki_plan core facade", () => {
+	it("rejects malformed planning facade input", async () => {
+		await assert.rejects(
+			() => runWikiPlan({ traceId: "TRACE-bad", work: [] }),
+			/wiki_plan received unsupported input field work/,
+		);
+		await assert.rejects(
+			() => runWikiPlan({ traceId: "TRACE-bad" }),
+			/wiki_plan requires decisionEvents array/,
+		);
+	});
+
 	it("previews planning loop iterations", async () => {
 		const traceId = "TRACE-wiki-plan-preview";
 		const decided = await decision(traceId);

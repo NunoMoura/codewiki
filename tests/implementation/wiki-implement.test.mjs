@@ -130,6 +130,17 @@ function changeInput(planningRef) {
 }
 
 describe("wiki_implement core facade", () => {
+	it("rejects malformed implementation facade input", async () => {
+		await assert.rejects(
+			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad", work: [] }),
+			/wiki_implement received unsupported input field work/,
+		);
+		await assert.rejects(
+			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad" }),
+			/wiki_implement requires planningEvents array/,
+		);
+	});
+
 	it("previews implementation with snapshot and automatic content proof", async () => {
 		const root = await fixture();
 		try {

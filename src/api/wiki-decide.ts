@@ -10,6 +10,7 @@ import type {
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { assertKnownInputKeys, requiredStringField } from "./input-validation.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
@@ -43,9 +44,31 @@ export interface RunWikiDecideResult {
 	append?: AppendSemanticLoopReportResult<DecisionIterationResult>["append"];
 }
 
+const WIKI_DECIDE_INPUT_KEYS = [
+	"traceId",
+	"table",
+	"tableInput",
+	"knowledgeDelta",
+	"currentStatePacket",
+	"requirementIds",
+	"parentId",
+	"createdAt",
+	"mode",
+	"repoRoot",
+	"expectedBytes",
+	"nextSequence",
+	"expectedTraceId",
+] as const;
+
 export async function runWikiDecide(
 	input: RunWikiDecideInput,
 ): Promise<RunWikiDecideResult> {
+	assertKnownInputKeys(
+		"wiki_decide",
+		input as unknown as Record<string, unknown>,
+		WIKI_DECIDE_INPUT_KEYS,
+	);
+	const traceId = requiredStringField("wiki_decide", "traceId", input.traceId);
 	const mode = input.mode || "preview";
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
 	const loopInput = decisionIterationInput(input);
@@ -75,7 +98,7 @@ export async function runWikiDecide(
 		records: loopResult.traceRecords,
 		loop: "decision",
 		nextSequence,
-		expectedTraceId: input.expectedTraceId ?? input.traceId,
+		expectedTraceId: input.expectedTraceId ?? traceId,
 	});
 	return {
 		mode,
@@ -89,7 +112,7 @@ function decisionIterationInput(
 	input: RunWikiDecideInput,
 ): DecisionIterationInput {
 	return {
-		traceId: input.traceId,
+		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
 		table: input.table,
 		tableInput: input.tableInput,
 		knowledgeDelta: input.knowledgeDelta,
