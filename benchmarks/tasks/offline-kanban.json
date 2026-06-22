@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "offline-kanban",
+	"title": "Offline Kanban App",
+	"kind": "functional_app",
+	"prompt": "Build a polished offline kanban app with columns, draggable cards, create/edit/delete flows, local persistence, search/filter, keyboard-friendly controls, responsive layout, and import/export of board data. The result must run locally without paid services.",
+	"acceptanceCriteria": [
+		"Users can create, edit, delete, move, search, and filter cards.",
+		"Board state persists across page reloads without a backend service.",
+		"Import and export flows preserve board data and handle invalid input gracefully.",
+		"The layout is usable on phone, tablet, and desktop widths.",
+		"The UI is polished enough for a user to judge from a screenshot or live preview.",
+		"Project includes run instructions and at least one automated or scripted sanity check."
+	],
+	"qualityGate": {
+		"minQualityScore": 84,
+		"minScores": {
+			"functional": 4,
+			"visual": 4,
+			"ux": 4,
+			"maintainability": 4,
+			"traceability": 4
+		}
+	},
+	"weights": {
+		"functional": 0.35,
+		"visual": 0.2,
+		"ux": 0.15,
+		"maintainability": 0.15,
+		"traceability": 0.15
+	},
+	"requiredArtifacts": [
+		"source repository or archive ref",
+		"commit or immutable artifact id",
+		"preview URL or local run command",
+		"screenshot or short walkthrough video",
+		"session or trace refs"
+	]
+}

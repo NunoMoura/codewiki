@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "breakout-polish",
+	"title": "Polished Breakout",
+	"kind": "visual_game",
+	"prompt": "Build a polished browser Breakout game with responsive layout, paddle controls, ball physics, brick grid, score, lives, win/lose states, restart, and clear visual feedback. The result must run locally without paid services.",
+	"acceptanceCriteria": [
+		"Paddle input works with keyboard, pointer, and touch where practical.",
+		"Ball, wall, paddle, and brick collisions feel consistent and fair.",
+		"Score, lives, win, lose, and restart states are visible and correct.",
+		"Game scales cleanly across mobile and desktop sizes.",
+		"Visual styling, motion, and feedback make the game easy to judge from a preview.",
+		"Project includes run instructions and at least one automated or scripted sanity check."
+	],
+	"qualityGate": {
+		"minQualityScore": 82,
+		"minScores": {
+			"functional": 4,
+			"visual": 4,
+			"ux": 4,
+			"maintainability": 4,
+			"traceability": 4
+		}
+	},
+	"weights": {
+		"functional": 0.35,
+		"visual": 0.2,
+		"ux": 0.15,
+		"maintainability": 0.15,
+		"traceability": 0.15
+	},
+	"requiredArtifacts": [
+		"source repository or archive ref",
+		"commit or immutable artifact id",
+		"preview URL or local run command",
+		"screenshot or short gameplay video",
+		"session or trace refs"
+	]
+}

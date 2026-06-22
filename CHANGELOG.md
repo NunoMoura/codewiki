@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added the agent-OS benchmark harness, visual/functional benchmark task specs,
+  and production benchmark gate command for quality-adjusted token/speed proof.
+
 ### Notes
 
-- No unreleased changes yet.
+- The benchmark gate intentionally fails until real CodeWiki and baseline run
+  results exist; no synthetic benchmark proof is included.
 
 ## [0.3.0] - 2026-06-22
 

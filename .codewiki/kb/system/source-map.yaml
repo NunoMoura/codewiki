@@ -41,6 +41,13 @@ components:
       - tests/runtime/external-package-failures-smoke.mjs
       - tests/runtime/readiness-checklist.test.mjs
     role: package_entrypoint
+  benchmarks:
+    doc: .codewiki/kb/system/benchmarks.md
+    source:
+      - benchmarks/**
+    tests:
+      - tests/benchmarks/**
+    role: production_readiness_evidence
   api:
     doc: .codewiki/kb/system/api.md
     source:

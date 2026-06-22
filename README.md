@@ -60,6 +60,8 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
+npm run benchmark:agent-os
+npm run benchmark:agent-os:gate
 npm run audit:codewiki
 ```
 
@@ -82,6 +84,10 @@ Smoke command roles:
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
 - `npm run test:readiness`: package, state-shape, install-gate, and stale
   wording checks.
+- `npm run benchmark:agent-os`: summarizes any available visual/functional
+  app benchmark results without enforcing the production benchmark gate.
+- `npm run benchmark:agent-os:gate`: enforces the CodeWiki-vs-baseline
+  quality-adjusted token/speed benchmark gate and fails until real results exist.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence
   run serially.
 
@@ -119,9 +125,12 @@ Still gated before production automation:
 - Auto-merge or auto-publish.
 - Treating worker completion as semantic truth without implementation preview.
 - Global/user CodeWiki installs for normal mutation workflows.
+- Public claims that CodeWiki is more token- or speed-efficient than baseline
+  agent workflows.
 
 Before enabling unattended worker start or auto-merge, require: multiple successful
 external package lifecycle smokes, passing failure-path package smokes, no project-root
 ambiguity, no `.codewiki/runtime` scratch leakage after checks, archive/hydrate
-validation green, and explicit user approval policy for destructive or externally
-visible actions.
+validation green, explicit user approval policy for destructive or externally
+visible actions, and passing agent-OS benchmark results for visual/functional app
+workloads.
