@@ -7,3 +7,4 @@ dist/
 .codewiki/runtime/
 .codewiki/session/queue.json
 .tmp-worktrees/
+benchmarks/runs/

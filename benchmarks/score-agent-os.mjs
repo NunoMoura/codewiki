@@ -39,7 +39,12 @@ function optionalNumber(value, label) {
 }
 
 function assertScore(value, label) {
-	if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 5) {
+	if (
+		typeof value !== "number" ||
+		!Number.isFinite(value) ||
+		value < 0 ||
+		value > 5
+	) {
 		throw new Error(`${label} must be a score from 0 to 5`);
 	}
 	return value;
@@ -76,15 +81,24 @@ export function validateTask(task, source = "task") {
 	assertString(task.title, `${source}.title`);
 	assertString(task.kind, `${source}.kind`);
 	assertString(task.prompt, `${source}.prompt`);
-	if (!Array.isArray(task.acceptanceCriteria) || task.acceptanceCriteria.length === 0) {
+	if (
+		!Array.isArray(task.acceptanceCriteria) ||
+		task.acceptanceCriteria.length === 0
+	) {
 		throw new Error(`${source}.acceptanceCriteria must be a non-empty array`);
 	}
 	for (const [index, criterion] of task.acceptanceCriteria.entries()) {
 		assertString(criterion, `${source}.acceptanceCriteria[${index}]`);
 	}
 	const qualityGate = assertObject(task.qualityGate, `${source}.qualityGate`);
-	optionalNumber(qualityGate.minQualityScore, `${source}.qualityGate.minQualityScore`);
-	const minScores = assertObject(qualityGate.minScores ?? {}, `${source}.qualityGate.minScores`);
+	optionalNumber(
+		qualityGate.minQualityScore,
+		`${source}.qualityGate.minQualityScore`,
+	);
+	const minScores = assertObject(
+		qualityGate.minScores ?? {},
+		`${source}.qualityGate.minScores`,
+	);
 	for (const key of SCORE_KEYS) {
 		if (minScores[key] !== undefined) {
 			assertScore(minScores[key], `${source}.qualityGate.minScores.${key}`);
@@ -112,8 +126,14 @@ export function validateRun(run, source = "run") {
 	optionalNumber(tokens.input, `${source}.tokens.input`);
 	optionalNumber(tokens.output, `${source}.tokens.output`);
 	optionalNumber(tokens.total, `${source}.tokens.total`);
-	if (tokens.total === undefined && tokens.input === undefined && tokens.output === undefined) {
-		throw new Error(`${source}.tokens must include total or input/output counts`);
+	if (
+		tokens.total === undefined &&
+		tokens.input === undefined &&
+		tokens.output === undefined
+	) {
+		throw new Error(
+			`${source}.tokens must include total or input/output counts`,
+		);
 	}
 	const scores = assertObject(run.scores, `${source}.scores`);
 	for (const key of SCORE_KEYS) {
@@ -126,18 +146,24 @@ export function validateRun(run, source = "run") {
 		assertObject(check, `${source}.checks[${index}]`);
 		assertString(check.name, `${source}.checks[${index}].name`);
 		if (!["pass", "fail", "skip"].includes(check.status)) {
-			throw new Error(`${source}.checks[${index}].status must be pass, fail, or skip`);
+			throw new Error(
+				`${source}.checks[${index}].status must be pass, fail, or skip`,
+			);
 		}
 	}
 	return run;
 }
 
 export function loadTasks(tasksDir = "benchmarks/tasks") {
-	return jsonFiles(tasksDir).map((path) => validateTask({ ...readJson(path), sourcePath: path }, path));
+	return jsonFiles(tasksDir).map((path) =>
+		validateTask({ ...readJson(path), sourcePath: path }, path),
+	);
 }
 
 export function loadRuns(resultsDir = "benchmarks/results") {
-	return jsonFiles(resultsDir).map((path) => validateRun({ ...readJson(path), sourcePath: path }, path));
+	return jsonFiles(resultsDir).map((path) =>
+		validateRun({ ...readJson(path), sourcePath: path }, path),
+	);
 }
 
 export function scoreQuality(scores, weights = DEFAULT_WEIGHTS) {
@@ -163,7 +189,10 @@ export function totalTokens(tokens) {
 }
 
 function passedChecks(run) {
-	return run.checks.length > 0 && run.checks.every((check) => check.status === "pass");
+	return (
+		run.checks.length > 0 &&
+		run.checks.every((check) => check.status === "pass")
+	);
 }
 
 function meetsMinScores(scores, minScores = {}) {
@@ -180,7 +209,10 @@ function meetsMinScores(scores, minScores = {}) {
 export function scoreRun(run, task) {
 	validateRun(run, run.sourcePath ?? run.runId);
 	validateTask(task, task?.sourcePath ?? task?.id ?? "task");
-	const qualityScore = scoreQuality(run.scores, task.weights ?? DEFAULT_WEIGHTS);
+	const qualityScore = scoreQuality(
+		run.scores,
+		task.weights ?? DEFAULT_WEIGHTS,
+	);
 	const tokenTotal = totalTokens(run.tokens);
 	const durationMs = run.durationMs ?? elapsedMs(run);
 	const minQualityScore = task.qualityGate?.minQualityScore ?? 80;
@@ -218,11 +250,17 @@ export function scoreRun(run, task) {
 
 function elapsedMs(run) {
 	if (!run.startedAt || !run.completedAt) {
-		throw new Error(`${run.runId}.durationMs is required when timestamps are absent`);
+		throw new Error(
+			`${run.runId}.durationMs is required when timestamps are absent`,
+		);
 	}
 	const started = Date.parse(run.startedAt);
 	const completed = Date.parse(run.completedAt);
-	if (!Number.isFinite(started) || !Number.isFinite(completed) || completed <= started) {
+	if (
+		!Number.isFinite(started) ||
+		!Number.isFinite(completed) ||
+		completed <= started
+	) {
 		throw new Error(`${run.runId} timestamps must produce a positive duration`);
 	}
 	return completed - started;
@@ -238,10 +276,16 @@ function betterRun(left, right) {
 	if (Math.abs(left.qualityScore - right.qualityScore) > EPSILON) {
 		return left.qualityScore > right.qualityScore ? left : right;
 	}
-	if (Math.abs(left.tokensPerQualityPoint - right.tokensPerQualityPoint) > EPSILON) {
-		return left.tokensPerQualityPoint < right.tokensPerQualityPoint ? left : right;
+	if (
+		Math.abs(left.tokensPerQualityPoint - right.tokensPerQualityPoint) > EPSILON
+	) {
+		return left.tokensPerQualityPoint < right.tokensPerQualityPoint
+			? left
+			: right;
 	}
-	return left.secondsPerQualityPoint <= right.secondsPerQualityPoint ? left : right;
+	return left.secondsPerQualityPoint <= right.secondsPerQualityPoint
+		? left
+		: right;
 }
 
 function geometricMean(values) {
@@ -330,10 +374,16 @@ function compareRuns(taskId, candidate, baseline) {
 	if (candidate.qualityScore + EPSILON < baseline.qualityScore) {
 		blockers.push("candidate quality is lower than baseline quality");
 	}
-	if (candidate.tokensPerQualityPoint > baseline.tokensPerQualityPoint + EPSILON) {
+	if (
+		candidate.tokensPerQualityPoint >
+		baseline.tokensPerQualityPoint + EPSILON
+	) {
 		blockers.push("candidate token efficiency is worse than baseline");
 	}
-	if (candidate.secondsPerQualityPoint > baseline.secondsPerQualityPoint + EPSILON) {
+	if (
+		candidate.secondsPerQualityPoint >
+		baseline.secondsPerQualityPoint + EPSILON
+	) {
 		blockers.push("candidate speed efficiency is worse than baseline");
 	}
 	return {
@@ -426,14 +476,18 @@ function evaluateGate({
 		baselineTokenGeomean !== null &&
 		candidateTokenGeomean > baselineTokenGeomean + EPSILON
 	) {
-		blockers.push(`${candidateSystem} token geomean is worse than ${baselineSystem}`);
+		blockers.push(
+			`${candidateSystem} token geomean is worse than ${baselineSystem}`,
+		);
 	}
 	if (
 		candidateSpeedGeomean !== null &&
 		baselineSpeedGeomean !== null &&
 		candidateSpeedGeomean > baselineSpeedGeomean + EPSILON
 	) {
-		blockers.push(`${candidateSystem} speed geomean is worse than ${baselineSystem}`);
+		blockers.push(
+			`${candidateSystem} speed geomean is worse than ${baselineSystem}`,
+		);
 	}
 	return {
 		status: blockers.length === 0 ? "pass" : "fail",

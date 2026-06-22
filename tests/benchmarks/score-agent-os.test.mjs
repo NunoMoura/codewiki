@@ -43,7 +43,11 @@ function run(taskId, system, overrides = {}) {
 		system,
 		model: "test-model",
 		durationMs: system === "codewiki" ? 600000 : 900000,
-		tokens: { input: 7000, output: 5000, total: system === "codewiki" ? 12000 : 18000 },
+		tokens: {
+			input: 7000,
+			output: 5000,
+			total: system === "codewiki" ? 12000 : 18000,
+		},
 		productionReady: true,
 		checks: [{ name: "tests", command: "npm test", status: "pass" }],
 		scores: {
@@ -115,7 +119,10 @@ describe("agent-OS benchmark scorer", () => {
 		});
 
 		assert.equal(summary.gate.status, "fail");
-		assert.equal(summary.gate.blockers[0], "need 2 compared production benchmark tasks, found 0");
+		assert.equal(
+			summary.gate.blockers[0],
+			"need 2 compared production benchmark tasks, found 0",
+		);
 	});
 
 	it("loads task and result JSON files from benchmark directories", () => {

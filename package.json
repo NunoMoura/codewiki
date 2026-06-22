@@ -33,6 +33,7 @@
 		"test:external-failures": "node tests/runtime/external-package-failures-smoke.mjs",
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
 		"benchmark:agent-os": "node benchmarks/score-agent-os.mjs",
+		"benchmark:agent-os:prepare": "node benchmarks/prepare-agent-os-run.mjs",
 		"benchmark:agent-os:gate": "node benchmarks/score-agent-os.mjs --gate",
 		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-mutation && npm run test:project-local-install && npm run test:external-lifecycle && npm run test:external-failures && npm run test:readiness && npm audit --omit=dev && git diff --check",
 		"typecheck": "tsc --noEmit"
