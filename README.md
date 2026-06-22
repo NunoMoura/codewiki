@@ -62,6 +62,7 @@ npm run test:external-failures
 npm run test:readiness
 npm run benchmark:agent-os
 npm run benchmark:agent-os:gate
+npm run benchmark:serve
 npm run audit:codewiki
 ```
 
@@ -88,6 +89,8 @@ Smoke command roles:
   app benchmark results without enforcing the production benchmark gate.
 - `npm run benchmark:agent-os:gate`: enforces the CodeWiki-vs-baseline
   quality-adjusted token/speed benchmark gate and fails until real results exist.
+- `npm run benchmark:serve`: extracts and serves the latest committed benchmark
+  artifact at `http://localhost:4173` for local review.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence
   run serially.
 

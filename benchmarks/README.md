@@ -30,11 +30,12 @@ refs.
 - `benchmarks/results/*.json` stores completed benchmark run summaries.
 - `benchmarks/score-agent-os.mjs` validates runs, computes quality-adjusted
   efficiency, and enforces the production benchmark gate.
+- `benchmarks/serve-artifact.mjs` extracts a committed benchmark source artifact
+  and serves it locally for review.
 
 Result files are intentionally small. Large screenshots, videos, hosted previews,
 Git commits, and session logs should be referenced by URI or Git ref instead of
 copied into the JSON result.
-
 
 ## Current required tasks
 
@@ -106,11 +107,20 @@ quality regression on any compared task.
 ```bash
 npm run benchmark:agent-os
 npm run benchmark:agent-os:gate
+npm run benchmark:serve
+npm run benchmark:serve -- --list
 ```
 
 The first command summarizes any available results and exits successfully when
 no results exist yet. The gate command is stricter and fails until enough real
 CodeWiki and baseline runs are present.
+
+`npm run benchmark:serve` serves the latest committed artifact at
+`http://localhost:4173`. Pass a run id to inspect a specific artifact:
+
+```bash
+npm run benchmark:serve -- 2026-06-22T10-27-15Z-codewiki-polished-tetris-gpt55-rerun
+```
 
 ## Result schema
 

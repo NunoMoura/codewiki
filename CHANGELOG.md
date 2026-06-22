@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Added the agent-OS benchmark harness, visual/functional benchmark task specs,
   and production benchmark gate command for quality-adjusted token/speed proof.
+- Added a local benchmark artifact viewer that serves committed artifacts on
+  localhost for manual review.
 
 ### Notes
 

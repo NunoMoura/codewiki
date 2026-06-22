@@ -10,7 +10,10 @@ import type {
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import { assertKnownInputKeys, requiredStringField } from "./input-validation.ts";
+import {
+	assertKnownInputKeys,
+	requiredStringField,
+} from "./input-validation.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,

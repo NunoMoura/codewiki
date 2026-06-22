@@ -18,9 +18,7 @@ function nextSequence(events) {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.loop === "decision",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);

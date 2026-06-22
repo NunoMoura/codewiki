@@ -21,9 +21,7 @@ import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.loop === "decision",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -31,9 +29,7 @@ function approvedDecisionRef(events) {
 }
 
 function planningWorkRef(events, workUnitId = "WU-implement") {
-	const iteration = events.find(
-		(event) => event.loop === "planning",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
@@ -132,7 +128,8 @@ function changeInput(planningRef) {
 describe("wiki_implement core facade", () => {
 	it("rejects malformed implementation facade input", async () => {
 		await assert.rejects(
-			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad", work: [] }),
+			() =>
+				runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad", work: [] }),
 			/wiki_implement received unsupported input field work/,
 		);
 		await assert.rejects(
