@@ -49,6 +49,13 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 		message: "Docs must use trace_close event wording.",
 	},
 	{
+		id: "prefixed_semantic_event_field",
+		scope: "product_documentation",
+		pattern: /["']event["']\s*:\s*["'](?:decision|planning|implementation)\./,
+		message:
+			"Stored semantic trace event examples must use split loop plus unprefixed event fields.",
+	},
+	{
 		id: "public_state_command",
 		scope: "product_documentation",
 		pattern: /\bwiki_status\b|\/wiki[-\s]+status\b/,

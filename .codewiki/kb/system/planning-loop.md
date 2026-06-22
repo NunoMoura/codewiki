@@ -104,7 +104,7 @@ Planning iterations should record compact facts:
 
 ```json
 {
-  "event": "planning.work_units_created",
+  "event": "work_units_created",
   "loop": "planning",
   "data": {
     "iteration": 1,

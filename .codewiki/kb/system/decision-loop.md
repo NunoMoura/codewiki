@@ -115,7 +115,7 @@ Decision iterations should record compact facts:
 
 ```json
 {
-  "event": "decision.rows_approved",
+  "event": "rows_approved",
   "loop": "decision",
   "data": {
     "iteration": 1,

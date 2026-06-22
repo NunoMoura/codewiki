@@ -140,7 +140,7 @@ Implementation iterations should record compact facts:
 
 ```json
 {
-  "event": "implementation.evidence_accepted",
+  "event": "evidence_accepted",
   "loop": "implementation",
   "data": {
     "iteration": 1,

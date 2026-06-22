@@ -143,7 +143,7 @@ Target trace iteration events follow this conceptual shape:
 {
   "type": "trace_event",
   "loop": "implementation",
-  "event": "implementation.evidence_accepted",
+  "event": "evidence_accepted",
   "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."],
   "data": {
     "iteration": 4,

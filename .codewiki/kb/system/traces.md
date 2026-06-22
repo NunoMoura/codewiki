@@ -63,7 +63,7 @@ Ordered durable event written by runtime. Semantic-loop events use one event per
   "traceId": "TRACE-20260611-example",
   "sequence": 1,
   "loop": "decision",
-  "event": "decision.rows_approved",
+  "event": "rows_approved",
   "refs": ["kb:system/loop-model.md"],
   "createdAt": "2026-06-11T00:00:00.000Z",
   "data": {

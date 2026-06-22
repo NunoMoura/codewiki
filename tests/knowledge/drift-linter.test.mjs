@@ -76,4 +76,25 @@ describe("knowledge drift linter", () => {
 			'.codewiki/kb/system/api.md: public_state_command: Public UX must use /wiki-state, not status. (matched "/wiki-status")',
 		]);
 	});
+
+	it("blocks stored semantic event examples that duplicate loop names", () => {
+		const issues = lintKnowledgeDrift([
+			{
+				path: ".codewiki/kb/system/traces.md",
+				content: '{ "loop": "decision", "event": "decision.rows_approved" }',
+				scopes: ["product_documentation"],
+			},
+		]);
+
+		assert.deepEqual(
+			issues.map((issue) => [issue.path, issue.ruleId, issue.match]),
+			[
+				[
+					".codewiki/kb/system/traces.md",
+					"prefixed_semantic_event_field",
+					'"event": "decision.',
+				],
+			],
+		);
+	});
 });
