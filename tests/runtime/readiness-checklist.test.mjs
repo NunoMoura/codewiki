@@ -89,6 +89,8 @@ describe("install readiness checklist", () => {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+		assert.equal(packageJson.private, true);
+		assert.equal(packageJson.publishConfig, undefined);
 		assert.equal(packageJson.bin, undefined);
 		assert.equal(packageJson.keywords.includes("pi-package"), true);
 		assert.deepEqual(Object.keys(packageJson.exports).sort(), [
@@ -219,8 +221,10 @@ describe("install readiness checklist", () => {
 			"utf8",
 		);
 		const runtimeDoc = readFileSync(".codewiki/kb/system/runtime.md", "utf8");
-		assert.match(readme, /pi install -l npm:codewiki/);
-		assert.match(extensionDoc, /pi install -l npm:codewiki/);
+		assert.match(readme, /not published to the npm registry yet/);
+		assert.match(extensionDoc, /not published to the npm registry yet/);
+		assert.match(readme, /future registry package name is still TBD/);
+		assert.match(extensionDoc, /future registry package name is still TBD/);
 		assert.match(readme, /Avoid global\/user installs/);
 		assert.match(extensionDoc, /Global\/user installs are discouraged/);
 		assert.match(readme, /Production readiness and automation gates/);

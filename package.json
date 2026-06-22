@@ -1,7 +1,7 @@
 {
 	"name": "codewiki",
-	"version": "0.1.2",
-	"description": "Source-first CodeWiki package scaffold for Pi-native tools and commands.",
+	"version": "0.3.0",
+	"description": "Pi-native CodeWiki tools, slash commands, and trace-first workflow backend.",
 	"keywords": [
 		"documentation",
 		"wiki",
@@ -84,5 +84,6 @@
 	},
 	"dependencies": {
 		"yaml": "^2.9.0"
-	}
+	},
+	"private": true
 }

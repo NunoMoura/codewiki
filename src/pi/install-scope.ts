@@ -5,10 +5,10 @@ import type { CodewikiExtensionContext } from "./types.ts";
 export const NON_PROJECT_INSTALL_OVERRIDE_FIELD = "allowNonProjectInstall";
 
 export const PROJECT_LOCAL_INSTALL_REQUIRED_MESSAGE =
-	"CodeWiki mutation requires a project-local Pi package installation. Install in this repository with: pi install -l npm:codewiki";
+	"CodeWiki mutation requires a project-local Pi package installation. Pre-release builds must be installed from a packed/local package in this repository before mutation.";
 
 export const PROJECT_LOCAL_INSTALL_WARNING_MESSAGE =
-	"CodeWiki is not loaded from this project's local Pi package install. Read-only commands are allowed, but mutation is disabled until you install in this repository with: pi install -l npm:codewiki";
+	"CodeWiki is not loaded from this project's local Pi package install. Read-only commands are allowed, but mutation is disabled until a packed/local package is installed in this repository.";
 
 export interface ProjectLocalInstallGuardInput {
 	toolName: string;

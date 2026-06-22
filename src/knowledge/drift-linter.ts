@@ -26,7 +26,7 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 	{
 		id: "public_command_namespace",
 		scope: "product_documentation",
-		pattern: /\/codewiki(?:\s|$)/,
+		pattern: /(?:^|[\s`])\/codewiki(?:\s|$)/,
 		message: "Public docs must use direct /wiki-* commands, not /codewiki.",
 	},
 	{

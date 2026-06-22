@@ -52,7 +52,10 @@ import {
 
 const packageRoot = join(process.cwd(), "node_modules", "codewiki");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+assert.equal(packageJson.name, "codewiki");
+assert.equal(packageJson.private, true);
 assert.equal(packageJson.bin, undefined);
+assert.equal(packageJson.publishConfig, undefined);
 assert.deepEqual(packageJson.pi, { extensions: ["dist/pi/extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json"]);

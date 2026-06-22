@@ -2,32 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
-This project follows a docs-first release process: package readiness work records the intended npm/Pi package posture before publication. The package version is not bumped here because this is a release-readiness baseline, not a release.
-
 ## [Unreleased]
+
+### Notes
+
+- No unreleased changes yet.
+
+## [0.3.0] - 2026-06-22
 
 ### Added
 
-- Added this changelog as the baseline for future release notes.
-- Documented the package entrypoint and build-script posture for the Pi package in `README.md`.
-- Added static-analysis metadata so PyLens/Knip-style review runs treat the Pi extension, public API facades, scripts, and tests as entrypoints.
+- Added the production-readiness gate for the Pi package: package install smoke, Pi RPC smoke, Pi mutation smoke, project-local install smoke, external lifecycle smoke, external failure smoke, readiness checklist, npm audit, and diff hygiene.
+- Added trace-first runtime backend support for hosts, heartbeat cycles, trigger run planning, work-unit claim selection, leases, worker starts, worker result collection, and runtime board visibility.
+- Added exact Pi extension surfaces for direct slash commands (`/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`) and model-facing tools (`wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`).
+- Added private pre-release package metadata and local pack/install gates for future npm distribution readiness.
 
-### Package readiness notes
+### Changed
 
-- The package is loaded by Pi through `package.json` `pi.extensions` and `pi.skills` metadata.
-- `src/index.ts` remains the Pi extension source entrypoint and re-exports the public API facade for package-local integrations.
-- No npm `main` or `module` entrypoint is declared intentionally; the package is distributed as a Pi extension/skill package rather than a compiled JavaScript library.
-- No build pipeline is added intentionally; validation uses `npm run typecheck`, smoke tests, and `npm pack --dry-run`.
-- No release, publish, push, or version bump is performed by this baseline.
+- Kept the package private and documented that the future npm registry package name is TBD because the unscoped `codewiki` name is already owned by another maintainer.
+- Changed semantic trace output events from generic loop iteration names to split `loop` plus specific `event` facts such as `decision.rows_approved`, `planning.work_units_created`, and `implementation.evidence_accepted`.
+- Kept runtime coordination events under `runtime.*` without semantic `loop` fields.
+- Made `wiki_state` trace-derived only and kept source ownership in the KB source map and `/wiki-explain` path.
+- Updated package documentation to avoid advertising a public npm install before the package is ready to publish.
+
+### Removed
+
+- Removed the repo-local CodeWiki extension shim and repo-local dogfood gate.
+- Removed the grouped `/wiki ...` slash namespace in favor of direct `/wiki-*` commands.
+- Removed the `_OLD_VERSION/**` archive after completing migration audit and production-readiness cleanup.
+
+### Validation
+
+- `npm run audit:codewiki` passed before this release preparation.
+- `npm view codewiki` showed the unscoped package name belongs to another maintainer; no public publish target is selected yet.
 
 ## [0.1.2] - 2026-05-28
 
 ### Added
 
-- Initial changelog baseline for the existing `0.1.2` package line.
-- Release-readiness documentation for intentional package metadata decisions surfaced by review tooling.
+- Initial changelog baseline for the early scaffold package line.
 
 ### Notes
 
 - Earlier development occurred before this changelog was introduced.
-- Future entries should describe user-visible package, command, tool, workflow, and validation changes before publication.
+- The package remains private during current distribution-readiness work.

@@ -89,16 +89,9 @@ Smoke command roles:
 
 ## Pi usage
 
-Install CodeWiki project-locally so the CodeWiki package, Pi settings, and
-`.codewiki/**` state all belong to the repository being documented:
+CodeWiki is not published to the npm registry yet. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer.
 
-```bash
-pi install -l npm:codewiki
-```
-
-Avoid global/user installs such as `pi install npm:codewiki` for normal use.
-Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi
-installation by default and point users back to `pi install -l npm:codewiki`.
+Avoid global/user installs for normal mutation workflows. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi package installation by default and point users back to a project-local packed/local package install until a registry package exists.
 
 CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` state
 and is intended to be compatible with external sandbox, worktree, container, or
@@ -112,7 +105,7 @@ Installed package use should be through Pi-owned `/wiki-*` commands and the smal
 
 Current supported posture:
 
-- Project-local package installation with `pi install -l npm:codewiki`.
+- Project-local packed/local package installation; no public npm publish yet.
 - Supervised `/wiki-*` and `wiki_*` use inside the repository being documented.
 - Guarded trace mutation with expected byte and sequence checks.
 - Runtime worker output treated as untrusted transport until `wiki_implement`

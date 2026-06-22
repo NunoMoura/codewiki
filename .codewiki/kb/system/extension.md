@@ -6,7 +6,7 @@ Target Pi integration lives under `src/pi/**` and exposes terminal-first command
 
 The target CodeWiki OS still needs a small model-facing `wiki_*` tool set: `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`. Runtime coordination is host/backend plumbing over core APIs, not a normal agent tool. The user-facing slash surface is direct `/wiki-*` commands: `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. The older grouped namespace command is deprecated. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
 
-CodeWiki should be installed project-locally with `pi install -l npm:codewiki` so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. Global/user installs are discouraged for normal use. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
+CodeWiki is not published to the npm registry yet. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer. Global/user installs are discouraged for normal use. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
 Mocked extension tests cover the intended package surface: the small `wiki_*` tool set, direct `/wiki-*` slash commands, pure TUI renderers, and a prompt-guidance hook. Prompt guidance is additive system-prompt context only; it must not create workflow truth or replace explicit tool/trace evidence.
 
@@ -45,12 +45,12 @@ audit sequence serially.
 
 ## Production readiness gates
 
-Supported now: project-local package installs, supervised `/wiki-*` and model-facing
+Supported now: project-local packed/local package installs, supervised `/wiki-*` and model-facing
 `wiki_*` flows, guarded expected-byte/sequence mutation, and external sandbox
 compatibility. Runtime backend APIs support host coordination but are not exposed
-as a normal agent tool. Gated before production automation: unattended runtime
-worker start, auto-merge, auto-publish, global/user installs for normal mutation,
-and treating worker completion as truth without implementation preview.
+as a normal agent tool. Gated before production automation: public npm publish,
+unattended runtime worker start, auto-merge, auto-publish, global/user installs
+for normal mutation, and treating worker completion as truth without implementation preview.
 
 Before enabling unattended worker start or auto-merge, require multiple successful
 external package lifecycle smokes, passing package failure-path smokes, no project-root

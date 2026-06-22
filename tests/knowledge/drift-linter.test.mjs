@@ -43,7 +43,7 @@ describe("knowledge drift linter", () => {
 		assert.deepEqual(
 			issues.map((issue) => [issue.path, issue.ruleId, issue.match]),
 			[
-				["README.md", "public_command_namespace", "/codewiki "],
+				["README.md", "public_command_namespace", " /codewiki "],
 				["README.md", "transitional_cli_product_ux", "codewiki state"],
 				["README.md", "trace_close_event_name", "trace.close"],
 				[

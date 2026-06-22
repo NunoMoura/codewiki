@@ -924,10 +924,10 @@ describe("Pi extension adapter", () => {
 			{
 				width: 80,
 				extensionIdentity: {
-					version: "0.1.2",
+					version: "0.3.0",
 					loadMode: "local checkout",
 					sourceLabel: "local checkout ✓",
-					footerLabel: "0.1.2 local",
+					footerLabel: "0.3.0 local",
 					entry: "dist/pi/commands/index.js",
 					packageRoot:
 						"/tmp/codewiki-bootstrap-renderer-wide-path-with-extra-text",
