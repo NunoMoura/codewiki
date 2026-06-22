@@ -61,7 +61,9 @@ export function parseArgs(argv) {
 	}
 	for (const system of options.systems) {
 		if (!["codewiki", "plain-pi", "other"].includes(system)) {
-			throw new Error("--systems may contain only codewiki, plain-pi, or other");
+			throw new Error(
+				"--systems may contain only codewiki, plain-pi, or other",
+			);
 		}
 	}
 	return options;
@@ -86,7 +88,8 @@ export function plannedRuns(options, now = new Date()) {
 		? options.taskIds
 		: listTaskIds(options.tasksDir);
 	const prefix =
-		options.runPrefix || now.toISOString().replace(/[:.]/g, "-").replace(/Z$/, "Z");
+		options.runPrefix ||
+		now.toISOString().replace(/[:.]/g, "-").replace(/Z$/, "Z");
 	const runs = [];
 	for (const taskId of taskIds) {
 		for (const system of options.systems) {

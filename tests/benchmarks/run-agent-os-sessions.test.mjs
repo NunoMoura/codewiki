@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -157,7 +163,10 @@ describe("agent-OS Pi session benchmark runner", () => {
 		const commandPlan = JSON.parse(
 			readFileSync(join(runDir, "command.plan.json"), "utf8"),
 		);
-		assert.equal(commandPlan.args.at(-1), readFileSync(join(runDir, "prompt.md"), "utf8"));
+		assert.equal(
+			commandPlan.args.at(-1),
+			readFileSync(join(runDir, "prompt.md"), "utf8"),
+		);
 		assert.match(commandPlan.env.PI_CODING_AGENT_DIR, /agent$/);
 	});
 });

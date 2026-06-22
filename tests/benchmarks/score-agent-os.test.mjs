@@ -82,7 +82,10 @@ describe("agent-OS benchmark scorer", () => {
 	});
 
 	it("marks a run production-ready only when checks and score gates pass", () => {
-		const scored = scoreRun(run("polished-tetris", "codewiki"), task("polished-tetris"));
+		const scored = scoreRun(
+			run("polished-tetris", "codewiki"),
+			task("polished-tetris"),
+		);
 
 		assert.equal(scored.productionReady, true);
 		assert.equal(Math.round(scored.qualityScore), 88);

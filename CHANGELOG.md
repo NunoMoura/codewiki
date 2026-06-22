@@ -6,14 +6,17 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added the agent-OS benchmark harness, detailed Tetris and flight-simulator
-  task specs, isolated Pi session runner, and production benchmark gate command
-  for quality-adjusted token/speed proof.
+- Added the loop-exit debug benchmark for decision, planning, and implementation
+  exit standards, plus the agent-OS benchmark harness with detailed Tetris and
+  flight-simulator task specs, isolated Pi session runner, and production
+  benchmark gate command for quality-adjusted token/speed proof.
 
 ### Notes
 
-- The benchmark gate intentionally fails until real CodeWiki and baseline run
-  results exist; no synthetic benchmark proof is included.
+- The loop-exit gate intentionally fails while current semantic gap fixtures
+  pass too cheaply, and the app benchmark gate intentionally fails until real
+  CodeWiki and baseline run results exist; no synthetic benchmark proof is
+  included.
 
 ## [0.3.0] - 2026-06-22
 

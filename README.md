@@ -60,6 +60,8 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
+npm run benchmark:loops
+npm run benchmark:loops:gate
 npm run benchmark:agent-os
 npm run benchmark:agent-os:prepare -- --task polished-tetris --system codewiki
 npm run benchmark:agent-os:run -- --dry-run
@@ -86,6 +88,10 @@ Smoke command roles:
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
 - `npm run test:readiness`: package, state-shape, install-gate, and stale
   wording checks.
+- `npm run benchmark:loops`: runs deterministic adversarial fixtures against
+  decision, planning, and implementation loop exits and reports known quality
+  gaps.
+- `npm run benchmark:loops:gate`: fails while any loop exit semantic gap remains.
 - `npm run benchmark:agent-os`: summarizes any available reviewed benchmark
   results without enforcing the production benchmark gate.
 - `npm run benchmark:agent-os:prepare`: creates a run directory with the shared

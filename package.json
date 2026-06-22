@@ -32,6 +32,8 @@
 		"test:external-lifecycle": "node tests/runtime/external-package-lifecycle-smoke.mjs",
 		"test:external-failures": "node tests/runtime/external-package-failures-smoke.mjs",
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
+		"benchmark:loops": "node --experimental-strip-types benchmarks/score-loop-exits.mjs",
+		"benchmark:loops:gate": "node --experimental-strip-types benchmarks/score-loop-exits.mjs --gate",
 		"benchmark:agent-os": "node benchmarks/score-agent-os.mjs",
 		"benchmark:agent-os:prepare": "node benchmarks/prepare-agent-os-run.mjs",
 		"benchmark:agent-os:run": "node benchmarks/run-agent-os-sessions.mjs",

@@ -1,15 +1,19 @@
 # CodeWiki Agent-OS Benchmarks
 
 These benchmarks are the production-readiness proof gate for CodeWiki as an
-agent OS. They do not test the future CodeWiki frontend. They test whether the
-CodeWiki decision → planning → implementation workflow helps Pi sessions produce
-production-ready software with less token spend and less elapsed time than
-comparable plain Pi sessions.
+agent OS. They do not test the future CodeWiki frontend. They test two layers:
+first, whether each CodeWiki loop exit rejects shallow outputs cheaply; second,
+whether the full decision → planning → implementation workflow helps Pi sessions
+produce production-ready software with less token spend and less elapsed time
+than comparable plain Pi sessions.
 
 ## Benchmark model
 
-The agent in this repository must not create winning app artifacts or run the
-benchmark for itself. The repository owns the harness only:
+The loop-exit debug benchmark runs inside this repository because it is a cheap,
+deterministic test of CodeWiki's own exit conditions. App benchmarks are
+different: the agent in this repository must not create winning app artifacts or
+run the app benchmark for itself. The repository owns the app benchmark harness
+only:
 
 1. define two stable, detailed prompts;
 2. start isolated Pi sessions for each system under test;
@@ -23,6 +27,9 @@ comparison comes from the session setup, not different user prompts.
 
 ## Layout
 
+- `benchmarks/score-loop-exits.mjs` runs adversarial fixtures against the
+  decision, planning, and implementation exit evaluators and reports current
+  semantic gaps.
 - `benchmarks/tasks/*.json` defines task prompts, frontend/backend requirements,
   acceptance criteria, scoring weights, and production gates.
 - `benchmarks/prepare-agent-os-run.mjs` creates a run directory with the shared
@@ -37,7 +44,41 @@ comparison comes from the session setup, not different user prompts.
 Do not commit generated app source archives or synthetic result files as proof.
 Commit final result JSON only after a real run and human review.
 
-## Current required tasks
+## Loop exit debug benchmark
+
+Run:
+
+```bash
+npm run benchmark:loops
+npm run benchmark:loops:gate
+```
+
+The loop benchmark contains complete fixtures that should pass, invalid fixtures
+that should fail or block, and adversarial shallow fixtures that currently expose
+known semantic gaps. The gate is allowed to fail during hardening; it becomes a
+production-readiness gate when all known gaps are closed.
+
+The benchmark reports standard mode counts (`deterministic`, `agent`, `user`) so
+we can see whether quality is enforced by cheap checks first and agent-dependent
+checks only where semantic judgment is unavoidable.
+
+## Self-improving loop hardening
+
+The autoresearch-inspired workflow for loop hardening is:
+
+1. keep the adversarial fixture corpus fixed for one experiment;
+2. let an agent patch only loop exit/quality-standard code and matching tests;
+3. run `npm run benchmark:loops` and normal tests under a fixed wall-clock/token
+   budget;
+4. keep the patch only if it closes a gap without creating regressions,
+   increasing agent-mode standards unnecessarily, or weakening app benchmarks;
+5. add the closed gap as a permanent regression fixture before starting the next
+   experiment.
+
+This makes loop improvement iterative and measurable without fabricating app
+benchmark proof.
+
+## Current required app tasks
 
 - `polished-tetris` — production Tetris with polished responsive frontend,
   deterministic engine, local persistence/API, replay seed support, and tests.
