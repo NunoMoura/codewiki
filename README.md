@@ -61,8 +61,9 @@ npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
 npm run benchmark:agent-os
+npm run benchmark:agent-os:prepare -- --task polished-tetris --system codewiki
+npm run benchmark:agent-os:run -- --dry-run
 npm run benchmark:agent-os:gate
-npm run benchmark:serve
 npm run audit:codewiki
 ```
 
@@ -85,12 +86,14 @@ Smoke command roles:
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
 - `npm run test:readiness`: package, state-shape, install-gate, and stale
   wording checks.
-- `npm run benchmark:agent-os`: summarizes any available visual/functional
-  app benchmark results without enforcing the production benchmark gate.
+- `npm run benchmark:agent-os`: summarizes any available reviewed benchmark
+  results without enforcing the production benchmark gate.
+- `npm run benchmark:agent-os:prepare`: creates a run directory with the shared
+  task prompt, system notes, and result template.
+- `npm run benchmark:agent-os:run`: launches isolated Pi benchmark sessions;
+  `--dry-run` writes command plans without running a model.
 - `npm run benchmark:agent-os:gate`: enforces the CodeWiki-vs-baseline
   quality-adjusted token/speed benchmark gate and fails until real results exist.
-- `npm run benchmark:serve`: extracts and serves the latest committed benchmark
-  artifact at `http://localhost:4173` for local review.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence
   run serially.
 
@@ -135,5 +138,5 @@ Before enabling unattended worker start or auto-merge, require: multiple success
 external package lifecycle smokes, passing failure-path package smokes, no project-root
 ambiguity, no `.codewiki/runtime` scratch leakage after checks, archive/hydrate
 validation green, explicit user approval policy for destructive or externally
-visible actions, and passing agent-OS benchmark results for visual/functional app
-workloads.
+visible actions, and passing agent-OS benchmark results for the Tetris and
+flight-simulator workloads.

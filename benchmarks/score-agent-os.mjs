@@ -4,10 +4,11 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const DEFAULT_WEIGHTS = Object.freeze({
-	functional: 0.35,
-	visual: 0.2,
-	ux: 0.15,
-	maintainability: 0.15,
+	functional: 0.25,
+	frontend: 0.2,
+	backend: 0.2,
+	ux: 0.1,
+	maintainability: 0.1,
 	traceability: 0.15,
 });
 

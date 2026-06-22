@@ -7,9 +7,10 @@ a future CodeWiki frontend.
 
 ## Benchmark objective
 
-The production benchmark must prove that CodeWiki can produce production-ready
-software more efficiently than comparable agent workflows. Efficiency is judged
-against quality-adjusted outputs, not raw token count alone.
+The production benchmark must prove that CodeWiki helps isolated Pi sessions
+produce production-ready software more efficiently than comparable plain Pi
+sessions. Efficiency is judged against quality-adjusted outputs, not raw token
+count alone.
 
 The target metrics are:
 
@@ -18,19 +19,35 @@ tokens per quality-adjusted production-ready result
 seconds per quality-adjusted production-ready result
 ```
 
+## Harness boundary
+
+The repository owns the benchmark harness, task prompts, scoring model, and gate.
+It must not contain agent-created winning app artifacts as proof. Real benchmark
+runs happen in separate Pi sessions and produce external or ignored artifacts
+that a human reviews before writing final result JSON.
+
+The same user prompt is sent to every system for a task. CodeWiki-vs-baseline
+comparison comes from the session setup, extension availability, traces, and
+workflow behavior, not from different prompts.
+
 ## Task shape
 
-Benchmark tasks should be visual or functional projects that a user can judge by
-running the result. Preferred tasks are browser games, interactive tools, and
-small apps with clear acceptance criteria, visible polish, and deterministic
-checks.
+Required tasks are ambitious local full-stack browser products:
+
+- `polished-tetris`: production Tetris with responsive frontend, deterministic
+  engine, local API/persistence, replay seed support, and checks.
+- `flight-simulator`: production browser flight simulator with responsive
+  cockpit/HUD, deterministic physics and missions, local API/persistence,
+  telemetry, and checks.
 
 Each task records:
 
 - prompt and user-facing goal;
-- required features;
-- visual and functional acceptance criteria;
-- required artifact refs such as repo, commit, preview, screenshot, or video;
+- frontend requirements;
+- backend/local API and persistence requirements;
+- functional acceptance criteria;
+- required artifact refs such as repo, commit, preview, screenshot, video, test
+  output, session output, and trace refs;
 - scoring weights and minimum production gate scores;
 - required checks and manual review notes.
 
@@ -39,9 +56,9 @@ Each task records:
 Each run records:
 
 - system id, provider/model id, task id, run id, and timestamps;
-- total input/output tokens and elapsed time;
+- input/output/cache tokens and elapsed wall-clock time from Pi session JSON;
 - pass/fail checks;
-- manual quality scores for functional behavior, visuals, UX,
+- manual quality scores for functional behavior, frontend, backend, UX,
   maintainability, and traceability;
 - artifact refs and CodeWiki trace refs when the system is CodeWiki;
 - `productionReady: true` only when the result is shippable for the task.
@@ -63,7 +80,8 @@ Model choice is explicit per run. The current default benchmark model is
 set with separate result files instead of mixing model populations.
 
 The benchmark harness lives under `benchmarks/**`. Benchmark result JSON files
-are small auditable summaries; large artifacts stay as external refs or Git refs.
+are small auditable summaries; large artifacts stay as external refs or ignored
+run outputs.
 
 ## Related docs
 

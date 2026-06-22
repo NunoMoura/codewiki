@@ -8,4 +8,3 @@ dist/
 .codewiki/session/queue.json
 .tmp-worktrees/
 benchmarks/runs/
-benchmarks/.serve/

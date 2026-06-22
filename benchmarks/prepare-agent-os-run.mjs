@@ -26,7 +26,7 @@ function timestamp() {
 	return new Date().toISOString().replace(/[:.]/g, "-");
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
 	const options = {
 		tasksDir: "benchmarks/tasks",
 		outDir: DEFAULT_OUT_DIR,
@@ -79,17 +79,25 @@ export function prepareBenchmarkRun(options) {
 	}
 	const runDir = join(options.outDir, options.runId);
 	mkdirSync(runDir, { recursive: true });
-	const prompt = renderPrompt({
-		task,
-		system: options.system,
-		model: options.model,
-	});
+	const prompt = renderPrompt({ task });
+	const systemNotes = renderSystemNotes({ system: options.system });
 	const template = resultTemplate({
 		task,
 		system: options.system,
 		model: options.model,
 		runId: options.runId,
 	});
+	const metadata = {
+		schemaVersion: 1,
+		runId: options.runId,
+		taskId: task.id,
+		system: options.system,
+		model: options.model,
+		promptInvariant: true,
+		promptPath: "prompt.md",
+		systemNotesPath: "system.md",
+		resultTemplatePath: "result.template.json",
+	};
 	const readme = renderRunReadme({
 		task,
 		system: options.system,
@@ -97,9 +105,14 @@ export function prepareBenchmarkRun(options) {
 		runId: options.runId,
 	});
 	writeFileSync(join(runDir, "prompt.md"), prompt);
+	writeFileSync(join(runDir, "system.md"), systemNotes);
 	writeFileSync(
 		join(runDir, "task.json"),
 		JSON.stringify(task, null, "\t") + "\n",
+	);
+	writeFileSync(
+		join(runDir, "run.json"),
+		JSON.stringify(metadata, null, "\t") + "\n",
 	);
 	writeFileSync(
 		join(runDir, "result.template.json"),
@@ -111,24 +124,17 @@ export function prepareBenchmarkRun(options) {
 		runDir,
 		taskPath,
 		promptPath: join(runDir, "prompt.md"),
+		systemNotesPath: join(runDir, "system.md"),
 		resultTemplatePath: join(runDir, "result.template.json"),
 	};
 }
 
-function renderPrompt({ task, system, model }) {
+export function renderPrompt({ task }) {
 	const criteria = task.acceptanceCriteria
 		.map((criterion, index) => `${index + 1}. ${criterion}`)
 		.join("\n");
-	const systemInstructions =
-		system === "codewiki"
-			? codewikiInstructions()
-			: system === "plain-pi"
-				? plainPiInstructions()
-				: otherSystemInstructions();
 	return `# Benchmark task: ${task.title}
 
-Model: ${model}
-System under test: ${system}
 Task id: ${task.id}
 Task kind: ${task.kind}
 
@@ -136,15 +142,11 @@ Task kind: ${task.kind}
 
 ${task.prompt}
 
-## Acceptance criteria
+${renderRequirements(task.requirements)}## Acceptance criteria
 
 ${criteria}
 
-## System-specific instructions
-
-${systemInstructions}
-
-## Required final report
+## Required final benchmark report
 
 When work is complete, write a concise benchmark report with:
 
@@ -156,53 +158,77 @@ When work is complete, write a concise benchmark report with:
 - elapsed wall-clock time;
 - honest notes about any acceptance criterion that is not fully satisfied.
 
-Do not claim production readiness unless the result is shippable for this task.
+## Fairness rules
+
+- Use the project workflow and tools available in the session, but do not change
+  the product scope.
+- Do not use paid services, hosted databases, proprietary assets, or network-only
+  dependencies for core functionality.
+- Prefer simple local code that a reviewer can run from a fresh checkout.
+- Do not claim production readiness unless the result is shippable for this task.
+- Do not fabricate tests, screenshots, token counts, elapsed time, traces, or
+  session refs.
 `;
 }
 
-function codewikiInstructions() {
-	return `Use CodeWiki as the agent OS for the run.
+function renderRequirements(requirements) {
+	if (!requirements || typeof requirements !== "object") return "";
+	const sections = Object.entries(requirements).map(([name, items]) => {
+		if (!Array.isArray(items) || items.length === 0) return "";
+		const title = name
+			.replace(/([a-z])([A-Z])/g, "$1 $2")
+			.replace(/^./, (value) => value.toUpperCase());
+		return `### ${title}\n\n${items.map((item) => `- ${item}`).join("\n")}\n`;
+	});
+	const rendered = sections.filter(Boolean).join("\n");
+	return rendered ? `## Requirements\n\n${rendered}\n` : "";
+}
 
-- Run inside the fresh temporary project prepared by the benchmark host.
-- Use the project-local CodeWiki package already installed by the host. If the
-  package or /wiki-* tools are missing, report setup failure instead of falling
-  back to a global install.
-- Use CodeWiki's direct /wiki-* commands and wiki_* tools for decision,
-  planning, implementation evidence, state, and archive where available.
-- Start or inspect one trace at .codewiki/traces/TRACE-<task-id>.jsonl.
-  If no trace exists, create only a trace_head record for that trace id, then
-  use wiki_decide/wiki_plan/wiki_implement append mode for semantic records.
-- wiki_decide input must be structured: { traceId, mode, expectedBytes,
-  nextSequence, tableInput: { id, createdAt, updatedAt, rows: [...] } }.
-  Do not pass shortcut fields such as intent, decision, or risks.
-- wiki_plan input must include traceId, decisionEvents, workItemInputs,
-  expectedBytes, and nextSequence.
-- wiki_implement input must include traceId, planningEvents, changeInputs,
-  expectedBytes, and nextSequence.
-- Preserve .codewiki/kb/** and .codewiki/traces/TRACE-*.jsonl as benchmark
-  artifacts.
-- Runtime may coordinate worker work, but semantic completion must come from
-  implementation evidence, not worker completion alone.
+function renderSystemNotes({ system }) {
+	if (system === "codewiki") return codewikiNotes();
+	if (system === "plain-pi") return plainPiNotes();
+	return otherSystemNotes();
+}
+
+function codewikiNotes() {
+	return `# System notes: codewiki
+
+These notes are for the benchmark host/reviewer. They are not part of the shared
+user prompt.
+
+- Run in a fresh project with CodeWiki installed as a project-local Pi package.
+- Keep the user prompt identical to baseline runs.
+- Let CodeWiki's Pi extension, tools, commands, and injected prompt guidance be
+  the system difference under test.
+- Preserve .codewiki/kb/** and .codewiki/traces/TRACE-*.jsonl as run artifacts.
 - Do not hand-edit trace JSON to make the benchmark look better.
-- Do not use a future CodeWiki frontend; this benchmark is agent-OS only.`;
+`;
 }
 
-function plainPiInstructions() {
-	return `Use a normal Pi coding workflow without CodeWiki semantic loops.
+function plainPiNotes() {
+	return `# System notes: plain-pi
 
-- Run inside the fresh temporary project prepared by the benchmark host.
-- Do not install or load CodeWiki.
+These notes are for the benchmark host/reviewer. They are not part of the shared
+user prompt.
+
+- Run in a fresh project without CodeWiki installed or loaded.
+- Keep the user prompt identical to CodeWiki runs.
+- Preserve the Pi session output and project artifact for audit.
 - Do not create CodeWiki traces or KB files.
-- Use ordinary Pi tool use, local files, and tests to complete the task.
-- Preserve the Pi session ref or exported session artifact for audit.`;
+`;
 }
 
-function otherSystemInstructions() {
-	return `Use the declared baseline workflow.
+function otherSystemNotes() {
+	return `# System notes: other
 
-- Start from a fresh temporary project.
+These notes are for the benchmark host/reviewer. They are not part of the shared
+user prompt.
+
+- Run in a fresh project.
+- Keep the user prompt identical to CodeWiki and baseline runs.
 - Record the exact tool, model, prompt, and host setup.
-- Preserve enough artifacts for another reviewer to reproduce or audit the run.`;
+- Preserve enough artifacts for another reviewer to reproduce or audit the run.
+`;
 }
 
 function resultTemplate({ task, system, model, runId }) {
@@ -218,6 +244,8 @@ function resultTemplate({ task, system, model, runId }) {
 		tokens: {
 			input: 0,
 			output: 0,
+			cacheRead: 0,
+			cacheWrite: 0,
 			total: 0,
 		},
 		productionReady: false,
@@ -230,7 +258,8 @@ function resultTemplate({ task, system, model, runId }) {
 		],
 		scores: {
 			functional: 0,
-			visual: 0,
+			frontend: 0,
+			backend: 0,
 			ux: 0,
 			maintainability: 0,
 			traceability: 0,
@@ -240,11 +269,14 @@ function resultTemplate({ task, system, model, runId }) {
 			commit: "",
 			preview: "",
 			screenshotOrVideo: "",
+			testOutput: "",
+			sourceArchive: "",
+			sessionOutput: "",
 			traceRefs: [],
 			sessionRefs: [],
 		},
 		notes:
-			"Fill this from the completed benchmark run. Do not fabricate scores, tokens, or production readiness.",
+			"Fill this from a real completed benchmark run and human review. Do not fabricate scores, tokens, or production readiness.",
 	};
 }
 
@@ -257,13 +289,17 @@ function renderRunReadme({ task, system, model, runId }) {
 
 Files:
 
-- prompt.md — prompt to run in the selected system.
+- prompt.md — shared prompt sent to every system for this task.
+- system.md — host/reviewer notes for this system; not part of the shared user
+  prompt.
 - task.json — immutable task spec snapshot for this run.
-- result.template.json — copy to benchmarks/results/${runId}.json after filling
-  real metrics, checks, scores, and artifact refs.
+- run.json — run metadata generated by the harness.
+- result.template.json — copy to benchmarks/results/${runId}.json only after a
+  real run has finished and a reviewer has filled metrics, checks, scores, and
+  artifact refs.
 
-Generated run directories are local scratch. Commit only the final result JSON
-when the run is real and auditable.
+Generated run directories are local scratch. Commit only final human-scored
+result JSON files and intentional artifact refs.
 `;
 }
 

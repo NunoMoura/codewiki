@@ -18,14 +18,15 @@ function task(id, overrides = {}) {
 		schemaVersion: 1,
 		id,
 		title: id,
-		kind: "visual_game",
+		kind: "full_stack_browser_game",
 		prompt: `Build ${id}`,
 		acceptanceCriteria: ["works", "looks good"],
 		qualityGate: {
 			minQualityScore: 80,
 			minScores: {
 				functional: 4,
-				visual: 4,
+				frontend: 4,
+				backend: 4,
 				ux: 4,
 				maintainability: 4,
 				traceability: 4,
@@ -52,7 +53,8 @@ function run(taskId, system, overrides = {}) {
 		checks: [{ name: "tests", command: "npm test", status: "pass" }],
 		scores: {
 			functional: 5,
-			visual: 4,
+			frontend: 4,
+			backend: 4,
 			ux: 4,
 			maintainability: 4,
 			traceability: system === "codewiki" ? 5 : 4,
@@ -65,42 +67,45 @@ function run(taskId, system, overrides = {}) {
 describe("agent-OS benchmark scorer", () => {
 	it("computes weighted quality scores", () => {
 		assert.equal(
-			scoreQuality({
-				functional: 5,
-				visual: 4,
-				ux: 4,
-				maintainability: 4,
-				traceability: 5,
-			}),
-			90,
+			Math.round(
+				scoreQuality({
+					functional: 5,
+					frontend: 4,
+					backend: 4,
+					ux: 4,
+					maintainability: 4,
+					traceability: 5,
+				}),
+			),
+			88,
 		);
 	});
 
 	it("marks a run production-ready only when checks and score gates pass", () => {
-		const scored = scoreRun(run("snake", "codewiki"), task("snake"));
+		const scored = scoreRun(run("polished-tetris", "codewiki"), task("polished-tetris"));
 
 		assert.equal(scored.productionReady, true);
-		assert.equal(scored.qualityScore, 90);
-		assert.equal(scored.tokensPerQualityPoint, 12000 / 90);
-		assert.equal(scored.secondsPerQualityPoint, 600 / 90);
+		assert.equal(Math.round(scored.qualityScore), 88);
+		assert.equal(scored.tokensPerQualityPoint, 12000 / scored.qualityScore);
+		assert.equal(scored.secondsPerQualityPoint, 600 / scored.qualityScore);
 
 		const failed = scoreRun(
-			run("snake", "codewiki", {
+			run("polished-tetris", "codewiki", {
 				checks: [{ name: "tests", command: "npm test", status: "fail" }],
 			}),
-			task("snake"),
+			task("polished-tetris"),
 		);
 		assert.equal(failed.productionReady, false);
 		assert.deepEqual(failed.blockers, ["not all checks passed"]);
 	});
 
 	it("passes the gate when CodeWiki beats the baseline on compared tasks", () => {
-		const tasks = [task("snake"), task("kanban")];
+		const tasks = [task("polished-tetris"), task("flight-simulator")];
 		const runs = [
-			run("snake", "codewiki"),
-			run("snake", "plain-pi"),
-			run("kanban", "codewiki"),
-			run("kanban", "plain-pi"),
+			run("polished-tetris", "codewiki"),
+			run("polished-tetris", "plain-pi"),
+			run("flight-simulator", "codewiki"),
+			run("flight-simulator", "plain-pi"),
 		];
 
 		const summary = aggregateBenchmarks({ tasks, runs, minTasks: 2 });
@@ -113,7 +118,7 @@ describe("agent-OS benchmark scorer", () => {
 
 	it("fails the gate until real candidate and baseline runs exist", () => {
 		const summary = aggregateBenchmarks({
-			tasks: [task("snake"), task("kanban")],
+			tasks: [task("polished-tetris"), task("flight-simulator")],
 			runs: [],
 			minTasks: 2,
 		});
@@ -131,10 +136,13 @@ describe("agent-OS benchmark scorer", () => {
 		const resultsDir = join(root, "results");
 		mkdirSync(tasksDir);
 		mkdirSync(resultsDir);
-		writeFileSync(join(tasksDir, "snake.json"), JSON.stringify(task("snake")));
 		writeFileSync(
-			join(resultsDir, "snake-codewiki.json"),
-			JSON.stringify(run("snake", "codewiki")),
+			join(tasksDir, "polished-tetris.json"),
+			JSON.stringify(task("polished-tetris")),
+		);
+		writeFileSync(
+			join(resultsDir, "polished-tetris-codewiki.json"),
+			JSON.stringify(run("polished-tetris", "codewiki")),
 		);
 
 		assert.equal(loadTasks(tasksDir).length, 1);

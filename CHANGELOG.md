@@ -6,10 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added the agent-OS benchmark harness, visual/functional benchmark task specs,
-  and production benchmark gate command for quality-adjusted token/speed proof.
-- Added a local benchmark artifact viewer that serves committed artifacts on
-  localhost for manual review.
+- Added the agent-OS benchmark harness, detailed Tetris and flight-simulator
+  task specs, isolated Pi session runner, and production benchmark gate command
+  for quality-adjusted token/speed proof.
 
 ### Notes
 
