@@ -38,7 +38,7 @@ Each task records:
 
 Each run records:
 
-- system id, model, task id, run id, and timestamps;
+- system id, provider/model id, task id, run id, and timestamps;
 - total input/output tokens and elapsed time;
 - pass/fail checks;
 - manual quality scores for functional behavior, visuals, UX,
@@ -57,6 +57,10 @@ has production-ready results for the required tasks, each compared task has at
 least one baseline production-ready result, CodeWiki has no quality regression
 on any compared task, and CodeWiki beats or ties the baseline on geometric-mean
 quality-adjusted token and speed efficiency.
+
+Model choice is explicit per run. The current default benchmark model is
+`openai-codex/gpt-5.5`, and future model comparisons should reuse the same task
+set with separate result files instead of mixing model populations.
 
 The benchmark harness lives under `benchmarks/**`. Benchmark result JSON files
 are small auditable summaries; large artifacts stay as external refs or Git refs.

@@ -11,13 +11,13 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { prepareBenchmarkRun } from "../../benchmarks/prepare-agent-os-run.mjs";
 
-function writeTask(tasksDir, id = "canvas-snake") {
+function writeTask(tasksDir, id = "polished-tetris") {
 	const task = {
 		schemaVersion: 1,
 		id,
-		title: "Canvas Snake",
+		title: "Polished Tetris",
 		kind: "visual_game",
-		prompt: "Build snake.",
+		prompt: "Build Tetris.",
 		acceptanceCriteria: ["plays", "scores"],
 		qualityGate: { minQualityScore: 82, minScores: {} },
 	};
@@ -35,9 +35,9 @@ describe("agent-OS benchmark run preparation", () => {
 		const result = prepareBenchmarkRun({
 			tasksDir,
 			outDir,
-			taskId: "canvas-snake",
+			taskId: "polished-tetris",
 			system: "codewiki",
-			model: "openai/gpt-5.5",
+			model: "openai-codex/gpt-5.5",
 			runId: "run-001",
 		});
 
@@ -48,13 +48,15 @@ describe("agent-OS benchmark run preparation", () => {
 			/Use CodeWiki as the agent OS/,
 		);
 		assert.deepEqual(
-			JSON.parse(readFileSync(join(result.runDir, "result.template.json"), "utf8")),
+			JSON.parse(
+				readFileSync(join(result.runDir, "result.template.json"), "utf8"),
+			),
 			{
 				schemaVersion: 1,
 				runId: "run-001",
-				taskId: "canvas-snake",
+				taskId: "polished-tetris",
 				system: "codewiki",
-				model: "openai/gpt-5.5",
+				model: "openai-codex/gpt-5.5",
 				startedAt: "",
 				completedAt: "",
 				durationMs: 0,
@@ -87,14 +89,14 @@ describe("agent-OS benchmark run preparation", () => {
 		const tasksDir = join(root, "tasks");
 		const outDir = join(root, "runs");
 		mkdirSync(tasksDir);
-		writeTask(tasksDir, "breakout-polish");
+		writeTask(tasksDir, "chess-trainer");
 
 		const result = prepareBenchmarkRun({
 			tasksDir,
 			outDir,
-			taskId: "breakout-polish",
+			taskId: "chess-trainer",
 			system: "plain-pi",
-			model: "openai/gpt-5.5",
+			model: "openai-codex/gpt-5.5",
 			runId: "run-002",
 		});
 		const prompt = readFileSync(join(result.runDir, "prompt.md"), "utf8");

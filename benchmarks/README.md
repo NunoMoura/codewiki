@@ -35,6 +35,16 @@ Result files are intentionally small. Large screenshots, videos, hosted previews
 Git commits, and session logs should be referenced by URI or Git ref instead of
 copied into the JSON result.
 
+
+## Current required tasks
+
+- `polished-tetris` — browser Tetris with seven-bag randomizer, hold, ghost
+  piece, responsive controls, scoring, and logic checks.
+- `chess-trainer` — legal chess trainer with FEN/PGN, puzzle mode, legal move
+  validation, and rule checks.
+- `offline-kanban` — offline functional app with persistence, import/export,
+  search/filter, responsive UX, and checks.
+
 ## Systems under test
 
 Use stable system identifiers:
@@ -109,10 +119,10 @@ A minimal result file:
 ```json
 {
   "schemaVersion": 1,
-  "runId": "2026-06-22-codewiki-canvas-snake-01",
-  "taskId": "canvas-snake",
+  "runId": "2026-06-22-codewiki-polished-tetris-01",
+  "taskId": "polished-tetris",
   "system": "codewiki",
-  "model": "example-model",
+  "model": "openai-codex/gpt-5.5",
   "startedAt": "2026-06-22T10:00:00.000Z",
   "completedAt": "2026-06-22T10:18:00.000Z",
   "durationMs": 1080000,
@@ -132,7 +142,7 @@ A minimal result file:
     "repo": "https://example.invalid/repo",
     "commit": "abc123",
     "preview": "https://example.invalid/preview",
-    "traceRefs": ["TRACE-example"]
+    "traceRefs": ["TRACE-polished-tetris"]
   }
 }
 ```

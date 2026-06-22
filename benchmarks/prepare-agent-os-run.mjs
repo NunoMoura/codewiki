@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const DEFAULT_OUT_DIR = "benchmarks/runs";
-const DEFAULT_MODEL = "openai/gpt-5.5";
+const DEFAULT_MODEL = "openai-codex/gpt-5.5";
 
 function readJson(path) {
 	try {
@@ -73,11 +73,17 @@ export function prepareBenchmarkRun(options) {
 	const taskPath = join(options.tasksDir, `${options.taskId}.json`);
 	const task = readJson(taskPath);
 	if (task.id !== options.taskId) {
-		throw new Error(`${taskPath} id ${task.id} does not match ${options.taskId}`);
+		throw new Error(
+			`${taskPath} id ${task.id} does not match ${options.taskId}`,
+		);
 	}
 	const runDir = join(options.outDir, options.runId);
 	mkdirSync(runDir, { recursive: true });
-	const prompt = renderPrompt({ task, system: options.system, model: options.model });
+	const prompt = renderPrompt({
+		task,
+		system: options.system,
+		model: options.model,
+	});
 	const template = resultTemplate({
 		task,
 		system: options.system,
@@ -91,7 +97,10 @@ export function prepareBenchmarkRun(options) {
 		runId: options.runId,
 	});
 	writeFileSync(join(runDir, "prompt.md"), prompt);
-	writeFileSync(join(runDir, "task.json"), JSON.stringify(task, null, "\t") + "\n");
+	writeFileSync(
+		join(runDir, "task.json"),
+		JSON.stringify(task, null, "\t") + "\n",
+	);
 	writeFileSync(
 		join(runDir, "result.template.json"),
 		JSON.stringify(template, null, "\t") + "\n",
@@ -223,7 +232,8 @@ function resultTemplate({ task, system, model, runId }) {
 			traceRefs: [],
 			sessionRefs: [],
 		},
-		notes: "Fill this from the completed benchmark run. Do not fabricate scores, tokens, or production readiness.",
+		notes:
+			"Fill this from the completed benchmark run. Do not fabricate scores, tokens, or production readiness.",
 	};
 }
 

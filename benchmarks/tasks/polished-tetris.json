@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "polished-tetris",
+	"title": "Polished Tetris",
+	"kind": "visual_game",
+	"prompt": "Build a polished browser Tetris game with modern responsive visuals, keyboard and touch controls, a seven-bag piece randomizer, ghost piece, hold piece, next-piece queue, scoring, levels, line clears, pause/resume, restart, game-over state, and local high-score persistence. The result must run locally without paid services.",
+	"acceptanceCriteria": [
+		"All seven tetrominoes spawn, rotate, collide, lock, and clear lines correctly.",
+		"The game uses a fair seven-bag randomizer with visible next-piece queue and hold support.",
+		"Keyboard controls include move, rotate both directions, soft drop, hard drop, hold, pause, and restart.",
+		"Touch or on-screen controls work on phone-sized screens without page scrolling issues.",
+		"Scoring, level progression, high score, pause, restart, and game-over states are visible and correct.",
+		"Ghost piece, board state, animations, and visual feedback are polished enough for screenshot review.",
+		"Project includes run instructions and at least one automated or scripted sanity check for game logic."
+	],
+	"qualityGate": {
+		"minQualityScore": 86,
+		"minScores": {
+			"functional": 4,
+			"visual": 4,
+			"ux": 4,
+			"maintainability": 4,
+			"traceability": 4
+		}
+	},
+	"weights": {
+		"functional": 0.4,
+		"visual": 0.2,
+		"ux": 0.15,
+		"maintainability": 0.1,
+		"traceability": 0.15
+	},
+	"requiredArtifacts": [
+		"source repository or archive ref",
+		"commit or immutable artifact id",
+		"preview URL or local run command",
+		"screenshot or short gameplay video",
+		"session or trace refs"
+	]
+}
