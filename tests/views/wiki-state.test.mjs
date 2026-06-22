@@ -1,10 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { buildWikiState, wikiStateSourceOwner } from "../../src/api/state.ts";
+import { buildWikiState } from "../../src/api/state.ts";
+import { createTraceCloseRecord } from "../../src/traces/retention.ts";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
-import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
@@ -16,7 +15,7 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
+		(event) => event.loop === "decision",
 	);
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
@@ -39,7 +38,7 @@ function traceRecords(traceId = "TRACE-state") {
 				id: "DTR-state",
 				question: "How should state be read?",
 				currentState: "State reads could depend on stored view files.",
-				desiredState: "State reads project traces and source-map inputs.",
+				desiredState: "State reads active project traces.",
 				rationale: "Views are disposable projections, not truth.",
 				...decisionQualityFields(),
 				approval: "approved",
@@ -65,7 +64,7 @@ function traceRecords(traceId = "TRACE-state") {
 				decisionRefs: [decisionRef],
 				outcome: "wiki_state returns derived projections.",
 				...planningQualityFields(),
-				acceptance: ["State derives from traces and source-map."],
+				acceptance: ["State derives from trace records."],
 				componentRefs: ["api"],
 				pathScopes: ["src/api/state.ts"],
 				verification: ["tests/views/wiki-state.test.mjs"],
@@ -76,15 +75,11 @@ function traceRecords(traceId = "TRACE-state") {
 }
 
 describe("wiki_state core facade", () => {
-	it("creates view-shaped state from trace records and source-map inputs", () => {
-		const sourceMap = parseSourceMapYaml(
-			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
-		);
+	it("creates view-shaped state from trace records", () => {
 		const state = buildWikiState({
 			records: traceRecords(),
 			generatedAt: "2026-06-11T00:00:03.000Z",
-			sourceMap,
-			sourcePaths: ["src/views/status.ts", "src/missing.ts"],
+			expectedBytesByTrace: { "TRACE-state": 999 },
 		});
 
 		assert.deepEqual(state.traceIds, ["TRACE-state"]);
@@ -95,11 +90,45 @@ describe("wiki_state core facade", () => {
 			"Implement planned work unit WU-state.",
 		);
 		assert.equal(state.workPlan?.cards[0].id, "WU-state");
-		assert.equal(state.quality?.summary.planning.met, 11);
+		assert.equal(state.quality?.summary.planning.met, 13);
 		assert.equal(state.workQueue.summary.ready, 1);
-		assert.equal(state.sourceOwners[0].componentId, "views");
-		assert.equal(state.sourceOwners[0].doc, ".codewiki/kb/system/traces.md");
-		assert.deepEqual(state.sourceOwners[1].sourcePatterns, []);
+		assert.equal(state.traceBoard.summary.needs_implementation, 1);
+		assert.equal(state.traceBoard.traces[0].status, "needs_implementation");
+		assert.equal(state.triggers.triggers.length, 0);
+		assert.equal(state.runtimeBoard.summary.readyWorkUnits, 1);
+		assert.equal(state.runtimeBoard.summary.selectedClaims, 1);
+		assert.equal(
+			state.runtimeBoard.nextActions[0].includes("work-unit claim"),
+			true,
+		);
+		assert.deepEqual(state.append?.byTrace["TRACE-state"], {
+			expectedBytes: 999,
+			nextSequence: 3,
+		});
+		assert.deepEqual(state.next, {
+			action: "implement",
+			reason: "Implement planned work unit WU-state.",
+			traceId: "TRACE-state",
+			tool: "wiki_implement",
+			workUnitId: "WU-state",
+		});
+	});
+
+	it("omits append handles for closed traces", () => {
+		const records = traceRecords("TRACE-state-closed");
+		const close = createTraceCloseRecord({
+			records,
+			gitRestoreRef: "refs/codewiki/archive/TRACE-state-closed",
+			allowIncomplete: true,
+		});
+		const state = buildWikiState({
+			records: [...records, close],
+			expectedBytesByTrace: { "TRACE-state-closed": 111 },
+		});
+
+		assert.equal(state.traceBoard.traces[0].closed, true);
+		assert.deepEqual(state.append?.byTrace, {});
+		assert.equal(state.next.action, "wait");
 	});
 
 	it("requires trace selection for per-trace state when records span traces", () => {
@@ -111,28 +140,36 @@ describe("wiki_state core facade", () => {
 		const selectedState = buildWikiState({
 			records,
 			traceId: "TRACE-state-b",
+			expectedBytesByTrace: {
+				"TRACE-state-a": 100,
+				"TRACE-state-b": 200,
+			},
 		});
 
 		assert.deepEqual(projectState.traceIds, ["TRACE-state-a", "TRACE-state-b"]);
 		assert.equal(projectState.selectedTraceId, undefined);
 		assert.equal(projectState.status, undefined);
 		assert.equal(projectState.workQueue.summary.ready, 2);
+		assert.equal(projectState.traceBoard.summary.needs_implementation, 2);
+		assert.equal(projectState.triggers.triggers.length, 0);
+		assert.equal(projectState.runtimeBoard.summary.readyWorkUnits, 2);
+		assert.equal(projectState.runtimeBoard.summary.traceConflicts, 1);
+		assert.equal(projectState.traceBoard.conflicts.length, 1);
+		assert.equal(
+			projectState.traceBoard.conflicts[0].pathScope,
+			"src/api/state.ts",
+		);
+		assert.equal(projectState.next.action, "wait");
 		assert.equal(selectedState.selectedTraceId, "TRACE-state-b");
 		assert.equal(selectedState.workPlan?.cards[0].id, "WU-state");
+		assert.equal(
+			selectedState.append?.byTrace["TRACE-state-b"].expectedBytes,
+			200,
+		);
+		assert.equal(selectedState.next.tool, "wiki_implement");
 		assert.throws(
 			() => buildWikiState({ records, traceId: "TRACE-state-missing" }),
 			/Unknown trace id/,
 		);
-	});
-
-	it("answers source ownership directly from source-map", () => {
-		const sourceMap = parseSourceMapYaml(
-			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
-		);
-		const owner = wikiStateSourceOwner(sourceMap, "src/api/state.ts");
-
-		assert.equal(owner.componentId, "api");
-		assert.equal(owner.doc, ".codewiki/kb/system/api.md");
-		assert.equal(owner.sourcePatterns.includes("src/api/**"), true);
 	});
 });

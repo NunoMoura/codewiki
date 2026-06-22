@@ -83,8 +83,7 @@ function decisionTableInput(createdAt) {
 			{
 				id: "DTR-project-local-install-smoke",
 				decisionKind: "harden",
-				currentState:
-					"Mutation guards require project-local package installs.",
+				currentState: "Mutation guards require project-local package installs.",
 				desiredState:
 					"A package under the project's .pi/npm tree can bootstrap and append without override.",
 				rationale:
@@ -124,16 +123,25 @@ try {
 	const pack = run("npm", ["pack", "--pack-destination", packRoot]);
 	const tarball = pack.stdout.trim().split(/\r?\n/).at(-1);
 	assert.match(tarball, /^codewiki-.*\.tgz$/);
-	run("npm", ["install", "--prefix", projectPiNpmRoot, join(packRoot, tarball)]);
+	run("npm", [
+		"install",
+		"--prefix",
+		projectPiNpmRoot,
+		join(packRoot, tarball),
+	]);
 	const packageRoot = join(projectPiNpmRoot, "node_modules", "codewiki");
-	assert.equal(existsSync(join(packageRoot, "dist", "pi", "extension.js")), true);
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "pi", "extension.js")),
+		true,
+	);
 
 	const { default: codewikiExtension } = await import(
 		pathToFileURL(join(packageRoot, "dist", "pi", "extension.js")).href
 	);
 	const pi = mockPi();
 	codewikiExtension(pi.api);
-	const wikiCommand = commandByName(pi, "wiki");
+	const bootstrapCommand = commandByName(pi, "wiki-bootstrap");
+	const stateCommand = commandByName(pi, "wiki-state");
 	const decideTool = toolByName(pi, "wiki_decide");
 	const configTool = toolByName(pi, "wiki_config");
 	const notifications = [];
@@ -147,10 +155,17 @@ try {
 	};
 
 	await assert.rejects(
-		() => toolByName(pi, "wiki_state").execute("pre-state", {}, undefined, undefined, ctx),
+		() =>
+			toolByName(pi, "wiki_state").execute(
+				"pre-state",
+				{},
+				undefined,
+				undefined,
+				ctx,
+			),
 		/No CodeWiki project found/,
 	);
-	await wikiCommand.handler("bootstrap --json", ctx);
+	await bootstrapCommand.handler("--json", ctx);
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "config.json")), true);
 	assert.equal(
 		notifications.some((notice) => notice.level === "warning"),
@@ -170,11 +185,20 @@ try {
 	assert.equal(config.config.project, "project-local-install");
 
 	const traceId = "TRACE-project-local-install-smoke";
-	const tracePath = join(projectRoot, ".codewiki", "traces", `${traceId}.jsonl`);
+	const tracePath = join(
+		projectRoot,
+		".codewiki",
+		"traces",
+		`${traceId}.jsonl`,
+	);
 	await mkdir(join(projectRoot, ".codewiki", "traces"), { recursive: true });
 	await writeFile(
 		tracePath,
-		traceHead(traceId, "Project local install smoke", "2026-06-18T14:00:00.000Z"),
+		traceHead(
+			traceId,
+			"Project local install smoke",
+			"2026-06-18T14:00:00.000Z",
+		),
 	);
 	const decided = assertToolResult(
 		await decideTool.execute(
@@ -198,7 +222,10 @@ try {
 	assert.equal(decided.loopResult.exit.passed, true);
 	assert.equal(decided.iterationEvent.data.exit.status, "exit");
 	assert.equal((await stat(tracePath)).size > 0, true);
-	const state = await wikiCommand.handler(`state --board --trace ${traceId} --json`, ctx);
+	const state = await stateCommand.handler(
+		`--board --trace ${traceId} --json`,
+		ctx,
+	);
 	assert.equal(state.data.workQueue.summary.ready, 0);
 	assert.equal(
 		notifications.some((notice) => notice.level === "warning"),

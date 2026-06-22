@@ -52,7 +52,7 @@ function planningEvents() {
 				outcome: "Implementation evidence emits trace events.",
 				...planningQualityFields(),
 				acceptance: ["Changed paths, checks, and proof refs are recorded."],
-				componentRefs: ["component.implementation"],
+				componentRefs: ["implementation"],
 				pathScopes: ["src/implementation"],
 				verification: [
 					"tests/implementation/implementation-iteration.test.mjs",
@@ -64,9 +64,7 @@ function planningEvents() {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -74,9 +72,7 @@ function approvedDecisionRef(events) {
 }
 
 function planningWorkEvent(events, workUnitId = "WU-001") {
-	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
@@ -85,7 +81,7 @@ function planningWorkEvent(events, workUnitId = "WU-001") {
 	return {
 		...iteration,
 		id: `trace:${iteration.id}#work:${item.id}`,
-		event: "planning.iteration",
+		event: "work_units_created",
 		refs: [...(item.decisionRefs || []), ...(item.pathScopes || [])],
 		data: item,
 	};
@@ -109,13 +105,16 @@ function runtimeClaimEvent(planningEvent, overrides = {}) {
 
 function componentMap() {
 	return {
-		sourceRefs: [".codewiki/kb/system/diagrams/file-structure-map.yaml"],
+		sourceRefs: [".codewiki/kb/system/source-map.yaml"],
+		defaults: { inheritance: true, excluded: [] },
 		components: [
 			{
-				id: "component.implementation",
-				kbRefs: [".codewiki/kb/system/loop-contracts.md"],
-				pathPatterns: ["src/implementation/**"],
+				id: "implementation",
+				doc: ".codewiki/kb/system/implementation-loop.md",
+				sourcePatterns: ["src/implementation/**"],
 				testPatterns: ["tests/implementation/**"],
+				generatedViews: [],
+				traceEvents: ["evidence_accepted"],
 			},
 		],
 	};
@@ -167,11 +166,11 @@ describe("implementation iteration runner", () => {
 		assert.equal(result.exit.route, "close");
 		assert.deepEqual(result.exit.coveredPlanningRefs, [planningEvent.id]);
 		assert.deepEqual(result.planningScopes[0].componentRefs, [
-			"component.implementation",
+			"implementation",
 		]);
 		assert.equal(result.draftTraceEvents.length, 0);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "implementation.iteration");
+		assert.equal(result.traceEvents[0].event, "evidence_accepted");
 		assert.equal(result.traceEvents[0].data?.exit.status, "exit");
 		assert.equal(result.traceEvents[0].data?.exit.targetLoop, null);
 		assert.equal(result.checkpoint.type, "tail_checkpoint");
@@ -229,7 +228,7 @@ describe("implementation iteration runner", () => {
 			["missing_planning_coverage", "missing_acceptance_criterion_coverage"],
 		);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "implementation.iteration");
+		assert.equal(result.traceEvents[0].event, "evidence_rejected");
 		assert.equal(result.traceEvents[0].data?.exit.status, "continue");
 	});
 
@@ -950,7 +949,7 @@ describe("implementation iteration runner", () => {
 			),
 			true,
 		);
-		assert.equal(result.traceEvents[0].event, "implementation.iteration");
+		assert.equal(result.traceEvents[0].event, "evidence_rejected");
 		assert.equal(result.traceEvents[0].data?.exit.status, "continue");
 	});
 
@@ -984,7 +983,7 @@ describe("implementation iteration runner", () => {
 			result.exit.issues.some((issue) => issue.code === "worker_blocked"),
 			true,
 		);
-		assert.equal(result.traceEvents[0].event, "implementation.iteration");
+		assert.equal(result.traceEvents[0].event, "implementation_blocked");
 		assert.equal(result.traceEvents[0].data?.exit.status, "blocked");
 		assert.equal(result.workerAggregation.blocked.length, 1);
 	});

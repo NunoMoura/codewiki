@@ -1,4 +1,5 @@
-import type { FileStructureMapContract } from "../knowledge/file-structure-map.ts";
+import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import type { SourceMapContract } from "../knowledge/source-map.ts";
 import {
 	runPlanningIteration,
 	type PlanningIterationInput,
@@ -11,10 +12,10 @@ import type {
 	PlanningWorkItemInput,
 } from "../planning/types.ts";
 import {
-	appendSemanticLoopIteration,
-	assertSemanticLoopIterationBatch,
-	type AppendSemanticLoopIterationResult,
-} from "../traces/orchestrator.ts";
+	appendSemanticLoopReport,
+	assertSemanticLoopReportBatch,
+	type AppendSemanticLoopReportResult,
+} from "../runtime/trace-writer.ts";
 import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiPlanMode = "preview" | "append";
@@ -26,7 +27,7 @@ export interface RunWikiPlanInput {
 	workItemInputs?: PlanningWorkItemInput[];
 	resolutions?: PlanningDecisionResolution[];
 	resolutionInputs?: PlanningDecisionResolutionInput[];
-	componentMap?: FileStructureMapContract;
+	componentMap?: SourceMapContract;
 	parentId?: string | null;
 	createdAt?: string;
 	mode?: WikiPlanMode;
@@ -41,7 +42,7 @@ export interface RunWikiPlanResult {
 	traceId: string;
 	loopResult: PlanningIterationResult;
 	iterationEvent: TraceEvent;
-	append?: AppendSemanticLoopIterationResult<PlanningIterationResult>["append"];
+	append?: AppendSemanticLoopReportResult<PlanningIterationResult>["append"];
 }
 
 export async function runWikiPlan(
@@ -51,7 +52,7 @@ export async function runWikiPlan(
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
 	const loopInput = planningIterationInput(input);
 	if (mode === "append") {
-		const result = await appendSemanticLoopIteration({
+		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			loop: "planning",
 			expectedBytes: requiredExpectedBytes(input.expectedBytes),
@@ -72,7 +73,7 @@ export async function runWikiPlan(
 		...loopInput,
 		startSequence: nextSequence,
 	});
-	const iterationEvent = assertSemanticLoopIterationBatch({
+	const iterationEvent = assertSemanticLoopReportBatch({
 		records: loopResult.traceRecords,
 		loop: "planning",
 		nextSequence,
@@ -104,19 +105,38 @@ function planningIterationInput(
 
 function requiredNextSequence(value: number): number {
 	if (!Number.isInteger(value) || value < 1) {
-		throw new Error("wiki_plan requires nextSequence >= 1.");
+		throw createCodewikiApiError({
+			operation: "wiki_plan",
+			code: "invalid_input",
+			field: "nextSequence",
+			message: "wiki_plan requires nextSequence >= 1.",
+			data: { value },
+		});
 	}
 	return value;
 }
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw new Error("wiki_plan append mode requires expectedBytes >= 0.");
+		throw createCodewikiApiError({
+			operation: "wiki_plan",
+			code: "invalid_input",
+			field: "expectedBytes",
+			message: "wiki_plan append mode requires expectedBytes >= 0.",
+			data: { value },
+		});
 	}
 	return value;
 }
 
 function requiredRepoRoot(value: string | undefined): string {
-	if (!value) throw new Error("wiki_plan append mode requires repoRoot.");
+	if (!value) {
+		throw createCodewikiApiError({
+			operation: "wiki_plan",
+			code: "missing_required",
+			field: "repoRoot",
+			message: "wiki_plan append mode requires repoRoot.",
+		});
+	}
 	return value;
 }

@@ -18,6 +18,7 @@ const expectedSupportRoots = [
 	"cli",
 	"pi",
 	"runtime",
+	"error-handling",
 	"project",
 	"utils",
 ];
@@ -95,7 +96,6 @@ describe("fresh scaffold", () => {
 			"runWikiRuntime",
 			"sourceLayout",
 			"validateWikiConfig",
-			"wikiStateSourceOwner",
 		]);
 	});
 

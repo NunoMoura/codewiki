@@ -22,7 +22,12 @@ export function assertProjectLocalMutationAllowed(
 	input: ProjectLocalInstallGuardInput,
 ): void {
 	if (input.input?.[NON_PROJECT_INSTALL_OVERRIDE_FIELD] === true) return;
-	if (isProjectLocalCodewikiInstall(input.moduleUrl, input.projectRoot ?? input.ctx.cwd)) {
+	if (
+		isProjectLocalCodewikiInstall(
+			input.moduleUrl,
+			input.projectRoot ?? input.ctx.cwd,
+		)
+	) {
 		return;
 	}
 	throw new Error(
@@ -31,9 +36,9 @@ export function assertProjectLocalMutationAllowed(
 	);
 }
 
-export function stripNonProjectInstallOverride<T extends Record<string, unknown>>(
-	input: T,
-): T {
+export function stripNonProjectInstallOverride<
+	T extends Record<string, unknown>,
+>(input: T): T {
 	if (!(NON_PROJECT_INSTALL_OVERRIDE_FIELD in input)) return input;
 	const cleaned = { ...input };
 	delete cleaned[NON_PROJECT_INSTALL_OVERRIDE_FIELD];
@@ -63,7 +68,9 @@ export function projectLocalInstallWarning(
 }
 
 function modulePathFromUrl(moduleUrl: string): string {
-	const path = moduleUrl.startsWith("file:") ? fileURLToPath(moduleUrl) : moduleUrl;
+	const path = moduleUrl.startsWith("file:")
+		? fileURLToPath(moduleUrl)
+		: moduleUrl;
 	return resolve(path);
 }
 

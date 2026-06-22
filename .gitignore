@@ -7,5 +7,3 @@ dist/
 .codewiki/runtime/
 .codewiki/session/queue.json
 .tmp-worktrees/
-_OLD_VERSION/**
-!_OLD_VERSION/tsconfig.json

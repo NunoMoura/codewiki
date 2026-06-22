@@ -3,9 +3,9 @@ import {
 	componentSupportsSourcePath,
 	componentSupportsTestPath,
 	unknownComponentRefs,
-	type FileStructureComponent,
-	type FileStructureMapContract,
-} from "../knowledge/file-structure-map.ts";
+	type SourceMapComponent,
+	type SourceMapContract,
+} from "../knowledge/source-map.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
 import type {
 	ExitDetails,
@@ -29,6 +29,9 @@ export type PlanningExitIssueCode =
 	| "missing_technical_requirements"
 	| "missing_verification"
 	| "missing_worker_profile"
+	| "invalid_planning_depth"
+	| "invalid_micro_plan_dependency"
+	| "invalid_micro_plan_decision_count"
 	| "missing_planning_assessment"
 	| "planning_assessment_not_worker_ready"
 	| "missing_uncertainty_resolution"
@@ -49,7 +52,11 @@ export type PlanningExitIssueCode =
 	| "verification_outside_component_tests"
 	| "unknown_dependency"
 	| "dependency_cycle"
-	| "invalid_traceability_ref";
+	| "invalid_traceability_ref"
+	| "invalid_trigger"
+	| "invalid_trigger_kind"
+	| "invalid_trigger_run_mode"
+	| "invalid_trigger_concurrency";
 
 export interface PlanningExitIssue {
 	code: PlanningExitIssueCode;
@@ -60,6 +67,19 @@ export interface PlanningExitIssue {
 	route?: ExitRoute;
 	message: string;
 }
+
+const KNOWN_TRIGGER_KINDS = new Set<string>([
+	"schedule",
+	"trigger",
+	"hook",
+	"manual",
+]);
+const KNOWN_TRIGGER_RUN_MODES = new Set<string>(["new_trace"]);
+const KNOWN_TRIGGER_CONCURRENCY = new Set<string>([
+	"skip_if_active",
+	"queue",
+	"replace",
+]);
 
 const KNOWN_RESOLUTION_KINDS = new Set<string>([
 	"work-unit",
@@ -74,7 +94,7 @@ export interface PlanningExitInput {
 	decisionRefs: string[];
 	workItems: PlanningWorkItem[];
 	resolutions: PlanningDecisionResolution[];
-	componentMap?: FileStructureMapContract;
+	componentMap?: SourceMapContract;
 }
 
 export interface PlanningExitResult extends ExitDetails {
@@ -121,12 +141,14 @@ function collectPlanningExitIssues(
 		...technicalRequirementIssues(input.workItems),
 		...verificationIssues(input.workItems),
 		...workerProfileIssues(input.workItems),
+		...planningDepthIssues(input.workItems),
 		...planningAssessmentIssues(input.workItems),
 		...planningUncertaintyIssues(input.workItems),
 		...rightSizingIssues(input.workItems),
 		...acceptanceCriterionIssues(input.workItems),
 		...componentAlignmentIssues(input),
 		...dependencyIssues(input.workItems),
+		...triggerIssues(input.workItems),
 		...traceabilityRefIssues(input),
 		...resolutionKindIssues(input.resolutions),
 		...resolutionIssues(input.resolutions),
@@ -226,6 +248,36 @@ function workerProfileIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
 				message: `Planning work item ${item.id} needs a worker profile for assignment.`,
 			},
 		];
+	});
+}
+
+function planningDepthIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
+	return items.flatMap((item): PlanningExitIssue[] => {
+		const issues: PlanningExitIssue[] = [];
+		if (!["micro", "standard"].includes(item.planningDepth)) {
+			issues.push({
+				code: "invalid_planning_depth",
+				workItemId: item.id,
+				message: `Planning work item ${item.id} has invalid planningDepth ${item.planningDepth}.`,
+			});
+		}
+		if (item.planningDepth === "micro") {
+			if (item.dependsOn.length > 0) {
+				issues.push({
+					code: "invalid_micro_plan_dependency",
+					workItemId: item.id,
+					message: `Micro-plan work item ${item.id} must not depend on other work items.`,
+				});
+			}
+			if (item.decisionRefs.length !== 1) {
+				issues.push({
+					code: "invalid_micro_plan_decision_count",
+					workItemId: item.id,
+					message: `Micro-plan work item ${item.id} must cover exactly one decision ref.`,
+				});
+			}
+		}
+		return issues;
 	});
 }
 
@@ -377,7 +429,7 @@ function missingComponentRefIssues(
 			{
 				code: "missing_component_ref" as const,
 				workItemId: item.id,
-				message: `Planning work item ${item.id} needs componentRefs for file-structure alignment.`,
+				message: `Planning work item ${item.id} needs componentRefs for source-map alignment.`,
 			},
 		];
 	});
@@ -414,7 +466,7 @@ function invalidComponentContractIssues(
 				{
 					code: "invalid_component_contract" as const,
 					componentRef: component.id,
-					message: `File-structure component ${component.id} is missing ${missing.join(", ")}.`,
+					message: `Source-map component ${component.id} is missing ${missing.join(", ")}.`,
 				},
 			];
 		},
@@ -484,12 +536,12 @@ function componentVerificationIssues(
 }
 
 function componentContractMissingFields(
-	component: FileStructureComponent,
+	component: SourceMapComponent,
 ): string[] {
 	return [
-		component.kbRefs.length ? "" : "kbRefs",
-		component.pathPatterns.length ? "" : "paths",
-		component.testPatterns.length ? "" : "testPaths",
+		component.doc ? "" : "doc",
+		component.sourcePatterns.length ? "" : "source",
+		component.testPatterns.length || component.testRationale ? "" : "tests",
 	].filter(Boolean);
 }
 
@@ -561,12 +613,57 @@ function visitDependency(
 	visited.add(id);
 }
 
+function triggerIssues(items: PlanningWorkItem[]): PlanningExitIssue[] {
+	return items.flatMap((item): PlanningExitIssue[] => {
+		const trigger = item.trigger;
+		if (!trigger) return [];
+		const issues: PlanningExitIssue[] = [];
+		const missing = [
+			trigger.id ? "" : "id",
+			trigger.runKeyTemplate ? "" : "runKeyTemplate",
+			trigger.owner ? "" : "owner",
+			trigger.trigger ? "" : "trigger",
+			trigger.refs.length ? "" : "refs",
+		].filter(Boolean);
+		if (missing.length > 0) {
+			issues.push({
+				code: "invalid_trigger",
+				workItemId: item.id,
+				message: `Planning trigger for ${item.id} is missing ${missing.join(", ")}.`,
+			});
+		}
+		if (!KNOWN_TRIGGER_KINDS.has(trigger.kind)) {
+			issues.push({
+				code: "invalid_trigger_kind",
+				workItemId: item.id,
+				message: `Planning trigger for ${item.id} has invalid kind ${trigger.kind}.`,
+			});
+		}
+		if (!KNOWN_TRIGGER_RUN_MODES.has(trigger.runMode)) {
+			issues.push({
+				code: "invalid_trigger_run_mode",
+				workItemId: item.id,
+				message: `Planning trigger for ${item.id} has invalid runMode ${trigger.runMode}.`,
+			});
+		}
+		if (!KNOWN_TRIGGER_CONCURRENCY.has(trigger.concurrency)) {
+			issues.push({
+				code: "invalid_trigger_concurrency",
+				workItemId: item.id,
+				message: `Planning trigger for ${item.id} has invalid concurrency ${trigger.concurrency}.`,
+			});
+		}
+		return issues;
+	});
+}
+
 function traceabilityRefIssues(input: PlanningExitInput): PlanningExitIssue[] {
 	return invalidTraceRefs([
 		...input.decisionRefs,
 		...input.workItems.flatMap((item) => [
 			...item.decisionRefs,
 			...item.pathScopes,
+			...(item.trigger?.refs || []),
 		]),
 		...input.resolutions.flatMap((resolution) => [
 			resolution.decisionRef,
@@ -734,6 +831,12 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Add verification refs or commands that implementation must run or satisfy.",
 	missing_worker_profile:
 		"Declare the worker profile needed to claim this unit of work.",
+	invalid_planning_depth:
+		"Use planningDepth micro or standard on the work item.",
+	invalid_micro_plan_dependency:
+		"Remove dependencies from the micro-plan or promote it to standard planning.",
+	invalid_micro_plan_decision_count:
+		"Make the micro-plan cover exactly one decision or promote it to standard planning.",
 	missing_planning_assessment:
 		"Add agent assessment proving the work item is independent and implementation-ready.",
 	planning_assessment_not_worker_ready:
@@ -752,11 +855,10 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 	duplicate_acceptance_criterion_id:
 		"Give each acceptance criterion within a work item a unique id.",
 	missing_component_ref:
-		"Attach componentRefs from the file-structure map to the work item.",
-	unknown_component_ref:
-		"Use component ids declared in the KB file-structure map.",
+		"Attach componentRefs from source-map.yaml to the work item.",
+	unknown_component_ref: "Use component ids declared in source-map.yaml.",
 	invalid_component_contract:
-		"Complete the component map entry with KB refs, owned paths, and test paths.",
+		"Complete the source-map component entry with doc, source, and tests.",
 	path_outside_component_scope:
 		"Align path scopes with declared component ownership or choose the correct component.",
 	verification_outside_component_tests:
@@ -775,6 +877,13 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Continue in the decision loop before planning hands work to implementation.",
 	path_conflict:
 		"Order conflicting work units with a real dependency or split the path scopes.",
+	invalid_trigger:
+		"Complete trigger id, owner, trigger source, run key template, and canonical refs before implementation consumes recurring, event, or hook work.",
+	invalid_trigger_kind: "Use trigger kind schedule, trigger, hook, or manual.",
+	invalid_trigger_run_mode:
+		"Use runMode new_trace so each due execution has an independent accountable trace.",
+	invalid_trigger_concurrency:
+		"Use concurrency skip_if_active, queue, or replace.",
 };
 
 function planningRemediationAction(issue: PlanningExitIssue): string {

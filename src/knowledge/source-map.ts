@@ -1,5 +1,4 @@
 import { parse as parseYaml } from "yaml";
-import { pathMatchesPattern } from "./file-structure-map.ts";
 
 export interface SourceMapDefaults {
 	inheritance: boolean;
@@ -18,6 +17,9 @@ export interface SourceMapComponent {
 	testPolicy?: string;
 	testRationale?: string;
 }
+
+export type ComponentOwnershipMap = SourceMapContract;
+export type ComponentOwnership = SourceMapComponent;
 
 export interface SourceMapContract {
 	id?: string;
@@ -102,7 +104,57 @@ export function sourceMapComponentById(
 	map: SourceMapContract,
 	id: string,
 ): SourceMapComponent | undefined {
-	return map.components.find((component) => component.id === id);
+	const normalized = normalizeComponentRef(id);
+	return map.components.find(
+		(component) => normalizeComponentRef(component.id) === normalized,
+	);
+}
+
+export function componentsForRefs(
+	map: SourceMapContract,
+	componentRefs: string[],
+): SourceMapComponent[] {
+	const requested = new Set(componentRefs.map(normalizeComponentRef));
+	return map.components.filter((component) =>
+		requested.has(normalizeComponentRef(component.id)),
+	);
+}
+
+export function unknownComponentRefs(
+	map: SourceMapContract,
+	componentRefs: string[],
+): string[] {
+	const known = new Set(
+		map.components.map((component) => normalizeComponentRef(component.id)),
+	);
+	return unique(componentRefs).filter(
+		(componentRef) => !known.has(normalizeComponentRef(componentRef)),
+	);
+}
+
+export function componentKbRefs(
+	map: SourceMapContract,
+	componentRefs: string[],
+): string[] {
+	return unique(
+		componentsForRefs(map, componentRefs).flatMap((component) => [
+			component.doc,
+		]),
+	);
+}
+
+export function componentSupportsSourcePath(
+	component: SourceMapComponent,
+	path: string,
+): boolean {
+	return matchesAny(path, [component.doc, ...component.sourcePatterns]);
+}
+
+export function componentSupportsTestPath(
+	component: SourceMapComponent,
+	path: string,
+): boolean {
+	return matchesAny(path, component.testPatterns);
 }
 
 export function validateSourceMap(
@@ -330,6 +382,23 @@ function matchesAny(path: string, patterns: string[]): boolean {
 	return patterns.some((pattern) => pathMatchesPattern(path, pattern));
 }
 
+export function pathMatchesPattern(path: string, pattern: string): boolean {
+	const normalizedPath = artifactPath(path);
+	const normalizedPattern = artifactPath(pattern);
+	if (!normalizedPath || !normalizedPattern) return false;
+	if (normalizedPattern.endsWith("/**")) {
+		const root = normalizedPattern.slice(0, -3);
+		return normalizedPath === root || normalizedPath.startsWith(`${root}/`);
+	}
+	if (!normalizedPattern.includes("*")) {
+		return normalizedPath === normalizedPattern;
+	}
+	return globSegmentsMatch(
+		normalizedPattern.split("/"),
+		normalizedPath.split("/"),
+	);
+}
+
 function componentSpecificity(component: SourceMapComponent): number {
 	return Math.max(
 		0,
@@ -337,6 +406,56 @@ function componentSpecificity(component: SourceMapComponent): number {
 			(pattern) => pattern.replace(/\*/g, "").length,
 		),
 	);
+}
+
+function globSegmentsMatch(pattern: string[], path: string[]): boolean {
+	if (pattern.length === 0) return path.length === 0;
+	const [head, ...rest] = pattern;
+	if (head === "**") {
+		return (
+			globSegmentsMatch(rest, path) ||
+			(path.length > 0 && globSegmentsMatch(pattern, path.slice(1)))
+		);
+	}
+	if (path.length === 0) return false;
+	return segmentMatches(head || "", path[0] || "")
+		? globSegmentsMatch(rest, path.slice(1))
+		: false;
+}
+
+function segmentMatches(pattern: string, value: string): boolean {
+	if (pattern === "*") return true;
+	if (!pattern.includes("*")) return pattern === value;
+	const parts = pattern.split("*");
+	let offset = 0;
+	const first = parts[0] || "";
+	if (first && !value.startsWith(first)) return false;
+	offset = first.length;
+	for (const part of parts.slice(1, -1)) {
+		if (!part) continue;
+		const index = value.indexOf(part, offset);
+		if (index === -1) return false;
+		offset = index + part.length;
+	}
+	const last = parts.at(-1) || "";
+	if (!last) return true;
+	const index = value.indexOf(last, offset);
+	return index !== -1 && value.endsWith(last);
+}
+
+function artifactPath(value: string): string {
+	const normalized = text(value).replace(/\\/g, "/");
+	if (normalized.startsWith("kb:")) {
+		return `.codewiki/kb/${normalized.slice(3)}`;
+	}
+	return normalized.replace(/\/$/, "");
+}
+
+function normalizeComponentRef(value: string): string {
+	const normalized = text(value);
+	return normalized.startsWith("component.")
+		? normalized.slice("component.".length)
+		: normalized;
 }
 
 function booleanValue(value: unknown, options: { fallback: boolean }): boolean {

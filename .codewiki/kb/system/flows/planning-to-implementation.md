@@ -3,7 +3,7 @@
 Implementation and runtime scheduling may start only from a planning iteration whose exit status is `exit`.
 
 ```text
-planning.iteration(exit) -> work-plan view -> work-queue view -> runtime scheduling -> implementation.iteration
+planning.work_units_created(exit) -> work-plan view -> work-queue view -> runtime scheduling -> implementation.evidence_accepted
 ```
 
 Planning output gives implementation:

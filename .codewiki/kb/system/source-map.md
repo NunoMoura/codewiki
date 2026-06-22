@@ -46,7 +46,7 @@ Source-map validation checks must verify:
 
 Validation helpers are pure. They accept repo file lists and Markdown/frontmatter presence facts from callers rather than reading the filesystem directly.
 
-If a mapping is needed, add it to `source-map.yaml` or to an owning diagram YAML file. If doc metadata is needed, derive it from path, first heading, Git, or source-map entries.
+If ownership mapping is needed, add it to `source-map.yaml`. If conceptual diagram metadata is needed, keep it in the owning diagram YAML without making it source ownership truth. If doc metadata is needed, derive it from path, first heading, Git, or source-map entries.
 
 ## Agent navigation rule
 
@@ -61,7 +61,7 @@ When editing source:
 
 ## Related docs
 
-- [File Structure](file-structure.md)
+- [Source Map](source-map.md)
 - [Loop Model](loop-model.md)
 - [Traces](traces.md)
 - [Runtime](runtime.md)

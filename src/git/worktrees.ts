@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
-import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
+import { pathMatchesPattern } from "../knowledge/source-map.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
-import type { RuntimeDispatchItem } from "../runtime/scheduler.ts";
+import type { RuntimeWorkUnitClaimCandidate } from "../runtime/work-unit-claim-selection.ts";
 
 export interface WorktreeRef {
 	path: string;
@@ -103,12 +103,12 @@ export class WorktreeCommandExecutionError extends Error {
 	}
 }
 
-export function planRuntimeDispatchWorktrees(
-	items: RuntimeDispatchItem[],
+export function planRuntimeWorkUnitClaimWorktrees(
+	items: RuntimeWorkUnitClaimCandidate[],
 	options: RuntimeWorktreePlanOptions,
 ): RuntimeWorktreePlan[] {
 	return items.map((item, index) =>
-		planRuntimeDispatchWorktree(item, index, items, options),
+		planRuntimeWorkUnitClaimWorktree(item, index, items, options),
 	);
 }
 
@@ -137,10 +137,10 @@ export async function executeRuntimeWorktreeCommands(
 	return { dryRun, steps: [...steps], records };
 }
 
-function planRuntimeDispatchWorktree(
-	item: RuntimeDispatchItem,
+function planRuntimeWorkUnitClaimWorktree(
+	item: RuntimeWorkUnitClaimCandidate,
 	index: number,
-	items: RuntimeDispatchItem[],
+	items: RuntimeWorkUnitClaimCandidate[],
 	options: RuntimeWorktreePlanOptions,
 ): RuntimeWorktreePlan {
 	const workerId = workerIdForItem(item, index, options);
@@ -250,13 +250,13 @@ function normalizeRunnerResult(
 }
 
 function worktreeReason(
-	item: RuntimeDispatchItem,
-	items: RuntimeDispatchItem[],
+	item: RuntimeWorkUnitClaimCandidate,
+	items: RuntimeWorkUnitClaimCandidate[],
 	options: RuntimeWorktreePlanOptions,
 ): string {
 	if (options.mode === "none") return "not_required";
 	if (options.mode === "worktree") return "policy_required";
-	if (items.length > 1) return "parallel_dispatch";
+	if (items.length > 1) return "parallel_claims";
 	if (dirtyPathsOverlap(item, options.dirtyPaths || [])) {
 		return "dirty_working_tree_overlap";
 	}
@@ -264,7 +264,7 @@ function worktreeReason(
 }
 
 function worktreeRef(input: {
-	item: RuntimeDispatchItem;
+	item: RuntimeWorkUnitClaimCandidate;
 	workerId: string;
 	options: RuntimeWorktreePlanOptions;
 }): WorktreeRef {
@@ -285,7 +285,7 @@ function worktreeRef(input: {
 
 function worktreePath(
 	options: RuntimeWorktreePlanOptions,
-	item: RuntimeDispatchItem,
+	item: RuntimeWorkUnitClaimCandidate,
 	workerId: string,
 ): string {
 	if (options.worktreeRoot) {
@@ -305,7 +305,7 @@ function worktreePath(
 
 function defaultWorktreeRoot(
 	options: RuntimeWorktreePlanOptions,
-	item: RuntimeDispatchItem,
+	item: RuntimeWorkUnitClaimCandidate,
 ): string {
 	const repoRoot = resolve(options.repoRoot || ".");
 	return resolve(repoRoot, traceTmpPath(item.traceId, "worktree"));
@@ -337,7 +337,7 @@ function commandPlan(
 }
 
 function dirtyPathsOverlap(
-	item: RuntimeDispatchItem,
+	item: RuntimeWorkUnitClaimCandidate,
 	dirtyPaths: string[],
 ): boolean {
 	return item.pathScopes.some((scope) =>
@@ -357,7 +357,11 @@ function pathsOverlap(left: string, right: string): boolean {
 
 function rootsOverlap(left: string, right: string): boolean {
 	if (!left || !right) return false;
-	return left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`);
+	return (
+		left === right ||
+		left.startsWith(`${right}/`) ||
+		right.startsWith(`${left}/`)
+	);
 }
 
 function globRoot(path: string): string {
@@ -376,7 +380,7 @@ function normalizePath(path: string): string {
 }
 
 function workerIdForItem(
-	item: RuntimeDispatchItem,
+	item: RuntimeWorkUnitClaimCandidate,
 	index: number,
 	options: RuntimeWorktreePlanOptions,
 ): string {

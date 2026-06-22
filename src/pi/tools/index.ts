@@ -5,17 +5,14 @@ import {
 	runWikiDecide,
 	runWikiImplement,
 	runWikiPlan,
-	runWikiRuntime,
 	type RunWikiArchiveInput,
 	type RunWikiConfigInput,
 	type RunWikiDecideInput,
 	type RunWikiImplementInput,
 	type RunWikiPlanInput,
-	type RunWikiRuntimeInput,
 } from "../../api/index.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
-	loadWikiConfigFile,
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../../project/config-file.ts";
@@ -26,10 +23,6 @@ import {
 	projectLocalInstallWarning,
 	stripNonProjectInstallOverride,
 } from "../install-scope.ts";
-import {
-	renderCodewikiToolCall,
-	renderCodewikiToolResult,
-} from "../rendering/tool-renderers.ts";
 import type {
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
@@ -45,7 +38,6 @@ export const CODEWIKI_TOOL_NAMES = [
 	"wiki_decide",
 	"wiki_plan",
 	"wiki_implement",
-	"wiki_runtime",
 	"wiki_archive",
 ] as const;
 
@@ -120,7 +112,6 @@ function codewikiTools(): CodewikiToolDefinition[] {
 			"Run the CodeWiki implementation loop facade for source evidence and planned verification coverage.",
 			runWikiImplement,
 		),
-		wikiRuntimeTool(),
 		facadeTool<RunWikiArchiveInput>(
 			"wiki_archive",
 			"CodeWiki Archive",
@@ -136,17 +127,14 @@ function wikiStateTool(): CodewikiToolDefinition {
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
-			"Read CodeWiki trace-backed status, resume, work-plan, work-queue, blockers, conflicts, quality, and source ownership views for the current project.",
+			"Read CodeWiki trace-backed status, board, blockers, and quality views for the current project.",
 		promptSnippet:
-			"Read CodeWiki state for the current repository from traces and source-map.",
+			"Read CodeWiki state for the current repository from active trace records.",
 		promptGuidelines: [
-			"Use wiki_state before CodeWiki decision, planning, implementation, runtime, or archive work to inspect current trace-backed state.",
+			"Use wiki_state before CodeWiki decision, planning, implementation, archive, or coordination-sensitive work to inspect current trace-backed state.",
 			"wiki_state does not write files and should not be replaced by shelling out to the transitional CodeWiki CLI.",
 		],
 		executionMode: "parallel",
-		renderCall: (args) => renderCodewikiToolCall(WIKI_STATE_TOOL_NAME, args),
-		renderResult: (result, options) =>
-			renderCodewikiToolResult(WIKI_STATE_TOOL_NAME, result, options),
 		parameters: Type.Object(
 			{
 				view: Type.Optional(
@@ -175,12 +163,6 @@ function wikiStateTool(): CodewikiToolDefinition {
 							"Optional generated timestamp for deterministic views.",
 					}),
 				),
-				sourcePaths: Type.Optional(
-					Type.Array(Type.String(), {
-						description:
-							"Optional source paths to resolve through source-map ownership.",
-					}),
-				),
 			},
 			{ additionalProperties: false },
 		),
@@ -191,17 +173,14 @@ function wikiStateTool(): CodewikiToolDefinition {
 				"view",
 				"traceId",
 				"generatedAt",
-				"sourcePaths",
 			]);
 			assertOptionalStateView(WIKI_STATE_TOOL_NAME, input, "view");
 			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "traceId");
 			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "generatedAt");
-			assertOptionalStringArray(WIKI_STATE_TOOL_NAME, input, "sourcePaths");
 			const snapshot = await buildProjectWikiState({
 				repoRoot: root,
 				traceId: optionalString(input.traceId),
 				generatedAt: optionalString(input.generatedAt),
-				sourcePaths: stringArray(input.sourcePaths),
 			});
 			const view = optionalStateView(input.view);
 			return toolResult(
@@ -226,9 +205,6 @@ function wikiConfigTool(): CodewikiToolDefinition {
 			"wiki_config writes only when its write parameter is true; otherwise it is read-only.",
 		],
 		executionMode: "sequential",
-		renderCall: (args) => renderCodewikiToolCall("wiki_config", args),
-		renderResult: (result, options) =>
-			renderCodewikiToolResult("wiki_config", result, options),
 		parameters: Type.Object(
 			{
 				allowNonProjectInstall: Type.Optional(
@@ -295,26 +271,6 @@ function wikiConfigTool(): CodewikiToolDefinition {
 	};
 }
 
-function wikiRuntimeTool(): CodewikiToolDefinition {
-	return facadeTool<RunWikiRuntimeInput>(
-		"wiki_runtime",
-		"CodeWiki Runtime",
-		"Preview or append CodeWiki runtime dispatch claims using the core facade.",
-		"Run the CodeWiki runtime facade for dispatch planning and trace-owned worker claims.",
-		async (input, ctx) => {
-			const root = await findCodewikiProjectRoot(ctx.cwd);
-			const prepared = withRepoRoot(
-				input,
-				root,
-			) as unknown as RunWikiRuntimeInput;
-			if (!prepared.config && prepared.repoRoot) {
-				prepared.config = await loadWikiConfigFile(prepared.repoRoot);
-			}
-			return runWikiRuntime(prepared);
-		},
-	);
-}
-
 function facadeTool<T extends object>(
 	name: string,
 	label: string,
@@ -332,9 +288,6 @@ function facadeTool<T extends object>(
 			`${name} defaults to preview mode unless its input.mode is explicitly set to append with expected byte checks.`,
 		],
 		executionMode: READ_ONLY_TOOL_NAMES.has(name) ? "parallel" : "sequential",
-		renderCall: (args) => renderCodewikiToolCall(name, args),
-		renderResult: (result, options) =>
-			renderCodewikiToolResult(name, result, options),
 		parameters: inputSchema(description),
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const args = paramsObject(name, params, ["input"]);
@@ -343,7 +296,9 @@ function facadeTool<T extends object>(
 			const prepared = withRepoRoot(input, root);
 			assertAppendContract(name, prepared);
 			const warning =
-				prepared.mode === "append" ? undefined : notifyInstallWarning(ctx, root);
+				prepared.mode === "append"
+					? undefined
+					: notifyInstallWarning(ctx, root);
 			if (prepared.mode === "append") {
 				assertProjectLocalMutationAllowed({
 					toolName: name,
@@ -379,7 +334,7 @@ async function requireCodewikiRoot(
 	const root = await findCodewikiProjectRoot(ctx.cwd);
 	if (!root) {
 		throw new Error(
-			"No CodeWiki project found. Run /wiki bootstrap from the project root.",
+			"No CodeWiki project found. Run /wiki-bootstrap from the project root.",
 		);
 	}
 	return root;
@@ -391,7 +346,7 @@ async function writeConfig(
 ): Promise<unknown> {
 	if (!root) {
 		throw new Error(
-			"wiki_config write requires an existing CodeWiki project. Run /wiki bootstrap first.",
+			"wiki_config write requires an existing CodeWiki project. Run /wiki-bootstrap first.",
 		);
 	}
 	return await updateWikiConfigFile(root, input);
@@ -447,18 +402,6 @@ function assertOptionalString(
 	}
 }
 
-function assertOptionalStringArray(
-	toolName: string,
-	input: Record<string, unknown>,
-	key: string,
-): void {
-	const value = input[key];
-	if (value === undefined) return;
-	if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) {
-		throw new Error(`${toolName} ${key} must be an array of strings.`);
-	}
-}
-
 function assertOptionalBoolean(
 	toolName: string,
 	input: Record<string, unknown>,
@@ -497,11 +440,6 @@ function assertAppendContract(
 			`${toolName} append mode requires a discovered CodeWiki project root.`,
 		);
 	}
-	if (toolName === "wiki_runtime") {
-		assertIntegerMap(toolName, input, "nextSequenceByTrace", 1);
-		assertIntegerMap(toolName, input, "expectedBytesByTrace", 0);
-		return;
-	}
 	assertIntegerField(toolName, input, "expectedBytes", 0);
 	if (toolName !== "wiki_archive") {
 		assertIntegerField(toolName, input, "nextSequence", 1);
@@ -520,27 +458,6 @@ function assertIntegerField(
 	}
 }
 
-function assertIntegerMap(
-	toolName: string,
-	input: Record<string, unknown>,
-	key: string,
-	minimum: number,
-): void {
-	const value = input[key];
-	if (!value || typeof value !== "object" || Array.isArray(value)) {
-		throw new Error(`${toolName} append mode requires ${key}.`);
-	}
-	for (const [traceId, entry] of Object.entries(
-		value as Record<string, unknown>,
-	)) {
-		if (!Number.isInteger(entry) || (entry as number) < minimum) {
-			throw new Error(
-				`${toolName} append mode requires ${key}.${traceId} >= ${minimum}.`,
-			);
-		}
-	}
-}
-
 function optionalStateView(value: unknown): WikiStateToolView | undefined {
 	return typeof value === "string" && WIKI_STATE_TOOL_VIEWS.has(value)
 		? (value as WikiStateToolView)
@@ -555,9 +472,6 @@ function stateToolPayload(
 	return {
 		view,
 		data: stateToolViewData(snapshot, view),
-		...(snapshot.sourceOwners.length
-			? { sourceOwners: snapshot.sourceOwners }
-			: {}),
 	};
 }
 
@@ -571,12 +485,17 @@ function stateToolViewData(
 			status: snapshot.status,
 			resume: snapshot.resume,
 			workQueueSummary: snapshot.workQueue.summary,
+			next: snapshot.next,
+			append: snapshot.append,
 		};
 	}
 	if (view === "board") {
 		return {
 			workPlan: snapshot.workPlan,
 			workQueue: snapshot.workQueue,
+			runtimeBoard: snapshot.runtimeBoard,
+			next: snapshot.next,
+			append: snapshot.append,
 		};
 	}
 	if (view === "quality") return snapshot.quality;
@@ -586,12 +505,6 @@ function stateToolViewData(
 
 function optionalString(value: unknown): string | undefined {
 	return typeof value === "string" && value.trim() ? value : undefined;
-}
-
-function stringArray(value: unknown): string[] {
-	return Array.isArray(value)
-		? value.filter((item): item is string => typeof item === "string")
-		: [];
 }
 
 function modeText(input: object): string {

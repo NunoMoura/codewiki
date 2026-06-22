@@ -1,14 +1,11 @@
 import { normalizeTraceRefs } from "../traces/refs.ts";
-import type { TraceEvent, TraceLoop } from "../traces/types.ts";
+import type { TraceEvent } from "../traces/types.ts";
 
-export type RuntimeClaimEventName =
-	| "runtime.work.claimed"
-	| "runtime.claim.acquired";
+export type RuntimeClaimEventName = "runtime.work_unit.claimed";
 export type RuntimeClaimReleaseEventName =
-	| "runtime.work.released"
-	| "runtime.claim.released"
-	| "runtime.claim.expired"
-	| "runtime.claim.cancelled";
+	| "runtime.work_unit.claim.released"
+	| "runtime.work_unit.claim.expired"
+	| "runtime.work_unit.claim.cancelled";
 
 export interface TraceClaim {
 	traceId: string;
@@ -22,7 +19,6 @@ export interface CreateRuntimeClaimEventInput {
 	parentId: string | null;
 	sequence: number;
 	createdAt: string;
-	loop?: TraceLoop;
 	event?: RuntimeClaimEventName;
 	claimId?: string;
 	workerId: string;
@@ -40,7 +36,6 @@ export interface CreateRuntimeClaimReleaseEventInput {
 	parentId: string | null;
 	sequence: number;
 	createdAt: string;
-	loop?: TraceLoop;
 	event?: RuntimeClaimReleaseEventName;
 	claimId?: string;
 	workerId?: string;
@@ -61,8 +56,7 @@ export function createRuntimeClaimEvent(
 		parentId: input.parentId,
 		traceId: input.traceId,
 		sequence: input.sequence,
-		loop: input.loop || "implementation",
-		event: input.event || "runtime.work.claimed",
+		event: input.event || "runtime.work_unit.claimed",
 		refs: claimRefs(input),
 		createdAt: input.createdAt,
 		data: {
@@ -86,8 +80,7 @@ export function createRuntimeClaimReleaseEvent(
 		parentId: input.parentId,
 		traceId: input.traceId,
 		sequence: input.sequence,
-		loop: input.loop || "implementation",
-		event: input.event || "runtime.claim.released",
+		event: input.event || "runtime.work_unit.claim.released",
 		refs: claimReleaseRefs(input),
 		createdAt: input.createdAt,
 		data: {

@@ -1,7 +1,7 @@
 import {
 	componentKbRefs,
-	type FileStructureMapContract,
-} from "../knowledge/file-structure-map.ts";
+	type SourceMapContract,
+} from "../knowledge/source-map.ts";
 import {
 	createLoopIterationEvent,
 	createLoopTailCheckpoint,
@@ -34,7 +34,7 @@ export interface PlanningIterationInput {
 	workItemInputs?: PlanningWorkItemInput[];
 	resolutions?: PlanningDecisionResolution[];
 	resolutionInputs?: PlanningDecisionResolutionInput[];
-	componentMap?: FileStructureMapContract;
+	componentMap?: SourceMapContract;
 	parentId?: string | null;
 	startSequence?: number;
 	createdAt?: string;
@@ -153,11 +153,12 @@ function planningOutputRefs(
 	decisionRefs: string[],
 	workItems: PlanningWorkItem[],
 	resolutions: PlanningDecisionResolution[],
-	componentMap?: FileStructureMapContract,
+	componentMap?: SourceMapContract,
 ): string[] {
 	return normalizeTraceRefs([
 		...decisionRefs,
 		...workItems.flatMap((item) => item.pathScopes),
+		...workItems.flatMap((item) => item.trigger?.refs || []),
 		...resolutions.flatMap((resolution) => resolution.evidenceRefs),
 		...componentMapRefs(workItems, componentMap),
 	]);
@@ -165,7 +166,7 @@ function planningOutputRefs(
 
 function componentMapRefs(
 	workItems: PlanningWorkItem[],
-	componentMap?: FileStructureMapContract,
+	componentMap?: SourceMapContract,
 ): string[] {
 	if (!componentMap) return [];
 	return [
@@ -188,10 +189,12 @@ function planningWorkItemData(item: PlanningWorkItem): Record<string, unknown> {
 		acceptanceCriteria: item.acceptanceCriteria,
 		componentRefs: item.componentRefs,
 		pathScopes: item.pathScopes,
+		planningDepth: item.planningDepth,
 		verification: item.verification,
 		workerProfile: item.workerProfile,
 		planningAssessment: item.planningAssessment,
 		dependsOn: item.dependsOn,
+		...(item.trigger ? { trigger: item.trigger } : {}),
 	};
 }
 

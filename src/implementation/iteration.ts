@@ -1,7 +1,7 @@
 import {
 	componentKbRefs,
-	type FileStructureMapContract,
-} from "../knowledge/file-structure-map.ts";
+	type SourceMapContract,
+} from "../knowledge/source-map.ts";
 import {
 	createLoopIterationEvent,
 	createLoopTailCheckpoint,
@@ -50,7 +50,7 @@ export interface ImplementationIterationInput {
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
 	expectedWorkerBaseSha?: string;
-	componentMap?: FileStructureMapContract;
+	componentMap?: SourceMapContract;
 	aggregateContentProof?: ContentProof;
 	existingPaths?: string[];
 	requireTddEvidence?: boolean;
@@ -244,7 +244,7 @@ function implementationOutputRefs(
 	planningScopes: PlanningImplementationScope[],
 	workerAggregation: ImplementationWorkerAggregation,
 	aggregateContentProof?: ContentProof,
-	componentMap?: FileStructureMapContract,
+	componentMap?: SourceMapContract,
 ): string[] {
 	return normalizeTraceRefs([
 		...planningRefs,
@@ -258,7 +258,7 @@ function implementationOutputRefs(
 
 function componentMapRefs(
 	planningScopes: PlanningImplementationScope[],
-	componentMap?: FileStructureMapContract,
+	componentMap?: SourceMapContract,
 ): string[] {
 	if (!componentMap) return [];
 	return [

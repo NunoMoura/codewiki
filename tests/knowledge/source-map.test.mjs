@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
-import { pathMatchesPattern } from "../../src/knowledge/file-structure-map.ts";
+import { pathMatchesPattern } from "../../src/knowledge/source-map.ts";
 import {
 	parseSourceMapYaml,
 	sourceMapExcluded,
@@ -61,7 +61,10 @@ describe("source ownership map", () => {
 		const map = parseSourceMapYaml(sourceMapText);
 
 		assert.equal(map.id, "spec.system.source-map");
-		assert.equal(sourceMapExcluded(map, "_OLD_VERSION/src/index.ts"), true);
+		assert.equal(
+			sourceMapExcluded(map, "node_modules/codewiki/index.js"),
+			true,
+		);
 		assert.equal(
 			sourceMapOwnerForPath(map, "src/traces/append.ts")?.id,
 			"traces",

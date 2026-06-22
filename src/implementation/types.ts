@@ -277,7 +277,7 @@ export interface ImplementationExitInput {
 	changes: ImplementationChange[];
 	acceptanceRequirements?: AcceptanceRequirement[];
 	planningScopes?: PlanningImplementationScope[];
-	componentMap?: import("../knowledge/file-structure-map.ts").FileStructureMapContract;
+	componentMap?: import("../knowledge/source-map.ts").SourceMapContract;
 	existingPaths?: string[];
 	requireTddEvidence?: boolean;
 	aggregateContentProof?: ContentProof;

@@ -172,7 +172,7 @@ function planningWorkItemsFromIterationEvents(
 	events: TraceEvent[],
 ): Array<Record<string, unknown> & { planningRef: string; id: string }> {
 	return events.flatMap((event) => {
-		if (event.loop !== "planning" || event.event !== "planning.iteration") {
+		if (event.loop !== "planning") {
 			return [];
 		}
 		return objectList<Record<string, unknown>>(

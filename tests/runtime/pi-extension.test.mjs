@@ -11,17 +11,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import codewikiExtension from "../../src/pi/extension.ts";
+import { CODEWIKI_COMMAND_NAMES } from "../../src/pi/command-catalog.ts";
 import {
 	CODEWIKI_PROMPT_MARKER,
 	codewikiPromptHooksAvailable,
 } from "../../src/pi/prompt/index.ts";
+import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
+	renderBootstrapCommand,
 	renderStateCommand,
 } from "../../src/pi/tui/index.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
@@ -31,25 +33,36 @@ function toolByName(pi, name) {
 	return pi.tools.find((candidate) => candidate.name === name);
 }
 
-function mockPi() {
+function mockPi(options = {}) {
 	const tools = [];
 	const commands = [];
 	const events = [];
+	const messages = [];
+	const messageRenderers = [];
+	const api = {
+		registerTool(tool) {
+			tools.push(tool);
+		},
+		registerCommand(name, command) {
+			commands.push({ name, command });
+		},
+		registerMessageRenderer(customType, renderer) {
+			messageRenderers.push({ customType, renderer });
+		},
+		on(eventName, handler) {
+			events.push({ eventName, handler });
+		},
+	};
+	if (options.sendMessage) {
+		api.sendMessage = (message) => messages.push(message);
+	}
 	return {
 		tools,
 		commands,
 		events,
-		api: {
-			registerTool(tool) {
-				tools.push(tool);
-			},
-			registerCommand(name, command) {
-				commands.push({ name, command });
-			},
-			on(eventName, handler) {
-				events.push({ eventName, handler });
-			},
-		},
+		messages,
+		messageRenderers,
+		api,
 	};
 }
 
@@ -87,7 +100,7 @@ async function fixture() {
 			"    generated_views:",
 			"      - .codewiki/views/status.json",
 			"    trace_events:",
-			"      - decision.iteration",
+			"      - decision.rows_approved",
 			"",
 		].join("\n"),
 	);
@@ -131,9 +144,7 @@ function nextSequence(events) {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -141,9 +152,7 @@ function approvedDecisionRef(events) {
 }
 
 function planningWorkRef(events, workUnitId = "WU-pi-preview") {
-	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
@@ -193,48 +202,10 @@ function changeInput(planningRef) {
 	};
 }
 
-function queue(traceId = "TRACE-pi") {
-	return {
-		traceIds: [traceId],
-		summary: {
-			backlog: 0,
-			waiting: 0,
-			ready: 1,
-			claimed: 0,
-			blocked: 0,
-			done: 0,
-		},
-		items: [
-			{
-				id: "WU-pi-preview",
-				kind: "work-unit",
-				status: "ready",
-				traceId,
-				title: "Preview Pi runtime dispatch",
-				traceRefs: [`${traceId}:planning:work:1`],
-				decisionRefs: [`${traceId}:decision:row:1`],
-				planningRefs: [`${traceId}:planning:work:1`],
-				componentRefs: ["pi"],
-				pathScopes: ["src/pi/tools/index.ts"],
-				dependsOn: [],
-				blockers: [],
-				qualityStandards: planningQualityStandards([]),
-				qualityBlockers: [],
-				sourceEventId: `${traceId}:planning:work:1`,
-			},
-		],
-	};
-}
-
 function assertToolResult(result, messagePattern) {
 	assert.match(result.content[0].text, messagePattern);
 	assert.ok(result.details.result);
 	return result.details.result;
-}
-
-function renderToolResult(tool, result, options = {}) {
-	assert.equal(typeof tool.renderResult, "function");
-	return tool.renderResult(result, options, {}, {}).render(120).join("\n");
 }
 
 async function fileExists(path) {
@@ -258,11 +229,15 @@ describe("Pi extension adapter", () => {
 		);
 		assert.deepEqual(
 			pi.commands.map((command) => command.name),
-			["wiki"],
+			[...CODEWIKI_COMMAND_NAMES],
 		);
 		assert.deepEqual(
 			pi.events.map((event) => event.eventName),
 			["before_agent_start", "session_start"],
+		);
+		assert.deepEqual(
+			pi.messageRenderers.map((renderer) => renderer.customType),
+			[CODEWIKI_COMMAND_MESSAGE_TYPE],
 		);
 		assert.equal(codewikiPromptHooksAvailable, true);
 		assert.equal(codewikiTuiRenderersAvailable, true);
@@ -272,11 +247,44 @@ describe("Pi extension adapter", () => {
 		)) {
 			assert.equal(toolByName(pi, name).executionMode, "sequential");
 		}
+		for (const name of CODEWIKI_TOOL_NAMES) {
+			assert.equal(toolByName(pi, name).renderCall, undefined);
+			assert.equal(toolByName(pi, name).renderResult, undefined);
+		}
 		const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 		assert.deepEqual(packageJson.pi, {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+	});
+
+	it("renders direct command output as a plain custom message in TUI mode", async () => {
+		const root = await fixture();
+		try {
+			const pi = mockPi({ sendMessage: true });
+			codewikiExtension(pi.api);
+			const command = pi.commands.find(
+				(candidate) => candidate.name === "wiki-state",
+			).command;
+
+			await command.handler("--board", {
+				cwd: root,
+				mode: "tui",
+				ui: { notify: () => assert.fail("notify fallback should not be used") },
+			});
+
+			assert.equal(pi.messages.length, 1);
+			assert.equal(pi.messages[0].customType, CODEWIKI_COMMAND_MESSAGE_TYPE);
+			const renderer = pi.messageRenderers.find(
+				(candidate) => candidate.customType === CODEWIKI_COMMAND_MESSAGE_TYPE,
+			).renderer;
+			assert.deepEqual(
+				renderer(pi.messages[0], {}, {}).render(80).slice(0, 3),
+				["CodeWiki Board", "", "┌───────┬───────┬──────┐"],
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("sets a CodeWiki footer status when Pi event hooks exist", async () => {
@@ -289,6 +297,7 @@ describe("Pi extension adapter", () => {
 		await hook.handler(
 			{ reason: "startup" },
 			{
+				cwd: process.cwd(),
 				ui: {
 					notify() {},
 					setStatus(key, value) {
@@ -298,9 +307,9 @@ describe("Pi extension adapter", () => {
 			},
 		);
 
-		assert.deepEqual(statuses, [
-			{ key: CODEWIKI_FOOTER_STATUS_KEY, value: "CodeWiki: /wiki state" },
-		]);
+		assert.equal(statuses.length, 1);
+		assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
+		assert.match(statuses[0].value, /^CodeWiki \S+ local · \/wiki-state$/);
 	});
 
 	it("injects CodeWiki prompt guidance once when Pi event hooks exist", async () => {
@@ -314,7 +323,8 @@ describe("Pi extension adapter", () => {
 		const result = await hook.handler({ systemPrompt: "base prompt" }, {});
 		assert.match(result.systemPrompt, /base prompt/);
 		assert.match(result.systemPrompt, /CodeWiki Pi guidance/);
-		assert.match(result.systemPrompt, /wiki_\*/);
+		assert.match(result.systemPrompt, /wiki_state/);
+		assert.match(result.systemPrompt, /wiki_decide/);
 		assert.match(result.systemPrompt, /\/wiki/);
 		assert.match(result.systemPrompt, new RegExp(CODEWIKI_PROMPT_MARKER));
 
@@ -335,7 +345,7 @@ describe("Pi extension adapter", () => {
 				() =>
 					toolByName(pi, "wiki_state").execute(
 						"tool-call-invalid-state",
-						{ sourcePaths: ["src/api/index.ts"], repo: root },
+						{ repo: root },
 						undefined,
 						undefined,
 						{ cwd: root },
@@ -346,12 +356,12 @@ describe("Pi extension adapter", () => {
 				() =>
 					toolByName(pi, "wiki_state").execute(
 						"tool-call-invalid-paths",
-						{ sourcePaths: [1] },
+						{ sourcePaths: ["src/api/index.ts"] },
 						undefined,
 						undefined,
 						{ cwd: root },
 					),
-				/wiki_state sourcePaths must be an array of strings\./,
+				/wiki_state received unsupported parameter sourcePaths\./,
 			);
 			await assert.rejects(
 				() =>
@@ -433,17 +443,6 @@ describe("Pi extension adapter", () => {
 			);
 			await assert.rejects(
 				() =>
-					toolByName(pi, "wiki_runtime").execute(
-						"tool-call-runtime-append",
-						{ input: { mode: "append" } },
-						undefined,
-						undefined,
-						{ cwd: root },
-					),
-				/wiki_runtime append mode requires nextSequenceByTrace\./,
-			);
-			await assert.rejects(
-				() =>
 					toolByName(pi, "wiki_archive").execute(
 						"tool-call-archive-append",
 						{ input: { action: "close", mode: "append" } },
@@ -488,17 +487,7 @@ describe("Pi extension adapter", () => {
 				decidedResult,
 				/wiki_decide: completed preview run\./,
 			);
-			const decisionRender = renderToolResult(decideTool, decidedResult, {
-				expanded: true,
-			});
-			assert.match(decisionRender, /CodeWiki Decision ◇ preview/);
-			assert.match(
-				decisionRender,
-				/Row\s+│ Kind\s+│ Pain\s+│ Outcome\s+│ Success/,
-			);
-			assert.match(decisionRender, /├/);
-			assert.match(decisionRender, /Quality/);
-			assert.equal(decided.iterationEvent.event, "decision.iteration");
+			assert.equal(decided.iterationEvent.event, "rows_approved");
 			assert.equal(decided.append, undefined);
 
 			const decisionRef = approvedDecisionRef(decided.loopResult.traceEvents);
@@ -523,11 +512,7 @@ describe("Pi extension adapter", () => {
 				plannedResult,
 				/wiki_plan: completed preview run\./,
 			);
-			const planRender = renderToolResult(planTool, plannedResult);
-			assert.match(planRender, /CodeWiki Planning ◇ preview/);
-			assert.match(planRender, /Work\s+│ Outcome\s+│ Paths/);
-			assert.match(planRender, /├/);
-			assert.equal(planned.iterationEvent.event, "planning.iteration");
+			assert.equal(planned.iterationEvent.event, "work_units_created");
 			assert.equal(planned.append, undefined);
 
 			const resolvedPlanResult = await planTool.execute(
@@ -557,10 +542,6 @@ describe("Pi extension adapter", () => {
 				resolvedPlanResult,
 				/wiki_plan: completed preview run\./,
 			);
-			const resolvedPlanRender = renderToolResult(planTool, resolvedPlanResult);
-			assert.match(resolvedPlanRender, /Resolutions/);
-			assert.match(resolvedPlanRender, /Decision\s+│ Kind\s+│ Evidence/);
-			assert.match(resolvedPlanRender, /non-executable/);
 			assert.equal(resolvedPlan.loopResult.exit.route, "close");
 
 			const planningRef = planningWorkRef(planned.loopResult.traceEvents);
@@ -585,68 +566,9 @@ describe("Pi extension adapter", () => {
 				implementedResult,
 				/wiki_implement: completed preview run\./,
 			);
-			const implementationRender = renderToolResult(
-				implementTool,
-				implementedResult,
-				{ expanded: true },
-			);
-			assert.match(implementationRender, /CodeWiki Implementation ◇ preview/);
-			assert.match(implementationRender, /Work\s+│ Code\s+│ Tests\s+│ Publish/);
-			assert.match(implementationRender, /├/);
-			assert.equal(
-				implemented.iterationEvent.event,
-				"implementation.iteration",
-			);
+			assert.equal(implemented.iterationEvent.event, "evidence_accepted");
 			assert.equal(implemented.append, undefined);
 			assert.equal(implemented.snapshot.root, root);
-
-			const runtimeTool = toolByName(pi, "wiki_runtime");
-			const runtimeResult = await runtimeTool.execute(
-				"tool-call-runtime-preview",
-				{
-					input: {
-						mode: "preview",
-						config: {
-							runtime: {
-								automation: "assist",
-								worktreeIsolation: "auto",
-							},
-						},
-						queue: queue("TRACE-pi-preview"),
-						maxWorkers: 1,
-						workerIdPrefix: "pi-worker",
-						dirtyPaths: ["src/pi/tools/index.ts"],
-						nextSequenceByTrace: { "TRACE-pi-preview": 1 },
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			);
-			const runtime = assertToolResult(
-				runtimeResult,
-				/wiki_runtime: completed preview run\./,
-			);
-			const runtimeRender = renderToolResult(runtimeTool, runtimeResult, {
-				expanded: true,
-			});
-			assert.match(runtimeRender, /CodeWiki Runtime ◇ preview/);
-			assert.match(runtimeRender, /To do\s+│ Doing\s+│ Done/);
-			assert.match(runtimeRender, /Worktrees/);
-			assert.match(runtimeRender, /dirty_working_tree_overlap/);
-			assert.match(
-				runtimeRender,
-				/codewiki\/TRACE-pi-preview\/WU-pi-preview\/pi-worker-001/,
-			);
-			assert.match(runtimeRender, /Dry-run commands/);
-			assert.match(runtimeRender, /git worktree add/);
-			assert.equal(runtime.plan.dispatch.length, 1);
-			assert.equal(runtime.policy.worktrees[0].required, true);
-			assert.equal(
-				runtime.batch.events[0].data.worktree.branch,
-				"codewiki/TRACE-pi-preview/WU-pi-preview/pi-worker-001",
-			);
-			assert.equal(runtime.append, undefined);
 
 			const archiveTool = toolByName(pi, "wiki_archive");
 			const archiveResult = await archiveTool.execute(
@@ -672,10 +594,6 @@ describe("Pi extension adapter", () => {
 				archiveResult,
 				/wiki_archive: completed preview run\./,
 			);
-			const archiveRender = renderToolResult(archiveTool, archiveResult);
-			assert.match(archiveRender, /CodeWiki Archive ◇ preview/);
-			assert.match(archiveRender, /Trace\s+│ Restore ref\s+│ Applied/);
-			assert.match(archiveRender, /refs\/codewiki\/archive\/TRACE/);
 			assert.equal(archive.stub.traceId, "TRACE-pi-preview");
 			assert.equal(archive.append, undefined);
 			assert.equal(await readFile(tracePath, "utf8"), before);
@@ -720,18 +638,52 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("/wiki state flags and resume return focused views", async () => {
+	it("direct /wiki-* commands dispatch the same command handlers", async () => {
+		const root = await fixture();
+		try {
+			const notifications = [];
+			const pi = mockPi();
+			codewikiExtension(pi.api);
+			const stateCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-state",
+			).command;
+			const resumeCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-resume",
+			).command;
+
+			const board = await stateCommand.handler("--board", {
+				cwd: root,
+				ui: { notify: (message) => notifications.push(message) },
+			});
+			assert.equal(board.command, "state");
+			assert.equal(board.view, "board");
+			assert.match(notifications.at(-1), /CodeWiki Board/);
+
+			const resume = await resumeCommand.handler("", {
+				cwd: root,
+				ui: { notify: (message) => notifications.push(message) },
+			});
+			assert.equal(resume.command, "resume");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("/wiki-state flags and /wiki-resume return focused views", async () => {
 		const root = await fixture();
 		try {
 			const notifications = [];
 			const statuses = [];
 			const pi = mockPi();
 			codewikiExtension(pi.api);
-			const command = pi.commands.find(
-				(candidate) => candidate.name === "wiki",
+			const stateCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-state",
+			).command;
+			const resumeCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-resume",
 			).command;
 
-			const board = await command.handler("state --board", {
+			const board = await stateCommand.handler("--board", {
 				cwd: root,
 				ui: {
 					notify: (message) => notifications.push(message),
@@ -742,6 +694,10 @@ describe("Pi extension adapter", () => {
 			assert.equal(board.view, "board");
 			assert.equal(board.json, false);
 			assert.ok(board.data.workQueue);
+			assert.ok(board.data.runtimeBoard);
+			assert.equal(board.data.runtimeBoard.summary.readyWorkUnits, 0);
+			assert.equal(board.data.next.action, "decide");
+			assert.equal(board.data.append.byTrace["TRACE-pi"].nextSequence, 1);
 			assert.deepEqual(board.rendered.slice(0, 3), [
 				"CodeWiki Board",
 				"",
@@ -749,14 +705,14 @@ describe("Pi extension adapter", () => {
 			]);
 			assert.match(notifications.at(-1), /CodeWiki Board/);
 			assert.match(notifications.at(-1), /├/);
-			assert.deepEqual(statuses, [
-				{
-					key: CODEWIKI_FOOTER_STATUS_KEY,
-					value: "CodeWiki: 1 trace(s) · ready 0 · blocked 0 · open",
-				},
-			]);
+			assert.equal(statuses.length, 1);
+			assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
+			assert.match(
+				statuses[0].value,
+				/^CodeWiki \S+ path: 1 trace\(s\) · ready 0 · blocked 0 · open$/,
+			);
 
-			const narrow = await command.handler("state --board", {
+			const narrow = await stateCommand.handler("--board", {
 				cwd: root,
 				ui: { width: 20, notify: (message) => notifications.push(message) },
 			});
@@ -765,7 +721,7 @@ describe("Pi extension adapter", () => {
 				"narrow command render should fit the requested width",
 			);
 
-			const quality = await command.handler("state --quality --json", {
+			const quality = await stateCommand.handler("--quality --json", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
@@ -773,7 +729,7 @@ describe("Pi extension adapter", () => {
 			assert.equal(quality.json, true);
 			assert.match(notifications.at(-1), /JSON returned/);
 
-			const resume = await command.handler("resume", {
+			const resume = await resumeCommand.handler("", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
@@ -809,7 +765,7 @@ describe("Pi extension adapter", () => {
 		assert.match(lines.join("\n"), /├/);
 	});
 
-	it("/wiki explain describes projects, flows, and owned paths", async () => {
+	it("/wiki-explain describes projects, flows, and owned paths", async () => {
 		const root = await fixture();
 		try {
 			await mkdir(join(root, ".codewiki", "kb", "system", "flows"), {
@@ -830,17 +786,17 @@ describe("Pi extension adapter", () => {
 			const pi = mockPi();
 			codewikiExtension(pi.api);
 			const command = pi.commands.find(
-				(candidate) => candidate.name === "wiki",
+				(candidate) => candidate.name === "wiki-explain",
 			).command;
 
-			const project = await command.handler("explain", {
+			const project = await command.handler("", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
 			assert.equal(project.data.kind, "project");
 			assert.match(project.data.title, /CodeWiki project/);
 
-			const path = await command.handler("explain src/api/index.ts", {
+			const path = await command.handler("src/api/index.ts", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
@@ -852,13 +808,10 @@ describe("Pi extension adapter", () => {
 			);
 			assert.match(path.rendered.join("\n"), /Owner|Component/);
 
-			const flow = await command.handler(
-				"explain planning-to-implementation --json",
-				{
-					cwd: root,
-					ui: { notify: (message) => notifications.push(message) },
-				},
-			);
+			const flow = await command.handler("planning-to-implementation --json", {
+				cwd: root,
+				ui: { notify: (message) => notifications.push(message) },
+			});
 			assert.equal(flow.json, true);
 			assert.equal(flow.data.kind, "flow");
 			assert.equal(flow.data.target, "planning-to-implementation");
@@ -877,7 +830,7 @@ describe("Pi extension adapter", () => {
 
 			const result = await tool.execute(
 				"tool-call-1",
-				{ sourcePaths: ["src/api/index.ts"] },
+				{},
 				undefined,
 				undefined,
 				{ cwd: join(root, "src", "api") },
@@ -885,7 +838,7 @@ describe("Pi extension adapter", () => {
 
 			assert.match(result.content[0].text, /wiki_state: all view/);
 			assert.deepEqual(result.details.result.traceIds, ["TRACE-pi"]);
-			assert.equal(result.details.result.sourceOwners[0].componentId, "api");
+			assert.equal(result.details.result.sourceOwners, undefined);
 
 			const board = await tool.execute(
 				"tool-call-board",
@@ -896,14 +849,15 @@ describe("Pi extension adapter", () => {
 			);
 			assert.equal(board.details.result.view, "board");
 			assert.ok(board.details.result.data.workQueue);
+			assert.ok(board.details.result.data.runtimeBoard);
 			assert.equal(board.details.result.data.traceIds, undefined);
-			assert.match(renderToolResult(tool, board), /CodeWiki State — board/);
+			assert.equal(tool.renderResult, undefined);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
 	});
 
-	it("/wiki bootstrap is explicit and reports preserved/stale state", async () => {
+	it("/wiki-bootstrap is explicit and reports preserved/stale state", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-pi-bootstrap-"));
 		try {
 			await mkdir(join(root, ".codewiki", "kb"), { recursive: true });
@@ -914,26 +868,82 @@ describe("Pi extension adapter", () => {
 			const pi = mockPi();
 			codewikiExtension(pi.api);
 			const command = pi.commands.find(
-				(candidate) => candidate.name === "wiki",
+				(candidate) => candidate.name === "wiki-bootstrap",
 			).command;
 
-			const result = await command.handler("bootstrap", {
+			const result = await command.handler("", {
 				cwd: root,
-				ui: { notify: (message) => notifications.push(message) },
+				ui: { width: 80, notify: (message) => notifications.push(message) },
 			});
 
 			assert.equal(result.data.project, "pi-bootstrap");
 			assert.deepEqual(result.data.audit.staleRoots, [".codewiki/roadmap"]);
 			assert.ok(result.data.preserved.includes(".codewiki/kb"));
 			assert.ok(result.data.preserved.includes(".codewiki/traces"));
-			assert.match(notifications.at(-1), /CodeWiki Bootstrap/);
+			assert.match(notifications.at(-1), /✓ CodeWiki ready/);
+			assert.match(notifications.at(-1), /Extension/);
+			assert.match(notifications.at(-1), /local path/);
+			assert.match(notifications.at(-1), /Version/);
+			assert.match(notifications.at(-1), /Entry/);
+			assert.match(notifications.at(-1), /Mutation/);
 			assert.match(notifications.at(-1), /\.codewiki\/roadmap/);
-			assert.match(
-				result.rendered.join("\n"),
-				/Created\s+│ Updated\s+│ Skipped\s+│ Preserved/,
-			);
+			assert.match(result.rendered.join("\n"), /Action\s+│ Count\s+│ Meaning/);
+			assert.match(result.rendered.join("\n"), /Next\n• You are ready/);
+			assert.match(result.rendered.join("\n"), /\/wiki-state/);
+			for (const line of result.rendered.filter((line) => line.includes("│"))) {
+				assert.ok(line.length <= 78, line);
+			}
 		} finally {
 			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("bootstrap renderer keeps next steps as plain text", () => {
+		const rendered = renderBootstrapCommand(
+			{
+				repoRoot: "/tmp/codewiki-bootstrap-renderer-wide-path-with-extra-text",
+				project: "bootstrap-renderer",
+				created: [".codewiki/config.json"],
+				updated: [],
+				skipped: [".codewiki/kb/lexicon.md"],
+				preserved: [".codewiki/kb"],
+				brownfield: true,
+				audit: {
+					projectKind: "brownfield",
+					existing: {
+						codewiki: true,
+						config: false,
+						kb: true,
+						traces: false,
+						views: false,
+					},
+					staleRoots: [],
+				},
+				boundaries: [],
+			},
+			{
+				width: 80,
+				extensionIdentity: {
+					version: "0.1.2",
+					loadMode: "local checkout",
+					sourceLabel: "local checkout ✓",
+					footerLabel: "0.1.2 local",
+					entry: "dist/pi/commands/index.js",
+					packageRoot:
+						"/tmp/codewiki-bootstrap-renderer-wide-path-with-extra-text",
+					loadedFromProject: true,
+				},
+			},
+		);
+		assert.match(rendered.join("\n"), /✓ CodeWiki ready/);
+		assert.match(rendered.join("\n"), /local checkout ✓/);
+		assert.match(rendered.join("\n"), /dist\/pi\/commands\/index\.js/);
+		assert.match(rendered.join("\n"), /Action\s+│ Count\s+│ Meaning/);
+		assert.match(rendered.join("\n"), /Next\n• You are ready/);
+		assert.match(rendered.join("\n"), /\/wiki-bootstrap/);
+		assert.doesNotMatch(rendered.join("\n"), /│ Agent work │/);
+		for (const line of rendered.filter((line) => line.includes("│"))) {
+			assert.ok(line.length <= 78, line);
 		}
 	});
 });

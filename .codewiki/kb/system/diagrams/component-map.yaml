@@ -7,7 +7,7 @@ source_docs:
   - .codewiki/kb/system/overview.md
   - .codewiki/kb/system/loop-model.md
   - .codewiki/kb/system/api-tools.md
-  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/source-map.md
   - .codewiki/kb/system/traces.md
   - .codewiki/kb/system/runtime.md
 renderer:
@@ -42,7 +42,7 @@ nodes:
     kind: application
     source: .codewiki/kb/system/api.md
   - id: wiki_tools
-    label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_runtime / wiki_archive / wiki_config
+    label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_archive / wiki_config
     group: api_layer
     kind: tool_surface
     source: .codewiki/kb/system/api-tools.md
@@ -80,7 +80,7 @@ nodes:
     label: Generated views
     group: truth_layer
     kind: generated_projection
-    source: .codewiki/kb/system/file-structure.md
+    source: .codewiki/kb/system/source-map.md
   - id: runtime_tmp
     label: Runtime temp scratch
     group: runtime_layer

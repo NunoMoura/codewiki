@@ -13,6 +13,7 @@ export interface CodewikiExtensionUi {
 
 export interface CodewikiExtensionContext {
 	cwd: string;
+	mode?: string;
 	ui?: CodewikiExtensionUi;
 }
 
@@ -71,8 +72,26 @@ export type CodewikiExtensionEventHandler = (
 	ctx: CodewikiExtensionContext,
 ) => unknown | Promise<unknown>;
 
+export interface CodewikiCustomMessage {
+	customType: string;
+	content: CodewikiToolContent[] | string;
+	display?: boolean;
+	details?: Record<string, unknown>;
+}
+
+export type CodewikiMessageRenderer = (
+	message: unknown,
+	options: unknown,
+	theme: unknown,
+) => CodewikiRenderComponent | undefined;
+
 export interface CodewikiExtensionApi {
 	registerTool(definition: CodewikiToolDefinition): void;
 	registerCommand(name: string, definition: CodewikiCommandDefinition): void;
+	registerMessageRenderer?(
+		customType: string,
+		renderer: CodewikiMessageRenderer,
+	): void;
+	sendMessage?(message: CodewikiCustomMessage): void;
 	on?(eventName: string, handler: CodewikiExtensionEventHandler): void;
 }

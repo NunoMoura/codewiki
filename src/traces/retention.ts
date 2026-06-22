@@ -1,3 +1,5 @@
+import { CodewikiTraceError } from "../error-handling/trace-errors.ts";
+import { traceGoalCloseBlockers } from "../views/trace-goals.ts";
 import { latestTailCheckpoint, replayTrace } from "./replay.ts";
 import type { TraceClose, TraceRecord } from "./types.ts";
 
@@ -29,6 +31,7 @@ export interface TraceCloseInput {
 	refs?: string[];
 	createdAt?: string;
 	data?: Record<string, unknown>;
+	allowIncomplete?: boolean;
 }
 
 export interface TraceHydrationPlan {
@@ -76,6 +79,17 @@ export function createTraceCloseRecord(input: TraceCloseInput): TraceClose {
 	const gitRestoreRef = input.gitRestoreRef.trim();
 	if (!gitRestoreRef) throw new Error("Trace close requires gitRestoreRef.");
 	const headRef = input.headRef?.trim() || state.head.traceId;
+	if (!input.allowIncomplete) {
+		const blockers = traceGoalCloseBlockers(input.records);
+		if (blockers.length > 0) {
+			throw new CodewikiTraceError({
+				code: "invalid_trace",
+				message: `Trace ${state.head.traceId} cannot close before its goal is complete: ${blockers.join(" ")}`,
+				traceId: state.head.traceId,
+				data: { blockers },
+			});
+		}
+	}
 	const parentId =
 		input.parentId !== undefined
 			? input.parentId

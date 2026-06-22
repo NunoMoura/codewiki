@@ -17,10 +17,10 @@ Adapters and UI surfaces translate host commands, panels, tools, and local views
 ## Flow links
 
 - [Resume context boundary](../flows/resume-context-boundary.md)
-- [Artifact claim wait/wake](../flows/artifact-claim-wait-wake.md)
+- [Artifact claim wait/heartbeat](../flows/artifact-claim-wait-heartbeat.md)
 
 ## Related docs
 
 - [System overview](../overview.md)
-- [File structure](../file-structure.md)
+- [Source map](../source-map.md)
 - [Component map](../diagrams/component-map.yaml)

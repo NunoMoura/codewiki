@@ -37,7 +37,8 @@ System knowledge defines technical architecture that implements product intent:
   decision-loop.md
   planning-loop.md
   implementation-loop.md
-  file-structure.md
+  source-map.md
+  source-map.yaml
   <component>.md
   diagrams/
 ```
@@ -84,5 +85,5 @@ Markdown frontmatter is forbidden in the target model. Exact code/test/view owne
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
 - [Traces](traces.md)
-- [File Structure](file-structure.md)
+- [Source Map](source-map.md)
 - [Source Map](source-map.md)

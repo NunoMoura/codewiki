@@ -3,8 +3,8 @@ import {
 	componentSupportsSourcePath,
 	componentSupportsTestPath,
 	unknownComponentRefs,
-	type FileStructureComponent,
-} from "../knowledge/file-structure-map.ts";
+	type SourceMapComponent,
+} from "../knowledge/source-map.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
 import type {
 	ExitFinding,
@@ -724,7 +724,7 @@ function invalidComponentContractIssues(
 				{
 					code: "invalid_component_contract" as const,
 					componentRef: component.id,
-					message: `File-structure component ${component.id} is missing ${missing.join(", ")}.`,
+					message: `Source-map component ${component.id} is missing ${missing.join(", ")}.`,
 				},
 			];
 		},
@@ -779,7 +779,7 @@ function changedPathComponentIssues(
 
 function sourcePathComponentIssues(
 	changeId: string,
-	components: FileStructureComponent[],
+	components: SourceMapComponent[],
 	paths: string[],
 ): ImplementationExitIssue[] {
 	return paths.flatMap((path) => {
@@ -803,7 +803,7 @@ function sourcePathComponentIssues(
 
 function testPathComponentIssues(
 	changeId: string,
-	components: FileStructureComponent[],
+	components: SourceMapComponent[],
 	paths: string[],
 ): ImplementationExitIssue[] {
 	return paths.flatMap((path) => {
@@ -866,7 +866,7 @@ function componentTestEvidenceRefs(change: ImplementationChange): string[] {
 function componentsForChange(
 	input: ImplementationExitInput,
 	change: ImplementationChange,
-): FileStructureComponent[] {
+): SourceMapComponent[] {
 	if (!input.componentMap) return [];
 	return uniqueComponents(
 		change.planningRefs.flatMap((planningRef) => {
@@ -881,8 +881,8 @@ function componentsForChange(
 }
 
 function uniqueComponents(
-	components: FileStructureComponent[],
-): FileStructureComponent[] {
+	components: SourceMapComponent[],
+): SourceMapComponent[] {
 	const seen = new Set<string>();
 	return components.filter((component) => {
 		if (seen.has(component.id)) return false;
@@ -892,12 +892,12 @@ function uniqueComponents(
 }
 
 function componentContractMissingFields(
-	component: FileStructureComponent,
+	component: SourceMapComponent,
 ): string[] {
 	return [
-		component.kbRefs.length ? "" : "kbRefs",
-		component.pathPatterns.length ? "" : "paths",
-		component.testPatterns.length ? "" : "testPaths",
+		component.doc ? "" : "doc",
+		component.sourcePatterns.length ? "" : "source",
+		component.testPatterns.length || component.testRationale ? "" : "tests",
 	].filter(Boolean);
 }
 
@@ -1347,12 +1347,10 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Map implementation evidence to every planned acceptance criterion id.",
 	unknown_acceptance_criterion:
 		"Use acceptance criterion ids emitted by the planning work unit.",
-	missing_component_ref:
-		"Attach planning componentRefs from the KB file-structure map.",
-	unknown_component_ref:
-		"Use component ids declared in the KB file-structure map.",
+	missing_component_ref: "Attach planning componentRefs from source-map.yaml.",
+	unknown_component_ref: "Use component ids declared in source-map.yaml.",
 	invalid_component_contract:
-		"Complete the component map entry with KB refs, owned paths, and test paths.",
+		"Complete the source-map component entry with doc, source, and tests.",
 	path_outside_component_scope:
 		"Move the change into the declared component scope or re-plan with the correct component.",
 	missing_component_test_coverage:

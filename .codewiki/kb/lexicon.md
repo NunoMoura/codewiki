@@ -6,7 +6,7 @@ Non-canonical terms are listed only to identify their replacements.
 
 ## Runtime outer loop
 
-The control loop that folds traces, chooses next safe actions, coordinates claims/workers/budgets/retention, and appends runtime coordination events. Runtime is not a semantic loop and does not own product truth.
+The control loop that folds traces, chooses next safe actions, coordinates claims/workers/budgets/retention, and appends trace records. Runtime is not a semantic loop and does not invent semantic truth.
 
 ## Semantic loop
 
@@ -23,7 +23,7 @@ There are no knowledge, validation, runtime, roadmap, graph, publication, or rec
 The repeated work inside a semantic loop:
 
 ```text
-observe refs -> act inside authority -> update loop output -> check exit conditions -> append iteration
+observe refs -> act inside authority -> update loop output -> check exit conditions -> report iteration to runtime
 ```
 
 ## Loop output
@@ -51,7 +51,7 @@ Runtime stop/progress rule that detects whether iterations are moving toward exi
 
 ## Trace iteration
 
-One append-only JSONL trace event representing a semantic loop iteration. A route-back or later correction appends a new iteration; it never rewrites the old one.
+One append-only JSONL trace event written by runtime to record a semantic loop report. A route-back or later correction appends a new iteration; it never rewrites the old one.
 
 ## Trace
 
@@ -121,11 +121,10 @@ Harness-exposed `wiki_*` tool used by agents and automation. Target normal tools
 - `wiki_decide`;
 - `wiki_plan`;
 - `wiki_implement`;
-- `wiki_runtime`;
 - `wiki_archive`;
 - `wiki_config`.
 
-Not target normal tools: split output generators, split exit evaluators, roadmap tools, or destructive cleanup tools.
+Runtime coordination is backend/host plumbing, not a normal model-facing tool. Not target normal tools: split output generators, split exit evaluators, runtime mega-tools, roadmap tools, or destructive cleanup tools.
 
 ## CodeWiki core
 
@@ -160,7 +159,7 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | garbage collection / GC | retention/archive/hydrate/restore pipeline |
 | agency subsystem | runtime automation/config policy |
 
-Deprecated terms may appear in `_OLD_VERSION/**` and this replacement table only.
+Deprecated terms may appear in this replacement table only; the old implementation archive has been removed.
 
 ## Related docs
 

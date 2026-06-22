@@ -13,6 +13,9 @@ import {
 } from "./quality-standards.ts";
 import {
 	DECISION_KIND_VALUES,
+	DECISION_PLANNING_DEPTH_VALUES,
+	DECISION_WORK_SCALE_VALUES,
+	type ActiveTraceGoal,
 	type CurrentStatePacket,
 	type DecisionRow,
 	type DecisionTable,
@@ -53,6 +56,12 @@ export type DecisionExitIssueCode =
 	| "missing_maintainer_impact"
 	| "missing_effort"
 	| "invalid_effort"
+	| "missing_work_scale"
+	| "invalid_work_scale"
+	| "missing_planning_depth"
+	| "invalid_planning_depth"
+	| "invalid_micro_plan_scale"
+	| "invalid_micro_plan_risk"
 	| "missing_recommendation"
 	| "invalid_recommendation"
 	| "recommendation_not_approve"
@@ -73,7 +82,8 @@ export type DecisionExitIssueCode =
 	| "invalid_traceability_ref"
 	| "missing_knowledge_delta"
 	| "invalid_knowledge_ref"
-	| "incomplete_knowledge_digest";
+	| "incomplete_knowledge_digest"
+	| "active_trace_conflict";
 
 export interface DecisionExitIssue {
 	code: DecisionExitIssueCode;
@@ -85,6 +95,7 @@ export interface DecisionExitIssue {
 export interface DecisionExitOptions {
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
+	activeTraceGoals?: ActiveTraceGoal[];
 }
 
 export interface DecisionExitResult extends ExitDetails {
@@ -125,6 +136,7 @@ export function evaluateDecisionExit(
 	for (const row of approvedRows) {
 		issues.push(
 			...approvedRowIssues(row),
+			...workRoutingIssues(row),
 			...decisionKindQualityIssues(row),
 			...recommendationQualityIssues(row),
 			...agentAssessmentQualityIssues(row),
@@ -134,6 +146,9 @@ export function evaluateDecisionExit(
 		);
 	}
 	issues.push(...knowledgeDeltaIssues(approvedRows, options.knowledgeDelta));
+	issues.push(
+		...activeTraceConflictIssues(approvedRows, options.activeTraceGoals || []),
+	);
 	const qualityStandards = decisionQualityStandards(issues, approvedRows);
 	const verdict =
 		blockedIssues(issues).length > 0
@@ -219,6 +234,55 @@ function approvedRowIssues(row: DecisionRow): DecisionExitIssue[] {
 			rowId: row.id,
 			message: `Decision row ${row.id} needs source refs or no-KB-impact rationale.`,
 		});
+	}
+	return issues;
+}
+
+function workRoutingIssues(row: DecisionRow): DecisionExitIssue[] {
+	const issues: DecisionExitIssue[] = [];
+	if (!row.workScale) {
+		issues.push({
+			code: "missing_work_scale",
+			rowId: row.id,
+			message: `Decision row ${row.id} must classify workScale.`,
+		});
+	} else if (!isAllowed(row.workScale, [...DECISION_WORK_SCALE_VALUES])) {
+		issues.push({
+			code: "invalid_work_scale",
+			rowId: row.id,
+			message: `Decision row ${row.id} has invalid workScale ${row.workScale}.`,
+		});
+	}
+	if (!row.planningDepth) {
+		issues.push({
+			code: "missing_planning_depth",
+			rowId: row.id,
+			message: `Decision row ${row.id} must classify planningDepth.`,
+		});
+	} else if (
+		!isAllowed(row.planningDepth, [...DECISION_PLANNING_DEPTH_VALUES])
+	) {
+		issues.push({
+			code: "invalid_planning_depth",
+			rowId: row.id,
+			message: `Decision row ${row.id} has invalid planningDepth ${row.planningDepth}.`,
+		});
+	}
+	if (row.planningDepth === "micro") {
+		if (!["tiny", "small"].includes(row.workScale)) {
+			issues.push({
+				code: "invalid_micro_plan_scale",
+				rowId: row.id,
+				message: `Decision row ${row.id} can use micro planning only for tiny or small work.`,
+			});
+		}
+		if (row.risk !== "low") {
+			issues.push({
+				code: "invalid_micro_plan_risk",
+				rowId: row.id,
+				message: `Decision row ${row.id} can use micro planning only for low-risk work.`,
+			});
+		}
 	}
 	return issues;
 }
@@ -658,6 +722,27 @@ function isHighRisk(row: DecisionRow): boolean {
 	);
 }
 
+function activeTraceConflictIssues(
+	approvedRows: DecisionRow[],
+	activeTraceGoals: ActiveTraceGoal[],
+): DecisionExitIssue[] {
+	if (activeTraceGoals.length === 0) return [];
+	return approvedRows.flatMap((row) => {
+		const rowRefs = [...row.sourceRefs, ...row.targetRefs].filter(isPathRef);
+		if (rowRefs.length === 0) return [];
+		return activeTraceGoals.flatMap((goal) => {
+			const overlaps = overlappingPathScopes(rowRefs, goal.pathScopes || []);
+			if (overlaps.length === 0) return [];
+			return overlaps.map((overlap) => ({
+				code: "active_trace_conflict" as const,
+				rowId: row.id,
+				ref: overlap,
+				message: `Decision row ${row.id} overlaps active trace ${goal.traceId} on ${overlap}; merge, supersede, defer, or record a non-conflict rationale before approval.`,
+			}));
+		});
+	});
+}
+
 function knowledgeDeltaIssues(
 	approvedRows: DecisionRow[],
 	knowledgeDelta?: KnowledgeDelta,
@@ -779,6 +864,15 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"Explain maintainer cost, operational impact, or complexity impact.",
 	missing_effort: "Add a low, medium, or high effort estimate.",
 	invalid_effort: "Use effort low, medium, or high.",
+	missing_work_scale:
+		"Classify the amount of work as tiny, small, normal, or large.",
+	invalid_work_scale: "Use workScale tiny, small, normal, or large.",
+	missing_planning_depth: "Classify the planning handoff as micro or standard.",
+	invalid_planning_depth: "Use planningDepth micro or standard.",
+	invalid_micro_plan_scale:
+		"Use micro planning only for tiny or small work; otherwise choose standard planning.",
+	invalid_micro_plan_risk:
+		"Use micro planning only for low-risk work; otherwise choose standard planning.",
 	missing_recommendation:
 		"Add an agent recommendation: approve, reject, defer, or ask_user.",
 	invalid_recommendation:
@@ -818,6 +912,8 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"Replace weak knowledge delta refs with canonical KB, trace, Git, digest, source, or test refs.",
 	incomplete_knowledge_digest:
 		"Record both beforeDigest and afterDigest, or omit both until write proof exists.",
+	active_trace_conflict:
+		"Resolve the active trace overlap by merging, superseding, deferring, adding dependency, or recording explicit non-conflict rationale.",
 };
 
 function decisionRemediationAction(issue: DecisionExitIssue): string {
@@ -828,6 +924,47 @@ function blockedIssues(issues: DecisionExitIssue[]): DecisionExitIssue[] {
 	return issues.filter(isBlockingDecisionIssue);
 }
 
+function overlappingPathScopes(left: string[], right: string[]): string[] {
+	const overlaps: string[] = [];
+	for (const leftScope of left) {
+		for (const rightScope of right) {
+			const overlap = overlappingScope(leftScope, rightScope);
+			if (overlap) overlaps.push(overlap);
+		}
+	}
+	return unique(overlaps);
+}
+
+function overlappingScope(left: string, right: string): string | undefined {
+	const leftPath = normalizePathScope(left);
+	const rightPath = normalizePathScope(right);
+	if (!leftPath || !rightPath) return undefined;
+	if (leftPath === rightPath) return leftPath;
+	if (rightPath.startsWith(`${leftPath}/`)) return leftPath;
+	if (leftPath.startsWith(`${rightPath}/`)) return rightPath;
+	return undefined;
+}
+
+function normalizePathScope(pathScope: string): string {
+	return pathScope.trim().replace(/\\/g, "/").replace(/\/+$/, "");
+}
+
+function isPathRef(ref: string): boolean {
+	const normalized = normalizePathScope(ref);
+	return (
+		normalized.startsWith("src/") ||
+		normalized.startsWith("tests/") ||
+		normalized.startsWith(".codewiki/kb/") ||
+		normalized.startsWith("kb:")
+	);
+}
+
 function isAllowed(value: string, allowed: string[]): boolean {
 	return allowed.includes(value.trim().toLowerCase());
+}
+
+function unique(values: string[]): string[] {
+	return Array.from(
+		new Set(values.map((value) => value.trim()).filter(Boolean)),
+	);
 }

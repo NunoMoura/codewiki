@@ -2,17 +2,17 @@
 
 CodeWiki is being rebuilt as a source-first package.
 
-The previous Pi extension, workflow skills, scripts, and tool pipeline have been moved to `_OLD_VERSION/` for reference. The rebuilt product surface is Pi-native tools/commands over the core facades; the CLI remains only a temporary development harness during stabilization.
+The old implementation archive has been removed after the migration audit. The rebuilt product surface is Pi-native tools/commands over the core facades; the CLI remains only a temporary development harness during stabilization.
 
 ## Current posture
 
 - Package metadata exposes the Pi extension for external Pi installs through `pi.extensions`.
-- Repo-local Pi settings now enable this checkout for initial CodeWiki dogfooding through Pi.
-- Project-local `.agents/skills/codewiki-*` skills are migration guidance only; they do not enable archived tools.
+- Repo-local Pi settings load pi-lens only; this checkout does not auto-load the CodeWiki extension while production readiness is being hardened.
+- Project-local `.agents/skills/codewiki-*` skills are limited to semantic loop playbooks: decide, plan, and implement.
 - `.codewiki/kb/**` remains source-of-truth documentation for intended product/system design.
 - `.codewiki/traces/TRACE-*.jsonl` is the intended workflow/state truth model, following Pi's session JSONL pattern.
 - `.codewiki/views/**` is generated/disposable projection output, not truth.
-- Other `.codewiki` roots from earlier dogfood runs are archived migration state, not active execution truth during the rebuild.
+- Other `.codewiki` roots from earlier harness runs are archived migration state, not active execution truth during the rebuild.
 - Pi native compaction should handle conversation compression. CodeWiki-owned refresh/compaction windows are disabled with the old extension.
 
 ## New source layout
@@ -29,17 +29,18 @@ src/
   knowledge/
   git/
   runtime/
+  error-handling/
   cli/
   pi/
   project/
   utils/
 ```
 
-The semantic loop roots are `decision`, `planning`, and `implementation`. Each loop is defined by its cycle, high-signal output, and exit conditions. `traces` owns append-only JSONL trace records. `views` owns generated projections such as status, resume, work-plan, work-queue, blockers, and conflicts. Runtime is the outer control loop for scheduling, claims, boundaries, budgets, policy, and temporary data.
+The semantic loop roots are `decision`, `planning`, and `implementation`. Each loop is defined by its cycle, high-signal output, and exit conditions. `traces` owns append-only JSONL trace records. `views` owns generated projections such as status, resume, work-plan, work-queue, runtime-board, blockers, and conflicts. Runtime is the outer coordination layer for Triggers, Heartbeats, Runs, work-unit claim selection, leases, boundaries, budgets, policy, and temporary data. `error-handling` owns shared error contracts, normalization, and recovery hints.
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<trace>/<loop>/`. It is cleaned on loop exit after durable trace/KB/source refs exist, preserved on continue/route-back/block when remediation needs it, replaced by superseding iterations, and removed at trace close.
 
-`_OLD_VERSION/` is a migration reference only. Migrate code back into `src/**` one module at a time, with tests, instead of re-enabling the old extension wholesale. The active migration inventory lives in `.codewiki/kb/system/migration-audit.md`.
+The active migration record lives in `.codewiki/kb/system/migration-audit.md`. Do not restore the old implementation wholesale; recover any future idea only through a new accepted decision, targeted source changes, and tests.
 
 ## Requirements
 
@@ -55,9 +56,8 @@ npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-mutation
-npm run test:pi-dogfood
 npm run test:project-local-install
-npm run test:external-dogfood
+npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
 npm run audit:codewiki
@@ -66,24 +66,22 @@ npm run audit:codewiki
 Smoke command roles:
 
 - `npm run test:pi-install`: isolated Pi install smoke with temporary Pi settings.
-- `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki bootstrap` and
-  `/wiki state --board` without a model turn.
+- `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki-bootstrap` and
+  `/wiki-state --board` without a model turn.
 - `npm run test:pi-mutation`: isolated Pi extension tool mutation smoke;
   previews first, rejects unguarded append, appends with expected bytes/sequence,
-  and verifies `/wiki state`.
-- `npm run test:pi-dogfood`: builds `dist/**` and verifies repo-local
-  `.pi/settings.json` loads `/wiki state --board` without a model turn.
+  and verifies `/wiki-state`.
 - `npm run test:project-local-install`: installs the packed package under a
   fresh project's `.pi/npm/node_modules/codewiki` path and verifies bootstrap,
   config write, and guarded decision append without controlled-test overrides.
-- `npm run test:external-dogfood`: packs and installs CodeWiki into a fresh
-  external project, runs `/wiki bootstrap`, guarded lifecycle appends, runtime
+- `npm run test:external-lifecycle`: packs and installs CodeWiki into a fresh
+  external project, runs `/wiki-bootstrap`, guarded lifecycle appends, runtime
   host worker-output collection, release, and archive close.
 - `npm run test:external-failures`: packs and installs CodeWiki into fresh
   external projects and verifies missing/malformed/blocked worker output,
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
-- `npm run test:readiness`: package, state-shape, dogfood, and stale wording
-  checks.
+- `npm run test:readiness`: package, state-shape, install-gate, and stale
+  wording checks.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence
   run serially.
 
@@ -99,23 +97,23 @@ pi install -l npm:codewiki
 ```
 
 Avoid global/user installs such as `pi install npm:codewiki` for normal use.
-Mutation-capable `/wiki` commands and `wiki_*` tools enforce project-local Pi
+Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi
 installation by default and point users back to `pi install -l npm:codewiki`.
 
 CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` state
 and is intended to be compatible with external sandbox, worktree, container, or
 agent-harness isolation.
 
-Repo-local Pi settings load `pi-lens` and this checkout (`..`) for initial CodeWiki dogfooding. Build `dist/**` before starting Pi from a fresh checkout because the package manifest points at `dist/pi/extension.js`.
+Repo-local Pi settings load `pi-lens` only. Do not add a repo-local `.pi/extensions/codewiki.ts` shim while production readiness is being hardened; packaged install smokes exercise `dist/pi/extension.js` in temporary projects instead.
 
-Installed package use should be through Pi-owned `/wiki ...` commands and `wiki_*` tools, not through the transitional CLI or archived tools. Prefer read-only `/wiki state` and `/wiki explain` during early dogfooding; mutation-capable tools still require explicit expected byte/sequence checks.
+Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. Prefer read-only `/wiki-state` and `/wiki-explain` during early package use; mutation-capable tools still require explicit expected byte/sequence checks.
 
 ## Production readiness and automation gates
 
 Current supported posture:
 
 - Project-local package installation with `pi install -l npm:codewiki`.
-- Supervised `/wiki` and `wiki_*` use inside the repository being documented.
+- Supervised `/wiki-*` and `wiki_*` use inside the repository being documented.
 - Guarded trace mutation with expected byte and sequence checks.
 - Runtime worker output treated as untrusted transport until `wiki_implement`
   validates implementation evidence.
@@ -124,13 +122,13 @@ Current supported posture:
 
 Still gated before production automation:
 
-- Unattended runtime worker dispatch.
+- Unattended runtime worker start.
 - Auto-merge or auto-publish.
 - Treating worker completion as semantic truth without implementation preview.
 - Global/user CodeWiki installs for normal mutation workflows.
 
-Before enabling unattended dispatch or auto-merge, require: multiple successful
-external project dogfoods, passing failure-path package smokes, no project-root
+Before enabling unattended worker start or auto-merge, require: multiple successful
+external package lifecycle smokes, passing failure-path package smokes, no project-root
 ambiguity, no `.codewiki/runtime` scratch leakage after checks, archive/hydrate
 validation green, and explicit user approval policy for destructive or externally
 visible actions.

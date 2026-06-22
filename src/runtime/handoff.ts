@@ -1,12 +1,16 @@
 import type { WorktreeRef } from "../git/worktrees.ts";
-import type { PiWorkerSessionInput } from "../pi/dispatcher.ts";
-import { createPiWorkerPrompt } from "../pi/dispatcher.ts";
+import type { PiWorkerSessionInput } from "../pi/worker-start.ts";
+import type { CodewikiHostError } from "../error-handling/host-errors.ts";
+import { createPiWorkerPrompt } from "../pi/worker-start.ts";
 import type {
-	RuntimeDispatchClaimAppendResult,
-	RuntimeDispatchClaimBatch,
-} from "./dispatcher.ts";
-import type { RuntimeDispatchPolicyDecision } from "./policy.ts";
-import type { RuntimeDispatchItem, RuntimeDispatchPlan } from "./scheduler.ts";
+	RuntimeWorkUnitClaimAppendResult,
+	RuntimeWorkUnitClaimEventBatch,
+} from "./work-unit-claims.ts";
+import type { RuntimeWorkUnitClaimPolicyDecision } from "./policy.ts";
+import type {
+	RuntimeWorkUnitClaimCandidate,
+	RuntimeWorkUnitClaimSelection,
+} from "./work-unit-claim-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
 
 export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v1";
@@ -24,6 +28,7 @@ export interface RuntimeWorkerStatusRemediation {
 	blockers: string[];
 	refs: string[];
 	suggestedActions: string[];
+	hostErrors?: CodewikiHostError[];
 }
 
 export interface RuntimeDisposableWorkerStatus {
@@ -49,12 +54,12 @@ export type RuntimeHandoffAction =
 	| "worktree.cleanup";
 
 export interface RuntimeHandoffRuntimeResult {
-	action: "dispatch";
+	action: "work-unit-claims";
 	mode: "preview" | "append";
-	plan: RuntimeDispatchPlan;
-	policy: RuntimeDispatchPolicyDecision;
-	batch?: RuntimeDispatchClaimBatch;
-	append?: RuntimeDispatchClaimAppendResult;
+	plan: RuntimeWorkUnitClaimSelection;
+	policy: RuntimeWorkUnitClaimPolicyDecision;
+	batch?: RuntimeWorkUnitClaimEventBatch;
+	append?: RuntimeWorkUnitClaimAppendResult;
 }
 
 export interface CreateRuntimeHandoffManifestOptions {
@@ -77,11 +82,11 @@ export interface RuntimeHandoffManifest {
 }
 
 export interface RuntimeHandoffSummary {
-	action: "dispatch";
+	action: "work-unit-claims";
 	mode: "preview" | "append";
 	appendAllowed: boolean;
 	blockers: string[];
-	dispatchCount: number;
+	claimSelectionCount: number;
 	heldCount: number;
 	claimEventCount: number;
 }
@@ -135,7 +140,7 @@ export function createRuntimeHandoffManifest(
 	const claimEvents = handoffClaimEvents(options);
 	const claimMetadata = claimMetadataByWorkUnit(claimEvents);
 	const worktrees = worktreePlanByWorkUnit(options.runtime.policy.worktrees);
-	const workers = options.runtime.plan.dispatch.map((item) =>
+	const workers = options.runtime.plan.selected.map((item) =>
 		handoffWorker({ item, claimMetadata, worktrees, options }),
 	);
 	return {
@@ -152,9 +157,12 @@ export function createRuntimeHandoffManifest(
 }
 
 function handoffWorker(input: {
-	item: RuntimeDispatchItem;
+	item: RuntimeWorkUnitClaimCandidate;
 	claimMetadata: Map<string, RuntimeHandoffClaimMetadata>;
-	worktrees: Map<string, RuntimeDispatchPolicyDecision["worktrees"][number]>;
+	worktrees: Map<
+		string,
+		RuntimeWorkUnitClaimPolicyDecision["worktrees"][number]
+	>;
 	options: CreateRuntimeHandoffManifestOptions;
 }): RuntimeHandoffWorker {
 	const claim = input.claimMetadata.get(input.item.workUnitId);
@@ -231,7 +239,7 @@ function runtimeSummary(
 		mode: runtime.mode,
 		appendAllowed: runtime.policy.appendAllowed,
 		blockers: [...runtime.policy.blockers],
-		dispatchCount: runtime.plan.dispatch.length,
+		claimSelectionCount: runtime.plan.selected.length,
 		heldCount: runtime.plan.held.length,
 		claimEventCount: claimEvents.length,
 	};
@@ -292,9 +300,7 @@ function expectedCompletionContract(): RuntimeHandoffCompletionContract {
 			changes: [
 				{
 					id: "IC-worker-001",
-					planningRefs: [
-						"trace:<planning-iteration>#work:<work-unit-id>",
-					],
+					planningRefs: ["trace:<planning-iteration>#work:<work-unit-id>"],
 					codePaths: ["src/example.ts"],
 					testPaths: ["tests/example.test.mjs"],
 					checkResults: [
@@ -356,8 +362,8 @@ function claimMetadataByWorkUnit(
 }
 
 function worktreePlanByWorkUnit(
-	plans: RuntimeDispatchPolicyDecision["worktrees"],
-): Map<string, RuntimeDispatchPolicyDecision["worktrees"][number]> {
+	plans: RuntimeWorkUnitClaimPolicyDecision["worktrees"],
+): Map<string, RuntimeWorkUnitClaimPolicyDecision["worktrees"][number]> {
 	return new Map(plans.map((plan) => [plan.workUnitId, plan]));
 }
 

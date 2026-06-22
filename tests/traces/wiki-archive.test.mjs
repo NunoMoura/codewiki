@@ -5,12 +5,16 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiArchive } from "../../src/api/wiki-archive.ts";
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
+import { runWikiImplement } from "../../src/api/wiki-implement.ts";
+import { runWikiPlan } from "../../src/api/wiki-plan.ts";
 import { appendTraceRecords } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { implementationQualityFields } from "../helpers/implementation-change.mjs";
+import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const head = createTraceHead({
@@ -38,7 +42,73 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 			],
 		},
 	});
-	return [head, ...decision.loopResult.traceRecords];
+	const decisionEvent = decision.loopResult.traceEvents[0];
+	const decisionRow = decisionEvent.data.output.approvedRows[0];
+	const decisionRef = `trace:${decisionEvent.id}#row:${decisionRow.id}`;
+	const planning = await runWikiPlan({
+		traceId,
+		decisionEvents: decision.loopResult.traceEvents,
+		nextSequence: 2,
+		createdAt: "2026-06-11T00:00:02.000Z",
+		workItemInputs: [
+			{
+				id: "WU-archive",
+				title: "Preview archive retention refs",
+				decisionRefs: [decisionRef],
+				outcome: "wiki_archive previews retention refs.",
+				...planningQualityFields(),
+				acceptance: ["Retention refs are previewed and close is guarded."],
+				componentRefs: ["traces"],
+				pathScopes: ["src/traces"],
+				verification: ["tests/traces/wiki-archive.test.mjs"],
+			},
+		],
+	});
+	const planningEvent = planning.loopResult.traceEvents[0];
+	const workItem = planningEvent.data.output.workItems[0];
+	const planningRef = `trace:${planningEvent.id}#work:${workItem.id}`;
+	const implementation = await runWikiImplement({
+		repoRoot: ".",
+		traceId,
+		planningEvents: planning.loopResult.traceEvents,
+		nextSequence: 3,
+		createdAt: "2026-06-11T00:00:03.000Z",
+		changeInputs: [
+			{
+				id: "CHG-archive",
+				planningRefs: [planningRef],
+				codePaths: ["src/traces/retention.ts"],
+				testPaths: ["tests/traces/wiki-archive.test.mjs"],
+				checks: [
+					"node --experimental-strip-types --test tests/traces/wiki-archive.test.mjs",
+				],
+				checkResults: [
+					{
+						command:
+							"node --experimental-strip-types --test tests/traces/wiki-archive.test.mjs",
+						status: "pass",
+						outputRef: "tests/traces/wiki-archive.test.mjs",
+					},
+				],
+				acceptanceEvidence: ["Archive retention refs are covered."],
+				acceptanceEvidenceItems: [
+					{
+						criterionId: "AC-001",
+						summary: "Archive retention refs are covered.",
+						evidenceRefs: ["tests/traces/wiki-archive.test.mjs"],
+					},
+				],
+				contentProof: { workingTreeDigest: "sha256:abcdef" },
+				...implementationQualityFields(),
+			},
+		],
+	});
+	return [
+		head,
+		...decision.loopResult.traceRecords,
+		...planning.loopResult.traceRecords,
+		...implementation.loopResult.traceRecords,
+	];
 }
 
 describe("wiki_archive core facade", () => {
@@ -62,6 +132,43 @@ describe("wiki_archive core facade", () => {
 		assert.equal(
 			result.refs.includes("refs/codewiki/archive/TRACE-wiki-archive"),
 			true,
+		);
+	});
+
+	it("blocks trace close until the trace goal is complete or deferred", async () => {
+		const head = createTraceHead({
+			traceId: "TRACE-wiki-archive-incomplete",
+			title: "Incomplete archive trace",
+			createdAt: "2026-06-11T00:00:00.000Z",
+		});
+		const decision = await runWikiDecide({
+			traceId: head.traceId,
+			createdAt: "2026-06-11T00:00:01.000Z",
+			tableInput: {
+				id: "DT-archive-incomplete",
+				createdAt: "2026-06-11T00:00:01.000Z",
+				updatedAt: "2026-06-11T00:00:01.000Z",
+				rows: [
+					{
+						id: "DTR-archive-incomplete",
+						currentState: "Trace close can happen too early.",
+						desiredState: "Trace close waits for goal coverage.",
+						rationale: "Closed incomplete traces hide unfinished goals.",
+						...decisionQualityFields(),
+						approval: "approved",
+						sourceRefs: ["kb:system/traces.md"],
+					},
+				],
+			},
+		});
+		await assert.rejects(
+			() =>
+				runWikiArchive({
+					action: "close",
+					records: [head, ...decision.loopResult.traceRecords],
+					gitRestoreRef: "refs/codewiki/archive/TRACE-wiki-archive-incomplete",
+				}),
+			/incomplete trace goal|needs planning coverage/,
 		);
 	});
 

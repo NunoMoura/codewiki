@@ -1,4 +1,4 @@
-import { eventsByName, traceRefs } from "../traces/queries.ts";
+import { loopOutputEvents, traceRefs } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
 import type { TraceLoop, TraceRecord } from "../traces/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
@@ -6,9 +6,10 @@ import { conflictsFromTrace } from "./conflicts.ts";
 import {
 	buildQualityView,
 	loopIterationQualityComplete,
-	planningIterationDispatchable,
+	planningIterationClaimable,
 	qualityBlockersFromTrace,
 } from "./quality.ts";
+import { buildTraceGoalView } from "./trace-goals.ts";
 import type { StatusView, TraceViewInput, ViewHealth } from "./types.ts";
 import { workPlanCardsFromTrace } from "./work-plan.ts";
 
@@ -25,6 +26,7 @@ export function buildStatusView(input: TraceViewInput): StatusView {
 					cards.length > 0 && cards.every((card) => card.status === "done"),
 			});
 	const quality = buildQualityView(input);
+	const goal = buildTraceGoalView(input);
 	const blockerMessages = closed
 		? []
 		: blockers.map((blocker) => blocker.message);
@@ -37,17 +39,23 @@ export function buildStatusView(input: TraceViewInput): StatusView {
 		generatedAt: input.generatedAt,
 		traceId: state.head.traceId,
 		title: state.head.title,
-		health: statusHealth({
-			blockers: activeBlockerCount,
-			conflicts: activeConflictCount,
-			currentLoop,
-		}),
+		...(state.head.origin ? { origin: state.head.origin } : {}),
+		health:
+			goal.status === "closed_incomplete"
+				? "red"
+				: statusHealth({
+						blockers: activeBlockerCount,
+						conflicts: activeConflictCount,
+						currentLoop,
+					}),
 		currentLoop,
 		readyForClosure:
 			!closed &&
+			goal.closable &&
 			currentLoop === null &&
 			activeBlockerCount === 0 &&
 			activeConflictCount === 0,
+		goalStatus: goal.status,
 		...(closed
 			? {
 					closed: true,
@@ -99,7 +107,7 @@ function decisionCount(records: TraceRecord[]): number {
 }
 
 function implementationChangeCount(records: TraceRecord[]): number {
-	return eventsByName(records, "implementation.iteration").reduce(
+	return loopOutputEvents(records, "implementation").reduce(
 		(count, event) =>
 			count + objectList(objectRecord(event.data?.output).changes).length,
 		0,
@@ -107,7 +115,7 @@ function implementationChangeCount(records: TraceRecord[]): number {
 }
 
 function decisionRefs(records: TraceRecord[]): string[] {
-	return eventsByName(records, "decision.iteration")
+	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
 		.flatMap((event) =>
 			objectList(objectRecord(event.data?.output).approvedRows).map((row) =>
@@ -119,8 +127,8 @@ function decisionRefs(records: TraceRecord[]): string[] {
 function planningWorkItems(
 	records: TraceRecord[],
 ): Array<{ decisionRefs: string[] }> {
-	return eventsByName(records, "planning.iteration")
-		.filter(planningIterationDispatchable)
+	return loopOutputEvents(records, "planning")
+		.filter(planningIterationClaimable)
 		.flatMap((event) =>
 			objectList(objectRecord(event.data?.output).workItems).map((item) => ({
 				decisionRefs: stringList(item.decisionRefs),
@@ -129,8 +137,8 @@ function planningWorkItems(
 }
 
 function planningResolutions(records: TraceRecord[]): string[] {
-	return eventsByName(records, "planning.iteration")
-		.filter(planningIterationDispatchable)
+	return loopOutputEvents(records, "planning")
+		.filter(planningIterationClaimable)
 		.flatMap((event) =>
 			objectList(objectRecord(event.data?.output).resolutions).map(
 				(resolution) => text(resolution.decisionRef),

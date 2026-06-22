@@ -3,11 +3,17 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
+import { assertValidTraceRecord } from "../../src/traces/schema.ts";
 import {
 	formatKnowledgeDriftIssues,
 	lintKnowledgeDrift,
 } from "../../src/knowledge/drift-linter.ts";
 import { piExtensionAvailable } from "../../src/pi/extension.ts";
+import {
+	CODEWIKI_PROMPT_GUIDELINES,
+	renderCodewikiPromptInstructions,
+} from "../../src/pi/prompt/index.ts";
+import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 
 const packageJson = jsonFile("package.json");
 const codewikiConfig = jsonFile(".codewiki/config.json");
@@ -18,6 +24,34 @@ const productDocumentationFiles = ["README.md", ...filesUnder(".codewiki/kb")];
 const operatingGuidanceFiles = [
 	...productDocumentationFiles,
 	...filesUnder(".agents/skills"),
+];
+const expectedToolNames = [
+	"wiki_state",
+	"wiki_config",
+	"wiki_decide",
+	"wiki_plan",
+	"wiki_implement",
+	"wiki_archive",
+];
+const expectedSkillNames = [
+	"codewiki-decide",
+	"codewiki-implement",
+	"codewiki-plan",
+];
+const forbiddenSkillNames = [
+	"codewiki-state",
+	"codewiki-runtime",
+	"codewiki-config",
+	"codewiki-archive",
+	"codewiki-decision",
+	"codewiki-planning",
+	"codewiki-implementation",
+];
+const agentSurfaceFiles = [
+	"README.md",
+	...filesUnder(".codewiki/kb"),
+	...filesUnder(".agents/skills"),
+	...filesUnder("src/pi"),
 ];
 
 function jsonFile(path) {
@@ -48,7 +82,7 @@ function knowledgeDriftFiles() {
 }
 
 describe("install readiness checklist", () => {
-	it("exposes package install metadata for repo-local dogfooding", () => {
+	it("exposes packaged Pi extension metadata without repo-local dogfooding", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
@@ -61,6 +95,7 @@ describe("install readiness checklist", () => {
 			".",
 			"./package.json",
 		]);
+		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
 			"node tests/runtime/pi-install-smoke.mjs",
@@ -70,12 +105,59 @@ describe("install readiness checklist", () => {
 			"node tests/runtime/project-local-install-smoke.mjs",
 		);
 		assert.equal(
-			packageJson.scripts["test:external-dogfood"],
-			"node tests/runtime/external-package-dogfood-smoke.mjs",
+			packageJson.scripts["test:external-lifecycle"],
+			"node tests/runtime/external-package-lifecycle-smoke.mjs",
 		);
 		assert.equal(
 			packageJson.scripts["test:external-failures"],
 			"node tests/runtime/external-package-failures-smoke.mjs",
+		);
+	});
+
+	it("keeps the internal agent tool surface small and exact", () => {
+		assert.deepEqual([...CODEWIKI_TOOL_NAMES], expectedToolNames);
+		assert.equal(
+			readFileSync("src/pi/tools/index.ts", "utf8").includes("wiki_runtime"),
+			false,
+		);
+	});
+
+	it("keeps only semantic loop skills", () => {
+		assert.deepEqual(readdirSync(".agents/skills").sort(), expectedSkillNames);
+		for (const skill of forbiddenSkillNames) {
+			assert.equal(existsSync(join(".agents/skills", skill)), false, skill);
+		}
+	});
+
+	it("keeps the injected CodeWiki prompt high signal and low noise", () => {
+		const prompt = renderCodewikiPromptInstructions();
+		assert.equal(CODEWIKI_PROMPT_GUIDELINES.length <= 4, true);
+		assert.equal(prompt.length < 900, true);
+		assert.match(prompt, /wiki_state/);
+		assert.match(prompt, /wiki_decide/);
+		assert.match(prompt, /wiki_plan/);
+		assert.match(prompt, /wiki_implement/);
+		assert.doesNotMatch(prompt, /wiki_runtime/);
+		assert.doesNotMatch(prompt, /wiki_config/);
+		assert.doesNotMatch(prompt, /wiki_archive/);
+	});
+
+	it("keeps runtime and source-map details out of the agent-facing state surface", () => {
+		const agentSurfaceText = agentSurfaceFiles
+			.map((path) => `${path}\n${readFileSync(path, "utf8")}`)
+			.join("\n---\n");
+		assert.doesNotMatch(agentSurfaceText, /wiki_runtime/);
+		assert.doesNotMatch(
+			readFileSync("src/api/state.ts", "utf8"),
+			/sourceOwners|sourcePaths/,
+		);
+		assert.doesNotMatch(
+			readFileSync("src/project/state-file.ts", "utf8"),
+			/sourceOwners|sourcePaths/,
+		);
+		assert.doesNotMatch(
+			readFileSync("src/pi/tools/index.ts", "utf8"),
+			/sourceOwners|sourcePaths/,
 		);
 	});
 
@@ -105,6 +187,25 @@ describe("install readiness checklist", () => {
 		]);
 	});
 
+	it("keeps trace truth in TRACE files without central index files", () => {
+		assert.equal(existsSync(".codewiki/traces.jsonl"), false);
+		assert.equal(existsSync(".codewiki/traces/traces.jsonl"), false);
+		assert.equal(existsSync(".codewiki/traces/catalog.json"), false);
+		assert.equal(existsSync(".codewiki/traces/trace-index.jsonl"), false);
+	});
+
+	it("keeps hot trace files valid under the current schema", () => {
+		for (const fileName of readdirSync(".codewiki/traces")) {
+			if (!/^TRACE-.*\.jsonl$/.test(fileName)) continue;
+			const path = join(".codewiki/traces", fileName);
+			const records = readFileSync(path, "utf8")
+				.split(/\r?\n/)
+				.filter(Boolean)
+				.map((line) => JSON.parse(line));
+			for (const record of records) assertValidTraceRecord(record);
+		}
+	});
+
 	it("keeps the CLI out of product host config", () => {
 		assert.deepEqual(Object.keys(codewikiConfig.hosts).sort(), ["mcp", "pi"]);
 		assert.equal(codewikiConfig.hosts.pi.enabled, false);
@@ -125,17 +226,23 @@ describe("install readiness checklist", () => {
 		assert.match(readme, /Production readiness and automation gates/);
 		assert.match(extensionDoc, /Production readiness gates/);
 		assert.match(runtimeDoc, /Automation gates/);
-		assert.match(runtimeDoc, /Unattended\s+worker dispatch/i);
+		assert.match(runtimeDoc, /Unattended\s+worker start/i);
 	});
 
-	it("enables this checkout for repo-local Pi dogfooding", () => {
+	it("keeps this checkout free of repo-local CodeWiki dogfooding", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
 		assert.equal(packages.includes("npm:pi-lens"), true);
-		assert.equal(packages.includes(".."), true);
+		assert.equal(packages.includes(".."), false);
 		assert.deepEqual(
 			packages.filter((entry) => JSON.stringify(entry).includes("codewiki")),
 			[],
+		);
+		assert.equal(existsSync(".pi/extensions/codewiki.ts"), false);
+		assert.equal(existsSync(".pi/extensions"), false);
+		assert.equal(
+			packageJson.scripts["audit:codewiki"].includes("pi-dogfood"),
+			false,
 		);
 	});
 

@@ -11,6 +11,8 @@ export function decisionQualityFields(overrides = {}) {
 		userImpact: "Improves user outcomes by preserving clear project intent.",
 		maintainerImpact: "Keeps implementation cost bounded and reviewable.",
 		effort: "low",
+		workScale: "small",
+		planningDepth: "micro",
 		risk: "low",
 		recommendation: "approve",
 		recommendationRationale:

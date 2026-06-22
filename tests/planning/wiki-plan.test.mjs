@@ -19,7 +19,7 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
+		(event) => event.loop === "decision",
 	);
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
@@ -83,7 +83,7 @@ describe("wiki_plan core facade", () => {
 		});
 
 		assert.equal(result.mode, "preview");
-		assert.equal(result.iterationEvent.event, "planning.iteration");
+		assert.equal(result.iterationEvent.event, "work_units_created");
 		assert.equal(result.loopResult.readyForImplementation, true);
 		assert.equal(result.append, undefined);
 	});
@@ -120,7 +120,7 @@ describe("wiki_plan core facade", () => {
 
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
-			assert.equal(state.events.at(-1)?.event, "planning.iteration");
+			assert.equal(state.events.at(-1)?.event, "work_units_created");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
 			await assert.rejects(
 				() =>

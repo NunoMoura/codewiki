@@ -31,7 +31,7 @@ run checks and collect evidence
 aggregate worker outputs and final content proof
 update implementation output
 check implementation exit conditions
-append implementation.iteration
+append implementation.evidence_accepted
 continue, exit, route back, or block
 ```
 
@@ -46,6 +46,7 @@ Implementation loop output is the high-signal packet needed to close or publish 
 - check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
 - acceptance evidence mapped to planning acceptance criterion ids;
 - TDD red/green proof when policy requires it;
+- trigger enablement or consumption proof when planning includes recurring schedules, event triggers, hooks, or manual heartbeats;
 - worker result summaries and claim/session provenance;
 - normalized worker proof digests, changed-path sets, validation refs, and conflict findings;
 - component/path alignment evidence;
@@ -71,7 +72,7 @@ The implementation loop can exit only when loop-owned quality standards are met 
 | tdd_evidence_valid | deterministic | Required red/green proof maps to planned acceptance criteria. |
 | content_proof_recorded | deterministic | Change-level proof, worker proof verdict/conflict checks, and aggregate content proof exist when required. |
 | worker_claims_correlated | deterministic | Worker-produced evidence ties to active runtime claims and completed worker results. |
-| source_ownership_aligned | deterministic | Changed source/test paths align with file-structure ownership and component test coverage. |
+| source_ownership_aligned | deterministic | Changed source/test paths align with source-map ownership and component test coverage. |
 | production_quality_reviewed | agent | Agent assesses maintainability, simplicity, project style, and error handling as production-ready. |
 | uncertainty_resolved | agent | No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting. |
 | security_privacy_reviewed | agent, conditional | Security/privacy-sensitive changes include explicit review evidence. |
@@ -91,6 +92,7 @@ The implementation loop can exit only when loop-owned quality standards are met 
 
 Implementation routes back to planning when:
 
+- triggers are missing, incomplete, unsafe, or not implementable as planned;
 - acceptance criteria are insufficient;
 - path scopes are wrong or too narrow;
 - dependency order is wrong;
@@ -138,7 +140,7 @@ Implementation iterations should record compact facts:
 
 ```json
 {
-  "event": "implementation.iteration",
+  "event": "implementation.evidence_accepted",
   "loop": "implementation",
   "data": {
     "iteration": 1,

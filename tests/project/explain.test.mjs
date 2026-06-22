@@ -27,7 +27,7 @@ async function fixture() {
 			"    test_patterns:",
 			"      - tests/api/**",
 			"    trace_events:",
-			"      - planning.iteration",
+			"      - planning.work_units_created",
 			"    role: public_facade",
 			"",
 		].join("\n"),
@@ -48,7 +48,7 @@ async function fixture() {
 				traceId: "TRACE-explain",
 				sequence: 1,
 				loop: "planning",
-				event: "planning.iteration",
+				event: "work_units_created",
 				refs: ["src/api/**"],
 				createdAt: "2026-06-17T00:00:01.000Z",
 				data: {

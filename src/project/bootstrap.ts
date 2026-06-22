@@ -80,7 +80,6 @@ const EXCLUDED_NAMES = new Set([
 	"node_modules",
 	"dist",
 	"coverage",
-	"_OLD_VERSION",
 ]);
 
 export async function bootstrapCodewiki(
@@ -223,7 +222,6 @@ function starterFiles(
 			"Terminal and CLI surfaces expose disposable views over KB and trace truth.",
 		),
 		".codewiki/kb/system/overview.md": systemOverviewDoc(project, boundaries),
-		".codewiki/kb/system/file-structure.md": fileStructureDoc(),
 		".codewiki/kb/system/loop-model.md": loopModelDoc(),
 		".codewiki/kb/system/decision-loop.md": loopDoc(
 			"Decision Loop",
@@ -268,12 +266,8 @@ function systemOverviewDoc(
 	return `# System Overview\n\n${project} CodeWiki state has three durable roots: KB knowledge, trace JSONL workflow records, and disposable views.\n\n## Detected boundaries\n\n${boundaryLines.join("\n")}\n`;
 }
 
-function fileStructureDoc(): string {
-	return `# File Structure\n\nTarget CodeWiki project state lives under \`.codewiki/\`:\n\n- \`config.json\` stores policy and host configuration.\n- \`kb/**\` stores product and system knowledge.\n- \`traces/TRACE-*.jsonl\` stores append-only workflow truth.\n- \`views/**\` stores disposable projections over KB and traces.\n\nKB Markdown must not use frontmatter. Deprecated graph, roadmap, and gateway truth roots are not part of the target model.\n`;
-}
-
 function loopModelDoc(): string {
-	return `# Loop Model\n\nCodeWiki has exactly three semantic loops: decision, planning, and implementation. Runtime coordinates work outside those loops. Each semantic loop emits one durable \`<loop>.iteration\` event per iteration with output, progress, and exit status.\n`;
+	return `# Loop Model\n\nCodeWiki has exactly three semantic loops: decision, planning, and implementation. Runtime coordinates work outside those loops. Each semantic loop emits durable facts with \`loop\` naming the semantic authority and \`event\` naming what changed, plus output, progress, and exit status.\n`;
 }
 
 function loopDoc(title: string, body: string): string {
@@ -281,11 +275,11 @@ function loopDoc(title: string, body: string): string {
 }
 
 function tracesDoc(): string {
-	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic loop truth is stored in \`decision.iteration\`, \`planning.iteration\`, and \`implementation.iteration\` events. Runtime events can coordinate claims, but they are not semantic loop truth.\n`;
+	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`rows_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
 }
 
 function apiDoc(): string {
-	return `# API\n\nCodeWiki host adapters should call core facades for state, config, decisions, planning, implementation, runtime dispatch, and archive lifecycle. Adapters must not introduce alternate workflow truth.\n`;
+	return `# API\n\nCodeWiki host adapters should call core facades for state, config, decisions, planning, implementation, runtime work-unit claims, and archive lifecycle. Adapters must not introduce alternate workflow truth.\n`;
 }
 
 function runtimeDoc(): string {
@@ -322,13 +316,12 @@ function sourceMapYaml(boundaries: BootstrapBoundary[]): string {
 		"purpose: Canonical machine-readable mapping between source ownership roots, KB docs, tests, generated views, and trace/event responsibilities.",
 		"source_docs:",
 		"  - .codewiki/kb/system/source-map.md",
-		"  - .codewiki/kb/system/file-structure.md",
 		"  - .codewiki/kb/system/loop-model.md",
+		"  - .codewiki/kb/system/overview.md",
 		"defaults:",
 		"  inheritance: true",
 		"  max_owner_depth: 2",
 		"  excluded:",
-		"    - _OLD_VERSION/**",
 		"    - node_modules/**",
 		"    - .git/**",
 		"    - .pi/**",

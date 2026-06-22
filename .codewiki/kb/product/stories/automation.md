@@ -5,7 +5,7 @@ As a user, I want an agent to advance CodeWiki work automatically while staying 
 ## Acceptance signals
 
 - Agents advance work through decision, planning, and implementation loop iterations.
-- Runtime coordinates automation but does not own product truth.
+- Runtime coordinates automation and trace writes but does not invent semantic truth.
 - Users can configure automation mode, max parallel workers, worker isolation, budgets, and approval requirements.
 - The agent stops or routes back on ambiguity, unsafe work, unmet exit conditions, budget exhaustion, no-progress churn, or missing approval.
 - Users can see the next safe action, why it is safe, which exit condition controls it, and which refs prove it.

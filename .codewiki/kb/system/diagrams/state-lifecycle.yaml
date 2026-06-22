@@ -31,63 +31,63 @@ transitions:
   - from: decision_active
     to: planning_active
     trigger: decision iteration exits
-    trace_event: decision.iteration
+    trace_event: decision.rows_approved
     exit_status: exit
     cleanup: clean decision tmp after durable refs exist
   - from: decision_active
     to: blocked
     trigger: decision iteration blocks or continues without progress
-    trace_event: decision.iteration
+    trace_event: decision.rows_approved
     exit_status: blocked
     cleanup: preserve decision tmp when remediation needs it
   - from: planning_active
     to: implementation_active
     trigger: planning iteration exits
-    trace_event: planning.iteration
+    trace_event: planning.work_units_created
     exit_status: exit
     cleanup: clean planning tmp after durable refs exist
   - from: planning_active
     to: route_back
     trigger: planning needs decision authority
-    trace_event: planning.iteration
+    trace_event: planning.work_units_created
     exit_status: route_back
     cleanup: preserve planning tmp when useful
   - from: planning_active
     to: blocked
     trigger: planning blocks or continues without progress
-    trace_event: planning.iteration
+    trace_event: planning.work_units_created
     exit_status: blocked
     cleanup: preserve planning tmp when remediation needs it
   - from: implementation_active
     to: production_ready
     trigger: implementation iteration exits
-    trace_event: implementation.iteration
+    trace_event: implementation.evidence_accepted
     exit_status: exit
     cleanup: clean implementation tmp after durable refs exist
   - from: implementation_active
     to: route_back
     trigger: implementation needs planning or decision authority
-    trace_event: implementation.iteration
+    trace_event: implementation.evidence_accepted
     exit_status: route_back
     cleanup: preserve implementation tmp when useful
   - from: implementation_active
     to: blocked
     trigger: implementation blocks or continues without progress
-    trace_event: implementation.iteration
+    trace_event: implementation.evidence_accepted
     exit_status: blocked
     cleanup: preserve implementation tmp when remediation needs it
   - from: route_back
     to: decision_active
     trigger: target loop is decision
-    trace_event: decision.iteration
+    trace_event: decision.rows_approved
   - from: route_back
     to: planning_active
     trigger: target loop is planning
-    trace_event: planning.iteration
+    trace_event: planning.work_units_created
   - from: production_ready
     to: published
     trigger: optional publication proof recorded
-    trace_event: implementation.iteration
+    trace_event: implementation.evidence_accepted
     exit_status: exit
   - from: production_ready
     to: closed

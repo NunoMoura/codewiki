@@ -1,4 +1,9 @@
-import { appendTraceRecord, type AppendTraceResult } from "../traces/append.ts";
+import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { traceGoalCloseBlockers } from "../views/trace-goals.ts";
+import {
+	appendRuntimeTraceRecord,
+	type AppendTraceResult,
+} from "../runtime/trace-writer.ts";
 import {
 	buildTraceCloseReleaseNotes,
 	type TraceCloseReleaseNotes,
@@ -48,12 +53,18 @@ export interface RunWikiArchiveResult {
 export async function runWikiArchive(
 	input: RunWikiArchiveInput,
 ): Promise<RunWikiArchiveResult> {
-	const action = input.action || "retention_stub";
-	const mode = input.mode || "preview";
+	const action = input.action ?? "retention_stub";
+	const mode = input.mode ?? "preview";
 	if (action === "retention_stub") return retentionStubResult(input, mode);
 	if (action === "close") return closeResult(input, mode);
 	if (action === "hydrate") return hydrationResult(input, mode);
-	throw new Error(`Unsupported wiki_archive action ${action}.`);
+	throw createCodewikiApiError({
+		operation: "wiki_archive",
+		code: "unsupported_action",
+		field: "action",
+		message: `Unsupported wiki_archive action ${action}.`,
+		data: { action },
+	});
 }
 
 function retentionStubResult(
@@ -79,6 +90,16 @@ async function closeResult(
 	mode: WikiArchiveMode,
 ): Promise<RunWikiArchiveResult> {
 	const records = requiredRecords(input.records);
+	const closeBlockers = traceGoalCloseBlockers(records);
+	if (closeBlockers.length > 0) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "append_blocked",
+			message: `wiki_archive close blocked by incomplete trace goal: ${closeBlockers.join(" ")}`,
+			suggestedAction: "fix_input",
+			data: { blockers: closeBlockers },
+		});
+	}
 	const closeRecord = createTraceCloseRecord({
 		records,
 		id: input.closeId,
@@ -99,7 +120,7 @@ async function closeResult(
 	const releaseNotes = buildTraceCloseReleaseNotes(closedRecords);
 	const append =
 		mode === "append"
-			? await appendTraceRecord(
+			? await appendRuntimeTraceRecord(
 					requiredRepoRoot(input.repoRoot),
 					closeRecord,
 					requiredExpectedBytes(input.expectedBytes),
@@ -135,12 +156,25 @@ function hydrationResult(
 
 function assertPreviewOnly(mode: WikiArchiveMode, action: string): void {
 	if (mode !== "preview") {
-		throw new Error(`wiki_archive ${action} only supports preview mode.`);
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "invalid_input",
+			field: "mode",
+			message: `wiki_archive ${action} only supports preview mode.`,
+			data: { action, mode },
+		});
 	}
 }
 
 function requiredRecords(records: TraceRecord[] | undefined): TraceRecord[] {
-	if (!records?.length) throw new Error("wiki_archive requires records.");
+	if (!records?.length) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "missing_required",
+			field: "records",
+			message: "wiki_archive requires records.",
+		});
+	}
 	return records;
 }
 
@@ -148,7 +182,12 @@ function requiredArchivedRecords(
 	records: TraceRecord[] | undefined,
 ): TraceRecord[] {
 	if (!records?.length) {
-		throw new Error("wiki_archive hydrate requires archivedRecords.");
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "missing_required",
+			field: "archivedRecords",
+			message: "wiki_archive hydrate requires archivedRecords.",
+		});
 	}
 	return records;
 }
@@ -156,23 +195,50 @@ function requiredArchivedRecords(
 function requiredStub(
 	stub: TraceRetentionStub | undefined,
 ): TraceRetentionStub {
-	if (!stub) throw new Error("wiki_archive hydrate requires stub.");
+	if (!stub) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "missing_required",
+			field: "stub",
+			message: "wiki_archive hydrate requires stub.",
+		});
+	}
 	return stub;
 }
 
 function requiredGitRestoreRef(value: string | undefined): string {
-	if (!value?.trim()) throw new Error("wiki_archive requires gitRestoreRef.");
+	if (!value?.trim()) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "missing_required",
+			field: "gitRestoreRef",
+			message: "wiki_archive requires gitRestoreRef.",
+		});
+	}
 	return value;
 }
 
 function requiredRepoRoot(value: string | undefined): string {
-	if (!value) throw new Error("wiki_archive append mode requires repoRoot.");
+	if (!value) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "missing_required",
+			field: "repoRoot",
+			message: "wiki_archive append mode requires repoRoot.",
+		});
+	}
 	return value;
 }
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw new Error("wiki_archive append mode requires expectedBytes >= 0.");
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "invalid_input",
+			field: "expectedBytes",
+			message: "wiki_archive append mode requires expectedBytes >= 0.",
+			data: { value },
+		});
 	}
 	return value;
 }

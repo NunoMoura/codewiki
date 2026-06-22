@@ -15,7 +15,3 @@ export {
 	type CommandRenderOptions,
 	type WikiStateCommandView,
 } from "../rendering/command-renderers.ts";
-export {
-	renderCodewikiToolCall,
-	renderCodewikiToolResult,
-} from "../rendering/tool-renderers.ts";

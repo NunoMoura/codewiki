@@ -8,7 +8,7 @@ A CodeWiki change starts as user intent and becomes durable when it is represent
 2. A decision iteration with `exit` appends accepted decision output and canonical refs to the trace.
 3. Planning loop starts from exited decision output and current KB refs, then iterates until work units, dependencies, path scopes, acceptance criteria, conflicts, and verification strategy satisfy planning exit conditions.
 4. A planning iteration with `exit` appends accepted planning output for implementation and runtime scheduling.
-5. Runtime outer loop folds traces, projects work queues, coordinates claims, dispatches workers, enforces budgets, and stores temporary scratch.
+5. Runtime outer loop folds traces, projects work queues, coordinates claims, starts workers, enforces budgets, and stores temporary scratch.
 6. Implementation loop starts from exited planning output, changes source/tests/docs, gathers checks/evidence, aggregates workers, and iterates until implementation exit conditions are satisfied.
 7. An implementation iteration with `exit` appends accepted implementation output, aggregate content proof, residual ownership, and publication refs when needed.
 8. Generated views update from traces, KB, source/tests, and Git refs.

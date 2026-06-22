@@ -4,13 +4,9 @@ import { describe, it } from "node:test";
 
 const skillRoot = ".agents/skills";
 const expectedSkills = [
-	"codewiki-archive",
-	"codewiki-config",
-	"codewiki-decision",
-	"codewiki-implementation",
-	"codewiki-planning",
-	"codewiki-runtime",
-	"codewiki-state",
+	"codewiki-decide",
+	"codewiki-implement",
+	"codewiki-plan",
 ];
 const bannedSkillTerms = [
 	/\bcompiler(s)?\b/i,

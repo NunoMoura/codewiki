@@ -20,6 +20,15 @@ export function eventsByName(
 	);
 }
 
+export function loopOutputEvents(
+	records: TraceRecord[],
+	loop: TraceEvent["loop"],
+): TraceEvent[] {
+	return eventsForLoop(records, loop).filter(
+		(event) => objectRecord(event.data).output !== undefined,
+	);
+}
+
 export function lastEventForLoop(
 	records: TraceRecord[],
 	loop: TraceEvent["loop"],
@@ -30,6 +39,7 @@ export function lastEventForLoop(
 export function traceRefs(records: TraceRecord[]): string[] {
 	return unique(
 		records.flatMap((record) => {
+			if (record.type === "trace_head") return record.origin?.refs || [];
 			if (record.type === "trace_event" || record.type === "trace_close") {
 				return record.refs;
 			}
@@ -48,6 +58,12 @@ export function traceHasEvent(
 function checkpointRefs(record: TraceRecord): string[] {
 	if (record.type !== "tail_checkpoint") return [];
 	return stringList(record.data?.refs);
+}
+
+function objectRecord(value: unknown): Record<string, unknown> {
+	return typeof value === "object" && value !== null
+		? (value as Record<string, unknown>)
+		: {};
 }
 
 function stringList(value: unknown): string[] {

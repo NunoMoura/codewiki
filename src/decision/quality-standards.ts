@@ -47,6 +47,20 @@ export function decisionQualityStandards(
 			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
 		}),
 		standard({
+			id: "work_routing_classified",
+			description:
+				"Approved rows classify work scale and choose micro or standard planning before planning handoff.",
+			issues,
+			codes: [
+				"missing_work_scale",
+				"invalid_work_scale",
+				"missing_planning_depth",
+				"invalid_planning_depth",
+				"invalid_micro_plan_scale",
+				"invalid_micro_plan_risk",
+			],
+		}),
+		standard({
 			id: "recommendation_justified",
 			description:
 				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
@@ -110,6 +124,13 @@ export function decisionQualityStandards(
 				"missing_high_risk_scope",
 				"missing_high_risk_alternative",
 			],
+		}),
+		standard({
+			id: "active_trace_conflicts_resolved",
+			description:
+				"Approved rows do not conflict with active trace goals unless the conflict is merged, superseded, deferred, or otherwise resolved.",
+			issues,
+			codes: ["active_trace_conflict"],
 		}),
 		standard({
 			id: "knowledge_impact_accounted",
@@ -268,7 +289,8 @@ export function isBlockingDecisionIssue(issue: DecisionExitIssue): boolean {
 	return (
 		issue.code === "agent_assessment_not_aligned" ||
 		issue.code === "missing_high_risk_approval" ||
-		issue.code === "invalid_approval_ref"
+		issue.code === "invalid_approval_ref" ||
+		issue.code === "active_trace_conflict"
 	);
 }
 

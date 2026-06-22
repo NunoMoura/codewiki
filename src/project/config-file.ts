@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
 	runWikiConfig,
 	resolveWikiConfig,
@@ -93,7 +94,11 @@ async function readOptionalJson(path: string): Promise<unknown> {
 		return JSON.parse(await readFile(path, "utf8"));
 	} catch (error) {
 		if (isNotFound(error)) return {};
-		throw error;
+		throw createCodewikiConfigError({
+			path,
+			message: `wiki_config file ${path} must contain valid JSON.`,
+			cause: error,
+		});
 	}
 }
 

@@ -31,6 +31,10 @@ async function fixture() {
 		]),
 	);
 	await writeFile(
+		join(root, ".codewiki", "traces", "NOT-A-TRACE.jsonl"),
+		"not json\n",
+	);
+	await writeFile(
 		join(root, ".codewiki", "kb", "system", "source-map.yaml"),
 		[
 			"id: test-source-map",
@@ -49,7 +53,7 @@ async function fixture() {
 			"    generated_views:",
 			"      - .codewiki/views/status.json",
 			"    trace_events:",
-			"      - decision.iteration",
+			"      - decision.rows_approved",
 			"",
 		].join("\n"),
 	);
@@ -76,8 +80,6 @@ describe("CLI adapter", () => {
 					"state",
 					"--trace",
 					"TRACE-cli",
-					"--source",
-					"src/api/index.ts",
 				],
 				{ cwd: join(root, "src", "api"), encoding: "utf8" },
 			);
@@ -85,13 +87,13 @@ describe("CLI adapter", () => {
 			assert.equal(result.status, 0, result.stderr);
 			const output = JSON.parse(result.stdout);
 			assert.deepEqual(output.traceIds, ["TRACE-cli"]);
-			assert.equal(output.sourceOwners[0].componentId, "api");
+			assert.equal(output.selectedTraceId, "TRACE-cli");
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
 	});
 
-	it("prints wiki_state JSON from project traces and source-map", async () => {
+	it("prints wiki_state JSON from project traces", async () => {
 		const root = await fixture();
 		try {
 			const result = spawnSync(
@@ -104,8 +106,6 @@ describe("CLI adapter", () => {
 					root,
 					"--trace",
 					"TRACE-cli",
-					"--source",
-					"src/api/index.ts",
 				],
 				{ cwd: process.cwd(), encoding: "utf8" },
 			);
@@ -113,7 +113,10 @@ describe("CLI adapter", () => {
 			const output = JSON.parse(result.stdout);
 			assert.deepEqual(output.traceIds, ["TRACE-cli"]);
 			assert.equal(output.selectedTraceId, "TRACE-cli");
-			assert.equal(output.sourceOwners[0].componentId, "api");
+			assert.equal(output.append.byTrace["TRACE-cli"].nextSequence, 1);
+			assert.equal(output.append.byTrace["TRACE-cli"].expectedBytes > 0, true);
+			assert.equal(output.next.action, "decide");
+			assert.equal(output.next.tool, "wiki_decide");
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

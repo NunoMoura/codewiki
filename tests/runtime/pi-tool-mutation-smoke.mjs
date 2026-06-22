@@ -9,6 +9,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
 import codewikiExtension from "../../src/pi/extension.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
@@ -71,9 +72,7 @@ function decisionTableInput() {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -81,9 +80,7 @@ function approvedDecisionRef(events) {
 }
 
 function planningWorkRef(events, workUnitId = "WU-pi-mutation-smoke") {
-	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
@@ -200,9 +197,9 @@ try {
 			"    test_patterns:",
 			"      - tests/runtime/pi-*.mjs",
 			"    trace_events:",
-			"      - decision.iteration",
-			"      - planning.iteration",
-			"      - implementation.iteration",
+			"      - decision.rows_approved",
+			"      - planning.work_units_created",
+			"      - implementation.evidence_accepted",
 			"",
 		].join("\n"),
 	);
@@ -220,10 +217,9 @@ try {
 	codewikiExtension(pi.api);
 	const decideTool = toolByName(pi, "wiki_decide");
 	const planTool = toolByName(pi, "wiki_plan");
-	const runtimeTool = toolByName(pi, "wiki_runtime");
 	const implementTool = toolByName(pi, "wiki_implement");
 	const archiveTool = toolByName(pi, "wiki_archive");
-	const wikiCommand = commandByName(pi, "wiki");
+	const stateCommand = commandByName(pi, "wiki-state");
 	const ctx = { cwd: root, ui: { notify() {} } };
 
 	const preview = assertToolResult(
@@ -325,25 +321,14 @@ try {
 	};
 	const beforeRuntimePreview = await readFile(tracePath, "utf8");
 	assert.equal(runtimeQueue.summary.ready, 1);
-	const runtimePreview = assertToolResult(
-		await runtimeTool.execute(
-			"tool-call-mutation-preview-runtime",
-			{
-				input: {
-					mode: "preview",
-					config: runtimeConfig,
-					queue: runtimeQueue,
-					workerIdPrefix: "mutation-worker",
-					dirtyPaths: ["src/pi/tool.ts"],
-					nextSequenceByTrace: { [traceId]: 3 },
-				},
-			},
-			undefined,
-			undefined,
-			ctx,
-		),
-		/wiki_runtime: completed preview run\./,
-	);
+	const runtimePreview = await runWikiRuntime({
+		mode: "preview",
+		config: runtimeConfig,
+		queue: runtimeQueue,
+		workerIdPrefix: "mutation-worker",
+		dirtyPaths: ["src/pi/tool.ts"],
+		nextSequenceByTrace: { [traceId]: 3 },
+	});
 	assert.equal(runtimePreview.append, undefined);
 	assert.equal(runtimePreview.policy.worktrees[0].required, true);
 	assert.equal(
@@ -358,52 +343,35 @@ try {
 
 	await assert.rejects(
 		() =>
-			runtimeTool.execute(
-				"tool-call-mutation-runtime-unguarded",
-				{
-					input: {
-						mode: "append",
-						config: runtimeConfig,
-						queue: runtimeQueue,
-						nextSequenceByTrace: { [traceId]: 3 },
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			),
-		/wiki_runtime append mode requires expectedBytesByTrace\./,
+			runWikiRuntime({
+				mode: "append",
+				config: runtimeConfig,
+				queue: runtimeQueue,
+				nextSequenceByTrace: { [traceId]: 3 },
+				repoRoot: root,
+			}),
+		/wiki_runtime append blocked by policy: Missing expected trace bytes/i,
 	);
 
-	const runtime = assertToolResult(
-		await runtimeTool.execute(
-			"tool-call-mutation-append-runtime",
-			{
-				input: {
-					mode: "append",
-					config: runtimeConfig,
-					queue: runtimeQueue,
-					createdAt: "2026-06-17T00:00:03.000Z",
-					workerIdPrefix: "mutation-worker",
-					dirtyPaths: ["src/pi/tool.ts"],
-					nextSequenceByTrace: { [traceId]: 3 },
-					expectedBytesByTrace: {
-						[traceId]: await expectedBytes(tracePath),
-					},
-				},
-			},
-			undefined,
-			undefined,
-			ctx,
-		),
-		/wiki_runtime: completed append run\./,
-	);
+	const runtime = await runWikiRuntime({
+		mode: "append",
+		config: runtimeConfig,
+		queue: runtimeQueue,
+		createdAt: "2026-06-17T00:00:03.000Z",
+		workerIdPrefix: "mutation-worker",
+		dirtyPaths: ["src/pi/tool.ts"],
+		nextSequenceByTrace: { [traceId]: 3 },
+		expectedBytesByTrace: {
+			[traceId]: await expectedBytes(tracePath),
+		},
+		repoRoot: root,
+	});
 	const claimEvent = runtime.append.events[0];
-	assert.equal(claimEvent.event, "runtime.work.claimed");
+	assert.equal(claimEvent.event, "runtime.work_unit.claimed");
 	assert.equal(claimEvent.sequence, 3);
 	assert.equal(runtime.batch.nextSequenceByTrace[traceId], 4);
-	const claimedState = await wikiCommand.handler(
-		`state --board --trace ${traceId} --json`,
+	const claimedState = await stateCommand.handler(
+		`--board --trace ${traceId} --json`,
 		ctx,
 	);
 	assert.equal(claimedState.data.workQueue.summary.claimed, 1);
@@ -436,8 +404,8 @@ try {
 		implemented.aggregateContentProof?.workingTreeDigest?.startsWith("sha256:"),
 		true,
 	);
-	const implementedState = await wikiCommand.handler(
-		`state --board --trace ${traceId} --json`,
+	const implementedState = await stateCommand.handler(
+		`--board --trace ${traceId} --json`,
 		ctx,
 	);
 	assert.equal(implementedState.data.workQueue.summary.done, 1);
@@ -473,22 +441,21 @@ try {
 		readBack.records.some(
 			(record) =>
 				record.type === "trace_event" &&
-				record.event === "runtime.work.claimed",
+				record.event === "runtime.work_unit.claimed",
 		),
 		true,
 	);
 	assert.equal(
 		readBack.records.some(
 			(record) =>
-				record.type === "trace_event" &&
-				record.event === "implementation.iteration",
+				record.type === "trace_event" && record.loop === "implementation",
 		),
 		true,
 	);
 	assert.equal(readBack.records.at(-1)?.type, "trace_close");
 
-	const state = await wikiCommand.handler(
-		`state --all --trace ${traceId} --json`,
+	const state = await stateCommand.handler(
+		`--all --trace ${traceId} --json`,
 		ctx,
 	);
 	assert.equal(state.data.status.traceId, traceId);

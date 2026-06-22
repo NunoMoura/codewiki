@@ -1,5 +1,5 @@
 import {
-	planRuntimeDispatchWorktrees,
+	planRuntimeWorkUnitClaimWorktrees,
 	type RuntimeWorktreePlan,
 } from "../git/worktrees.ts";
 import {
@@ -11,19 +11,21 @@ import {
 	type WikiConfigWorktreeIsolation,
 } from "../project/config.ts";
 import type { WorkQueueItem, WorkQueueView } from "../views/types.ts";
-import type { RuntimeDispatchPlan } from "./scheduler.ts";
+import type { RuntimeWorkUnitClaimSelection } from "./work-unit-claim-selection.ts";
 
 export interface RuntimePolicy {
 	automationEnabled: boolean;
 	maxParallelClaims: number;
 }
 
-export type RuntimeDispatchPolicyMode = "preview" | "append";
+export type RuntimeWorkUnitClaimPolicyMode = "preview" | "append";
+export type RuntimeHeartbeatCyclePolicyMode = "preview" | "append";
+export type RuntimeLeaseExpirationPolicyMode = "preview" | "append";
 
-export interface RuntimeDispatchPolicyInput {
-	mode: RuntimeDispatchPolicyMode;
+export interface RuntimeWorkUnitClaimPolicyInput {
+	mode: RuntimeWorkUnitClaimPolicyMode;
 	queue: WorkQueueView;
-	plan: RuntimeDispatchPlan;
+	plan: RuntimeWorkUnitClaimSelection;
 	config?: PartialWikiConfig | WikiConfig;
 	maxWorkers?: number;
 	nextSequenceByTrace?: Record<string, number>;
@@ -37,7 +39,7 @@ export interface RuntimeDispatchPolicyInput {
 	workerIds?: Record<string, string>;
 }
 
-export interface RuntimeDispatchPolicyDecision extends RuntimePolicy {
+export interface RuntimeWorkUnitClaimPolicyDecision extends RuntimePolicy {
 	automation: WikiConfigAutomationMode;
 	agency: WikiConfigAgencyLevel;
 	worktreeIsolation: WikiConfigWorktreeIsolation;
@@ -45,6 +47,34 @@ export interface RuntimeDispatchPolicyDecision extends RuntimePolicy {
 	appendAllowed: boolean;
 	blockers: string[];
 	qualityBlockedWorkUnitIds: string[];
+}
+
+export interface RuntimeHeartbeatCyclePolicyInput {
+	mode: RuntimeHeartbeatCyclePolicyMode;
+	config?: PartialWikiConfig | WikiConfig;
+	repoRoot?: string;
+}
+
+export interface RuntimeHeartbeatCyclePolicyDecision extends RuntimePolicy {
+	automation: WikiConfigAutomationMode;
+	agency: WikiConfigAgencyLevel;
+	appendAllowed: boolean;
+	blockers: string[];
+}
+
+export interface RuntimeLeaseExpirationPolicyInput {
+	mode: RuntimeLeaseExpirationPolicyMode;
+	config?: PartialWikiConfig | WikiConfig;
+	repoRoot?: string;
+	traceIds?: string[];
+	expectedBytesByTrace?: Record<string, number>;
+}
+
+export interface RuntimeLeaseExpirationPolicyDecision extends RuntimePolicy {
+	automation: WikiConfigAutomationMode;
+	agency: WikiConfigAgencyLevel;
+	appendAllowed: boolean;
+	blockers: string[];
 }
 
 export function runtimePolicyFromConfig(
@@ -58,12 +88,48 @@ export function runtimePolicyFromConfig(
 	};
 }
 
-export function evaluateRuntimeDispatchPolicy(
-	input: RuntimeDispatchPolicyInput,
-): RuntimeDispatchPolicyDecision {
+export function evaluateRuntimeHeartbeatCyclePolicy(
+	input: RuntimeHeartbeatCyclePolicyInput,
+): RuntimeHeartbeatCyclePolicyDecision {
+	const config = resolveWikiConfig(input.config);
+	const blockers = [
+		...automationBlockers(config),
+		...heartbeatAppendSafetyBlockers(input),
+	];
+	return {
+		automationEnabled: config.runtime.automation !== "manual",
+		maxParallelClaims: config.runtime.maxWorkers,
+		automation: config.runtime.automation,
+		agency: config.runtime.agency,
+		appendAllowed: blockers.length === 0,
+		blockers,
+	};
+}
+
+export function evaluateRuntimeLeaseExpirationPolicy(
+	input: RuntimeLeaseExpirationPolicyInput,
+): RuntimeLeaseExpirationPolicyDecision {
+	const config = resolveWikiConfig(input.config);
+	const blockers = [
+		...automationBlockers(config),
+		...leaseExpirationAppendSafetyBlockers(input),
+	];
+	return {
+		automationEnabled: config.runtime.automation !== "manual",
+		maxParallelClaims: config.runtime.maxWorkers,
+		automation: config.runtime.automation,
+		agency: config.runtime.agency,
+		appendAllowed: blockers.length === 0,
+		blockers,
+	};
+}
+
+export function evaluateRuntimeWorkUnitClaimPolicy(
+	input: RuntimeWorkUnitClaimPolicyInput,
+): RuntimeWorkUnitClaimPolicyDecision {
 	const config = resolveWikiConfig(input.config);
 	const setupCommands = config.runtime.worktreeSetupCommands;
-	const worktrees = planRuntimeDispatchWorktrees(input.plan.dispatch, {
+	const worktrees = planRuntimeWorkUnitClaimWorktrees(input.plan.selected, {
 		mode: config.runtime.worktreeIsolation,
 		repoRoot: input.repoRoot,
 		projectName: config.project,
@@ -75,7 +141,7 @@ export function evaluateRuntimeDispatchPolicy(
 		workerIds: input.workerIds,
 		setupCommands,
 	});
-	const qualityBlockedWorkUnitIds = dispatchQualityBlockedWorkUnitIds(
+	const qualityBlockedWorkUnitIds = selectedQualityBlockedWorkUnitIds(
 		input.queue,
 		input.plan,
 	);
@@ -83,7 +149,7 @@ export function evaluateRuntimeDispatchPolicy(
 		...automationBlockers(config),
 		...appendSafetyBlockers(input),
 		...qualityBlockedWorkUnitIds.map(
-			(id) => `Work unit ${id} is not dispatchable by quality policy.`,
+			(id) => `Work unit ${id} is not claimable by quality policy.`,
 		),
 	];
 	return {
@@ -113,9 +179,34 @@ function automationBlockers(config: WikiConfig): string[] {
 	return blockers;
 }
 
-function appendSafetyBlockers(input: RuntimeDispatchPolicyInput): string[] {
+function heartbeatAppendSafetyBlockers(
+	input: RuntimeHeartbeatCyclePolicyInput,
+): string[] {
 	if (input.mode !== "append") return [];
-	const traceIds = unique(input.plan.dispatch.map((item) => item.traceId));
+	return input.repoRoot ? [] : ["Missing repoRoot for heartbeat cycle append."];
+}
+
+function leaseExpirationAppendSafetyBlockers(
+	input: RuntimeLeaseExpirationPolicyInput,
+): string[] {
+	if (input.mode !== "append") return [];
+	return [
+		...(input.repoRoot
+			? []
+			: ["Missing repoRoot for lease expiration append."]),
+		...(input.traceIds || [])
+			.filter(
+				(traceId) => !hasExpectedBytes(input.expectedBytesByTrace, traceId),
+			)
+			.map((traceId) => `Missing expected trace bytes for ${traceId}.`),
+	];
+}
+
+function appendSafetyBlockers(
+	input: RuntimeWorkUnitClaimPolicyInput,
+): string[] {
+	if (input.mode !== "append") return [];
+	const traceIds = unique(input.plan.selected.map((item) => item.traceId));
 	return [
 		...traceIds
 			.filter((traceId) => !hasNextSequence(input.nextSequenceByTrace, traceId))
@@ -128,13 +219,13 @@ function appendSafetyBlockers(input: RuntimeDispatchPolicyInput): string[] {
 	];
 }
 
-function dispatchQualityBlockedWorkUnitIds(
+function selectedQualityBlockedWorkUnitIds(
 	queue: WorkQueueView,
-	plan: RuntimeDispatchPlan,
+	plan: RuntimeWorkUnitClaimSelection,
 ): string[] {
-	const dispatchIds = new Set(plan.dispatch.map((item) => item.workUnitId));
+	const selectedIds = new Set(plan.selected.map((item) => item.workUnitId));
 	return queue.items
-		.filter((item) => dispatchIds.has(item.id))
+		.filter((item) => selectedIds.has(item.id))
 		.filter(qualityBlocked)
 		.map((item) => item.id);
 }

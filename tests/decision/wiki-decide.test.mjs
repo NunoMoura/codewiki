@@ -41,7 +41,7 @@ describe("wiki_decide core facade", () => {
 		});
 
 		assert.equal(result.mode, "preview");
-		assert.equal(result.iterationEvent.event, "decision.iteration");
+		assert.equal(result.iterationEvent.event, "rows_approved");
 		assert.equal(result.iterationEvent.sequence, 2);
 		assert.equal(result.loopResult.readyForPlanning, true);
 		assert.equal(result.append, undefined);
@@ -71,7 +71,7 @@ describe("wiki_decide core facade", () => {
 
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
-			assert.equal(state.events.at(-1)?.event, "decision.iteration");
+			assert.equal(state.events.at(-1)?.event, "rows_approved");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
 			await assert.rejects(
 				() =>

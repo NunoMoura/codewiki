@@ -34,6 +34,13 @@ export const DECISION_RECOMMENDATION_VALUES = [
 	"ask_user",
 ] as const;
 export const DECISION_EFFORT_VALUES = ["low", "medium", "high"] as const;
+export const DECISION_WORK_SCALE_VALUES = [
+	"tiny",
+	"small",
+	"normal",
+	"large",
+] as const;
+export const DECISION_PLANNING_DEPTH_VALUES = ["micro", "standard"] as const;
 export const DECISION_APPROVAL_AUTHORITY_VALUES = [
 	"user",
 	"maintainer",
@@ -55,6 +62,9 @@ export type DecisionKind = (typeof DECISION_KIND_VALUES)[number];
 export type DecisionRecommendation =
 	(typeof DECISION_RECOMMENDATION_VALUES)[number];
 export type DecisionEffort = (typeof DECISION_EFFORT_VALUES)[number];
+export type DecisionWorkScale = (typeof DECISION_WORK_SCALE_VALUES)[number];
+export type DecisionPlanningDepth =
+	(typeof DECISION_PLANNING_DEPTH_VALUES)[number];
 export type DecisionApprovalAuthority =
 	(typeof DECISION_APPROVAL_AUTHORITY_VALUES)[number];
 export type DecisionAgentStance = (typeof DECISION_AGENT_STANCE_VALUES)[number];
@@ -86,6 +96,10 @@ export interface DecisionRowInput {
 	userImpact?: string;
 	maintainerImpact?: string;
 	effort?: DecisionEffort | string;
+	workScale?: DecisionWorkScale | string;
+	work_scale?: DecisionWorkScale | string;
+	planningDepth?: DecisionPlanningDepth | string;
+	planning_depth?: DecisionPlanningDepth | string;
 	affectedLayers?: string[];
 	risk?: DecisionRisk;
 	approval?: DecisionApprovalStatus | string;
@@ -134,6 +148,8 @@ export interface DecisionRow {
 	userImpact: string;
 	maintainerImpact: string;
 	effort: DecisionEffort | string;
+	workScale: DecisionWorkScale | string;
+	planningDepth: DecisionPlanningDepth | string;
 	affectedLayers: string[];
 	risk: DecisionRisk;
 	approval: DecisionApprovalStatus;
@@ -204,6 +220,15 @@ export interface CurrentStatePacket {
 	refs: string[];
 	observedAt?: string;
 	contentProof?: ContentProof;
+}
+
+export interface ActiveTraceGoal {
+	traceId: string;
+	title?: string;
+	status: string;
+	decisionRefs: string[];
+	pathScopes: string[];
+	blockers?: string[];
 }
 
 export interface DecisionOutput {

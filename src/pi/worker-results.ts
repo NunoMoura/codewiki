@@ -4,10 +4,10 @@ import type {
 	ImplementationWorkerBlockerInput,
 	ImplementationWorkerResultInput,
 } from "../implementation/workers.ts";
-import type { PiWorkerDispatchResult } from "./dispatcher.ts";
+import type { PiWorkerStartResult } from "./worker-start.ts";
 
 export interface PiWorkerCompletionInput {
-	dispatch: PiWorkerDispatchResult;
+	workerStart: PiWorkerStartResult;
 	output?: unknown;
 	error?: unknown;
 }
@@ -21,7 +21,7 @@ const WORKER_REPORT_FENCE =
 	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/gi;
 
 export async function collectPiWorkerOutputFiles(
-	workers: PiWorkerDispatchResult[],
+	workers: PiWorkerStartResult[],
 ): Promise<PiWorkerCompletionInput[]> {
 	return Promise.all(workers.map(collectPiWorkerOutputFile));
 }
@@ -33,23 +33,23 @@ export function collectPiWorkerResults(
 }
 
 async function collectPiWorkerOutputFile(
-	dispatch: PiWorkerDispatchResult,
+	workerStart: PiWorkerStartResult,
 ): Promise<PiWorkerCompletionInput> {
-	if (!dispatch.outputFile) {
+	if (!workerStart.outputFile) {
 		return {
-			dispatch,
-			error: `Worker completion output file is missing for worker ${dispatch.workerId}.`,
+			workerStart,
+			error: `Worker completion output file is missing for worker ${workerStart.workerId}.`,
 		};
 	}
 	try {
 		return {
-			dispatch,
-			output: await readFile(dispatch.outputFile, "utf8"),
+			workerStart,
+			output: await readFile(workerStart.outputFile, "utf8"),
 		};
 	} catch (error) {
 		return {
-			dispatch,
-			error: `Worker completion output file is unreadable: ${dispatch.outputFile}: ${errorMessage(error)}`,
+			workerStart,
+			error: `Worker completion output file is unreadable: ${workerStart.outputFile}: ${errorMessage(error)}`,
 		};
 	}
 }
@@ -61,14 +61,14 @@ export function normalizePiWorkerCompletion(
 	const data = parsed.data;
 	const status = completionStatus(input, parsed);
 	return guardEmptyCompletedWorkerEvidence({
-		workerId: input.dispatch.workerId,
-		workUnitId: input.dispatch.workUnitId,
+		workerId: input.workerStart.workerId,
+		workUnitId: input.workerStart.workUnitId,
 		planningRefs: completionPlanningRefs(input, data),
 		status,
-		...(input.dispatch.claimId || text(data.claimId ?? data.claim_id)
+		...(input.workerStart.claimId || text(data.claimId ?? data.claim_id)
 			? {
 					claimId:
-						input.dispatch.claimId || text(data.claimId ?? data.claim_id),
+						input.workerStart.claimId || text(data.claimId ?? data.claim_id),
 				}
 			: {}),
 		...completionSession(input, data),
@@ -164,7 +164,11 @@ function completionStatus(
 	input: PiWorkerCompletionInput,
 	parsed: ParsedCompletionOutput,
 ): ImplementationWorkerResultInput["status"] {
-	if (input.error || input.dispatch.status === "failed" || parsed.parseError) {
+	if (
+		input.error ||
+		input.workerStart.status === "failed" ||
+		parsed.parseError
+	) {
 		return "failed";
 	}
 	const status = text(parsed.data.status).toLowerCase();
@@ -181,7 +185,7 @@ function completionPlanningRefs(
 		...stringList(data.planning_refs),
 		text(data.workUnitRef ?? data.work_unit_ref),
 	]);
-	return refs.length > 0 ? refs : [...input.dispatch.planningRefs];
+	return refs.length > 0 ? refs : [...input.workerStart.planningRefs];
 }
 
 function completionSession(
@@ -191,11 +195,11 @@ function completionSession(
 	return {
 		...optionalTextField(
 			"sessionId",
-			data.sessionId ?? data.session_id ?? input.dispatch.sessionId,
+			data.sessionId ?? data.session_id ?? input.workerStart.sessionId,
 		),
 		...optionalTextField(
 			"sessionFile",
-			data.sessionFile ?? data.session_file ?? input.dispatch.sessionFile,
+			data.sessionFile ?? data.session_file ?? input.workerStart.sessionFile,
 		),
 	};
 }
@@ -215,7 +219,7 @@ function completionMessage(
 		...objectList<ImplementationWorkerBlockerInput>(data.blockers).map(
 			(blocker) => text(blocker.message),
 		),
-		input.dispatch.error,
+		input.workerStart.error,
 		errorMessage(input.error),
 	]
 		.filter(Boolean)
@@ -296,7 +300,9 @@ function invalidStatusMessage(value: unknown): string {
 		: "";
 }
 
-function isWorkerStatus(status: string): status is "completed" | "blocked" | "failed" {
+function isWorkerStatus(
+	status: string,
+): status is "completed" | "blocked" | "failed" {
 	return ["completed", "blocked", "failed"].includes(status);
 }
 

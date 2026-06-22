@@ -8,13 +8,18 @@ import { createDecisionTable } from "../../src/decision/table.ts";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
 import {
+	createTriggerRunTraceHead,
+	createTraceHead,
+} from "../../src/traces/writer.ts";
+import {
+	buildTriggersView,
 	buildBlockersView,
 	buildConflictsView,
 	buildQualityView,
 	buildResumeView,
 	buildStatusView,
+	buildTraceBoardView,
 	buildWorkPlanView,
 	buildWorkQueueView,
 	formatViewJson,
@@ -51,9 +56,7 @@ function decisionEvents(traceId = "TRACE-views") {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -61,9 +64,7 @@ function approvedDecisionRef(events) {
 }
 
 function planningWorkEvent(events, workUnitId) {
-	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = workUnitId
 		? iteration?.data?.output?.workItems?.find(
 				(candidate) => candidate.id === workUnitId,
@@ -73,7 +74,7 @@ function planningWorkEvent(events, workUnitId) {
 	return {
 		...iteration,
 		id: `trace:${iteration.id}#work:${item.id}`,
-		event: "planning.iteration",
+		event: "work_units_created",
 		refs: [...(item.decisionRefs || []), ...(item.pathScopes || [])],
 		data: { ...item, workUnitId: item.id },
 	};
@@ -118,8 +119,9 @@ function queueTrace(traceId, options = {}) {
 				createdAt: "2026-06-11T00:00:02.000Z",
 				workItemInputs,
 			});
+	const workUnitId = options.workUnitId || workItemInputs[0]?.id || "WU-queue";
 	const planningEvent = plan
-		? planningWorkEvent(plan.traceEvents, options.workUnitId)
+		? planningWorkEvent(plan.traceEvents, workUnitId)
 		: undefined;
 	const nextAfterPlan = nextSequence(plan?.traceEvents || decisions);
 	const implementation = options.implemented
@@ -148,6 +150,9 @@ function queueTrace(traceId, options = {}) {
 				],
 			})
 		: undefined;
+	const claimId = `${traceId}:claim:${workUnitId}`;
+	const planningRef =
+		planningEvent?.id || `trace:${traceId}:planning#work:${workUnitId}`;
 	const claim = options.claimed
 		? [
 				{
@@ -156,12 +161,15 @@ function queueTrace(traceId, options = {}) {
 					parentId: planningEvent.id,
 					traceId,
 					sequence: nextAfterPlan,
-					loop: "implementation",
-					event: "runtime.work.claimed",
-					refs: [planningEvent.id],
+					event: "runtime.work_unit.claimed",
+					refs: [planningRef],
 					createdAt: "2026-06-11T00:00:03.000Z",
 					data: {
+						claimId,
 						workerId: options.workerId || "worker-1",
+						workUnitId,
+						planningRefs: [planningRef],
+						pathScopes: ["src/queue.ts"],
 						...(options.claimExpiresAt
 							? { expiresAt: options.claimExpiresAt }
 							: {}),
@@ -174,14 +182,18 @@ function queueTrace(traceId, options = {}) {
 				{
 					type: "trace_event",
 					id: `${traceId}:runtime:release:1`,
-					parentId: planningEvent.id,
+					parentId: claim[0]?.id || planningEvent.id,
 					traceId,
 					sequence: nextAfterPlan + claim.length,
-					loop: "implementation",
-					event: "runtime.claim.released",
-					refs: [planningEvent.id],
+					event: "runtime.work_unit.claim.released",
+					refs: [planningRef],
 					createdAt: "2026-06-11T00:00:04.000Z",
-					data: { workerId: options.workerId || "worker-1" },
+					data: {
+						claimId,
+						workerId: options.workerId || "worker-1",
+						workUnitId,
+						planningRefs: [planningRef],
+					},
 				},
 			]
 		: [];
@@ -198,6 +210,78 @@ function queueTrace(traceId, options = {}) {
 			...release,
 			...(implementation?.traceEvents || []),
 		],
+	};
+}
+
+function runTrace(input) {
+	const head = createTriggerRunTraceHead({
+		traceId: input.traceId,
+		title: input.title || input.traceId,
+		triggerTraceId: input.triggerTraceId,
+		triggerId: input.triggerId,
+		planningRef: input.planningRef,
+		runKey: input.runKey,
+		createdAt: "2026-06-11T00:00:04.000Z",
+	});
+	const decisions = decisionEvents(input.traceId);
+	const decisionRef = approvedDecisionRef(decisions);
+	const plan = runPlanningIteration({
+		traceId: input.traceId,
+		decisionEvents: decisions,
+		startSequence: nextSequence(decisions),
+		createdAt: "2026-06-11T00:00:05.000Z",
+		workItemInputs: [
+			{
+				id: "WU-run",
+				title: "Run run",
+				decisionRefs: [decisionRef],
+				outcome: "Run work completes.",
+				...planningQualityFields(),
+				acceptance: ["Run evidence exists."],
+				componentRefs: ["component.views"],
+				pathScopes: ["src/views"],
+				verification: ["tests/views/views-projections.test.mjs"],
+			},
+		],
+	});
+	const planningEvent = planningWorkEvent(plan.traceEvents);
+	const implementation = runImplementationIteration({
+		traceId: input.traceId,
+		planningEvents: plan.traceEvents,
+		startSequence: nextSequence(plan.traceEvents),
+		createdAt: "2026-06-11T00:00:06.000Z",
+		changeInputs: [
+			{
+				id: "IC-run",
+				planningRefs: [planningEvent.id],
+				codePaths: ["src/views/triggers.ts"],
+				testPaths: ["tests/views/views-projections.test.mjs"],
+				checkResults: [{ command: "npm test", status: "pass" }],
+				acceptanceEvidenceItems: [
+					{
+						criterionId: "AC-001",
+						summary: "Run evidence passed.",
+						evidenceRefs: ["tests/views/views-projections.test.mjs"],
+					},
+				],
+				contentProof: { workingTreeDigest: "sha256:abcdef" },
+				...implementationQualityFields(),
+			},
+		],
+	});
+	const records = [
+		head,
+		...decisions,
+		...plan.traceEvents,
+		...implementation.traceEvents,
+	];
+	return {
+		records,
+		close: createTraceCloseRecord({
+			records,
+			gitRestoreRef: `refs/codewiki/archive/${input.traceId}`,
+			createdAt: "2026-06-11T00:00:07.000Z",
+		}),
 	};
 }
 
@@ -239,6 +323,30 @@ function plannedTrace() {
 }
 
 describe("trace-backed views", () => {
+	it("projects run lineage into status and trace-board views", () => {
+		const head = createTriggerRunTraceHead({
+			traceId: "TRACE-lineage-view",
+			title: "Lineage run",
+			triggerTraceId: "TRACE-lineage-trigger",
+			triggerId: "TRG-lineage",
+			planningRef:
+				"trace:TRACE-lineage-trigger:planning:iteration:1#work:WU-lineage",
+			runKey: "lineage:1",
+			createdAt: "2026-06-11T00:00:00.000Z",
+		});
+		const input = {
+			records: [head],
+			generatedAt: "2026-06-11T00:00:01.000Z",
+		};
+		const status = buildStatusView(input);
+		const board = buildTraceBoardView(input);
+
+		assert.equal(status.origin.kind, "trigger_run");
+		assert.equal(status.origin.triggerTraceId, "TRACE-lineage-trigger");
+		assert.equal(board.traces[0].origin.triggerId, "TRG-lineage");
+		assert.equal(board.traces[0].status, "needs_decision");
+	});
+
 	it("projects planned trace work into work-plan, status, and resume views", () => {
 		const { records, plan } = plannedTrace();
 		const input = { records, generatedAt: "2026-06-11T00:00:03.000Z" };
@@ -257,6 +365,235 @@ describe("trace-backed views", () => {
 		assert.equal(status.currentLoop, "implementation");
 		assert.equal(status.readyForClosure, false);
 		assert.equal(resume.nextAction, "Implement planned work unit WU-views.");
+	});
+
+	it("projects triggers with enabled and run state", () => {
+		const plannedTrace = queueTrace("TRACE-trigger-planned", {
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-trigger-planned",
+					title: "Trigger planned work",
+					decisionRefs: [decisionRef],
+					outcome: "Trigger is planned.",
+					...planningQualityFields(),
+					acceptance: ["Trigger is planned."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					trigger: {
+						id: "TRG-planned",
+						kind: "schedule",
+						runMode: "new_trace",
+						concurrency: "skip_if_active",
+						runKeyTemplate: "planned:${date}",
+						owner: "implementation",
+						trigger: "cron:0 9 * * 1",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+		const enabledTrace = queueTrace("TRACE-trigger-enabled", {
+			implemented: true,
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-trigger-enabled",
+					title: "Trigger enabled work",
+					decisionRefs: [decisionRef],
+					outcome: "Trigger is enabled.",
+					...planningQualityFields(),
+					acceptance: ["Trigger is enabled."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					trigger: {
+						id: "TRG-enabled",
+						kind: "trigger",
+						runMode: "new_trace",
+						concurrency: "queue",
+						runKeyTemplate: "enabled:${event}",
+						owner: "implementation",
+						trigger: "github:check.failed",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+		const enabledOnlyTrace = queueTrace("TRACE-trigger-enabled-only", {
+			implemented: true,
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-trigger-enabled-only",
+					title: "Trigger enabled-only work",
+					decisionRefs: [decisionRef],
+					outcome: "Trigger is enabled without runs.",
+					...planningQualityFields(),
+					acceptance: ["Trigger is enabled."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					trigger: {
+						id: "TRG-enabled-only",
+						kind: "manual",
+						runMode: "new_trace",
+						concurrency: "replace",
+						runKeyTemplate: "enabled-only:${manual}",
+						owner: "implementation",
+						trigger: "manual:runtime",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+		const enabledPlanningRef = planningWorkEvent(
+			enabledTrace.plan.traceEvents,
+		).id;
+		const activeRun = createTriggerRunTraceHead({
+			traceId: "TRACE-trigger-active-run",
+			title: "Active run",
+			triggerTraceId: "TRACE-trigger-enabled",
+			triggerId: "TRG-enabled",
+			planningRef: enabledPlanningRef,
+			runKey: "enabled:event-1",
+			createdAt: "2026-06-11T00:00:04.000Z",
+		});
+		const completedRun = runTrace({
+			traceId: "TRACE-trigger-completed-run",
+			triggerTraceId: "TRACE-trigger-enabled",
+			triggerId: "TRG-enabled",
+			planningRef: enabledPlanningRef,
+			runKey: "enabled:event-0",
+		});
+		const view = buildTriggersView({
+			records: [
+				...plannedTrace.records,
+				...enabledTrace.records,
+				...enabledOnlyTrace.records,
+				activeRun,
+				...completedRun.records,
+				completedRun.close,
+			],
+			generatedAt: "2026-06-11T00:00:08.000Z",
+		});
+		const byId = Object.fromEntries(
+			view.triggers.map((trigger) => [trigger.id, trigger]),
+		);
+
+		assert.equal(byId["TRG-planned"].status, "planned");
+		assert.equal(byId["TRG-enabled-only"].status, "enabled");
+		assert.equal(byId["TRG-enabled"].status, "active");
+		assert.equal(byId["TRG-enabled"].enabledBy.length > 0, true);
+		assert.equal(byId["TRG-enabled"].runs.length, 2);
+		assert.equal(
+			byId["TRG-enabled"].runs.some((run) => run.status === "closed_complete"),
+			true,
+		);
+		assert.deepEqual(view.summary, {
+			planned: 1,
+			enabled: 1,
+			due: 0,
+			active: 1,
+			completed: 0,
+			blocked: 0,
+			disabled: 0,
+		});
+	});
+
+	it("marks enabled scheduled triggers due when current run is missing", () => {
+		const trace = queueTrace("TRACE-trigger-due", {
+			implemented: true,
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-trigger-due",
+					title: "Due trigger work",
+					decisionRefs: [decisionRef],
+					outcome: "Trigger becomes due on schedule.",
+					...planningQualityFields(),
+					acceptance: ["Trigger due state is projected."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					trigger: {
+						id: "TRG-due",
+						kind: "schedule",
+						runMode: "new_trace",
+						concurrency: "skip_if_active",
+						runKeyTemplate: "due:${week}",
+						owner: "implementation",
+						trigger: "cron:0 9 * * 1",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+		const planningRef = planningWorkEvent(trace.plan.traceEvents).id;
+		const dueView = buildTriggersView({
+			records: trace.records,
+			generatedAt: "2026-06-15T10:00:00.000Z",
+		});
+		const earlyView = buildTriggersView({
+			records: trace.records,
+			generatedAt: "2026-06-11T04:00:00.000Z",
+		});
+		const currentRun = runTrace({
+			traceId: "TRACE-trigger-due-run",
+			triggerTraceId: "TRACE-trigger-due",
+			triggerId: "TRG-due",
+			planningRef,
+			runKey: "due:2026-W25",
+		});
+		const coveredView = buildTriggersView({
+			records: [...trace.records, ...currentRun.records, currentRun.close],
+			generatedAt: "2026-06-15T10:00:00.000Z",
+		});
+
+		assert.equal(dueView.triggers[0].status, "due");
+		assert.equal(dueView.triggers[0].due.status, "due");
+		assert.equal(dueView.triggers[0].due.runKey, "due:2026-W25");
+		assert.equal(dueView.triggers[0].due.scheduledAt, "2026-06-15T09:00Z");
+		assert.equal(earlyView.triggers[0].status, "enabled");
+		assert.equal(earlyView.triggers[0].due.reason, "before_enabled");
+		assert.equal(coveredView.triggers[0].status, "enabled");
+		assert.equal(coveredView.triggers[0].due.reason, "run_exists");
+	});
+
+	it("projects planning triggers into work-plan and work-queue views", () => {
+		const trace = queueTrace("TRACE-trigger-view", {
+			workItemInputs: (decisionRef) => [
+				{
+					id: "WU-trigger-view",
+					title: "Trigger view work",
+					decisionRefs: [decisionRef],
+					outcome: "Trigger is visible to runtime views.",
+					...planningQualityFields(),
+					acceptance: ["Trigger is projected."],
+					componentRefs: ["component.views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					trigger: {
+						id: "TRG-view",
+						kind: "trigger",
+						runMode: "new_trace",
+						concurrency: "queue",
+						runKeyTemplate: "view:${event}",
+						owner: "implementation",
+						trigger: "github:check.failed",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+		const input = {
+			records: trace.records,
+			generatedAt: "2026-06-11T00:00:03.000Z",
+		};
+		const workPlan = buildWorkPlanView(input);
+		const workQueue = buildWorkQueueView(input);
+
+		assert.equal(workPlan.cards[0].trigger.id, "TRG-view");
+		assert.equal(workPlan.cards[0].trigger.kind, "trigger");
+		assert.equal(workQueue.items[0].trigger.id, "TRG-view");
+		assert.equal(workQueue.items[0].trigger.concurrency, "queue");
 	});
 
 	it("marks work done when implementation evidence covers planning refs", () => {
@@ -380,7 +717,7 @@ describe("trace-backed views", () => {
 		assert.equal(status.qualityBlockers.length, 1);
 	});
 
-	it("treats closed traces as terminal in active views", () => {
+	it("treats closed traces as terminal and flags incomplete goals", () => {
 		const trace = queueTrace("TRACE-queue-closed", {
 			workUnitId: "WU-closed",
 		});
@@ -389,6 +726,7 @@ describe("trace-backed views", () => {
 			gitRestoreRef: "refs/codewiki/archive/TRACE-queue-closed",
 			reason: "Trace finished and retained.",
 			createdAt: "2026-06-11T00:00:05.000Z",
+			allowIncomplete: true,
 		});
 		const records = [...trace.records, close];
 		const status = buildStatusView({ records });
@@ -397,7 +735,8 @@ describe("trace-backed views", () => {
 
 		assert.equal(status.closed, true);
 		assert.equal(status.closedAt, "2026-06-11T00:00:05.000Z");
-		assert.equal(status.health, "green");
+		assert.equal(status.health, "red");
+		assert.equal(status.goalStatus, "closed_incomplete");
 		assert.equal(status.currentLoop, null);
 		assert.equal(status.readyForClosure, false);
 		assert.equal(resume.closed, true);
@@ -419,11 +758,9 @@ describe("trace-backed views", () => {
 			workUnitId: "WU-quality-all",
 			implemented: true,
 		});
-		const decision = trace.records.find(
-			(record) => record.event === "decision.iteration",
-		);
+		const decision = trace.records.find((record) => record.loop === "decision");
 		const implementation = trace.records.find(
-			(record) => record.event === "implementation.iteration",
+			(record) => record.loop === "implementation",
 		);
 		decision.data.output.qualityStandards =
 			decision.data.output.qualityStandards.map((standard) =>
@@ -533,9 +870,7 @@ describe("trace-backed views", () => {
 		const trace = queueTrace("TRACE-queue-quality", {
 			workUnitId: "WU-quality",
 		});
-		const planning = trace.records.find(
-			(record) => record.event === "planning.iteration",
-		);
+		const planning = trace.records.find((record) => record.loop === "planning");
 		planning.data.output.qualityStandards =
 			planning.data.output.qualityStandards.map((standard) =>
 				standard.id === "uncertainty_resolved"
@@ -610,6 +945,15 @@ describe("trace-backed views", () => {
 			assert.equal(
 				viewFilePath("work-queue"),
 				".codewiki/views/work-queue.json",
+			);
+			assert.equal(
+				viewFilePath("trace-board"),
+				".codewiki/views/trace-board.json",
+			);
+			assert.equal(viewFilePath("triggers"), ".codewiki/views/triggers.json");
+			assert.equal(
+				viewFilePath("runtime-board"),
+				".codewiki/views/runtime-board.json",
 			);
 			assert.equal(viewFilePath("quality"), ".codewiki/views/quality.json");
 			assert.equal(

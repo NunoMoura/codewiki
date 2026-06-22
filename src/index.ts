@@ -10,6 +10,7 @@ export const sourceLayout = {
 		"cli",
 		"pi",
 		"runtime",
+		"error-handling",
 		"project",
 		"utils",
 	],

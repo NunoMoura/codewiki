@@ -8,7 +8,7 @@ import {
 	normalizePiWorkerCompletion,
 } from "../../src/pi/worker-results.ts";
 
-function dispatch(overrides = {}) {
+function workerStart(overrides = {}) {
 	return {
 		workerId: "pi-worker-001",
 		workUnitId: "WU-a",
@@ -26,11 +26,11 @@ function dispatch(overrides = {}) {
 describe("Pi worker completion normalization", () => {
 	it("converts structured session output into implementation worker results", () => {
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: JSON.stringify({
 				status: "completed",
 				message: "Worker finished.",
-				changed_files: ["src/runtime/dispatcher.ts"],
+				changed_files: ["src/runtime/work-unit-claims.ts"],
 				checks_run: ["npm test"],
 				head_sha: "abc1234",
 				tree_sha: "def5678",
@@ -65,7 +65,7 @@ describe("Pi worker completion normalization", () => {
 			"trace:TRACE-pi-a:planning:iteration:1#work:WU-a",
 		]);
 		assert.equal(result.message, "Worker finished.");
-		assert.deepEqual(result.changedFiles, ["src/runtime/dispatcher.ts"]);
+		assert.deepEqual(result.changedFiles, ["src/runtime/work-unit-claims.ts"]);
 		assert.deepEqual(result.checksRun, ["npm test"]);
 		assert.equal(result.headSha, "abc1234");
 		assert.equal(result.treeSha, "def5678");
@@ -80,7 +80,7 @@ describe("Pi worker completion normalization", () => {
 	it("parses fenced CodeWiki worker reports from prose completion output", () => {
 		const planningRef = "trace:TRACE-pi-a:planning:iteration:1#work:WU-a";
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: `Worker done.\n\n\`\`\`codewiki-worker-report\n${JSON.stringify({
 				status: "completed",
 				workUnitRef: planningRef,
@@ -96,8 +96,7 @@ describe("Pi worker completion normalization", () => {
 						planningRefs: [planningRef],
 						checkResults: [
 							{
-								command:
-									"node --test tests/runtime/pi-worker-results.test.mjs",
+								command: "node --test tests/runtime/pi-worker-results.test.mjs",
 								status: "pass",
 							},
 						],
@@ -134,7 +133,7 @@ describe("Pi worker completion normalization", () => {
 
 	it("normalizes blocked and failed completions without log refs", () => {
 		const blocked = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: {
 				status: "blocked",
 				blockers: [
@@ -146,7 +145,7 @@ describe("Pi worker completion normalization", () => {
 			},
 		});
 		const failed = normalizePiWorkerCompletion({
-			dispatch: dispatch({ status: "failed", error: "spawn failed" }),
+			workerStart: workerStart({ status: "failed", error: "spawn failed" }),
 			output: "plain text is not structured JSON",
 		});
 
@@ -162,11 +161,11 @@ describe("Pi worker completion normalization", () => {
 
 	it("fails invalid fenced CodeWiki worker reports", () => {
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: "```codewiki-worker-report\nnot json\n```",
 		});
 		const arrayReport = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: "```codewiki-worker-report\n[]\n```",
 		});
 
@@ -184,7 +183,7 @@ describe("Pi worker completion normalization", () => {
 
 	it("fails ambiguous completions with multiple worker reports", () => {
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: [
 				"```codewiki-worker-report",
 				JSON.stringify({ status: "completed", changedFiles: ["src/a.ts"] }),
@@ -204,7 +203,7 @@ describe("Pi worker completion normalization", () => {
 
 	it("fails worker reports with invalid status values", () => {
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: `\`\`\`codewiki-worker-report\n${JSON.stringify({
 				status: "completed | blocked | failed",
 				changedFiles: ["src/pi/worker-results.ts"],
@@ -220,7 +219,7 @@ describe("Pi worker completion normalization", () => {
 
 	it("guards completed worker output without implementation evidence", () => {
 		const result = normalizePiWorkerCompletion({
-			dispatch: dispatch(),
+			workerStart: workerStart(),
 			output: { status: "completed", message: "Looks done." },
 		});
 
@@ -231,7 +230,7 @@ describe("Pi worker completion normalization", () => {
 		);
 	});
 
-	it("collects worker output files in dispatch order", async () => {
+	it("collects worker output files in worker-start order", async () => {
 		const base = join(process.cwd(), ".tmp-worktrees/pi-worker-results");
 		await mkdir(base, { recursive: true });
 		const root = await mkdtemp(join(base, "run-"));
@@ -247,12 +246,12 @@ describe("Pi worker completion normalization", () => {
 			);
 
 			const completions = await collectPiWorkerOutputFiles([
-				dispatch({
+				workerStart({
 					workUnitId: "WU-a",
 					workerId: "worker-a",
 					outputFile: firstOutput,
 				}),
-				dispatch({
+				workerStart({
 					workUnitId: "WU-b",
 					workerId: "worker-b",
 					outputFile: missingOutput,
@@ -260,12 +259,13 @@ describe("Pi worker completion normalization", () => {
 			]);
 			const results = collectPiWorkerResults(completions);
 
-			assert.equal(completions[0].output.includes("codewiki-worker-report"), true);
-			assert.equal(completions[1].dispatch.outputFile, missingOutput);
+			assert.equal(
+				completions[0].output.includes("codewiki-worker-report"),
+				true,
+			);
+			assert.equal(completions[1].workerStart.outputFile, missingOutput);
 			assert.equal(results[0].status, "completed");
-			assert.deepEqual(results[0].changedFiles, [
-				"src/pi/worker-results.ts",
-			]);
+			assert.deepEqual(results[0].changedFiles, ["src/pi/worker-results.ts"]);
 			assert.equal(results[1].status, "failed");
 			assert.match(
 				results[1].message,
@@ -280,7 +280,7 @@ describe("Pi worker completion normalization", () => {
 
 	it("fails collection when a worker did not provide an output file", async () => {
 		const completions = await collectPiWorkerOutputFiles([
-			dispatch({ workerId: "worker-no-output", outputFile: undefined }),
+			workerStart({ workerId: "worker-no-output", outputFile: undefined }),
 		]);
 		const results = collectPiWorkerResults(completions);
 
@@ -295,14 +295,17 @@ describe("Pi worker completion normalization", () => {
 		);
 	});
 
-	it("collects multiple completions in dispatch order", () => {
+	it("collects multiple completions in worker-start order", () => {
 		const results = collectPiWorkerResults([
 			{
-				dispatch: dispatch({ workUnitId: "WU-a", workerId: "worker-a" }),
-				output: { status: "completed", changedFiles: ["src/pi/dispatcher.ts"] },
+				workerStart: workerStart({ workUnitId: "WU-a", workerId: "worker-a" }),
+				output: {
+					status: "completed",
+					changedFiles: ["src/pi/worker-results.ts"],
+				},
 			},
 			{
-				dispatch: dispatch({ workUnitId: "WU-b", workerId: "worker-b" }),
+				workerStart: workerStart({ workUnitId: "WU-b", workerId: "worker-b" }),
 				output: { status: "failed", message: "check failed" },
 			},
 		]);

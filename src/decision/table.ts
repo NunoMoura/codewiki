@@ -88,6 +88,10 @@ function normalizeDecisionRow(
 		userImpact: text(row.userImpact),
 		maintainerImpact: text(row.maintainerImpact),
 		effort: text(row.effort),
+		workScale: normalizeWorkScale(row.workScale ?? row.work_scale),
+		planningDepth: normalizePlanningDepth(
+			row.planningDepth ?? row.planning_depth,
+		),
 		affectedLayers: unique(stringList(row.affectedLayers)),
 		risk: text(row.risk),
 		approval: normalizeDecisionApprovalStatus(row.approval),
@@ -227,6 +231,27 @@ function normalizeDecisionKind(value: unknown): string {
 	if (["enhance", "enhancement"].includes(normalized)) return "improve";
 	if (["migration", "refactor", "refactoring"].includes(normalized)) {
 		return "migrate";
+	}
+	return normalized;
+}
+
+function normalizeWorkScale(value: unknown): string {
+	const normalized = text(value).toLowerCase().replace(/_/g, "-");
+	if (normalized === "trivial") return "tiny";
+	if (["medium", "regular"].includes(normalized)) return "normal";
+	if (["big", "broad"].includes(normalized)) return "large";
+	return normalized;
+}
+
+function normalizePlanningDepth(value: unknown): string {
+	const normalized = text(value).toLowerCase().replace(/_/g, "-");
+	if (
+		["micro-plan", "microplan", "fast-track", "fasttrack"].includes(normalized)
+	) {
+		return "micro";
+	}
+	if (["full", "full-plan", "standard-plan", "normal"].includes(normalized)) {
+		return "standard";
 	}
 	return normalized;
 }

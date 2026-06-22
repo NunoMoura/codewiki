@@ -1,10 +1,9 @@
+import type { PlanningTrigger } from "../planning/types.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
+import { loopOutputEvents } from "../traces/queries.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
-import {
-	loopQualityReadiness,
-	planningIterationDispatchable,
-} from "./quality.ts";
+import { loopQualityReadiness, planningIterationClaimable } from "./quality.ts";
 import type {
 	BlockerView,
 	TraceViewInput,
@@ -55,6 +54,7 @@ interface WorkUnitProjection {
 	componentRefs: string[];
 	pathScopes: string[];
 	dependsOn: string[];
+	trigger?: PlanningTrigger;
 	qualityStandards: WorkQueueItem["qualityStandards"];
 	qualityBlockers: string[];
 	sourceEventId: string;
@@ -134,6 +134,7 @@ function workUnitQueueItems(
 			componentRefs: item.componentRefs,
 			pathScopes: item.pathScopes,
 			dependsOn: item.dependsOn,
+			...(item.trigger ? { trigger: item.trigger } : {}),
 			blockers: unique(itemBlockers.map((blocker) => blocker.message)),
 			qualityStandards: item.qualityStandards,
 			qualityBlockers: item.qualityBlockers,
@@ -181,8 +182,8 @@ function workUnitStatus(input: {
 
 function plannedDecisionRefs(records: TraceRecord[]): Set<string> {
 	return new Set(
-		eventsByName(records, "planning.iteration")
-			.filter(planningIterationDispatchable)
+		loopOutputEvents(records, "planning")
+			.filter(planningIterationClaimable)
 			.flatMap((event) => [
 				...objectList(objectRecord(event.data?.output).workItems).flatMap(
 					(item) => stringList(item.decisionRefs),
@@ -198,7 +199,7 @@ function implementationRefsByPlanningRef(
 	records: TraceRecord[],
 ): Map<string, string[]> {
 	const refs = new Map<string, string[]>();
-	for (const event of eventsByName(records, "implementation.iteration")) {
+	for (const event of loopOutputEvents(records, "implementation")) {
 		for (const change of objectList(objectRecord(event.data?.output).changes)) {
 			const changeRef = iterationSubref(event, "change", text(change.id));
 			for (const planningRef of stringList(change.planningRefs)) {
@@ -214,12 +215,17 @@ function implementationRefsByPlanningRef(
 
 interface RuntimeClaim {
 	claimedBy: string;
+	claimId: string;
+	eventId: string;
 	refs: string[];
 	expiresAt?: string;
 	createdAt: string;
 }
 
 interface RuntimeClaimRelease {
+	claimId?: string;
+	workUnitId?: string;
+	parentId: string | null;
 	refs: string[];
 	createdAt: string;
 }
@@ -241,12 +247,15 @@ function runtimeClaimsByRef(
 }
 
 function runtimeClaim(event: TraceEvent): RuntimeClaim {
+	const claimId = text(event.data?.claimId) || event.id;
 	return {
 		claimedBy:
 			text(event.data?.workerId) ||
 			text(event.data?.worker) ||
-			text(event.data?.claimId) ||
+			claimId ||
 			event.id,
+		claimId,
+		eventId: event.id,
 		refs: unique([...event.refs, event.id]),
 		...(text(event.data?.expiresAt)
 			? { expiresAt: text(event.data?.expiresAt) }
@@ -257,23 +266,27 @@ function runtimeClaim(event: TraceEvent): RuntimeClaim {
 
 function runtimeRelease(event: TraceEvent): RuntimeClaimRelease {
 	return {
+		parentId: event.parentId,
+		...(text(event.data?.claimId)
+			? { claimId: text(event.data?.claimId) }
+			: {}),
+		...(text(event.data?.workUnitId)
+			? { workUnitId: text(event.data?.workUnitId) }
+			: {}),
 		refs: unique([...event.refs, event.id]),
 		createdAt: event.createdAt,
 	};
 }
 
 function isRuntimeClaimEvent(event: TraceEvent): boolean {
-	return ["runtime.work.claimed", "runtime.claim.acquired"].includes(
-		event.event,
-	);
+	return event.event === "runtime.work_unit.claimed";
 }
 
 function isRuntimeReleaseEvent(event: TraceEvent): boolean {
 	return [
-		"runtime.work.released",
-		"runtime.claim.released",
-		"runtime.claim.expired",
-		"runtime.claim.cancelled",
+		"runtime.work_unit.claim.released",
+		"runtime.work_unit.claim.expired",
+		"runtime.work_unit.claim.cancelled",
 	].includes(event.event);
 }
 
@@ -289,7 +302,10 @@ function claimReleased(
 	return releases.some(
 		(release) =>
 			Date.parse(release.createdAt) >= Date.parse(claim.createdAt) &&
-			release.refs.some((ref) => claim.refs.includes(ref)),
+			((release.claimId && release.claimId === claim.claimId) ||
+				release.parentId === claim.eventId ||
+				release.refs.includes(claim.claimId) ||
+				release.refs.includes(claim.eventId)),
 	);
 }
 
@@ -312,7 +328,7 @@ function blockersForRefs(
 }
 
 function approvedDecisionRows(records: TraceRecord[]): DecisionProjection[] {
-	return eventsByName(records, "decision.iteration").flatMap((event) =>
+	return loopOutputEvents(records, "decision").flatMap((event) =>
 		objectList(objectRecord(event.data?.output).approvedRows).map((row) => {
 			const id = text(row.id) || event.id;
 			const sourceEventId = iterationSubref(event, "row", id);
@@ -328,7 +344,7 @@ function approvedDecisionRows(records: TraceRecord[]): DecisionProjection[] {
 }
 
 function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
-	return eventsByName(records, "planning.iteration").flatMap((event) => {
+	return loopOutputEvents(records, "planning").flatMap((event) => {
 		const quality = loopQualityReadiness(event);
 		return objectList(objectRecord(event.data?.output).workItems).map(
 			(item) => {
@@ -352,6 +368,7 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 					componentRefs: stringList(item.componentRefs),
 					pathScopes,
 					dependsOn: stringList(item.dependsOn),
+					...triggerProperty(item.trigger),
 					qualityStandards: quality.standards,
 					qualityBlockers: quality.blockers,
 					sourceEventId,
@@ -361,11 +378,38 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 	});
 }
 
-function eventsByName(records: TraceRecord[], eventName: string): TraceEvent[] {
-	return records.filter(
-		(record): record is TraceEvent =>
-			record.type === "trace_event" && record.event === eventName,
-	);
+function triggerProperty(value: unknown): {
+	trigger?: PlanningTrigger;
+} {
+	const record = objectRecord(value);
+	const id = text(record.id);
+	const kind = text(record.kind);
+	const runMode = text(record.runMode);
+	const concurrency = text(record.concurrency);
+	const runKeyTemplate = text(record.runKeyTemplate);
+	const owner = text(record.owner);
+	const trigger = text(record.trigger);
+	const refs = stringList(record.refs);
+	if (
+		![id, kind, runMode, concurrency, runKeyTemplate, owner, trigger].some(
+			Boolean,
+		) &&
+		refs.length === 0
+	) {
+		return {};
+	}
+	return {
+		trigger: {
+			id,
+			kind,
+			runMode,
+			concurrency,
+			runKeyTemplate,
+			owner,
+			trigger,
+			refs,
+		},
+	};
 }
 
 function workQueueSummary(

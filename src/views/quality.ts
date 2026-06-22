@@ -1,7 +1,7 @@
 import { decisionQualityStandards } from "../decision/quality-standards.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
 import { planningQualityStandards } from "../planning/quality-standards.ts";
-import { eventsByName } from "../traces/queries.ts";
+import { loopOutputEvents } from "../traces/queries.ts";
 import type {
 	LoopQualityStandardResult,
 	TraceEvent,
@@ -73,35 +73,34 @@ export function loopIterationQualityComplete(event: TraceEvent): boolean {
 	);
 }
 
-export function planningIterationDispatchable(event: TraceEvent): boolean {
+export function planningIterationClaimable(event: TraceEvent): boolean {
 	return event.loop === "planning" && loopIterationQualityComplete(event);
 }
 
 export function loopQualityReadiness(event: TraceEvent): LoopQualityReadiness {
+	const loop = semanticLoop(event);
 	const provided = qualityStandardsFromEvent(event);
 	const byId = new Map(provided.map((standard) => [standard.id, standard]));
-	const required = REQUIRED_QUALITY_STANDARDS[event.loop].map(
-		(requiredStandard) => {
-			const standard = byId.get(requiredStandard.id);
-			if (!standard) {
-				return {
-					id: requiredStandard.id,
-					status: "missing" as const,
-					mode: requiredStandard.mode,
-					description: requiredStandard.description,
-					message: `${event.loop} quality standard ${requiredStandard.id} is missing.`,
-					refs: [event.id],
-				};
-			}
-			return standard;
-		},
-	);
+	const required = REQUIRED_QUALITY_STANDARDS[loop].map((requiredStandard) => {
+		const standard = byId.get(requiredStandard.id);
+		if (!standard) {
+			return {
+				id: requiredStandard.id,
+				status: "missing" as const,
+				mode: requiredStandard.mode,
+				description: requiredStandard.description,
+				message: `${loop} quality standard ${requiredStandard.id} is missing.`,
+				refs: [event.id],
+			};
+		}
+		return standard;
+	});
 	const requiredIds = new Set(required.map((standard) => standard.id));
 	const extras = provided.filter((standard) => !requiredIds.has(standard.id));
 	const standards = [...required, ...extras];
 	const unmet = standards.filter((standard) => standard.status !== "met");
 	return {
-		loop: event.loop,
+		loop,
 		traceId: event.traceId,
 		eventId: event.id,
 		exitStatus: text(objectRecord(event.data?.exit).status),
@@ -126,8 +125,8 @@ export function qualityBlockersFromTrace(
 		return [
 			{
 				id: `${event.id}:quality`,
-				ownerRef: event.loop,
-				routeBack: event.loop,
+				ownerRef: readiness.loop,
+				routeBack: readiness.loop,
 				kind: "exit" as const,
 				message: readiness.blockers.join(" "),
 				traceRefs: readiness.refs,
@@ -139,10 +138,15 @@ export function qualityBlockersFromTrace(
 
 function loopIterationEvents(records: TraceRecord[]): TraceEvent[] {
 	return [
-		...eventsByName(records, "decision.iteration"),
-		...eventsByName(records, "planning.iteration"),
-		...eventsByName(records, "implementation.iteration"),
+		...loopOutputEvents(records, "decision"),
+		...loopOutputEvents(records, "planning"),
+		...loopOutputEvents(records, "implementation"),
 	].sort((left, right) => left.sequence - right.sequence);
+}
+
+function semanticLoop(event: TraceEvent): TraceLoop {
+	if (event.loop) return event.loop;
+	throw new Error(`Trace event ${event.id} is not a semantic loop event.`);
 }
 
 function qualitySummary(

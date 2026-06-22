@@ -1,0 +1,31 @@
+---
+name: codewiki-plan
+description: Run the CodeWiki planning loop. Use when exited decision rows must become executable work units, dependencies, path scopes, acceptance criteria, triggers, and a durable planning iteration.
+---
+
+# CodeWiki Plan
+
+Use this skill after decision output exits and needs executable work.
+
+## Ground rules
+
+- Start from `wiki_state` for current trace-backed context.
+- Planning consumes `decision.rows_approved` output.
+- Planning owns work units, dependencies, path scopes, acceptance criteria, verification refs, and triggers.
+- Planning does not edit source/docs/tests for implementation.
+- Work units are referenced as `trace:<iteration-id>#work:<work-id>`.
+- Append only with expected trace bytes and next sequence.
+
+## Workflow
+
+1. Read exited decision rows and source-map ownership for touched paths.
+2. Create self-contained work units with path scopes, component refs, acceptance criteria, verification refs, and dependencies.
+3. Add triggers only when scheduling/event/hook/manual activation is part of the accepted plan.
+4. Preview with `wiki_plan`.
+5. If blocked, fix missing decision coverage, invalid refs, path conflicts, dependency cycles, weak acceptance, or trigger quality gaps.
+6. Append only after trace append handles are known.
+7. Route exited work units to `codewiki-implement`.
+
+## Stop conditions
+
+Stop and route back to decision when accepted intent is missing, ambiguous, or contradicted by current docs. Block when work overlaps another unit without dependency ordering or lacks verifiable acceptance.

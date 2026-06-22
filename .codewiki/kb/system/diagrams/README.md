@@ -37,13 +37,12 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `data-model.yaml` | `data_model` | Show durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
 | `state-lifecycle.yaml` | `state_lifecycle` | Show semantic loop iteration, exit-condition, runtime coordination, retention, and release lifecycles. | Mermaid state diagram or custom state renderer. |
-| `file-structure-map.yaml` | `file_structure_map` | Show intended repository/source ownership, current implementation shape, approved migration deltas, and drift categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
 ## Rendering boundaries
 
 - The UI may render a diagram picker from this folder.
-- Selecting a node, edge, entity, state, sequence step, or file-structure node should open source-backed inspector detail.
-- File-structure diagrams should show ownership and drift categories without duplicating full component docs.
+- Selecting a node, edge, entity, state, sequence step, or source ownership node should open source-backed inspector detail.
+- Source ownership renderers should read `../source-map.yaml` directly instead of duplicating ownership in diagram YAML.
 - Diagram files should not duplicate full component docs.
 - Generated view output remains `.codewiki/views/**`; diagram files are intended system knowledge.
 - Generated HTML, SVG, PNG, graph JSON, Mermaid output, Unicode terminal views, ASCII diagrams, or future TUI render output must be treated as render artifacts, not source truth.
@@ -52,5 +51,5 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 ## Related docs
 
 - [Terminal UI and Agent Visual Language](../terminal-ui.md)
-- [File Structure](../file-structure.md)
+- [Source Map](../source-map.md)
 - [System Overview](../overview.md)

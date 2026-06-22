@@ -3,7 +3,7 @@
 Planning may start only from a decision iteration whose exit status is `exit`.
 
 ```text
-decision.iteration(exit) -> planning.iteration
+decision.rows_approved(exit) -> planning.work_units_created
 ```
 
 Decision output gives planning:

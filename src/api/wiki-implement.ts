@@ -1,5 +1,6 @@
+import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import type { ContentProof } from "../git/content-proof.ts";
-import type { FileStructureMapContract } from "../knowledge/file-structure-map.ts";
+import type { SourceMapContract } from "../knowledge/source-map.ts";
 import { normalizeImplementationChanges } from "../implementation/evidence.ts";
 import {
 	runImplementationIteration,
@@ -21,10 +22,10 @@ import {
 	type ProjectSnapshot,
 } from "../project/snapshot.ts";
 import {
-	appendSemanticLoopIteration,
-	assertSemanticLoopIterationBatch,
-	type AppendSemanticLoopIterationResult,
-} from "../traces/orchestrator.ts";
+	appendSemanticLoopReport,
+	assertSemanticLoopReportBatch,
+	type AppendSemanticLoopReportResult,
+} from "../runtime/trace-writer.ts";
 import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiImplementMode = "preview" | "append";
@@ -39,7 +40,7 @@ export interface RunWikiImplementInput {
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
 	expectedWorkerBaseSha?: string;
-	componentMap?: FileStructureMapContract;
+	componentMap?: SourceMapContract;
 	requireTddEvidence?: boolean;
 	parentId?: string | null;
 	createdAt?: string;
@@ -63,7 +64,7 @@ export interface RunWikiImplementResult {
 	aggregateContentProof?: ContentProof;
 	loopResult: ImplementationIterationResult;
 	iterationEvent: TraceEvent;
-	append?: AppendSemanticLoopIterationResult<ImplementationIterationResult>["append"];
+	append?: AppendSemanticLoopReportResult<ImplementationIterationResult>["append"];
 }
 
 export async function runWikiImplement(
@@ -72,7 +73,13 @@ export async function runWikiImplement(
 	const mode = input.mode || "preview";
 	const nextSequence = input.nextSequence ?? 1;
 	if (!Number.isInteger(nextSequence) || nextSequence < 1) {
-		throw new Error("wiki_implement requires nextSequence >= 1.");
+		throw createCodewikiApiError({
+			operation: "wiki_implement",
+			code: "invalid_input",
+			field: "nextSequence",
+			message: "wiki_implement requires nextSequence >= 1.",
+			data: { value: nextSequence },
+		});
 	}
 	const snapshot = await collectProjectSnapshot({
 		root: input.repoRoot,
@@ -98,7 +105,7 @@ export async function runWikiImplement(
 	});
 	if (mode === "append") {
 		const expectedBytes = requiredExpectedBytes(input.expectedBytes);
-		const result = await appendSemanticLoopIteration({
+		const result = await appendSemanticLoopReport({
 			repoRoot: input.repoRoot,
 			loop: "implementation",
 			expectedBytes,
@@ -122,7 +129,7 @@ export async function runWikiImplement(
 		...loopInput,
 		startSequence: nextSequence,
 	});
-	const iterationEvent = assertSemanticLoopIterationBatch({
+	const iterationEvent = assertSemanticLoopReportBatch({
 		records: loopResult.traceRecords,
 		loop: "implementation",
 		nextSequence,
@@ -187,7 +194,13 @@ function changesWithLocalProof(
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw new Error("wiki_implement append mode requires expectedBytes >= 0.");
+		throw createCodewikiApiError({
+			operation: "wiki_implement",
+			code: "invalid_input",
+			field: "expectedBytes",
+			message: "wiki_implement append mode requires expectedBytes >= 0.",
+			data: { value },
+		});
 	}
 	return value;
 }

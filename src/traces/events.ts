@@ -1,10 +1,14 @@
 import { normalizeTraceRefs } from "./refs.ts";
 import type {
+	DecisionTraceEventName,
 	ExitDetails,
 	ExitRoute,
+	ImplementationTraceEventName,
 	LoopIterationData,
 	LoopIterationExit,
 	LoopIterationProgress,
+	PlanningTraceEventName,
+	SemanticTraceEventName,
 	TailCheckpoint,
 	TraceEvent,
 	TraceLoop,
@@ -39,6 +43,22 @@ export interface CreateLoopIterationEventInput {
 	data?: Record<string, unknown>;
 }
 
+export const SEMANTIC_TRACE_EVENT_NAMES = {
+	decision: ["rows_approved", "user_input_required", "decision_blocked"],
+	planning: [
+		"work_units_created",
+		"decisions_resolved",
+		"route_back_requested",
+		"planning_blocked",
+	],
+	implementation: [
+		"evidence_accepted",
+		"evidence_rejected",
+		"route_back_requested",
+		"implementation_blocked",
+	],
+} as const satisfies Record<TraceLoop, readonly SemanticTraceEventName[]>;
+
 export function createLoopIterationEvent(
 	input: CreateLoopIterationEventInput,
 ): TraceEvent {
@@ -56,7 +76,7 @@ export function createLoopIterationEvent(
 		traceId: input.traceId,
 		sequence: input.sequence,
 		loop: input.loop,
-		event: `${input.loop}.iteration`,
+		event: loopIterationEventName(input.loop, data.exit, data.output),
 		refs: normalizeTraceRefs(input.refs),
 		createdAt: input.createdAt,
 		data: {
@@ -64,6 +84,59 @@ export function createLoopIterationEvent(
 			...(input.data || {}),
 		},
 	};
+}
+
+export function isSemanticEventName(
+	loop: TraceLoop,
+	eventName: string,
+): boolean {
+	return (SEMANTIC_TRACE_EVENT_NAMES[loop] as readonly string[]).includes(
+		eventName,
+	);
+}
+
+function loopIterationEventName(
+	loop: TraceLoop,
+	exit: LoopIterationExit,
+	output: Record<string, unknown>,
+): SemanticTraceEventName {
+	if (loop === "decision") return decisionEventName(exit);
+	if (loop === "planning") return planningEventName(exit, output);
+	return implementationEventName(exit);
+}
+
+function decisionEventName(exit: LoopIterationExit): DecisionTraceEventName {
+	if (exit.status === "exit") return "rows_approved";
+	if (exit.targetLoop === null || exit.status === "blocked") {
+		return "user_input_required";
+	}
+	return "decision_blocked";
+}
+
+function planningEventName(
+	exit: LoopIterationExit,
+	output: Record<string, unknown>,
+): PlanningTraceEventName {
+	if (exit.status === "exit") {
+		return objectList(output.workItems).length > 0
+			? "work_units_created"
+			: "decisions_resolved";
+	}
+	if (exit.status === "route_back" || exit.targetLoop === "decision") {
+		return "route_back_requested";
+	}
+	return "planning_blocked";
+}
+
+function implementationEventName(
+	exit: LoopIterationExit,
+): ImplementationTraceEventName {
+	if (exit.status === "exit") return "evidence_accepted";
+	if (exit.status === "route_back" || exit.targetLoop === "planning") {
+		return "route_back_requested";
+	}
+	if (exit.status === "continue") return "evidence_rejected";
+	return "implementation_blocked";
 }
 
 export function createLoopTailCheckpoint(
@@ -183,6 +256,15 @@ function normalizeLoopIterationProgress(
 			? { nextSafeAction: progress.nextSafeAction }
 			: {}),
 	};
+}
+
+function objectList(value: unknown): Record<string, unknown>[] {
+	return Array.isArray(value)
+		? value.filter(
+				(item): item is Record<string, unknown> =>
+					typeof item === "object" && item !== null,
+			)
+		: [];
 }
 
 function currentLoopForRoute(route: ExitRoute): TraceLoop | null {

@@ -32,10 +32,6 @@ export type {
 	PlanningWorkItemInput,
 } from "../planning/types.ts";
 export type {
-	FileStructureComponent,
-	FileStructureMapContract,
-} from "../knowledge/file-structure-map.ts";
-export type {
 	SourceMapComponent,
 	SourceMapContract,
 	SourceMapDefaults,
@@ -60,7 +56,7 @@ export type {
 	WorktreeRef,
 } from "../git/worktrees.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
-export type { RuntimeDispatchPolicyDecision } from "../runtime/policy.ts";
+export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
 export type {
 	CreateRuntimeHandoffManifestOptions,
 	RuntimeHandoffAction,
@@ -81,6 +77,8 @@ export type {
 	ConflictsView,
 	ResumeView,
 	StatusView,
+	TraceBoardView,
+	TriggersView,
 	WorkPlanView,
 	WorkQueueView,
 } from "../views/types.ts";

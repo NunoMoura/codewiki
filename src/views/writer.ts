@@ -6,6 +6,9 @@ export type ViewName =
 	| "resume"
 	| "work-plan"
 	| "work-queue"
+	| "trace-board"
+	| "triggers"
+	| "runtime-board"
 	| "quality"
 	| "blockers"
 	| "conflicts";
@@ -15,6 +18,9 @@ export const VIEW_FILE_PATHS: Record<ViewName, string> = {
 	resume: ".codewiki/views/resume.json",
 	"work-plan": ".codewiki/views/work-plan.json",
 	"work-queue": ".codewiki/views/work-queue.json",
+	"trace-board": ".codewiki/views/trace-board.json",
+	triggers: ".codewiki/views/triggers.json",
+	"runtime-board": ".codewiki/views/runtime-board.json",
 	quality: ".codewiki/views/quality.json",
 	blockers: ".codewiki/views/blockers.json",
 	conflicts: ".codewiki/views/conflicts.json",

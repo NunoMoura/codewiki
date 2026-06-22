@@ -1,5 +1,7 @@
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import type { BootstrapResult } from "../../project/bootstrap.ts";
+import { CODEWIKI_DIRECT_COMMANDS } from "../command-catalog.ts";
+import type { CodewikiExtensionIdentity } from "../identity.ts";
 import type { ProjectExplainView } from "../../project/explain.ts";
 import type { WikiConfigFileResult } from "../../project/config-file.ts";
 import type { RunWikiConfigResult } from "../../project/config.ts";
@@ -21,6 +23,7 @@ export interface CommandRenderOptions {
 	width?: number;
 	maxColumnWidth?: number;
 	minColumnWidth?: number;
+	extensionIdentity?: CodewikiExtensionIdentity;
 }
 
 export function renderStateCommand(
@@ -124,27 +127,105 @@ export function renderBootstrapCommand(
 	result: BootstrapResult,
 	options: CommandRenderOptions = {},
 ): string[] {
+	const identityRows = options.extensionIdentity
+		? [
+				["Extension", options.extensionIdentity.sourceLabel],
+				["Version", options.extensionIdentity.version],
+				["Package", options.extensionIdentity.packageRoot || "unknown"],
+				["Entry", options.extensionIdentity.entry],
+			]
+		: [["Extension", "CodeWiki loaded in Pi ✓"]];
 	return [
-		"CodeWiki Bootstrap",
+		"✓ CodeWiki ready",
+		"",
+		"Project",
 		"",
 		...tableLines(
-			["Created", "Updated", "Skipped", "Preserved"],
+			["Field", "Value"],
 			[
+				["Root", result.repoRoot],
+				["Project", result.project],
+				["State", bootstrapState(result)],
+				...identityRows,
+				["Mutation", "enabled, guarded by expected-byte checks"],
+			],
+			options,
+		),
+		"",
+		"Bootstrap",
+		"",
+		...tableLines(
+			["Action", "Count", "Meaning"],
+			[
+				["Created", String(result.created.length), "New CodeWiki files added"],
 				[
-					String(result.created.length),
+					"Updated",
 					String(result.updated.length),
-					String(result.skipped.length),
+					"Existing scaffold files refreshed",
+				],
+				["Skipped", String(result.skipped.length), "Files already current"],
+				[
+					"Preserved",
 					String(result.preserved.length),
+					"Local project files left untouched",
+				],
+				[
+					"Stale",
+					String(result.audit.staleRoots.length),
+					"Deprecated roots found",
 				],
 			],
 			options,
 		),
-		...section(
-			"Stale roots",
-			result.audit.staleRoots.length ? result.audit.staleRoots : ["none"],
+		...pathTableSection(
+			"Preserved files",
+			["Path", "Reason"],
+			result.preserved.map((path) => [path, preservedReason(path)]),
 			options,
 		),
+		...pathTableSection(
+			"Stale roots",
+			["Path", "Recommended action"],
+			result.audit.staleRoots.map((path) => [
+				path,
+				"Review or archive; not active CodeWiki state",
+			]),
+			options,
+		),
+		"",
+		"Next",
+		"• You are ready: just start working on the project.",
+		"• Ask the agent for the feature, fix, or question you want to tackle.",
+		"• Available slash commands:",
+		...CODEWIKI_DIRECT_COMMANDS.map(
+			(command) => `  /${command.name} — ${command.description}`,
+		),
 	];
+}
+
+function bootstrapState(result: BootstrapResult): string {
+	if (result.audit.existing.codewiki)
+		return "existing CodeWiki project detected";
+	if (result.brownfield) return "brownfield project detected";
+	return "new CodeWiki project initialized";
+}
+
+function preservedReason(path: string): string {
+	if (path === ".codewiki/config.json") return "Existing project config";
+	if (path === ".codewiki/kb") return "Local knowledge base";
+	if (path === ".codewiki/traces") return "Workflow trace history";
+	if (path === ".codewiki/views") return "Disposable generated views";
+	return "Existing local project file";
+}
+
+function pathTableSection(
+	title: string,
+	headers: string[],
+	rows: string[][],
+	options: CommandRenderOptions,
+): string[] {
+	if (rows.length === 0) return ["", title, "• none"];
+	return ["", title, "", ...tableLines(headers, rows, options)];
 }
 
 function renderStateSummary(
@@ -167,11 +248,7 @@ function renderStateSummary(
 			],
 			options,
 		),
-		...section(
-			"Next",
-			[snapshot.resume?.nextAction || "Run /wiki resume."],
-			options,
-		),
+		...section("Next", [snapshot.next.reason], options),
 	];
 }
 
@@ -269,7 +346,9 @@ function tableLines(
 	options: CommandRenderOptions,
 ): string[] {
 	const safeRows = rows.length ? rows : [headers.map(() => "—")];
-	const maxColumnWidth = Math.max(1, options.maxColumnWidth ?? 34);
+	const maxColumnWidth = options.maxColumnWidth
+		? Math.max(1, options.maxColumnWidth)
+		: Number.POSITIVE_INFINITY;
 	const widths = fitColumnWidths(
 		headers.map((header, index) =>
 			Math.min(
@@ -355,9 +434,10 @@ function fitColumnWidths(
 }
 
 function renderWidth(options: CommandRenderOptions): number | undefined {
-	return typeof options.width === "number" && Number.isFinite(options.width)
-		? Math.max(1, Math.floor(options.width))
-		: undefined;
+	if (typeof options.width !== "number" || !Number.isFinite(options.width)) {
+		return undefined;
+	}
+	return Math.max(1, Math.floor(options.width) - 2);
 }
 
 function sum(values: number[]): number {
@@ -368,9 +448,63 @@ function truncate(value: string, width: number | undefined): string {
 	if (width === undefined) return value;
 	if (width < 1) return "";
 	if (visibleLength(value) <= width) return value;
-	return `${value.slice(0, Math.max(0, width - 1))}…`;
+	const targetWidth = Math.max(0, width - 1);
+	let used = 0;
+	let output = "";
+	for (const character of Array.from(value)) {
+		const width = characterWidth(character);
+		if (used + width > targetWidth) break;
+		output += character;
+		used += width;
+	}
+	return `${output}…`;
 }
 
 function visibleLength(value: string): number {
-	return value.length;
+	return Array.from(stripAnsi(value)).reduce(
+		(total, character) => total + characterWidth(character),
+		0,
+	);
+}
+
+function stripAnsi(value: string): string {
+	return value.replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, "");
+}
+
+function characterWidth(character: string): number {
+	const code = character.codePointAt(0) ?? 0;
+	if (code === 0) return 0;
+	if (code < 32 || (code >= 0x7f && code < 0xa0)) return 0;
+	if (isCombiningMark(code)) return 0;
+	if (isWideCodePoint(code)) return 2;
+	return 1;
+}
+
+function isCombiningMark(code: number): boolean {
+	return (
+		(code >= 0x0300 && code <= 0x036f) ||
+		(code >= 0x1ab0 && code <= 0x1aff) ||
+		(code >= 0x1dc0 && code <= 0x1dff) ||
+		(code >= 0x20d0 && code <= 0x20ff) ||
+		(code >= 0xfe00 && code <= 0xfe0f) ||
+		(code >= 0xfe20 && code <= 0xfe2f)
+	);
+}
+
+function isWideCodePoint(code: number): boolean {
+	return (
+		(code >= 0x1100 && code <= 0x115f) ||
+		code === 0x2329 ||
+		code === 0x232a ||
+		(code >= 0x2e80 && code <= 0xa4cf && code !== 0x303f) ||
+		(code >= 0xac00 && code <= 0xd7a3) ||
+		(code >= 0xf900 && code <= 0xfaff) ||
+		(code >= 0xfe10 && code <= 0xfe19) ||
+		(code >= 0xfe30 && code <= 0xfe6f) ||
+		(code >= 0xff00 && code <= 0xff60) ||
+		(code >= 0xffe0 && code <= 0xffe6) ||
+		(code >= 0x1f300 && code <= 0x1f64f) ||
+		(code >= 0x1f900 && code <= 0x1f9ff) ||
+		(code >= 0x20000 && code <= 0x3fffd)
+	);
 }

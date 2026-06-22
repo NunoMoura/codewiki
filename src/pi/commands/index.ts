@@ -5,9 +5,15 @@ import { buildProjectExplainView } from "../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
 import {
+	CODEWIKI_DIRECT_COMMANDS,
+	type CodewikiSubcommand,
+} from "../command-catalog.ts";
+import {
 	assertProjectLocalMutationAllowed,
 	projectLocalInstallWarning,
 } from "../install-scope.ts";
+import { resolveCodewikiExtensionIdentity } from "../identity.ts";
+import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
 	renderCodewikiStateFooterStatus,
@@ -26,24 +32,39 @@ import type {
 } from "../types.ts";
 
 export function registerCodewikiCommands(pi: CodewikiExtensionApi): void {
-	pi.registerCommand("wiki", wikiCommand());
+	for (const command of CODEWIKI_DIRECT_COMMANDS) {
+		pi.registerCommand(
+			command.name,
+			directWikiCommand(pi, command.subcommand, command.description),
+		);
+	}
 }
 
-function wikiCommand(): CodewikiCommandDefinition {
+function directWikiCommand(
+	pi: CodewikiExtensionApi,
+	subcommand: CodewikiSubcommand,
+	description: string,
+): CodewikiCommandDefinition {
 	return {
-		description:
-			"CodeWiki project commands. Supported while extension is explicit: state, resume, explain, config, bootstrap.",
+		description,
 		handler: async (args, ctx) => {
-			const [subcommand, ...rest] = tokens(args);
-			if (!subcommand || subcommand === "help") return notifyUsage(ctx);
-			if (subcommand === "state") return await stateCommand(rest, ctx);
-			if (subcommand === "resume") return await resumeCommand(rest, ctx);
-			if (subcommand === "explain") return await explainCommand(rest, ctx);
-			if (subcommand === "config") return await configCommand(rest, ctx);
-			if (subcommand === "bootstrap") return await bootstrapCommand(rest, ctx);
-			throw new Error(`Unknown /wiki command: ${subcommand}`);
+			return await dispatchWikiCommand(subcommand, tokens(args), ctx, pi);
 		},
 	};
+}
+
+async function dispatchWikiCommand(
+	subcommand: string,
+	args: string[],
+	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
+): Promise<unknown> {
+	if (subcommand === "state") return await stateCommand(args, ctx, pi);
+	if (subcommand === "resume") return await resumeCommand(args, ctx, pi);
+	if (subcommand === "explain") return await explainCommand(args, ctx, pi);
+	if (subcommand === "config") return await configCommand(args, ctx, pi);
+	if (subcommand === "bootstrap") return await bootstrapCommand(args, ctx, pi);
+	throw new Error(`Unknown CodeWiki command: ${subcommand}`);
 }
 
 type StateView = "summary" | "board" | "quality" | "blockers" | "all";
@@ -57,6 +78,7 @@ interface StateCommandOptions {
 async function stateCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseStateOptions(args);
 	const root = await requireCodewikiRoot(ctx);
@@ -66,15 +88,20 @@ async function stateCommand(
 		traceId: options.traceId,
 	});
 	const data = stateViewData(snapshot, options.view);
-	const renderOptions = commandRenderOptions(ctx);
+	const renderOptions = commandRenderOptions(ctx, root);
 	const rendered = renderStateCommand(snapshot, options.view, renderOptions);
-	notify(
+	emitCommandOutput(
+		pi,
 		ctx,
 		options.json
 			? `CodeWiki state ${options.view}: JSON returned.`
 			: rendered.join("\n"),
+		rendered,
 	);
-	setCodewikiFooterStatus(ctx, renderCodewikiStateFooterStatus(snapshot));
+	setCodewikiFooterStatus(
+		ctx,
+		stateFooterStatus(snapshot, renderOptions.extensionIdentity),
+	);
 	return {
 		command: "state",
 		view: options.view,
@@ -87,6 +114,7 @@ async function stateCommand(
 async function resumeCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseTraceJsonOptions("resume", args);
 	const root = await requireCodewikiRoot(ctx);
@@ -99,9 +127,11 @@ async function resumeCommand(
 	const renderOptions = commandRenderOptions(ctx);
 	if (!resume) {
 		const rendered = renderResumeCommand(undefined, renderOptions);
-		notify(
+		emitCommandOutput(
+			pi,
 			ctx,
 			options.json ? "CodeWiki resume: JSON returned." : rendered.join("\n"),
+			rendered,
 		);
 		return {
 			command: "resume",
@@ -112,9 +142,11 @@ async function resumeCommand(
 		};
 	}
 	const rendered = renderResumeCommand(resume, renderOptions);
-	notify(
+	emitCommandOutput(
+		pi,
 		ctx,
 		options.json ? "CodeWiki resume: JSON returned." : rendered.join("\n"),
+		rendered,
 	);
 	return { command: "resume", json: options.json, data: resume, rendered };
 }
@@ -122,6 +154,7 @@ async function resumeCommand(
 async function explainCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseExplainOptions(args);
 	const root = await requireCodewikiRoot(ctx);
@@ -130,10 +163,12 @@ async function explainCommand(
 		repoRoot: root,
 		target: options.target,
 	});
-	const rendered = renderExplainCommand(view, commandRenderOptions(ctx));
-	notify(
+	const rendered = renderExplainCommand(view, commandRenderOptions(ctx, root));
+	emitCommandOutput(
+		pi,
 		ctx,
 		options.json ? "CodeWiki explain: JSON returned." : rendered.join("\n"),
+		rendered,
 	);
 	return { command: "explain", json: options.json, data: view, rendered };
 }
@@ -141,6 +176,7 @@ async function explainCommand(
 async function configCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseTraceJsonOptions("config", args);
 	const root = await findCodewikiProjectRoot(ctx.cwd);
@@ -148,10 +184,12 @@ async function configCommand(
 	const config = root
 		? await resolveWikiConfigFile(root, {})
 		: runWikiConfig({});
-	const rendered = renderConfigCommand(config, commandRenderOptions(ctx));
-	notify(
+	const rendered = renderConfigCommand(config, commandRenderOptions(ctx, root));
+	emitCommandOutput(
+		pi,
 		ctx,
 		options.json ? "CodeWiki config: JSON returned." : rendered.join("\n"),
+		rendered,
 	);
 	return { command: "config", json: options.json, data: config, rendered };
 }
@@ -159,12 +197,13 @@ async function configCommand(
 async function bootstrapCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseTraceJsonOptions("bootstrap", args, {
 		allowNonProjectInstall: true,
 	});
 	assertProjectLocalMutationAllowed({
-		toolName: "/wiki bootstrap",
+		toolName: "/wiki-bootstrap",
 		ctx,
 		moduleUrl: import.meta.url,
 		input: {
@@ -172,10 +211,15 @@ async function bootstrapCommand(
 		},
 	});
 	const result = await bootstrapCodewiki(ctx.cwd);
-	const rendered = renderBootstrapCommand(result, commandRenderOptions(ctx));
-	notify(
+	const rendered = renderBootstrapCommand(
+		result,
+		commandRenderOptions(ctx, result.repoRoot),
+	);
+	emitCommandOutput(
+		pi,
 		ctx,
 		options.json ? "CodeWiki bootstrap: JSON returned." : rendered.join("\n"),
+		rendered,
 	);
 	return { command: "bootstrap", json: options.json, data: result, rendered };
 }
@@ -208,7 +252,7 @@ function parseStateOptions(args: string[]): StateCommandOptions {
 			options.traceId = requiredFlagValue("state", arg, args[++index]);
 			continue;
 		}
-		throw new Error(`Unsupported /wiki state option: ${arg}`);
+		throw new Error(`Unsupported /wiki-state option: ${arg}`);
 	}
 	return options;
 }
@@ -237,7 +281,7 @@ function parseTraceJsonOptions(
 			options.allowNonProjectInstall = true;
 			continue;
 		}
-		throw new Error(`Unsupported /wiki ${command} option: ${arg}`);
+		throw new Error(`Unsupported /wiki-${command} option: ${arg}`);
 	}
 	return options;
 }
@@ -265,12 +309,17 @@ function stateViewData(snapshot: WikiStateSnapshot, view: StateView): unknown {
 			status: snapshot.status,
 			resume: snapshot.resume,
 			workQueueSummary: snapshot.workQueue.summary,
+			next: snapshot.next,
+			append: snapshot.append,
 		};
 	}
 	if (view === "board") {
 		return {
 			workPlan: snapshot.workPlan,
 			workQueue: snapshot.workQueue,
+			runtimeBoard: snapshot.runtimeBoard,
+			next: snapshot.next,
+			append: snapshot.append,
 		};
 	}
 	if (view === "quality") return snapshot.quality;
@@ -284,20 +333,37 @@ async function requireCodewikiRoot(
 	const root = await findCodewikiProjectRoot(ctx.cwd);
 	if (!root) {
 		throw new Error(
-			"No CodeWiki project found. Run /wiki bootstrap from the project root.",
+			"No CodeWiki project found. Run /wiki-bootstrap from the project root.",
 		);
 	}
 	return root;
 }
 
-function notifyUsage(ctx: CodewikiExtensionContext): void {
-	notify(
-		ctx,
-		"Usage: /wiki state [--board|--quality|--blockers|--all] [--json] | resume | explain [target] | config | bootstrap",
-	);
+function stateFooterStatus(
+	snapshot: WikiStateSnapshot,
+	identity: CommandRenderOptions["extensionIdentity"],
+): string {
+	const status = renderCodewikiStateFooterStatus(snapshot);
+	return identity
+		? status.replace(/^CodeWiki:/, `CodeWiki ${identity.footerLabel}:`)
+		: status;
 }
 
-function notify(ctx: CodewikiExtensionContext, message: string): void {
+function emitCommandOutput(
+	pi: CodewikiExtensionApi,
+	ctx: CodewikiExtensionContext,
+	message: string,
+	lines = message.split("\n"),
+): void {
+	if (ctx.mode === "tui" && pi.sendMessage) {
+		pi.sendMessage({
+			customType: CODEWIKI_COMMAND_MESSAGE_TYPE,
+			content: [{ type: "text", text: message }],
+			display: true,
+			details: { lines },
+		});
+		return;
+	}
 	ctx.ui?.notify(message, "info");
 }
 
@@ -311,10 +377,18 @@ function notifyInstallWarning(
 
 function commandRenderOptions(
 	ctx: CodewikiExtensionContext,
+	projectRoot?: string,
 ): CommandRenderOptions {
-	return typeof ctx.ui?.width === "number" && Number.isFinite(ctx.ui.width)
-		? { width: ctx.ui.width }
-		: {};
+	const options: CommandRenderOptions = {
+		extensionIdentity: resolveCodewikiExtensionIdentity(
+			import.meta.url,
+			projectRoot,
+		),
+	};
+	if (typeof ctx.ui?.width === "number" && Number.isFinite(ctx.ui.width)) {
+		options.width = ctx.ui.width;
+	}
+	return options;
 }
 
 function tokens(args: string): string[] {
@@ -327,7 +401,7 @@ function requiredFlagValue(
 	value: string | undefined,
 ): string {
 	if (!value || value.startsWith("--")) {
-		throw new Error(`/wiki ${command} ${flag} requires a value.`);
+		throw new Error(`/wiki-${command} ${flag} requires a value.`);
 	}
 	return value;
 }

@@ -9,7 +9,7 @@ import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
-import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/dispatcher.ts";
+import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/work-unit-claims.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
@@ -22,7 +22,7 @@ import { implementationQualityFields } from "../helpers/implementation-change.mj
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
+		(event) => event.loop === "decision",
 	);
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
@@ -32,7 +32,7 @@ function approvedDecisionRef(events) {
 
 function planningWorkRef(events, workUnitId = "WU-implement") {
 	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
+		(event) => event.loop === "planning",
 	);
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
@@ -147,7 +147,7 @@ describe("wiki_implement core facade", () => {
 			});
 
 			assert.equal(result.mode, "preview");
-			assert.equal(result.iterationEvent.event, "implementation.iteration");
+			assert.equal(result.iterationEvent.event, "evidence_accepted");
 			assert.equal(result.loopResult.readyForClosure, true);
 			assert.equal(result.append, undefined);
 			assert.deepEqual(result.proofPaths, [
@@ -188,7 +188,7 @@ describe("wiki_implement core facade", () => {
 			});
 			const workerResults = collectPiWorkerResults([
 				{
-					dispatch: {
+					workerStart: {
 						workerId: "pi-worker-001",
 						workUnitId: "WU-implement",
 						traceId,
@@ -280,7 +280,7 @@ describe("wiki_implement core facade", () => {
 
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
-			assert.equal(state.events.at(-1)?.event, "implementation.iteration");
+			assert.equal(state.events.at(-1)?.event, "evidence_accepted");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
 			await assert.rejects(
 				() =>

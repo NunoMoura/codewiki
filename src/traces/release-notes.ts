@@ -116,7 +116,7 @@ function implementationChangesFromRecords(
 ): ImplementationChange[] {
 	const state = replayTrace(records);
 	const rawChanges = state.events.flatMap((event) => {
-		if (event.event !== "implementation.iteration") return [];
+		if (event.loop !== "implementation") return [];
 		return objectList(objectRecord(event.data?.output).changes).filter(
 			isImplementationChangeInput,
 		);

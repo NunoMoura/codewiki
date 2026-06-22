@@ -27,7 +27,14 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 		id: "public_command_namespace",
 		scope: "product_documentation",
 		pattern: /\/codewiki(?:\s|$)/,
-		message: "Public docs must use /wiki, not /codewiki.",
+		message: "Public docs must use direct /wiki-* commands, not /codewiki.",
+	},
+	{
+		id: "grouped_wiki_namespace",
+		scope: "product_documentation",
+		pattern: /\/wiki\s+(?:state|resume|explain|config|bootstrap)(?:\b|\s|$)/,
+		message:
+			"Public docs must use direct /wiki-* commands, not the grouped /wiki namespace.",
 	},
 	{
 		id: "transitional_cli_product_ux",
@@ -44,15 +51,30 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 	{
 		id: "public_state_command",
 		scope: "product_documentation",
-		pattern: /\bwiki_status\b|\/wiki\s+status\b/,
-		message: "Public UX must use state, not status.",
+		pattern: /\bwiki_status\b|\/wiki[-\s]+status\b/,
+		message: "Public UX must use /wiki-state, not status.",
 	},
 	{
-		id: "current_dogfood_guidance",
-		scope: "operating_guidance",
-		pattern: /extension is disabled|while the extension is disabled|hosts\.cli/,
+		id: "folded_trace_product_concept",
+		scope: "product_documentation",
+		pattern: /\bfold(?:ed|ing)?\s+trace(?:s|\s+state|\s+records)?\b/i,
 		message:
-			"Docs and skills must use current repo-local dogfood gating wording.",
+			"Product docs should say views are derived from traces instead of exposing fold as a product concept.",
+	},
+	{
+		id: "loop_tool_rendering_ux",
+		scope: "product_documentation",
+		pattern: /\bloop tool renders\b|\bTool rendering contract\b/,
+		message:
+			"Post-bootstrap UX should be append/view driven, not rich loop tool rendering.",
+	},
+	{
+		id: "repo_local_dogfood_disabled",
+		scope: "operating_guidance",
+		pattern:
+			/repo-local CodeWiki dogfooding is enabled|\.pi\/extensions\/codewiki\.ts loads|hosts\.cli/i,
+		message:
+			"Docs and skills must keep repo-local CodeWiki dogfooding disabled until readiness gates pass.",
 	},
 ];
 

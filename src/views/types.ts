@@ -1,7 +1,9 @@
+import type { PlanningTrigger } from "../planning/types.ts";
 import type {
 	LoopQualityStandardMode,
 	LoopQualityStandardStatus,
 	TraceLoop,
+	TraceOrigin,
 	TraceRecord,
 } from "../traces/types.ts";
 
@@ -15,6 +17,25 @@ export type WorkQueueItemStatus =
 	| "blocked"
 	| "done";
 export type WorkQueueItemKind = "decision" | "work-unit";
+export type TraceGoalResolutionStatus =
+	| "needs_decision"
+	| "needs_planning"
+	| "needs_implementation"
+	| "blocked"
+	| "deferred"
+	| "finished";
+export type TraceGoalStatus =
+	| TraceGoalResolutionStatus
+	| "closed_complete"
+	| "closed_incomplete";
+export type TriggerStatus =
+	| "planned"
+	| "enabled"
+	| "due"
+	| "active"
+	| "completed"
+	| "blocked"
+	| "disabled";
 export type QualityStandardSummaryStatus =
 	| LoopQualityStandardStatus
 	| "missing";
@@ -78,8 +99,10 @@ export interface WorkPlanCard {
 	decisionRefs: string[];
 	componentRefs: string[];
 	pathScopes: string[];
+	planningDepth: string;
 	verification: string[];
 	dependsOn: string[];
+	trigger?: PlanningTrigger;
 	implementationRefs: string[];
 	blockers: string[];
 	qualityStandards: QualityStandardSummary[];
@@ -104,6 +127,7 @@ export interface WorkQueueItem {
 	componentRefs: string[];
 	pathScopes: string[];
 	dependsOn: string[];
+	trigger?: PlanningTrigger;
 	blockers: string[];
 	qualityStandards: QualityStandardSummary[];
 	qualityBlockers: string[];
@@ -119,13 +143,100 @@ export interface WorkQueueView {
 	items: WorkQueueItem[];
 }
 
+export type TriggerDueStatus = "due" | "not_due" | "invalid";
+
+export interface TriggerDueView {
+	status: TriggerDueStatus;
+	reason: string;
+	scheduledAt?: string;
+	runKey?: string;
+	traceId?: string;
+}
+
+export interface TriggerRunView {
+	traceId: string;
+	title?: string;
+	status: TraceGoalStatus;
+	closed: boolean;
+	closedAt?: string;
+	triggerTraceId: string;
+	triggerId: string;
+	planningRef: string;
+	runKey: string;
+	refs: string[];
+}
+
+export interface TriggerView {
+	id: string;
+	status: TriggerStatus;
+	traceId: string;
+	traceTitle?: string;
+	workUnitId: string;
+	planningRef: string;
+	decisionRefs: string[];
+	pathScopes: string[];
+	trigger: PlanningTrigger;
+	enabledBy: string[];
+	enabledAt?: string;
+	due?: TriggerDueView;
+	runs: TriggerRunView[];
+	qualityBlockers: string[];
+	refs: string[];
+	sourceEventId: string;
+}
+
+export interface TriggersView {
+	generatedAt?: string;
+	traceIds: string[];
+	summary: Record<TriggerStatus, number>;
+	triggers: TriggerView[];
+}
+
+export interface TraceGoalView {
+	generatedAt?: string;
+	traceId: string;
+	title?: string;
+	origin?: TraceOrigin;
+	status: TraceGoalStatus;
+	closable: boolean;
+	closed: boolean;
+	closedAt?: string;
+	closeReason?: string;
+	decisionRefs: string[];
+	plannedDecisionRefs: string[];
+	unresolvedDecisionRefs: string[];
+	deferredDecisionRefs: string[];
+	workUnitRefs: string[];
+	incompleteWorkUnitRefs: string[];
+	pathScopes: string[];
+	blockers: string[];
+	lastEventId?: string;
+}
+
+export interface TraceBoardConflict {
+	leftTraceId: string;
+	rightTraceId: string;
+	pathScope: string;
+	message: string;
+}
+
+export interface TraceBoardView {
+	generatedAt?: string;
+	traceIds: string[];
+	summary: Record<TraceGoalStatus, number>;
+	traces: TraceGoalView[];
+	conflicts: TraceBoardConflict[];
+}
+
 export interface StatusView {
 	generatedAt?: string;
 	traceId?: string;
 	title?: string;
+	origin?: TraceOrigin;
 	health: ViewHealth;
 	currentLoop: TraceLoop | null;
 	readyForClosure: boolean;
+	goalStatus?: TraceGoalStatus;
 	closed?: boolean;
 	closedAt?: string;
 	closeReason?: string;

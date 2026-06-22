@@ -4,7 +4,7 @@
 
 CodeWiki traces are the durable workflow and state record for software work. One trace represents one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
 
-A trace is append-only. Old lines are never rewritten. Current state is derived by replaying the trace and reading compact checkpoints or generated views.
+A trace is append-only. Old lines are never rewritten. Runtime is the sole trace writer: semantic loops report appendable loop output and exit results to runtime, and runtime validates sequence/byte safety before appending trace records. Current status is exposed through generated views that derive their calculations from traces, compact checkpoints, KB/source refs, and Git refs.
 
 ## Canonical storage
 
@@ -25,26 +25,35 @@ tail_checkpoint
 trace_close          # optional final lifecycle record
 ```
 
-The trace file is its own hot catalog entry. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog.
+The trace file is its own hot catalog entry. The `.codewiki/traces/` directory is the active working set: hot files are active or recently closing traces, and project state loaders only read files matching `TRACE-*.jsonl`. Closed detail can be replaced by compact retention stubs after required evidence is committed. Closed traces are terminal and do not receive append handles. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog, central `.codewiki/traces.jsonl`, or trace-index truth file.
 
 ## Record types
 
 ### `trace_head`
 
-Stable identity and top-level scope.
+Stable identity and top-level scope. `origin` is optional. Manual traces can omit it. Recurring, triggered, hook-based, amendment, retry, or route-back traces should include origin lineage refs rather than becoming sub-traces.
 
 ```json
 {
   "type": "trace_head",
   "traceId": "TRACE-20260611-example",
   "title": "Short accountable change title",
-  "createdAt": "2026-06-11T00:00:00.000Z"
+  "createdAt": "2026-06-11T00:00:00.000Z",
+  "origin": {
+    "kind": "trigger_run",
+    "parentTraceId": "TRACE-20260611-trigger",
+    "triggerTraceId": "TRACE-20260611-trigger",
+    "triggerId": "TRG-example",
+    "planningRef": "trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-example",
+    "runKey": "example:2026-W24",
+    "refs": ["TRACE-20260611-trigger", "trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-example"]
+  }
 }
 ```
 
 ### `trace_event`
 
-Ordered durable event. Target semantic-loop events use one event per loop iteration. Runtime coordination events use explicit runtime event names.
+Ordered durable event written by runtime. Semantic-loop events use one event per loop iteration and include `loop`. Runtime coordination events use explicit `runtime.*` event names and omit `loop` because runtime is not a semantic loop.
 
 ```json
 {
@@ -54,7 +63,7 @@ Ordered durable event. Target semantic-loop events use one event per loop iterat
   "traceId": "TRACE-20260611-example",
   "sequence": 1,
   "loop": "decision",
-  "event": "decision.iteration",
+  "event": "decision.rows_approved",
   "refs": ["kb:system/loop-model.md"],
   "createdAt": "2026-06-11T00:00:00.000Z",
   "data": {
@@ -89,7 +98,7 @@ Derived compact state for fast resume and view generation. Replay from `trace_he
 
 ### `trace_close`
 
-Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from dispatchable work.
+Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from claimable work. Archive close should only be appended when the trace goal is finished or explicitly deferred; trace-board/status views flag historical or bypassed closes as `closed_incomplete` when DTR/WU/implementation coverage is missing.
 
 ```json
 {
@@ -115,9 +124,9 @@ planning
 implementation
 ```
 
-Each semantic loop appends one `<loop>.iteration` event as the durable semantic boundary. Loop-specific rows, work items, and implementation changes live inside the iteration output and are referenced with subrefs such as `trace:<iteration-id>#row:<id>`, `trace:<iteration-id>#work:<id>`, and `trace:<iteration-id>#change:<id>`.
+Each semantic loop produces one appendable semantic report as the durable boundary. Runtime appends that report as a trace event after validation. The trace event stores `loop` as the semantic authority and `event` as the specific fact, read conceptually as `loop.event`, such as `decision.rows_approved`, `planning.work_units_created`, or `implementation.evidence_accepted`. Loop-specific rows, work items, and implementation changes live inside the event output and are referenced with subrefs such as `trace:<event-id>#row:<id>`, `trace:<event-id>#work:<id>`, and `trace:<event-id>#change:<id>`.
 
-`appendSemanticLoopIteration()` is the core append facade for this boundary. It runs one semantic loop iteration with an expected next sequence, verifies exactly one target `<loop>.iteration` event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap.
+`appendSemanticLoopReport()` is the runtime-owned append helper for this boundary. It validates one target semantic output event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap.
 
 A semantic loop iteration records:
 
@@ -143,26 +152,34 @@ blocked
 Example route-back history:
 
 ```text
-line 10: implementation.iteration -> route_back decision
-line 11: decision.iteration -> exit
-line 12: planning.iteration -> exit
-line 13: implementation.iteration -> exit
+line 10: implementation.evidence_accepted -> route_back decision
+line 11: decision.rows_approved -> exit
+line 12: planning.work_units_created -> exit
+line 13: implementation.evidence_accepted -> exit
 ```
 
 No line is rewritten. Route-back creates a new iteration in the target loop.
 
+## Event tree and trace lineage
+
+Inside a trace, `id` and `parentId` form a tree like Pi session entries. The active path can branch through route-backs, retries, and alternative implementation attempts without creating another trace identity. Views may render this event tree for review and resume, but the trace still represents one accountable goal.
+
+Across traces, CodeWiki uses `trace_head.origin` lineage metadata rather than sub-traces. Recurring, triggered, hook-based, amendment, or retry work creates an independent trace with origin refs to the trigger/source trace. The run trace closes independently and cites the trigger id, trigger trace id, planning work ref, and run key when available. This preserves trace closure while keeping provenance discoverable.
+
 ## Runtime coordination events
 
-Runtime is the outer control loop and may append coordination events between semantic iterations. Runtime events do not create a fourth semantic loop.
+Runtime is the outer control loop and may append coordination events between semantic iterations. Runtime events do not create a fourth semantic loop and do not carry `loop`.
 
 Examples:
 
 ```text
-runtime.claim.acquired
-runtime.work.claimed
-runtime.claim.released
-runtime.claim.expired
-runtime.dispatch.planned
+runtime.work_unit.claimed
+runtime.work_unit.claim.released
+runtime.work_unit.claim.expired
+runtime.work_unit.claim.cancelled
+runtime.host.observed
+runtime.host.blocked
+runtime.host.stopped
 ```
 
 Runtime events store worker ids, claim ids, expiry, and scheduling details in `data`. `refs` carry only canonical planning refs, source/test paths, trace refs, Git refs, or digests.
@@ -176,14 +193,17 @@ Generated views are disposable projections over traces, KB, source/tests, and Gi
 .codewiki/views/resume.json
 .codewiki/views/work-plan.json
 .codewiki/views/work-queue.json
+.codewiki/views/trace-board.json
+.codewiki/views/triggers.json
+.codewiki/views/runtime-board.json
 .codewiki/views/quality.json
 .codewiki/views/blockers.json
 .codewiki/views/conflicts.json
 ```
 
-Views answer questions quickly. They do not own truth and must be rebuildable from traces and sources.
+Views answer questions quickly and own the disposable calculations needed for status, resume, quality, work-plan, trace-board, triggers, runtime-board, and work-queue projections. They do not own truth and must be rebuildable from traces and sources.
 
-`work-plan` is the per-trace planning projection. `work-queue` is the cross-trace runtime scheduling projection. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board or kanban display renders views; it is not its own truth root.
+`work-plan` is the per-trace planning projection. `work-queue` is the cross-trace work-unit claim selection projection. `trace-board` is the cross-trace goal projection that shows whether each trace needs decision, planning, implementation, is blocked, deferred, finished, closed complete, or closed incomplete. `triggers` derives scheduled/event/hook/manual trigger state from planning work items, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines trace-board, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board, pinned card, or kanban display renders views; it is not its own truth root.
 
 ## Trace data and refs
 
@@ -229,12 +249,12 @@ Closed traces can be compacted only after required evidence is committed and no 
 
 `wiki_archive` supports retention stubs, trace-close records, hydrate plans, and release-note summaries derived from `trace_close` plus implementation evidence. Close appends a `trace_close` record with expected-byte compare-and-swap. Release notes are derived output, not truth: they summarize close metadata, changed paths, checks, and evidence refs already present in the trace. Hydrate verifies archived records against the retained stub and returns the records and restore refs needed to restore hot detail.
 
-The retention model avoids separate canonical catalogs. The trace stub plus Git history is the catalog.
+The retention model avoids separate canonical catalogs. The hot trace file or retained trace stub plus Git history is the catalog. Hydration restores the exact trace records from retained refs when cold detail must become hot again.
 
 ## Non-goals
 
 - No graph as target product concept.
-- No canonical `.codewiki/traces/catalog.json`.
+- No canonical `.codewiki/traces/catalog.json`, `.codewiki/traces.jsonl`, or trace-index file.
 - No standalone validation loop.
 - No durable state in generated views.
 - No full Pi transcript storage inside CodeWiki traces.
@@ -248,4 +268,4 @@ The retention model avoids separate canonical catalogs. The trace stub plus Git 
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)
-- [File Structure](file-structure.md)
+- [Source Map](source-map.md)

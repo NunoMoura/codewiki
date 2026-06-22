@@ -1,3 +1,5 @@
+export type PlanningDepth = "micro" | "standard" | string;
+
 export type PlanningResolutionKind =
 	| "work-unit"
 	| "deferred"
@@ -33,6 +35,41 @@ export type PlanningUncertaintyOwner =
 	| "decision"
 	| "user"
 	| string;
+
+export type PlanningTriggerKind =
+	| "schedule"
+	| "trigger"
+	| "hook"
+	| "manual"
+	| string;
+export type PlanningTriggerRunMode = "new_trace" | string;
+export type PlanningTriggerConcurrency =
+	| "skip_if_active"
+	| "queue"
+	| "replace"
+	| string;
+
+export interface PlanningTrigger {
+	id: string;
+	kind: PlanningTriggerKind;
+	runMode: PlanningTriggerRunMode;
+	concurrency: PlanningTriggerConcurrency;
+	runKeyTemplate: string;
+	owner: string;
+	trigger: string;
+	refs: string[];
+}
+
+export interface PlanningTriggerInput {
+	id?: string;
+	kind?: PlanningTriggerKind;
+	runMode?: PlanningTriggerRunMode;
+	concurrency?: PlanningTriggerConcurrency;
+	runKeyTemplate?: string;
+	owner?: string;
+	trigger?: string;
+	refs?: string[];
+}
 
 export interface PlanningWorkAssessmentInput {
 	stance?: PlanningAssessmentStance;
@@ -75,10 +112,12 @@ export interface PlanningWorkItem {
 	acceptanceCriteria: AcceptanceCriterion[];
 	componentRefs: string[];
 	pathScopes: string[];
+	planningDepth: PlanningDepth;
 	verification: string[];
 	workerProfile: string;
 	planningAssessment: PlanningWorkAssessment;
 	dependsOn: string[];
+	trigger?: PlanningTrigger;
 }
 
 export interface PlanningWorkItemInput {
@@ -96,6 +135,8 @@ export interface PlanningWorkItemInput {
 	component_refs?: string[];
 	pathScopes?: string[];
 	path_scopes?: string[];
+	planningDepth?: PlanningDepth;
+	planning_depth?: PlanningDepth;
 	verification?: string[];
 	workerProfile?: string;
 	worker_profile?: string;
@@ -103,6 +144,7 @@ export interface PlanningWorkItemInput {
 	planning_assessment?: PlanningWorkAssessmentInput;
 	dependsOn?: string[];
 	depends_on?: string[];
+	trigger?: PlanningTriggerInput;
 }
 
 export interface PlanningDecisionResolution {

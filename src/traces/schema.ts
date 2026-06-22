@@ -1,8 +1,11 @@
+import { CodewikiTraceError } from "../error-handling/trace-errors.ts";
+import { isSemanticEventName } from "./events.ts";
 import type {
 	TailCheckpoint,
 	TraceClose,
 	TraceEvent,
 	TraceHead,
+	TraceOrigin,
 	TraceRecord,
 } from "./types.ts";
 
@@ -33,11 +36,17 @@ export interface TraceValidationResult<T> {
 	value?: T;
 }
 
-export class TraceValidationError extends Error {
+export class TraceValidationError extends CodewikiTraceError {
 	readonly issues: TraceValidationIssue[];
 
 	constructor(issues: TraceValidationIssue[]) {
-		super(issues.map((issue) => `${issue.path}: ${issue.message}`).join("; "));
+		super({
+			code: "invalid_trace",
+			message: issues
+				.map((issue) => `${issue.path}: ${issue.message}`)
+				.join("; "),
+			data: { issues },
+		});
 		this.name = "TraceValidationError";
 		this.issues = issues;
 	}
@@ -45,7 +54,13 @@ export class TraceValidationError extends Error {
 
 export function traceFilePath(traceId: string): string {
 	const normalized = traceId.trim();
-	if (!isTraceId(normalized)) throw new Error(`Invalid trace id: ${traceId}`);
+	if (!isTraceId(normalized)) {
+		throw new CodewikiTraceError({
+			code: "invalid_trace",
+			message: `Invalid trace id: ${traceId}`,
+			traceId,
+		});
+	}
 	return `.codewiki/traces/${normalized}.jsonl`;
 }
 
@@ -96,6 +111,53 @@ function validateTraceHead(
 	requireTraceId(issues, value.traceId, "$.traceId");
 	requireString(issues, value.title, "$.title");
 	requireString(issues, value.createdAt, "$.createdAt");
+	if (value.origin !== undefined) {
+		validateTraceOrigin(issues, value.origin as Partial<TraceOrigin>);
+	}
+}
+
+function validateTraceOrigin(
+	issues: TraceValidationIssue[],
+	value: Partial<TraceOrigin>,
+): void {
+	if (!isRecord(value)) {
+		issue(issues, "$.origin", "Trace origin must be a JSON object.");
+		return;
+	}
+	requireString(issues, value.kind, "$.origin.kind");
+	if (value.parentTraceId !== undefined)
+		requireTraceId(issues, value.parentTraceId, "$.origin.parentTraceId");
+	if (value.triggerTraceId !== undefined)
+		requireTraceId(issues, value.triggerTraceId, "$.origin.triggerTraceId");
+	requireOptionalString(issues, value.triggerId, "$.origin.triggerId");
+	requireOptionalString(issues, value.planningRef, "$.origin.planningRef");
+	requireOptionalString(issues, value.sourceRef, "$.origin.sourceRef");
+	requireOptionalString(issues, value.runKey, "$.origin.runKey");
+	requireStringArray(issues, value.refs, "$.origin.refs");
+	if (value.kind === "trigger_run") {
+		if (!value.triggerTraceId)
+			issue(
+				issues,
+				"$.origin.triggerTraceId",
+				"Trigger run origin requires triggerTraceId.",
+			);
+		if (!value.triggerId)
+			issue(
+				issues,
+				"$.origin.triggerId",
+				"Trigger run origin requires triggerId.",
+			);
+		if (!value.planningRef)
+			issue(
+				issues,
+				"$.origin.planningRef",
+				"Trigger run origin requires planningRef.",
+			);
+		if (!value.runKey)
+			issue(issues, "$.origin.runKey", "Trigger run origin requires runKey.");
+		if (!Array.isArray(value.refs) || value.refs.length === 0)
+			issue(issues, "$.origin.refs", "Trigger run origin requires refs.");
+	}
 }
 
 function validateTraceEvent(
@@ -112,14 +174,8 @@ function validateTraceEvent(
 			"Trace event sequence must be a positive integer.",
 		);
 	}
-	if (!TRACE_LOOP_VALUES.includes(value.loop as never)) {
-		issue(
-			issues,
-			"$.loop",
-			"Trace event loop must be decision, planning, or implementation.",
-		);
-	}
 	requireString(issues, value.event, "$.event");
+	validateTraceEventLoop(issues, value);
 	requireStringArray(issues, value.refs, "$.refs");
 	requireString(issues, value.createdAt, "$.createdAt");
 	if (value.data !== undefined && !isRecord(value.data)) {
@@ -127,6 +183,40 @@ function validateTraceEvent(
 			issues,
 			"$.data",
 			"Trace event data must be a JSON object when present.",
+		);
+	}
+}
+
+function validateTraceEventLoop(
+	issues: TraceValidationIssue[],
+	value: Partial<TraceEvent>,
+): void {
+	const loop = value.loop;
+	const event = typeof value.event === "string" ? value.event : "";
+	if (event.startsWith("runtime.")) {
+		if (loop !== undefined) {
+			issue(
+				issues,
+				"$.loop",
+				"Runtime coordination trace events must omit semantic loop.",
+			);
+		}
+		return;
+	}
+	if (!TRACE_LOOP_VALUES.includes(loop as never)) {
+		issue(
+			issues,
+			"$.loop",
+			"Semantic trace event loop must be decision, planning, or implementation.",
+		);
+		return;
+	}
+	const semanticLoop = loop as (typeof TRACE_LOOP_VALUES)[number];
+	if (!isSemanticEventName(semanticLoop, event)) {
+		issue(
+			issues,
+			"$.event",
+			`Semantic trace event ${event} is not valid for loop ${semanticLoop}.`,
 		);
 	}
 }
@@ -187,6 +277,16 @@ function requireString(
 ): void {
 	if (typeof value !== "string" || value.trim().length === 0) {
 		issue(issues, path, "Field must be a non-empty string.");
+	}
+}
+
+function requireOptionalString(
+	issues: TraceValidationIssue[],
+	value: unknown,
+	path: string,
+): void {
+	if (value !== undefined && (typeof value !== "string" || !value.trim())) {
+		issue(issues, path, "Field must be a non-empty string when present.");
 	}
 }
 

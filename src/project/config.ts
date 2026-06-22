@@ -1,3 +1,5 @@
+import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
+
 export type WikiConfigWorktreeIsolation = "none" | "worktree" | "auto";
 export type WikiConfigAutomationMode = "manual" | "assist" | "auto";
 export type WikiConfigAgencyLevel = "observe" | "assist" | "delegate" | "auto";
@@ -170,17 +172,33 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 
 export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	if (!config.project.trim()) {
-		throw new Error("wiki_config project is required.");
+		throw createCodewikiConfigError({
+			path: "project",
+			code: "missing_required",
+			message: "wiki_config project is required.",
+		});
 	}
 	assertNonNegativeInteger(config.runtime.maxWorkers, "runtime.maxWorkers");
 	if (!isWorktreeIsolation(config.runtime.worktreeIsolation)) {
-		throw new Error("wiki_config runtime.worktreeIsolation is invalid.");
+		throw createCodewikiConfigError({
+			path: "runtime.worktreeIsolation",
+			message: "wiki_config runtime.worktreeIsolation is invalid.",
+			value: config.runtime.worktreeIsolation,
+		});
 	}
 	if (!isAutomation(config.runtime.automation)) {
-		throw new Error("wiki_config runtime.automation is invalid.");
+		throw createCodewikiConfigError({
+			path: "runtime.automation",
+			message: "wiki_config runtime.automation is invalid.",
+			value: config.runtime.automation,
+		});
 	}
 	if (!isAgency(config.runtime.agency)) {
-		throw new Error("wiki_config runtime.agency is invalid.");
+		throw createCodewikiConfigError({
+			path: "runtime.agency",
+			message: "wiki_config runtime.agency is invalid.",
+			value: config.runtime.agency,
+		});
 	}
 	validateBudgets(config.runtime.budgets);
 	validateApproval(config.runtime.approval);
@@ -189,14 +207,21 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	);
 	for (const command of config.runtime.worktreeSetupCommands) {
 		if (command.includes("\n") || command.includes("\r")) {
-			throw new Error(
-				"wiki_config runtime.worktreeSetupCommands must be single-line commands.",
-			);
+			throw createCodewikiConfigError({
+				path: "runtime.worktreeSetupCommands",
+				message:
+					"wiki_config runtime.worktreeSetupCommands must be single-line commands.",
+				value: command,
+			});
 		}
 	}
 	const stopConditions = uniqueStringList(config.runtime.stopConditions);
 	if (!config.retention.archiveRefPrefix.trim()) {
-		throw new Error("wiki_config retention.archiveRefPrefix is required.");
+		throw createCodewikiConfigError({
+			path: "retention.archiveRefPrefix",
+			code: "missing_required",
+			message: "wiki_config retention.archiveRefPrefix is required.",
+		});
 	}
 	assertNonNegativeInteger(
 		config.retention.hotTraceLimit,
@@ -269,22 +294,37 @@ function validateBudgets(budgets: WikiRuntimeBudgetConfig): void {
 
 function validateApproval(approval: WikiApprovalPolicyConfig): void {
 	if (!isApprovalCadence(approval.cadence)) {
-		throw new Error("wiki_config runtime.approval.cadence is invalid.");
+		throw createCodewikiConfigError({
+			path: "runtime.approval.cadence",
+			message: "wiki_config runtime.approval.cadence is invalid.",
+			value: approval.cadence,
+		});
 	}
 	if (!isRiskAction(approval.destructiveAction)) {
-		throw new Error(
-			"wiki_config runtime.approval.destructiveAction is invalid.",
-		);
+		throw createCodewikiConfigError({
+			path: "runtime.approval.destructiveAction",
+			message: "wiki_config runtime.approval.destructiveAction is invalid.",
+			value: approval.destructiveAction,
+		});
 	}
 	if (!isRiskAction(approval.riskEscalation)) {
-		throw new Error("wiki_config runtime.approval.riskEscalation is invalid.");
+		throw createCodewikiConfigError({
+			path: "runtime.approval.riskEscalation",
+			message: "wiki_config runtime.approval.riskEscalation is invalid.",
+			value: approval.riskEscalation,
+		});
 	}
 }
 
 function validateHosts(hosts: WikiHostConfig): void {
 	for (const [name, host] of Object.entries(hosts)) {
 		if (typeof host.enabled !== "boolean") {
-			throw new Error(`wiki_config hosts.${name}.enabled must be boolean.`);
+			throw createCodewikiConfigError({
+				path: `hosts.${name}.enabled`,
+				code: "invalid_type",
+				message: `wiki_config hosts.${name}.enabled must be boolean.`,
+				value: host.enabled,
+			});
 		}
 	}
 }
@@ -299,14 +339,22 @@ function cleanBudgets(
 
 function assertNonNegativeInteger(value: unknown, path: string): void {
 	if (!Number.isInteger(value) || Number(value) < 0) {
-		throw new Error(`wiki_config ${path} must be >= 0.`);
+		throw createCodewikiConfigError({
+			path,
+			message: `wiki_config ${path} must be >= 0.`,
+			value,
+		});
 	}
 }
 
 function assertOptionalPositiveInteger(value: unknown, path: string): void {
 	if (value === undefined) return;
 	if (!Number.isInteger(value) || Number(value) < 1) {
-		throw new Error(`wiki_config ${path} must be >= 1 when set.`);
+		throw createCodewikiConfigError({
+			path,
+			message: `wiki_config ${path} must be >= 1 when set.`,
+			value,
+		});
 	}
 }
 

@@ -57,7 +57,7 @@ assert.deepEqual(packageJson.pi, { extensions: ["dist/pi/extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json"]);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
-assert.deepEqual(buildWikiState({ records: [], sourcePaths: [] }).traceIds, []);
+assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.equal(runWikiConfig({}).config.project, "codewiki");
 
 for (const dependency of Object.keys(packageJson.dependencies || {})) {
@@ -96,7 +96,6 @@ assert.deepEqual(tools, [
 	"wiki_decide",
 	"wiki_plan",
 	"wiki_implement",
-	"wiki_runtime",
 	"wiki_archive",
 ]);
 assert.deepEqual(events.map((event) => event.eventName), [
@@ -118,12 +117,22 @@ await footerHook.handler(
 		},
 	},
 );
-assert.deepEqual(statuses, [{ key: "codewiki", value: "CodeWiki: /wiki state" }]);
-assert.deepEqual(commands, ["wiki"]);
+assert.equal(statuses.length, 1);
+assert.equal(statuses[0].key, "codewiki");
+assert.match(statuses[0].value, /^CodeWiki \\S+ non-project · \\/wiki-state$/);
+assert.deepEqual(commands, [
+	"wiki-state",
+	"wiki-resume",
+	"wiki-explain",
+	"wiki-config",
+	"wiki-bootstrap",
+]);
 const injected = await promptHook.handler({ systemPrompt: "base" }, { cwd: process.cwd() });
 assert.match(injected.systemPrompt, /CodeWiki Pi guidance/);
-assert.equal(injected.systemPrompt.includes("wiki_*"), true);
-assert.equal(injected.systemPrompt.includes("/wiki"), true);
+assert.equal(injected.systemPrompt.includes("wiki_state"), true);
+assert.equal(injected.systemPrompt.includes("wiki_decide"), true);
+assert.equal(injected.systemPrompt.includes("/wiki-*"), true);
+assert.equal(injected.systemPrompt.includes("/wiki or"), false);
 assert.deepEqual(await promptHook.handler({ systemPrompt: injected.systemPrompt }, { cwd: process.cwd() }), {});
 `,
 	);

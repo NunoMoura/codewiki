@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
 	executeRuntimeWorktreeCommands,
-	planRuntimeDispatchWorktrees,
+	planRuntimeWorkUnitClaimWorktrees,
 	WorktreeCommandExecutionError,
 } from "../../src/git/worktrees.ts";
 import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-runner.ts";
@@ -21,7 +21,7 @@ function item(id, pathScopes = [`src/${id}.ts`]) {
 
 describe("runtime worktree planning", () => {
 	it("creates deterministic worktree refs and shell commands", () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 			projectName: "codewiki",
@@ -48,7 +48,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("keeps explicit worktree roots available for custom hosts", () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 			worktreeRoot: "/sandbox/custom-worktrees",
@@ -62,7 +62,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("adds optional setup commands to explicit worktree prepare", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 			setupCommands: ["npm install", "npm test -- --runInBand"],
@@ -91,7 +91,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("dry-runs planned worktree commands by default", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 		});
@@ -115,7 +115,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("executes worktree commands only with an explicit runner", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 		});
@@ -148,7 +148,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("stops explicit command execution on non-zero exit", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 		});
@@ -175,7 +175,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("creates an explicit host shell runner for worktree commands", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 		});
@@ -210,7 +210,7 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("surfaces shell runner failures through worktree execution records", async () => {
-		const [plan] = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
 		});
@@ -239,15 +239,15 @@ describe("runtime worktree planning", () => {
 	});
 
 	it("auto mode isolates parallel or dirty overlapping work only", () => {
-		const parallel = planRuntimeDispatchWorktrees(
+		const parallel = planRuntimeWorkUnitClaimWorktrees(
 			[item("WU-one"), item("WU-two")],
 			{ mode: "auto", repoRoot: "/tmp/repo/codewiki" },
 		);
-		const cleanSolo = planRuntimeDispatchWorktrees([item("WU-one")], {
+		const cleanSolo = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "auto",
 			repoRoot: "/tmp/repo/codewiki",
 		});
-		const dirtySolo = planRuntimeDispatchWorktrees(
+		const dirtySolo = planRuntimeWorkUnitClaimWorktrees(
 			[item("WU-one", ["src/runtime"])],
 			{
 				mode: "auto",
@@ -255,15 +255,15 @@ describe("runtime worktree planning", () => {
 				dirtyPaths: ["src/runtime/policy.ts"],
 			},
 		);
-		const dirtyGlobSolo = planRuntimeDispatchWorktrees(
+		const dirtyGlobSolo = planRuntimeWorkUnitClaimWorktrees(
 			[item("WU-one", ["src/pi/**"])],
 			{
 				mode: "auto",
 				repoRoot: "/tmp/repo/codewiki",
-				dirtyPaths: ["src/pi/rendering/tool-renderers.ts"],
+				dirtyPaths: ["src/pi/rendering/command-renderers.ts"],
 			},
 		);
-		const unrelatedDirtySolo = planRuntimeDispatchWorktrees(
+		const unrelatedDirtySolo = planRuntimeWorkUnitClaimWorktrees(
 			[item("WU-one", ["src/decision"])],
 			{
 				mode: "auto",
@@ -274,7 +274,7 @@ describe("runtime worktree planning", () => {
 
 		assert.deepEqual(
 			parallel.map((plan) => plan.reason),
-			["parallel_dispatch", "parallel_dispatch"],
+			["parallel_claims", "parallel_claims"],
 		);
 		assert.equal(cleanSolo[0].required, false);
 		assert.equal(cleanSolo[0].commands.worktreePrepare.length, 0);

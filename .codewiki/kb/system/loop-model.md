@@ -17,18 +17,18 @@ Older migration vocabulary is not part of the desired-state model and must not d
 
 ## Runtime outer loop
 
-Runtime is the outer control loop. It is not a semantic loop and it does not own product truth.
+Runtime is the outer control loop. It is not a semantic loop and it does not own semantic truth. Runtime is the sole trace writer: semantic loops produce appendable reports, and runtime validates and appends them.
 
 ```text
 while project has active traces:
-  fold traces
+  read traces and derived views
   inspect current state and exit conditions
   choose next semantic loop or runtime coordination action
-  run one semantic loop iteration or append one runtime coordination event
+  run one semantic loop iteration and append its report, or append one runtime coordination event
   repeat
 ```
 
-Runtime coordinates claims, scheduling, worker dispatch, temporary data, budgets, stop conditions, retention, and host integration. Accepted product/system truth remains in KB, source, tests, Git, and traces.
+Runtime coordinates claims, scheduling, worker start, temporary data, budgets, stop conditions, retention, heartbeat/watch policies, worker liveness, and host integration. Accepted product/system truth remains in KB, source, tests, Git, and traces.
 
 ## Semantic loops
 
@@ -53,11 +53,11 @@ observe durable refs
 act inside loop authority
 update loop output
 check exit conditions
-append trace iteration
+report appendable iteration to runtime
 continue, exit, route back, or block
 ```
 
-The loop cycle is where noisy work happens: reading, comparing, editing, testing, asking questions, dispatching workers, and resolving findings. Noise belongs in chat, tools, or runtime temp. It should not become durable truth unless distilled into loop output or compact route-back provenance.
+The loop cycle is where noisy work happens: reading, comparing, editing, testing, asking questions, and resolving findings. Worker start belongs to host integration coordinated by runtime. Noise belongs in chat, tools, or runtime temp. It should not become durable truth unless distilled into loop output or compact route-back provenance.
 
 ## Loop output
 
@@ -124,16 +124,16 @@ Runtime may stop, block, or ask for user approval when iterations consume budget
 
 ## Trace iterations
 
-A semantic loop iteration is the durable trace boundary. JSONL trace files are append-only; old iterations are never rewritten.
+A semantic loop iteration is the durable trace boundary. The semantic loop produces the iteration report; runtime appends it. JSONL trace files are append-only; old iterations are never rewritten.
 
 ```text
-line 10: implementation.iteration -> route_back decision
-line 11: decision.iteration -> exit
-line 12: planning.iteration -> exit
-line 13: implementation.iteration -> exit
+line 10: implementation.evidence_accepted -> route_back decision
+line 11: decision.rows_approved -> exit
+line 12: planning.work_units_created -> exit
+line 13: implementation.evidence_accepted -> exit
 ```
 
-Current state is derived by folding the trace and selecting the latest relevant accepted/active iteration plus runtime coordination events.
+Current state is exposed through trace-derived views that select the latest relevant accepted or active iteration plus runtime coordination events. The calculation belongs to the view builder; it is not a separate product concept or durable state layer.
 
 ## Iteration event shape
 
@@ -143,7 +143,7 @@ Target trace iteration events follow this conceptual shape:
 {
   "type": "trace_event",
   "loop": "implementation",
-  "event": "implementation.iteration",
+  "event": "implementation.evidence_accepted",
   "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."],
   "data": {
     "iteration": 4,

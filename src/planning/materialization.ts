@@ -2,6 +2,8 @@ import type { TraceEvent } from "../traces/types.ts";
 import type {
 	AcceptanceCriterion,
 	AcceptanceCriterionInput,
+	PlanningTrigger,
+	PlanningTriggerInput,
 	PlanningDecisionResolution,
 	PlanningDecisionResolutionInput,
 	PlanningResolutionKind,
@@ -60,6 +62,9 @@ export function normalizePlanningWorkItems(
 				...stringList(item.pathScopes),
 				...stringList(item.path_scopes),
 			]),
+			planningDepth: normalizePlanningDepth(
+				item.planningDepth ?? item.planning_depth,
+			),
 			verification: stringList(item.verification),
 			workerProfile: text(item.workerProfile ?? item.worker_profile),
 			planningAssessment: normalizePlanningAssessment(
@@ -69,6 +74,7 @@ export function normalizePlanningWorkItems(
 				...stringList(item.dependsOn),
 				...stringList(item.depends_on),
 			]),
+			...triggerProperty(item.trigger),
 		};
 	});
 }
@@ -98,7 +104,7 @@ export function normalizePlanningDecisionResolutions(
 export function decisionRefsFromEvents(events: TraceEvent[]): string[] {
 	return unique(
 		events.flatMap((event) => {
-			if (event.loop !== "decision" || event.event !== "decision.iteration") {
+			if (event.loop !== "decision") {
 				return [];
 			}
 			return objectList(objectRecord(event.data?.output).approvedRows).map(
@@ -143,6 +149,57 @@ export function normalizePlanningAssessment(
 	};
 }
 
+function triggerProperty(value: PlanningTriggerInput | undefined): {
+	trigger?: PlanningTrigger;
+} {
+	const trigger = normalizePlanningTrigger(value);
+	return trigger ? { trigger } : {};
+}
+
+export function normalizePlanningTrigger(
+	value: PlanningTriggerInput | undefined,
+): PlanningTrigger | undefined {
+	if (!value) return undefined;
+	const id = text(value.id);
+	const kind = normalizeTriggerKind(value.kind);
+	const runMode = normalizeTriggerRunMode(value.runMode);
+	const concurrency = normalizeTriggerConcurrency(value.concurrency);
+	const runKeyTemplate = text(value.runKeyTemplate);
+	const owner = text(value.owner);
+	const trigger = text(value.trigger);
+	const refs = unique(stringList(value.refs));
+	if (
+		![id, kind, runMode, concurrency, runKeyTemplate, owner, trigger].some(
+			Boolean,
+		) &&
+		refs.length === 0
+	) {
+		return undefined;
+	}
+	return {
+		id,
+		kind,
+		runMode,
+		concurrency,
+		runKeyTemplate,
+		owner,
+		trigger,
+		refs,
+	};
+}
+
+function normalizeTriggerKind(value: unknown): string {
+	return text(value).toLowerCase().replace(/_/g, "-");
+}
+
+function normalizeTriggerRunMode(value: unknown): string {
+	return text(value).toLowerCase();
+}
+
+function normalizeTriggerConcurrency(value: unknown): string {
+	return text(value).toLowerCase();
+}
+
 function normalizeResolutionKind(
 	value: unknown,
 ): PlanningResolutionKind | string {
@@ -150,6 +207,20 @@ function normalizeResolutionKind(
 	if (!raw) return "work-unit";
 	const normalized = raw.toLowerCase().replace(/_/g, "-");
 	return resolutionAliases.get(normalized) ?? normalized;
+}
+
+function normalizePlanningDepth(value: unknown): string {
+	const normalized = text(value).toLowerCase().replace(/_/g, "-");
+	if (!normalized) return "standard";
+	if (
+		["micro-plan", "microplan", "fast-track", "fasttrack"].includes(normalized)
+	) {
+		return "micro";
+	}
+	if (["full", "full-plan", "standard-plan", "normal"].includes(normalized)) {
+		return "standard";
+	}
+	return normalized;
 }
 
 function normalizeAcceptanceCriteria(input: {

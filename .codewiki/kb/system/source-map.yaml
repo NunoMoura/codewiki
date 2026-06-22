@@ -6,13 +6,12 @@ purpose: Canonical machine-readable mapping between source ownership roots, KB d
 updated: "2026-06-12"
 source_docs:
   - .codewiki/kb/system/source-map.md
-  - .codewiki/kb/system/file-structure.md
   - .codewiki/kb/system/loop-model.md
+  - .codewiki/kb/system/overview.md
 defaults:
   inheritance: true
   max_owner_depth: 2
   excluded:
-    - _OLD_VERSION/**
     - node_modules/**
     - .pi/**
     - .git/**
@@ -38,7 +37,7 @@ components:
       - tests/scaffold.test.mjs
       - tests/runtime/package-install-smoke.mjs
       - tests/runtime/project-local-install-smoke.mjs
-      - tests/runtime/external-package-dogfood-smoke.mjs
+      - tests/runtime/external-package-lifecycle-smoke.mjs
       - tests/runtime/external-package-failures-smoke.mjs
       - tests/runtime/readiness-checklist.test.mjs
     role: package_entrypoint
@@ -66,7 +65,7 @@ components:
       - tests/decision/**
       - tests/helpers/decision-row.mjs
     trace_events:
-      - decision.iteration
+      - decision.rows_approved
     role: semantic_loop
   planning:
     doc: .codewiki/kb/system/planning-loop.md
@@ -79,9 +78,10 @@ components:
     generated_views:
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
+      - .codewiki/views/triggers.json
       - .codewiki/views/quality.json
     trace_events:
-      - planning.iteration
+      - planning.work_units_created
     role: semantic_loop
   implementation:
     doc: .codewiki/kb/system/implementation-loop.md
@@ -92,7 +92,7 @@ components:
       - tests/implementation/**
       - tests/helpers/implementation-change.mjs
     trace_events:
-      - implementation.iteration
+      - implementation.evidence_accepted
     role: semantic_loop
   traces:
     doc: .codewiki/kb/system/traces.md
@@ -119,6 +119,9 @@ components:
       - .codewiki/views/resume.json
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
+      - .codewiki/views/trace-board.json
+      - .codewiki/views/triggers.json
+      - .codewiki/views/runtime-board.json
       - .codewiki/views/quality.json
       - .codewiki/views/blockers.json
       - .codewiki/views/conflicts.json
@@ -155,14 +158,23 @@ components:
     tests:
       - tests/runtime/**
     trace_events:
-      - runtime.claim.acquired
-      - runtime.work.claimed
-      - runtime.claim.released
-      - runtime.work.released
-      - runtime.claim.expired
-      - runtime.claim.cancelled
-      - runtime.dispatch.planned
+      - runtime.work_unit.claimed
+      - runtime.work_unit.claim.released
+      - runtime.work_unit.claim.expired
+      - runtime.work_unit.claim.cancelled
+      - runtime.host.started
+      - runtime.host.observed
+      - runtime.host.blocked
+      - runtime.host.completed
+      - runtime.host.stopped
     role: outer_loop_coordination
+  error_handling:
+    doc: .codewiki/kb/system/runtime.md
+    source:
+      - src/error-handling/**
+    tests:
+      - tests/runtime/**
+    role: shared_error_contracts
   cli:
     doc: .codewiki/kb/system/api.md
     source:
@@ -175,8 +187,7 @@ components:
     source:
       - src/pi/**
     tests:
-      - tests/runtime/pi-dispatcher.test.mjs
-      - tests/runtime/pi-dogfood-smoke.mjs
+      - tests/runtime/pi-worker-start.test.mjs
       - tests/runtime/pi-extension.test.mjs
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-install-scope.test.mjs
@@ -186,11 +197,11 @@ components:
       - tests/runtime/pi-worker-results.test.mjs
       - tests/runtime/package-install-smoke.mjs
       - tests/runtime/project-local-install-smoke.mjs
-      - tests/runtime/external-package-dogfood-smoke.mjs
+      - tests/runtime/external-package-lifecycle-smoke.mjs
       - tests/runtime/external-package-failures-smoke.mjs
     role: host_adapter
   project:
-    doc: .codewiki/kb/system/file-structure.md
+    doc: .codewiki/kb/system/source-map.md
     source:
       - src/project/**
     tests:
@@ -200,7 +211,7 @@ components:
       - tests/runtime/wiki-config.test.mjs
     role: project_boundary
   utils:
-    doc: .codewiki/kb/system/file-structure.md
+    doc: .codewiki/kb/system/source-map.md
     source:
       - src/utils/**
     test_policy: inherited

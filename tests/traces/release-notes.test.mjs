@@ -18,7 +18,7 @@ function releaseRecords() {
 		traceId,
 		sequence: 1,
 		loop: "implementation",
-		event: "implementation.iteration",
+		event: "evidence_accepted",
 		refs: [
 			"trace:TRACE-release-notes:planning:iteration:1#work:WU-001",
 			"src/traces/release-notes.ts",

@@ -79,7 +79,10 @@ export function replayTrace(records: TraceRecord[]): TraceReplayState {
 		latestCheckpoint: checkpoints.at(-1),
 		lastRecordId,
 		lastSequence,
-		refs: unique(events.flatMap((event) => event.refs)),
+		refs: unique([
+			...(head.origin?.refs || []),
+			...events.flatMap((event) => event.refs),
+		]),
 	};
 }
 

@@ -1,4 +1,4 @@
-import { eventsByName } from "../traces/queries.ts";
+import { loopOutputEvents } from "../traces/queries.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import type { BlockerView, BlockersView, TraceViewInput } from "./types.ts";
 import { conflictsFromTrace } from "./conflicts.ts";
@@ -29,7 +29,7 @@ export function blockersFromTrace(records: TraceRecord[]): BlockerView[] {
 }
 
 function resolutionBlockers(records: TraceRecord[]): BlockerView[] {
-	return eventsByName(records, "planning.iteration").flatMap((event) =>
+	return loopOutputEvents(records, "planning").flatMap((event) =>
 		objectList(objectRecord(event.data?.output).resolutions).flatMap(
 			(resolution) => {
 				const kind = text(resolution.kind);
@@ -84,7 +84,7 @@ function resolutionBlocker(input: {
 
 function iterationBlockers(records: TraceRecord[]): BlockerView[] {
 	return records.flatMap((record) => {
-		if (record.type !== "trace_event" || !record.event.endsWith(".iteration")) {
+		if (record.type !== "trace_event" || !record.loop) {
 			return [];
 		}
 		const exit = objectRecord(record.data?.exit);

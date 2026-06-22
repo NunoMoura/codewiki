@@ -9,7 +9,7 @@ export type {
 	CreateLoopIterationEventInput,
 	CreateLoopTailCheckpointInput,
 } from "../traces/events.ts";
-export * from "../traces/orchestrator.ts";
+export * from "../runtime/trace-writer.ts";
 export * from "../traces/project.ts";
 export * from "../traces/queries.ts";
 export * from "../traces/refs.ts";

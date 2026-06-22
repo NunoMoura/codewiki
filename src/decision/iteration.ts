@@ -13,6 +13,7 @@ import type {
 import { evaluateDecisionExit, type DecisionExitResult } from "./exit.ts";
 import { approvedDecisionRows, createDecisionTable } from "./table.ts";
 import type {
+	ActiveTraceGoal,
 	CurrentStatePacket,
 	DecisionOutput,
 	DecisionRow,
@@ -27,6 +28,7 @@ export interface DecisionIterationInput {
 	tableInput?: DecisionTableInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
+	activeTraceGoals?: ActiveTraceGoal[];
 	requirementIds?: string[];
 	parentId?: string | null;
 	startSequence?: number;
@@ -62,6 +64,7 @@ export function runDecisionIteration(
 	const exit = evaluateDecisionExit(table, {
 		currentStatePacket: output.currentStatePacket,
 		knowledgeDelta: output.knowledgeDelta,
+		activeTraceGoals: input.activeTraceGoals,
 	});
 	const draftTraceEvents: TraceEvent[] = [];
 	const traceEvents = decisionTraceEvents({
@@ -220,6 +223,8 @@ function decisionRowData(row: DecisionRow): Record<string, unknown> {
 		userImpact: row.userImpact,
 		maintainerImpact: row.maintainerImpact,
 		effort: row.effort,
+		workScale: row.workScale,
+		planningDepth: row.planningDepth,
 		affectedLayers: row.affectedLayers,
 		risk: row.risk,
 		approvalAuthority: row.approvalAuthority,

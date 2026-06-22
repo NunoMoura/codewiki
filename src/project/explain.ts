@@ -1,7 +1,8 @@
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
-import { pathMatchesPattern } from "../knowledge/file-structure-map.ts";
 import {
+	parseSourceMapYaml,
+	pathMatchesPattern,
 	sourceMapComponentById,
 	sourceMapOwnerForPath,
 	type SourceMapComponent,
@@ -11,7 +12,7 @@ import { foldProjectTraceRecords } from "../traces/project.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import { buildQualityView } from "../views/quality.ts";
 import type { QualityIterationSummary } from "../views/types.ts";
-import { readProjectSourceMap, readProjectTraceRecords } from "./state-file.ts";
+import { readProjectTraceRecords } from "./state-file.ts";
 
 export type ProjectExplainKind =
 	| "project"
@@ -64,6 +65,24 @@ export interface ProjectExplainView {
 interface BuildProjectExplainInput {
 	repoRoot: string;
 	target?: string;
+}
+
+async function readProjectSourceMap(
+	repoRoot: string,
+): Promise<SourceMapContract | undefined> {
+	const sourceMapPath = join(
+		repoRoot,
+		".codewiki",
+		"kb",
+		"system",
+		"source-map.yaml",
+	);
+	try {
+		return parseSourceMapYaml(await readFile(sourceMapPath, "utf8"));
+	} catch (error) {
+		if (isNotFound(error)) return undefined;
+		throw error;
+	}
 }
 
 export async function buildProjectExplainView(
@@ -137,7 +156,7 @@ async function projectExplain(
 			{
 				title: "User experience",
 				items: [
-					"Primary host UX is Pi-owned /wiki commands and wiki_* tools.",
+					"Primary host UX is Pi-owned /wiki-* commands and wiki_* tools.",
 					"Tool rendering should expose semantic progress without adding model-token cost.",
 				],
 			},
@@ -337,7 +356,7 @@ function decisionRowRefsForPath(
 	target: string,
 	owner: SourceMapComponent | undefined,
 ): string[] {
-	if (event.event !== "decision.iteration") return [];
+	if (event.loop !== "decision") return [];
 	const output = objectRecord(event.data?.output);
 	return [
 		...objectList(output.approvedRows),
@@ -353,7 +372,7 @@ function planningWorkRefsForPath(
 	target: string,
 	owner: SourceMapComponent | undefined,
 ): string[] {
-	if (event.event !== "planning.iteration") return [];
+	if (event.loop !== "planning") return [];
 	return objectList(objectRecord(event.data?.output).workItems)
 		.filter((item) => planningWorkTouchesPath(item, target, owner))
 		.map((item) => `trace:${event.id}#work:${text(item.id) || "unknown"}`);
@@ -364,7 +383,7 @@ function implementationChangeRefsForPath(
 	target: string,
 	owner: SourceMapComponent | undefined,
 ): string[] {
-	if (event.event !== "implementation.iteration") return [];
+	if (event.loop !== "implementation") return [];
 	return objectList(objectRecord(event.data?.output).changes)
 		.filter((change) => implementationChangeTouchesPath(change, target, owner))
 		.map(

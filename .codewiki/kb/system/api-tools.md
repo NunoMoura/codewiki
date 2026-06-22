@@ -1,6 +1,6 @@
 # API Tool Surface
 
-CodeWiki should be operated through a small set of explicit tools backed by the same core package APIs. The tools are required for CodeWiki as a software-development OS: without them, an agent can read files, but it cannot safely execute semantic loop iterations, runtime coordination, and trace state updates.
+CodeWiki should be operated through a small set of explicit tools backed by the same core package APIs. The tools are required for CodeWiki as a software-development OS: without them, an agent can read files, but it cannot safely execute semantic loop iterations and trace state updates. Runtime coordination remains backend/host plumbing, not a model-facing mega-tool.
 
 The current rebuild keeps the core package harness-agnostic, but the intended agent-facing product surface is Pi-native tools and commands. The CLI remains a temporary development/test harness until the Pi adapter is stable.
 
@@ -21,9 +21,8 @@ Good pattern:
 
 ```json
 {
-  "view": "work_queue",
+  "view": "board",
   "traceId": "TRACE-...",
-  "format": "summary",
   "include": ["blockers", "refs"]
 }
 ```
@@ -45,105 +44,112 @@ The normal internal agent surface is small and phase-aligned.
 
 | Tool | Responsibility | Mutates truth? |
 | --- | --- | --- |
-| `wiki_state` | Read trace/source-map-backed state summaries, resume packets, work-plan, work-queue, blockers, conflicts, trace summaries, and source ownership refs. Views are output shape, not truth input. | No |
-| `wiki_decide` | Run decision-loop iterations from intent, current-state refs, KB propagation evidence, and exit conditions; append trace state. | Yes |
-| `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, and exit conditions; append trace state. | Yes |
-| `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; append trace state. | Yes |
-| `wiki_runtime` | Inspect queue state, plan dispatch, claim/release work, and coordinate worker dispatch without creating a fourth loop. | Yes, for claim/release events |
+| `wiki_state` | Read active trace-derived state summaries, board packets, quality, and blockers. Views are output shape, not truth input. | No |
+| `wiki_decide` | Run decision-loop iterations from intent, current-state refs, KB propagation evidence, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
+| `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, triggers, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
+| `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. | Yes |
 | `wiki_config` | Read and update CodeWiki configuration for automation, agency, approval, budgets, worktree isolation, retention, skills, and host integration. | Yes |
 
 There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
 
+## Backend support contract
+
+| Consumer | Surface | Backend support | Non-goal |
+| --- | --- | --- | --- |
+| Internal agent | `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, `wiki_config` | Trace-derived read model; checked semantic loop preview/append; guarded archive/config mutation. | Runtime mega-tool, split loop output/evaluation tools, or source-map explain inside `wiki_state`. |
+| Host/runtime | Package APIs such as `runWikiRuntime()`, host lifecycle helpers, worker-start helpers, handoff manifest helpers. | Work-unit claim selection, heartbeat-cycle Run starts, lease expiry, worker session transport, release events, append-safe coordination writes. | Semantic approval, Planning-owned work invention, or treating worker output as proof before implementation validation. |
+| User/Pi commands | `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Compact observability, active trace cards, source-map/path explanation, effective config, setup readiness. | Grouped namespace commands, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
+
 The core reduced-tool facade shape now exists for the current tool set:
 
-- `buildWikiState()` folds traces and source-map inputs into view-shaped state projections.
-- `runWikiDecide()` runs decision output and exit conditions, then previews or appends the checked decision iteration batch.
-- `runWikiPlan()` runs planning output and exit conditions, then previews or appends the checked planning iteration batch.
-- `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch.
-- `runWikiRuntime()` plans dispatch from the work queue, reports runtime policy blockers, and optionally appends runtime claim events when automation policy and append safety checks allow it.
-- `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
+- `buildWikiState()` derives view-shaped state projections from active trace records only.
+- `runWikiDecide()` runs decision output and exit conditions, then previews or appends the checked decision iteration batch through the runtime-owned trace append boundary.
+- `runWikiPlan()` runs planning output and exit conditions, then previews or appends the checked planning iteration batch through the runtime-owned trace append boundary.
+- `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch through the runtime-owned trace append boundary.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
 - `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
 
-Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The Pi adapter registers `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_runtime`, and `wiki_archive` over the same root facade surface. Runtime append reads project config when a CodeWiki root is discovered; default `manual` automation permits preview but blocks claim append. The CLI adapter is only a transitional development harness and should not be the normal agent path.
+The runtime backend remains available to host code, not as a normal agent tool:
+
+- `runWikiRuntime()` selects work-unit claims from the work queue, reports runtime policy blockers, can include heartbeat-cycle trigger/run planning and lease expiry, and optionally appends runtime claim events, lease-expiry events, or run trace heads when automation policy and append safety checks allow it.
+- Runtime lifecycle helpers plan main-host and trace-host coordination from derived views and can create trace-owned host observed/block/stop events. They are helpers, not a fourth semantic loop.
+- `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
+
+Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The Pi adapter registers the model-facing `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive` tools over the root facade surface. Host runners call runtime backend APIs for coordination writes. The CLI adapter is only a transitional development harness and should not be the normal agent path.
 
 ## `wiki_state` views
 
-`wiki_state` is the primary read surface. There is no separate status tool; summary output is one `wiki_state` view shape. Core state reads fold trace records and source-map inputs directly; stored `.codewiki/views/**` files are optional caches or render artifacts, never state truth.
+`wiki_state` is the primary trace read surface. Summary and focused views come from one progressive read model. Views own derived calculations over active trace records only. Stored `.codewiki/views/**` files are optional caches or render artifacts, never state truth. Source-map ownership is still canonical, but it is exposed through KB/source-map validation and `/wiki-explain`, not `wiki_state`. Project-backed `wiki_state` also returns append handles for active trace files so agents can move from read context to guarded semantic append without guessing byte offsets or next sequence numbers.
 
-Initial `view` values:
+Supported `view` values stay intentionally small:
 
 | View | Purpose |
 | --- | --- |
-| `summary` | Default state summary: latest trace health, active loop, latest exit status, blockers, and next safe action. Currently backed by the legacy `status` projection during the rebuild. |
-| `resume` | Compact continuation packet with durable refs, current loop, and recovery rationale. |
-| `work_plan` | Per-trace planning detail: work units, acceptance, dependencies, path scopes, and implementation refs. |
-| `work_queue` | Cross-trace scheduling projection: backlog, waiting, ready, claimed, blocked, and done. |
+| `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
+| `board` | Card-ready work context: per-trace work plan when selected, work queue, runtime-board projection, next action, and append handles for active traces. |
 | `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
-| `trace` | Trace lifecycle summary from decision through implementation and content proof. |
-| `blockers` | Current blocked/route-back/continue exit conditions and remediation refs. |
-| `conflicts` | Path or dependency conflicts that affect scheduling. |
-| `kb` | KB refs and selected source-of-truth docs relevant to the query. |
-| `config` | Effective CodeWiki configuration and host capabilities. |
+| `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
+| `all` | Debug/maintenance payload containing all derived projections. |
+
+Every full project-backed state payload includes:
+
+- `next`: compact safe-action hint (`decide`, `plan`, `implement`, `archive`, or `wait`) with target tool when applicable;
+- `append.byTrace[traceId].expectedBytes`: current hot open trace file byte length;
+- `append.byTrace[traceId].nextSequence`: next trace event sequence for guarded semantic appends.
+
+Closed traces are terminal, so they appear in trace-board/history projections when still hot but are omitted from `append.byTrace`.
 
 Useful selectors:
 
 - `traceId`
-- `workUnitId`
-- `loop`
-- `ref`
-- `include`
-- `format`: `summary`, `json`, or `refs`
-- `limit`
+- `generatedAt` for deterministic tests
 
-Large results should return omitted-count metadata and refs for expansion instead of dumping full state.
+Large future results should return omitted-count metadata and refs for expansion instead of growing the model-facing tool list.
 
 ## User command surface
 
-Slash commands are host UX, not workflow semantics. Use `/wiki` as the short user-facing command namespace because it matches the `wiki_*` tools and minimizes repeated typing.
+Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` commands so Pi can show and trigger each supported action as its own slash command. The older grouped namespace command is deprecated and should not be advertised.
 
 | Command | Backend action |
 | --- | --- |
-| `/wiki state` | Compact state summary from `wiki_state`; flags can request board, quality, blockers, detail, or JSON. |
-| `/wiki resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
-| `/wiki explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
-| `/wiki bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. |
-| `/wiki config` | Effective config summary; writes require explicit user confirmation. |
+| `/wiki-state` | Compact state summary from `wiki_state`; flags can request board, quality, blockers, detail, or JSON. |
+| `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
+| `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
+| `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
+| `/wiki-config` | Effective config summary; writes require explicit user confirmation. |
 
-Users may ask for decision, planning, implementation, runtime, or archive work in chat. The agent uses the internal tools to execute those loop actions.
+Users may ask for decisions, planning, implementation, automation, or archive work in chat. The agent uses semantic loop tools for truth changes; the host uses runtime backend APIs for coordination.
 
-## Tool rendering contract
+## Rendering contract
 
-Pi tool rendering is a product UX surface. It should show what the agent is doing and how that affects the project without making the user repeatedly call `/wiki state`. Renderers are UI-only and derive from tool params/results; they must not become hidden state.
+Pi command rendering and future trace/view rendering are product UX surfaces. Wiki tools execute loops and return compact agent handles; they should not register rich TUI renderers for calls or results.
 
-Default collapsed render should show user value, not internal trace mechanics. Expanded render may show engineering detail. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
+Post-bootstrap user-facing observability is append-driven:
 
-All loop tool renders use table-first layouts with a separator line between the header row and content:
+```text
+wiki_* append -> trace record -> derived view -> renderer
+```
 
-| Loop/tool | Primary render |
-| --- | --- |
-| `wiki_decide` | Decision alignment table: current state, desired state, quality verdict derived from decision quality standards. Agent judgement explains pass/block/uncertainty, blindspots, and proposed solutions. |
-| `wiki_plan` / `wiki_runtime` | Board table: To do, Doing, Done, derived from work-plan and runtime queue/claim projections. This is a rendered board, not roadmap truth. |
-| `wiki_implement` | Verification matrix: work, code, tests, publish evidence. `Publish` means package/pack/merge/release evidence where relevant, not automatic commits. |
+Preview mode is agent-private validation. It can fail fast and guide the agent, but it should not update user-facing progress UI because it is not proof of durable work.
 
-Each loop render ends with a quality footer using the loop-local quality standards as visible exit-condition status: `✓` met, `⚠` unmet/uncertain, and `✗` blocked. The agent verdict is derived from these standards rather than an independent vibe check.
+`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-state`, `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. Loop progress, quality, blockers, workers, host lifecycle events, and completion receipts should render from appended trace records and generated views, not from raw tool payloads.
+
+Renderers are UI-only and must not become hidden state. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
 
 ## Skills
 
-Skills are as important as tools. Tools execute; skills tell agents when and how to use them.
+Skills are semantic loop playbooks, not a second tool surface. The system prompt gives the small CodeWiki OS model; skills tell agents how to run the three loops when needed.
 
-Project-local skills under `.agents/skills/codewiki-*` are small, operational, and aligned to the new model:
+Project-local skills under `.agents/skills/codewiki-*` are intentionally limited to:
 
-- `codewiki-state`: inspect status/resume/work queue before acting;
-- `codewiki-decision`: run decision loop cycles, output, and exit conditions;
-- `codewiki-planning`: run planning loop cycles, output, and exit conditions;
-- `codewiki-implementation`: run implementation loop cycles, output, and exit conditions;
-- `codewiki-runtime`: claim/release/dispatch worker work safely;
-- `codewiki-archive`: close, retain, hydrate, and restore traces/knowledge;
-- `codewiki-config`: read automation and host policy.
+- `codewiki-decide`: run decision loop cycles, output, and exit conditions;
+- `codewiki-plan`: run planning loop cycles, output, and exit conditions;
+- `codewiki-implement`: run implementation loop cycles, output, and exit conditions.
 
-Repo-local dogfooding is enabled, so these skills may point agents at Pi-owned `wiki_*` tools for read-only state and explanation work. Mutation workflows must still require explicit expected byte/sequence checks and must not reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
+There is no `codewiki-state`, `codewiki-config`, `codewiki-archive`, or `codewiki-runtime` skill. State, config, and archive are tools/APIs that the agent may call when needed, but they do not need separate playbooks. Runtime is backend/host coordination only and must not become an agent skill or fourth loop.
+
+Mutation workflows must still require explicit expected byte/sequence checks and must not reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
 
 ## Distribution
 
@@ -154,7 +160,7 @@ Recommended packaging path:
 1. `codewiki` package exports core APIs and types.
 2. Pi extension adapter registers the normal CodeWiki tools and commands once the core surface stabilizes.
 3. CLI source remains optional development/CI support only if deliberately retained; the package should not expose a `codewiki` binary while Pi is the intended product surface.
-4. MCP server adapter can expose the same seven tools to non-Pi agents later.
+4. MCP server adapter can expose the same six model-facing tools to non-Pi agents later, with runtime coordination remaining a host/backend API.
 
 If Pi SDK dependencies become heavy or version-sensitive, split adapters into optional packages later. Until then, avoid hard SDK imports from core source and keep adapter dependencies optional or entrypoint-isolated.
 
@@ -178,4 +184,4 @@ Temporary cleanup is runtime housekeeping. Knowledge/trace archival is a product
 - [Traces](traces.md)
 - [Runtime](runtime.md)
 - [Extension](extension.md)
-- [File Structure](file-structure.md)
+- [Source Map](source-map.md)

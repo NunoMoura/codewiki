@@ -58,11 +58,15 @@ try {
 		PI_CODING_AGENT_SESSION_DIR: join(root, "sessions"),
 		PI_OFFLINE: "1",
 	};
-	run("pi", ["install", "-l", packageRoot], { cwd: projectRoot, env });
+	run("pi", ["install", "-l", packageRoot, "--approve"], {
+		cwd: projectRoot,
+		env,
+	});
 
 	child = spawn(
 		"pi",
 		[
+			"--approve",
 			"--mode",
 			"rpc",
 			"--no-session",
@@ -105,22 +109,28 @@ try {
 		stderrRef,
 	);
 	assert.equal(commands.success, true);
+	for (const name of ["wiki-state", "wiki-bootstrap"]) {
+		assert.equal(
+			commands.data.commands.some((command) => command.name === name),
+			true,
+		);
+	}
 	assert.equal(
 		commands.data.commands.some((command) => command.name === "wiki"),
-		true,
+		false,
 	);
 
 	send({
 		id: "bootstrap",
 		type: "prompt",
-		message: "/wiki bootstrap --allow-non-project-install",
+		message: "/wiki-bootstrap --allow-non-project-install",
 	});
 	const bootstrapNotice = await waitFor(
 		messages,
 		(message) =>
 			message.type === "extension_ui_request" &&
 			message.method === "notify" &&
-			message.message.includes("CodeWiki Bootstrap"),
+			message.message.includes("✓ CodeWiki ready"),
 		stderrRef,
 	);
 	await waitFor(
@@ -134,7 +144,7 @@ try {
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "traces")), true);
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "views")), true);
 
-	send({ id: "state", type: "prompt", message: "/wiki state --board" });
+	send({ id: "state", type: "prompt", message: "/wiki-state --board" });
 	const stateNotice = await waitFor(
 		messages,
 		(message) =>
@@ -159,7 +169,7 @@ try {
 		JSON.stringify(
 			{
 				ok: true,
-				command: "/wiki",
+				command: "/wiki-*",
 				bootstrapRendered: bootstrapNotice.message.split("\n").slice(0, 4),
 				stateRendered: stateNotice.message.split("\n").slice(0, 4),
 			},

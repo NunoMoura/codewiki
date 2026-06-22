@@ -83,18 +83,20 @@ async function expectedBytes(tracePath) {
 function decisionQuality(overrides = {}) {
 	return {
 		userImpact:
-			"External package users get safer worker-failure behavior before unattended dogfooding is enabled.",
+			"External package users get safer worker-failure behavior before unattended automation is enabled.",
 		maintainerImpact:
 			"Maintainers can verify installed package failure handling without touching repo-local state.",
 		effort: "medium",
+		workScale: "medium",
+		planningDepth: "standard",
 		risk: "medium",
 		recommendation: "approve",
 		recommendationRationale:
-			"Failure-path package smoke is the next safe readiness gate after happy-path dogfood.",
+			"Failure-path package smoke is the next safe readiness gate after happy-path lifecycle.",
 		agentAssessment: {
 			stance: "aligned",
 			userAlignment:
-				"Matches the requested next step to harden dogfooding before broader trust.",
+				"Matches the requested next step to harden automation before broader trust.",
 			projectBenefit:
 				"Proves terminal worker states stay controlled after package installation.",
 			rationale:
@@ -118,8 +120,7 @@ function planningQuality(overrides = {}) {
 			workUnitSize: "right_sized",
 			rightSizing:
 				"One smoke covers terminal failure modes without enabling unattended automation.",
-			independence:
-				"Each scenario owns a fresh temp project and trace state.",
+			independence: "Each scenario owns a fresh temp project and trace state.",
 			implementationReadiness:
 				"Failure modes, expected routes, and verification command are explicit.",
 			uncertainties: [],
@@ -153,7 +154,8 @@ function implementationQuality(overrides = {}) {
 			security:
 				"The smoke uses isolated local package installs and explicit guarded mutation.",
 			privacy: "No private data handling changed.",
-			accessibility: "No user interface behavior changed beyond validation coverage.",
+			accessibility:
+				"No user interface behavior changed beyond validation coverage.",
 			dependencyRisk: "No dependency surface changed.",
 			rationale: "The change is validation-only and project-local.",
 		},
@@ -164,7 +166,7 @@ function implementationQuality(overrides = {}) {
 function decisionTableInput(traceId, createdAt) {
 	return {
 		id: `DT-${traceId}`,
-		summary: "Prepare external package failure-path runtime dogfood.",
+		summary: "Prepare external package failure-path runtime lifecycle.",
 		createdAt,
 		updatedAt: createdAt,
 		sourceRefs: ["README.md", "src/external-feature.js"],
@@ -173,11 +175,11 @@ function decisionTableInput(traceId, createdAt) {
 				id: `DTR-${traceId}`,
 				decisionKind: "harden",
 				currentState:
-					"Happy-path package dogfood exists, but installed-package terminal failure behavior also needs proof.",
+					"Happy-path package lifecycle exists, but installed-package terminal failure behavior also needs proof.",
 				desiredState:
 					"Installed package runtime failures produce deterministic release and remediation behavior in fresh projects.",
 				rationale:
-					"Unattended dogfooding stays gated until terminal worker and worktree outcomes are proven safe.",
+					"Unattended automation stays gated until terminal worker and worktree outcomes are proven safe.",
 				...decisionQuality({
 					safetyBoundary:
 						"Failed, blocked, malformed, and worktree-failed workers must not become implementation success evidence.",
@@ -203,7 +205,8 @@ function decisionTableInput(traceId, createdAt) {
 
 function workItemInput(decisionRef, workUnitId, options = {}) {
 	const pathScope = options.pathScope ?? "src/**";
-	const verification = options.verification ?? "tests/external-feature.test.mjs";
+	const verification =
+		options.verification ?? "tests/external-feature.test.mjs";
 	return {
 		id: workUnitId,
 		title: "Exercise installed package runtime failure handling",
@@ -244,21 +247,25 @@ function implementationChange(planningRef, checkCommand, options = {}) {
 				summary: "External fixture test passed.",
 			},
 		],
-		acceptanceEvidenceItems: ["AC-001", "AC-002", "AC-003", "AC-004", "AC-005"].map(
-			(criterionId) => ({
-				criterionId,
-				summary:
-					"Completed worker evidence stayed scoped to existing source and test paths.",
-				evidenceRefs: [testPath],
-			}),
-		),
+		acceptanceEvidenceItems: [
+			"AC-001",
+			"AC-002",
+			"AC-003",
+			"AC-004",
+			"AC-005",
+		].map((criterionId) => ({
+			criterionId,
+			summary:
+				"Completed worker evidence stayed scoped to existing source and test paths.",
+			evidenceRefs: [testPath],
+		})),
 		...implementationQuality(),
 	};
 }
 
 function approvedDecisionRef(decided) {
 	const iteration = decided.loopResult.traceEvents.find(
-		(event) => event.event === "decision.iteration",
+		(event) => event.loop === "decision",
 	);
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
@@ -268,7 +275,7 @@ function approvedDecisionRef(decided) {
 
 function planningWorkRef(planned) {
 	const iteration = planned.loopResult.traceEvents.find(
-		(event) => event.event === "planning.iteration",
+		(event) => event.loop === "planning",
 	);
 	const work = iteration?.data?.output?.workItems?.[0];
 	assert.ok(iteration);
@@ -334,7 +341,9 @@ function workerReportForCompletion(
 		checks_run: [checkCommand],
 		working_tree_digest:
 			"sha256:3333333333333333333333333333333333333333333333333333333333333333",
-		changes: [implementationChange(planningRef, checkCommand, { codePath, testPath })],
+		changes: [
+			implementationChange(planningRef, checkCommand, { codePath, testPath }),
+		],
 	});
 }
 
@@ -348,11 +357,16 @@ async function installPackage(root) {
 	assert.match(tarball, /^codewiki-.*\.tgz$/);
 	run("npm", ["install", "--prefix", installRoot, join(packRoot, tarball)]);
 	const packageRoot = join(installRoot, "node_modules", "codewiki");
-	assert.equal(existsSync(join(packageRoot, "dist", "pi", "extension.js")), true);
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "pi", "extension.js")),
+		true,
+	);
 	return {
 		packageRoot,
 		codewikiExtension: (
-			await import(pathToFileURL(join(packageRoot, "dist/pi/extension.js")).href)
+			await import(
+				pathToFileURL(join(packageRoot, "dist/pi/extension.js")).href
+			)
 		).default,
 		createPiProcessSessionFactory: (
 			await import(
@@ -378,25 +392,28 @@ async function newProject(root, installed, name) {
 	);
 	writeFileSync(
 		join(projectRoot, "README.md"),
-		`# ${name}\n\nExternal failure dogfood fixture.\n`,
+		`# ${name}\n\nExternal failure lifecycle fixture.\n`,
 	);
 	writeFileSync(
 		join(projectRoot, "src", "external-feature.js"),
-		"export const externalDogfoodFeature = 'ready';\n",
+		"export const externalLifecycleFeature = 'ready';\n",
 	);
 	writeFileSync(
 		join(projectRoot, "tests", "external-feature.test.mjs"),
-		`import assert from "node:assert/strict";\nimport { externalDogfoodFeature } from "../src/external-feature.js";\nassert.equal(externalDogfoodFeature, "ready");\n`,
+		`import assert from "node:assert/strict";\nimport { externalLifecycleFeature } from "../src/external-feature.js";\nassert.equal(externalLifecycleFeature, "ready");\n`,
 	);
 	const pi = mockPi();
 	installed.codewikiExtension(pi.api);
-	const commands = { wiki: commandByName(pi, "wiki") };
+	const commands = {
+		bootstrap: commandByName(pi, "wiki-bootstrap"),
+		state: commandByName(pi, "wiki-state"),
+	};
 	const tools = {
 		decide: toolByName(pi, "wiki_decide"),
 		plan: toolByName(pi, "wiki_plan"),
 	};
 	const ctx = { cwd: projectRoot, ui: { notify() {} } };
-	await commands.wiki.handler("bootstrap --allow-non-project-install --json", ctx);
+	await commands.bootstrap.handler("--allow-non-project-install --json", ctx);
 	return { projectRoot, ctx, commands, tools };
 }
 
@@ -405,23 +422,32 @@ function writeExternalFeature(projectRoot, suffix) {
 	const testPath = `tests/external-feature-${suffix}.test.mjs`;
 	writeFileSync(
 		join(projectRoot, codePath),
-		`export const externalDogfoodFeature${suffix.toUpperCase()} = "ready-${suffix}";\n`,
+		`export const externalLifecycleFeature${suffix.toUpperCase()} = "ready-${suffix}";\n`,
 	);
 	writeFileSync(
 		join(projectRoot, testPath),
-		`import assert from "node:assert/strict";\nimport { externalDogfoodFeature${suffix.toUpperCase()} } from "../src/external-feature-${suffix}.js";\nassert.equal(externalDogfoodFeature${suffix.toUpperCase()}, "ready-${suffix}");\n`,
+		`import assert from "node:assert/strict";\nimport { externalLifecycleFeature${suffix.toUpperCase()} } from "../src/external-feature-${suffix}.js";\nassert.equal(externalLifecycleFeature${suffix.toUpperCase()}, "ready-${suffix}");\n`,
 	);
 	return { codePath, testPath };
 }
 
 async function createReadyTrace(project, traceId, workUnitId, options = {}) {
-	const tracePath = join(project.projectRoot, ".codewiki", "traces", `${traceId}.jsonl`);
+	const tracePath = join(
+		project.projectRoot,
+		".codewiki",
+		"traces",
+		`${traceId}.jsonl`,
+	);
 	await mkdir(join(project.projectRoot, ".codewiki", "traces"), {
 		recursive: true,
 	});
 	await writeFile(
 		tracePath,
-		traceHead(traceId, `${traceId} failure scenario`, "2026-06-18T11:00:00.000Z"),
+		traceHead(
+			traceId,
+			`${traceId} failure scenario`,
+			"2026-06-18T11:00:00.000Z",
+		),
 	);
 	const decided = assertToolResult(
 		await executeTool(
@@ -471,8 +497,8 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 
 async function board(project, traceId) {
 	return (
-		await project.commands.wiki.handler(
-			traceId ? `state --board --trace ${traceId} --json` : "state --board --json",
+		await project.commands.state.handler(
+			traceId ? `--board --trace ${traceId} --json` : "--board --json",
 			project.ctx,
 		)
 	).data.workQueue;
@@ -506,7 +532,11 @@ function mergeQueues(...queues) {
 
 async function runMissingOutput(installed, root) {
 	const project = await newProject(root, installed, "missing-output");
-	const ready = await createReadyTrace(project, "TRACE-external-missing-output", "WU-missing-output");
+	const ready = await createReadyTrace(
+		project,
+		"TRACE-external-missing-output",
+		"WU-missing-output",
+	);
 	const created = [];
 	const result = await installed.runRuntimeHostOnce({
 		runtime: {
@@ -516,7 +546,9 @@ async function runMissingOutput(installed, root) {
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [ready.traceId]: 3 },
-			expectedBytesByTrace: { [ready.traceId]: await expectedBytes(ready.tracePath) },
+			expectedBytesByTrace: {
+				[ready.traceId]: await expectedBytes(ready.tracePath),
+			},
 		},
 		implementationInputs: [],
 		sessionFactory: noOutputSessionFactory(created),
@@ -538,7 +570,11 @@ async function runMissingOutput(installed, root) {
 
 async function runMalformedOutput(installed, root) {
 	const project = await newProject(root, installed, "malformed-output");
-	const ready = await createReadyTrace(project, "TRACE-external-malformed-output", "WU-malformed-output");
+	const ready = await createReadyTrace(
+		project,
+		"TRACE-external-malformed-output",
+		"WU-malformed-output",
+	);
 	const result = await installed.runRuntimeHostOnce({
 		runtime: {
 			mode: "append",
@@ -547,7 +583,9 @@ async function runMalformedOutput(installed, root) {
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [ready.traceId]: 3 },
-			expectedBytesByTrace: { [ready.traceId]: await expectedBytes(ready.tracePath) },
+			expectedBytesByTrace: {
+				[ready.traceId]: await expectedBytes(ready.tracePath),
+			},
 		},
 		implementationInputs: [],
 		sessionFactory: installed.createPiProcessSessionFactory({
@@ -560,12 +598,18 @@ async function runMalformedOutput(installed, root) {
 		releaseIdPrefix: "malformed-output-release",
 	});
 	assert.equal(result.workerResults[0].status, "failed");
-	assert.match(result.workerResults[0].message, /missing a codewiki-worker-report/);
+	assert.match(
+		result.workerResults[0].message,
+		/missing a codewiki-worker-report/,
+	);
 	assert.equal(result.releaseCheck.reason, "worker_failed");
 	assert.equal(result.remediation.route, "retry_worker");
 	assert.equal(
 		result.workers[0].outputFile.startsWith(
-			join(project.projectRoot, ".codewiki/runtime/tmp/TRACE-external-malformed-output/runtime/pi-workers"),
+			join(
+				project.projectRoot,
+				".codewiki/runtime/tmp/TRACE-external-malformed-output/runtime/pi-workers",
+			),
 		),
 		true,
 	);
@@ -574,7 +618,11 @@ async function runMalformedOutput(installed, root) {
 
 async function runBlockedOutput(installed, root) {
 	const project = await newProject(root, installed, "blocked-output");
-	const ready = await createReadyTrace(project, "TRACE-external-blocked-output", "WU-blocked-output");
+	const ready = await createReadyTrace(
+		project,
+		"TRACE-external-blocked-output",
+		"WU-blocked-output",
+	);
 	const report = fencedWorkerReport({
 		status: "blocked",
 		message: "Need clarified planning scope.",
@@ -588,7 +636,9 @@ async function runBlockedOutput(installed, root) {
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [ready.traceId]: 3 },
-			expectedBytesByTrace: { [ready.traceId]: await expectedBytes(ready.tracePath) },
+			expectedBytesByTrace: {
+				[ready.traceId]: await expectedBytes(ready.tracePath),
+			},
 		},
 		implementationInputs: [],
 		sessionFactory: installed.createPiProcessSessionFactory({
@@ -612,14 +662,24 @@ async function runMixedOutputs(installed, root) {
 	const project = await newProject(root, installed, "mixed-output");
 	const firstPaths = writeExternalFeature(project.projectRoot, "a");
 	const secondPaths = writeExternalFeature(project.projectRoot, "b");
-	const first = await createReadyTrace(project, "TRACE-external-mixed-a", "WU-mixed-a", {
-		pathScope: firstPaths.codePath,
-		verification: firstPaths.testPath,
-	});
-	const second = await createReadyTrace(project, "TRACE-external-mixed-b", "WU-mixed-b", {
-		pathScope: secondPaths.codePath,
-		verification: secondPaths.testPath,
-	});
+	const first = await createReadyTrace(
+		project,
+		"TRACE-external-mixed-a",
+		"WU-mixed-a",
+		{
+			pathScope: firstPaths.codePath,
+			verification: firstPaths.testPath,
+		},
+	);
+	const second = await createReadyTrace(
+		project,
+		"TRACE-external-mixed-b",
+		"WU-mixed-b",
+		{
+			pathScope: secondPaths.codePath,
+			verification: secondPaths.testPath,
+		},
+	);
 	const result = await installed.runRuntimeHostOnce({
 		runtime: {
 			mode: "append",
@@ -651,7 +711,11 @@ async function runMixedOutputs(installed, root) {
 		],
 		sessionFactory: outputFileSessionFactory(project.projectRoot, (input) =>
 			input.workUnitId === first.workUnitId
-				? workerReportForCompletion(first.planningRef, "First worker finished.", firstPaths)
+				? workerReportForCompletion(
+						first.planningRef,
+						"First worker finished.",
+						firstPaths,
+					)
 				: fencedWorkerReport({
 						status: "failed",
 						message: "Second worker crashed.",
@@ -693,7 +757,11 @@ async function runMixedOutputs(installed, root) {
 
 async function runWorktreePrepareFailure(installed, root) {
 	const project = await newProject(root, installed, "worktree-prepare");
-	const ready = await createReadyTrace(project, "TRACE-external-worktree-prepare", "WU-worktree-prepare");
+	const ready = await createReadyTrace(
+		project,
+		"TRACE-external-worktree-prepare",
+		"WU-worktree-prepare",
+	);
 	const result = await installed.runRuntimeHostOnce({
 		runtime: {
 			mode: "append",
@@ -707,7 +775,9 @@ async function runWorktreePrepareFailure(installed, root) {
 			},
 			queue: await board(project, ready.traceId),
 			nextSequenceByTrace: { [ready.traceId]: 3 },
-			expectedBytesByTrace: { [ready.traceId]: await expectedBytes(ready.tracePath) },
+			expectedBytesByTrace: {
+				[ready.traceId]: await expectedBytes(ready.tracePath),
+			},
 		},
 		implementationInputs: [],
 		sessionFactory: failingSessionFactory("worker should not start"),
@@ -726,7 +796,11 @@ async function runWorktreePrepareFailure(installed, root) {
 
 async function runWorktreeCleanupFailure(installed, root) {
 	const project = await newProject(root, installed, "worktree-cleanup");
-	const ready = await createReadyTrace(project, "TRACE-external-worktree-cleanup", "WU-worktree-cleanup");
+	const ready = await createReadyTrace(
+		project,
+		"TRACE-external-worktree-cleanup",
+		"WU-worktree-cleanup",
+	);
 	const result = await installed.runRuntimeHostOnce({
 		runtime: {
 			mode: "append",
@@ -742,7 +816,9 @@ async function runWorktreeCleanupFailure(installed, root) {
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [ready.traceId]: 3 },
-			expectedBytesByTrace: { [ready.traceId]: await expectedBytes(ready.tracePath) },
+			expectedBytesByTrace: {
+				[ready.traceId]: await expectedBytes(ready.tracePath),
+			},
 		},
 		implementationInputs: [
 			{

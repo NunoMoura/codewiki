@@ -88,9 +88,9 @@ describe("runtime handoff manifest", () => {
 			"worktree.cleanup",
 		]);
 		assert.equal(manifest.runtime.appendAllowed, true);
-		assert.equal(manifest.runtime.dispatchCount, 2);
+		assert.equal(manifest.runtime.claimSelectionCount, 2);
 		assert.equal(manifest.runtime.claimEventCount, 2);
-		assert.equal(manifest.claimEvents[0].event, "runtime.work.claimed");
+		assert.equal(manifest.claimEvents[0].event, "runtime.work_unit.claimed");
 		assert.equal(manifest.workers.length, 2);
 		assert.deepEqual(
 			manifest.workerStatuses.map((status) => [
@@ -171,8 +171,8 @@ describe("runtime handoff manifest", () => {
 			"validationRef",
 		]);
 		assert.equal(
-			manifest.expectedCompletion.example.changes[0]
-				.acceptanceEvidenceItems[0].criterionId,
+			manifest.expectedCompletion.example.changes[0].acceptanceEvidenceItems[0]
+				.criterionId,
 			"AC-001",
 		);
 		assert.equal(

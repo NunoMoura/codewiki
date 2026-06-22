@@ -73,7 +73,6 @@ async function stateCommand(
 		repoRoot,
 		traceId: one(flags.trace),
 		generatedAt: one(flags["generated-at"]),
-		sourcePaths: flags.source || [],
 	});
 	return jsonResult(snapshot);
 }
@@ -255,7 +254,7 @@ function helpText(): string {
 		"codewiki <command> [options]",
 		"",
 		"Commands:",
-		"  state   Print wiki_state JSON from .codewiki/traces and source-map.",
+		"  state   Print wiki_state JSON from active .codewiki/traces records.",
 		"  config     Resolve wiki_config JSON from the current CodeWiki project.",
 		"  bootstrap  Create target .codewiki scaffold in the current repository.",
 		"  decide     Run wiki_decide from --input <file|-> JSON.",
@@ -266,7 +265,6 @@ function helpText(): string {
 		"",
 		"State/bootstrap/config options:",
 		"  --trace <trace-id>     Select one trace for per-trace views.",
-		"  --source <path>        Include source ownership for a path. Repeatable.",
 		"  --generated-at <iso>   Generated timestamp for views.",
 		"  --project <name>       Bootstrap project name.",
 		"  --force                Bootstrap overwrites scaffold files.",

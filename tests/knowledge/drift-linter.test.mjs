@@ -11,7 +11,8 @@ describe("knowledge drift linter", () => {
 		const issues = lintKnowledgeDrift([
 			{
 				path: "README.md",
-				content: "Use /wiki state and trace_close with repo-local dogfooding.",
+				content:
+					"Use /wiki-state and trace_close with repo-local CodeWiki dogfooding disabled.",
 				scopes: ["product_documentation", "operating_guidance"],
 			},
 		]);
@@ -27,9 +28,14 @@ describe("knowledge drift linter", () => {
 				scopes: ["product_documentation", "operating_guidance"],
 			},
 			{
-				path: ".agents/skills/codewiki-state/SKILL.md",
+				path: ".codewiki/kb/system/api-tools.md",
+				content: "Run /wiki state for project state.",
+				scopes: ["product_documentation"],
+			},
+			{
+				path: ".agents/skills/codewiki-decide/SKILL.md",
 				content:
-					"Do this while the extension is disabled; hosts.cli is legacy.",
+					"Repo-local CodeWiki dogfooding is enabled; hosts.cli is legacy.",
 				scopes: ["operating_guidance"],
 			},
 		]);
@@ -41,9 +47,14 @@ describe("knowledge drift linter", () => {
 				["README.md", "transitional_cli_product_ux", "codewiki state"],
 				["README.md", "trace_close_event_name", "trace.close"],
 				[
-					".agents/skills/codewiki-state/SKILL.md",
-					"current_dogfood_guidance",
-					"while the extension is disabled",
+					".codewiki/kb/system/api-tools.md",
+					"grouped_wiki_namespace",
+					"/wiki state",
+				],
+				[
+					".agents/skills/codewiki-decide/SKILL.md",
+					"repo_local_dogfood_disabled",
+					"Repo-local CodeWiki dogfooding is enabled",
 				],
 			],
 		);
@@ -54,7 +65,7 @@ describe("knowledge drift linter", () => {
 			[
 				{
 					path: ".codewiki/kb/system/api.md",
-					content: "Use /wiki status.",
+					content: "Use /wiki-status.",
 					scopes: ["product_documentation"],
 				},
 			],
@@ -62,7 +73,7 @@ describe("knowledge drift linter", () => {
 		);
 
 		assert.deepEqual(formatKnowledgeDriftIssues(issues), [
-			'.codewiki/kb/system/api.md: public_state_command: Public UX must use state, not status. (matched "/wiki status")',
+			'.codewiki/kb/system/api.md: public_state_command: Public UX must use /wiki-state, not status. (matched "/wiki-status")',
 		]);
 	});
 });

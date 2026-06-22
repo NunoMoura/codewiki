@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, it } from "node:test";
+import { resolveCodewikiExtensionIdentity } from "../../src/pi/identity.ts";
 import {
 	assertProjectLocalMutationAllowed,
 	isProjectLocalCodewikiInstall,
@@ -19,13 +20,13 @@ describe("Pi project-local install guard", () => {
 	it("allows package code loaded from the current project's .pi tree", () => {
 		const projectRoot = "/repo/app";
 		const moduleUrl = fileUrl(
-			join(
-				projectRoot,
-				".pi/npm/node_modules/codewiki/dist/pi/extension.js",
-			),
+			join(projectRoot, ".pi/npm/node_modules/codewiki/dist/pi/extension.js"),
 		);
 
 		assert.equal(isProjectLocalCodewikiInstall(moduleUrl, projectRoot), true);
+		const identity = resolveCodewikiExtensionIdentity(moduleUrl, projectRoot);
+		assert.equal(identity.loadMode, "project-local package");
+		assert.equal(identity.sourceLabel, "project-local Pi package ✓");
 		assert.doesNotThrow(() =>
 			assertProjectLocalMutationAllowed({
 				toolName: "wiki_decide",
@@ -41,6 +42,10 @@ describe("Pi project-local install guard", () => {
 		const moduleUrl = fileUrl(join(projectRoot, "dist/pi/extension.js"));
 
 		assert.equal(isProjectLocalCodewikiInstall(moduleUrl, projectRoot), true);
+
+		const identity = resolveCodewikiExtensionIdentity(moduleUrl, projectRoot);
+		assert.equal(identity.loadMode, "local checkout");
+		assert.equal(identity.sourceLabel, "local checkout ✓");
 	});
 
 	it("rejects non-project package installs for mutation", () => {
@@ -54,6 +59,9 @@ describe("Pi project-local install guard", () => {
 			projectLocalInstallWarning(moduleUrl, projectRoot),
 			PROJECT_LOCAL_INSTALL_WARNING_MESSAGE,
 		);
+		const identity = resolveCodewikiExtensionIdentity(moduleUrl, projectRoot);
+		assert.equal(identity.loadMode, "non-project package");
+		assert.equal(identity.sourceLabel, "non-project package ⚠");
 		assert.throws(
 			() =>
 				assertProjectLocalMutationAllowed({

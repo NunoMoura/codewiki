@@ -107,8 +107,14 @@ async function multiTraceRuntimeFixture() {
 		join(root, "src", "feature-b.ts"),
 		"export const featureB = true;\n",
 	);
-	await writeFile(join(root, "tests", "feature-a.test.mjs"), "assert.ok(true);\n");
-	await writeFile(join(root, "tests", "feature-b.test.mjs"), "assert.ok(true);\n");
+	await writeFile(
+		join(root, "tests", "feature-a.test.mjs"),
+		"assert.ok(true);\n",
+	);
+	await writeFile(
+		join(root, "tests", "feature-b.test.mjs"),
+		"assert.ok(true);\n",
+	);
 	const firstTraceId = "TRACE-host-multi-a";
 	const secondTraceId = "TRACE-host-multi-b";
 	const firstPlanningEvents = planningEventsForHostOnce(firstTraceId, {
@@ -206,7 +212,7 @@ function planningEventsForHostOnce(traceId, options = {}) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
+		(event) => event.loop === "decision",
 	);
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
@@ -216,7 +222,7 @@ function approvedDecisionRef(events) {
 
 function planningWorkRef(events, workUnitId = "WU-host-once") {
 	const iteration = events.find(
-		(event) => event.event === "planning.iteration",
+		(event) => event.loop === "planning",
 	);
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
@@ -297,7 +303,7 @@ function fencedWorkerReport(report) {
 
 function completedWorkerOutput(fixture, worker) {
 	return {
-		dispatch: worker,
+		workerStart: worker,
 		output: {
 			status: "completed",
 			message: "Worker finished.",
@@ -311,7 +317,7 @@ function completedWorkerOutput(fixture, worker) {
 
 function terminalWorkerOutput(worker, status, message) {
 	return {
-		dispatch: worker,
+		workerStart: worker,
 		output: {
 			status,
 			message,
@@ -475,6 +481,10 @@ describe("runtime host worker session revive", () => {
 			"worker_session_detached",
 		);
 		assert.equal(revived.workerStatuses[1].remediation.route, "retry_worker");
+		assert.equal(
+			revived.workerStatuses[1].remediation.hostErrors[0].kind,
+			"session_lost",
+		);
 	});
 
 	it("marks all worker sessions detached when no resume adapter exists", async () => {
@@ -540,7 +550,7 @@ describe("runtime host one-shot execution", () => {
 					assert.equal(workers[0].status, "started");
 					return [
 						{
-							dispatch: workers[0],
+							workerStart: workers[0],
 							output: {
 								status: "completed",
 								message: "Worker finished.",
@@ -584,7 +594,7 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.releaseBatch.events.length, 1);
 			assert.equal(
 				result.releaseBatch.events[0].event,
-				"runtime.claim.released",
+				"runtime.work_unit.claim.released",
 			);
 			assert.equal(result.releaseBatch.events[0].sequence, 2);
 			assert.equal(
@@ -702,8 +712,14 @@ describe("runtime host one-shot execution", () => {
 				reason: "worker_failed",
 				blockers: [],
 			});
+			assert.equal(result.hostErrors[0].kind, "output_missing");
 			assert.equal(result.remediation.route, "retry_worker");
+			assert.equal(result.remediation.hostErrors[0].kind, "output_missing");
 			assert.equal(result.releaseBatch.events[0].data.reason, "worker_failed");
+			assert.equal(
+				result.releaseBatch.events[0].data.hostError.kind,
+				"output_missing",
+			);
 			assert.equal(result.releaseAppend.events.length, 1);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
@@ -742,7 +758,13 @@ describe("runtime host one-shot execution", () => {
 				"Worker completion output is missing a codewiki-worker-report block. not a worker report",
 			);
 			assert.equal(result.releaseCheck.reason, "worker_failed");
+			assert.equal(result.hostErrors[0].kind, "output_malformed");
 			assert.equal(result.remediation.route, "retry_worker");
+			assert.equal(result.remediation.hostErrors[0].kind, "output_malformed");
+			assert.equal(
+				result.releaseBatch.events[0].data.hostError.kind,
+				"output_malformed",
+			);
 			assert.equal(result.releaseAppend.events.length, 1);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
@@ -827,10 +849,7 @@ describe("runtime host one-shot execution", () => {
 						? fencedWorkerReport({
 								status: "completed",
 								message: "First worker finished.",
-								changed_files: [
-									"src/feature-a.ts",
-									"tests/feature-a.test.mjs",
-								],
+								changed_files: ["src/feature-a.ts", "tests/feature-a.test.mjs"],
 								checks_run: ["node --test tests/feature-a.test.mjs"],
 								working_tree_digest:
 									"sha256:1111111111111111111111111111111111111111111111111111111111111111",
@@ -920,14 +939,11 @@ describe("runtime host one-shot execution", () => {
 					);
 					return [
 						{
-							dispatch: workers[0],
+							workerStart: workers[0],
 							output: {
 								status: "completed",
 								message: "First worker finished.",
-								changed_files: [
-									"src/feature-a.ts",
-									"tests/feature-a.test.mjs",
-								],
+								changed_files: ["src/feature-a.ts", "tests/feature-a.test.mjs"],
 								checks_run: ["node --test tests/feature-a.test.mjs"],
 								working_tree_digest:
 									"sha256:1111111111111111111111111111111111111111111111111111111111111111",
@@ -955,7 +971,11 @@ describe("runtime host one-shot execution", () => {
 								],
 							},
 						},
-						terminalWorkerOutput(workers[1], "failed", "Second worker crashed."),
+						terminalWorkerOutput(
+							workers[1],
+							"failed",
+							"Second worker crashed.",
+						),
 					];
 				},
 				appendImplementation: true,
@@ -991,14 +1011,14 @@ describe("runtime host one-shot execution", () => {
 			assert.deepEqual(
 				firstEvents.map((event) => event.event),
 				[
-					"runtime.work.claimed",
-					"implementation.iteration",
-					"runtime.claim.released",
+					"runtime.work_unit.claimed",
+					"evidence_accepted",
+					"runtime.work_unit.claim.released",
 				],
 			);
 			assert.deepEqual(
 				secondEvents.map((event) => event.event),
-				["runtime.work.claimed", "runtime.claim.released"],
+				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 			assert.equal(
 				queue.items.find((item) => item.id === "WU-host-a")?.status,
@@ -1041,7 +1061,11 @@ describe("runtime host one-shot execution", () => {
 
 			assert.equal(result.releaseCheck.status, "blocked");
 			assert.equal(result.releaseCheck.reason, "worker_start_failed");
+			assert.equal(result.hostErrors[0].role, "worker");
+			assert.equal(result.hostErrors[0].kind, "spawn_failed");
+			assert.equal(result.hostErrors[0].suggestedAction, "release_claim");
 			assert.equal(result.remediation.route, "retry_worker");
+			assert.equal(result.remediation.hostErrors[0].kind, "spawn_failed");
 			assert.equal(
 				result.remediation.suggestedActions.some((action) =>
 					action.includes("Retry the worker"),
@@ -1050,10 +1074,18 @@ describe("runtime host one-shot execution", () => {
 			);
 			assert.equal(result.workerStatuses[0].state, "failed");
 			assert.equal(result.workerStatuses[0].remediation.route, "retry_worker");
+			assert.equal(
+				result.workerStatuses[0].remediation.hostErrors[0].kind,
+				"spawn_failed",
+			);
 			assert.equal(result.failedStartReleaseBatch.events.length, 1);
 			assert.equal(
 				result.failedStartReleaseBatch.events[0].data.reason,
 				"worker_start_failed",
+			);
+			assert.equal(
+				result.failedStartReleaseBatch.events[0].data.hostError.kind,
+				"spawn_failed",
 			);
 			assert.equal(result.releaseAppend, undefined);
 		} finally {
@@ -1110,7 +1142,7 @@ describe("runtime host one-shot execution", () => {
 			);
 			assert.deepEqual(
 				events.map((event) => event.event),
-				["runtime.work.claimed", "runtime.claim.released"],
+				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 			assert.equal(
 				queue.items.find((item) => item.id === "WU-host-once")?.status,
@@ -1419,7 +1451,7 @@ describe("runtime host one-shot execution", () => {
 			assert.match(result.remediation.blockers[0], /cleanup refused/);
 			assert.deepEqual(
 				events.map((event) => event.event),
-				["runtime.work.claimed", "runtime.claim.released"],
+				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
@@ -1528,7 +1560,7 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.releaseAppend.events.length, 1);
 			assert.deepEqual(
 				events.map((event) => event.event),
-				["runtime.work.claimed", "runtime.claim.released"],
+				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 			assert.equal(
 				queue.items.find((item) => item.id === "WU-host-once")?.status,
@@ -1603,7 +1635,7 @@ describe("runtime host one-shot execution", () => {
 				completionCollector({ workers }) {
 					return [
 						{
-							dispatch: workers[0],
+							workerStart: workers[0],
 							output: {
 								status: "completed",
 								message: "No files needed.",
@@ -1656,7 +1688,7 @@ describe("runtime host one-shot execution", () => {
 				completionCollector({ workers }) {
 					return [
 						{
-							dispatch: workers[0],
+							workerStart: workers[0],
 							output: {
 								status: "completed",
 								message: "Worker finished.",
@@ -1691,9 +1723,9 @@ describe("runtime host one-shot execution", () => {
 			assert.deepEqual(
 				events.map((event) => event.event),
 				[
-					"runtime.work.claimed",
-					"implementation.iteration",
-					"runtime.claim.released",
+					"runtime.work_unit.claimed",
+					"evidence_accepted",
+					"runtime.work_unit.claim.released",
 				],
 			);
 			assert.equal(
@@ -1731,7 +1763,7 @@ describe("runtime host one-shot execution", () => {
 				completionCollector({ workers }) {
 					return [
 						{
-							dispatch: workers[0],
+							workerStart: workers[0],
 							output: {
 								status: "completed",
 								changed_files: ["src/feature.ts"],

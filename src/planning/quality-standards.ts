@@ -41,6 +41,17 @@ export function planningQualityStandards(
 			],
 		}),
 		standard({
+			id: "planning_depth_accounted",
+			description:
+				"Each work item declares standard or micro planning depth; micro-plans stay dependency-free and cover one decision.",
+			issues,
+			codes: [
+				"invalid_planning_depth",
+				"invalid_micro_plan_dependency",
+				"invalid_micro_plan_decision_count",
+			],
+		}),
+		standard({
 			id: "worker_assignment_ready",
 			description:
 				"Each work item declares worker profile and agent judgment that the unit is independent and implementation-ready.",
@@ -66,7 +77,7 @@ export function planningQualityStandards(
 		standard({
 			id: "work_unit_right_sized",
 			description:
-				"Each worker unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or dispatch batch.",
+				"Each work unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or claim batch.",
 			mode: "agent",
 			issues,
 			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
@@ -90,6 +101,18 @@ export function planningQualityStandards(
 				"Dependencies are known, acyclic, and order overlapping work before implementation.",
 			issues,
 			codes: ["unknown_dependency", "dependency_cycle", "path_conflict"],
+		}),
+		standard({
+			id: "triggers_valid",
+			description:
+				"Recurring, triggered, or hook-based work has a complete planned trigger before runtime can heartbeat or start runs from it.",
+			issues,
+			codes: [
+				"invalid_trigger",
+				"invalid_trigger_kind",
+				"invalid_trigger_run_mode",
+				"invalid_trigger_concurrency",
+			],
 		}),
 		standard({
 			id: "resolutions_accounted",

@@ -93,7 +93,7 @@ export function implementationQualityStandards(
 		standard({
 			id: "source_ownership_aligned",
 			description:
-				"Changed source/test paths align with file-structure component ownership and test coverage.",
+				"Changed source/test paths align with source-map component ownership and test coverage.",
 			issues,
 			codes: [
 				"missing_component_ref",

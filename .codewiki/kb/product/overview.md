@@ -21,7 +21,7 @@ All previous product UI surfaces are deprecated for now, including status panels
 
 The only retained UI direction is future Pi TUI support. That direction is intentionally narrow: Pi TUI may render source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
 
-Backend state and continuation remain available through tools and APIs such as `wiki_state`, generated views, folded traces, loop outputs, and exit-condition results. `/wiki state` is the preferred command shape for summary output; no separate status command is planned.
+Backend state and continuation remain available through tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-state` and `/wiki-state` are the preferred command shapes for summary output; no separate status command is planned.
 
 ## Product boundaries
 

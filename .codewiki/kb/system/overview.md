@@ -1,6 +1,6 @@
 # System Overview
 
-CodeWiki is being rebuilt from a clean source scaffold. The old Pi extension is archived under `_OLD_VERSION/**`; the new Pi extension is package-installable and repo-local read-only dogfooding is enabled. This checkout uses `.codewiki/kb/**` as design truth while source is migrated module by module. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
+CodeWiki is being rebuilt from a clean source scaffold. The old implementation archive has been removed after migration audit; the new Pi extension is package-installable, and repo-local CodeWiki dogfooding stays disabled while production readiness is hardened. This checkout uses `.codewiki/kb/**` as design truth while source stabilizes. The current migration inventory and remaining gaps are tracked in [Migration Audit](migration-audit.md).
 
 ## Target mental model
 
@@ -9,7 +9,7 @@ CodeWiki has one runtime outer loop and three semantic loops.
 Runtime outer loop:
 
 ```text
-fold traces -> choose next action -> run semantic iteration or runtime coordination -> append trace -> repeat
+read traces/views -> choose next action -> run semantic iteration or runtime coordination -> append trace -> repeat
 ```
 
 Semantic loops:
@@ -36,7 +36,7 @@ CodeWiki truth comes from:
 - source/tests for implementation content;
 - Git for cold history, restore refs, commits, trees, and publication proof.
 
-Generated state lives under `.codewiki/views/**` and is disposable. Runtime temp under `.codewiki/runtime/tmp/**` is scratch only. Historical dogfood files outside the active roots are not target truth roots.
+Generated views live under `.codewiki/views/**` and are disposable derived calculations/caches over traces and sources. Runtime temp under `.codewiki/runtime/tmp/**` is scratch only. Historical dogfood files outside the active roots are not target truth roots.
 
 ## Source roots
 
@@ -50,6 +50,7 @@ Target package roots are:
 - `src/knowledge/**`
 - `src/git/**`
 - `src/runtime/**`
+- `src/error-handling/**`
 - `src/pi/**`
 - `src/project/**`
 - `src/utils/**`
@@ -59,7 +60,7 @@ There is no target package root for split evaluation, stored state, graph projec
 
 ## Runtime model
 
-Runtime coordinates execution. It owns boundaries, claims, leases, scheduling, automation policy, budgets, dispatch, lifecycle helpers, retention orchestration, and temporary data. Runtime is the outer control loop, not a semantic loop.
+Runtime coordinates execution and owns trace writes. It owns boundaries, claims, leases, work-unit claim selection, heartbeat/watch coordination, worker liveness, automation policy, budgets, worker-start handoff, lifecycle helpers, retention orchestration, and temporary data. Runtime is the outer control loop, not a semantic loop. Main host, trace host, and worker host are host roles that drive or execute runtime instructions; they are not separate runtimes.
 
 Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Loop exit deletes loop temp after durable refs exist. Continue/blocked/route-back can preserve loop temp for remediation. Superseding iterations replace stale temp. Trace close cleans all remaining temp.
 

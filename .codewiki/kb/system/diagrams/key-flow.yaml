@@ -40,7 +40,7 @@ participants:
   - id: views
     label: Generated views
     kind: generated_projection
-    source: .codewiki/kb/system/file-structure.md
+    source: .codewiki/kb/system/source-map.md
   - id: git
     label: Git content evidence
     kind: executable_truth
@@ -56,7 +56,7 @@ steps:
   - id: append_decision
     from: decision
     to: traces
-    message: appends decision.iteration with output, exit status, conditions, progress, and refs
+    message: appends decision.rows_approved with output, exit status, conditions, progress, and refs
   - id: run_planning
     from: runtime
     to: planning
@@ -64,7 +64,7 @@ steps:
   - id: append_planning
     from: planning
     to: traces
-    message: appends planning.iteration with work units, acceptance, path scopes, conditions, and refs
+    message: appends planning.work_units_created with work units, acceptance, path scopes, conditions, and refs
   - id: schedule_work
     from: traces
     to: runtime
@@ -72,11 +72,11 @@ steps:
   - id: run_implementation
     from: runtime
     to: implementation
-    message: runs implementation loop or dispatches workers with source refs and content-evidence requirements
+    message: runs implementation loop or starts workers with source refs and content-evidence requirements
   - id: append_implementation
     from: implementation
     to: traces
-    message: appends implementation.iteration with evidence, checks, worker provenance, proof, exit conditions, and refs
+    message: appends implementation.evidence_accepted with evidence, checks, worker provenance, proof, exit conditions, and refs
   - id: prove_content
     from: implementation
     to: git

@@ -9,9 +9,10 @@ import { invalidTraceRefs } from "../../src/traces/refs.ts";
 import {
 	TraceAppendConflictError,
 	TraceClosedAppendError,
-	appendSemanticLoopIteration,
+	appendSemanticLoopReport,
 	appendTraceRecord,
 	appendTraceRecords,
+	createTriggerRunTraceHead,
 	createLoopIterationEvent,
 	createTailCheckpoint,
 	createTraceHead,
@@ -41,7 +42,7 @@ function sampleRecords() {
 		traceId: head.traceId,
 		sequence: 1,
 		loop: "decision",
-		event: "decision.approved",
+		event: "rows_approved",
 		refs: ["kb:system/traces.md", "src/traces/schema.ts"],
 		createdAt: "2026-06-11T00:00:01.000Z",
 		data: { rowId: "DTR-001" },
@@ -79,6 +80,53 @@ describe("trace JSONL core", () => {
 		);
 	});
 
+	it("records run lineage on trace heads", () => {
+		const head = createTriggerRunTraceHead({
+			traceId: "TRACE-20260611-run",
+			title: "Run scheduled dependency check",
+			triggerTraceId: "TRACE-20260611-trigger",
+			triggerId: "TRG-dependency-check",
+			planningRef:
+				"trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-trigger",
+			runKey: "dependency-check:2026-W24",
+			sourceRef: "kb:system/runtime.md",
+			createdAt: "2026-06-11T00:00:00.000Z",
+		});
+		const parsed = parseTraceText(formatTraceText([head]));
+		const state = replayTrace(parsed);
+
+		assert.equal(parsed[0].origin.kind, "trigger_run");
+		assert.equal(parsed[0].origin.parentTraceId, "TRACE-20260611-trigger");
+		assert.equal(parsed[0].origin.triggerTraceId, "TRACE-20260611-trigger");
+		assert.equal(parsed[0].origin.triggerId, "TRG-dependency-check");
+		assert.equal(parsed[0].origin.runKey, "dependency-check:2026-W24");
+		assert.deepEqual(state.refs, [
+			"TRACE-20260611-trigger",
+			"TRG-dependency-check",
+			"trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-trigger",
+			"dependency-check:2026-W24",
+			"kb:system/runtime.md",
+		]);
+		assert.throws(
+			() =>
+				parseTraceText(
+					formatTraceText([
+						{
+							type: "trace_head",
+							traceId: "TRACE-bad-run",
+							title: "Bad run",
+							createdAt: "2026-06-11T00:00:00.000Z",
+							origin: {
+								kind: "trigger_run",
+								refs: [],
+							},
+						},
+					]),
+				),
+			/triggerTraceId|triggerId|planningRef|runKey|refs/,
+		);
+	});
+
 	it("replays ordered records into current trace state", () => {
 		const records = sampleRecords();
 		const state = replayTrace(records);
@@ -90,7 +138,7 @@ describe("trace JSONL core", () => {
 			"kb:system/traces.md",
 			"src/traces/schema.ts",
 		]);
-		assert.equal(traceHasEvent(records, "decision.approved"), true);
+		assert.equal(traceHasEvent(records, "rows_approved"), true);
 		assert.deepEqual(traceRefs(records), [
 			"kb:system/traces.md",
 			"src/traces/schema.ts",
@@ -98,9 +146,12 @@ describe("trace JSONL core", () => {
 		]);
 	});
 
-	it("treats active agent skill paths as canonical refs", () => {
+	it("treats active agent skill and Pi settings paths as canonical refs", () => {
 		assert.deepEqual(
-			invalidTraceRefs([".agents/skills/codewiki-decision/SKILL.md"]),
+			invalidTraceRefs([
+				".agents/skills/codewiki-decide/SKILL.md",
+				".pi/settings.json",
+			]),
 			[],
 		);
 	});
@@ -141,7 +192,7 @@ describe("trace JSONL core", () => {
 			},
 		});
 
-		assert.equal(event.event, "implementation.iteration");
+		assert.equal(event.event, "route_back_requested");
 		assert.deepEqual(event.refs, [
 			"src/traces/events.ts",
 			"tests/traces/traces-jsonl.test.mjs",
@@ -172,7 +223,7 @@ describe("trace JSONL core", () => {
 		}
 	});
 
-	it("appends semantic loop iterations as one checked batch", async () => {
+	it("appends semantic loop reports as one checked batch", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-loop-append-"));
 		try {
 			const head = createTraceHead({
@@ -189,7 +240,8 @@ describe("trace JSONL core", () => {
 					{
 						id: "DTR-loop-append",
 						currentState: "Loop writes are assembled before append.",
-						desiredState: "Loop iteration append is one checked batch.",
+						desiredState:
+							"Runtime appends semantic loop reports as one checked batch.",
 						rationale: "Avoid partial durable semantic state.",
 						...decisionQualityFields(),
 						approval: "approved",
@@ -197,7 +249,7 @@ describe("trace JSONL core", () => {
 					},
 				],
 			});
-			const result = await appendSemanticLoopIteration({
+			const result = await appendSemanticLoopReport({
 				repoRoot: root,
 				loop: "decision",
 				expectedBytes: first.nextBytes,
@@ -214,7 +266,7 @@ describe("trace JSONL core", () => {
 			const readBack = await readTrace(join(root, traceFilePath(head.traceId)));
 			const state = replayTrace(readBack.records);
 
-			assert.equal(result.iterationEvent.event, "decision.iteration");
+			assert.equal(result.iterationEvent.event, "rows_approved");
 			assert.equal(result.iterationEvent.sequence, 1);
 			assert.equal(result.append.records.length, 2);
 			assert.equal(state.events.at(-1)?.id, result.iterationEvent.id);
@@ -222,7 +274,7 @@ describe("trace JSONL core", () => {
 			assert.equal(readBack.records.length, 3);
 			await assert.rejects(
 				() =>
-					appendSemanticLoopIteration({
+					appendSemanticLoopReport({
 						repoRoot: root,
 						loop: "planning",
 						expectedBytes: result.append.nextBytes,
@@ -236,7 +288,7 @@ describe("trace JSONL core", () => {
 								createdAt: "2026-06-11T00:00:02.000Z",
 							}),
 					}),
-				/exactly one planning\.iteration/,
+				/exactly one planning output event/,
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -251,6 +303,7 @@ describe("trace JSONL core", () => {
 				records,
 				gitRestoreRef: "refs/codewiki/archive/TRACE-20260611-traces",
 				createdAt: "2026-06-11T00:00:03.000Z",
+				allowIncomplete: true,
 			});
 			await assert.rejects(
 				() => appendTraceRecords(root, [...records, close, records[1]], 0),

@@ -1,9 +1,10 @@
 import { planningConflicts } from "../planning/conflicts.ts";
 import type {
 	AcceptanceCriterion,
+	PlanningTrigger,
 	PlanningWorkItem,
 } from "../planning/types.ts";
-import { eventsByName } from "../traces/queries.ts";
+import { loopOutputEvents } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
@@ -72,8 +73,10 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 			decisionRefs: [...item.decisionRefs],
 			componentRefs: [...item.componentRefs],
 			pathScopes: [...item.pathScopes],
+			planningDepth: item.planningDepth,
 			verification: [...item.verification],
 			dependsOn: [...item.dependsOn],
+			...(item.trigger ? { trigger: item.trigger } : {}),
 			implementationRefs: implementedBy,
 			blockers,
 			qualityStandards: item.qualityStandards,
@@ -98,7 +101,7 @@ export function planningWorkItemsFromTrace(
 function acceptedPlanningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): TracePlanningWorkItem[] {
-	return eventsByName(records, "planning.iteration").flatMap((event) => {
+	return loopOutputEvents(records, "planning").flatMap((event) => {
 		const quality = loopQualityReadiness(event);
 		return objectList(objectRecord(event.data?.output).workItems).map(
 			(item) => {
@@ -118,10 +121,12 @@ function acceptedPlanningWorkItemsFromTrace(
 					),
 					componentRefs: stringList(item.componentRefs),
 					pathScopes: stringList(item.pathScopes),
+					planningDepth: planningDepth(item.planningDepth),
 					verification: stringList(item.verification),
 					workerProfile: text(item.workerProfile),
 					planningAssessment: planningAssessment(item.planningAssessment),
 					dependsOn: stringList(item.dependsOn),
+					...triggerProperty(item.trigger),
 					qualityStandards: quality.standards,
 					qualityBlockers: quality.blockers,
 				};
@@ -155,7 +160,7 @@ function implementationRefsByPlanningRef(
 	records: TraceRecord[],
 ): Map<string, string[]> {
 	const refs = new Map<string, string[]>();
-	for (const event of eventsByName(records, "implementation.iteration")) {
+	for (const event of loopOutputEvents(records, "implementation")) {
 		for (const change of objectList(objectRecord(event.data?.output).changes)) {
 			const changeRef = iterationSubref(event, "change", text(change.id));
 			for (const planningRef of stringList(change.planningRefs)) {
@@ -210,12 +215,48 @@ function normalizeCard(card: WorkPlanCard): WorkPlanCard {
 		decisionRefs: [...(card.decisionRefs || [])],
 		componentRefs: [...(card.componentRefs || [])],
 		pathScopes: [...(card.pathScopes || [])],
+		planningDepth: planningDepth(card.planningDepth),
 		verification: [...(card.verification || [])],
 		dependsOn: [...(card.dependsOn || [])],
+		...(card.trigger ? { trigger: card.trigger } : {}),
 		implementationRefs: [...(card.implementationRefs || [])],
 		blockers: [...(card.blockers || [])],
 		qualityStandards: [...(card.qualityStandards || [])],
 		qualityBlockers: [...(card.qualityBlockers || [])],
+	};
+}
+
+function triggerProperty(value: unknown): {
+	trigger?: PlanningTrigger;
+} {
+	const record = objectRecord(value);
+	const id = text(record.id);
+	const kind = text(record.kind);
+	const runMode = text(record.runMode);
+	const concurrency = text(record.concurrency);
+	const runKeyTemplate = text(record.runKeyTemplate);
+	const owner = text(record.owner);
+	const trigger = text(record.trigger);
+	const refs = stringList(record.refs);
+	if (
+		![id, kind, runMode, concurrency, runKeyTemplate, owner, trigger].some(
+			Boolean,
+		) &&
+		refs.length === 0
+	) {
+		return {};
+	}
+	return {
+		trigger: {
+			id,
+			kind,
+			runMode,
+			concurrency,
+			runKeyTemplate,
+			owner,
+			trigger,
+			refs,
+		},
 	};
 }
 
@@ -254,6 +295,20 @@ function acceptanceCriteriaList(
 		id: `AC-${String(index + 1).padStart(3, "0")}`,
 		text: criterion,
 	}));
+}
+
+function planningDepth(value: unknown): PlanningWorkItem["planningDepth"] {
+	const normalized = text(value).toLowerCase().replace(/_/g, "-");
+	if (!normalized) return "standard";
+	if (
+		["micro-plan", "microplan", "fast-track", "fasttrack"].includes(normalized)
+	) {
+		return "micro";
+	}
+	if (["full", "full-plan", "standard-plan", "normal"].includes(normalized)) {
+		return "standard";
+	}
+	return normalized;
 }
 
 function objectRecord(value: unknown): Record<string, unknown> {

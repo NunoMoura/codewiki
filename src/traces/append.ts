@@ -1,6 +1,11 @@
 import { mkdir, appendFile, readFile, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import type { TraceRecord } from "./types.ts";
+import {
+	CodewikiTraceError,
+	TraceAppendConflictError,
+	TraceClosedAppendError,
+} from "../error-handling/trace-errors.ts";
+import type { TraceClose, TraceRecord } from "./types.ts";
 import { parseTraceText } from "./reader.ts";
 import { traceFilePath } from "./schema.ts";
 import { formatTraceLine, formatTraceText } from "./writer.ts";
@@ -32,37 +37,10 @@ export interface AppendTraceBatchResult {
 	records: TraceRecord[];
 }
 
-export class TraceAppendConflictError extends Error {
-	readonly path: string;
-	readonly expectedBytes: number;
-	readonly actualBytes: number;
-
-	constructor(path: string, expectedBytes: number, actualBytes: number) {
-		super(
-			`Trace append conflict for ${path}: expected ${expectedBytes} bytes, found ${actualBytes}.`,
-		);
-		this.name = "TraceAppendConflictError";
-		this.path = path;
-		this.expectedBytes = expectedBytes;
-		this.actualBytes = actualBytes;
-	}
-}
-
-export class TraceClosedAppendError extends Error {
-	readonly path: string;
-	readonly traceId: string;
-	readonly closeId: string;
-
-	constructor(path: string, traceId: string, closeId: string) {
-		super(
-			`Trace ${traceId} is closed by ${closeId}; append is not allowed for ${path}.`,
-		);
-		this.name = "TraceClosedAppendError";
-		this.path = path;
-		this.traceId = traceId;
-		this.closeId = closeId;
-	}
-}
+export {
+	TraceAppendConflictError,
+	TraceClosedAppendError,
+} from "../error-handling/trace-errors.ts";
 
 function planTraceAppend(
 	record: TraceRecord,
@@ -154,14 +132,20 @@ export function appendTraceRecords(
 
 function assertSingleTraceBatch(records: TraceRecord[]): void {
 	if (records.length === 0) {
-		throw new Error("Trace append batch requires at least one record.");
+		throw new CodewikiTraceError({
+			code: "invalid_append_batch",
+			message: "Trace append batch requires at least one record.",
+		});
 	}
 	const traceId = records[0].traceId;
 	for (const record of records) {
 		if (record.traceId !== traceId) {
-			throw new Error(
-				`Trace append batch mixes trace ids: ${traceId} and ${record.traceId}.`,
-			);
+			throw new CodewikiTraceError({
+				code: "invalid_append_batch",
+				message: `Trace append batch mixes trace ids: ${traceId} and ${record.traceId}.`,
+				traceId,
+				data: { actualTraceId: record.traceId, recordType: record.type },
+			});
 		}
 	}
 }
@@ -171,9 +155,10 @@ function assertTerminalClosePosition(records: TraceRecord[]): void {
 		(record) => record.type === "trace_close",
 	);
 	if (closeIndex === -1 || closeIndex === records.length - 1) return;
-	throw new Error(
-		"Trace append batch must not include records after trace_close.",
-	);
+	throw new CodewikiTraceError({
+		code: "invalid_append_batch",
+		message: "Trace append batch must not include records after trace_close.",
+	});
 }
 
 async function assertTraceOpenForAppend(
@@ -182,9 +167,9 @@ async function assertTraceOpenForAppend(
 ): Promise<void> {
 	if (previousBytes === 0) return;
 	const close = parseTraceText(await readFile(path, "utf8")).find(
-		(record) => record.type === "trace_close",
+		(record): record is TraceClose => record.type === "trace_close",
 	);
-	if (!close || close.type !== "trace_close") return;
+	if (!close) return;
 	throw new TraceClosedAppendError(path, close.traceId, close.id);
 }
 

@@ -1,5 +1,0 @@
-{
-  "tools": ["wiki_state"],
-  "commands": ["wiki-status"],
-  "knip_entry": ["src/index.ts", "src/api/index.ts", "src/api/tools.ts", "scripts/*.mjs", "tests/**/*.mjs"]
-}

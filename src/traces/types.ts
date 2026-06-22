@@ -8,12 +8,51 @@ export type TraceRecordType =
 	| "trace_close";
 export type TraceRecord = TraceHead | TraceEvent | TailCheckpoint | TraceClose;
 
+export type TraceOriginKind =
+	| "manual"
+	| "trigger_run"
+	| "amendment"
+	| "retry"
+	| "route_back"
+	| string;
+
+export interface TraceOrigin {
+	kind: TraceOriginKind;
+	parentTraceId?: string;
+	triggerTraceId?: string;
+	triggerId?: string;
+	planningRef?: string;
+	sourceRef?: string;
+	runKey?: string;
+	refs: string[];
+}
+
 export interface TraceHead {
 	type: "trace_head";
 	traceId: string;
 	title: string;
 	createdAt: IsoTimestamp;
+	origin?: TraceOrigin;
 }
+
+export type DecisionTraceEventName =
+	| "rows_approved"
+	| "user_input_required"
+	| "decision_blocked";
+export type PlanningTraceEventName =
+	| "work_units_created"
+	| "decisions_resolved"
+	| "route_back_requested"
+	| "planning_blocked";
+export type ImplementationTraceEventName =
+	| "evidence_accepted"
+	| "evidence_rejected"
+	| "route_back_requested"
+	| "implementation_blocked";
+export type SemanticTraceEventName =
+	| DecisionTraceEventName
+	| PlanningTraceEventName
+	| ImplementationTraceEventName;
 
 export interface TraceEvent {
 	type: "trace_event";
@@ -21,7 +60,7 @@ export interface TraceEvent {
 	parentId: string | null;
 	traceId: string;
 	sequence: number;
-	loop: TraceLoop;
+	loop?: TraceLoop;
 	event: string;
 	refs: string[];
 	createdAt: IsoTimestamp;

@@ -4,12 +4,11 @@ import type {
 	ImplementationWorkerClaimStatus,
 } from "./types.ts";
 
-const CLAIM_EVENTS = ["runtime.work.claimed", "runtime.claim.acquired"];
+const CLAIM_EVENTS = ["runtime.work_unit.claimed"];
 const RELEASE_EVENTS = [
-	"runtime.work.released",
-	"runtime.claim.released",
-	"runtime.claim.expired",
-	"runtime.claim.cancelled",
+	"runtime.work_unit.claim.released",
+	"runtime.work_unit.claim.expired",
+	"runtime.work_unit.claim.cancelled",
 ];
 
 export interface ImplementationWorkerClaimsOptions {

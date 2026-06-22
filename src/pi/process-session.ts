@@ -8,7 +8,7 @@ import type {
 	PiWorkerSessionInput,
 	PiWorkerSessionResumeInput,
 	PiWorkerSessionResumeResult,
-} from "./dispatcher.ts";
+} from "./worker-start.ts";
 
 export interface PiProcessSessionFactoryOptions {
 	command?: string;

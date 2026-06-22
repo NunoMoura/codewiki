@@ -74,7 +74,7 @@ nodes:
     label: Generated views
     group: generated
     kind: generated_projection
-    source: .codewiki/kb/system/file-structure.md
+    source: .codewiki/kb/system/source-map.md
   - id: git
     label: Git commits / trees / restore refs
     group: evidence
@@ -94,7 +94,7 @@ edges:
     label: runs planning iteration
   - from: runtime
     to: implementation
-    label: runs implementation iteration or dispatches workers
+    label: runs implementation iteration or starts workers
   - from: decision
     to: kb
     label: updates hot knowledge intent

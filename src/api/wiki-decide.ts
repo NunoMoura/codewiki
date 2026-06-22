@@ -9,11 +9,12 @@ import type {
 	DecisionTableInput,
 	KnowledgeDelta,
 } from "../decision/types.ts";
+import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import {
-	appendSemanticLoopIteration,
-	assertSemanticLoopIterationBatch,
-	type AppendSemanticLoopIterationResult,
-} from "../traces/orchestrator.ts";
+	appendSemanticLoopReport,
+	assertSemanticLoopReportBatch,
+	type AppendSemanticLoopReportResult,
+} from "../runtime/trace-writer.ts";
 import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiDecideMode = "preview" | "append";
@@ -39,7 +40,7 @@ export interface RunWikiDecideResult {
 	traceId: string;
 	loopResult: DecisionIterationResult;
 	iterationEvent: TraceEvent;
-	append?: AppendSemanticLoopIterationResult<DecisionIterationResult>["append"];
+	append?: AppendSemanticLoopReportResult<DecisionIterationResult>["append"];
 }
 
 export async function runWikiDecide(
@@ -49,7 +50,7 @@ export async function runWikiDecide(
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
 	const loopInput = decisionIterationInput(input);
 	if (mode === "append") {
-		const result = await appendSemanticLoopIteration({
+		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			loop: "decision",
 			expectedBytes: requiredExpectedBytes(input.expectedBytes),
@@ -70,7 +71,7 @@ export async function runWikiDecide(
 		...loopInput,
 		startSequence: nextSequence,
 	});
-	const iterationEvent = assertSemanticLoopIterationBatch({
+	const iterationEvent = assertSemanticLoopReportBatch({
 		records: loopResult.traceRecords,
 		loop: "decision",
 		nextSequence,
@@ -101,19 +102,38 @@ function decisionIterationInput(
 
 function requiredNextSequence(value: number): number {
 	if (!Number.isInteger(value) || value < 1) {
-		throw new Error("wiki_decide requires nextSequence >= 1.");
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "invalid_input",
+			field: "nextSequence",
+			message: "wiki_decide requires nextSequence >= 1.",
+			data: { value },
+		});
 	}
 	return value;
 }
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw new Error("wiki_decide append mode requires expectedBytes >= 0.");
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "invalid_input",
+			field: "expectedBytes",
+			message: "wiki_decide append mode requires expectedBytes >= 0.",
+			data: { value },
+		});
 	}
 	return value;
 }
 
 function requiredRepoRoot(value: string | undefined): string {
-	if (!value) throw new Error("wiki_decide append mode requires repoRoot.");
+	if (!value) {
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "missing_required",
+			field: "repoRoot",
+			message: "wiki_decide append mode requires repoRoot.",
+		});
+	}
 	return value;
 }

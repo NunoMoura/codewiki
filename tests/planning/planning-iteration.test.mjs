@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
-import { parseFileStructureMapYaml } from "../../src/knowledge/file-structure-map.ts";
+import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { evaluatePlanningExit } from "../../src/planning/exit.ts";
 import { normalizePlanningWorkItems } from "../../src/planning/materialization.ts";
@@ -33,9 +33,7 @@ function decisionEvents() {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.event === "decision.iteration",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -44,13 +42,16 @@ function approvedDecisionRef(events) {
 
 function componentMap() {
 	return {
-		sourceRefs: [".codewiki/kb/system/diagrams/file-structure-map.yaml"],
+		sourceRefs: [".codewiki/kb/system/source-map.yaml"],
+		defaults: { inheritance: true, excluded: [] },
 		components: [
 			{
-				id: "component.planning",
-				kbRefs: [".codewiki/kb/system/iteration runners.md"],
-				pathPatterns: ["src/planning/**"],
+				id: "planning",
+				doc: ".codewiki/kb/system/planning-loop.md",
+				sourcePatterns: ["src/planning/**"],
 				testPatterns: ["tests/planning/**"],
+				generatedViews: [],
+				traceEvents: ["work_units_created"],
 			},
 		],
 	};
@@ -85,7 +86,7 @@ describe("planning iteration runner", () => {
 		assert.deepEqual(result.exit.coveredDecisionRefs, [decisionRef]);
 		assert.equal(result.draftTraceEvents.length, 0);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "planning.iteration");
+		assert.equal(result.traceEvents[0].event, "work_units_created");
 		assert.equal(result.traceEvents[0].data?.exit.status, "exit");
 		assert.equal(result.traceEvents[0].data?.exit.targetLoop, "implementation");
 		assert.equal(result.checkpoint.type, "tail_checkpoint");
@@ -98,6 +99,10 @@ describe("planning iteration runner", () => {
 			result.traceEvents[0].data?.output?.workItems?.[0]?.acceptanceCriteria,
 			[{ id: "AC-001", text: "Append and replay trace records." }],
 		);
+		assert.equal(
+			result.traceEvents[0].data?.output?.workItems?.[0]?.planningDepth,
+			"standard",
+		);
 		assert.deepEqual(
 			result.traceEvents[0].data?.output?.qualityStandards?.map(
 				(standard) => standard.id,
@@ -107,11 +112,13 @@ describe("planning iteration runner", () => {
 				"worker_units_self_contained",
 				"technical_requirements_complete",
 				"acceptance_and_verification_testable",
+				"planning_depth_accounted",
 				"worker_assignment_ready",
 				"uncertainty_resolved",
 				"work_unit_right_sized",
 				"source_ownership_aligned",
 				"dependency_order_clear",
+				"triggers_valid",
 				"resolutions_accounted",
 				"traceability_refs_canonical",
 			],
@@ -124,46 +131,103 @@ describe("planning iteration runner", () => {
 		);
 	});
 
-	it("parses KB file-structure component contracts", () => {
-		const map = parseFileStructureMapYaml(
-			readFileSync(
-				".codewiki/kb/system/diagrams/file-structure-map.yaml",
-				"utf8",
-			),
+	it("validates micro-plan work item constraints", () => {
+		const decisions = decisionEvents();
+		const decisionRef = approvedDecisionRef(decisions);
+		const valid = normalizePlanningWorkItems([
+			{
+				id: "WU-micro-valid",
+				decisionRefs: [decisionRef],
+				outcome: "Tiny work is ready for direct implementation.",
+				...planningQualityFields({ planningDepth: "micro" }),
+				acceptanceCriteria: [
+					{
+						id: "AC-001",
+						text: "Micro-plan has one decision and no dependencies.",
+					},
+				],
+				componentRefs: ["planning"],
+				pathScopes: ["src/planning/types.ts"],
+				verification: ["tests/planning/planning-iteration.test.mjs"],
+			},
+		]);
+		const invalid = normalizePlanningWorkItems([
+			{
+				id: "WU-micro-invalid",
+				decisionRefs: [decisionRef, "trace:other:decision:iteration:1#row:DTR"],
+				outcome: "Broad work wrongly marked as micro.",
+				...planningQualityFields({ planningDepth: "micro" }),
+				acceptance: ["Micro constraints should fail."],
+				componentRefs: ["planning"],
+				pathScopes: ["src/planning/types.ts"],
+				verification: ["tests/planning/planning-iteration.test.mjs"],
+				dependsOn: ["WU-other"],
+			},
+		]);
+
+		const validExit = evaluatePlanningExit({
+			decisionRefs: [decisionRef],
+			workItems: valid,
+			resolutions: [],
+		});
+		const invalidExit = evaluatePlanningExit({
+			decisionRefs: [decisionRef, "trace:other:decision:iteration:1#row:DTR"],
+			workItems: invalid,
+			resolutions: [],
+		});
+
+		assert.equal(validExit.passed, true);
+		assert.equal(invalidExit.passed, false);
+		assert.deepEqual(
+			invalidExit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.startsWith("invalid_micro_plan"))
+				.sort(),
+			["invalid_micro_plan_decision_count", "invalid_micro_plan_dependency"],
+		);
+		assert.equal(
+			invalidExit.qualityStandards.find(
+				(standard) => standard.id === "planning_depth_accounted",
+			)?.status,
+			"unmet",
+		);
+	});
+
+	it("parses KB source-map component contracts", () => {
+		const map = parseSourceMapYaml(
+			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
 		);
 
 		assert.equal(
-			map.components.some(
-				(component) => component.id === "component.implementation",
-			),
+			map.components.some((component) => component.id === "implementation"),
 			true,
 		);
 		assert.equal(
 			map.components
-				.find((component) => component.id === "component.implementation")
+				.find((component) => component.id === "implementation")
 				?.testPatterns.includes("tests/implementation/**"),
 			true,
 		);
 		assert.deepEqual(
-			map.components.find((component) => component.id === "component.git")
-				?.pathPatterns,
+			map.components.find((component) => component.id === "git")
+				?.sourcePatterns,
 			["src/git/**"],
 		);
 		assert.equal(
 			map.components
-				.find((component) => component.id === "component.git")
+				.find((component) => component.id === "git")
 				?.testPatterns.includes("tests/runtime/worktrees.test.mjs"),
 			true,
 		);
 		assert.equal(
 			map.components
-				.find((component) => component.id === "component.knowledge")
+				.find((component) => component.id === "knowledge")
 				?.testPatterns.includes("tests/knowledge/**"),
 			true,
 		);
 	});
 
-	it("links planning work to file-structure components", () => {
+	it("links planning work to source-map components", () => {
 		const decisions = decisionEvents();
 		const decisionRef = approvedDecisionRef(decisions);
 		const result = runPlanningIteration({
@@ -178,7 +242,7 @@ describe("planning iteration runner", () => {
 					outcome: "Planning component is aligned.",
 					...planningQualityFields(),
 					acceptance: ["Component refs and test scope are explicit."],
-					componentRefs: ["component.planning"],
+					componentRefs: ["planning"],
 					pathScopes: ["src/planning"],
 					verification: ["tests/planning/planning-iteration.test.mjs"],
 				},
@@ -186,20 +250,20 @@ describe("planning iteration runner", () => {
 		});
 
 		assert.equal(result.exit.passed, true);
-		assert.deepEqual(result.workItems[0].componentRefs, ["component.planning"]);
+		assert.deepEqual(result.workItems[0].componentRefs, ["planning"]);
 		assert.deepEqual(
 			result.traceEvents[0].data?.output?.workItems?.[0]?.componentRefs,
-			["component.planning"],
+			["planning"],
 		);
 		assert.equal(
 			result.traceEvents[0].refs.includes(
-				".codewiki/kb/system/diagrams/file-structure-map.yaml",
+				".codewiki/kb/system/source-map.yaml",
 			),
 			true,
 		);
 	});
 
-	it("blocks work outside declared file-structure components", () => {
+	it("blocks work outside declared source-map components", () => {
 		const decisionRef = approvedDecisionRef(decisionEvents());
 		const exit = evaluatePlanningExit({
 			decisionRefs: [decisionRef],
@@ -211,7 +275,7 @@ describe("planning iteration runner", () => {
 					outcome: "Component drift is blocked.",
 					...planningQualityFields(),
 					acceptance: ["Done"],
-					componentRefs: ["component.planning"],
+					componentRefs: ["planning"],
 					pathScopes: ["src/implementation"],
 					verification: ["tests/views/views-projections.test.mjs"],
 				},
@@ -278,6 +342,109 @@ describe("planning iteration runner", () => {
 				.filter((code) => code.includes("worker") || code.includes("sized"))
 				.sort(),
 			["planning_assessment_not_worker_ready", "work_unit_not_right_sized"],
+		);
+	});
+
+	it("records valid triggers for recurrence, triggers, and hooks", () => {
+		const decisions = decisionEvents();
+		const decisionRef = approvedDecisionRef(decisions);
+		const result = runPlanningIteration({
+			traceId: "TRACE-planning",
+			decisionEvents: decisions,
+			createdAt: "2026-06-11T00:00:00.000Z",
+			workItemInputs: [
+				{
+					id: "WU-trigger",
+					decisionRefs: [decisionRef],
+					outcome: "Scheduled trigger is ready for implementation.",
+					...planningQualityFields(),
+					acceptance: ["Due runs create independent lineage traces."],
+					componentRefs: ["planning"],
+					pathScopes: ["src/planning/types.ts"],
+					verification: ["tests/planning/planning-iteration.test.mjs"],
+					trigger: {
+						id: "TRG-weekly-check",
+						kind: "schedule",
+						runMode: "new_trace",
+						concurrency: "skip_if_active",
+						runKeyTemplate: "weekly-check:${isoWeek}",
+						owner: "implementation",
+						trigger: "cron:0 9 * * 1",
+						refs: ["kb:system/runtime.md"],
+					},
+				},
+			],
+		});
+
+		assert.equal(result.exit.passed, true);
+		assert.deepEqual(result.workItems[0].trigger, {
+			id: "TRG-weekly-check",
+			kind: "schedule",
+			runMode: "new_trace",
+			concurrency: "skip_if_active",
+			runKeyTemplate: "weekly-check:${isoWeek}",
+			owner: "implementation",
+			trigger: "cron:0 9 * * 1",
+			refs: ["kb:system/runtime.md"],
+		});
+		assert.deepEqual(
+			result.traceEvents[0].data?.output?.workItems?.[0]?.trigger,
+			result.workItems[0].trigger,
+		);
+		assert.equal(
+			result.traceEvents[0].refs.includes("kb:system/runtime.md"),
+			true,
+		);
+		assert.equal(
+			result.exit.qualityStandards.find(
+				(standard) => standard.id === "triggers_valid",
+			)?.status,
+			"met",
+		);
+	});
+
+	it("blocks invalid triggers before runtime can consume them", () => {
+		const decisionRef = approvedDecisionRef(decisionEvents());
+		const exit = evaluatePlanningExit({
+			decisionRefs: [decisionRef],
+			workItems: normalizePlanningWorkItems([
+				{
+					id: "WU-bad-trigger",
+					decisionRefs: [decisionRef],
+					outcome: "Bad trigger must not reach runtime.",
+					...planningQualityFields(),
+					acceptance: ["Invalid trigger blocks planning exit."],
+					componentRefs: ["planning"],
+					pathScopes: ["src/planning/types.ts"],
+					verification: ["tests/planning/planning-iteration.test.mjs"],
+					trigger: {
+						id: "TRG-bad",
+						kind: "daemon",
+						runMode: "same_trace",
+						concurrency: "parallel",
+					},
+				},
+			]),
+			resolutions: [],
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(
+			exit.qualityStandards.find((standard) => standard.id === "triggers_valid")
+				?.status,
+			"unmet",
+		);
+		assert.deepEqual(
+			exit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.startsWith("invalid_trigger"))
+				.sort(),
+			[
+				"invalid_trigger",
+				"invalid_trigger_concurrency",
+				"invalid_trigger_kind",
+				"invalid_trigger_run_mode",
+			],
 		);
 	});
 
@@ -378,7 +545,7 @@ describe("planning iteration runner", () => {
 			["missing_decision_coverage"],
 		);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "planning.iteration");
+		assert.equal(result.traceEvents[0].event, "planning_blocked");
 		assert.equal(result.traceEvents[0].data?.exit.status, "continue");
 	});
 
@@ -400,7 +567,7 @@ describe("planning iteration runner", () => {
 		assert.equal(missing.exit.verdict, "fail");
 		assert.equal(missing.exit.issues[0].code, "invalid_resolution");
 		assert.equal(missing.traceEvents.length, 1);
-		assert.equal(missing.traceEvents[0].event, "planning.iteration");
+		assert.equal(missing.traceEvents[0].event, "planning_blocked");
 
 		const complete = runPlanningIteration({
 			traceId: "TRACE-planning",
@@ -420,7 +587,7 @@ describe("planning iteration runner", () => {
 		assert.equal(complete.readyForImplementation, true);
 		assert.equal(complete.exit.verdict, "pass");
 		assert.equal(complete.exit.route, "close");
-		assert.equal(complete.traceEvents[0].event, "planning.iteration");
+		assert.equal(complete.traceEvents[0].event, "decisions_resolved");
 		assert.equal(complete.traceEvents[0].data?.exit.targetLoop, null);
 		assert.equal(
 			complete.traceEvents[0].data?.output?.resolutions?.[0]?.kind,

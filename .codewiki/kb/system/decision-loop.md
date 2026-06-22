@@ -8,6 +8,7 @@ The decision loop owns:
 
 - user intent and approvals;
 - decision kind classification (`debug`, `fix`, `harden`, `improve`, `migrate`, `docs`, or `release`);
+- work scale classification (`tiny`, `small`, `normal`, or `large`) and planning depth (`micro` or `standard`);
 - requirements and non-goals;
 - product/system tradeoffs;
 - risk tier and approval needs;
@@ -16,7 +17,7 @@ The decision loop owns:
 - questions that planning must answer;
 - route-back answers from planning or implementation.
 
-The decision loop does not own implementation details, task scheduling, worker dispatch, or code evidence.
+The decision loop does not own implementation details, task scheduling, worker start, or code evidence.
 
 ## Loop cycle
 
@@ -28,7 +29,7 @@ identify decisions, requirements, risks, alternatives, and unknowns
 prepare or verify KB/diagram propagation
 update decision output
 check decision exit conditions
-append decision.iteration
+append decision.rows_approved
 continue, exit, route back, or block
 ```
 
@@ -47,10 +48,11 @@ Decision loop output is the high-signal packet planning needs:
 - risk tier and approval evidence;
 - assumptions and non-goals;
 - downstream planning questions;
+- planning-depth handoff guidance (`micro` or `standard`), while still always handing accepted project-affecting work to planning;
 - route-back answers;
 - canonical refs proving the output.
 
-Decision output should not include task breakdowns, implementation plans, test commands, or worker instructions.
+Decision output should not include task breakdowns, implementation plans, test commands, or worker instructions. Even tiny project-affecting work exits to planning; the decision loop only classifies whether planning should produce a micro-plan or a standard plan.
 
 Decision rows carry shared intent fields plus a `decisionKind`. Kind-specific fields shape the row without creating another loop:
 
@@ -63,6 +65,15 @@ Decision rows carry shared intent fields plus a `decisionKind`. Kind-specific fi
 | migrate | Source behavior, target behavior, preserved invariants, equivalence proof, and rollback or containment plan. |
 
 `docs` and `release` rows currently use the shared decision standards only unless a narrower kind better describes the decision.
+
+`decisionKind` describes semantic intent, not size. Size and routing are separate fields:
+
+| Field | Values | Meaning |
+| --- | --- | --- |
+| `workScale` | `tiny`, `small`, `normal`, `large` | The estimated amount of work and review surface. |
+| `planningDepth` | `micro`, `standard` | Whether planning should emit a compact one-unit micro-plan or a full standard plan. |
+
+Micro planning is allowed only for low-risk `tiny` or `small` decisions. `normal`, `large`, medium-risk, high-risk, ambiguous, destructive, dependency, API/product, security/privacy, release, or multi-component work must use standard planning.
 
 ## Exit quality standards
 
@@ -81,6 +92,7 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk rows need explicit proof refs for research, prior art, validation, or user guidance. |
 | risks_and_alternatives_considered | Approved rows declare a low/medium/high risk tier; high-risk intentions identify affected layers and at least one viable alternative before planning. |
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
+| work_routing_classified | Approved rows classify work scale and planning depth; micro planning is limited to tiny or small low-risk work. |
 | decision_kind_classified | Approved rows classify the decision kind so kind-specific standards can apply inside the decision loop. |
 | debug_decision_focused | Debug rows include target, hypothesis, invariant, probe, expected safe behavior, and stop condition. |
 | fix_decision_reproducible | Fix rows include reproduction, expected behavior, and regression coverage. |
@@ -103,7 +115,7 @@ Decision iterations should record compact facts:
 
 ```json
 {
-  "event": "decision.iteration",
+  "event": "decision.rows_approved",
   "loop": "decision",
   "data": {
     "iteration": 1,

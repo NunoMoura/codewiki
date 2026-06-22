@@ -1,10 +1,40 @@
 import { assertValidTraceRecord } from "./schema.ts";
-import type { TailCheckpoint, TraceHead, TraceRecord } from "./types.ts";
+import { normalizeTraceRefs } from "./refs.ts";
+import type {
+	TailCheckpoint,
+	TraceHead,
+	TraceOrigin,
+	TraceRecord,
+} from "./types.ts";
 
 export interface CreateTraceHeadInput {
 	traceId: string;
 	title: string;
 	createdAt?: string;
+	origin?: TraceOriginInput;
+}
+
+export interface TraceOriginInput {
+	kind: string;
+	parentTraceId?: string;
+	triggerTraceId?: string;
+	triggerId?: string;
+	planningRef?: string;
+	sourceRef?: string;
+	runKey?: string;
+	refs?: string[];
+}
+
+export interface CreateTriggerRunTraceHeadInput {
+	traceId: string;
+	title: string;
+	triggerTraceId: string;
+	triggerId: string;
+	planningRef: string;
+	runKey: string;
+	createdAt?: string;
+	sourceRef?: string;
+	refs?: string[];
 }
 
 export interface CreateTailCheckpointInput {
@@ -23,7 +53,58 @@ export function createTraceHead(input: CreateTraceHeadInput): TraceHead {
 		traceId: input.traceId.trim(),
 		title: input.title.trim(),
 		createdAt: input.createdAt || new Date().toISOString(),
+		...traceOriginProperty(input.origin),
 	};
+}
+
+export function createTriggerRunTraceHead(
+	input: CreateTriggerRunTraceHeadInput,
+): TraceHead {
+	return createTraceHead({
+		traceId: input.traceId,
+		title: input.title,
+		createdAt: input.createdAt,
+		origin: {
+			kind: "trigger_run",
+			parentTraceId: input.triggerTraceId,
+			triggerTraceId: input.triggerTraceId,
+			triggerId: input.triggerId,
+			planningRef: input.planningRef,
+			runKey: input.runKey,
+			...(input.sourceRef ? { sourceRef: input.sourceRef } : {}),
+			refs: normalizeTraceRefs([
+				input.triggerTraceId,
+				input.triggerId,
+				input.planningRef,
+				input.runKey,
+				input.sourceRef || "",
+				...(input.refs || []),
+			]),
+		},
+	});
+}
+
+function traceOriginProperty(input: TraceOriginInput | undefined): {
+	origin?: TraceOrigin;
+} {
+	if (!input) return {};
+	const origin: TraceOrigin = {
+		kind: input.kind.trim(),
+		...(input.parentTraceId
+			? { parentTraceId: input.parentTraceId.trim() }
+			: {}),
+		...(input.triggerTraceId
+			? { triggerTraceId: input.triggerTraceId.trim() }
+			: {}),
+		...(input.triggerId ? { triggerId: input.triggerId.trim() } : {}),
+		...(input.planningRef ? { planningRef: input.planningRef.trim() } : {}),
+		...(input.sourceRef ? { sourceRef: input.sourceRef.trim() } : {}),
+		...(input.runKey
+			? { runKey: input.runKey.trim() }
+			: {}),
+		refs: normalizeTraceRefs(input.refs || []),
+	};
+	return { origin };
 }
 
 export function createTailCheckpoint(

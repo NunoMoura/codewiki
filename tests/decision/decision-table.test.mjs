@@ -38,6 +38,8 @@ describe("decision tables", () => {
 		assert.equal(table.rows[0].approval, "approved");
 		assert.equal(table.rows[0].changeType, "code");
 		assert.equal(table.rows[0].decisionKind, "improve");
+		assert.equal(table.rows[0].workScale, "small");
+		assert.equal(table.rows[0].planningDepth, "micro");
 		assert.deepEqual(table.rows[0].affectedLayers, ["system", "source"]);
 	});
 
@@ -172,6 +174,53 @@ describe("decision exit and iteration runner", () => {
 		]);
 	});
 
+	it("blocks decisions that overlap active trace goals", () => {
+		const table = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-overlap",
+					currentState: "Runtime host lifecycle work is active elsewhere.",
+					desiredState: "A second trace edits the same runtime host files.",
+					rationale: "The overlap must be resolved before approval.",
+					...decisionQualityFields(),
+					approval: "approved",
+					sourceRefs: ["src/runtime/host-runner.ts"],
+				},
+			],
+		});
+
+		const exit = evaluateDecisionExit(table, {
+			knowledgeDelta: {
+				updatedRefs: ["src/runtime/host-runner.ts"],
+				sections: [],
+			},
+			activeTraceGoals: [
+				{
+					traceId: "TRACE-host-lifecycle",
+					status: "needs_implementation",
+					decisionRefs: [
+						"trace:TRACE-host-lifecycle:decision:iteration:1#row:DTR-host",
+					],
+					pathScopes: ["src/runtime"],
+				},
+			],
+		});
+
+		assert.equal(exit.passed, false);
+		assert.equal(exit.verdict, "block");
+		assert.equal(exit.route, "user");
+		assert.equal(
+			exit.issues.some((issue) => issue.code === "active_trace_conflict"),
+			true,
+		);
+		assert.equal(
+			exit.qualityStandards.find(
+				(standard) => standard.id === "active_trace_conflicts_resolved",
+			)?.status,
+			"blocked",
+		);
+	});
+
 	it("blocks agent-judged misalignment before planning", () => {
 		const table = createDecisionTable({
 			rows: [
@@ -258,6 +307,72 @@ describe("decision exit and iteration runner", () => {
 		assert.equal(
 			missing.qualityStandards.find(
 				(standard) => standard.id === "risks_and_alternatives_considered",
+			)?.status,
+			"unmet",
+		);
+	});
+
+	it("blocks missing and invalid decision work routing", () => {
+		const missing = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-routing-missing",
+					currentState: "Decision rows do not classify work routing.",
+					desiredState: "Decision rows classify routing before planning.",
+					rationale: "Planning needs trusted route metadata.",
+					...decisionQualityFields({
+						workScale: undefined,
+						planningDepth: undefined,
+					}),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+		const invalidMicro = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-routing-invalid",
+					currentState: "Micro-plans could be selected for broad work.",
+					desiredState:
+						"Micro-plans are limited to tiny or small low-risk work.",
+					rationale: "Large or risky work needs standard planning.",
+					...decisionQualityFields({
+						workScale: "large",
+						planningDepth: "micro",
+						risk: "medium",
+					}),
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+
+		const missingExit = evaluateDecisionExit(missing);
+		const invalidExit = evaluateDecisionExit(invalidMicro);
+
+		assert.equal(missingExit.passed, false);
+		assert.deepEqual(
+			missingExit.issues
+				.map((issue) => issue.code)
+				.filter(
+					(code) =>
+						code.includes("work_scale") || code.includes("planning_depth"),
+				)
+				.sort(),
+			["missing_planning_depth", "missing_work_scale"],
+		);
+		assert.equal(invalidExit.passed, false);
+		assert.deepEqual(
+			invalidExit.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.startsWith("invalid_micro_plan"))
+				.sort(),
+			["invalid_micro_plan_risk", "invalid_micro_plan_scale"],
+		);
+		assert.equal(
+			invalidExit.qualityStandards.find(
+				(standard) => standard.id === "work_routing_classified",
 			)?.status,
 			"unmet",
 		);
@@ -361,10 +476,10 @@ describe("decision exit and iteration runner", () => {
 			rows: [
 				{
 					id: "DTR-risk",
-					currentState: "Runtime may dispatch work automatically.",
+					currentState: "Runtime may select work-unit claims automatically.",
 					desiredState: "Runtime may apply high-risk changes automatically.",
 					rationale: "User asked to explore automation.",
-					...decisionQualityFields(),
+					...decisionQualityFields({ planningDepth: "standard" }),
 					approval: "approved",
 					risk: "high",
 					sourceRefs: ["kb:system/runtime.md"],
@@ -456,7 +571,7 @@ describe("decision exit and iteration runner", () => {
 		assert.equal(result.exit.route, "planning");
 		assert.equal(result.draftTraceEvents.length, 0);
 		assert.equal(result.traceEvents.length, 1);
-		assert.equal(result.traceEvents[0].event, "decision.iteration");
+		assert.equal(result.traceEvents[0].event, "rows_approved");
 		assert.deepEqual(result.output.currentStatePacket.refs, [
 			"kb:system/traces.md",
 		]);
@@ -479,12 +594,14 @@ describe("decision exit and iteration runner", () => {
 				"intention_understood",
 				"user_value_clear",
 				"cost_understood",
+				"work_routing_classified",
 				"recommendation_justified",
 				"intention_validated",
 				"approval_safety",
 				"current_state_grounded",
 				"evidence_sufficient",
 				"risks_and_alternatives_considered",
+				"active_trace_conflicts_resolved",
 				"knowledge_impact_accounted",
 				"decision_kind_classified",
 				"improve_decision_outcome",
