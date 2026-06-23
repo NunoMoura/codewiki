@@ -45,9 +45,7 @@ export const decisionExitStandards: LabStandard<DecisionLabInput>[] = [
 				route: "fail" as const,
 				description:
 					"Approved decision rows must use specific impact, rationale, and assessment text instead of generic placeholder words.",
-				...(failures.length > 0
-					? { message: failures.join(" ") }
-					: {}),
+				...(failures.length > 0 ? { message: failures.join(" ") } : {}),
 			};
 		},
 	},
@@ -91,9 +89,7 @@ function decisionSpecificityFailures(
 		.map((field) => field.label);
 	return weakFields.length === 0
 		? []
-		: [
-				`Decision row ${row.id} has vague fields: ${weakFields.join(", ")}.`,
-			];
+		: [`Decision row ${row.id} has vague fields: ${weakFields.join(", ")}.`];
 }
 
 function isWeakDecisionText(value: string): boolean {
