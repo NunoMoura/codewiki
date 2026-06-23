@@ -16,6 +16,7 @@ import {
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 
 const packageJson = jsonFile("package.json");
+const buildTsconfig = jsonFile("tsconfig.build.json");
 const codewikiConfig = jsonFile(".codewiki/config.json");
 const piSettings = existsSync(".pi/settings.json")
 	? jsonFile(".pi/settings.json")
@@ -160,6 +161,27 @@ describe("install readiness checklist", () => {
 		assert.doesNotMatch(
 			readFileSync("src/pi/tools/index.ts", "utf8"),
 			/sourceOwners|sourcePaths/,
+		);
+	});
+
+	it("keeps lab code out of the packaged Pi extension", () => {
+		assert.deepEqual(packageJson.files, [
+			"dist",
+			"README.md",
+			"CHANGELOG.md",
+			"LICENSE",
+			"package.json",
+		]);
+		assert.deepEqual(buildTsconfig.include, ["src/**/*.ts"]);
+		assert.equal(packageJson.pi.extensions.includes("lab"), false);
+		assert.equal(existsSync("lab"), true);
+		assert.equal(
+			readFileSync("src/pi/extension.ts", "utf8").includes("lab/"),
+			false,
+		);
+		assert.equal(
+			readFileSync("src/pi/prompt/index.ts", "utf8").includes("lab/"),
+			false,
 		);
 	});
 

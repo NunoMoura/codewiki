@@ -41,7 +41,7 @@ try {
 	writeFileSync(
 		smokeScript,
 		`import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -70,6 +70,15 @@ assert.equal(packageJson.dependencies["js-yaml"], undefined);
 assert.equal(packageJson.dependencies.yaml.startsWith("^2."), true);
 assert.equal(packageJson.dependencies.typebox, undefined);
 assert.deepEqual(packageJson.peerDependencies, { typebox: "*" });
+assert.equal(existsSync(join(packageRoot, "lab")), false);
+assert.equal(existsSync(join(packageRoot, "tests")), false);
+assert.equal(existsSync(join(packageRoot, ".codewiki")), false);
+assert.equal(existsSync(join(packageRoot, "benchmarks")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "lab")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "tests")), false);
+assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), true);
+assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);
+assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);
 
 const extension = await import(pathToFileURL(join(packageRoot, "dist", "pi", "extension.js")).href);
 const prompt = await import(pathToFileURL(join(packageRoot, "dist", "pi", "prompt", "index.js")).href);

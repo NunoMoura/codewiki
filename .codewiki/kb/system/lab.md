@@ -14,6 +14,11 @@ simple metrics, and isolated experiment runs.
 The lab is not a fourth semantic loop and not a runtime variant. It is an
 experiment runner surface for CodeWiki maintainers and agents.
 
+The lab is not part of the Pi extension runtime surface. Packed CodeWiki packages
+ship `dist/**` only, so `lab/**`, `tests/**`, and `.codewiki/**` stay in the
+source repository. Pi tools, slash commands, prompt hooks, and TUI renderers must
+not import or expose lab code.
+
 ## Autoresearch adaptation
 
 CodeWiki borrows the useful shape of autoresearch:
