@@ -128,6 +128,13 @@ The runner records base score, candidate score, prompts, logs, and patch diff.
 Successful runs produce candidate branches for human review. They do not merge
 into production automatically until the lab process earns trust.
 
+## Current lab state
+
+The Decision candidate includes a deterministic specificity standard that catches
+`DEC/vague-docs-decision`. DEC currently scores 100 against the locked seed cases.
+Remaining known false passes are PEC vague/overlap fixtures and the IEC shallow
+production assertion fixture.
+
 ## Promotion
 
 A successful lab candidate does not automatically replace production code.

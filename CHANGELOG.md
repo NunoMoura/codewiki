@@ -10,11 +10,17 @@ All notable changes to this project will be documented in this file.
   condition scores (DEC, PEC, IEC), weighted quality standards, and candidate
   loop-exit experiments.
 
+### Changed
+
+- Hardened the Decision lab candidate with a deterministic specificity standard,
+  raising DEC to 100 against the locked seed cases while PEC and IEC still expose
+  known false-pass fixtures.
+
 ### Notes
 
-- The lab gate intentionally fails while current production-parity seed
-  standards allow known false-pass fixtures; app benchmarks are deferred until
-  loop exits are hardened.
+- The lab gate intentionally fails while remaining PEC and IEC seed standards
+  allow known false-pass fixtures; app benchmarks are deferred until loop exits
+  are hardened.
 
 ## [0.3.0] - 2026-06-22
 

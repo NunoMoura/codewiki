@@ -3,10 +3,7 @@ import type {
 	ImplementationExitInput,
 	ImplementationExitResult,
 } from "../../src/implementation/types.ts";
-import type {
-	LabCandidateStandards,
-	LabStandard,
-} from "../runner/types.ts";
+import type { LabCandidateStandards, LabStandard } from "../runner/types.ts";
 
 export interface ImplementationLabInput {
 	plan: unknown;

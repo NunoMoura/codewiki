@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { scoreAllLoops, labGateStatus } from "../../lab/runner/score.ts";
 
 describe("CodeWiki lab loop exit scores", () => {
-	it("scores seed candidates against locked DEC/PEC/IEC cases", () => {
+	it("scores candidates against locked DEC/PEC/IEC cases", () => {
 		const scores = scoreAllLoops();
 
 		assert.deepEqual(Object.keys(scores), [
@@ -19,7 +19,7 @@ describe("CodeWiki lab loop exit scores", () => {
 		assert.equal(scores.implementation.caseCount, 3);
 	});
 
-	it("exposes known false-pass gaps from production-parity seed standards", () => {
+	it("exposes remaining known false-pass gaps after DEC specificity hardening", () => {
 		const scores = scoreAllLoops();
 		const falsePasses = Object.values(scores).flatMap((score) =>
 			score.cases
@@ -27,8 +27,9 @@ describe("CodeWiki lab loop exit scores", () => {
 				.map((testCase) => `${score.metric}/${testCase.id}`),
 		);
 
+		assert.equal(scores.decision.score, 100);
+		assert.equal(scores.decision.falsePasses, 0);
 		assert.deepEqual(falsePasses, [
-			"DEC/vague-docs-decision",
 			"PEC/vague-work-unit-plan",
 			"PEC/overlapping-independent-work",
 			"IEC/shallow-production-assertion",

@@ -36,18 +36,21 @@ describe("lab candidate contract", () => {
 	});
 
 	it("declares locked evaluator files outside candidate edit scope", () => {
-		assert.deepEqual([...LAB_LOCKED_EVALUATOR_FILES].sort(), [
-			"lab/decision/cases.ts",
-			"lab/decision/score.ts",
-			"lab/implementation/cases.ts",
-			"lab/implementation/score.ts",
-			"lab/planning/cases.ts",
-			"lab/planning/score.ts",
-			"lab/runner/contract.ts",
-			"lab/runner/engine.ts",
-			"lab/runner/score.ts",
-			"lab/runner/types.ts",
-		].sort());
+		assert.deepEqual(
+			[...LAB_LOCKED_EVALUATOR_FILES].sort(),
+			[
+				"lab/decision/cases.ts",
+				"lab/decision/score.ts",
+				"lab/implementation/cases.ts",
+				"lab/implementation/score.ts",
+				"lab/planning/cases.ts",
+				"lab/planning/score.ts",
+				"lab/runner/contract.ts",
+				"lab/runner/engine.ts",
+				"lab/runner/score.ts",
+				"lab/runner/types.ts",
+			].sort(),
+		);
 		for (const filePath of LAB_LOCKED_EVALUATOR_FILES) {
 			assert.equal(existsSync(filePath), true, filePath);
 		}
@@ -100,9 +103,11 @@ describe("lab candidate contract", () => {
 });
 
 function importSpecifiers(source) {
-	return [...source.matchAll(/(?:import\s+(?:type\s+)?(?:[\s\S]*?)\s+from\s+|import\s+)["']([^"']+)["']/g)].map(
-		(match) => match[1],
-	);
+	return [
+		...source.matchAll(
+			/(?:import\s+(?:type\s+)?(?:[\s\S]*?)\s+from\s+|import\s+)["']([^"']+)["']/g,
+		),
+	].map((match) => match[1]);
 }
 
 function assertUnique(values) {
