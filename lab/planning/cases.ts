@@ -80,7 +80,9 @@ function planningInput(workItem: PlanningWorkItem): PlanningExitInput {
 	};
 }
 
-function planningWorkItem(overrides: Partial<PlanningWorkItem> = {}): PlanningWorkItem {
+function planningWorkItem(
+	overrides: Partial<PlanningWorkItem> = {},
+): PlanningWorkItem {
 	return {
 		id: "PW-good",
 		title: "Add deterministic loop-exit adversarial debug coverage",
@@ -91,7 +93,9 @@ function planningWorkItem(overrides: Partial<PlanningWorkItem> = {}): PlanningWo
 			"Add deterministic adversarial fixtures for each loop exit evaluator.",
 			"Report observed verdict, desired verdict, issue codes, standard modes, and open gap count.",
 		],
-		acceptance: ["Lab reports pass, gap, or regression status for every fixture."],
+		acceptance: [
+			"Lab reports pass, gap, or regression status for every fixture.",
+		],
 		acceptanceCriteria: [
 			{
 				id: "AC-1",
@@ -99,10 +103,7 @@ function planningWorkItem(overrides: Partial<PlanningWorkItem> = {}): PlanningWo
 			},
 		],
 		componentRefs: [],
-		pathScopes: [
-			"src/runtime/types.ts",
-			"tests/lab/loop-exit-score.test.mjs",
-		],
+		pathScopes: ["src/runtime/types.ts", "tests/lab/loop-exit-score.test.mjs"],
 		planningDepth: "micro",
 		verification: ["tests/lab/loop-exit-score.test.mjs"],
 		workerProfile: "implementation_worker",

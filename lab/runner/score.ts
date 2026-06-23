@@ -109,7 +109,9 @@ export function labGateStatus(scores: Record<LabLoop, LabLoopScore>): {
 					`${score.metric} has ${score.expectedPassRegressions} expected-pass regression(s).`,
 				]
 			: []),
-		...(score.score < 100 ? [`${score.metric} is ${score.score}, not 100.`] : []),
+		...(score.score < 100
+			? [`${score.metric} is ${score.score}, not 100.`]
+			: []),
 	]);
 	return { status: blockers.length === 0 ? "pass" : "fail", blockers };
 }

@@ -49,6 +49,17 @@ Production loop helpers and wiring live under `src/<loop>/**`. Shared standard
 construction helpers live under `src/loops/**`. Those helpers should stay small,
 deterministic, and reusable.
 
+Production source supports the lab by exporting three substrate seams per loop:
+
+- issue collection, such as `collectDecisionExitIssues`, independent of final
+  verdict wiring;
+- weighted quality-standard definitions;
+- quality-standard builders that convert collected issues into traceable
+  standard results.
+
+This lets lab candidates experiment with standards while production keeps stable
+input parsing, issue collection, route wiring, trace output, and helper behavior.
+
 ## Fixed evaluation data
 
 Lab evals use loop-specific inputs:

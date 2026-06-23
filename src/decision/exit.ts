@@ -104,10 +104,15 @@ export interface DecisionExitResult extends ExitDetails {
 	approvedRowIds: string[];
 }
 
-export function evaluateDecisionExit(
+export interface DecisionExitIssueCollection {
+	issues: DecisionExitIssue[];
+	approvedRows: DecisionRow[];
+}
+
+export function collectDecisionExitIssues(
 	table: DecisionTable,
 	options: DecisionExitOptions = {},
-): DecisionExitResult {
+): DecisionExitIssueCollection {
 	const issues: DecisionExitIssue[] = [];
 	if (table.rows.length === 0) {
 		issues.push({
@@ -149,6 +154,14 @@ export function evaluateDecisionExit(
 	issues.push(
 		...activeTraceConflictIssues(approvedRows, options.activeTraceGoals || []),
 	);
+	return { issues, approvedRows };
+}
+
+export function evaluateDecisionExit(
+	table: DecisionTable,
+	options: DecisionExitOptions = {},
+): DecisionExitResult {
+	const { issues, approvedRows } = collectDecisionExitIssues(table, options);
 	const qualityStandards = decisionQualityStandards(issues, approvedRows);
 	const verdict =
 		blockedIssues(issues).length > 0

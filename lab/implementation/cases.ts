@@ -89,7 +89,9 @@ export const implementationCases: LabCase<ImplementationLabInput>[] = [
 	},
 ];
 
-function implementationInput(change: ImplementationChange): ImplementationExitInput {
+function implementationInput(
+	change: ImplementationChange,
+): ImplementationExitInput {
 	return {
 		planningRefs: ["trace:PW-1"],
 		changes: [change],

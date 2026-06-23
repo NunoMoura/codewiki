@@ -10,19 +10,23 @@ export interface ImplementationLabInput {
 	implementation: ImplementationExitInput;
 }
 
-export const implementationExitStandards: LabStandard<ImplementationLabInput>[] = [
-	{
-		id: "production_implementation_exit_parity",
-		mode: "deterministic",
-		weight: 100,
-		description:
-			"Seed candidate mirrors the current production implementation exit until experiments add better weighted standards.",
-		evaluate(input) {
-			const exit = evaluateImplementationExit(input.implementation);
-			return productionExitResult("production_implementation_exit_parity", exit);
+export const implementationExitStandards: LabStandard<ImplementationLabInput>[] =
+	[
+		{
+			id: "production_implementation_exit_parity",
+			mode: "deterministic",
+			weight: 100,
+			description:
+				"Seed candidate mirrors the current production implementation exit until experiments add better weighted standards.",
+			evaluate(input) {
+				const exit = evaluateImplementationExit(input.implementation);
+				return productionExitResult(
+					"production_implementation_exit_parity",
+					exit,
+				);
+			},
 		},
-	},
-];
+	];
 
 function productionExitResult(id: string, exit: ImplementationExitResult) {
 	return {

@@ -9,131 +9,136 @@ import type { DecisionRow } from "./types.ts";
 
 export { criteriaFromQualityStandards };
 
-const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<DecisionExitIssueCode>[] = [
-	{
-		id: "decision_table_ready",
-		weight: 8,
-		description:
-			"Decision table has at least one approved row and stable row ids.",
-		codes: ["no_decision_rows", "no_approved_rows", "duplicate_decision_row_id"],
-	},
-	{
-		id: "intention_understood",
-		weight: 14,
-		description:
-			"Approved rows state the user intention as current state, desired state, and rationale.",
-		codes: [
-			"missing_current_state",
-			"missing_desired_state",
-			"missing_rationale",
-		],
-	},
-	{
-		id: "user_value_clear",
-		weight: 10,
-		description:
-			"Approved rows explain how the intention benefits users or improves user outcomes.",
-		codes: ["missing_user_impact"],
-	},
-	{
-		id: "cost_understood",
-		weight: 7,
-		description:
-			"Approved rows expose maintainer impact and a bounded effort estimate.",
-		codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
-	},
-	{
-		id: "work_routing_classified",
-		weight: 10,
-		description:
-			"Approved rows classify work scale and choose micro or standard planning before planning handoff.",
-		codes: [
-			"missing_work_scale",
-			"invalid_work_scale",
-			"missing_planning_depth",
-			"invalid_planning_depth",
-			"invalid_micro_plan_scale",
-			"invalid_micro_plan_risk",
-		],
-	},
-	{
-		id: "recommendation_justified",
-		weight: 9,
-		description:
-			"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
-		codes: [
-			"missing_recommendation",
-			"invalid_recommendation",
-			"recommendation_not_approve",
-			"missing_recommendation_rationale",
-		],
-	},
-	{
-		id: "intention_validated",
-		weight: 12,
-		mode: "agent",
-		description:
-			"The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests.",
-		codes: ["missing_agent_assessment", "agent_assessment_not_aligned"],
-	},
-	{
-		id: "approval_safety",
-		weight: 18,
-		description:
-			"High-risk approved rows have explicit user approval authority and a canonical approval ref.",
-		codes: ["missing_high_risk_approval", "invalid_approval_ref"],
-	},
-	{
-		id: "current_state_grounded",
-		weight: 12,
-		description:
-			"Current state is grounded in canonical source, KB, trace, Git, digest, or test refs.",
-		codes: ["missing_current_state_packet", "invalid_current_state_ref"],
-	},
-	{
-		id: "evidence_sufficient",
-		weight: 12,
-		description:
-			"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk rows.",
-		codes: [
-			"missing_traceability_ref",
-			"missing_high_risk_evidence",
-			"invalid_traceability_ref",
-		],
-	},
-	{
-		id: "risks_and_alternatives_considered",
-		weight: 10,
-		description:
-			"Approved rows declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
-		codes: [
-			"missing_risk",
-			"invalid_risk",
-			"missing_high_risk_scope",
-			"missing_high_risk_alternative",
-		],
-	},
-	{
-		id: "active_trace_conflicts_resolved",
-		weight: 16,
-		description:
-			"Approved rows do not conflict with active trace goals unless the conflict is merged, superseded, deferred, or otherwise resolved.",
-		codes: ["active_trace_conflict"],
-	},
-	{
-		id: "knowledge_impact_accounted",
-		weight: 8,
-		description:
-			"Knowledge impact is recorded as updated refs or explicit no-impact rationale.",
-		codes: [
-			"missing_knowledge_delta",
-			"invalid_knowledge_ref",
-			"incomplete_knowledge_digest",
-		],
-	},
-];
+export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<DecisionExitIssueCode>[] =
+	[
+		{
+			id: "decision_table_ready",
+			weight: 8,
+			description:
+				"Decision table has at least one approved row and stable row ids.",
+			codes: [
+				"no_decision_rows",
+				"no_approved_rows",
+				"duplicate_decision_row_id",
+			],
+		},
+		{
+			id: "intention_understood",
+			weight: 14,
+			description:
+				"Approved rows state the user intention as current state, desired state, and rationale.",
+			codes: [
+				"missing_current_state",
+				"missing_desired_state",
+				"missing_rationale",
+			],
+		},
+		{
+			id: "user_value_clear",
+			weight: 10,
+			description:
+				"Approved rows explain how the intention benefits users or improves user outcomes.",
+			codes: ["missing_user_impact"],
+		},
+		{
+			id: "cost_understood",
+			weight: 7,
+			description:
+				"Approved rows expose maintainer impact and a bounded effort estimate.",
+			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
+		},
+		{
+			id: "work_routing_classified",
+			weight: 10,
+			description:
+				"Approved rows classify work scale and choose micro or standard planning before planning handoff.",
+			codes: [
+				"missing_work_scale",
+				"invalid_work_scale",
+				"missing_planning_depth",
+				"invalid_planning_depth",
+				"invalid_micro_plan_scale",
+				"invalid_micro_plan_risk",
+			],
+		},
+		{
+			id: "recommendation_justified",
+			weight: 9,
+			description:
+				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
+			codes: [
+				"missing_recommendation",
+				"invalid_recommendation",
+				"recommendation_not_approve",
+				"missing_recommendation_rationale",
+			],
+		},
+		{
+			id: "intention_validated",
+			weight: 12,
+			mode: "agent",
+			description:
+				"The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests.",
+			codes: ["missing_agent_assessment", "agent_assessment_not_aligned"],
+		},
+		{
+			id: "approval_safety",
+			weight: 18,
+			description:
+				"High-risk approved rows have explicit user approval authority and a canonical approval ref.",
+			codes: ["missing_high_risk_approval", "invalid_approval_ref"],
+		},
+		{
+			id: "current_state_grounded",
+			weight: 12,
+			description:
+				"Current state is grounded in canonical source, KB, trace, Git, digest, or test refs.",
+			codes: ["missing_current_state_packet", "invalid_current_state_ref"],
+		},
+		{
+			id: "evidence_sufficient",
+			weight: 12,
+			description:
+				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk rows.",
+			codes: [
+				"missing_traceability_ref",
+				"missing_high_risk_evidence",
+				"invalid_traceability_ref",
+			],
+		},
+		{
+			id: "risks_and_alternatives_considered",
+			weight: 10,
+			description:
+				"Approved rows declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
+			codes: [
+				"missing_risk",
+				"invalid_risk",
+				"missing_high_risk_scope",
+				"missing_high_risk_alternative",
+			],
+		},
+		{
+			id: "active_trace_conflicts_resolved",
+			weight: 16,
+			description:
+				"Approved rows do not conflict with active trace goals unless the conflict is merged, superseded, deferred, or otherwise resolved.",
+			codes: ["active_trace_conflict"],
+		},
+		{
+			id: "knowledge_impact_accounted",
+			weight: 8,
+			description:
+				"Knowledge impact is recorded as updated refs or explicit no-impact rationale.",
+			codes: [
+				"missing_knowledge_delta",
+				"invalid_knowledge_ref",
+				"incomplete_knowledge_digest",
+			],
+		},
+	];
 
-const DECISION_KIND_QUALITY_STANDARDS: Record<
+export const DECISION_KIND_QUALITY_STANDARDS: Record<
 	string,
 	LoopQualityStandardDefinition<DecisionExitIssueCode>
 > = {
@@ -218,12 +223,15 @@ export function decisionQualityStandards(
 	]);
 	return [
 		...BASE_DECISION_QUALITY_STANDARDS.map((definition) =>
-			buildDecisionStandard({
-				...definition,
-				evidenceRefs: evidenceStandardIds.has(definition.id)
-					? evidenceRefs
-					: definition.evidenceRefs,
-			}, issues),
+			buildDecisionStandard(
+				{
+					...definition,
+					evidenceRefs: evidenceStandardIds.has(definition.id)
+						? evidenceRefs
+						: definition.evidenceRefs,
+				},
+				issues,
+			),
 		),
 		...decisionKindQualityStandards(issues, approvedRows),
 	];

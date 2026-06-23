@@ -8,7 +8,9 @@ import type { ImplementationExitIssue } from "./types.ts";
 
 export { criteriaFromQualityStandards };
 
-const IMPLEMENTATION_QUALITY_STANDARDS: LoopQualityStandardDefinition<ImplementationExitIssue["code"]>[] = [
+export const IMPLEMENTATION_QUALITY_STANDARDS: LoopQualityStandardDefinition<
+	ImplementationExitIssue["code"]
+>[] = [
 	{
 		id: "planning_coverage_complete",
 		weight: 12,
@@ -180,7 +182,9 @@ export function implementationQualityStandards(
 	);
 }
 
-export function implementationIssueRefs(issue: ImplementationExitIssue): string[] {
+export function implementationIssueRefs(
+	issue: ImplementationExitIssue,
+): string[] {
 	return [
 		issue.planningRef,
 		issue.changeId,

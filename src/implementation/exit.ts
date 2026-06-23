@@ -57,7 +57,7 @@ export function evaluateImplementationExit(
 	};
 }
 
-function collectImplementationExitIssues(
+export function collectImplementationExitIssues(
 	input: ImplementationExitInput,
 ): ImplementationExitIssue[] {
 	return [

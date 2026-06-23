@@ -13,7 +13,8 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		description:
 			"Grounded improve decision with refs, no-KB-impact rationale, and aligned assessment exits.",
 		input: {
-			prompt: "Improve loop exit standards with deterministic adversarial coverage.",
+			prompt:
+				"Improve loop exit standards with deterministic adversarial coverage.",
 			decisionTable: decisionTable(decisionRow()),
 		},
 		expected: "pass",
@@ -97,7 +98,9 @@ function decisionRow(overrides: DecisionRowInput = {}): DecisionRowInput {
 			"Decision, planning, and implementation exits expose measurable gaps before closure.",
 		successSignal:
 			"The lab reports pass/fail/block verdicts and known gap counts.",
-		nonGoals: ["Do not run external model judges in the deterministic loop gate."],
+		nonGoals: [
+			"Do not run external model judges in the deterministic loop gate.",
+		],
 		userImpact:
 			"Users get safer automation because shallow loop outputs fail before implementation or release.",
 		maintainerImpact:

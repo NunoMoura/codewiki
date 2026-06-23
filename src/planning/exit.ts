@@ -130,7 +130,7 @@ export function evaluatePlanningExit(
 	};
 }
 
-function collectPlanningExitIssues(
+export function collectPlanningExitIssues(
 	input: PlanningExitInput,
 ): PlanningExitIssue[] {
 	return [

@@ -20,7 +20,10 @@ export const decisionExitStandards: LabStandard<DecisionLabInput>[] = [
 		description:
 			"Seed candidate mirrors the current production decision exit until experiments add better weighted standards.",
 		evaluate(input) {
-			const exit = evaluateDecisionExit(input.decisionTable, input.options || {});
+			const exit = evaluateDecisionExit(
+				input.decisionTable,
+				input.options || {},
+			);
 			return productionExitResult("production_decision_exit_parity", exit);
 		},
 	},
