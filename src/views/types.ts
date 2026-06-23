@@ -44,6 +44,7 @@ export interface QualityStandardSummary {
 	id: string;
 	status: QualityStandardSummaryStatus;
 	mode: LoopQualityStandardMode;
+	weight?: number;
 	description: string;
 	message?: string;
 	refs: string[];

@@ -6,17 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added the loop-exit debug benchmark for decision, planning, and implementation
-  exit standards, plus the agent-OS benchmark harness with detailed Tetris and
-  flight-simulator task specs, isolated Pi session runner, and production
-  benchmark gate command for quality-adjusted token/speed proof.
+- Added the CodeWiki lab for Decision, Planning, and Implementation exit
+  condition scores (DEC, PEC, IEC), weighted quality standards, and candidate
+  loop-exit experiments.
 
 ### Notes
 
-- The loop-exit gate intentionally fails while current semantic gap fixtures
-  pass too cheaply, and the app benchmark gate intentionally fails until real
-  CodeWiki and baseline run results exist; no synthetic benchmark proof is
-  included.
+- The lab gate intentionally fails while current production-parity seed
+  standards allow known false-pass fixtures; app benchmarks are deferred until
+  loop exits are hardened.
 
 ## [0.3.0] - 2026-06-22
 

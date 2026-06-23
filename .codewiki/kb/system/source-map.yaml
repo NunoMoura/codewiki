@@ -41,13 +41,13 @@ components:
       - tests/runtime/external-package-failures-smoke.mjs
       - tests/runtime/readiness-checklist.test.mjs
     role: package_entrypoint
-  benchmarks:
-    doc: .codewiki/kb/system/benchmarks.md
+  lab:
+    doc: .codewiki/kb/system/lab.md
     source:
-      - benchmarks/**
+      - lab/**
     tests:
-      - tests/benchmarks/**
-    role: production_readiness_evidence
+      - tests/lab/**
+    role: loop_exit_experimentation
   api:
     doc: .codewiki/kb/system/api.md
     source:
@@ -101,6 +101,16 @@ components:
     trace_events:
       - implementation.evidence_accepted
     role: semantic_loop
+  loop_standards:
+    doc: .codewiki/kb/system/loop-contracts.md
+    source:
+      - src/loops/**
+    tests:
+      - tests/decision/**
+      - tests/planning/**
+      - tests/implementation/**
+      - tests/lab/**
+    role: loop_exit_standard_engine
   traces:
     doc: .codewiki/kb/system/traces.md
     source:

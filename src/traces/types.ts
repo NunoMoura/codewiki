@@ -147,6 +147,7 @@ export interface LoopQualityStandardResult {
 	id: string;
 	status: LoopQualityStandardStatus;
 	mode: LoopQualityStandardMode;
+	weight?: number;
 	description: string;
 	message?: string;
 	refs?: string[];

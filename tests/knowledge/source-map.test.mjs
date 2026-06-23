@@ -31,7 +31,7 @@ function activeArtifactPaths() {
 	return unique([
 		...collectFiles("src"),
 		...collectFiles("tests"),
-		...collectFiles("benchmarks"),
+		...collectFiles("lab"),
 		...collectFiles(".codewiki/kb"),
 		...collectFiles(".agents/skills"),
 		"README.md",

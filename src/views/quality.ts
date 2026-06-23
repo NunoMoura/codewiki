@@ -88,6 +88,7 @@ export function loopQualityReadiness(event: TraceEvent): LoopQualityReadiness {
 				id: requiredStandard.id,
 				status: "missing" as const,
 				mode: requiredStandard.mode,
+				weight: requiredStandard.weight,
 				description: requiredStandard.description,
 				message: `${loop} quality standard ${requiredStandard.id} is missing.`,
 				refs: [event.id],
@@ -199,6 +200,7 @@ function qualityStandardSummary(
 		id: text(standard.id),
 		status: qualityStatus(standard.status),
 		mode: qualityMode(standard.mode),
+		...(number(standard.weight) ? { weight: number(standard.weight) } : {}),
 		description: text(standard.description),
 		...(text(standard.message) ? { message: text(standard.message) } : {}),
 		refs: stringList(standard.refs),
@@ -251,6 +253,12 @@ function stringList(value: unknown): string[] {
 	return Array.isArray(value)
 		? value.map((item) => text(item)).filter(Boolean)
 		: [];
+}
+
+function number(value: unknown): number {
+	return typeof value === "number" && Number.isFinite(value) && value > 0
+		? value
+		: 0;
 }
 
 function text(value: unknown): string {

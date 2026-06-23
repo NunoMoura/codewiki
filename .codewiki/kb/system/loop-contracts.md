@@ -63,6 +63,26 @@ Boolean pass/fail is not enough for recovery or automation.
 
 Host errors are not loop exit conditions. If a main, trace, or worker host cannot execute or coordinate work, runtime records or returns host-error metadata. Once a semantic loop runs and produces output, quality standards determine whether that loop exits, continues, routes back, or blocks.
 
+## Weighted quality standards
+
+A loop exit condition is the sum of weighted quality standards. Standards are the
+editable quality surface: they define what must be true for a decision, plan, or
+implementation output to leave its loop. Exit wiring, helper predicates,
+component/source-map lookups, trace reading, and runner behavior live outside the
+standards surface.
+
+Each standard declares:
+
+- stable id;
+- description;
+- mode: `deterministic`, `agent`, or `user`;
+- weight;
+- issue codes or predicates that make the standard unmet or blocked.
+
+Production loop outputs carry the standard results for traceability and recovery.
+The lab uses editable candidate standards and locked eval cases to improve DEC,
+PEC, and IEC before promotion back into production code.
+
 ## Baseline exit-condition invariants
 
 Every loop should enforce cheap structural invariants before deeper semantic checks:
@@ -160,7 +180,7 @@ Exit-condition findings and checkpoints provide recovery alignment after errors,
 
 ## Token-efficiency rule
 
-Do not add loops to compensate for weak loop outputs or weak exit conditions. Add compact outputs, exact refs, and stronger exit conditions. Downstream loops should read the previous loop output and touched refs, not reload full chat history.
+Do not add loops to compensate for weak loop outputs or weak exit conditions. Add compact outputs, exact refs, and stronger weighted standards. Downstream loops should read the previous loop output and touched refs, not reload full chat history.
 
 Preview results are validation drafts for the agent. Append only meaningful trace facts, keep loop outputs compact, run cheap deterministic checks before expensive agent-judgment standards, and let views cache derived status/progress for hosts and renderers.
 
