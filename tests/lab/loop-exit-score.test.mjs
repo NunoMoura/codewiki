@@ -19,7 +19,7 @@ describe("CodeWiki lab loop exit scores", () => {
 		assert.equal(scores.implementation.caseCount, 3);
 	});
 
-	it("exposes remaining known false-pass gap after DEC and PEC hardening", () => {
+	it("passes the locked DEC/PEC/IEC gate after lab hardening", () => {
 		const scores = scoreAllLoops();
 		const falsePasses = Object.values(scores).flatMap((score) =>
 			score.cases
@@ -31,7 +31,9 @@ describe("CodeWiki lab loop exit scores", () => {
 		assert.equal(scores.decision.falsePasses, 0);
 		assert.equal(scores.planning.score, 100);
 		assert.equal(scores.planning.falsePasses, 0);
-		assert.deepEqual(falsePasses, ["IEC/shallow-production-assertion"]);
-		assert.equal(labGateStatus(scores).status, "fail");
+		assert.equal(scores.implementation.score, 100);
+		assert.equal(scores.implementation.falsePasses, 0);
+		assert.deepEqual(falsePasses, []);
+		assert.equal(labGateStatus(scores).status, "pass");
 	});
 });

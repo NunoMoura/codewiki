@@ -17,12 +17,14 @@ All notable changes to this project will be documented in this file.
 - Hardened the Planning lab candidate with deterministic work-unit specificity
   and path-scope overlap standards, raising PEC to 100 against the locked seed
   cases.
+- Hardened the Implementation lab candidate with a deterministic evidence
+  specificity standard, raising IEC to 100 against the locked seed cases and
+  making `npm run lab:gate` pass.
 
 ### Notes
 
-- The lab gate intentionally fails while the remaining IEC shallow assertion
-  fixture exposes a false-pass gap; app benchmarks are deferred until loop exits
-  are hardened.
+- App benchmarks remain deferred until the lab-proven standards are reviewed and
+  promoted into production loop exits.
 
 ## [0.3.0] - 2026-06-22
 

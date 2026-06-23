@@ -131,12 +131,15 @@ into production automatically until the lab process earns trust.
 ## Current lab state
 
 The Decision candidate includes a deterministic specificity standard that catches
-`DEC/vague-docs-decision`. DEC currently scores 100 against the locked seed cases.
-The Planning candidate includes deterministic work-unit specificity and path
-scope overlap standards that catch `PEC/vague-work-unit-plan` and
-`PEC/overlapping-independent-work`. PEC currently scores 100 against the locked
-seed cases. The remaining known false pass is the IEC shallow production
-assertion fixture.
+`DEC/vague-docs-decision`. The Planning candidate includes deterministic
+work-unit specificity and path-scope overlap standards that catch
+`PEC/vague-work-unit-plan` and `PEC/overlapping-independent-work`. The
+Implementation candidate includes a deterministic evidence-specificity standard
+that catches `IEC/shallow-production-assertion`.
+
+DEC, PEC, and IEC currently score 100 against the locked seed cases, so
+`npm run lab:gate` passes. These results are lab evidence only; production loop
+promotion still requires human review and normal validation.
 
 ## Promotion
 
