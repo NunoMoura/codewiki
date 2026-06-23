@@ -13,14 +13,16 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Hardened the Decision lab candidate with a deterministic specificity standard,
-  raising DEC to 100 against the locked seed cases while PEC and IEC still expose
-  known false-pass fixtures.
+  raising DEC to 100 against the locked seed cases.
+- Hardened the Planning lab candidate with a deterministic work-unit specificity
+  standard, raising PEC to 61.29 while the overlap fixture remains a known
+  false-pass gap.
 
 ### Notes
 
-- The lab gate intentionally fails while remaining PEC and IEC seed standards
-  allow known false-pass fixtures; app benchmarks are deferred until loop exits
-  are hardened.
+- The lab gate intentionally fails while remaining PEC overlap and IEC shallow
+  assertion fixtures expose false-pass gaps; app benchmarks are deferred until
+  loop exits are hardened.
 
 ## [0.3.0] - 2026-06-22
 

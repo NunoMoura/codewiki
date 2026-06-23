@@ -19,7 +19,7 @@ describe("CodeWiki lab loop exit scores", () => {
 		assert.equal(scores.implementation.caseCount, 3);
 	});
 
-	it("exposes remaining known false-pass gaps after DEC specificity hardening", () => {
+	it("exposes remaining known false-pass gaps after DEC and PEC specificity hardening", () => {
 		const scores = scoreAllLoops();
 		const falsePasses = Object.values(scores).flatMap((score) =>
 			score.cases
@@ -29,8 +29,9 @@ describe("CodeWiki lab loop exit scores", () => {
 
 		assert.equal(scores.decision.score, 100);
 		assert.equal(scores.decision.falsePasses, 0);
+		assert.equal(scores.planning.score, 61.29);
+		assert.equal(scores.planning.falsePasses, 1);
 		assert.deepEqual(falsePasses, [
-			"PEC/vague-work-unit-plan",
 			"PEC/overlapping-independent-work",
 			"IEC/shallow-production-assertion",
 		]);

@@ -132,8 +132,10 @@ into production automatically until the lab process earns trust.
 
 The Decision candidate includes a deterministic specificity standard that catches
 `DEC/vague-docs-decision`. DEC currently scores 100 against the locked seed cases.
-Remaining known false passes are PEC vague/overlap fixtures and the IEC shallow
-production assertion fixture.
+The Planning candidate includes a deterministic work-unit specificity standard
+that catches `PEC/vague-work-unit-plan`, raising PEC to 61.29. Remaining known
+false passes are the PEC overlap fixture and the IEC shallow production assertion
+fixture.
 
 ## Promotion
 
