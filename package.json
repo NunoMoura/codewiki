@@ -34,6 +34,8 @@
 		"test:readiness": "node --experimental-strip-types --test tests/runtime/readiness-checklist.test.mjs",
 		"lab": "node --experimental-strip-types lab/runner/score.ts",
 		"lab:gate": "node --experimental-strip-types lab/runner/score.ts --gate",
+		"lab:holdout": "node --experimental-strip-types lab/runner/holdout-score.ts",
+		"lab:pipeline": "node --experimental-strip-types lab/pipeline/score.ts",
 		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-mutation && npm run test:project-local-install && npm run test:external-lifecycle && npm run test:external-failures && npm run test:readiness && npm audit --omit=dev && git diff --check",
 		"typecheck": "tsc --noEmit"
 	},

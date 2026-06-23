@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Added the CodeWiki lab for Decision, Planning, and Implementation exit
   condition scores (DEC, PEC, IEC), weighted quality standards, and candidate
   loop-exit experiments.
+- Added the lab holdout runner for sealed external evaluation bundles that live
+  outside the repository and are not visible to candidate agents.
+- Added the pipeline carryover lab (PCE) for testing decision-to-planning-to-
+  implementation trace handoff fidelity with production-shaped trace events.
 
 ### Changed
 
@@ -23,6 +27,8 @@ All notable changes to this project will be documented in this file.
 
 ### Notes
 
+- Visible lab 100% is no longer treated as meaningful proof by itself; promotion
+  requires PCE coverage, an external holdout gate, and review.
 - App benchmarks remain deferred until the lab-proven standards are reviewed and
   promoted into production loop exits.
 

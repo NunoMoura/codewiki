@@ -5,6 +5,7 @@ import { decisionExitCandidate } from "../../lab/decision/exit.ts";
 import { implementationExitCandidate } from "../../lab/implementation/exit.ts";
 import { planningExitCandidate } from "../../lab/planning/exit.ts";
 import {
+	LAB_ALLOWED_CANDIDATE_IMPORTS,
 	LAB_FORBIDDEN_CANDIDATE_IMPORTS,
 	LAB_FORBIDDEN_CANDIDATE_TOKENS,
 	LAB_LOCKED_EVALUATOR_FILES,
@@ -43,10 +44,16 @@ describe("lab candidate contract", () => {
 				"lab/decision/score.ts",
 				"lab/implementation/cases.ts",
 				"lab/implementation/score.ts",
+				"lab/pipeline/cases.ts",
+				"lab/pipeline/score.ts",
+				"lab/pipeline/trace-harness.ts",
+				"lab/pipeline/types.ts",
 				"lab/planning/cases.ts",
 				"lab/planning/score.ts",
 				"lab/runner/contract.ts",
 				"lab/runner/engine.ts",
+				"lab/runner/holdout-score.ts",
+				"lab/runner/holdout.ts",
 				"lab/runner/score.ts",
 				"lab/runner/types.ts",
 			].sort(),
@@ -76,6 +83,33 @@ describe("lab candidate contract", () => {
 				assert.equal(typeof standard.description, "string");
 				assert.equal(standard.description.length > 0, true);
 				assert.equal(typeof standard.evaluate, "function");
+			}
+		}
+	});
+
+	it("prevents candidate files from importing outside the allowlist", () => {
+		assert.deepEqual(LAB_ALLOWED_CANDIDATE_IMPORTS, {
+			decision: [
+				"../../src/decision/exit.ts",
+				"../../src/decision/types.ts",
+				"../runner/types.ts",
+			],
+			planning: ["../../src/planning/exit.ts", "../runner/types.ts"],
+			implementation: [
+				"../../src/implementation/exit.ts",
+				"../../src/implementation/types.ts",
+				"../runner/types.ts",
+			],
+		});
+		for (const [loop, filePath] of Object.entries(LAB_LOOP_CANDIDATE_FILES)) {
+			const source = readFileSync(filePath, "utf8");
+			const imports = importSpecifiers(source);
+			for (const importSpecifier of imports) {
+				assert.equal(
+					LAB_ALLOWED_CANDIDATE_IMPORTS[loop].includes(importSpecifier),
+					true,
+					`${loop} candidate imports non-allowlisted module ${importSpecifier}`,
+				);
 			}
 		}
 	});

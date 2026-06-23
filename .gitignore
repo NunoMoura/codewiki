@@ -8,3 +8,5 @@ dist/
 .codewiki/session/queue.json
 .tmp-worktrees/
 lab/runs/
+lab/holdout*.json
+.codewiki-lab-holdout*.json
