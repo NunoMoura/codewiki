@@ -3,7 +3,10 @@ import type {
 	ImplementationExitInput,
 	ImplementationExitResult,
 } from "../../src/implementation/types.ts";
-import type { LabStandard } from "../runner/types.ts";
+import type {
+	LabCandidateStandards,
+	LabStandard,
+} from "../runner/types.ts";
 
 export interface ImplementationLabInput {
 	plan: unknown;
@@ -27,6 +30,12 @@ export const implementationExitStandards: LabStandard<ImplementationLabInput>[] 
 			},
 		},
 	];
+
+export const implementationExitCandidate = {
+	loop: "implementation",
+	metric: "IEC",
+	standards: implementationExitStandards,
+} satisfies LabCandidateStandards<ImplementationLabInput>;
 
 function productionExitResult(id: string, exit: ImplementationExitResult) {
 	return {

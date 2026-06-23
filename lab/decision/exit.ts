@@ -4,7 +4,10 @@ import type {
 	DecisionExitResult,
 } from "../../src/decision/exit.ts";
 import type { DecisionTable } from "../../src/decision/types.ts";
-import type { LabStandard } from "../runner/types.ts";
+import type {
+	LabCandidateStandards,
+	LabStandard,
+} from "../runner/types.ts";
 
 export interface DecisionLabInput {
 	prompt: string;
@@ -28,6 +31,12 @@ export const decisionExitStandards: LabStandard<DecisionLabInput>[] = [
 		},
 	},
 ];
+
+export const decisionExitCandidate = {
+	loop: "decision",
+	metric: "DEC",
+	standards: decisionExitStandards,
+} satisfies LabCandidateStandards<DecisionLabInput>;
 
 function productionExitResult(id: string, exit: DecisionExitResult) {
 	return {

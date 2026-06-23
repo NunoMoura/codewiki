@@ -48,7 +48,9 @@ that file.
 
 The candidate file must not own the evaluator. Fixed cases, scoring, experiment
 runner logic, worktree setup, and promotion logic live outside the candidate file
-and are not editable during normal experiments.
+and are not editable during normal experiments. The editable file allowlist,
+locked evaluator files, and forbidden candidate imports are declared in
+`lab/runner/contract.ts` and guarded by `tests/lab/candidate-contract.test.mjs`.
 
 Production loop helpers and wiring live under `src/<loop>/**`. Shared standard
 construction helpers live under `src/loops/**`. Those helpers should stay small,

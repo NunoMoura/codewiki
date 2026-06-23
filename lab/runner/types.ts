@@ -1,4 +1,5 @@
 export type LabLoop = "decision" | "planning" | "implementation";
+export type LabMetric = "DEC" | "PEC" | "IEC";
 export type LabVerdict = "pass" | "fail" | "block";
 export type LabStandardMode = "deterministic" | "agent" | "user";
 
@@ -18,6 +19,12 @@ export interface LabStandard<TInput> {
 	weight: number;
 	description: string;
 	evaluate(input: TInput): LabStandardResult | boolean;
+}
+
+export interface LabCandidateStandards<TInput> {
+	loop: LabLoop;
+	metric: LabMetric;
+	standards: LabStandard<TInput>[];
 }
 
 export interface LabExitResult {
@@ -52,7 +59,7 @@ export interface LabCaseScore {
 
 export interface LabLoopScore {
 	loop: LabLoop;
-	metric: "DEC" | "PEC" | "IEC";
+	metric: LabMetric;
 	score: number;
 	routeQuality: number;
 	cases: LabCaseScore[];

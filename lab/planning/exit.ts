@@ -3,7 +3,10 @@ import type {
 	PlanningExitInput,
 	PlanningExitResult,
 } from "../../src/planning/exit.ts";
-import type { LabStandard } from "../runner/types.ts";
+import type {
+	LabCandidateStandards,
+	LabStandard,
+} from "../runner/types.ts";
 
 export interface PlanningLabInput {
 	decisions: unknown[];
@@ -23,6 +26,12 @@ export const planningExitStandards: LabStandard<PlanningLabInput>[] = [
 		},
 	},
 ];
+
+export const planningExitCandidate = {
+	loop: "planning",
+	metric: "PEC",
+	standards: planningExitStandards,
+} satisfies LabCandidateStandards<PlanningLabInput>;
 
 function productionExitResult(id: string, exit: PlanningExitResult) {
 	return {
