@@ -87,6 +87,31 @@ export interface SensitiveSurfaceAssessment {
 	rationale: string;
 }
 
+export type ImplementationArchiveDispositionAction =
+	| "post_commit_compact"
+	| "retain_hot";
+
+export interface ImplementationArchiveDispositionInput {
+	action?: ImplementationArchiveDispositionAction | string;
+	traceId?: string;
+	trace_id?: string;
+	reason?: string;
+	afterCommit?: boolean;
+	after_commit?: boolean;
+	gitRestoreRef?: string;
+	git_restore_ref?: string;
+	refs?: string[];
+}
+
+export interface ImplementationArchiveDisposition {
+	action: ImplementationArchiveDispositionAction | string;
+	traceId: string;
+	reason: string;
+	afterCommit: boolean;
+	gitRestoreRef?: string;
+	refs: string[];
+}
+
 export interface AcceptanceRequirement {
 	planningRef: string;
 	criterionId: string;
@@ -265,7 +290,9 @@ export type ImplementationExitIssueCode =
 	| "review_missing_acceptance_evidence_link"
 	| "semantic_evidence_mismatch"
 	| "semantic_checks_irrelevant"
-	| "semantic_implementation_not_ready";
+	| "semantic_implementation_not_ready"
+	| "missing_archive_disposition"
+	| "invalid_archive_disposition";
 
 export interface ImplementationExitIssue {
 	code: ImplementationExitIssueCode;
@@ -294,6 +321,8 @@ export interface ImplementationExitInput {
 	expectedWorkerBaseSha?: string;
 	workerClaims?: ImplementationWorkerClaim[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
+	archiveDisposition?: ImplementationArchiveDisposition;
+	requireArchiveDisposition?: boolean;
 	qualityJudge?: LoopQualityJudgeExecutionOptions;
 }
 

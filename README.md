@@ -123,6 +123,12 @@ Repo-local Pi settings load `pi-lens` plus this package through the local packag
 
 Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. Prefer read-only `/wiki-state` and `/wiki-explain` during early package use; mutation-capable tools still require explicit expected byte/sequence checks.
 
+## Trace archive cleanup
+
+Completed traces should not stay hot forever. After implementation evidence exits and the source changes are committed, the post-commit archive step can run `wiki_archive` with a Git restore ref for that commit. The archive step closes and compacts the hot `TRACE-*.jsonl` file into a minimal replayable stub (`trace_head`, retention checkpoint, and `trace_close`) while the full trace body remains recoverable from Git.
+
+Hydration validates the stub against archived records before restoring full detail. Compaction is therefore cleanup of hot state, not unrecoverable deletion. When cleanup is required, Implementation quality can require an archive disposition: either `post_commit_compact` with `afterCommit: true`, or an explicit `retain_hot` reason.
+
 ## Review evidence configuration
 
 CodeWiki owns Implementation review. External tools such as TypeScript, ESLint, Biome, Ruff, Pyright, Go, Cargo, Clippy, and ShellCheck are evidence sensors only; a clean tool run does not prove implementation correctness. Implementation exit still requires acceptance evidence links, changed-path scope, checks, content proof where required, and CodeWiki quality-network gates.

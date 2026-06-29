@@ -41,9 +41,23 @@ export interface TraceHydrationPlan {
 	refs: string[];
 }
 
+export interface TraceArchiveCompactPlan {
+	traceId: string;
+	gitRestoreRef: string;
+	fullRecordCount: number;
+	compactRecords: TraceRecord[];
+	closeRecord: TraceClose;
+	stub: TraceRetentionStub;
+	refs: string[];
+}
+
 export interface TraceHydrationInput {
 	stub: TraceRetentionStub;
 	archivedRecords: TraceRecord[];
+}
+
+export interface TraceArchiveCompactInput extends TraceCloseInput {
+	summary?: string;
 }
 
 export function buildTraceRetentionStub(
@@ -69,6 +83,56 @@ export function buildTraceRetentionStub(
 				}
 			: {}),
 		createdAt: state.head.createdAt,
+	};
+}
+
+export function buildTraceArchiveCompactPlan(
+	input: TraceArchiveCompactInput,
+): TraceArchiveCompactPlan {
+	const state = replayTrace(input.records);
+	const closeRecord = state.close || createTraceCloseRecord(input);
+	const compactCheckpoint = {
+		type: "tail_checkpoint" as const,
+		id: `${state.head.traceId}:archive:checkpoint:${closeRecord.id}`,
+		parentId: null,
+		traceId: state.head.traceId,
+		firstKeptRecordId: closeRecord.id,
+		summary:
+			input.summary?.trim() ||
+			`Trace archived to ${closeRecord.gitRestoreRef}; hydrate from Git restore ref for full records.`,
+		createdAt: closeRecord.createdAt,
+		data: {
+			archivedRecordCount: state.closed
+				? input.records.length
+				: input.records.length + 1,
+			gitRestoreRef: closeRecord.gitRestoreRef,
+			headRef: closeRecord.headRef,
+			closeRecordId: closeRecord.id,
+		},
+	};
+	const compactClose: TraceClose = {
+		...closeRecord,
+		parentId: compactCheckpoint.id,
+	};
+	const compactRecords: TraceRecord[] = [
+		state.head,
+		compactCheckpoint,
+		compactClose,
+	];
+	replayTrace(compactRecords);
+	const stub = buildTraceRetentionStub({
+		records: compactRecords,
+		gitRestoreRef: closeRecord.gitRestoreRef,
+		headRef: closeRecord.headRef,
+	});
+	return {
+		traceId: state.head.traceId,
+		gitRestoreRef: closeRecord.gitRestoreRef,
+		fullRecordCount: input.records.length,
+		compactRecords,
+		closeRecord,
+		stub,
+		refs: traceRetentionRefs(stub),
 	};
 }
 
@@ -136,9 +200,27 @@ export function buildTraceHydrationPlan(
 	return {
 		traceId: input.stub.traceId,
 		gitRestoreRef: input.stub.gitRestoreRef,
-		records: [...input.archivedRecords],
+		records: hydratedRecords(input.stub, input.archivedRecords, state),
 		refs: traceRetentionRefs(input.stub),
 	};
+}
+
+function hydratedRecords(
+	stub: TraceRetentionStub,
+	archivedRecords: TraceRecord[],
+	state: ReturnType<typeof replayTrace>,
+): TraceRecord[] {
+	if (state.close || !stub.closedAt) return [...archivedRecords];
+	return [
+		...archivedRecords,
+		createTraceCloseRecord({
+			records: archivedRecords,
+			gitRestoreRef: stub.gitRestoreRef,
+			headRef: stub.headRef,
+			reason: stub.closeReason,
+			createdAt: stub.closedAt,
+		}),
+	];
 }
 
 function assertHydrationStubMatchesTrace(
@@ -147,6 +229,7 @@ function assertHydrationStubMatchesTrace(
 ): void {
 	const close = state.close;
 	if (!close) {
+		if (stub.closedAt && stub.gitRestoreRef.trim()) return;
 		if (stub.closedAt || stub.closeReason) {
 			throw new Error(
 				`Hydration close mismatch: stub for ${stub.traceId} is closed but archived records are open.`,

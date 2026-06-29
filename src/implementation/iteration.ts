@@ -44,6 +44,8 @@ import {
 } from "./review/index.ts";
 import type {
 	AcceptanceRequirement,
+	ImplementationArchiveDisposition,
+	ImplementationArchiveDispositionInput,
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationExitResult,
@@ -62,6 +64,9 @@ export interface ImplementationIterationInput {
 	claimEvents?: TraceEvent[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
 	reviewEvidenceCache?: ReviewEvidenceCacheReader;
+	archiveDisposition?: ImplementationArchiveDisposition;
+	archiveDispositionInput?: ImplementationArchiveDispositionInput;
+	requireArchiveDisposition?: boolean;
 	expectedWorkerBaseSha?: string;
 	componentMap?: SourceMapContract;
 	aggregateContentProof?: ContentProof;
@@ -82,6 +87,7 @@ export interface ImplementationIterationResult {
 	aggregateContentProof?: ContentProof;
 	changes: ImplementationChange[];
 	reviewEvidenceReports: ImplementationEvidenceReportInput[];
+	archiveDisposition?: ImplementationArchiveDisposition;
 	exit: ImplementationExitResult;
 	draftTraceEvents: TraceEvent[];
 	traceEvents: TraceEvent[];
@@ -122,6 +128,7 @@ export function runImplementationIteration(
 		input,
 		changes,
 	);
+	const archiveDisposition = archiveDispositionForIteration(input);
 	const exit = evaluateImplementationExit({
 		planningRefs,
 		acceptanceRequirements,
@@ -136,6 +143,8 @@ export function runImplementationIteration(
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		workerClaims,
 		reviewEvidenceReports,
+		archiveDisposition,
+		requireArchiveDisposition: input.requireArchiveDisposition,
 		changes,
 	});
 	const baseSequence = input.startSequence ?? 1;
@@ -143,6 +152,7 @@ export function runImplementationIteration(
 	const eventInput = {
 		...input,
 		reviewEvidenceReports,
+		archiveDisposition,
 		createdAt,
 		baseSequence,
 	};
@@ -166,6 +176,7 @@ export function runImplementationIteration(
 		aggregateContentProof,
 		input.componentMap,
 		reviewEvidenceReports,
+		archiveDisposition,
 	);
 	const checkpoint = createLoopTailCheckpoint({
 		traceId: input.traceId,
@@ -186,6 +197,7 @@ export function runImplementationIteration(
 		aggregateContentProof,
 		changes,
 		reviewEvidenceReports: reviewEvidenceReports,
+		archiveDisposition,
 		exit,
 		draftTraceEvents,
 		traceEvents,
@@ -227,6 +239,7 @@ export async function runImplementationIterationWithRunner(
 		input,
 		changes,
 	);
+	const archiveDisposition = archiveDispositionForIteration(input);
 	const exit = await evaluateImplementationExitWithRunner({
 		planningRefs,
 		acceptanceRequirements,
@@ -241,6 +254,8 @@ export async function runImplementationIterationWithRunner(
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		workerClaims,
 		reviewEvidenceReports,
+		archiveDisposition,
+		requireArchiveDisposition: input.requireArchiveDisposition,
 		changes,
 		qualityJudge: input.qualityJudge,
 	});
@@ -249,6 +264,7 @@ export async function runImplementationIterationWithRunner(
 	const eventInput = {
 		...input,
 		reviewEvidenceReports,
+		archiveDisposition,
 		createdAt,
 		baseSequence,
 	};
@@ -272,6 +288,7 @@ export async function runImplementationIterationWithRunner(
 		aggregateContentProof,
 		input.componentMap,
 		reviewEvidenceReports,
+		archiveDisposition,
 	);
 	const checkpoint = createLoopTailCheckpoint({
 		traceId: input.traceId,
@@ -292,6 +309,7 @@ export async function runImplementationIterationWithRunner(
 		aggregateContentProof,
 		changes,
 		reviewEvidenceReports: reviewEvidenceReports,
+		archiveDisposition,
 		exit,
 		draftTraceEvents,
 		traceEvents,
@@ -323,6 +341,34 @@ function reviewEvidenceReportsForIteration(
 			phases: ["fast", "exit"],
 		}) || [];
 	return [...cachedReports, ...(input.reviewEvidenceReports || [])];
+}
+
+function archiveDispositionForIteration(
+	input: ImplementationIterationInput,
+): ImplementationArchiveDisposition | undefined {
+	if (input.archiveDisposition) return input.archiveDisposition;
+	const disposition = input.archiveDispositionInput;
+	if (!disposition) return undefined;
+	return {
+		action: text(disposition.action),
+		traceId: text(disposition.traceId ?? disposition.trace_id) || input.traceId,
+		reason: text(disposition.reason),
+		afterCommit: Boolean(
+			disposition.afterCommit ?? disposition.after_commit ?? false,
+		),
+		...(text(disposition.gitRestoreRef ?? disposition.git_restore_ref)
+			? {
+					gitRestoreRef: text(
+						disposition.gitRestoreRef ?? disposition.git_restore_ref,
+					),
+				}
+			: {}),
+		refs: (disposition.refs || []).map(text).filter(Boolean),
+	};
+}
+
+function text(value: unknown): string {
+	return String(value || "").trim();
 }
 
 function implementationTraceEvents(args: {
@@ -358,6 +404,7 @@ function implementationTraceEvents(args: {
 		aggregateContentProof,
 		input.componentMap,
 		input.reviewEvidenceReports,
+		input.archiveDisposition,
 	);
 	return [
 		createLoopIterationEvent({
@@ -384,6 +431,7 @@ function implementationTraceEvents(args: {
 				qualityStandards: exit.qualityStandards,
 				qualityDiagnostics: exit.diagnostics,
 				reviewEvidenceReports: input.reviewEvidenceReports || [],
+				archiveDisposition: input.archiveDisposition,
 				qualityRunner: exit.qualityRunner,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
@@ -401,6 +449,7 @@ function implementationOutputRefs(
 	aggregateContentProof?: ContentProof,
 	componentMap?: SourceMapContract,
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[],
+	archiveDisposition?: ImplementationArchiveDisposition,
 ): string[] {
 	return normalizeTraceRefs([
 		...planningRefs,
@@ -410,7 +459,21 @@ function implementationOutputRefs(
 		...contentProofRefList(aggregateContentProof),
 		...componentMapRefs(planningScopes, componentMap),
 		...reviewEvidenceReportRefs(reviewEvidenceReports),
+		...archiveDispositionRefList(archiveDisposition),
 	]);
+}
+
+function archiveDispositionRefList(
+	disposition?: ImplementationArchiveDisposition,
+): string[] {
+	if (!disposition) return [];
+	return [
+		disposition.traceId,
+		disposition.gitRestoreRef,
+		...disposition.refs,
+	]
+		.map((ref) => String(ref || "").trim())
+		.filter(Boolean);
 }
 
 function reviewEvidenceReportRefs(

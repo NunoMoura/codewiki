@@ -197,6 +197,7 @@ describe("implementation iteration runner", () => {
 				"worker_claims_correlated",
 				"source_ownership_aligned",
 				"production_quality_reviewed",
+				"archive_disposition_ready",
 				"implementation_review_evidence_clean",
 				"evidence_matches_claims_judged",
 				"checks_relevant_judged",
@@ -214,6 +215,73 @@ describe("implementation iteration runner", () => {
 				(standard) => standard.status === "met",
 			),
 			true,
+		);
+	});
+
+	it("enforces archive disposition when implementation policy requires cleanup", () => {
+		const planning = planningEvents();
+		const planningEvent = planningWorkEvent(planning);
+		const changeInput = {
+			id: "IC-archive",
+			planningRefs: [planningEvent.id],
+			codePaths: ["src/implementation/iteration.ts"],
+			testPaths: ["tests/implementation/implementation-iteration.test.mjs"],
+			checks: ["npm test"],
+			checkResults: [
+				{
+					command: "npm test",
+					status: "pass",
+					outputRef: "tests/implementation/implementation-iteration.test.mjs",
+				},
+			],
+			acceptanceEvidenceItems: [
+				{
+					criterionId: "AC-001",
+					summary: "Archive disposition is enforced.",
+					evidenceRefs: [
+						"tests/implementation/implementation-iteration.test.mjs",
+					],
+				},
+			],
+			contentProof: { workingTreeDigest: "sha256:abcdef" },
+			...implementationQualityFields(),
+		};
+
+		const missing = runImplementationIteration({
+			traceId: "TRACE-implementation",
+			planningEvents: planning,
+			componentMap: componentMap(),
+			requireArchiveDisposition: true,
+			changeInputs: [changeInput],
+		});
+		assert.equal(missing.exit.passed, false);
+		assert.equal(
+			missing.exit.issues.some(
+				(issue) => issue.code === "missing_archive_disposition",
+			),
+			true,
+		);
+
+		const planned = runImplementationIteration({
+			traceId: "TRACE-implementation",
+			planningEvents: planning,
+			componentMap: componentMap(),
+			requireArchiveDisposition: true,
+			archiveDispositionInput: {
+				action: "post_commit_compact",
+				traceId: "TRACE-implementation",
+				afterCommit: true,
+				reason: "Implementation trace will compact after commit.",
+				refs: ["trace:TRACE-implementation"],
+			},
+			changeInputs: [changeInput],
+		});
+
+		assert.equal(planned.exit.passed, true);
+		assert.equal(planned.archiveDisposition?.action, "post_commit_compact");
+		assert.equal(
+			planned.traceEvents[0].data.output.archiveDisposition.reason,
+			"Implementation trace will compact after commit.",
 		);
 	});
 

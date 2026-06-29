@@ -15,7 +15,8 @@ The implementation loop owns:
 - component/path alignment proof;
 - aggregate content proof;
 - residual issue coverage;
-- publication readiness when configured.
+- publication readiness when configured;
+- archive disposition when post-commit trace cleanup is required.
 
 The implementation loop does not own new product decisions, planning scope changes, `.codewiki/kb/**` meaning changes, `.codewiki/traces/**` append authority, config-policy writes, or generated `.codewiki/views/**` projections. It routes back instead.
 
@@ -53,6 +54,7 @@ Implementation loop output is the high-signal packet needed to close or publish 
 - final aggregate content proof for worker or parallel outputs;
 - residual issue coverage or explicit blockers;
 - publication refs and approval refs when configured;
+- archive disposition, either a post-commit compact plan or an explicit retained-hot reason when cleanup policy requires one;
 - agent production-quality assessment for maintainability, simplicity, style, error handling, sensitive surfaces, and uncertainty resolution;
 - route-back questions for planning or decision when authority is missing;
 - canonical refs proving the output.
@@ -74,6 +76,7 @@ The implementation loop can exit only when loop-owned quality standards are met 
 | worker_claims_correlated | deterministic | Worker-produced evidence ties to active runtime claims and completed worker results. |
 | source_ownership_aligned | deterministic | Changed source/test paths align with source-map ownership and component test coverage. |
 | production_quality_reviewed | agent | Agent assesses maintainability, simplicity, project style, and error handling as production-ready. |
+| archive_disposition_ready | deterministic | When policy requires cleanup, implementation output records either a post-commit trace compact plan or an explicit retained-hot reason. |
 | uncertainty_resolved | agent | No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting. |
 | security_privacy_reviewed | agent, conditional | Security/privacy-sensitive changes include explicit review evidence. |
 | accessibility_ui_reviewed | agent, conditional | UI/page changes include accessibility review evidence. |
@@ -130,7 +133,9 @@ Core helpers provide these facts without making Git history or generated views t
 - `createWorkingTreeDigest()` hashes selected file contents deterministically;
 - `createWorkingTreeContentProof()` wraps the digest as implementation content proof;
 - `createImplementationMergeContentProof()` derives final merged proof paths from changes plus worker proof metadata and hashes the merged working tree unless a host supplies an explicit Git/content proof;
-- `runWikiImplement()` combines snapshot, merge proof, implementation loop output, exit evaluation, and optional append into one core facade.
+- `runWikiImplement()` combines snapshot, merge proof, implementation loop output, exit evaluation, optional archive-disposition enforcement, and optional append into one core facade.
+
+Archive disposition is pre-commit evidence, not the archive mutation itself. Implementation may state `post_commit_compact` with `afterCommit: true` before a commit hash exists. The post-commit pipeline then runs `wiki_archive` with a Git restore ref so completed traces close and compact without unrecoverable deletion. If a completed trace must remain hot, implementation must record an explicit `retain_hot` reason instead of silently skipping cleanup.
 
 The digest should cover changed paths and evidence paths, not runtime temp or stored generated views. Direct local changes without per-change proof may receive the generated working-tree proof. Worker-local proof remains provenance; worker/parallel implementations still require final aggregate content proof over the merged output.
 

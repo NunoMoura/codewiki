@@ -5,10 +5,15 @@ import {
 	type AppendTraceResult,
 } from "../runtime/trace-writer.ts";
 import {
+	replaceTraceRecords,
+	type ReplaceTraceRecordsResult,
+} from "../traces/append.ts";
+import {
 	buildTraceCloseReleaseNotes,
 	type TraceCloseReleaseNotes,
 } from "../traces/release-notes.ts";
 import {
+	buildTraceArchiveCompactPlan,
 	buildTraceHydrationPlan,
 	buildTraceRetentionStub,
 	createTraceCloseRecord,
@@ -19,7 +24,11 @@ import {
 import type { TraceClose, TraceRecord } from "../traces/types.ts";
 
 export type WikiArchiveMode = "preview" | "append";
-export type WikiArchiveAction = "retention_stub" | "close" | "hydrate";
+export type WikiArchiveAction =
+	| "retention_stub"
+	| "close"
+	| "hydrate"
+	| "compact";
 
 export interface RunWikiArchiveInput {
 	action?: WikiArchiveAction;
@@ -35,6 +44,7 @@ export interface RunWikiArchiveInput {
 	refs?: string[];
 	createdAt?: string;
 	data?: Record<string, unknown>;
+	summary?: string;
 	repoRoot?: string;
 	expectedBytes?: number;
 }
@@ -46,8 +56,9 @@ export interface RunWikiArchiveResult {
 	closeRecord?: TraceClose;
 	hydration?: TraceHydrationPlan;
 	releaseNotes?: TraceCloseReleaseNotes;
+	compactRecords?: TraceRecord[];
 	refs: string[];
-	append?: AppendTraceResult;
+	append?: AppendTraceResult | ReplaceTraceRecordsResult;
 }
 
 export async function runWikiArchive(
@@ -58,6 +69,7 @@ export async function runWikiArchive(
 	if (action === "retention_stub") return retentionStubResult(input, mode);
 	if (action === "close") return closeResult(input, mode);
 	if (action === "hydrate") return hydrationResult(input, mode);
+	if (action === "compact") return compactResult(input, mode);
 	throw createCodewikiApiError({
 		operation: "wiki_archive",
 		code: "unsupported_action",
@@ -133,6 +145,46 @@ async function closeResult(
 		closeRecord,
 		releaseNotes,
 		refs: closeRecord.refs,
+		...(append ? { append } : {}),
+	};
+}
+
+async function compactResult(
+	input: RunWikiArchiveInput,
+	mode: WikiArchiveMode,
+): Promise<RunWikiArchiveResult> {
+	const plan = buildTraceArchiveCompactPlan({
+		records: requiredRecords(input.records),
+		id: input.closeId,
+		parentId: input.parentId,
+		reason: input.reason,
+		gitRestoreRef: requiredGitRestoreRef(input.gitRestoreRef),
+		headRef: input.headRef,
+		refs: input.refs,
+		createdAt: input.createdAt,
+		data: input.data,
+		summary: input.summary,
+	});
+	const releaseNotes = buildTraceCloseReleaseNotes([
+		...input.records!,
+		plan.closeRecord,
+	]);
+	const append =
+		mode === "append"
+			? await replaceTraceRecords(
+					requiredRepoRoot(input.repoRoot),
+					plan.compactRecords,
+					requiredExpectedBytes(input.expectedBytes),
+				)
+			: undefined;
+	return {
+		action: "compact",
+		mode,
+		stub: plan.stub,
+		closeRecord: plan.closeRecord,
+		releaseNotes,
+		compactRecords: plan.compactRecords,
+		refs: plan.refs,
 		...(append ? { append } : {}),
 	};
 }

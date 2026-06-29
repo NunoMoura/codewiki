@@ -1,4 +1,4 @@
-import { mkdir, appendFile, readFile, stat } from "node:fs/promises";
+import { mkdir, appendFile, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
 	CodewikiTraceError,
@@ -36,6 +36,8 @@ export interface AppendTraceBatchResult {
 	text: string;
 	records: TraceRecord[];
 }
+
+export type ReplaceTraceRecordsResult = AppendTraceBatchResult;
 
 export {
 	TraceAppendConflictError,
@@ -111,6 +113,28 @@ async function appendTraceRecordsToFile(
 	};
 }
 
+async function replaceTraceRecordsInFile(
+	path: string,
+	records: TraceRecord[],
+	expectedBytes: number,
+): Promise<ReplaceTraceRecordsResult> {
+	const plan = planTraceAppendBatch(records, expectedBytes);
+	parseTraceText(plan.text);
+	const previousBytes = await fileSize(path);
+	if (previousBytes !== plan.expectedBytes) {
+		throw new TraceAppendConflictError(path, plan.expectedBytes, previousBytes);
+	}
+	await mkdir(dirname(path), { recursive: true });
+	await writeFile(path, plan.text, "utf8");
+	return {
+		path,
+		previousBytes,
+		nextBytes: Buffer.byteLength(plan.text, "utf8"),
+		text: plan.text,
+		records: plan.records,
+	};
+}
+
 export function appendTraceRecord(
 	repoRoot: string,
 	record: TraceRecord,
@@ -130,6 +154,19 @@ export function appendTraceRecords(
 ): Promise<AppendTraceBatchResult> {
 	assertSingleTraceBatch(records);
 	return appendTraceRecordsToFile(
+		resolve(repoRoot, traceFilePath(records[0].traceId)),
+		records,
+		expectedBytes,
+	);
+}
+
+export function replaceTraceRecords(
+	repoRoot: string,
+	records: TraceRecord[],
+	expectedBytes: number,
+): Promise<ReplaceTraceRecordsResult> {
+	assertSingleTraceBatch(records);
+	return replaceTraceRecordsInFile(
 		resolve(repoRoot, traceFilePath(records[0].traceId)),
 		records,
 		expectedBytes,

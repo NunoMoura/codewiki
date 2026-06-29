@@ -31,6 +31,8 @@ import {
 	type ImplementationIterationResult,
 } from "../implementation/iteration.ts";
 import type {
+	ImplementationArchiveDisposition,
+	ImplementationArchiveDispositionInput,
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
@@ -66,6 +68,9 @@ export interface RunWikiImplementInput {
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
+	archiveDisposition?: ImplementationArchiveDisposition;
+	archiveDispositionInput?: ImplementationArchiveDispositionInput;
+	requireArchiveDisposition?: boolean;
 	evidencePolicy?: DecisionEvidencePolicy;
 	includeCachedReviewEvidence?: boolean;
 	autoReviewEvidence?: boolean;
@@ -139,6 +144,9 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"workerClaims",
 	"claimEvents",
 	"reviewEvidenceReports",
+	"archiveDisposition",
+	"archiveDispositionInput",
+	"requireArchiveDisposition",
 	"evidencePolicy",
 	"includeCachedReviewEvidence",
 	"autoReviewEvidence",
@@ -547,6 +555,9 @@ function implementationIterationInput(
 		existingPaths: prepared.existingPaths,
 		aggregateContentProof: prepared.aggregateContentProof,
 		reviewEvidenceReports: prepared.reviewEvidenceReports,
+		archiveDisposition: input.archiveDisposition,
+		archiveDispositionInput: input.archiveDispositionInput,
+		requireArchiveDisposition: input.requireArchiveDisposition,
 		reviewEvidenceCache: shouldIncludeCachedReviewEvidence(
 			input,
 			prepared.reviewConfig,

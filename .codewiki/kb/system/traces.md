@@ -25,7 +25,7 @@ tail_checkpoint
 trace_close          # optional final lifecycle record
 ```
 
-The trace file is its own hot catalog entry. The `.codewiki/traces/` directory is the active working set: hot files are active or recently closing traces, and project state loaders only read files matching `TRACE-*.jsonl`. Closed detail can be replaced by compact retention stubs after required evidence is committed. Closed traces are terminal and do not receive append handles. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog, central `.codewiki/traces.jsonl`, or trace-index truth file.
+The trace file is its own hot catalog entry. The `.codewiki/traces/` directory is the active working set: hot files are active or recently closing traces, and project state loaders only read files matching `TRACE-*.jsonl`. Completed traces are closed and compacted only after implementation evidence exits and the full trace body is preserved by a Git restore ref. Closed detail can be replaced by compact hot stubs after required evidence is committed. Closed traces are terminal and do not receive append handles. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog, central `.codewiki/traces.jsonl`, or trace-index truth file.
 
 ## Record types
 
@@ -98,7 +98,7 @@ Derived compact state for fast resume and view generation. Replay from `trace_he
 
 ### `trace_close`
 
-Final lifecycle record for retention. It never rewrites earlier lines; it records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from claimable work. Archive close should only be appended when the trace goal is finished or explicitly deferred; trace-board/status views flag historical or bypassed closes as `closed_incomplete` when DTR/WU/implementation coverage is missing.
+Final lifecycle record for retention. In a full hot trace it is appended after completion; in a compact hot stub it is kept with the `trace_head` and a retention `tail_checkpoint` while the full pre-compact records remain recoverable from Git. It records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from claimable work. Archive close/compact should only run when the trace goal is finished or explicitly deferred and a Git restore ref is available; trace-board/status views flag historical or bypassed closes as `closed_incomplete` when DTR/WU/implementation coverage is missing.
 
 ```json
 {

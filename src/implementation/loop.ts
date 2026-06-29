@@ -60,7 +60,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 	ImplementationExitIssue["code"]
 > = {
 	graphId: "implementation.loop",
-	graphVersion: "0.3.0.loop.7",
+	graphVersion: "0.3.0.loop.8",
 	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	layers: loopGraphLayers([
 		"hard_gate",
@@ -219,6 +219,17 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"missing_implementation_assessment",
 				"implementation_not_production_ready",
 			],
+		}),
+		implementationNode({
+			id: "archive_disposition_ready",
+			layer: "pipeline_carryover",
+			standardType: "trace_fidelity",
+			weight: 10,
+			cost: 10,
+			hardGate: true,
+			description:
+				"Completed implementation output has a post-commit archive disposition when retention policy requires cleanup.",
+			codes: ["missing_archive_disposition", "invalid_archive_disposition"],
 		}),
 		implementationNode({
 			id: "implementation_review_evidence_clean",
@@ -514,6 +525,7 @@ export function collectImplementationExitIssues(
 		...implementationAssessmentIssues(input.changes),
 		...sensitiveSurfaceIssues(input.changes),
 		...releaseSafetyIssues(input.changes),
+		...archiveDispositionIssues(input),
 		...reviewEvidenceIssues(input),
 		...traceabilityRefIssues(input),
 	];
@@ -1461,6 +1473,46 @@ function releaseSafetyIssues(
 	});
 }
 
+function archiveDispositionIssues(
+	input: ImplementationExitInput,
+): ImplementationExitIssue[] {
+	if (!input.requireArchiveDisposition) return [];
+	const disposition = input.archiveDisposition;
+	if (!disposition) {
+		return [
+			{
+				code: "missing_archive_disposition" as const,
+				message:
+					"Implementation requires an archive disposition: post-commit compact plan or explicit retain-hot reason.",
+			},
+		];
+	}
+	const action = String(disposition.action || "").trim();
+	const traceId = String(disposition.traceId || "").trim();
+	const reason = String(disposition.reason || "").trim();
+	const invalidReasons: string[] = [];
+	if (!traceId) invalidReasons.push("traceId is required");
+	if (!reason) invalidReasons.push("reason is required");
+	if (action === "post_commit_compact" && !disposition.afterCommit) {
+		invalidReasons.push("post_commit_compact must be marked afterCommit");
+	} else if (action === "retain_hot") {
+		if (!reason) invalidReasons.push("retain_hot requires an explicit reason");
+	} else if (action !== "post_commit_compact") {
+		invalidReasons.push(
+			"action must be post_commit_compact or retain_hot",
+		);
+	}
+	return invalidReasons.length
+		? [
+				{
+					code: "invalid_archive_disposition" as const,
+					ref: traceId || undefined,
+					message: `Implementation archive disposition is invalid: ${invalidReasons.join("; ")}.`,
+				},
+			]
+		: [];
+}
+
 function needsSecurityPrivacyReview(change: ImplementationChange): boolean {
 	return changedPaths(change).some((path) =>
 		/(auth|security|privacy|secret|token|credential|session|permission|policy)/i.test(
@@ -1968,6 +2020,10 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Fix CodeWiki-owned review diagnostics before implementation closure.",
 	review_missing_acceptance_evidence_link:
 		"Link review evidence to every planned acceptance criterion before implementation closure.",
+	missing_archive_disposition:
+		"Add a post-commit archive compact plan or an explicit retain-hot reason before closure.",
+	invalid_archive_disposition:
+		"Fix archive disposition fields: action, traceId, reason, and afterCommit policy.",
 	semantic_evidence_mismatch:
 		"Strengthen or correct implementation evidence until an independent judge can verify it supports the claimed changes.",
 	semantic_checks_irrelevant:

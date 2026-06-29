@@ -582,7 +582,7 @@ function assertQualityGraphIdentity(record, graphId) {
 	const checkpointGraph = record?.data?.qualityGraph;
 	const graph = outputGraph || exitGraph || checkpointGraph;
 	assert.equal(graph?.id, graphId);
-	assert.equal(graph?.version, "0.3.0.loop.7");
+	assert.equal(graph?.version, "0.3.0.loop.8");
 	assert.equal(graph?.schemaVersion, 2);
 	assert.match(graph?.hash, /^sha256:/);
 	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);

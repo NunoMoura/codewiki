@@ -16,7 +16,7 @@ Runtime is the outer control loop. It coordinates traces, scheduling, claims, wo
 | --- | --- | --- | --- |
 | Decision | Observe user intent, current KB/source/trace/Git refs, risks, alternatives, work scale, planning depth, route target, and route-back questions. | Accepted decision facts, requirements, KB/diagram propagation, risks, non-goals, assumptions, planning-depth guidance, route metadata, and planning questions. | Intent quality, current-state grounding, KB impact, risk/approval, and safe routing readiness. |
 | Planning | Observe accepted decision output and trace-queue state, then shape executable work. | Work units or micro-plans, acceptance criteria, dependencies, component refs, path scopes, verification strategy, trace-queue ordering/conflict decisions, deferrals, and optional triggers for recurring schedules, events, or hooks. | Decision coverage, acceptance clarity, planning-depth validity, dependency/path/component validity, trace-queue health, trigger validity, and implementation/runtime readiness. |
-| Implementation | Observe accepted planning output and change code/docs/tests. | Changed paths, checks, acceptance evidence, worker provenance, aggregate content proof, residual ownership, publication refs when needed. | Planning coverage, checks, AC evidence, TDD proof, component/path alignment, worker claim correlation, content proof, and closure readiness. |
+| Implementation | Observe accepted planning output and change code/docs/tests. | Changed paths, checks, acceptance evidence, worker provenance, aggregate content proof, residual ownership, archive disposition, and publication refs when needed. | Planning coverage, checks, AC evidence, TDD proof, component/path alignment, worker claim correlation, content proof, archive-disposition readiness, and closure readiness. |
 
 ## Implementation review and tool evidence
 
@@ -249,7 +249,8 @@ trigger validity, resolution validity, and canonical refs.
 
 Implementation hard gates cover planning/direct-decision coverage, scope control,
 acceptance evidence, verification results, required TDD proof, content proof,
-worker claim correlation, source ownership, release approval, and canonical refs.
+worker claim correlation, source ownership, archive disposition when post-commit
+cleanup is required, release approval, and canonical refs.
 
 Softer agent-assessment standards still fail the loop when unmet, but they are
 not hard-gate fail-fast blockers because they may need richer repair guidance or
@@ -311,6 +312,8 @@ A trace represents one accountable goal. The trace may close only when that goal
 Recurring or triggered work closes through a trigger trace plus independent run traces. The trigger trace proves the standing decision and trigger. Each run trace proves one due execution and links back through lineage refs; it is not a sub-trace.
 
 The archive close path must block incomplete goals. Derived views may surface `needs_decision`, `needs_planning`, `needs_implementation`, `blocked`, `deferred`, `finished`, `closed_complete`, or `closed_incomplete`; those statuses are view calculations, not workflow truth.
+
+Completed traces leave hot state through a post-commit archive pipeline: the full completed trace is first preserved by a Git restore ref, then `wiki_archive` may close and compact the hot file into `trace_head` + retention checkpoint + `trace_close`. Hydration restores the full trace body from Git and validates the stub before use; compacting must not be an unrecoverable delete.
 
 The decision loop must check active trace goals before approving a new row. Semantic overlap with an active trace should be merged, superseded, deferred, ordered by dependency, or explicitly justified as non-conflicting before planning starts. Runtime/main-host checks may detect cheap operational overlap such as path conflicts, but semantic contradiction remains a decision quality-standard concern.
 

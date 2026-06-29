@@ -193,9 +193,7 @@ function decisionRows(records: TraceRecord[]): DecisionProjection[] {
 
 function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 	const implementationRefs = implementedPlanningRefs(records);
-	const planned = loopOutputEvents(records, "planning")
-		.filter(planningIterationClaimable)
-		.flatMap((event) =>
+	const planned = activePlanningEvents(records).flatMap((event) =>
 			objectList(objectRecord(event.data?.output).workItems).map((item) => {
 				const id = text(item.id) || event.id;
 				const ref = iterationSubref(event, "work", id);
@@ -221,9 +219,7 @@ function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 }
 
 function resolutionsFromTrace(records: TraceRecord[]): ResolutionProjection[] {
-	return loopOutputEvents(records, "planning")
-		.filter(planningIterationClaimable)
-		.flatMap((event) =>
+	return activePlanningEvents(records).flatMap((event) =>
 			objectList(objectRecord(event.data?.output).resolutions).map(
 				(resolution) => ({
 					decisionRef: text(resolution.decisionRef),
@@ -240,6 +236,33 @@ function resolutionsFromTrace(records: TraceRecord[]): ResolutionProjection[] {
 				}),
 			),
 		);
+}
+
+function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
+	const events = loopOutputEvents(records, "planning").filter(
+		planningIterationClaimable,
+	);
+	const latestByDecisionRef = new Map<string, TraceEvent>();
+	for (const event of events) {
+		for (const decisionRef of planningDecisionRefs(event)) {
+			latestByDecisionRef.set(decisionRef, event);
+		}
+	}
+	const activeEventIds = new Set(
+		[...latestByDecisionRef.values()].map((event) => event.id),
+	);
+	return events.filter((event) => activeEventIds.has(event.id));
+}
+
+function planningDecisionRefs(event: TraceEvent): string[] {
+	return unique([
+		...objectList(objectRecord(event.data?.output).workItems).flatMap((item) =>
+			stringList(item.decisionRefs),
+		),
+		...objectList(objectRecord(event.data?.output).resolutions).map(
+			(resolution) => text(resolution.decisionRef),
+		),
+	]).filter(Boolean);
 }
 
 function decisionCoverageByRef(

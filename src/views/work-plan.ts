@@ -105,9 +105,7 @@ export function planningWorkItemsFromTrace(
 function acceptedPlanningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): TracePlanningWorkItem[] {
-	const plannedItems = loopOutputEvents(records, "planning")
-		.filter(planningIterationExited)
-		.flatMap((event) => {
+	const plannedItems = activePlanningEvents(records).flatMap((event) => {
 			const quality = loopQualityReadiness(event);
 			return objectList(objectRecord(event.data?.output).workItems).map(
 				(item) => {
@@ -178,6 +176,33 @@ function directWorkItem(
 		qualityStandards: [],
 		qualityBlockers: [],
 	};
+}
+
+function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
+	const events = loopOutputEvents(records, "planning").filter(
+		planningIterationExited,
+	);
+	const latestByDecisionRef = new Map<string, TraceEvent>();
+	for (const event of events) {
+		for (const decisionRef of planningDecisionRefs(event)) {
+			latestByDecisionRef.set(decisionRef, event);
+		}
+	}
+	const activeEventIds = new Set(
+		[...latestByDecisionRef.values()].map((event) => event.id),
+	);
+	return events.filter((event) => activeEventIds.has(event.id));
+}
+
+function planningDecisionRefs(event: TraceEvent): string[] {
+	return unique([
+		...objectList(objectRecord(event.data?.output).workItems).flatMap((item) =>
+			stringList(item.decisionRefs),
+		),
+		...objectList(objectRecord(event.data?.output).resolutions).map(
+			(resolution) => text(resolution.decisionRef),
+		),
+	]).filter(Boolean);
 }
 
 function planningIterationExited(event: TraceEvent): boolean {

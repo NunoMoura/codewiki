@@ -215,14 +215,99 @@ describe("wiki_archive core facade", () => {
 				}),
 			/Hydration restore ref mismatch/,
 		);
+		const hydrateFromOpenArchive = await runWikiArchive({
+			action: "hydrate",
+			stub: close.stub,
+			archivedRecords: records,
+		});
+		assert.equal(
+			hydrateFromOpenArchive.hydration?.records.length,
+			records.length + 1,
+		);
+		assert.equal(
+			hydrateFromOpenArchive.hydration?.records.at(-1)?.type,
+			"trace_close",
+		);
+	});
+
+	it("compacts completed traces into replayable hot stubs", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-archive-compact-"));
+		try {
+			const records = await archiveRecords("TRACE-wiki-archive-compact");
+			const first = await appendTraceRecords(root, records, 0);
+			const result = await runWikiArchive({
+				action: "compact",
+				mode: "append",
+				repoRoot: root,
+				expectedBytes: first.nextBytes,
+				records,
+				gitRestoreRef: "979df48",
+				headRef: "trace:TRACE-wiki-archive-compact",
+				reason: "Trace finished and retained in Git.",
+				createdAt: "2026-06-11T00:00:04.000Z",
+			});
+			const readBack = await readTrace(
+				join(root, traceFilePath("TRACE-wiki-archive-compact")),
+			);
+			const state = replayTrace(readBack.records);
+
+			assert.equal(result.action, "compact");
+			assert.equal(result.append?.previousBytes, first.nextBytes);
+			assert.ok((result.append?.nextBytes || 0) < first.nextBytes);
+			assert.equal(readBack.records.length, 3);
+			assert.equal(readBack.records[0].type, "trace_head");
+			assert.equal(readBack.records[1].type, "tail_checkpoint");
+			assert.equal(readBack.records[2].type, "trace_close");
+			assert.equal(state.closed, true);
+			assert.equal(result.stub?.closedAt, "2026-06-11T00:00:04.000Z");
+
+			const hydrate = await runWikiArchive({
+				action: "hydrate",
+				stub: result.stub,
+				archivedRecords: records,
+			});
+			assert.equal(hydrate.hydration?.records.length, records.length + 1);
+			assert.equal(hydrate.hydration?.records.at(-1)?.type, "trace_close");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("blocks compacting incomplete traces", async () => {
+		const head = createTraceHead({
+			traceId: "TRACE-wiki-archive-compact-incomplete",
+			title: "Incomplete compact archive trace",
+			createdAt: "2026-06-11T00:00:00.000Z",
+		});
+		const decision = await runWikiDecide({
+			traceId: head.traceId,
+			createdAt: "2026-06-11T00:00:01.000Z",
+			tableInput: {
+				id: "DT-archive-compact-incomplete",
+				createdAt: "2026-06-11T00:00:01.000Z",
+				updatedAt: "2026-06-11T00:00:01.000Z",
+				rows: [
+					{
+						id: "DTR-archive-compact-incomplete",
+						currentState: "Trace compact can happen too early.",
+						desiredState: "Trace compact waits for implementation exit.",
+						rationale: "Compacting incomplete traces hides unfinished work.",
+						...decisionQualityFields(),
+						approval: "approved",
+						sourceRefs: ["kb:system/traces.md"],
+					},
+				],
+			},
+		});
 		await assert.rejects(
 			() =>
 				runWikiArchive({
-					action: "hydrate",
-					stub: close.stub,
-					archivedRecords: records,
+					action: "compact",
+					records: [head, ...decision.loopResult.traceRecords],
+					gitRestoreRef:
+						"refs/codewiki/archive/TRACE-wiki-archive-compact-incomplete",
 				}),
-			/Hydration close mismatch/,
+			/incomplete trace goal|needs planning coverage/,
 		);
 	});
 

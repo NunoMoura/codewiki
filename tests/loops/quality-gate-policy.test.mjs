@@ -38,6 +38,7 @@ const EXPECTED_HARD_GATES = {
 		"content_proof_recorded",
 		"worker_claims_correlated",
 		"source_ownership_aligned",
+		"archive_disposition_ready",
 		"implementation_review_evidence_clean",
 		"release_safety_approved",
 		"traceability_refs_canonical",

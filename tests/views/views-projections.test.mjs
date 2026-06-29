@@ -709,6 +709,81 @@ describe("trace-backed views", () => {
 		);
 	});
 
+	it("uses latest planning exit for close readiness when a plan is superseded", () => {
+		const { head, decisions, plan } = plannedTrace("TRACE-views-plan-superseded");
+		const decisionRef = approvedDecisionRef(decisions);
+		const correctedPlan = runPlanningIteration({
+			traceId: head.traceId,
+			decisionEvents: decisions,
+			startSequence: nextSequence([...decisions, ...plan.traceEvents]),
+			workItemInputs: [
+				{
+					id: "WU-corrected",
+					title: "Corrected view work",
+					decisionRefs: [decisionRef],
+					outcome: "Corrected planning work is implemented.",
+					...planningQualityFields(),
+					acceptance: ["Corrected plan is covered."],
+					componentRefs: ["views"],
+					pathScopes: ["src/views"],
+					verification: ["tests/views/views-projections.test.mjs"],
+				},
+			],
+		});
+		const planningEvent = planningWorkEvent(
+			correctedPlan.traceEvents,
+			"WU-corrected",
+		);
+		const implementation = runImplementationIteration({
+			traceId: head.traceId,
+			planningEvents: correctedPlan.traceEvents,
+			startSequence: nextSequence([
+				...decisions,
+				...plan.traceEvents,
+				...correctedPlan.traceEvents,
+			]),
+			changeInputs: [
+				{
+					id: "IC-corrected",
+					planningRefs: [planningEvent.id],
+					codePaths: ["src/views/trace-goals.ts"],
+					testPaths: ["tests/views/views-projections.test.mjs"],
+					checks: ["npm test"],
+					checkResults: [{ command: "npm test", status: "pass" }],
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-001",
+							summary: "Corrected plan is covered.",
+							evidenceRefs: ["tests/views/views-projections.test.mjs"],
+						},
+					],
+					contentProof: { workingTreeDigest: "sha256:123abc" },
+					...implementationQualityFields(),
+				},
+			],
+		});
+		const records = [
+			head,
+			...decisions,
+			...plan.traceEvents,
+			...correctedPlan.traceEvents,
+			...implementation.traceEvents,
+		];
+		const status = buildStatusView({ records });
+		const workPlan = buildWorkPlanView({ records });
+
+		assert.equal(status.readyForClosure, true);
+		assert.equal(status.goalStatus, "finished");
+		assert.equal(
+			status.blockers.some((blocker) => blocker.includes("WU-views")),
+			false,
+		);
+		assert.deepEqual(
+			workPlan.cards.map((card) => card.id),
+			["WU-corrected"],
+		);
+	});
+
 	it("projects planning conflicts and route-back blockers", () => {
 		const traceId = "TRACE-views-blocked";
 		const head = createTraceHead({

@@ -332,7 +332,12 @@ describe("install readiness checklist", () => {
 		);
 		assert.match(tracesDoc, /trace-queue.*product concept/i);
 		assert.match(tracesDoc, /one card per accountable trace/i);
+		assert.match(tracesDoc, /post-commit archive pipeline|Git restore ref/i);
+		assert.match(tracesDoc, /compact hot stubs|compact.*stub/i);
 		assert.match(implementationDoc, /does not own .*\.codewiki\/kb/i);
+		assert.match(implementationDoc, /archive_disposition_ready/i);
+		assert.match(implementationDoc, /post_commit_compact/i);
+		assert.match(implementationDoc, /retain_hot/i);
 		assert.doesNotMatch(
 			runtimeDoc,
 			/choose next semantic loop or coordination action/,
