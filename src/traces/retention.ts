@@ -90,7 +90,11 @@ export function buildTraceArchiveCompactPlan(
 	input: TraceArchiveCompactInput,
 ): TraceArchiveCompactPlan {
 	const state = replayTrace(input.records);
-	const closeRecord = state.close || createTraceCloseRecord(input);
+	const restoreGitRef = input.gitRestoreRef.trim();
+	const restoreHeadRef = input.headRef?.trim() || state.head.traceId;
+	const closeRecord = state.close
+		? closeRecordForArchiveCompaction(state.close, input)
+		: createTraceCloseRecord(input);
 	const compactCheckpoint = {
 		type: "tail_checkpoint" as const,
 		id: `${state.head.traceId}:archive:checkpoint:${closeRecord.id}`,
@@ -99,15 +103,21 @@ export function buildTraceArchiveCompactPlan(
 		firstKeptRecordId: closeRecord.id,
 		summary:
 			input.summary?.trim() ||
-			`Trace archived to ${closeRecord.gitRestoreRef}; hydrate from Git restore ref for full records.`,
+			`Trace archived to ${restoreGitRef}; hydrate from Git restore ref for full records.`,
 		createdAt: closeRecord.createdAt,
 		data: {
 			archivedRecordCount: state.closed
 				? input.records.length
 				: input.records.length + 1,
-			gitRestoreRef: closeRecord.gitRestoreRef,
-			headRef: closeRecord.headRef,
+			gitRestoreRef: restoreGitRef,
+			headRef: restoreHeadRef,
 			closeRecordId: closeRecord.id,
+			...(state.close?.gitRestoreRef && state.close.gitRestoreRef !== restoreGitRef
+				? { originalCloseGitRestoreRef: state.close.gitRestoreRef }
+				: {}),
+			...(state.close?.headRef && state.close.headRef !== restoreHeadRef
+				? { originalCloseHeadRef: state.close.headRef }
+				: {}),
 		},
 	};
 	const compactClose: TraceClose = {
@@ -122,17 +132,44 @@ export function buildTraceArchiveCompactPlan(
 	replayTrace(compactRecords);
 	const stub = buildTraceRetentionStub({
 		records: compactRecords,
-		gitRestoreRef: closeRecord.gitRestoreRef,
-		headRef: closeRecord.headRef,
+		gitRestoreRef: restoreGitRef,
+		headRef: restoreHeadRef,
 	});
 	return {
 		traceId: state.head.traceId,
-		gitRestoreRef: closeRecord.gitRestoreRef,
+		gitRestoreRef: restoreGitRef,
 		fullRecordCount: input.records.length,
 		compactRecords,
 		closeRecord,
 		stub,
 		refs: traceRetentionRefs(stub),
+	};
+}
+
+function closeRecordForArchiveCompaction(
+	close: TraceClose,
+	input: TraceArchiveCompactInput,
+): TraceClose {
+	const gitRestoreRef = input.gitRestoreRef.trim();
+	const headRef = input.headRef?.trim() || close.headRef;
+	if (close.gitRestoreRef === gitRestoreRef && close.headRef === headRef) {
+		return close;
+	}
+	return {
+		...close,
+		gitRestoreRef,
+		headRef,
+		refs: normalizeRefs([
+			...close.refs,
+			gitRestoreRef,
+			headRef,
+			...normalizeRefs(input.refs || []),
+		]),
+		data: {
+			...(close.data || {}),
+			originalCloseGitRestoreRef: close.gitRestoreRef,
+			originalCloseHeadRef: close.headRef,
+		},
 	};
 }
 
@@ -237,12 +274,16 @@ function assertHydrationStubMatchesTrace(
 		}
 		return;
 	}
-	if (close.gitRestoreRef.trim() !== stub.gitRestoreRef.trim()) {
+	const compactCloseMatch = stub.firstKeptRecordId === close.id;
+	if (
+		close.gitRestoreRef.trim() !== stub.gitRestoreRef.trim() &&
+		!compactCloseMatch
+	) {
 		throw new Error(
 			`Hydration restore ref mismatch: ${close.gitRestoreRef} does not match ${stub.gitRestoreRef}.`,
 		);
 	}
-	if (close.headRef.trim() !== stub.headRef.trim()) {
+	if (close.headRef.trim() !== stub.headRef.trim() && !compactCloseMatch) {
 		throw new Error(
 			`Hydration head ref mismatch: ${close.headRef} does not match ${stub.headRef}.`,
 		);

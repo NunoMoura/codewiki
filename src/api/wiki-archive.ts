@@ -153,8 +153,9 @@ async function compactResult(
 	input: RunWikiArchiveInput,
 	mode: WikiArchiveMode,
 ): Promise<RunWikiArchiveResult> {
+	const records = requiredRecords(input.records);
 	const plan = buildTraceArchiveCompactPlan({
-		records: requiredRecords(input.records),
+		records,
 		id: input.closeId,
 		parentId: input.parentId,
 		reason: input.reason,
@@ -165,10 +166,11 @@ async function compactResult(
 		data: input.data,
 		summary: input.summary,
 	});
-	const releaseNotes = buildTraceCloseReleaseNotes([
-		...input.records!,
-		plan.closeRecord,
-	]);
+	const releaseNotes = buildTraceCloseReleaseNotes(
+		records.some((record) => record.type === "trace_close")
+			? records
+			: [...records, plan.closeRecord],
+	);
 	const append =
 		mode === "append"
 			? await replaceTraceRecords(

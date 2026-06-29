@@ -273,6 +273,55 @@ describe("wiki_archive core facade", () => {
 		}
 	});
 
+	it("compacts already closed traces with a fresh Git restore ref", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-archive-closed-compact-"));
+		try {
+			const records = await archiveRecords("TRACE-wiki-archive-closed-compact");
+			const close = await runWikiArchive({
+				action: "close",
+				records,
+				gitRestoreRef: "refs/codewiki/archive/legacy-closed-compact",
+				headRef: "trace:TRACE-wiki-archive-closed-compact",
+				reason: "Trace was closed before commit-backed compaction existed.",
+				createdAt: "2026-06-11T00:00:04.000Z",
+			});
+			const closedRecords = [...records, close.closeRecord];
+			const first = await appendTraceRecords(root, closedRecords, 0);
+			const result = await runWikiArchive({
+				action: "compact",
+				mode: "append",
+				repoRoot: root,
+				expectedBytes: first.nextBytes,
+				records: closedRecords,
+				gitRestoreRef: "d62561c",
+				headRef: "d62561c:TRACE-wiki-archive-closed-compact.jsonl",
+				summary: "Closed legacy trace archived to current Git commit.",
+			});
+			const readBack = await readTrace(
+				join(root, traceFilePath("TRACE-wiki-archive-closed-compact")),
+			);
+
+			assert.equal(readBack.records.length, 3);
+			assert.equal(result.stub?.gitRestoreRef, "d62561c");
+			assert.equal(result.stub?.firstKeptRecordId, close.closeRecord.id);
+			assert.equal(readBack.records[1].data.gitRestoreRef, "d62561c");
+			assert.equal(readBack.records[2].gitRestoreRef, "d62561c");
+			assert.equal(
+				readBack.records[2].data.originalCloseGitRestoreRef,
+				"refs/codewiki/archive/legacy-closed-compact",
+			);
+
+			const hydrate = await runWikiArchive({
+				action: "hydrate",
+				stub: result.stub,
+				archivedRecords: closedRecords,
+			});
+			assert.equal(hydrate.hydration?.records.length, closedRecords.length);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("blocks compacting incomplete traces", async () => {
 		const head = createTraceHead({
 			traceId: "TRACE-wiki-archive-compact-incomplete",
