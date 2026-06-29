@@ -48,11 +48,37 @@ export interface WikiHostConfig {
 	mcp: { enabled: boolean };
 }
 
+export interface WikiQualityJudgeConfig {
+	enabled: boolean;
+	provider: "none" | "http";
+	endpoint?: string;
+	promptVersion: string;
+	timeoutMs: number;
+}
+
+export interface WikiQualityReviewConfig {
+	enabled: boolean;
+	autoEvidence: boolean;
+	includeCachedEvidence: boolean;
+	timeoutMs: number;
+	fastTimeoutMs: number;
+	maxCachedEvidenceAgeMs?: number;
+	enabledPacks: string[];
+	disabledPacks: string[];
+	requiredPacks: string[];
+}
+
+export interface WikiQualityConfig {
+	judge: WikiQualityJudgeConfig;
+	review: WikiQualityReviewConfig;
+}
+
 export interface WikiConfig {
 	project: string;
 	runtime: WikiRuntimeConfig;
 	retention: WikiRetentionConfig;
 	hosts: WikiHostConfig;
+	quality: WikiQualityConfig;
 }
 
 export interface RunWikiConfigInput {
@@ -70,6 +96,7 @@ export type PartialWikiConfig = {
 	runtime?: PartialRuntimeConfig;
 	retention?: Partial<WikiRetentionConfig>;
 	hosts?: PartialHostConfig;
+	quality?: PartialQualityConfig;
 };
 
 export type PartialRuntimeConfig = Partial<
@@ -82,6 +109,11 @@ export type PartialRuntimeConfig = Partial<
 export type PartialHostConfig = {
 	pi?: Partial<WikiHostConfig["pi"]>;
 	mcp?: Partial<WikiHostConfig["mcp"]>;
+};
+
+export type PartialQualityConfig = {
+	judge?: Partial<WikiQualityJudgeConfig>;
+	review?: Partial<WikiQualityReviewConfig>;
 };
 
 export const DEFAULT_WIKI_CONFIG: WikiConfig = {
@@ -120,6 +152,36 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 	hosts: {
 		pi: { enabled: false },
 		mcp: { enabled: false },
+	},
+	quality: {
+		judge: {
+			enabled: false,
+			provider: "none",
+			endpoint: undefined,
+			promptVersion: "loop-quality-judge.v3",
+			timeoutMs: 30_000,
+		},
+		review: {
+			enabled: true,
+			autoEvidence: true,
+			includeCachedEvidence: true,
+			timeoutMs: 15_000,
+			fastTimeoutMs: 3_000,
+			maxCachedEvidenceAgeMs: 10 * 60 * 1000,
+			enabledPacks: [
+				"tsjs.typescript",
+				"tsjs.lint",
+				"python.ruff",
+				"python.pyright",
+				"go.test",
+				"go.vet",
+				"rust.cargo-test",
+				"rust.cargo-clippy",
+				"shell.shellcheck",
+			],
+			disabledPacks: [],
+			requiredPacks: [],
+		},
 	},
 };
 
@@ -164,6 +226,25 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 			mcp: {
 				...DEFAULT_WIKI_CONFIG.hosts.mcp,
 				...(input.hosts?.mcp || {}),
+			},
+		},
+		quality: {
+			judge: {
+				...DEFAULT_WIKI_CONFIG.quality.judge,
+				...(input.quality?.judge || {}),
+			},
+			review: {
+				...DEFAULT_WIKI_CONFIG.quality.review,
+				...(input.quality?.review || {}),
+				enabledPacks: input.quality?.review?.enabledPacks
+					? [...input.quality.review.enabledPacks]
+					: [...DEFAULT_WIKI_CONFIG.quality.review.enabledPacks],
+				disabledPacks: input.quality?.review?.disabledPacks
+					? [...input.quality.review.disabledPacks]
+					: [...DEFAULT_WIKI_CONFIG.quality.review.disabledPacks],
+				requiredPacks: input.quality?.review?.requiredPacks
+					? [...input.quality.review.requiredPacks]
+					: [...DEFAULT_WIKI_CONFIG.quality.review.requiredPacks],
 			},
 		},
 	};
@@ -228,6 +309,7 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 		"retention.hotTraceLimit",
 	);
 	validateHosts(config.hosts);
+	validateQuality(config.quality);
 	return {
 		project: config.project.trim(),
 		runtime: {
@@ -243,6 +325,19 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 		hosts: {
 			pi: { ...config.hosts.pi },
 			mcp: { ...config.hosts.mcp },
+		},
+		quality: {
+			judge: {
+				...config.quality.judge,
+				endpoint: text(config.quality.judge.endpoint) || undefined,
+				promptVersion: text(config.quality.judge.promptVersion),
+			},
+			review: {
+				...config.quality.review,
+				enabledPacks: uniqueStringList(config.quality.review.enabledPacks),
+				disabledPacks: uniqueStringList(config.quality.review.disabledPacks),
+				requiredPacks: uniqueStringList(config.quality.review.requiredPacks),
+			},
 		},
 	};
 }
@@ -270,7 +365,153 @@ function mergeWikiConfigPatch(
 			pi: { ...current.hosts.pi, ...(patch.hosts?.pi || {}) },
 			mcp: { ...current.hosts.mcp, ...(patch.hosts?.mcp || {}) },
 		},
+		quality: {
+			judge: {
+				...current.quality.judge,
+				...(patch.quality?.judge || {}),
+			},
+			review: {
+				...current.quality.review,
+				...(patch.quality?.review || {}),
+				enabledPacks: patch.quality?.review?.enabledPacks
+					? [...patch.quality.review.enabledPacks]
+					: [...current.quality.review.enabledPacks],
+				disabledPacks: patch.quality?.review?.disabledPacks
+					? [...patch.quality.review.disabledPacks]
+					: [...current.quality.review.disabledPacks],
+				requiredPacks: patch.quality?.review?.requiredPacks
+					? [...patch.quality.review.requiredPacks]
+					: [...current.quality.review.requiredPacks],
+			},
+		},
 	};
+}
+
+function validateQuality(quality: WikiQualityConfig): void {
+	if (typeof quality.review.enabled !== "boolean") {
+		throw createCodewikiConfigError({
+			path: "quality.review.enabled",
+			code: "invalid_type",
+			message: "wiki_config quality.review.enabled must be boolean.",
+			value: quality.review.enabled,
+		});
+	}
+	if (typeof quality.review.autoEvidence !== "boolean") {
+		throw createCodewikiConfigError({
+			path: "quality.review.autoEvidence",
+			code: "invalid_type",
+			message: "wiki_config quality.review.autoEvidence must be boolean.",
+			value: quality.review.autoEvidence,
+		});
+	}
+	if (typeof quality.review.includeCachedEvidence !== "boolean") {
+		throw createCodewikiConfigError({
+			path: "quality.review.includeCachedEvidence",
+			code: "invalid_type",
+			message:
+				"wiki_config quality.review.includeCachedEvidence must be boolean.",
+			value: quality.review.includeCachedEvidence,
+		});
+	}
+	assertOptionalPositiveInteger(
+		quality.review.timeoutMs,
+		"quality.review.timeoutMs",
+	);
+	assertOptionalPositiveInteger(
+		quality.review.fastTimeoutMs,
+		"quality.review.fastTimeoutMs",
+	);
+	assertOptionalPositiveInteger(
+		quality.review.maxCachedEvidenceAgeMs,
+		"quality.review.maxCachedEvidenceAgeMs",
+	);
+	if (!Array.isArray(quality.review.enabledPacks)) {
+		throw createCodewikiConfigError({
+			path: "quality.review.enabledPacks",
+			code: "invalid_type",
+			message:
+				"wiki_config quality.review.enabledPacks must be a string array.",
+			value: quality.review.enabledPacks,
+		});
+	}
+	if (!Array.isArray(quality.review.disabledPacks)) {
+		throw createCodewikiConfigError({
+			path: "quality.review.disabledPacks",
+			code: "invalid_type",
+			message:
+				"wiki_config quality.review.disabledPacks must be a string array.",
+			value: quality.review.disabledPacks,
+		});
+	}
+	if (!Array.isArray(quality.review.requiredPacks)) {
+		throw createCodewikiConfigError({
+			path: "quality.review.requiredPacks",
+			code: "invalid_type",
+			message:
+				"wiki_config quality.review.requiredPacks must be a string array.",
+			value: quality.review.requiredPacks,
+		});
+	}
+	validateRequiredReviewPacks(quality.review);
+	if (typeof quality.judge.enabled !== "boolean") {
+		throw createCodewikiConfigError({
+			path: "quality.judge.enabled",
+			code: "invalid_type",
+			message: "wiki_config quality.judge.enabled must be boolean.",
+			value: quality.judge.enabled,
+		});
+	}
+	if (quality.judge.provider !== "none" && quality.judge.provider !== "http") {
+		throw createCodewikiConfigError({
+			path: "quality.judge.provider",
+			message: "wiki_config quality.judge.provider is invalid.",
+			value: quality.judge.provider,
+		});
+	}
+	if (!text(quality.judge.promptVersion)) {
+		throw createCodewikiConfigError({
+			path: "quality.judge.promptVersion",
+			code: "missing_required",
+			message: "wiki_config quality.judge.promptVersion is required.",
+		});
+	}
+	assertOptionalPositiveInteger(
+		quality.judge.timeoutMs,
+		"quality.judge.timeoutMs",
+	);
+	if (quality.judge.enabled && quality.judge.provider === "http") {
+		if (!text(quality.judge.endpoint)) {
+			throw createCodewikiConfigError({
+				path: "quality.judge.endpoint",
+				code: "missing_required",
+				message:
+					"wiki_config quality.judge.endpoint is required for http judge provider.",
+			});
+		}
+	}
+}
+
+function validateRequiredReviewPacks(review: WikiQualityReviewConfig): void {
+	const enabled = new Set(uniqueStringList(review.enabledPacks));
+	const disabled = new Set(uniqueStringList(review.disabledPacks));
+	for (const packId of uniqueStringList(review.requiredPacks)) {
+		if (disabled.has(packId)) {
+			throw createCodewikiConfigError({
+				path: "quality.review.requiredPacks",
+				message:
+					"wiki_config quality.review.requiredPacks cannot include disabled review packs.",
+				value: packId,
+			});
+		}
+		if (enabled.size > 0 && !enabled.has(packId)) {
+			throw createCodewikiConfigError({
+				path: "quality.review.requiredPacks",
+				message:
+					"wiki_config quality.review.requiredPacks must also be present in enabledPacks when enabledPacks is non-empty.",
+				value: packId,
+			});
+		}
+	}
 }
 
 function validateBudgets(budgets: WikiRuntimeBudgetConfig): void {

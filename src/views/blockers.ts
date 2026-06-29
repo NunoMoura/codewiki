@@ -87,6 +87,9 @@ function iterationBlockers(records: TraceRecord[]): BlockerView[] {
 		if (record.type !== "trace_event" || !record.loop) {
 			return [];
 		}
+		if (supersededByLaterLoopIteration(record, records)) {
+			return [];
+		}
 		const exit = objectRecord(record.data?.exit);
 		const status = text(exit.status);
 		if (status === "exit") return [];
@@ -112,6 +115,19 @@ function iterationBlockers(records: TraceRecord[]): BlockerView[] {
 			},
 		];
 	});
+}
+
+function supersededByLaterLoopIteration(
+	event: TraceEvent,
+	records: TraceRecord[],
+): boolean {
+	return records.some(
+		(record) =>
+			record.type === "trace_event" &&
+			record.traceId === event.traceId &&
+			record.loop === event.loop &&
+			record.sequence > event.sequence,
+	);
 }
 
 function conflictBlockers(records: TraceRecord[]): BlockerView[] {

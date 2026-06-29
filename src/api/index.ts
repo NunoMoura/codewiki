@@ -9,6 +9,7 @@ export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
 export type { SourceLayout } from "../index.ts";
 export type {
 	CurrentStatePacket,
+	DecisionOutputTypeProfile,
 	DecisionRow,
 	DecisionTable,
 	DecisionTableInput,
@@ -78,6 +79,7 @@ export type {
 	ResumeView,
 	StatusView,
 	TraceBoardView,
+	TraceQueueView,
 	TriggersView,
 	WorkPlanView,
 	WorkQueueView,

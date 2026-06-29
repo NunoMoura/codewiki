@@ -268,7 +268,7 @@ describe("runtime worktree planning", () => {
 			{
 				mode: "auto",
 				repoRoot: "/tmp/repo/codewiki",
-				dirtyPaths: ["src/planning/exit.ts"],
+				dirtyPaths: ["src/planning/loop.ts"],
 			},
 		);
 

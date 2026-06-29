@@ -5,7 +5,7 @@ import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
 import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
-import { evaluatePlanningExit } from "../../src/planning/exit.ts";
+import { evaluatePlanningExit } from "../../src/planning/loop.ts";
 import { normalizePlanningWorkItems } from "../../src/planning/materialization.ts";
 import { orderWorkItems } from "../../src/planning/ordering.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
@@ -114,6 +114,9 @@ describe("planning iteration runner", () => {
 				"acceptance_and_verification_testable",
 				"planning_depth_accounted",
 				"worker_assignment_ready",
+				"work_unit_atomic_judged",
+				"acceptance_criteria_testable_judged",
+				"scope_minimal_judged",
 				"uncertainty_resolved",
 				"work_unit_right_sized",
 				"source_ownership_aligned",
@@ -448,7 +451,7 @@ describe("planning iteration runner", () => {
 		);
 	});
 
-	it("routes unresolved planning uncertainty to user authority", () => {
+	it("routes unresolved planning user uncertainty to decision authority", () => {
 		const decisionRef = approvedDecisionRef(decisionEvents());
 		const exit = evaluatePlanningExit({
 			decisionRefs: [decisionRef],
@@ -480,16 +483,16 @@ describe("planning iteration runner", () => {
 		});
 
 		assert.equal(exit.passed, false);
-		assert.equal(exit.verdict, "block");
-		assert.equal(exit.route, "user");
+		assert.equal(exit.verdict, "fail");
+		assert.equal(exit.route, "decision");
 		const uncertainty = exit.qualityStandards.find(
 			(standard) => standard.id === "uncertainty_resolved",
 		);
-		assert.equal(uncertainty?.status, "blocked");
+		assert.equal(uncertainty?.status, "unmet");
 		assert.equal(
 			exit.criteria.find((criterion) => criterion.id === "uncertainty_resolved")
 				?.status,
-			"block",
+			"fail",
 		);
 	});
 

@@ -146,10 +146,12 @@ describe("trace JSONL core", () => {
 		]);
 	});
 
-	it("treats active agent skill and Pi settings paths as canonical refs", () => {
+	it("treats active agent, lab, config, and Pi settings paths as canonical refs", () => {
 		assert.deepEqual(
 			invalidTraceRefs([
 				".agents/skills/codewiki-decide/SKILL.md",
+				"lab/decision/loop.ts",
+				".codewiki/config.json",
 				".pi/settings.json",
 			]),
 			[],
@@ -218,6 +220,27 @@ describe("trace JSONL core", () => {
 				() => appendTraceRecord(root, event, first.nextBytes),
 				TraceAppendConflictError,
 			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("rejects invalid records before writing an append", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-invalid-append-"));
+		try {
+			const [head, event] = sampleRecords();
+			const first = await appendTraceRecord(root, head, 0);
+			await assert.rejects(
+				() =>
+					appendTraceRecord(
+						root,
+						{ ...event, event: "decision.iteration" },
+						first.nextBytes,
+					),
+				/Semantic trace event decision\.iteration is not valid/,
+			);
+			const readBack = await readTrace(join(root, traceFilePath(head.traceId)));
+			assert.equal(readBack.records.length, 1);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

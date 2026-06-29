@@ -47,6 +47,44 @@ describe("wiki_config core facade", () => {
 		assert.equal(result.config.runtime.approval.destructiveAction, "ask");
 		assert.equal(result.config.runtime.budgets.maxIterations, 2);
 		assert.equal(result.config.runtime.budgets.maxChangedFiles, 12);
+		assert.equal(result.config.quality.judge.enabled, false);
+		assert.equal(result.config.quality.judge.provider, "none");
+		assert.equal(result.config.quality.review.enabled, true);
+		assert.equal(result.config.quality.review.autoEvidence, true);
+		assert.equal(result.config.quality.review.includeCachedEvidence, true);
+		assert.deepEqual(result.config.quality.review.enabledPacks, [
+			"tsjs.typescript",
+			"tsjs.lint",
+			"python.ruff",
+			"python.pyright",
+			"go.test",
+			"go.vet",
+			"rust.cargo-test",
+			"rust.cargo-clippy",
+			"shell.shellcheck",
+		]);
+		assert.deepEqual(result.config.quality.review.requiredPacks, []);
+	});
+
+	it("documents review pack configuration recipes", async () => {
+		const readme = await readFile("README.md", "utf8");
+		const loopContracts = await readFile(
+			".codewiki/kb/system/loop-contracts.md",
+			"utf8",
+		);
+		const docs = `${readme}\n${loopContracts}`;
+
+		for (const packId of DEFAULT_WIKI_CONFIG.quality.review.enabledPacks) {
+			assert.match(docs, new RegExp(escapeRegExp(packId)));
+		}
+		assert.match(readme, /Review evidence configuration/);
+		assert.match(readme, /autoEvidence/);
+		assert.match(readme, /includeCachedEvidence/);
+		assert.match(readme, /requiredPacks/);
+		assert.match(readme, /skippedPacks/);
+		assert.match(readme, /Explicit `reviewEvidenceReports`/);
+		assert.match(loopContracts, /Review pack recipes/);
+		assert.match(loopContracts, /requiredPacks/);
 	});
 
 	it("normalizes retention, host, and stop-condition policy", () => {
@@ -80,6 +118,45 @@ describe("wiki_config core facade", () => {
 		assert.deepEqual(Object.keys(config.hosts).sort(), ["mcp", "pi"]);
 		assert.equal(config.hosts.pi.enabled, true);
 		assert.equal(config.hosts.mcp.enabled, true);
+		const judged = resolveWikiConfig({
+			quality: {
+				judge: {
+					enabled: true,
+					provider: "http",
+					endpoint: "http://127.0.0.1:8080/judge",
+					promptVersion: "judge.test.v1",
+					timeoutMs: 1234,
+				},
+			},
+		});
+		assert.equal(judged.quality.judge.enabled, true);
+		assert.equal(judged.quality.judge.provider, "http");
+		assert.equal(judged.quality.judge.promptVersion, "judge.test.v1");
+		assert.equal(judged.quality.judge.timeoutMs, 1234);
+		const reviewed = resolveWikiConfig({
+			quality: {
+				review: {
+					autoEvidence: false,
+					includeCachedEvidence: false,
+					timeoutMs: 2222,
+					fastTimeoutMs: 333,
+					maxCachedEvidenceAgeMs: 4444,
+					enabledPacks: ["tsjs.typescript", "tsjs.typescript"],
+					disabledPacks: ["tsjs.lint", ""],
+					requiredPacks: ["tsjs.typescript", ""],
+				},
+			},
+		});
+		assert.equal(reviewed.quality.review.autoEvidence, false);
+		assert.equal(reviewed.quality.review.includeCachedEvidence, false);
+		assert.equal(reviewed.quality.review.timeoutMs, 2222);
+		assert.equal(reviewed.quality.review.fastTimeoutMs, 333);
+		assert.equal(reviewed.quality.review.maxCachedEvidenceAgeMs, 4444);
+		assert.deepEqual(reviewed.quality.review.enabledPacks, ["tsjs.typescript"]);
+		assert.deepEqual(reviewed.quality.review.disabledPacks, ["tsjs.lint"]);
+		assert.deepEqual(reviewed.quality.review.requiredPacks, [
+			"tsjs.typescript",
+		]);
 	});
 
 	it("loads and saves project config files", async () => {
@@ -183,5 +260,61 @@ describe("wiki_config core facade", () => {
 				}),
 			/hosts\.pi\.enabled/,
 		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: { judge: { provider: "stdio" } },
+				}),
+			/quality\.judge\.provider/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: { judge: { enabled: true, provider: "http" } },
+				}),
+			/quality\.judge\.endpoint/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: { review: { autoEvidence: "yes" } },
+				}),
+			/quality\.review\.autoEvidence/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: { review: { timeoutMs: 0 } },
+				}),
+			/quality\.review\.timeoutMs/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: {
+						review: {
+							disabledPacks: ["tsjs.typescript"],
+							requiredPacks: ["tsjs.typescript"],
+						},
+					},
+				}),
+			/quality\.review\.requiredPacks/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: {
+						review: {
+							enabledPacks: ["tsjs.lint"],
+							requiredPacks: ["tsjs.typescript"],
+						},
+					},
+				}),
+			/quality\.review\.requiredPacks/,
+		);
 	});
 });
+
+function escapeRegExp(value) {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

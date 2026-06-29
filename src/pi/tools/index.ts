@@ -109,7 +109,7 @@ function codewikiTools(): CodewikiToolDefinition[] {
 			"wiki_implement",
 			"CodeWiki Implement",
 			"Preview or append a CodeWiki implementation iteration using the core facade.",
-			"Run the CodeWiki implementation loop facade for source evidence and planned verification coverage.",
+			"Run the CodeWiki implementation loop facade for source evidence and planned or direct-decision verification coverage.",
 			runWikiImplement,
 		),
 		facadeTool<RunWikiArchiveInput>(
@@ -183,8 +183,12 @@ function wikiStateTool(): CodewikiToolDefinition {
 				generatedAt: optionalString(input.generatedAt),
 			});
 			const view = optionalStateView(input.view);
+			const activeWorkItems = snapshot.workQueue.items.filter(
+				(item) => item.status !== "done",
+			).length;
+			const reviewBlockers = snapshot.reviewEvidence?.blockers.length || 0;
 			return toolResult(
-				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${snapshot.workQueue.items.length} queued item(s).`,
+				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${activeWorkItems} active work item(s), ${reviewBlockers} review blocker(s).`,
 				stateToolPayload(snapshot, view),
 				warning,
 			);
@@ -485,6 +489,7 @@ function stateToolViewData(
 			status: snapshot.status,
 			resume: snapshot.resume,
 			workQueueSummary: snapshot.workQueue.summary,
+			reviewEvidence: snapshot.reviewEvidence,
 			next: snapshot.next,
 			append: snapshot.append,
 		};

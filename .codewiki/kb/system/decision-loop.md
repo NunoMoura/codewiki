@@ -1,14 +1,14 @@
 # Decision Loop
 
-The decision loop owns product and system intent. It turns user goals, current project state, alternatives, risks, and knowledge impact into an accepted decision output that planning can trust.
+The decision loop owns product and system intent and KB meaning updates. It turns user goals, current project state, alternatives, risks, and knowledge impact into user-validated decision rows that can become an accepted decision output Planning can trust.
 
 ## Loop authority
 
 The decision loop owns:
 
 - user intent and approvals;
-- decision kind classification (`debug`, `fix`, `harden`, `improve`, `migrate`, `docs`, or `release`);
-- work scale classification (`tiny`, `small`, `normal`, or `large`) and planning depth (`micro` or `standard`);
+- decision kind and resolved decision type classification (`debug`, `fix`, `harden`, `improve`, `migrate`, `docs`, `release`, or a guarded direct-implementation type);
+- work scale classification (`tiny`, `small`, `normal`, or `large`), planning depth (`micro` or `standard`), and route target;
 - requirements and non-goals;
 - product/system tradeoffs;
 - risk tier and approval needs;
@@ -33,6 +33,8 @@ append decision.rows_approved
 continue, exit, route back, or block
 ```
 
+Candidate decision rows should be visible to the user before append. The user can approve, edit, reject, or defer each row. That validated table is the Decision loop input; it is not final workflow truth until Decision quality standards pass and runtime appends `decision.rows_approved`.
+
 The agent should ask the user when required authority is missing, risk is high, or ambiguity would otherwise leak into planning.
 
 ## Loop output
@@ -48,13 +50,13 @@ Decision loop output is the high-signal packet planning needs:
 - risk tier and approval evidence;
 - assumptions and non-goals;
 - downstream planning questions;
-- planning-depth handoff guidance (`micro` or `standard`), while still always handing accepted project-affecting work to planning;
+- planning-depth handoff guidance (`micro` or `standard`) and route metadata (`planning` by default, or direct `implementation` for eligible tiny/small low-risk rows);
 - route-back answers;
 - canonical refs proving the output.
 
-Decision output should not include task breakdowns, implementation plans, test commands, or worker instructions. Even tiny project-affecting work exits to planning; the decision loop only classifies whether planning should produce a micro-plan or a standard plan.
+Decision output should not include task breakdowns, implementation plans, or worker instructions. It may include a direct implementation scope only for tiny/small low-risk rows that explicitly skip Planning; that scope is a bounded acceptance/verification packet, not a task plan.
 
-Decision rows carry shared intent fields plus a `decisionKind`. Kind-specific fields shape the row without creating another loop:
+Decision rows carry shared intent fields plus a `decisionKind` and resolved `decisionType`. `decisionKind` captures semantic intent; `decisionType` selects package-owned pipeline, quality-profile, evidence-policy, escalation, and forbidden-skip defaults. Kind-specific fields shape the row without creating another loop:
 
 | decisionKind | Additional required signal |
 | --- | --- |
@@ -72,10 +74,12 @@ Decision rows carry shared intent fields plus a `decisionKind`. Kind-specific fi
 | --- | --- | --- |
 | `workScale` | `tiny`, `small`, `normal`, `large` | The estimated amount of work and review surface. |
 | `planningDepth` | `micro`, `standard` | Whether planning should emit a compact one-unit micro-plan or a full standard plan. |
+| `routeTarget` | `planning`, `implementation` | The next loop if the decision exits. Defaults to `planning`. |
+| `implementationMode` | `tdd`, `targeted_checks` | Required only for direct implementation rows. |
 
-Micro planning is allowed only for low-risk `tiny` or `small` decisions. `normal`, `large`, medium-risk, high-risk, ambiguous, destructive, dependency, API/product, security/privacy, release, or multi-component work must use standard planning.
+Micro planning is allowed only for low-risk `tiny` or `small` decisions. Direct implementation is narrower: it also requires explicit route rationale, implementation mode, `directImplementationScope.pathScopes`, acceptance criteria, and verification. `normal`, `large`, medium-risk, high-risk, ambiguous, destructive, dependency, API/product, security/privacy, release, or multi-component work must use standard planning.
 
-## Exit quality standards
+## Loop quality standards
 
 The decision loop can exit only when loop-owned quality standards are met. Research, uncertainty handling, and blind-spot review are not separate top-level concepts; they are evidence for these standards.
 
@@ -93,6 +97,7 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | risks_and_alternatives_considered | Approved rows declare a low/medium/high risk tier; high-risk intentions identify affected layers and at least one viable alternative before planning. |
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
 | work_routing_classified | Approved rows classify work scale and planning depth; micro planning is limited to tiny or small low-risk work. |
+| loop_route_safe | Approved rows choose a safe next loop; direct implementation is limited to scoped, low-risk rows with validation. |
 | decision_kind_classified | Approved rows classify the decision kind so kind-specific standards can apply inside the decision loop. |
 | debug_decision_focused | Debug rows include target, hypothesis, invariant, probe, expected safe behavior, and stop condition. |
 | fix_decision_reproducible | Fix rows include reproduction, expected behavior, and regression coverage. |

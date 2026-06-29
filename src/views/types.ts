@@ -57,6 +57,8 @@ export interface LoopQualitySummary {
 	unmet: number;
 	blocked: number;
 	missing: number;
+	notApplicable?: number;
+	escalated?: number;
 }
 
 export interface QualityIterationSummary {
@@ -142,6 +144,40 @@ export interface WorkQueueView {
 	traceIds: string[];
 	summary: Record<WorkQueueItemStatus, number>;
 	items: WorkQueueItem[];
+}
+
+export interface TraceQueueItem {
+	id: string;
+	kind: WorkQueueItemKind;
+	status: WorkQueueItemStatus;
+	title: string;
+	decisionRefs: string[];
+	planningRefs: string[];
+	pathScopes: string[];
+	blockers: string[];
+}
+
+export interface TraceQueueCard {
+	traceId: string;
+	title: string;
+	status: TraceGoalStatus;
+	closed: boolean;
+	decisionRefs: string[];
+	rowCount: number;
+	plannedDecisionRefs: string[];
+	unresolvedDecisionRefs: string[];
+	workUnitRefs: string[];
+	pathScopes: string[];
+	blockers: string[];
+	nextLoop?: TraceLoop | "archive";
+	items: TraceQueueItem[];
+}
+
+export interface TraceQueueView {
+	generatedAt?: string;
+	traceIds: string[];
+	summary: Record<TraceGoalStatus, number>;
+	cards: TraceQueueCard[];
 }
 
 export type TriggerDueStatus = "due" | "not_due" | "invalid";

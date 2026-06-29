@@ -35,7 +35,8 @@ describe("CodeWiki pipeline lab", () => {
 	it("detects fact loss between planning and implementation", () => {
 		const caseScore = scorePipelineCase(
 			pipelineCases.find(
-				(testCase) => testCase.id === "decision-fact-lost-before-implementation",
+				(testCase) =>
+					testCase.id === "decision-fact-lost-before-implementation",
 			),
 		);
 		assert.equal(caseScore.expected, "fail");

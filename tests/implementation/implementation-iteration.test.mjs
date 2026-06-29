@@ -11,7 +11,7 @@ import {
 	contentProofRefs,
 	normalizeImplementationChanges,
 } from "../../src/implementation/evidence.ts";
-import { evaluateImplementationExit } from "../../src/implementation/exit.ts";
+import { evaluateImplementationExit } from "../../src/implementation/loop.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
@@ -197,6 +197,10 @@ describe("implementation iteration runner", () => {
 				"worker_claims_correlated",
 				"source_ownership_aligned",
 				"production_quality_reviewed",
+				"implementation_review_evidence_clean",
+				"evidence_matches_claims_judged",
+				"checks_relevant_judged",
+				"implementation_readiness_judged",
 				"uncertainty_resolved",
 				"security_privacy_reviewed",
 				"accessibility_ui_reviewed",
@@ -263,13 +267,13 @@ describe("implementation iteration runner", () => {
 		assert.deepEqual(contentProofRefs(change), []);
 	});
 
-	it("blocks unresolved implementation uncertainty to user authority", () => {
+	it("routes unresolved implementation user uncertainty to decision authority", () => {
 		const planningEvent = planningWorkEvent(planningEvents());
 		const changes = normalizeImplementationChanges([
 			{
 				id: "IC-uncertain",
 				planningRefs: [planningEvent.id],
-				codePaths: ["src/implementation/exit.ts"],
+				codePaths: ["src/implementation/loop.ts"],
 				checkResults: [{ command: "npm test", status: "pass" }],
 				acceptanceEvidenceItems: [
 					{
@@ -304,16 +308,16 @@ describe("implementation iteration runner", () => {
 		});
 
 		assert.equal(exit.passed, false);
-		assert.equal(exit.verdict, "block");
-		assert.equal(exit.route, "user");
+		assert.equal(exit.verdict, "fail");
+		assert.equal(exit.route, "decision");
 		const standards = Object.fromEntries(
 			exit.qualityStandards.map((standard) => [standard.id, standard]),
 		);
 		assert.equal(standards.production_quality_reviewed.status, "unmet");
-		assert.equal(standards.uncertainty_resolved.status, "blocked");
+		assert.equal(standards.uncertainty_resolved.status, "unmet");
 	});
 
-	it("blocks release/publication without user approval", () => {
+	it("routes release/publication without user approval to decision", () => {
 		const planningEvent = planningWorkEvent(planningEvents());
 		const changes = normalizeImplementationChanges([
 			{
@@ -339,15 +343,15 @@ describe("implementation iteration runner", () => {
 		});
 
 		assert.equal(exit.passed, false);
-		assert.equal(exit.verdict, "block");
-		assert.equal(exit.route, "user");
+		assert.equal(exit.verdict, "fail");
+		assert.equal(exit.route, "decision");
 		assert.equal(
 			exit.issues.some((issue) => issue.code === "missing_release_approval"),
 			true,
 		);
 		assert.equal(
 			exit.remediation.find((item) => item.action.includes("approval"))?.route,
-			"user",
+			"decision",
 		);
 	});
 
@@ -361,14 +365,14 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-missing-planned-verification",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/implementation/exit.ts"],
+					codePaths: ["src/implementation/loop.ts"],
 					checkResults: [{ command: "npm run typecheck", status: "pass" }],
 					acceptanceEvidenceItems: [
 						{
 							criterionId: "AC-001",
 							summary:
 								"Implementation evidence exists but omits planned verification.",
-							evidenceRefs: ["src/implementation/exit.ts"],
+							evidenceRefs: ["src/implementation/loop.ts"],
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:abc123" },
@@ -471,7 +475,7 @@ describe("implementation iteration runner", () => {
 			{
 				id: "IC-dup",
 				planningRefs: [planningEvent.id],
-				codePaths: ["src/implementation/exit.ts"],
+				codePaths: ["src/implementation/loop.ts"],
 				checks: ["npm test"],
 				checkResults: [{ command: "npm test", status: "pass" }],
 				acceptanceEvidence: ["Evidence"],
@@ -503,7 +507,7 @@ describe("implementation iteration runner", () => {
 			{
 				id: "IC-proof",
 				planningRefs: [planningEvent.id],
-				codePaths: ["src/implementation/exit.ts"],
+				codePaths: ["src/implementation/loop.ts"],
 				checkResults: [
 					{
 						command: "npm test",
@@ -540,7 +544,7 @@ describe("implementation iteration runner", () => {
 			{
 				id: "IC-unknown-criterion",
 				planningRefs: [planningEvent.id],
-				codePaths: ["src/implementation/exit.ts"],
+				codePaths: ["src/implementation/loop.ts"],
 				checkResults: [{ command: "npm test", status: "pass" }],
 				acceptanceEvidenceItems: [
 					{
@@ -585,7 +589,7 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-tdd",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/implementation/exit.ts"],
+					codePaths: ["src/implementation/loop.ts"],
 					testPaths: ["tests/implementation/implementation-iteration.test.mjs"],
 					checkResults: [
 						{
@@ -642,7 +646,7 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-missing-tdd",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/implementation/exit.ts"],
+					codePaths: ["src/implementation/loop.ts"],
 					checkResults: [
 						{
 							command: "npm test",
@@ -1123,7 +1127,7 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-missing-component-tests",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/implementation/exit.ts"],
+					codePaths: ["src/implementation/loop.ts"],
 					checkResults: [
 						{
 							command: "npm test",

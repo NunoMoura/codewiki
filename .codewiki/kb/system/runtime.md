@@ -6,7 +6,7 @@ Runtime is CodeWiki's outer control loop. It is not a semantic loop and it does 
 while active work exists:
   read traces and derived views
   inspect loop outputs and exit conditions
-  choose next semantic loop or coordination action
+  invoke the semantic loop named by trace-derived state, or run a mechanical coordination action already authorized by Planning
   append semantic loop report or runtime coordination event
 ```
 
@@ -14,7 +14,7 @@ while active work exists:
 
 Runtime owns:
 
-- trace/view projection and next-action selection;
+- trace/view projection and mechanical next-action hints;
 - source-backed context boundaries;
 - trace-owned worker claims;
 - ephemeral leases and lock helpers;
@@ -25,7 +25,7 @@ Runtime owns:
 - temporary working data under `.codewiki/runtime/tmp/**`;
 - host session refs and Pi-native compaction boundaries.
 
-Runtime does not invent accepted requirements, work-plan truth, implementation evidence, loop outputs, generated views, or loop quality standards. Those are KB/source/Git/semantic-loop concerns until runtime appends them as trace records. Views own the derived calculations and cacheable projections over traces; runtime reads those views to coordinate, but traces remain truth. Shared error contracts and recovery hints live under `src/error-handling/**`; runtime consumes them without making error handling a semantic loop.
+Runtime does not invent accepted requirements, choose among raw decisions semantically, create work-plan truth, create implementation evidence, own loop outputs, treat generated views as truth, or define loop quality standards. Those are KB/source/Git/semantic-loop concerns until runtime appends them as trace records. Views own the derived calculations and cacheable projections over traces; runtime reads those views to coordinate, but traces remain truth. Shared error contracts and recovery hints live under `src/error-handling/**`; runtime consumes them without making error handling a semantic loop.
 
 ## Hosts
 
@@ -65,7 +65,7 @@ The selection emits claim candidates only:
 work-queue -> selected[] + held[]
 ```
 
-It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted work-unit claim selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. The claim append helper groups those events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
+It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted work-unit claim selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. Runtime claim selection ignores raw decision items; those must enter Planning first so Planning can own trace-queue ordering, conflicts, starvation, deferrals, and route-back policy. The claim append helper groups claim events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
 
 ## Claim events
 

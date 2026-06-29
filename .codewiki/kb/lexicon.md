@@ -77,9 +77,33 @@ The semantic loop that turns exited decision output into work units, dependencie
 
 The semantic loop that changes code/docs/tests, records checks and acceptance evidence, aggregates worker results, correlates runtime claims, and produces final content proof. It exits only when planned acceptance and closure conditions are met.
 
+## Route contract
+
+Shared loop-exit metadata that names the next semantic target, route kind,
+rationale, refs, and optional implementation mode. It is how Decision, Planning,
+and Implementation prevent drift without inventing another semantic loop.
+
+## Direct implementation route
+
+A Decision-loop route for tiny or small low-risk work where approved rows carry
+explicit scope and validation, allowing Implementation to consume the decision
+row without a Planning iteration. This is still trace-backed and still requires
+implementation evidence.
+
+## AX
+
+Agent Experience: how clear and safe CodeWiki is for an agent using tools,
+traces, append handles, route hints, and repair loops.
+
+## UX
+
+User Experience: how clear and useful CodeWiki is for the human developer.
+
 ## Route-back
 
-A loop iteration status indicating that an earlier semantic loop owns the required authority. Example: implementation routes back to planning for bad path scopes, or to decision for ambiguous product/API behavior.
+A loop iteration status indicating that an earlier semantic loop owns the
+required authority. Example: implementation routes back to planning for bad path
+scopes, or to decision for ambiguous product/API behavior or user validation.
 
 ## Blocked
 

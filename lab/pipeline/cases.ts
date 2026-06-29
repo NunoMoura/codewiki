@@ -12,13 +12,26 @@ export const pipelineCases: PipelineCase[] = [
 			userIntent:
 				"Keep lab out of the packed Pi extension while preserving package readiness checks.",
 			expectedFacts: [
-				{ id: "fact-lab-excluded", text: "lab/** is excluded from packed package runtime" },
-				{ id: "fact-extension-dist", text: "Pi extension metadata points to dist/pi/extension.js" },
-				{ id: "fact-pack-smoke", text: "package install smoke verifies lab tests and .codewiki are absent" },
+				{
+					id: "fact-lab-excluded",
+					text: "lab/** is excluded from packed package runtime",
+				},
+				{
+					id: "fact-extension-dist",
+					text: "Pi extension metadata points to dist/pi/extension.js",
+				},
+				{
+					id: "fact-pack-smoke",
+					text: "package install smoke verifies lab tests and .codewiki are absent",
+				},
 			],
 			decision: {
 				rowId: "DEC-package-boundary",
-				refs: ["README.md", "package.json", "tests/runtime/package-install-smoke.mjs"],
+				refs: [
+					"README.md",
+					"package.json",
+					"tests/runtime/package-install-smoke.mjs",
+				],
 				facts: ["fact-lab-excluded", "fact-extension-dist", "fact-pack-smoke"],
 			},
 			planning: {
@@ -27,9 +40,20 @@ export const pipelineCases: PipelineCase[] = [
 					{
 						id: "WU-package-boundary-guard",
 						decisionRefs: ["DEC-package-boundary"],
-						pathScopes: ["tests/runtime/package-install-smoke.mjs", "package.json"],
-						acceptanceCriteria: ["AC-lab-excluded", "AC-extension-dist", "AC-pack-smoke"],
-						facts: ["fact-lab-excluded", "fact-extension-dist", "fact-pack-smoke"],
+						pathScopes: [
+							"tests/runtime/package-install-smoke.mjs",
+							"package.json",
+						],
+						acceptanceCriteria: [
+							"AC-lab-excluded",
+							"AC-extension-dist",
+							"AC-pack-smoke",
+						],
+						facts: [
+							"fact-lab-excluded",
+							"fact-extension-dist",
+							"fact-pack-smoke",
+						],
 					},
 				],
 			},
@@ -39,12 +63,20 @@ export const pipelineCases: PipelineCase[] = [
 					{
 						id: "IMP-package-boundary-guard",
 						workItemRefs: ["WU-package-boundary-guard"],
-						acceptanceCovered: ["AC-lab-excluded", "AC-extension-dist", "AC-pack-smoke"],
+						acceptanceCovered: [
+							"AC-lab-excluded",
+							"AC-extension-dist",
+							"AC-pack-smoke",
+						],
 						evidenceRefs: [
 							"tests/runtime/package-install-smoke.mjs",
 							"tests/runtime/readiness-checklist.test.mjs",
 						],
-						facts: ["fact-lab-excluded", "fact-extension-dist", "fact-pack-smoke"],
+						facts: [
+							"fact-lab-excluded",
+							"fact-extension-dist",
+							"fact-pack-smoke",
+						],
 					},
 				],
 			},
@@ -58,10 +90,17 @@ export const pipelineCases: PipelineCase[] = [
 		weight: 2,
 		input: {
 			traceId: "TRACE-lab-lost-fact",
-			userIntent: "Preserve weighted standard semantics while refactoring loop exits.",
+			userIntent:
+				"Preserve weighted standard semantics while refactoring loop exits.",
 			expectedFacts: [
-				{ id: "fact-standard-weights", text: "standard weights remain editable in candidate files" },
-				{ id: "fact-loss-weights", text: "case loss weights remain locked in the evaluator" },
+				{
+					id: "fact-standard-weights",
+					text: "standard weights remain editable in candidate files",
+				},
+				{
+					id: "fact-loss-weights",
+					text: "case loss weights remain locked in the evaluator",
+				},
 			],
 			decision: {
 				rowId: "DEC-weighted-standards",
@@ -104,8 +143,14 @@ export const pipelineCases: PipelineCase[] = [
 			traceId: "TRACE-lab-acceptance-gap",
 			userIntent: "Add trace projection coverage for runtime board state.",
 			expectedFacts: [
-				{ id: "fact-board-source", text: "runtime board is generated from trace records" },
-				{ id: "fact-board-command", text: "wiki_state board view exposes runtime board" },
+				{
+					id: "fact-board-source",
+					text: "runtime board is generated from trace records",
+				},
+				{
+					id: "fact-board-command",
+					text: "wiki_state board view exposes runtime board",
+				},
 			],
 			decision: {
 				rowId: "DEC-runtime-board",
@@ -131,7 +176,10 @@ export const pipelineCases: PipelineCase[] = [
 						id: "IMP-runtime-board",
 						workItemRefs: ["WU-runtime-board"],
 						acceptanceCovered: ["AC-board-from-trace"],
-						evidenceRefs: ["src/runtime/board.ts", "tests/views/runtime-board.test.mjs"],
+						evidenceRefs: [
+							"src/runtime/board.ts",
+							"tests/views/runtime-board.test.mjs",
+						],
 						facts: ["fact-board-source", "fact-board-command"],
 					},
 				],

@@ -9,6 +9,7 @@ import type {
 	BlockersView,
 	QualityView,
 	ResumeView,
+	TraceQueueCard,
 	WorkQueueItem,
 } from "../../views/types.ts";
 
@@ -31,14 +32,14 @@ export function renderStateCommand(
 	view: WikiStateCommandView,
 	options: CommandRenderOptions = {},
 ): string[] {
-	if (view === "board") return renderBoard(snapshot.workQueue.items, options);
+	if (view === "board") return renderBoard(traceQueueCards(snapshot), options);
 	if (view === "quality") return renderQuality(snapshot.quality, options);
 	if (view === "blockers") return renderBlockers(snapshot.blockers, options);
 	if (view === "all") {
 		return [
 			...renderStateSummary(snapshot, options),
 			"",
-			...renderBoard(snapshot.workQueue.items, options),
+			...renderBoard(traceQueueCards(snapshot), options),
 			"",
 			...renderQuality(snapshot.quality, options),
 			"",
@@ -252,20 +253,68 @@ function renderStateSummary(
 	];
 }
 
+function traceQueueCards(snapshot: WikiStateSnapshot): TraceQueueCard[] {
+	return (
+		snapshot.traceQueue?.cards ||
+		workQueueItemsAsTraceCards(snapshot.workQueue.items)
+	);
+}
+
+function workQueueItemsAsTraceCards(items: WorkQueueItem[]): TraceQueueCard[] {
+	return items.map((item) => ({
+		traceId: item.traceId || item.id,
+		title: item.title,
+		status: item.status === "done" ? "finished" : "needs_implementation",
+		closed: false,
+		decisionRefs: item.decisionRefs || [],
+		rowCount: (item.decisionRefs || []).length,
+		plannedDecisionRefs: item.decisionRefs || [],
+		unresolvedDecisionRefs: [],
+		workUnitRefs: item.planningRefs || [],
+		pathScopes: item.pathScopes || [],
+		blockers: item.blockers || [],
+		nextLoop: "implementation",
+		items: [
+			{
+				id: item.id,
+				kind: item.kind || "work-unit",
+				status: item.status,
+				title: item.title,
+				decisionRefs: item.decisionRefs || [],
+				planningRefs: item.planningRefs || [],
+				pathScopes: item.pathScopes || [],
+				blockers: item.blockers || [],
+			},
+		],
+	}));
+}
+
 function renderBoard(
-	items: WorkQueueItem[],
+	cards: TraceQueueCard[],
 	options: CommandRenderOptions,
 ): string[] {
-	const todo = items
-		.filter((item) =>
-			["backlog", "waiting", "ready", "blocked"].includes(item.status),
+	const todo = cards
+		.filter((card) =>
+			[
+				"needs_decision",
+				"needs_planning",
+				"needs_implementation",
+				"blocked",
+				"deferred",
+			].includes(card.status),
 		)
-		.map(itemLabel);
-	const doing = items
-		.filter((item) => item.status === "claimed")
-		.map(itemLabel);
-	const done = items.filter((item) => item.status === "done").map(itemLabel);
-	return ["CodeWiki Board", "", ...boardTable({ todo, doing, done }, options)];
+		.map(traceCardLabel);
+	const doing = cards
+		.filter((card) => card.items.some((item) => item.status === "claimed"))
+		.map(traceCardLabel);
+	const done = cards
+		.filter((card) => card.status === "finished" || card.closed)
+		.map(traceCardLabel);
+	return [
+		"CodeWiki Trace Queue",
+		"",
+		...boardTable({ todo, doing, done }, options),
+	];
 }
 
 function renderQuality(
@@ -383,8 +432,8 @@ function section(
 	];
 }
 
-function itemLabel(item: WorkQueueItem): string {
-	return `${item.id} ${item.title}`.trim();
+function traceCardLabel(card: TraceQueueCard): string {
+	return `${card.traceId} ${card.status} rows:${card.rowCount} work:${card.items.length} ${card.title}`.trim();
 }
 
 function border(left: string, join: string, right: string, widths: number[]) {

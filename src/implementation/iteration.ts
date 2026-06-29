@@ -9,6 +9,7 @@ import {
 	loopProgressFromEvaluation,
 } from "../traces/events.ts";
 import type { ContentProof } from "../git/content-proof.ts";
+import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
 import { normalizeTraceRefs } from "../traces/refs.ts";
 import type {
 	TailCheckpoint,
@@ -25,13 +26,22 @@ import {
 	planningRefsFromEvents,
 	planningScopesFromEvents,
 } from "./evidence.ts";
-import { evaluateImplementationExit } from "./exit.ts";
+import {
+	evaluateImplementationExit,
+	evaluateImplementationExitWithRunner,
+} from "./loop.ts";
 import { workerProofRefs } from "./worker-proof.ts";
 import type {
 	ImplementationWorkerAggregation,
 	ImplementationWorkerResultInput,
 } from "./workers.ts";
 import { aggregateImplementationWorkerResults } from "./workers.ts";
+import {
+	evidenceRefsForReport,
+	mergeImplementationEvidenceReports,
+	type ImplementationEvidenceReportInput,
+	type ReviewEvidenceCacheReader,
+} from "./review/index.ts";
 import type {
 	AcceptanceRequirement,
 	ImplementationChange,
@@ -43,17 +53,21 @@ import type {
 
 export interface ImplementationIterationInput {
 	traceId: string;
-	planningEvents: TraceEvent[];
+	planningEvents?: TraceEvent[];
+	decisionEvents?: TraceEvent[];
 	changes?: ImplementationChange[];
 	changeInputs?: ImplementationChangeInput[];
 	workerResults?: ImplementationWorkerResultInput[];
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
+	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
+	reviewEvidenceCache?: ReviewEvidenceCacheReader;
 	expectedWorkerBaseSha?: string;
 	componentMap?: SourceMapContract;
 	aggregateContentProof?: ContentProof;
 	existingPaths?: string[];
 	requireTddEvidence?: boolean;
+	qualityJudge?: LoopQualityJudgeExecutionOptions;
 	parentId?: string | null;
 	startSequence?: number;
 	createdAt?: string;
@@ -67,6 +81,7 @@ export interface ImplementationIterationResult {
 	workerClaims: ImplementationWorkerClaim[];
 	aggregateContentProof?: ContentProof;
 	changes: ImplementationChange[];
+	reviewEvidenceReports: ImplementationEvidenceReportInput[];
 	exit: ImplementationExitResult;
 	draftTraceEvents: TraceEvent[];
 	traceEvents: TraceEvent[];
@@ -79,11 +94,14 @@ export function runImplementationIteration(
 	input: ImplementationIterationInput,
 ): ImplementationIterationResult {
 	const createdAt = input.createdAt || new Date().toISOString();
-	const planningRefs = planningRefsFromEvents(input.planningEvents);
-	const acceptanceRequirements = acceptanceRequirementsFromPlanningEvents(
-		input.planningEvents,
-	);
-	const planningScopes = planningScopesFromEvents(input.planningEvents);
+	const routeSourceEvents = [
+		...(input.planningEvents || []),
+		...(input.decisionEvents || []),
+	];
+	const planningRefs = planningRefsFromEvents(routeSourceEvents);
+	const acceptanceRequirements =
+		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
+	const planningScopes = planningScopesFromEvents(routeSourceEvents);
 	const workerAggregation = aggregateImplementationWorkerResults(
 		input.workerResults,
 	);
@@ -100,6 +118,10 @@ export function runImplementationIteration(
 		changes,
 		input.aggregateContentProof,
 	);
+	const reviewEvidenceReports = reviewEvidenceReportsForIteration(
+		input,
+		changes,
+	);
 	const exit = evaluateImplementationExit({
 		planningRefs,
 		acceptanceRequirements,
@@ -113,11 +135,17 @@ export function runImplementationIteration(
 		workerProofConflicts: workerAggregation.workerProofConflicts,
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		workerClaims,
+		reviewEvidenceReports,
 		changes,
 	});
 	const baseSequence = input.startSequence ?? 1;
 	const buildId = `${input.traceId}:implementation:iteration:${baseSequence}`;
-	const eventInput = { ...input, createdAt, baseSequence };
+	const eventInput = {
+		...input,
+		reviewEvidenceReports,
+		createdAt,
+		baseSequence,
+	};
 	const draftTraceEvents: TraceEvent[] = [];
 	const traceEvents = implementationTraceEvents({
 		input: eventInput,
@@ -137,6 +165,7 @@ export function runImplementationIteration(
 		workerAggregation,
 		aggregateContentProof,
 		input.componentMap,
+		reviewEvidenceReports,
 	);
 	const checkpoint = createLoopTailCheckpoint({
 		traceId: input.traceId,
@@ -156,6 +185,113 @@ export function runImplementationIteration(
 		workerClaims,
 		aggregateContentProof,
 		changes,
+		reviewEvidenceReports: reviewEvidenceReports,
+		exit,
+		draftTraceEvents,
+		traceEvents,
+		checkpoint,
+		traceRecords: [...traceEvents, checkpoint],
+		readyForClosure: exit.passed,
+	};
+}
+
+export async function runImplementationIterationWithRunner(
+	input: ImplementationIterationInput,
+): Promise<ImplementationIterationResult> {
+	const createdAt = input.createdAt || new Date().toISOString();
+	const routeSourceEvents = [
+		...(input.planningEvents || []),
+		...(input.decisionEvents || []),
+	];
+	const planningRefs = planningRefsFromEvents(routeSourceEvents);
+	const acceptanceRequirements =
+		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
+	const planningScopes = planningScopesFromEvents(routeSourceEvents);
+	const workerAggregation = aggregateImplementationWorkerResults(
+		input.workerResults,
+	);
+	const workerClaims =
+		input.workerClaims ??
+		implementationWorkerClaimsFromEvents(input.claimEvents, { at: createdAt });
+	const changes =
+		input.changes ??
+		normalizeImplementationChanges([
+			...(input.changeInputs || []),
+			...workerAggregation.changeInputs,
+		]);
+	const aggregateContentProof = aggregateProofForOutput(
+		changes,
+		input.aggregateContentProof,
+	);
+	const reviewEvidenceReports = reviewEvidenceReportsForIteration(
+		input,
+		changes,
+	);
+	const exit = await evaluateImplementationExitWithRunner({
+		planningRefs,
+		acceptanceRequirements,
+		planningScopes,
+		componentMap: input.componentMap,
+		existingPaths: input.existingPaths,
+		requireTddEvidence: input.requireTddEvidence,
+		aggregateContentProof,
+		workerResults: workerAggregation.workerResults,
+		workerProofs: workerAggregation.workerProofs,
+		workerProofConflicts: workerAggregation.workerProofConflicts,
+		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
+		workerClaims,
+		reviewEvidenceReports,
+		changes,
+		qualityJudge: input.qualityJudge,
+	});
+	const baseSequence = input.startSequence ?? 1;
+	const buildId = `${input.traceId}:implementation:iteration:${baseSequence}`;
+	const eventInput = {
+		...input,
+		reviewEvidenceReports,
+		createdAt,
+		baseSequence,
+	};
+	const draftTraceEvents: TraceEvent[] = [];
+	const traceEvents = implementationTraceEvents({
+		input: eventInput,
+		planningRefs,
+		acceptanceRequirements,
+		planningScopes,
+		workerAggregation,
+		workerClaims,
+		aggregateContentProof,
+		changes,
+		exit,
+	});
+	const refs = implementationOutputRefs(
+		planningRefs,
+		changes,
+		planningScopes,
+		workerAggregation,
+		aggregateContentProof,
+		input.componentMap,
+		reviewEvidenceReports,
+	);
+	const checkpoint = createLoopTailCheckpoint({
+		traceId: input.traceId,
+		loop: "implementation",
+		id: `${input.traceId}:implementation:checkpoint:${baseSequence}`,
+		parentId: traceEvents.at(-1)?.id || buildId,
+		firstKeptRecordId: traceEvents.at(-1)?.id || buildId,
+		createdAt,
+		exit,
+		sourceRefs: refs,
+	});
+	return {
+		planningRefs,
+		acceptanceRequirements,
+		planningScopes,
+		workerAggregation,
+		workerClaims,
+		aggregateContentProof,
+		changes,
+		reviewEvidenceReports: reviewEvidenceReports,
 		exit,
 		draftTraceEvents,
 		traceEvents,
@@ -173,6 +309,20 @@ function aggregateProofForOutput(
 	if (changes.length !== 1) return undefined;
 	const [change] = changes;
 	return change.workerId || change.claimId ? undefined : change.contentProof;
+}
+
+function reviewEvidenceReportsForIteration(
+	input: ImplementationIterationInput,
+	changes: ImplementationChange[],
+): ImplementationEvidenceReportInput[] {
+	const changedPathList = changes.flatMap((change) => changedPaths(change));
+	const cachedReports =
+		input.reviewEvidenceCache?.reports({
+			traceId: input.traceId,
+			changedPaths: changedPathList,
+			phases: ["fast", "exit"],
+		}) || [];
+	return [...cachedReports, ...(input.reviewEvidenceReports || [])];
 }
 
 function implementationTraceEvents(args: {
@@ -207,6 +357,7 @@ function implementationTraceEvents(args: {
 		workerAggregation,
 		aggregateContentProof,
 		input.componentMap,
+		input.reviewEvidenceReports,
 	);
 	return [
 		createLoopIterationEvent({
@@ -229,7 +380,11 @@ function implementationTraceEvents(args: {
 				workerClaims,
 				aggregateContentProof,
 				changes: changes.map(implementationChangeData),
+				qualityGraph: exit.qualityGraph,
 				qualityStandards: exit.qualityStandards,
+				qualityDiagnostics: exit.diagnostics,
+				reviewEvidenceReports: input.reviewEvidenceReports || [],
+				qualityRunner: exit.qualityRunner,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
 			exit: loopExitFromEvaluation("implementation", exit),
@@ -245,6 +400,7 @@ function implementationOutputRefs(
 	workerAggregation: ImplementationWorkerAggregation,
 	aggregateContentProof?: ContentProof,
 	componentMap?: SourceMapContract,
+	reviewEvidenceReports?: ImplementationEvidenceReportInput[],
 ): string[] {
 	return normalizeTraceRefs([
 		...planningRefs,
@@ -253,7 +409,15 @@ function implementationOutputRefs(
 		...workerAggregation.workerProofs.flatMap(workerProofRefs),
 		...contentProofRefList(aggregateContentProof),
 		...componentMapRefs(planningScopes, componentMap),
+		...reviewEvidenceReportRefs(reviewEvidenceReports),
 	]);
+}
+
+function reviewEvidenceReportRefs(
+	reports?: ImplementationEvidenceReportInput[],
+): string[] {
+	if (!reports || reports.length === 0) return [];
+	return evidenceRefsForReport(mergeImplementationEvidenceReports(reports));
 }
 
 function componentMapRefs(

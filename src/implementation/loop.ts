@@ -5,11 +5,35 @@ import {
 	unknownComponentRefs,
 	type SourceMapComponent,
 } from "../knowledge/source-map.ts";
+import {
+	loopQualityRunnerSummary,
+	type RunLoopQualityGraphResult,
+} from "../loops/evaluator.ts";
+import {
+	loopGraphLayers,
+	loopQualityGraphRef,
+	loopQualityJudgeSpecForNode,
+	loopQualityMethodForMode,
+	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+	type LoopQualityGraph,
+	type LoopQualityGraphNode,
+} from "../loops/graph.ts";
+import { qualityDiagnosticsFromStandards } from "../loops/feedback.ts";
+import {
+	criteriaFromQualityStandards,
+	loopQualityStandardSatisfied,
+} from "../loops/quality-standards.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
+import {
+	evaluateCommonReviewEvidence,
+	mergeImplementationEvidenceReports,
+	type ImplementationEvidenceReport,
+} from "./review/index.ts";
 import type {
 	ExitFinding,
 	ExitRemediationItem,
 	ExitRoute,
+	LoopRoutePlan,
 } from "../traces/types.ts";
 import {
 	acceptanceEvidenceRefs,
@@ -19,9 +43,9 @@ import {
 	contentProofRefs,
 } from "./evidence.ts";
 import {
-	criteriaFromQualityStandards,
-	implementationQualityStandards,
+	evaluateImplementationQualityStandards,
 	implementationIssueRefs,
+	runImplementationQualityStandards,
 } from "./quality-standards.ts";
 import { detectImplementationWorkerProofConflicts } from "./worker-proof.ts";
 import type {
@@ -32,29 +56,441 @@ import type {
 	ImplementationExitResult,
 } from "./types.ts";
 
+export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
+	ImplementationExitIssue["code"]
+> = {
+	graphId: "implementation.loop",
+	graphVersion: "0.3.0.loop.7",
+	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+	layers: loopGraphLayers([
+		"hard_gate",
+		"input_contract",
+		"trace_fidelity",
+		"coverage",
+		"scope_control",
+		"evidence_quality",
+		"risk_authority",
+		"project_fit",
+		"repairability",
+		"pipeline_carryover",
+		"exit_loss",
+	]),
+	nodes: [
+		implementationNode({
+			id: "planning_coverage_complete",
+			layer: "coverage",
+			standardType: "trace_fidelity",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced.",
+			codes: ["missing_planning_coverage", "unknown_planning_ref"],
+		}),
+		implementationNode({
+			id: "scope_controlled",
+			layer: "scope_control",
+			standardType: "scope_control",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Implementation changes stay inside planned component/path scope and existing repo paths.",
+			codes: [
+				"invalid_change",
+				"duplicate_change_id",
+				"path_outside_component_scope",
+				"missing_changed_path",
+			],
+		}),
+		implementationNode({
+			id: "acceptance_evidence_complete",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			weight: 16,
+			cost: 16,
+			hardGate: true,
+			description:
+				"Every planned acceptance criterion is covered by structured evidence refs.",
+			codes: [
+				"missing_acceptance_evidence",
+				"invalid_acceptance_evidence",
+				"missing_acceptance_criterion_coverage",
+				"unknown_acceptance_criterion",
+			],
+		}),
+		implementationNode({
+			id: "verification_passed",
+			layer: "hard_gate",
+			standardType: "robustness",
+			method: "external_evidence",
+			weight: 18,
+			cost: 18,
+			hardGate: true,
+			description:
+				"Required implementation checks are structured, present, passing, cover planned verification, and package changes include pack verification.",
+			codes: [
+				"missing_check_results",
+				"invalid_check_result",
+				"failed_check",
+				"missing_planned_verification",
+				"missing_package_pack_check",
+			],
+		}),
+		implementationNode({
+			id: "tdd_evidence_valid",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			method: "external_evidence",
+			weight: 10,
+			cost: 10,
+			hardGate: true,
+			description:
+				"Required red/green TDD evidence is mapped to planned acceptance criteria.",
+			codes: [
+				"invalid_tdd_evidence",
+				"missing_tdd_red_evidence",
+				"missing_tdd_green_evidence",
+				"unknown_tdd_criterion",
+			],
+		}),
+		implementationNode({
+			id: "content_proof_recorded",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			method: "external_evidence",
+			weight: 14,
+			cost: 14,
+			hardGate: true,
+			description:
+				"Implementation output has change-level and aggregate content proof when required.",
+			codes: [
+				"missing_content_proof",
+				"missing_aggregate_content_proof",
+				"worker_proof_failed",
+				"worker_proof_conflict",
+			],
+		}),
+		implementationNode({
+			id: "worker_claims_correlated",
+			layer: "trace_fidelity",
+			standardType: "trace_fidelity",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Worker-produced evidence is tied to active runtime claims and completed worker results.",
+			codes: [
+				"worker_failed",
+				"worker_blocked",
+				"missing_worker_claim",
+				"unknown_worker_claim",
+				"inactive_worker_claim",
+				"worker_claim_mismatch",
+			],
+		}),
+		implementationNode({
+			id: "source_ownership_aligned",
+			layer: "scope_control",
+			standardType: "scope_control",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Changed source/test paths align with source-map component ownership and test coverage.",
+			codes: [
+				"missing_component_ref",
+				"unknown_component_ref",
+				"invalid_component_contract",
+				"missing_component_test_coverage",
+				"missing_evidence_path",
+			],
+		}),
+		implementationNode({
+			id: "production_quality_reviewed",
+			layer: "project_fit",
+			standardType: "maintainability",
+			mode: "agent",
+			weight: 16,
+			cost: 16,
+			description:
+				"Agent assessment records maintainability, simplicity, project style, and error-handling readiness.",
+			codes: [
+				"missing_implementation_assessment",
+				"implementation_not_production_ready",
+			],
+		}),
+		implementationNode({
+			id: "implementation_review_evidence_clean",
+			layer: "hard_gate",
+			standardType: "robustness",
+			method: "external_evidence",
+			weight: 18,
+			cost: 18,
+			hardGate: true,
+			description:
+				"CodeWiki-owned review evidence has no blocking diagnostics and links acceptance criteria to concrete evidence.",
+			codes: [
+				"review_blocking_diagnostic",
+				"review_missing_acceptance_evidence_link",
+			],
+		}),
+		implementationNode({
+			id: "evidence_matches_claims_judged",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			method: "model_judge",
+			weight: 16,
+			cost: 16,
+			description:
+				"Independent judge verifies implementation evidence actually supports the claimed changes and acceptance criteria.",
+			codes: ["semantic_evidence_mismatch"],
+		}),
+		implementationNode({
+			id: "checks_relevant_judged",
+			layer: "evidence_quality",
+			standardType: "robustness",
+			method: "model_judge",
+			weight: 14,
+			cost: 14,
+			description:
+				"Independent judge verifies passing checks are relevant to changed behavior rather than generic or unrelated proof.",
+			codes: ["semantic_checks_irrelevant"],
+		}),
+		implementationNode({
+			id: "implementation_readiness_judged",
+			layer: "project_fit",
+			standardType: "maintainability",
+			method: "model_judge",
+			weight: 12,
+			cost: 12,
+			description:
+				"Independent judge verifies the production-readiness assessment is specific and not hand-wavy.",
+			codes: ["semantic_implementation_not_ready"],
+		}),
+		implementationNode({
+			id: "uncertainty_resolved",
+			layer: "repairability",
+			standardType: "repairability",
+			mode: "agent",
+			weight: 14,
+			cost: 14,
+			description:
+				"No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting.",
+			codes: [
+				"missing_implementation_uncertainty_resolution",
+				"unresolved_implementation_uncertainty",
+			],
+		}),
+		implementationNode({
+			id: "security_privacy_reviewed",
+			layer: "risk_authority",
+			standardType: "security",
+			mode: "agent",
+			weight: 12,
+			cost: 12,
+			description:
+				"Security/privacy-sensitive changes include explicit review evidence.",
+			codes: ["missing_security_privacy_assessment"],
+		}),
+		implementationNode({
+			id: "accessibility_ui_reviewed",
+			layer: "risk_authority",
+			standardType: "user_value",
+			mode: "agent",
+			weight: 8,
+			cost: 8,
+			description: "UI/page changes include accessibility review evidence.",
+			codes: ["missing_accessibility_assessment"],
+		}),
+		implementationNode({
+			id: "dependency_risk_controlled",
+			layer: "risk_authority",
+			standardType: "robustness",
+			mode: "agent",
+			weight: 8,
+			cost: 8,
+			description: "Dependency-surface changes include risk review evidence.",
+			codes: ["missing_dependency_risk_assessment"],
+		}),
+		implementationNode({
+			id: "release_safety_approved",
+			layer: "hard_gate",
+			standardType: "risk_authority",
+			repairTarget: "user",
+			mode: "user",
+			weight: 20,
+			cost: 20,
+			hardGate: true,
+			description:
+				"Release, publication, destructive, or externally visible implementation refs require explicit user approval.",
+			codes: ["missing_release_approval", "invalid_release_approval_ref"],
+		}),
+		implementationNode({
+			id: "traceability_refs_canonical",
+			layer: "trace_fidelity",
+			standardType: "trace_fidelity",
+			weight: 8,
+			cost: 8,
+			hardGate: true,
+			description:
+				"Implementation refs are canonical trace, KB, Git, digest, source, or test refs.",
+			codes: ["invalid_traceability_ref"],
+		}),
+	],
+};
+
+function implementationNode(
+	node: Omit<
+		LoopQualityGraphNode<ImplementationExitIssue["code"]>,
+		"method" | "repairTarget"
+	> & {
+		method?: LoopQualityGraphNode<ImplementationExitIssue["code"]>["method"];
+		repairTarget?: LoopQualityGraphNode<
+			ImplementationExitIssue["code"]
+		>["repairTarget"];
+	},
+): LoopQualityGraphNode<ImplementationExitIssue["code"]> {
+	const resolved: LoopQualityGraphNode<ImplementationExitIssue["code"]> = {
+		method: node.method || loopQualityMethodForMode(node.mode),
+		gate: node.hardGate || node.layer === "hard_gate" ? "hard" : "soft",
+		timeoutMs: 50,
+		repairTarget: "implementation",
+		...node,
+	};
+	return {
+		...resolved,
+		judge: resolved.judge || loopQualityJudgeSpecForNode(resolved),
+	};
+}
+
 export function evaluateImplementationExit(
 	input: ImplementationExitInput,
 ): ImplementationExitResult {
 	const issues = collectImplementationExitIssues(input);
-	const qualityStandards = implementationQualityStandards(issues);
-	const verdict =
-		issues.length === 0
-			? "pass"
-			: blockedIssues(issues).length > 0
-				? "block"
-				: "fail";
+	const qualityStandards = evaluateImplementationExitGraph(issues);
+	return implementationExitResultFromQuality({
+		input,
+		issues,
+		qualityStandards,
+	});
+}
+
+export async function evaluateImplementationExitWithRunner(
+	input: ImplementationExitInput,
+): Promise<ImplementationExitResult> {
+	const issues = collectImplementationExitIssues(input);
+	const quality = await runImplementationQualityStandards(
+		IMPLEMENTATION_LOOP_GRAPH,
+		issues,
+		{
+			...(input.qualityJudge || {}),
+			judgeInput:
+				input.qualityJudge?.judgeInput || implementationJudgeInput(input),
+		},
+	);
+	return implementationExitResultFromQuality({
+		input,
+		issues,
+		qualityStandards: quality.standards,
+		qualityRunner: quality,
+	});
+}
+
+function implementationJudgeInput(
+	input: ImplementationExitInput,
+): Record<string, unknown> {
+	return {
+		loop: "implementation",
+		planningRefs: input.planningRefs,
+		acceptanceRequirements: input.acceptanceRequirements,
+		planningScopes: input.planningScopes,
+		changes: input.changes.map((change) => ({
+			id: change.id,
+			planningRefs: change.planningRefs,
+			codePaths: change.codePaths,
+			docPaths: change.docPaths,
+			testPaths: change.testPaths,
+			checks: change.checks,
+			checkResults: change.checkResults,
+			acceptanceEvidence: change.acceptanceEvidence,
+			acceptanceEvidenceItems: change.acceptanceEvidenceItems,
+			contentProof: change.contentProof,
+			implementationAssessment: change.implementationAssessment,
+			sensitiveSurfaceAssessment: change.sensitiveSurfaceAssessment,
+			publicationRefs: change.publicationRefs,
+			workerId: change.workerId,
+			claimId: change.claimId,
+		})),
+		componentMap: input.componentMap,
+		workerResults: input.workerResults,
+		workerClaims: input.workerClaims,
+		aggregateContentProof: input.aggregateContentProof,
+		requireTddEvidence: input.requireTddEvidence,
+	};
+}
+
+function implementationExitResultFromQuality(input: {
+	input: ImplementationExitInput;
+	issues: ImplementationExitIssue[];
+	qualityStandards: ImplementationExitResult["qualityStandards"];
+	qualityRunner?: RunLoopQualityGraphResult;
+}): ImplementationExitResult {
+	const remediation = input.issues.map(issueRemediation);
+	const diagnostics = qualityDiagnosticsFromStandards(
+		input.qualityStandards || [],
+		remediation,
+	);
+	const verdict = implementationVerdictFromQuality(
+		input.issues,
+		input.qualityStandards || [],
+	);
 	return {
 		passed: verdict === "pass",
 		verdict,
-		issues,
-		criteria: criteriaFromQualityStandards(qualityStandards),
-		qualityStandards,
-		findings: issues.map(issueFinding),
-		remediation: issues.map(issueRemediation),
-		route: implementationRoute(verdict, issues),
-		coveredPlanningRefs: coveredPlanningRefs(input),
-		changeIds: input.changes.map((change) => change.id),
+		issues: input.issues,
+		criteria: criteriaFromQualityStandards(input.qualityStandards || []),
+		qualityStandards: input.qualityStandards,
+		qualityGraph: loopQualityGraphRef(IMPLEMENTATION_LOOP_GRAPH),
+		...(input.qualityRunner
+			? { qualityRunner: loopQualityRunnerSummary(input.qualityRunner.runner) }
+			: {}),
+		findings: input.issues.map(issueFinding),
+		remediation,
+		diagnostics,
+		route: implementationRoute(verdict, input.issues),
+		routePlan: implementationRoutePlan(verdict, input.issues, input.input),
+		coveredPlanningRefs: coveredPlanningRefs(input.input),
+		changeIds: input.input.changes.map((change) => change.id),
 	};
+}
+
+function implementationVerdictFromQuality(
+	issues: ImplementationExitIssue[],
+	standards: ImplementationExitResult["qualityStandards"],
+): "pass" | "fail" | "block" {
+	if (
+		blockedIssues(issues).length > 0 ||
+		standards?.some((standard) => standard.status === "blocked")
+	) {
+		return "block";
+	}
+	if (
+		issues.length === 0 &&
+		standards?.every((standard) => loopQualityStandardSatisfied(standard))
+	) {
+		return "pass";
+	}
+	return "fail";
+}
+
+export function evaluateImplementationExitGraph(
+	issues: ImplementationExitIssue[],
+) {
+	return evaluateImplementationQualityStandards(
+		IMPLEMENTATION_LOOP_GRAPH,
+		issues,
+	);
 }
 
 export function collectImplementationExitIssues(
@@ -78,22 +514,9 @@ export function collectImplementationExitIssues(
 		...implementationAssessmentIssues(input.changes),
 		...sensitiveSurfaceIssues(input.changes),
 		...releaseSafetyIssues(input.changes),
+		...reviewEvidenceIssues(input),
 		...traceabilityRefIssues(input),
 	];
-}
-
-export function implementationHasValidationInputs(
-	change: ImplementationChange,
-): boolean {
-	return (
-		changeIssues([change]).length === 0 &&
-		checkResultIssues([change]).length === 0 &&
-		acceptanceEvidenceIssues({
-			planningRefs: change.planningRefs,
-			changes: [change],
-		}).length === 0 &&
-		changeContentProofIssues([change]).length === 0
-	);
 }
 
 function coverageIssues(
@@ -1018,7 +1441,7 @@ function releaseSafetyIssues(
 				{
 					code: "missing_release_approval" as const,
 					changeId: change.id,
-					route: "user",
+					route: "decision",
 					message: `Implementation change ${change.id} has release/publication refs and needs explicit user approval.`,
 				},
 			];
@@ -1030,7 +1453,7 @@ function releaseSafetyIssues(
 						code: "invalid_release_approval_ref" as const,
 						changeId: change.id,
 						ref: invalidApprovalRef,
-						route: "user",
+						route: "decision",
 						message: `Implementation change ${change.id} has non-canonical approval ref ${invalidApprovalRef}.`,
 					},
 				]
@@ -1182,12 +1605,102 @@ function traceabilityRefIssues(
 			...contentProofRefs(change),
 			...change.publicationRefs,
 		]),
+		...reviewEvidenceRefs(input),
 		...contentProofRefList(input.aggregateContentProof),
 	]).map((ref) => ({
 		code: "invalid_traceability_ref" as const,
 		ref,
 		message: `Implementation has non-canonical ref ${ref}.`,
 	}));
+}
+
+function reviewEvidenceIssues(
+	input: ImplementationExitInput,
+): ImplementationExitIssue[] {
+	const report = mergedReviewEvidenceReport(input);
+	if (!report) return [];
+	return evaluateCommonReviewEvidence({
+		report,
+		acceptanceRequirements: reviewEvidenceRequiresAcceptanceLinks(input)
+			? input.acceptanceRequirements || []
+			: [],
+		requireRelevantChecks: true,
+	}).findings.flatMap((finding): ImplementationExitIssue[] => {
+		if (finding.severity !== "block") return [];
+		const code = reviewFindingIssueCode(finding.code);
+		if (!code) return [];
+		return [
+			{
+				code,
+				planningRef: finding.planningRef,
+				ref: finding.path || finding.evidenceRefs[0],
+				message: finding.message,
+			},
+		];
+	});
+}
+
+function reviewFindingIssueCode(
+	code: ReturnType<
+		typeof evaluateCommonReviewEvidence
+	>["findings"][number]["code"],
+):
+	| "review_blocking_diagnostic"
+	| "review_missing_acceptance_evidence_link"
+	| undefined {
+	if (code === "review_blocking_diagnostic") return code;
+	if (code === "review_missing_acceptance_evidence_link") return code;
+	return undefined;
+}
+
+function reviewEvidenceRequiresAcceptanceLinks(
+	input: ImplementationExitInput,
+): boolean {
+	return Boolean(
+		input.reviewEvidenceReports?.some(
+			(report) => (report.phase || "exit") === "exit",
+		),
+	);
+}
+
+function mergedReviewEvidenceReport(
+	input: ImplementationExitInput,
+): ImplementationEvidenceReport | undefined {
+	if (
+		!input.reviewEvidenceReports ||
+		input.reviewEvidenceReports.length === 0
+	) {
+		return undefined;
+	}
+	return mergeImplementationEvidenceReports(input.reviewEvidenceReports, {
+		phase: "exit",
+	});
+}
+
+function reviewEvidenceRefs(input: ImplementationExitInput): string[] {
+	const report = mergedReviewEvidenceReport(input);
+	if (!report) return [];
+	return [
+		...report.changedPaths,
+		...report.checks.map((check) => check.outputRef || ""),
+		...report.diagnostics.flatMap((diagnostic) => [
+			diagnostic.path,
+			...(diagnostic.evidenceRefs || []),
+		]),
+		...report.symbols.flatMap((symbol) => [
+			symbol.path,
+			...(symbol.evidenceRefs || []),
+		]),
+		...report.dependencyEdges.flatMap((edge) => [
+			edge.from,
+			edge.to,
+			...(edge.evidenceRefs || []),
+		]),
+		...report.evidenceLinks.flatMap((link) => [
+			link.targetRef,
+			...link.evidenceRefs,
+		]),
+	];
 }
 
 function contentProofIssues(
@@ -1264,10 +1777,78 @@ function blockedIssues(
 	);
 }
 
+function implementationRoutePlan(
+	verdict: ImplementationExitVerdict,
+	issues: ImplementationExitIssue[],
+	input: ImplementationExitInput,
+): LoopRoutePlan {
+	const route = implementationRoute(verdict, issues);
+	const refs = issues.length
+		? issues.flatMap(implementationIssueRefs)
+		: input.changes.map((change) => change.id);
+	if (route === "close") {
+		return {
+			target: "close",
+			kind: "advance",
+			rationale: "Implementation evidence passed and the trace can close.",
+			refs,
+		};
+	}
+	if (route === "decision") {
+		return {
+			target: "decision",
+			kind: routeKindForImplementationIssues(issues),
+			rationale:
+				"Implementation found authority, scope, or product ambiguity that must return to decision before continuing.",
+			refs,
+		};
+	}
+	if (route === "planning") {
+		return {
+			target: "planning",
+			kind: "scope_change",
+			rationale:
+				"Implementation evidence no longer matches the planned work scope.",
+			refs,
+		};
+	}
+	if (route === "user") {
+		return {
+			target: "decision",
+			kind: "authority_validation",
+			rationale:
+				"Implementation needs explicit user authority, represented as a decision-loop request.",
+			refs,
+		};
+	}
+	return {
+		target: "continue",
+		kind: "continue",
+		rationale: "Implementation must continue until required evidence passes.",
+		refs,
+	};
+}
+
+function routeKindForImplementationIssues(
+	issues: ImplementationExitIssue[],
+): string {
+	if (
+		issues.some((issue) =>
+			["missing_release_approval", "invalid_release_approval_ref"].includes(
+				issue.code,
+			),
+		)
+	) {
+		return "authority_validation";
+	}
+	if (issues.some((issue) => issue.route === "decision"))
+		return "clarification";
+	return "continue";
+}
+
 function uncertaintyRoute(owner: string): ExitRoute {
 	if (owner === "planning") return "planning";
-	if (owner === "decision") return "decision";
-	if (owner === "user") return "user";
+	if (owner === "decision" || owner === "user") return "decision";
 	return "implementation";
 }
 
@@ -1383,6 +1964,16 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Attach fresh content proof: commit, tree, or working-tree digest.",
 	missing_aggregate_content_proof:
 		"Attach final aggregate content proof after merging worker or parallel changes.",
+	review_blocking_diagnostic:
+		"Fix CodeWiki-owned review diagnostics before implementation closure.",
+	review_missing_acceptance_evidence_link:
+		"Link review evidence to every planned acceptance criterion before implementation closure.",
+	semantic_evidence_mismatch:
+		"Strengthen or correct implementation evidence until an independent judge can verify it supports the claimed changes.",
+	semantic_checks_irrelevant:
+		"Run or record checks that directly exercise the changed behavior and planned verification.",
+	semantic_implementation_not_ready:
+		"Revise implementation or assessment until an independent judge can verify production readiness.",
 };
 
 function implementationRemediationAction(

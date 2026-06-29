@@ -3,7 +3,7 @@
 Editable candidate file:
 
 ```text
-lab/implementation/exit.ts
+lab/implementation/loop.ts
 ```
 
 Metric: IEC, Implementation Exit Condition score.

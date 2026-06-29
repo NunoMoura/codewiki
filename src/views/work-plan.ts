@@ -1,3 +1,4 @@
+import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { planningConflicts } from "../planning/conflicts.ts";
 import type {
 	AcceptanceCriterion,
@@ -32,7 +33,11 @@ interface TracePlanningWorkItem extends PlanningWorkItem {
 
 export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 	const items = acceptedPlanningWorkItemsFromTrace(records);
-	const conflicts = planningConflicts(items);
+	const implementationRefs = implementationRefsByPlanningRef(records);
+	const activeItems = items.filter((item) =>
+		traceRefsForWorkItem(item).every((ref) => !implementationRefs.has(ref)),
+	);
+	const conflicts = planningConflicts(activeItems);
 	const blockedIds = new Map<string, string[]>();
 	for (const conflict of conflicts) {
 		const messages = conflictMessages(conflict);
@@ -48,7 +53,6 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 	const traceBlockers = blockersFromTrace(records).filter(
 		(blocker) => blocker.kind !== "conflict",
 	);
-	const implementationRefs = implementationRefsByPlanningRef(records);
 	const runtimeRefs = activeRuntimeRefs(records);
 	return items.map((item) => {
 		const itemTraceRefs = traceRefsForWorkItem(item);
@@ -101,38 +105,83 @@ export function planningWorkItemsFromTrace(
 function acceptedPlanningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): TracePlanningWorkItem[] {
-	return loopOutputEvents(records, "planning").flatMap((event) => {
-		const quality = loopQualityReadiness(event);
-		return objectList(objectRecord(event.data?.output).workItems).map(
-			(item) => {
-				const id = text(item.id) || `${event.id}:work-item`;
-				const acceptance = stringList(item.acceptance);
-				return {
-					id,
-					traceEventId: iterationSubref(event, "work", id),
-					title: text(item.title) || id,
-					decisionRefs: stringList(item.decisionRefs),
-					outcome: text(item.outcome),
-					technicalRequirements: stringList(item.technicalRequirements),
-					acceptance,
-					acceptanceCriteria: acceptanceCriteriaList(
-						item.acceptanceCriteria,
+	const plannedItems = loopOutputEvents(records, "planning")
+		.filter(planningIterationExited)
+		.flatMap((event) => {
+			const quality = loopQualityReadiness(event);
+			return objectList(objectRecord(event.data?.output).workItems).map(
+				(item) => {
+					const id = text(item.id) || `${event.id}:work-item`;
+					const acceptance = stringList(item.acceptance);
+					return {
+						id,
+						traceEventId: iterationSubref(event, "work", id),
+						title: text(item.title) || id,
+						decisionRefs: stringList(item.decisionRefs),
+						outcome: text(item.outcome),
+						technicalRequirements: stringList(item.technicalRequirements),
 						acceptance,
-					),
-					componentRefs: stringList(item.componentRefs),
-					pathScopes: stringList(item.pathScopes),
-					planningDepth: planningDepth(item.planningDepth),
-					verification: stringList(item.verification),
-					workerProfile: text(item.workerProfile),
-					planningAssessment: planningAssessment(item.planningAssessment),
-					dependsOn: stringList(item.dependsOn),
-					...triggerProperty(item.trigger),
-					qualityStandards: quality.standards,
-					qualityBlockers: quality.blockers,
-				};
-			},
-		);
-	});
+						acceptanceCriteria: acceptanceCriteriaList(
+							item.acceptanceCriteria,
+							acceptance,
+						),
+						componentRefs: stringList(item.componentRefs),
+						pathScopes: stringList(item.pathScopes),
+						planningDepth: planningDepth(item.planningDepth),
+						verification: stringList(item.verification),
+						workerProfile: text(item.workerProfile),
+						planningAssessment: planningAssessment(item.planningAssessment),
+						dependsOn: stringList(item.dependsOn),
+						...triggerProperty(item.trigger),
+						qualityStandards: quality.standards,
+						qualityBlockers: quality.blockers,
+					};
+				},
+			);
+		});
+	return [
+		...plannedItems,
+		...directImplementationDecisionsFromRecords(records).map(directWorkItem),
+	];
+}
+
+function directWorkItem(
+	direct: ReturnType<typeof directImplementationDecisionsFromRecords>[number],
+): TracePlanningWorkItem {
+	return {
+		id: direct.id,
+		traceEventId: direct.ref,
+		title: direct.title,
+		decisionRefs: direct.decisionRefs,
+		outcome: direct.routeRationale,
+		technicalRequirements: direct.verification,
+		acceptance: direct.acceptance,
+		acceptanceCriteria: direct.acceptanceCriteria,
+		componentRefs: direct.componentRefs,
+		pathScopes: direct.pathScopes,
+		planningDepth: "micro",
+		verification: direct.verification,
+		workerProfile: "implementation_worker",
+		planningAssessment: {
+			stance: "worker_ready",
+			workUnitSize: "right_sized",
+			rightSizing: "Decision row is approved for direct implementation.",
+			independence: "Direct implementation is bounded by the decision row.",
+			implementationReadiness: direct.routeRationale,
+			uncertainties: [],
+			concerns: [],
+			uncertaintyOwner: "none",
+			uncertaintyResolution: "No planning loop required for this direct route.",
+			rationale: direct.routeRationale,
+		},
+		dependsOn: [],
+		qualityStandards: [],
+		qualityBlockers: [],
+	};
+}
+
+function planningIterationExited(event: TraceEvent): boolean {
+	return text(objectRecord(event.data?.exit).status) === "exit";
 }
 
 function blockersForRefs(

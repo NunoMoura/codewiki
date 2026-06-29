@@ -1,6 +1,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import type { LabCase, LabLoop, LabVerdict } from "./types.ts";
+import type {
+	LabCase,
+	LabExpectedFailure,
+	LabLoop,
+	LabVerdict,
+} from "./types.ts";
 
 export interface LabHoldoutCase extends LabCase<unknown> {
 	suiteId: string;
@@ -94,6 +99,7 @@ function validateHoldoutCase(value: unknown, suiteId: string): LabHoldoutCase {
 	const expected = labVerdict(record.expected);
 	const input = objectRecord(record.input, "holdout case input");
 	const weight = positiveNumber(record.weight, "case.weight");
+	const expectedFailures = optionalExpectedFailures(record.expectedFailures);
 	return {
 		suiteId,
 		id: stringValue(record.id, "case.id"),
@@ -102,7 +108,33 @@ function validateHoldoutCase(value: unknown, suiteId: string): LabHoldoutCase {
 		input,
 		expected,
 		weight,
+		...(expectedFailures ? { expectedFailures } : {}),
 	};
+}
+
+function optionalExpectedFailures(
+	value: unknown,
+): LabExpectedFailure[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) {
+		throw new Error("Expected case.expectedFailures to be an array.");
+	}
+	return value.map((failureValue, index): LabExpectedFailure => {
+		const failure = objectRecord(
+			failureValue,
+			`case.expectedFailures[${index}]`,
+		);
+		return {
+			standardId: stringValue(
+				failure.standardId,
+				`case.expectedFailures[${index}].standardId`,
+			),
+			failureClass: stringValue(
+				failure.failureClass,
+				`case.expectedFailures[${index}].failureClass`,
+			),
+		};
+	});
 }
 
 function objectRecord(value: unknown, label: string): Record<string, unknown> {

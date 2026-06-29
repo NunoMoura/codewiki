@@ -4,7 +4,7 @@ import type {
 	DecisionTable,
 } from "../../src/decision/types.ts";
 import type { LabCase } from "../runner/types.ts";
-import type { DecisionLabInput } from "./exit.ts";
+import type { DecisionLabInput } from "./loop.ts";
 
 export const decisionCases: LabCase<DecisionLabInput>[] = [
 	{
@@ -49,6 +49,20 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		},
 		expected: "fail",
 		weight: 15,
+		expectedFailures: [
+			{
+				standardId: "decision.current_desired_rationale_specificity",
+				failureClass: "specificity",
+			},
+			{
+				standardId: "decision.impact_specificity",
+				failureClass: "specificity",
+			},
+			{
+				standardId: "decision.agent_assessment_specificity",
+				failureClass: "specificity",
+			},
+		],
 	},
 	{
 		id: "high-risk-without-approval",
@@ -70,6 +84,93 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		},
 		expected: "block",
 		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "decision.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "decision.risk_and_authority_boundary",
+				failureClass: "authority",
+			},
+			{
+				standardId: "decision.work_routing_contract",
+				failureClass: "scope",
+			},
+		],
+	},
+	{
+		id: "high_risk_explicit_user_approval",
+		loop: "decision",
+		description:
+			"High-risk hardening decision exits when scope, alternatives, proof, and explicit user authority are present.",
+		input: {
+			prompt: "Approve supervised high-risk package boundary hardening.",
+			decisionTable: decisionTable(
+				decisionRow({
+					id: "D-risk-approved",
+					decisionKind: "harden",
+					risk: "high",
+					workScale: "normal",
+					planningDepth: "standard",
+					affectedLayers: ["api", "runtime"],
+					alternatives: [
+						"Keep the old package boundary until explicit release review.",
+					],
+					proofRefs: ["tests/runtime/readiness-checklist.test.mjs"],
+					approvalAuthority: "user",
+					approvalRef: "trace:TRACE-production-readiness-audit",
+					safetyBoundary:
+						"Keep mutation guarded by expected bytes and project-local install scope.",
+					failureModes: [
+						"A global install bypasses project-local mutation safeguards.",
+					],
+					negativeTestPlan:
+						"Readiness tests reject global mutation and stale public command surfaces.",
+					compatibilityImpact:
+						"Existing packed/local install smokes continue to exercise the package boundary.",
+				}),
+			),
+		},
+		expected: "pass",
+		weight: 10,
+	},
+	{
+		id: "migration-without-rollback-plan",
+		loop: "decision",
+		description:
+			"Migration decision without rollback plan fails because planning cannot safely execute it.",
+		input: {
+			prompt: "Migrate trace state layout without rollback guidance.",
+			decisionTable: decisionTable(
+				decisionRow({
+					id: "D-migrate",
+					decisionKind: "migrate",
+					sourceBehavior:
+						"Trace state is stored as append-only JSONL records under .codewiki/traces.",
+					targetBehavior:
+						"Trace state keeps append-only records while adding replay metadata.",
+					preservedInvariants: [
+						"Trace records remain append-only and schema-valid.",
+					],
+					equivalenceProof:
+						"Replay before and after the migration yields the same board state.",
+					rollbackPlan: undefined,
+				}),
+			),
+		},
+		expected: "fail",
+		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "decision.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "decision.kind_specific_contract",
+				failureClass: "production_readiness",
+			},
+		],
 	},
 ];
 
@@ -118,7 +219,7 @@ function decisionRow(overrides: DecisionRowInput = {}): DecisionRowInput {
 		agentAssessment: {
 			stance: "aligned",
 			userAlignment:
-				"Matches the user's request to debug loop exit quality before app benchmarks.",
+				"Matches the user's request to debug loop quality before app benchmarks.",
 			projectBenefit:
 				"Improves CodeWiki's ability to enforce production-ready semantic loops cheaply.",
 			rationale:

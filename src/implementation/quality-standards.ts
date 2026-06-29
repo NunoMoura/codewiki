@@ -1,8 +1,15 @@
 import {
+	evaluateLoopQualityGraph,
+	runLoopQualityGraphEvaluation,
+	type LoopQualityJudgeExecutionOptions,
+	type RunLoopQualityGraphResult,
+} from "../loops/evaluator.ts";
+import type { LoopQualityGraph } from "../loops/graph.ts";
+import {
 	buildLoopQualityStandard,
 	criteriaFromQualityStandards,
 	type LoopQualityStandardDefinition,
-} from "../loops/standards.ts";
+} from "../loops/quality-standards.ts";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
 import type { ImplementationExitIssue } from "./types.ts";
 
@@ -107,6 +114,16 @@ export const IMPLEMENTATION_QUALITY_STANDARDS: LoopQualityStandardDefinition<
 		],
 	},
 	{
+		id: "implementation_review_evidence_clean",
+		weight: 18,
+		description:
+			"CodeWiki-owned review evidence has no blocking diagnostics and links acceptance criteria to concrete evidence.",
+		codes: [
+			"review_blocking_diagnostic",
+			"review_missing_acceptance_evidence_link",
+		],
+	},
+	{
 		id: "production_quality_reviewed",
 		weight: 16,
 		mode: "agent",
@@ -177,9 +194,43 @@ export function implementationQualityStandards(
 			issueCode: (issue) => issue.code,
 			issueMessage: (issue) => issue.message,
 			issueRefs: implementationIssueRefs,
-			isBlockingIssue: (issue) => issue.route === "user",
+			isBlockingIssue: isBlockingImplementationIssue,
 		}),
 	);
+}
+
+export function evaluateImplementationQualityStandards(
+	graph: LoopQualityGraph<ImplementationExitIssue["code"]>,
+	issues: ImplementationExitIssue[],
+): LoopQualityStandardResult[] {
+	return evaluateLoopQualityGraph(
+		implementationQualityGraphOptions(graph, issues),
+	);
+}
+
+export function runImplementationQualityStandards(
+	graph: LoopQualityGraph<ImplementationExitIssue["code"]>,
+	issues: ImplementationExitIssue[],
+	judgeOptions: LoopQualityJudgeExecutionOptions = {},
+): Promise<RunLoopQualityGraphResult> {
+	return runLoopQualityGraphEvaluation({
+		...implementationQualityGraphOptions(graph, issues),
+		...judgeOptions,
+	});
+}
+
+function implementationQualityGraphOptions(
+	graph: LoopQualityGraph<ImplementationExitIssue["code"]>,
+	issues: ImplementationExitIssue[],
+) {
+	return {
+		graph,
+		issues,
+		issueCode: (issue: ImplementationExitIssue) => issue.code,
+		issueMessage: (issue: ImplementationExitIssue) => issue.message,
+		issueRefs: implementationIssueRefs,
+		isBlockingIssue: isBlockingImplementationIssue,
+	};
 }
 
 export function implementationIssueRefs(
@@ -194,4 +245,10 @@ export function implementationIssueRefs(
 	]
 		.map((ref) => String(ref || "").trim())
 		.filter(Boolean);
+}
+
+export function isBlockingImplementationIssue(
+	issue: ImplementationExitIssue,
+): boolean {
+	return issue.route === "user";
 }

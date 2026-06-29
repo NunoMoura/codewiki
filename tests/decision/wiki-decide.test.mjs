@@ -62,6 +62,64 @@ describe("wiki_decide core facade", () => {
 		assert.equal(result.append, undefined);
 	});
 
+	it("routes low-risk scoped decisions directly to implementation", async () => {
+		const result = await runWikiDecide({
+			mode: "preview",
+			traceId: "TRACE-wiki-decide-direct-implementation",
+			nextSequence: 2,
+			createdAt: "2026-06-11T00:00:01.000Z",
+			tableInput: tableInput("DT-wiki-decide-direct"),
+		});
+		const row = result.iterationEvent.data.output.approvedRows[0];
+
+		assert.equal(result.loopResult.exit.route, "planning");
+		assert.equal(row.routeTarget, "planning");
+
+		const direct = await runWikiDecide({
+			mode: "preview",
+			traceId: "TRACE-wiki-decide-direct-implementation",
+			nextSequence: 2,
+			createdAt: "2026-06-11T00:00:01.000Z",
+			tableInput: {
+				...tableInput("DT-wiki-decide-direct"),
+				rows: [
+					{
+						...tableInput("DT-wiki-decide-direct").rows[0],
+						routeTarget: "implementation",
+						routeRationale:
+							"The change is low-risk, scoped, and has targeted validation.",
+						implementationMode: "targeted_checks",
+						directImplementationScope: {
+							pathScopes: ["src/pi/tools/index.ts"],
+							verification: ["npm run typecheck"],
+							acceptanceCriteria: [
+								{
+									id: "AC-DIRECT",
+									text: "The small fix is validated without a planning loop.",
+								},
+							],
+						},
+					},
+				],
+			},
+		});
+
+		assert.equal(direct.loopResult.readyForPlanning, false);
+		assert.equal(direct.loopResult.exit.route, "implementation");
+		assert.equal(
+			direct.iterationEvent.data.exit.routePlan.target,
+			"implementation",
+		);
+		assert.equal(
+			direct.iterationEvent.data.exit.routePlan.kind,
+			"direct_implementation",
+		);
+		assert.equal(
+			direct.iterationEvent.data.output.approvedRows[0].implementationMode,
+			"targeted_checks",
+		);
+	});
+
 	it("appends decision loop iterations atomically", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-decide-"));
 		try {
@@ -87,7 +145,9 @@ describe("wiki_decide core facade", () => {
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
 			assert.equal(state.events.at(-1)?.event, "rows_approved");
+			assertQualityGraphIdentity(state.events.at(-1), "decision.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
+			assertQualityGraphIdentity(state.latestCheckpoint, "decision.loop");
 			await assert.rejects(
 				() =>
 					runWikiDecide({
@@ -103,3 +163,15 @@ describe("wiki_decide core facade", () => {
 		}
 	});
 });
+
+function assertQualityGraphIdentity(record, graphId) {
+	const outputGraph = record?.data?.output?.qualityGraph;
+	const exitGraph = record?.data?.exit?.qualityGraph;
+	const checkpointGraph = record?.data?.qualityGraph;
+	const graph = outputGraph || exitGraph || checkpointGraph;
+	assert.equal(graph?.id, graphId);
+	assert.equal(graph?.version, "0.3.0.loop.5");
+	assert.equal(graph?.schemaVersion, 2);
+	assert.match(graph?.hash, /^sha256:/);
+	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
+}

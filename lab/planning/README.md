@@ -3,7 +3,7 @@
 Editable candidate file:
 
 ```text
-lab/planning/exit.ts
+lab/planning/loop.ts
 ```
 
 Metric: PEC, Planning Exit Condition score.

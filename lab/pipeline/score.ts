@@ -19,7 +19,10 @@ const PCE_LOSS: Record<LabVerdict, Record<LabVerdict, number>> = {
 export function scorePipeline(cases = pipelineCases): PipelineScore {
 	const caseScores = cases.map(scorePipelineCase);
 	const loss = caseScores.reduce((sum, testCase) => sum + testCase.loss, 0);
-	const maxLoss = caseScores.reduce((sum, testCase) => sum + testCase.maxLoss, 0);
+	const maxLoss = caseScores.reduce(
+		(sum, testCase) => sum + testCase.maxLoss,
+		0,
+	);
 	const score = maxLoss === 0 ? 100 : 100 * (1 - loss / maxLoss);
 	return {
 		metric: "PCE",
@@ -97,7 +100,9 @@ function decisionFactIssues(
 function planningFactIssues(
 	input: PipelineCaseInput,
 ): PipelineEvaluationIssue[] {
-	const planningFacts = input.planning.workItems.flatMap((workItem) => workItem.facts);
+	const planningFacts = input.planning.workItems.flatMap(
+		(workItem) => workItem.facts,
+	);
 	return missingFacts(
 		"planning_missing_fact",
 		"planning work items",
@@ -106,7 +111,9 @@ function planningFactIssues(
 	);
 }
 
-function planningRefIssues(input: PipelineCaseInput): PipelineEvaluationIssue[] {
+function planningRefIssues(
+	input: PipelineCaseInput,
+): PipelineEvaluationIssue[] {
 	return input.planning.workItems.flatMap((workItem) =>
 		workItem.decisionRefs.includes(input.decision.rowId)
 			? []

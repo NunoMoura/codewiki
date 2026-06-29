@@ -106,11 +106,12 @@ components:
     source:
       - src/loops/**
     tests:
+      - tests/loops/**
       - tests/decision/**
       - tests/planning/**
       - tests/implementation/**
       - tests/lab/**
-    role: loop_exit_standard_engine
+    role: loop_standard_engine
   traces:
     doc: .codewiki/kb/system/traces.md
     source:

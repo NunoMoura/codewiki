@@ -76,12 +76,11 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 			"Post-bootstrap UX should be append/view driven, not rich loop tool rendering.",
 	},
 	{
-		id: "repo_local_dogfood_disabled",
+		id: "repo_local_dogfood_boundary",
 		scope: "operating_guidance",
-		pattern:
-			/repo-local CodeWiki dogfooding is enabled|\.pi\/extensions\/codewiki\.ts loads|hosts\.cli/i,
+		pattern: /\.pi\/extensions\/codewiki\.ts loads|hosts\.cli/i,
 		message:
-			"Docs and skills must keep repo-local CodeWiki dogfooding disabled until readiness gates pass.",
+			"Docs and skills must keep CodeWiki dogfooding on the project-local package path, not legacy host or shim wiring.",
 	},
 ];
 

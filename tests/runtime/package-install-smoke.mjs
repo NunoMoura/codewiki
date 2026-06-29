@@ -112,6 +112,7 @@ assert.deepEqual(tools, [
 ]);
 assert.deepEqual(events.map((event) => event.eventName), [
 	"before_agent_start",
+	"tool_result",
 	"session_start",
 ]);
 const promptHook = events.find((event) => event.eventName === "before_agent_start");

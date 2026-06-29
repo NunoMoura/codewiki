@@ -13,6 +13,77 @@ All notable changes to this project will be documented in this file.
   outside the repository and are not visible to candidate agents.
 - Added the pipeline carryover lab (PCE) for testing decision-to-planning-to-
   implementation trace handoff fidelity with production-shaped trace events.
+- Added `lab/program.md` and `npm run lab:objective` as the optimizer-facing
+  quality-network program and scalar objective for visible/sealed lab scoring.
+- Added versioned production loop quality graphs in `src/<loop>/loop.ts` and
+  aligned lab candidates around graph ids, versions, layers, costs, and repair
+  targets.
+- Added `npm run lab:graph` for inspecting production/candidate graph shape,
+  hashes, layers, and node deltas.
+- Added `npm run lab:forge` for reducing trace JSONL into sanitized,
+  human-labeled draft case material without treating raw traces as truth.
+- Expanded visible DEC, PEC, and IEC seed corpora from 3 to 5 cases per loop.
+- Fixed repo-local dogfood settings to use `..` from `.pi/settings.json`, because
+  Pi resolves relative package paths against the settings file.
+- Hardened trace append helpers to validate records before writing, preventing
+  stale generic semantic event names from corrupting hot trace files.
+- Fixed trace-derived view projections to ignore superseded non-exit decision
+  and planning attempts plus conflicts from already completed work units.
+- Changed the `wiki_state` tool summary to report active work items rather than
+  total historical work items.
+- Added shared loop route metadata plus a direct implementation route for
+  explicitly scoped, tiny/small low-risk decisions.
+- Routed Planning and Implementation user-clarification/validation uncertainty
+  back to Decision instead of blocking directly.
+- Added a CodeWiki-owned loop graph runner with parallel node execution,
+  hard-gate skip/fail-fast behavior, timeout diagnostics, and no Pi extension
+  dependency.
+- Added loop quality graph contract tests covering node method, gate,
+  timeout, and per-node failure feedback across Decision, Planning, and
+  Implementation.
+- Added explicit hard-gate policy tests for binary semantic contracts in all
+  three loop quality graphs.
+- Added loop quality method policy tests for deterministic, agent-assessed,
+  human-authority, and external-evidence standards.
+- Added compact `qualityDiagnostics` repair feedback to loop results and trace
+  outputs, sorted so hard-gate blockers appear before softer guidance.
+- Added `npm run lab:promotion` to report promotion eligibility across visible
+  gates, PCE, sealed holdout status, objective threshold, graph diff, and human
+  review.
+- Split loop graph identity from graph evaluation, added shared
+  `src/loops/quality-standards.ts`, and routed production loop quality-standard
+  evaluation through the per-loop `quality-standards.ts` modules.
+- Wired `wiki_decide`, `wiki_plan`, and `wiki_implement` through the
+  CodeWiki-owned loop runner for production quality-standard evaluation while
+  preserving existing verdict and diagnostic semantics.
+- Added independent quality-judge infrastructure for `agent_self_assessment` and
+  `model_judge` standards with fake-judge tests, one batched call per loop
+  attempt, graph/prompt/input-evidence cache keys, hard-gate skip behavior,
+  versioned prompts, optional HTTP provider injection through config/env,
+  `npm run lab:judge-calibration` for sealed judge calibration bundles,
+  judge-calibration promotion gating in `npm run lab:promotion`, and
+  `npm run lab:experiment` for isolated candidate worktree evaluation.
+- Added `npm run lab:auto-experiment` for budgeted lab-only candidate sweeps with
+  run, wall-clock, candidate-file, and diff-byte limits; score-only sealed
+  feedback; best-candidate reporting; and no production graph mutation or
+  automatic promotion.
+- Added loop-level batched judge prompts for enabled production quality judges,
+  including structured loop evidence, per-standard verdicts for semantic
+  `model_judge` standards, prompt version `loop-quality-judge.v3`, and
+  deterministic hard-gate prechecks before judge calls.
+- Added quality-network judge-node metadata so each non-deterministic standard
+  has its own specialized rubric and 0-100 judge score while still allowing
+  batched transport per loop attempt.
+- Added `npm run lab:judge-smoke` to validate a configured judge endpoint with
+  synthetic non-private loop packets before sealed judge calibration.
+- Added `npm run lab:sealed-template` to create off-repo starter templates for
+  private holdout and judge calibration bundles without treating templates as
+  sealed evidence.
+- Added `npm run lab:sealed-check` to validate filled sealed bundles are
+  off-repo, placeholder-free, and contain pass controls plus fail/block traps.
+- Added lab loss v2 reason labels: fail/block cases can declare expected
+  standard failures plus failure classes, so route-correct wrong-reason exits
+  still lose score.
 
 ### Changed
 
@@ -24,11 +95,23 @@ All notable changes to this project will be documented in this file.
 - Hardened the Implementation lab candidate with a deterministic evidence
   specificity standard, raising IEC to 100 against the locked seed cases and
   making `npm run lab:gate` pass.
+- Renamed the canonical production and lab quality-graph files to
+  `loop.ts`.
+- Upgraded loop quality graph schema metadata to include explicit methods,
+  binary/soft gates, and timeout budgets.
+- Hardened Decision, Planning, and Implementation graph gate classification so
+  core route, coverage, authority, traceability, scope, and evidence failures are
+  hard gates.
+- Classified Implementation check, TDD, and content-proof standards as
+  `external_evidence` instead of deterministic semantic checks.
+- Changed deterministic production quality nodes from binary-only scores to
+  partial 0-100 scores based on activated issue coverage while preserving
+  fail-closed route status and hard-gate behavior.
 
 ### Notes
 
 - Visible lab 100% is no longer treated as meaningful proof by itself; promotion
-  requires PCE coverage, an external holdout gate, and review.
+  requires PCE coverage, objective scoring, an external holdout gate, and review.
 - App benchmarks remain deferred until the lab-proven standards are reviewed and
   promoted into production loop exits.
 

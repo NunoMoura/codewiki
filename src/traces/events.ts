@@ -7,6 +7,7 @@ import type {
 	LoopIterationData,
 	LoopIterationExit,
 	LoopIterationProgress,
+	LoopRoutePlan,
 	PlanningTraceEventName,
 	SemanticTraceEventName,
 	TailCheckpoint,
@@ -162,6 +163,15 @@ export function createLoopTailCheckpoint(
 			sourceRefs: normalizeTraceRefs(input.sourceRefs),
 			recoveryCursor: input.parentId,
 			route: input.exit.route,
+			...(input.exit.qualityGraph
+				? { qualityGraph: input.exit.qualityGraph }
+				: {}),
+			...(input.exit.qualityRunner
+				? { qualityRunner: input.exit.qualityRunner }
+				: {}),
+			...(input.exit.routePlan
+				? { routePlan: normalizeRoutePlan(input.exit.routePlan) }
+				: {}),
 			...(input.data || {}),
 		},
 	};
@@ -179,8 +189,14 @@ export function loopExitFromEvaluation(
 			...(criterion.message ? { message: criterion.message } : {}),
 			...(criterion.refs ? { refs: criterion.refs } : {}),
 		})),
+		...(exit.qualityGraph ? { qualityGraph: exit.qualityGraph } : {}),
+		...(exit.diagnostics ? { diagnostics: exit.diagnostics } : {}),
+		...(exit.qualityRunner ? { qualityRunner: exit.qualityRunner } : {}),
 		targetLoop: currentLoopForRoute(exit.route),
 		nextAction: exit.remediation[0]?.action || nextActionForRoute(exit.route),
+		...(exit.routePlan
+			? { routePlan: normalizeRoutePlan(exit.routePlan) }
+			: {}),
 	};
 }
 
@@ -234,8 +250,26 @@ function normalizeLoopIterationExit(
 			...condition,
 			...(condition.refs ? { refs: normalizeTraceRefs(condition.refs) } : {}),
 		})),
+		...(exit.qualityGraph ? { qualityGraph: exit.qualityGraph } : {}),
+		...(exit.diagnostics ? { diagnostics: exit.diagnostics } : {}),
+		...(exit.qualityRunner ? { qualityRunner: exit.qualityRunner } : {}),
 		...(exit.targetLoop === undefined ? {} : { targetLoop: exit.targetLoop }),
 		...(exit.nextAction ? { nextAction: exit.nextAction } : {}),
+		...(exit.routePlan
+			? { routePlan: normalizeRoutePlan(exit.routePlan) }
+			: {}),
+	};
+}
+
+function normalizeRoutePlan(routePlan: LoopRoutePlan): LoopRoutePlan {
+	return {
+		target: routePlan.target,
+		kind: routePlan.kind,
+		rationale: routePlan.rationale,
+		...(routePlan.implementationMode
+			? { implementationMode: routePlan.implementationMode }
+			: {}),
+		...(routePlan.refs ? { refs: normalizeTraceRefs(routePlan.refs) } : {}),
 	};
 }
 

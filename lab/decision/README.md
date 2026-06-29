@@ -3,7 +3,7 @@
 Editable candidate file:
 
 ```text
-lab/decision/exit.ts
+lab/decision/loop.ts
 ```
 
 Metric: DEC, Decision Exit Condition score.

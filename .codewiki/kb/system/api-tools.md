@@ -11,7 +11,7 @@ CodeWiki core package
   -> MCP adapter (future optional adapter)
 ```
 
-Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**` and remains disabled in this checkout until an explicit reintroduction decision.
+Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. In this checkout, supervised Pi-tool self-dogfood is enabled by the self-dogfood re-enable decision; unattended runtime automation remains disabled.
 
 ## Tool parameter style
 
@@ -64,9 +64,9 @@ There is no standalone current tool for split output generation or split exit ev
 The core reduced-tool facade shape now exists for the current tool set:
 
 - `buildWikiState()` derives view-shaped state projections from active trace records only.
-- `runWikiDecide()` runs decision output and exit conditions, then previews or appends the checked decision iteration batch through the runtime-owned trace append boundary.
-- `runWikiPlan()` runs planning output and exit conditions, then previews or appends the checked planning iteration batch through the runtime-owned trace append boundary.
-- `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch through the runtime-owned trace append boundary.
+- `runWikiDecide()` runs decision output and exit conditions, records route metadata, then previews or appends the checked decision iteration batch through the runtime-owned trace append boundary.
+- `runWikiPlan()` runs planning output and exit conditions, routes clarification/user-validation needs back to Decision, then previews or appends the checked planning iteration batch through the runtime-owned trace append boundary.
+- `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, accepts exited planning output or direct implementation decision events, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch through the runtime-owned trace append boundary.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
 - `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
 
@@ -87,7 +87,7 @@ Supported `view` values stay intentionally small:
 | View | Purpose |
 | --- | --- |
 | `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
-| `board` | Card-ready work context: per-trace work plan when selected, work queue, runtime-board projection, next action, and append handles for active traces. |
+| `board` | Card-ready trace-queue context: one card per trace, row/work subitems, per-trace work plan when selected, runtime-board projection, next action, and append handles for active traces. |
 | `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
 | `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
 | `all` | Debug/maintenance payload containing all derived projections. |
@@ -125,7 +125,7 @@ Users may ask for decisions, planning, implementation, automation, or archive wo
 
 Pi command rendering and future trace/view rendering are product UX surfaces. Wiki tools execute loops and return compact agent handles; they should not register rich TUI renderers for calls or results.
 
-Post-bootstrap user-facing observability is append-driven:
+Post-bootstrap user-facing observability is append-driven. Decision table validation is the pre-append exception: candidates are shown to the user for approval/edit/reject before becoming decision-loop input.
 
 ```text
 wiki_* append -> trace record -> derived view -> renderer

@@ -1,12 +1,12 @@
 # Implementation Loop
 
-The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output into verified project changes.
+The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output, or an eligible direct implementation decision row, into verified project changes.
 
 ## Loop authority
 
 The implementation loop owns:
 
-- source/docs/test edits;
+- repo payload edits in `src/`, `tests/`, package files, README, and product docs;
 - local TDD execution when required;
 - worker result aggregation;
 - runtime claim correlation;
@@ -17,14 +17,14 @@ The implementation loop owns:
 - residual issue coverage;
 - publication readiness when configured.
 
-The implementation loop does not own new product decisions or planning scope changes. It routes back instead.
+The implementation loop does not own new product decisions, planning scope changes, `.codewiki/kb/**` meaning changes, `.codewiki/traces/**` append authority, config-policy writes, or generated `.codewiki/views/**` projections. It routes back instead.
 
 ## Loop cycle
 
 One implementation cycle does this work:
 
 ```text
-observe accepted planning output + source/test/Git/runtime refs
+observe accepted planning output or direct implementation decision + source/test/Git/runtime refs
 claim or receive worker work when needed
 change code/docs/tests inside planned scope
 run checks and collect evidence
@@ -41,7 +41,7 @@ Implementation should keep noisy logs and scratch under runtime temp or external
 
 Implementation loop output is the high-signal packet needed to close or publish the trace:
 
-- covered planning refs;
+- covered planning refs or direct implementation decision refs;
 - changed code/docs/test paths;
 - check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
 - acceptance evidence mapped to planning acceptance criterion ids;
@@ -59,13 +59,13 @@ Implementation loop output is the high-signal packet needed to close or publish 
 
 Implementation output should not include full logs, private scratch, unbounded diffs, or product decisions made during coding.
 
-## Exit quality standards
+## Loop quality standards
 
 The implementation loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
 
 | Quality standard | Mode | Required signal |
 | --- | --- | --- |
-| planning_coverage_complete | deterministic | Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced. |
+| planning_coverage_complete | deterministic | Every planned work ref or direct implementation decision ref is covered by implementation evidence and no unknown refs are introduced. |
 | scope_controlled | deterministic | Changed paths stay inside planned component/path scope and existing repo paths. |
 | acceptance_evidence_complete | deterministic | Every planned acceptance criterion is covered by structured evidence refs. |
 | verification_passed | deterministic | Required checks are structured, present, passing, cover planned verification refs/commands, and package/dependency changes include pack verification. |
@@ -86,7 +86,7 @@ The implementation loop can exit only when loop-owned quality standards are met 
 - `continue`: same implementation loop can add code/tests/evidence, rerun checks, collect proof, or resolve worker issues.
 - `exit`: implementation output is accepted and the trace can close or publish according to policy.
 - `route_back`: planning or decision authority is needed.
-- `blocked`: user, external resource, runtime worker, merge conflict, or policy wait prevents progress.
+- `blocked`: external resource, runtime worker, merge conflict, or policy wait prevents progress. User clarification/validation routes to Decision first.
 
 ## Route-back rules
 

@@ -20,6 +20,7 @@ import {
 	buildResumeView,
 	buildStatusView,
 	buildTraceBoardView,
+	buildTraceQueueView,
 	buildWorkPlanView,
 	buildWorkQueueView,
 	formatViewJson,
@@ -61,6 +62,44 @@ function approvedDecisionRef(events) {
 	assert.ok(iteration);
 	assert.ok(row);
 	return `trace:${iteration.id}#row:${row.id}`;
+}
+
+function directDecisionEvents(traceId = "TRACE-direct-route") {
+	const table = createDecisionTable({
+		id: "DT-direct-route",
+		createdAt: "2026-06-11T00:00:00.000Z",
+		updatedAt: "2026-06-11T00:00:00.000Z",
+		rows: [
+			{
+				id: "DTR-direct-route",
+				currentState: "Small fixes require planning ceremony.",
+				desiredState:
+					"Small scoped fixes can route directly to implementation.",
+				rationale: "The route is explicit and still trace-backed.",
+				...decisionQualityFields(),
+				approval: "approved",
+				routeTarget: "implementation",
+				routeRationale: "Low-risk, scoped, and directly verifiable.",
+				implementationMode: "targeted_checks",
+				directImplementationScope: {
+					pathScopes: ["src/views/work-queue.ts"],
+					verification: ["tests/views/views-projections.test.mjs"],
+					acceptanceCriteria: [
+						{
+							id: "AC-DIRECT",
+							text: "Direct routed work appears as implementation work.",
+						},
+					],
+				},
+				sourceRefs: ["kb:system/loop-contracts.md"],
+			},
+		],
+	});
+	return runDecisionIteration({
+		traceId,
+		table,
+		createdAt: "2026-06-11T00:00:01.000Z",
+	}).traceEvents;
 }
 
 function planningWorkEvent(events, workUnitId) {
@@ -365,6 +404,28 @@ describe("trace-backed views", () => {
 		assert.equal(status.currentLoop, "implementation");
 		assert.equal(status.readyForClosure, false);
 		assert.equal(resume.nextAction, "Implement planned work unit WU-views.");
+	});
+
+	it("projects direct implementation decisions as implementation work", () => {
+		const head = createTraceHead({
+			traceId: "TRACE-direct-route",
+			title: "Direct route",
+			createdAt: "2026-06-11T00:00:00.000Z",
+		});
+		const decisions = directDecisionEvents("TRACE-direct-route");
+		const input = {
+			records: [head, ...decisions],
+			generatedAt: "2026-06-11T00:00:03.000Z",
+		};
+		const workPlan = buildWorkPlanView(input);
+		const workQueue = buildWorkQueueView(input);
+		const status = buildStatusView(input);
+
+		assert.equal(workPlan.cards[0].id, "DTR-direct-route");
+		assert.equal(workPlan.cards[0].status, "todo");
+		assert.equal(workQueue.items[0].kind, "work-unit");
+		assert.equal(workQueue.items[0].status, "ready");
+		assert.equal(status.currentLoop, "implementation");
 	});
 
 	it("projects triggers with enabled and run state", () => {
@@ -864,6 +925,27 @@ describe("trace-backed views", () => {
 		assert.equal(byId["WU-claimed"].status, "claimed");
 		assert.equal(byId["WU-claimed"].claimedBy, "worker-claimed");
 		assert.equal(byId["WU-done"].status, "done");
+	});
+
+	it("projects trace queue cards as one card per trace with row subitems", () => {
+		const ready = queueTrace("TRACE-card-ready", {
+			workUnitId: "WU-card-ready",
+		});
+		const backlog = queueTrace("TRACE-card-backlog", { unplanned: true });
+		const queue = buildTraceQueueView({
+			records: [...ready.records, ...backlog.records],
+		});
+		const byTrace = Object.fromEntries(
+			queue.cards.map((card) => [card.traceId, card]),
+		);
+
+		assert.equal(queue.cards.length, 2);
+		assert.equal(byTrace["TRACE-card-ready"].rowCount, 1);
+		assert.equal(byTrace["TRACE-card-ready"].items.length, 1);
+		assert.equal(byTrace["TRACE-card-ready"].nextLoop, "implementation");
+		assert.equal(byTrace["TRACE-card-backlog"].rowCount, 1);
+		assert.equal(byTrace["TRACE-card-backlog"].items.length, 1);
+		assert.equal(byTrace["TRACE-card-backlog"].nextLoop, "planning");
 	});
 
 	it("exposes planning quality blockers in views", () => {

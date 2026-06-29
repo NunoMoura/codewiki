@@ -1,5 +1,5 @@
 import {
-	runDecisionIteration,
+	runDecisionIterationWithRunner,
 	type DecisionIterationInput,
 	type DecisionIterationResult,
 } from "../decision/iteration.ts";
@@ -10,6 +10,7 @@ import type {
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import {
 	assertKnownInputKeys,
 	requiredStringField,
@@ -74,7 +75,10 @@ export async function runWikiDecide(
 	const traceId = requiredStringField("wiki_decide", "traceId", input.traceId);
 	const mode = input.mode || "preview";
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
-	const loopInput = decisionIterationInput(input);
+	const qualityJudge = await resolveLoopQualityJudgeExecutionOptions({
+		repoRoot: input.repoRoot,
+	});
+	const loopInput = decisionIterationInput(input, qualityJudge);
 	if (mode === "append") {
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
@@ -83,7 +87,7 @@ export async function runWikiDecide(
 			nextSequence,
 			expectedTraceId: input.expectedTraceId ?? input.traceId,
 			run: ({ startSequence }) =>
-				runDecisionIteration({ ...loopInput, startSequence }),
+				runDecisionIterationWithRunner({ ...loopInput, startSequence }),
 		});
 		return {
 			mode,
@@ -93,7 +97,7 @@ export async function runWikiDecide(
 			append: result.append,
 		};
 	}
-	const loopResult = runDecisionIteration({
+	const loopResult = await runDecisionIterationWithRunner({
 		...loopInput,
 		startSequence: nextSequence,
 	});
@@ -113,6 +117,7 @@ export async function runWikiDecide(
 
 function decisionIterationInput(
 	input: RunWikiDecideInput,
+	qualityJudge: DecisionIterationInput["qualityJudge"],
 ): DecisionIterationInput {
 	return {
 		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
@@ -120,6 +125,7 @@ function decisionIterationInput(
 		tableInput: input.tableInput,
 		knowledgeDelta: input.knowledgeDelta,
 		currentStatePacket: input.currentStatePacket,
+		qualityJudge,
 		requirementIds: input.requirementIds,
 		parentId: input.parentId,
 		createdAt: input.createdAt,

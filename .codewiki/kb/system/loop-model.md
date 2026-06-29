@@ -86,9 +86,11 @@ A loop output must not contain:
 
 The loop output is high-signal because exit conditions force it to be high-signal. If required signal is missing, the loop continues or routes back.
 
-## Exit quality standards
+## Loop quality network
 
-Exit conditions are the loop's quality and safety contract. In source, they are represented as loop-owned quality standards. They answer:
+Exit conditions are the loop's quality and safety contract. In source, they are
+represented as a loop-owned quality network made of quality-standard nodes. They
+answer:
 
 ```text
 Can this loop safely exit?
@@ -96,7 +98,13 @@ Can the next loop trust this output?
 If not, what exact condition is unmet?
 ```
 
-Quality standards should be deterministic when possible. Agent-judgment standards and user-approval standards are allowed only when their quality value is worth the token and UX cost.
+Quality-standard nodes should be deterministic when possible. Deterministic
+nodes may be binary or numeric. Deterministic nodes expose 0-100 repair scores
+without changing their fail-closed route status. Non-deterministic nodes use
+specialized judge nodes that score one standard from supplied evidence and return
+ref-linked feedback; passes below threshold or without a score fail closed.
+User-approval standards are allowed only when authority genuinely belongs to the
+project owner or another human authority.
 
 Loop exit results use four statuses:
 
@@ -108,6 +116,8 @@ Loop exit results use four statuses:
 | `blocked` | External user, resource, policy, or runtime wait is required. |
 
 Semantic uncertainty becomes an explicit unmet quality standard, route-back, or user-approval block, not hidden confidence.
+
+Implementation quality networks consume normalized review evidence, not raw tool authority. Fast edit feedback and Implementation exit review may reuse the same adapters, but they run with different budgets and different authority. Fast feedback is an agent-repair accelerator. Exit review is the trace-backed quality-network decision. Common language-agnostic nodes keep review portable across projects; language-specific nodes add deeper evidence only when their pack or underlying tool is available.
 
 ## Progress boundaries
 

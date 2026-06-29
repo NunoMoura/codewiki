@@ -1,6 +1,6 @@
 # Pi Extension
 
-The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. This checkout intentionally does not auto-load CodeWiki through `.pi/extensions/codewiki.ts` while production readiness is being hardened; temp-project package smokes exercise `dist/pi/extension.js` instead.
+The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. This checkout uses controlled repo-local dogfooding through the project-local package path `..` in `.pi/settings.json`; Pi resolves relative package paths against the settings file, so `..` points at the package root. It intentionally does not auto-load CodeWiki through a `.pi/extensions/codewiki.ts` shim. Rebuild `dist/**` and restart/reload Pi before relying on repo-local dogfood after source changes. Temp-project package smokes also exercise `dist/pi/extension.js`.
 
 Target Pi integration lives under `src/pi/**` and exposes terminal-first commands, tools, prompt assets, and TUI views through thin adapter registrations over the core facades. Pi is the primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
@@ -37,16 +37,21 @@ failure paths through installed package artifacts.
 
 `npm run test:readiness` is the repo-local readiness checklist. It verifies
 package metadata is present, Pi is not bundled as a runtime dependency,
-`.codewiki` top-level state has the target shape, repo-local Pi settings do not
-load CodeWiki, CLI is absent from product host config, and docs do not contain
-stale public command, CLI, legacy trace-close, or state/status command wording.
+`.codewiki` top-level state has the target shape, repo-local Pi settings load
+CodeWiki only through the project-local package path, CLI is absent from product
+host config, and docs do not contain stale public command, CLI, legacy
+trace-close, or state/status command wording.
 `npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
 audit sequence serially.
+`npm run test:self-dogfood-ready` is the heavy self-dogfood re-enable gate. It
+runs the full CodeWiki audit plus loop lab gates before this repository may
+change its own operating guidance to use CodeWiki `wiki_*` tools for normal
+self-repo work.
 
 ## Production readiness gates
 
 Supported now: project-local packed/local package installs, supervised `/wiki-*` and model-facing
-`wiki_*` flows, guarded expected-byte/sequence mutation, and external sandbox
+`wiki_*` flows in external or controlled test projects, guarded expected-byte/sequence mutation, and external sandbox
 compatibility. Runtime backend APIs support host coordination but are not exposed
 as a normal agent tool. Gated before production automation: public npm publish,
 unattended runtime worker start, auto-merge, auto-publish, global/user installs
@@ -58,9 +63,48 @@ ambiguity, no `.codewiki/runtime` scratch leakage after checks, green
 archive/hydrate validation, and explicit user approval policy for destructive or
 externally visible actions.
 
+## Self-dogfood re-enable gate
+
+Repo-local self-dogfood means using CodeWiki `wiki_*` tools inside the CodeWiki
+source checkout itself. This is stricter than using the package in a temporary or
+external project because bad tool behavior could mutate CodeWiki's own workflow
+truth. Self-dogfood is not re-enabled by build success alone.
+
+Self-dogfood status: enabled for this source checkout by
+`trace:TRACE-self-dogfood-reenabled-v1#row:DTR-self-dogfood-reenable-approved`
+after the gate command passed, project-local Pi package loading was confirmed,
+and the gate implementation trace reported matching content proof.
+
+The re-enable gate remains:
+
+1. `npm run test:self-dogfood-ready` passes.
+2. The current self-repo trace for the change has decision, planning, and
+   implementation records; every touched source, test, README, and KB file is
+   referenced; and the latest implementation content proof matches current file
+   content.
+3. `.codewiki/traces/TRACE-*.jsonl` files validate, and no central trace index or
+   legacy generated root becomes active truth.
+4. Repo-local Pi settings continue to load the package through `..`, not a
+   `.pi/extensions/codewiki.ts` shim and not a global/user install.
+5. Mutation-capable tools remain supervised: preview before append,
+   expected-byte/sequence guards, project-local install guard, no unattended
+   worker start, no auto-merge, and no auto-publish.
+6. A durable decision trace explicitly approves changing the repo operating
+   guidance from core-facade dogfood to Pi-tool dogfood.
+
+Current repo operating guidance allows supervised CodeWiki Pi-tool dogfood in
+this checkout. The first self-repo CodeWiki tool use after re-enable should be a
+read-only `wiki_state` check, followed by preview-mode `wiki_decide`,
+`wiki_plan`, or `wiki_implement` calls before any guarded append. Fast edit
+feedback may run as a hook, but it is not a substitute for durable trace records.
+Mutation-capable tools must keep expected-byte/sequence guards, project-local
+install scope, and manual preview review. Unattended worker start, auto-merge,
+and auto-publish remain disabled until a separate gate and decision trace approve
+them.
+
 ## Rebuild rules
 
-- Repo-local CodeWiki dogfooding is disabled until production readiness gates pass; keep `.codewiki/kb/**` updated manually.
+- Repo-local CodeWiki dogfooding is enabled only through the project-local package path `..` in `.pi/settings.json`; do not add a `.pi/extensions/codewiki.ts` shim.
 - Do not run CodeWiki-owned compaction, resume injection, or auto-pickup.
 - Use Pi native compaction only.
 - Do not rely on `_OLD_VERSION/**`; the archive has been removed after migration audit.

@@ -7,6 +7,7 @@ import {
 	buildResumeView,
 	buildStatusView,
 	buildTraceBoardView,
+	buildTraceQueueView,
 	buildWorkPlanView,
 	buildWorkQueueView,
 } from "./views.ts";
@@ -16,6 +17,12 @@ import {
 	type RuntimeBoardRuntimePreview,
 } from "../views/runtime-board.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
+import {
+	summarizeReviewEvidenceReports,
+	type ImplementationEvidenceReportInput,
+	type ReviewEvidenceCacheReader,
+	type ReviewEvidenceSummary,
+} from "../implementation/review/index.ts";
 import type { TraceRecord } from "../traces/types.ts";
 import type {
 	TriggersView,
@@ -25,6 +32,7 @@ import type {
 	ResumeView,
 	StatusView,
 	TraceBoardView,
+	TraceQueueView,
 	WorkPlanView,
 	WorkQueueView,
 } from "../views/types.ts";
@@ -64,8 +72,17 @@ export interface WikiStateInput {
 	generatedAt?: string;
 	traceId?: string;
 	expectedBytesByTrace?: Record<string, number>;
+	reviewEvidenceCache?: ReviewEvidenceCacheReader;
+	reviewEvidenceMaxAgeMs?: number;
 	runtimeMaxWorkers?: number;
 	runtimeResultPreview?: RuntimeBoardRuntimePreview;
+}
+
+export interface WikiStateReviewEvidenceView {
+	traceId?: string;
+	traceBacked: ReviewEvidenceSummary;
+	cachedFast: ReviewEvidenceSummary;
+	blockers: string[];
 }
 
 export interface WikiStateSnapshot {
@@ -76,6 +93,7 @@ export interface WikiStateSnapshot {
 	resume?: ResumeView;
 	workPlan?: WorkPlanView;
 	workQueue: WorkQueueView;
+	traceQueue: TraceQueueView;
 	traceBoard: TraceBoardView;
 	triggers: TriggersView;
 	runtimeBoard: RuntimeBoard;
@@ -84,6 +102,7 @@ export interface WikiStateSnapshot {
 	blockers?: BlockersView;
 	conflicts?: ConflictsView;
 	quality?: QualityView;
+	reviewEvidence?: WikiStateReviewEvidenceView;
 }
 
 export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
@@ -100,6 +119,7 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 		generatedAt: input.generatedAt,
 	};
 	const workQueue = buildWorkQueueView(projectViewInput);
+	const traceQueue = buildTraceQueueView(projectViewInput);
 	const traceBoard = buildTraceBoardView(projectViewInput);
 	const triggers = buildTriggersView(projectViewInput);
 	const status = traceViewInput ? buildStatusView(traceViewInput) : undefined;
@@ -114,6 +134,13 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 		? buildConflictsView(traceViewInput)
 		: undefined;
 	const quality = traceViewInput ? buildQualityView(traceViewInput) : undefined;
+	const reviewEvidence = buildWikiStateReviewEvidence({
+		records: selectedRecords || input.records,
+		traceId: selectedTraceId,
+		cache: input.reviewEvidenceCache,
+		generatedAt: input.generatedAt,
+		maxAgeMs: input.reviewEvidenceMaxAgeMs,
+	});
 	return {
 		generatedAt: input.generatedAt,
 		traceIds: fold.traceIds,
@@ -124,7 +151,9 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 		...(blockers ? { blockers } : {}),
 		...(conflicts ? { conflicts } : {}),
 		...(quality ? { quality } : {}),
+		...(reviewEvidence ? { reviewEvidence } : {}),
 		workQueue,
+		traceQueue,
 		traceBoard,
 		triggers,
 		runtimeBoard: buildRuntimeBoard({
@@ -147,6 +176,75 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 			traceBoard,
 		}),
 	};
+}
+
+function buildWikiStateReviewEvidence(input: {
+	records: TraceRecord[];
+	traceId?: string;
+	cache?: ReviewEvidenceCacheReader;
+	generatedAt?: string;
+	maxAgeMs?: number;
+}): WikiStateReviewEvidenceView | undefined {
+	if (input.records.length === 0 && !input.traceId) return undefined;
+	const traceBackedReports = reviewEvidenceReportsFromRecords(input.records);
+	const cachedFastReports =
+		input.cache?.reports({
+			...(input.traceId ? { traceId: input.traceId } : {}),
+			phases: ["fast"],
+			...(input.maxAgeMs !== undefined ? { maxAgeMs: input.maxAgeMs } : {}),
+			...(input.generatedAt ? { now: input.generatedAt } : {}),
+		}) || [];
+	const traceBacked = summarizeReviewEvidenceReports(traceBackedReports);
+	const cachedFast = summarizeReviewEvidenceReports(cachedFastReports);
+	if (traceBacked.reportCount === 0 && cachedFast.reportCount === 0) {
+		return undefined;
+	}
+	return {
+		...(input.traceId ? { traceId: input.traceId } : {}),
+		traceBacked,
+		cachedFast,
+		blockers: [
+			...traceBacked.blockingDiagnostics,
+			...cachedFast.blockingDiagnostics,
+		].map(reviewEvidenceBlockerMessage),
+	};
+}
+
+function reviewEvidenceReportsFromRecords(
+	records: TraceRecord[],
+): ImplementationEvidenceReportInput[] {
+	return records.flatMap((record) => {
+		if (record.type !== "trace_event" || record.loop !== "implementation") {
+			return [];
+		}
+		const output = objectValue(objectValue(record.data).output);
+		const reports = output.reviewEvidenceReports;
+		return Array.isArray(reports)
+			? (reports as ImplementationEvidenceReportInput[])
+			: [];
+	});
+}
+
+function reviewEvidenceBlockerMessage(input: {
+	path: string;
+	message: string;
+	sourceId?: string;
+	ruleId?: string;
+	line?: number;
+}): string {
+	return [
+		input.sourceId || "review",
+		input.ruleId ? ` ${input.ruleId}` : "",
+		`: ${input.path}`,
+		input.line !== undefined ? `:${input.line}` : "",
+		` ${input.message}`,
+	].join("");
+}
+
+function objectValue(value: unknown): Record<string, unknown> {
+	return typeof value === "object" && value !== null
+		? (value as Record<string, unknown>)
+		: {};
 }
 
 function openTraceIds(traceBoard: TraceBoardView): string[] {

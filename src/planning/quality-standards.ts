@@ -1,10 +1,17 @@
 import {
+	evaluateLoopQualityGraph,
+	runLoopQualityGraphEvaluation,
+	type LoopQualityJudgeExecutionOptions,
+	type RunLoopQualityGraphResult,
+} from "../loops/evaluator.ts";
+import type { LoopQualityGraph } from "../loops/graph.ts";
+import {
 	buildLoopQualityStandard,
 	criteriaFromQualityStandards,
 	type LoopQualityStandardDefinition,
-} from "../loops/standards.ts";
+} from "../loops/quality-standards.ts";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
-import type { PlanningExitIssue, PlanningExitIssueCode } from "./exit.ts";
+import type { PlanningExitIssue, PlanningExitIssueCode } from "./loop.ts";
 
 export { criteriaFromQualityStandards };
 
@@ -146,13 +153,49 @@ export function planningQualityStandards(
 			issueCode: (issue) => issue.code,
 			issueMessage: (issue) => issue.message,
 			issueRefs: planningIssueRefs,
-			isBlockingIssue: (issue) => issue.route === "user",
+			isBlockingIssue: isBlockingPlanningIssue,
 		}),
 	);
+}
+
+export function evaluatePlanningQualityStandards(
+	graph: LoopQualityGraph<PlanningExitIssueCode>,
+	issues: PlanningExitIssue[],
+): LoopQualityStandardResult[] {
+	return evaluateLoopQualityGraph(planningQualityGraphOptions(graph, issues));
+}
+
+export function runPlanningQualityStandards(
+	graph: LoopQualityGraph<PlanningExitIssueCode>,
+	issues: PlanningExitIssue[],
+	judgeOptions: LoopQualityJudgeExecutionOptions = {},
+): Promise<RunLoopQualityGraphResult> {
+	return runLoopQualityGraphEvaluation({
+		...planningQualityGraphOptions(graph, issues),
+		...judgeOptions,
+	});
+}
+
+function planningQualityGraphOptions(
+	graph: LoopQualityGraph<PlanningExitIssueCode>,
+	issues: PlanningExitIssue[],
+) {
+	return {
+		graph,
+		issues,
+		issueCode: (issue: PlanningExitIssue) => issue.code,
+		issueMessage: (issue: PlanningExitIssue) => issue.message,
+		issueRefs: planningIssueRefs,
+		isBlockingIssue: isBlockingPlanningIssue,
+	};
 }
 
 export function planningIssueRefs(issue: PlanningExitIssue): string[] {
 	return [issue.decisionRef, issue.workItemId, issue.ref, issue.componentRef]
 		.map((ref) => String(ref || "").trim())
 		.filter(Boolean);
+}
+
+export function isBlockingPlanningIssue(issue: PlanningExitIssue): boolean {
+	return issue.route === "user";
 }

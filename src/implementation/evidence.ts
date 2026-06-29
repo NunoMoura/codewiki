@@ -1,4 +1,8 @@
 import type { ContentProof } from "../git/content-proof.ts";
+import {
+	directImplementationDecisionsFromRecords,
+	type DirectImplementationDecisionProjection,
+} from "../decision/direct-implementation.ts";
 import type { TraceEvent } from "../traces/types.ts";
 import type {
 	AcceptanceEvidenceInput,
@@ -97,38 +101,67 @@ export function normalizeImplementationChanges(
 export function acceptanceRequirementsFromPlanningEvents(
 	events: TraceEvent[],
 ): AcceptanceRequirement[] {
-	return planningWorkItemsFromIterationEvents(events).flatMap((item) =>
-		objectList<AcceptanceEvidenceInput>(item.acceptanceCriteria).map(
-			(criterion, index) => ({
-				planningRef: item.planningRef,
-				criterionId:
-					text(criterion.criterionId ?? criterion.criterion_id) ||
-					text((criterion as { id?: string }).id) ||
-					`AC-${String(index + 1).padStart(3, "0")}`,
-				text: text((criterion as { text?: string }).text || criterion.summary),
-			}),
+	return [
+		...planningWorkItemsFromIterationEvents(events).flatMap((item) =>
+			objectList<AcceptanceEvidenceInput>(item.acceptanceCriteria).map(
+				(criterion, index) => ({
+					planningRef: item.planningRef,
+					criterionId:
+						text(criterion.criterionId ?? criterion.criterion_id) ||
+						text((criterion as { id?: string }).id) ||
+						`AC-${String(index + 1).padStart(3, "0")}`,
+					text: text(
+						(criterion as { text?: string }).text || criterion.summary,
+					),
+				}),
+			),
 		),
-	);
+		...directImplementationDecisionsFromRecords(events).flatMap((direct) =>
+			direct.acceptanceCriteria.map((criterion) => ({
+				planningRef: direct.ref,
+				criterionId: criterion.id,
+				text: criterion.text,
+			})),
+		),
+	];
 }
 
 export function planningRefsFromEvents(events: TraceEvent[]): string[] {
-	return unique(
-		planningWorkItemsFromIterationEvents(events).map(
+	return unique([
+		...planningWorkItemsFromIterationEvents(events).map(
 			(item) => item.planningRef,
 		),
-	);
+		...directImplementationDecisionsFromRecords(events).map((item) => item.ref),
+	]);
 }
 
 export function planningScopesFromEvents(
 	events: TraceEvent[],
 ): PlanningImplementationScope[] {
-	return planningWorkItemsFromIterationEvents(events).map((item) => ({
-		planningRef: item.planningRef,
-		workUnitId: item.id,
-		componentRefs: stringList(item.componentRefs),
-		pathScopes: stringList(item.pathScopes),
-		verification: stringList(item.verification),
-	}));
+	return [
+		...planningWorkItemsFromIterationEvents(events).map((item) => ({
+			planningRef: item.planningRef,
+			workUnitId: item.id,
+			componentRefs: stringList(item.componentRefs),
+			pathScopes: stringList(item.pathScopes),
+			verification: stringList(item.verification),
+		})),
+		...directImplementationDecisionsFromRecords(events).map((direct) =>
+			directImplementationScope(direct),
+		),
+	];
+}
+
+function directImplementationScope(
+	direct: DirectImplementationDecisionProjection,
+): PlanningImplementationScope {
+	return {
+		planningRef: direct.ref,
+		workUnitId: direct.id,
+		componentRefs: direct.componentRefs,
+		pathScopes: direct.pathScopes,
+		verification: direct.verification,
+	};
 }
 
 export function implementationEvidenceRefs(

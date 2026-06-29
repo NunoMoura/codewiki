@@ -1,5 +1,7 @@
 import type { ContentProof } from "../git/content-proof.ts";
+import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
 import type { ExitDetails } from "../traces/types.ts";
+import type { ImplementationEvidenceReportInput } from "./review/evidence-report.ts";
 
 export type CheckStatus = "pass" | "fail" | "blocked" | "not-run";
 export type CheckPhase = "red" | "green" | "refactor" | "verify";
@@ -258,7 +260,12 @@ export type ImplementationExitIssueCode =
 	| "missing_release_approval"
 	| "invalid_release_approval_ref"
 	| "duplicate_change_id"
-	| "invalid_traceability_ref";
+	| "invalid_traceability_ref"
+	| "review_blocking_diagnostic"
+	| "review_missing_acceptance_evidence_link"
+	| "semantic_evidence_mismatch"
+	| "semantic_checks_irrelevant"
+	| "semantic_implementation_not_ready";
 
 export interface ImplementationExitIssue {
 	code: ImplementationExitIssueCode;
@@ -286,6 +293,8 @@ export interface ImplementationExitInput {
 	workerProofConflicts?: import("./worker-proof.ts").ImplementationWorkerProofConflict[];
 	expectedWorkerBaseSha?: string;
 	workerClaims?: ImplementationWorkerClaim[];
+	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
+	qualityJudge?: LoopQualityJudgeExecutionOptions;
 }
 
 export interface ImplementationExitResult extends ExitDetails {

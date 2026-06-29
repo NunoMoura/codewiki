@@ -150,7 +150,7 @@ try {
 		(message) =>
 			message.type === "extension_ui_request" &&
 			message.method === "notify" &&
-			message.message.includes("CodeWiki Board"),
+			message.message.includes("CodeWiki Trace Queue"),
 		stderrRef,
 	);
 	await waitFor(

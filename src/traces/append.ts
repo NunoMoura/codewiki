@@ -7,7 +7,7 @@ import {
 } from "../error-handling/trace-errors.ts";
 import type { TraceClose, TraceRecord } from "./types.ts";
 import { parseTraceText } from "./reader.ts";
-import { traceFilePath } from "./schema.ts";
+import { assertValidTraceRecord, traceFilePath } from "./schema.ts";
 import { formatTraceLine, formatTraceText } from "./writer.ts";
 
 interface AppendPlan {
@@ -46,19 +46,25 @@ function planTraceAppend(
 	record: TraceRecord,
 	expectedBytes: number,
 ): AppendPlan {
-	return { expectedBytes, line: formatTraceLine(record), record };
+	const validRecord = assertValidTraceRecord(record);
+	return {
+		expectedBytes,
+		line: formatTraceLine(validRecord),
+		record: validRecord,
+	};
 }
 
 function planTraceAppendBatch(
 	records: TraceRecord[],
 	expectedBytes: number,
 ): AppendBatchPlan {
-	assertSingleTraceBatch(records);
-	assertTerminalClosePosition(records);
+	const validRecords = records.map((record) => assertValidTraceRecord(record));
+	assertSingleTraceBatch(validRecords);
+	assertTerminalClosePosition(validRecords);
 	return {
 		expectedBytes,
-		text: formatTraceText(records),
-		records: [...records],
+		text: formatTraceText(validRecords),
+		records: [...validRecords],
 	};
 }
 

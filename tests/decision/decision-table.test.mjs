@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { evaluateDecisionExit } from "../../src/decision/exit.ts";
+import { evaluateDecisionExit } from "../../src/decision/loop.ts";
 import {
 	decisionPropagationRefs,
 	decisionStateDeltaGaps,
@@ -12,6 +12,11 @@ import {
 } from "../../src/decision/table.ts";
 import { formatTraceLine } from "../../src/traces/writer.ts";
 import { parseTraceLine } from "../../src/traces/reader.ts";
+import {
+	builtInDecisionTypeDefinitions,
+	decisionTypeDefinitionById,
+	validateDecisionTypeDefinitions,
+} from "../../src/decision/type-definitions.ts";
 import { decisionQualityFields } from "../helpers/decision-row.mjs";
 
 describe("decision tables", () => {
@@ -38,6 +43,7 @@ describe("decision tables", () => {
 		assert.equal(table.rows[0].approval, "approved");
 		assert.equal(table.rows[0].changeType, "code");
 		assert.equal(table.rows[0].decisionKind, "improve");
+		assert.equal(table.rows[0].decisionType, "improve");
 		assert.equal(table.rows[0].workScale, "small");
 		assert.equal(table.rows[0].planningDepth, "micro");
 		assert.deepEqual(table.rows[0].affectedLayers, ["system", "source"]);
@@ -70,6 +76,91 @@ describe("decision tables", () => {
 		assert.equal(passed.changed, true);
 		assert.equal(passed.table.rows[0].approval, "approved");
 		assert.equal(table.rows[0].approval, "pending");
+	});
+});
+
+describe("decision type registry", () => {
+	it("exposes safe built-in definitions and fail-closed lookup", () => {
+		const definitions = builtInDecisionTypeDefinitions();
+		assert.deepEqual(validateDecisionTypeDefinitions(definitions), []);
+		assert.deepEqual(
+			definitions.map((definition) => definition.id),
+			[
+				"debug",
+				"fix",
+				"harden",
+				"improve",
+				"migrate",
+				"docs",
+				"release",
+				"direct_implementation",
+			],
+		);
+		assert.equal(decisionTypeDefinitionById("missing", definitions), undefined);
+		assert.equal(
+			definitions.every(
+				(definition) =>
+					definition.pipelineProfile.id &&
+					definition.loopQualityProfile.id &&
+					definition.evidencePolicy.id &&
+					definition.forbiddenSkips.includes("protected_hard_gates"),
+			),
+			true,
+		);
+	});
+
+	it("blocks unknown decision types and unsafe direct profile routes", () => {
+		const unknown = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-unknown-type",
+					currentState: "A row can name an arbitrary type.",
+					desiredState: "Unknown decision types fail closed.",
+					rationale: "Profiles must be package-owned or guarded.",
+					...decisionQualityFields(),
+					decisionType: "surprise",
+					approval: "approved",
+					sourceRefs: ["kb:system/decision-loop.md"],
+				},
+			],
+		});
+		const unsafeDirect = createDecisionTable({
+			rows: [
+				{
+					id: "DTR-release-direct",
+					currentState: "Release rows can try to bypass Planning.",
+					desiredState: "Release rows must route through Planning.",
+					rationale: "Publication safety requires stronger process.",
+					...decisionQualityFields({
+						decisionKind: "release",
+						routeTarget: "implementation",
+						implementationMode: "targeted_checks",
+						directImplementationScope: {
+							pathScopes: ["package.json"],
+							verification: ["npm run test:pack"],
+							acceptanceCriteria: [
+								{ id: "AC-REL", text: "Release check passes." },
+							],
+						},
+					}),
+					approval: "approved",
+					sourceRefs: ["package.json"],
+				},
+			],
+		});
+
+		assert.equal(
+			evaluateDecisionExit(unknown).issues.some(
+				(issue) => issue.code === "unknown_decision_type",
+			),
+			true,
+		);
+		assert.equal(
+			evaluateDecisionExit(unsafeDirect).issues.some(
+				(issue) => issue.code === "pipeline_profile_direct_route_disallowed",
+			),
+			true,
+		);
 	});
 });
 
@@ -595,8 +686,12 @@ describe("decision exit and iteration runner", () => {
 				"user_value_clear",
 				"cost_understood",
 				"work_routing_classified",
+				"loop_route_safe",
 				"recommendation_justified",
 				"intention_validated",
+				"decision_semantically_sufficient",
+				"cost_tradeoff_plausible",
+				"risk_tier_plausible",
 				"approval_safety",
 				"current_state_grounded",
 				"evidence_sufficient",

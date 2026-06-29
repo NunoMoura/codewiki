@@ -1,7 +1,7 @@
-import type { PlanningExitInput } from "../../src/planning/exit.ts";
+import type { PlanningExitInput } from "../../src/planning/loop.ts";
 import type { PlanningWorkItem } from "../../src/planning/types.ts";
 import type { LabCase } from "../runner/types.ts";
-import type { PlanningLabInput } from "./exit.ts";
+import type { PlanningLabInput } from "./loop.ts";
 
 export const planningCases: LabCase<PlanningLabInput>[] = [
 	{
@@ -50,6 +50,20 @@ export const planningCases: LabCase<PlanningLabInput>[] = [
 		},
 		expected: "fail",
 		weight: 15,
+		expectedFailures: [
+			{
+				standardId: "planning.outcome_requirement_specificity",
+				failureClass: "specificity",
+			},
+			{
+				standardId: "planning.acceptance_verification_specificity",
+				failureClass: "verification",
+			},
+			{
+				standardId: "planning.assessment_specificity",
+				failureClass: "specificity",
+			},
+		],
 	},
 	{
 		id: "overlapping-independent-work",
@@ -69,6 +83,72 @@ export const planningCases: LabCase<PlanningLabInput>[] = [
 		},
 		expected: "fail",
 		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "planning.path_scope_overlap",
+				failureClass: "scope",
+			},
+		],
+	},
+	{
+		id: "overlap-resolved-by-dependency",
+		loop: "planning",
+		description:
+			"Overlapping path scopes can exit when dependency order makes the work serial and explicit.",
+		input: {
+			decisions: [{ id: "trace:D-1" }],
+			plan: {
+				decisionRefs: ["trace:D-1"],
+				workItems: [
+					planningWorkItem({
+						id: "PW-base",
+						planningDepth: "standard",
+						pathScopes: ["src/runtime/**"],
+					}),
+					planningWorkItem({
+						id: "PW-followup",
+						planningDepth: "standard",
+						pathScopes: ["src/runtime/host.ts"],
+						dependsOn: ["PW-base"],
+					}),
+				],
+				resolutions: [],
+			},
+		},
+		expected: "pass",
+		weight: 10,
+	},
+	{
+		id: "micro-plan-with-dependency",
+		loop: "planning",
+		description:
+			"Micro planning with dependencies fails because it is too large for the micro-plan contract.",
+		input: {
+			decisions: [{ id: "trace:D-1" }],
+			plan: planningInput(
+				planningWorkItem({
+					id: "PW-micro-dependent",
+					planningDepth: "micro",
+					dependsOn: ["PW-earlier"],
+				}),
+			),
+		},
+		expected: "fail",
+		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "planning.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "planning.work_unit_structure",
+				failureClass: "scope",
+			},
+			{
+				standardId: "planning.dependency_and_conflict_integrity",
+				failureClass: "scope",
+			},
+		],
 	},
 ];
 

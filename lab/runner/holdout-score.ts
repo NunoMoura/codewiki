@@ -1,19 +1,16 @@
 #!/usr/bin/env node
-import { evaluateDecisionCandidate } from "../decision/score.ts";
 import {
-	decisionExitCandidate,
+	decisionLoopCandidate,
 	type DecisionLabInput,
-} from "../decision/exit.ts";
-import { evaluateImplementationCandidate } from "../implementation/score.ts";
+} from "../decision/loop.ts";
 import {
-	implementationExitCandidate,
+	implementationLoopCandidate,
 	type ImplementationLabInput,
-} from "../implementation/exit.ts";
-import { evaluatePlanningCandidate } from "../planning/score.ts";
+} from "../implementation/loop.ts";
 import {
-	planningExitCandidate,
+	planningLoopCandidate,
 	type PlanningLabInput,
-} from "../planning/exit.ts";
+} from "../planning/loop.ts";
 import { loadLabHoldoutBundle, type LabHoldoutBundle } from "./holdout.ts";
 import {
 	DEC_LOSS,
@@ -24,13 +21,7 @@ import {
 	scoreLoop,
 	type LossMatrix,
 } from "./score.ts";
-import type {
-	LabCase,
-	LabLoop,
-	LabLoopScore,
-	LabStandard,
-	LabVerdict,
-} from "./types.ts";
+import type { LabCase, LabLoop, LabLoopScore, LabStandard } from "./types.ts";
 
 export interface LabHoldoutSuiteScore {
 	suiteId: string;
@@ -66,24 +57,21 @@ export function scoreHoldoutCases(
 			loop: "decision",
 			metric: "DEC",
 			cases,
-			standards: decisionExitCandidate.standards,
-			evaluate: evaluateDecisionCandidate,
+			standards: decisionLoopCandidate.standards,
 			lossMatrix: DEC_LOSS,
 		}),
 		planning: scoreTypedHoldoutLoop<PlanningLabInput>({
 			loop: "planning",
 			metric: "PEC",
 			cases,
-			standards: planningExitCandidate.standards,
-			evaluate: evaluatePlanningCandidate,
+			standards: planningLoopCandidate.standards,
 			lossMatrix: PEC_LOSS,
 		}),
 		implementation: scoreTypedHoldoutLoop<ImplementationLabInput>({
 			loop: "implementation",
 			metric: "IEC",
 			cases,
-			standards: implementationExitCandidate.standards,
-			evaluate: evaluateImplementationCandidate,
+			standards: implementationLoopCandidate.standards,
 			lossMatrix: IEC_LOSS,
 		}),
 	};
@@ -94,14 +82,12 @@ function scoreTypedHoldoutLoop<TInput>({
 	metric,
 	cases,
 	standards,
-	evaluate,
 	lossMatrix,
 }: {
 	loop: LabLoop;
 	metric: LabLoopScore["metric"];
 	cases: LabCase<unknown>[];
 	standards: LabStandard<TInput>[];
-	evaluate: (input: TInput) => LabVerdict;
 	lossMatrix: LossMatrix;
 }): LabLoopScore {
 	return scoreLoop({
@@ -111,7 +97,6 @@ function scoreTypedHoldoutLoop<TInput>({
 			.filter((testCase) => testCase.loop === loop)
 			.map((testCase) => ({ ...testCase, input: testCase.input as TInput })),
 		standards,
-		evaluate,
 		lossMatrix,
 	});
 }

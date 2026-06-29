@@ -97,6 +97,40 @@ describe("wiki_plan core facade", () => {
 		assert.equal(result.append, undefined);
 	});
 
+	it("routes planning uncertainty back to decision", async () => {
+		const traceId = "TRACE-wiki-plan-route-back";
+		const decided = await decision(traceId);
+		const decisionRef = approvedDecisionRef(decided.loopResult.traceEvents);
+		const item = workItemInput(decisionRef);
+		const result = await runWikiPlan({
+			mode: "preview",
+			traceId,
+			decisionEvents: decided.loopResult.traceEvents,
+			nextSequence: nextSequence(decided.loopResult.traceEvents),
+			createdAt: "2026-06-11T00:00:02.000Z",
+			workItemInputs: [
+				{
+					...item,
+					planningAssessment: {
+						...item.planningAssessment,
+						uncertainties: ["Needs user authority on the route."],
+						uncertaintyOwner: "user",
+						uncertaintyResolution:
+							"Route to decision for user validation before implementation.",
+					},
+				},
+			],
+		});
+
+		assert.equal(result.iterationEvent.event, "route_back_requested");
+		assert.equal(result.loopResult.exit.route, "decision");
+		assert.equal(result.iterationEvent.data.exit.routePlan.target, "decision");
+		assert.equal(
+			result.iterationEvent.data.exit.routePlan.kind,
+			"clarification",
+		);
+	});
+
 	it("appends planning loop iterations after decision iterations", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-plan-"));
 		try {
@@ -130,7 +164,9 @@ describe("wiki_plan core facade", () => {
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
 			assert.equal(state.events.at(-1)?.event, "work_units_created");
+			assertQualityGraphIdentity(state.events.at(-1), "planning.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
+			assertQualityGraphIdentity(state.latestCheckpoint, "planning.loop");
 			await assert.rejects(
 				() =>
 					runWikiPlan({
@@ -147,3 +183,15 @@ describe("wiki_plan core facade", () => {
 		}
 	});
 });
+
+function assertQualityGraphIdentity(record, graphId) {
+	const outputGraph = record?.data?.output?.qualityGraph;
+	const exitGraph = record?.data?.exit?.qualityGraph;
+	const checkpointGraph = record?.data?.qualityGraph;
+	const graph = outputGraph || exitGraph || checkpointGraph;
+	assert.equal(graph?.id, graphId);
+	assert.equal(graph?.version, "0.3.0.loop.5");
+	assert.equal(graph?.schemaVersion, 2);
+	assert.match(graph?.hash, /^sha256:/);
+	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
+}

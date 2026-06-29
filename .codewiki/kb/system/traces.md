@@ -126,7 +126,7 @@ implementation
 
 Each semantic loop produces one appendable semantic report as the durable boundary. Runtime appends that report as a trace event after validation. The trace event stores `loop` as the semantic authority and `event` as the specific fact, read conceptually as `loop.event`, such as `decision.rows_approved`, `planning.work_units_created`, or `implementation.evidence_accepted`. Loop-specific rows, work items, and implementation changes live inside the event output and are referenced with subrefs such as `trace:<event-id>#row:<id>`, `trace:<event-id>#work:<id>`, and `trace:<event-id>#change:<id>`.
 
-`appendSemanticLoopReport()` is the runtime-owned append helper for this boundary. It validates one target semantic output event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap.
+`appendSemanticLoopReport()` is the runtime-owned append helper for this boundary. It validates one target semantic output event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap. Low-level append helpers also validate every record against the current trace schema before writing, so stale generic event names such as `decision.iteration` are rejected before they can corrupt hot traces.
 
 A semantic loop iteration records:
 
@@ -203,7 +203,9 @@ Generated views are disposable projections over traces, KB, source/tests, and Gi
 
 Views answer questions quickly and own the disposable calculations needed for status, resume, quality, work-plan, trace-board, triggers, runtime-board, and work-queue projections. They do not own truth and must be rebuildable from traces and sources.
 
-`work-plan` is the per-trace planning projection. `work-queue` is the cross-trace work-unit claim selection projection. `trace-board` is the cross-trace goal projection that shows whether each trace needs decision, planning, implementation, is blocked, deferred, finished, closed complete, or closed incomplete. `triggers` derives scheduled/event/hook/manual trigger state from planning work items, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines trace-board, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board, pinned card, or kanban display renders views; it is not its own truth root.
+View projections show active work, not every historical repair attempt. A later semantic-loop iteration for the same trace and loop supersedes previous non-exit blockers, decision queues ignore non-exited decision attempts, accepted planning work excludes non-exited planning attempts from work-plan/work-queue, and conflict projections ignore work units already completed by implementation evidence.
+
+`work-plan` is the per-trace planning projection. `trace-queue` is the product concept for cross-trace goal state: one card per accountable trace, row subitems inside the card, current status, blockers, and next semantic loop. `trace-board` remains a compatibility renderer/projection for trace goal status. `work-queue` is the runtime claim selection projection over Planning-approved work units, not raw decisions. `triggers` derives scheduled/event/hook/manual trigger state from planning work items, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines trace-board/trace-queue-compatible state, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board, pinned card, or kanban display renders views; it is not its own truth root.
 
 ## Trace data and refs
 

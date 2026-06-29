@@ -1,3 +1,4 @@
+import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { loopOutputEvents, traceRefs } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
 import type { TraceLoop, TraceRecord } from "../traces/types.ts";
@@ -85,6 +86,9 @@ function nextLoop(
 	const decisions = decisionRefs(records);
 	if (decisions.length === 0) return "decision";
 	const workUnits = planningWorkItems(records);
+	const directRefs = new Set(
+		directImplementationDecisionRefsForStatus(records),
+	);
 	const planningCoverage = new Set(
 		workUnits.flatMap((item) => item.decisionRefs),
 	);
@@ -92,12 +96,14 @@ function nextLoop(
 	if (
 		decisions.some(
 			(decision) =>
-				!planningCoverage.has(decision) && !resolvedDecisions.has(decision),
+				!planningCoverage.has(decision) &&
+				!directRefs.has(decision) &&
+				!resolvedDecisions.has(decision),
 		)
 	) {
 		return "planning";
 	}
-	if (workUnits.length === 0) return null;
+	if (workUnits.length === 0 && directRefs.size === 0) return null;
 	if (!options.allWorkDone) return "implementation";
 	return null;
 }
@@ -122,6 +128,14 @@ function decisionRefs(records: TraceRecord[]): string[] {
 				iterationSubref(event, "row", text(row.id)),
 			),
 		);
+}
+
+function directImplementationDecisionRefsForStatus(
+	records: TraceRecord[],
+): string[] {
+	return directImplementationDecisionsFromRecords(records).map(
+		(row) => row.ref,
+	);
 }
 
 function planningWorkItems(

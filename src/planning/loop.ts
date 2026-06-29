@@ -6,18 +6,38 @@ import {
 	type SourceMapComponent,
 	type SourceMapContract,
 } from "../knowledge/source-map.ts";
+import {
+	loopQualityRunnerSummary,
+	type LoopQualityJudgeExecutionOptions,
+	type RunLoopQualityGraphResult,
+} from "../loops/evaluator.ts";
+import {
+	loopGraphLayers,
+	loopQualityGraphRef,
+	loopQualityJudgeSpecForNode,
+	loopQualityMethodForMode,
+	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+	type LoopQualityGraph,
+	type LoopQualityGraphNode,
+} from "../loops/graph.ts";
+import { qualityDiagnosticsFromStandards } from "../loops/feedback.ts";
+import {
+	criteriaFromQualityStandards,
+	loopQualityStandardSatisfied,
+} from "../loops/quality-standards.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
 import type {
 	ExitDetails,
 	ExitFinding,
 	ExitRemediationItem,
 	ExitRoute,
+	LoopRoutePlan,
 } from "../traces/types.ts";
 import { planningConflicts } from "./conflicts.ts";
 import {
-	criteriaFromQualityStandards,
+	evaluatePlanningQualityStandards,
 	planningIssueRefs,
-	planningQualityStandards,
+	runPlanningQualityStandards,
 } from "./quality-standards.ts";
 import { workItemsForDecisionRef } from "./materialization.ts";
 import type { PlanningDecisionResolution, PlanningWorkItem } from "./types.ts";
@@ -56,7 +76,10 @@ export type PlanningExitIssueCode =
 	| "invalid_trigger"
 	| "invalid_trigger_kind"
 	| "invalid_trigger_run_mode"
-	| "invalid_trigger_concurrency";
+	| "invalid_trigger_concurrency"
+	| "semantic_work_unit_not_atomic"
+	| "semantic_acceptance_not_testable"
+	| "semantic_scope_too_broad";
 
 export interface PlanningExitIssue {
 	code: PlanningExitIssueCode;
@@ -95,6 +118,7 @@ export interface PlanningExitInput {
 	workItems: PlanningWorkItem[];
 	resolutions: PlanningDecisionResolution[];
 	componentMap?: SourceMapContract;
+	qualityJudge?: LoopQualityJudgeExecutionOptions;
 }
 
 export interface PlanningExitResult extends ExitDetails {
@@ -104,30 +128,350 @@ export interface PlanningExitResult extends ExitDetails {
 	workUnitIds: string[];
 }
 
+export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
+	graphId: "planning.loop",
+	graphVersion: "0.3.0.loop.5",
+	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+	layers: loopGraphLayers([
+		"hard_gate",
+		"input_contract",
+		"trace_fidelity",
+		"coverage",
+		"scope_control",
+		"specificity",
+		"evidence_quality",
+		"project_fit",
+		"repairability",
+		"pipeline_carryover",
+		"exit_loss",
+	]),
+	nodes: [
+		planningNode({
+			id: "decision_coverage_complete",
+			layer: "coverage",
+			standardType: "trace_fidelity",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Every accepted decision ref is covered by a work unit or explicit resolution.",
+			codes: ["missing_decision_coverage", "unknown_decision_ref"],
+		}),
+		planningNode({
+			id: "worker_units_self_contained",
+			layer: "input_contract",
+			standardType: "loop_contract",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Each work item has enough bounded context to be claimed by one implementation worker.",
+			codes: ["invalid_work_item", "duplicate_work_item_id"],
+		}),
+		planningNode({
+			id: "technical_requirements_complete",
+			layer: "specificity",
+			standardType: "user_value",
+			weight: 12,
+			cost: 12,
+			description:
+				"Each work item breaks decision intent into concrete technical requirements.",
+			codes: ["missing_technical_requirements"],
+		}),
+		planningNode({
+			id: "acceptance_and_verification_testable",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			weight: 14,
+			cost: 14,
+			hardGate: true,
+			description:
+				"Each work item has stable acceptance criteria and verification refs or commands.",
+			codes: [
+				"invalid_acceptance_criterion",
+				"duplicate_acceptance_criterion_id",
+				"missing_verification",
+			],
+		}),
+		planningNode({
+			id: "planning_depth_accounted",
+			layer: "pipeline_carryover",
+			standardType: "scope_control",
+			weight: 8,
+			cost: 8,
+			hardGate: true,
+			description:
+				"Each work item declares standard or micro planning depth; micro-plans stay dependency-free and cover one decision.",
+			codes: [
+				"invalid_planning_depth",
+				"invalid_micro_plan_dependency",
+				"invalid_micro_plan_decision_count",
+			],
+		}),
+		planningNode({
+			id: "worker_assignment_ready",
+			layer: "project_fit",
+			standardType: "project_fit",
+			mode: "agent",
+			weight: 12,
+			cost: 12,
+			description:
+				"Each work item declares worker profile and agent judgment that the unit is independent and implementation-ready.",
+			codes: [
+				"missing_worker_profile",
+				"missing_planning_assessment",
+				"planning_assessment_not_worker_ready",
+			],
+		}),
+		planningNode({
+			id: "work_unit_atomic_judged",
+			layer: "scope_control",
+			standardType: "scope_control",
+			method: "model_judge",
+			weight: 12,
+			cost: 12,
+			description:
+				"Independent judge verifies each work unit is atomic enough for one implementation worker and is not a disguised sprint.",
+			codes: ["semantic_work_unit_not_atomic"],
+		}),
+		planningNode({
+			id: "acceptance_criteria_testable_judged",
+			layer: "evidence_quality",
+			standardType: "evidence_quality",
+			method: "model_judge",
+			weight: 12,
+			cost: 12,
+			description:
+				"Independent judge verifies acceptance criteria and verification commands are concrete enough to prove implementation completion.",
+			codes: ["semantic_acceptance_not_testable"],
+		}),
+		planningNode({
+			id: "scope_minimal_judged",
+			layer: "scope_control",
+			standardType: "scope_control",
+			method: "model_judge",
+			weight: 10,
+			cost: 10,
+			description:
+				"Independent judge verifies path scopes and dependencies are no broader than needed for the accepted decisions.",
+			codes: ["semantic_scope_too_broad"],
+		}),
+		planningNode({
+			id: "uncertainty_resolved",
+			layer: "repairability",
+			standardType: "repairability",
+			mode: "agent",
+			weight: 12,
+			cost: 12,
+			description:
+				"No unresolved planning uncertainty remains; decision or user authority is routed instead of leaking into implementation.",
+			codes: [
+				"missing_uncertainty_resolution",
+				"unresolved_planning_uncertainty",
+			],
+		}),
+		planningNode({
+			id: "work_unit_right_sized",
+			layer: "project_fit",
+			standardType: "project_fit",
+			mode: "agent",
+			weight: 10,
+			cost: 10,
+			description:
+				"Each work unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or claim batch.",
+			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
+		}),
+		planningNode({
+			id: "source_ownership_aligned",
+			layer: "scope_control",
+			standardType: "scope_control",
+			weight: 12,
+			cost: 12,
+			hardGate: true,
+			description:
+				"Component refs, path scopes, and verification refs align with source ownership contracts.",
+			codes: [
+				"missing_component_ref",
+				"unknown_component_ref",
+				"invalid_component_contract",
+				"path_outside_component_scope",
+				"verification_outside_component_tests",
+			],
+		}),
+		planningNode({
+			id: "dependency_order_clear",
+			layer: "scope_control",
+			standardType: "scope_control",
+			weight: 14,
+			cost: 14,
+			hardGate: true,
+			description:
+				"Dependencies are known, acyclic, and order overlapping work before implementation.",
+			codes: ["unknown_dependency", "dependency_cycle", "path_conflict"],
+		}),
+		planningNode({
+			id: "triggers_valid",
+			layer: "repairability",
+			standardType: "repairability",
+			weight: 8,
+			cost: 8,
+			hardGate: true,
+			description:
+				"Recurring, triggered, or hook-based work has a complete planned trigger before runtime can start runs from it.",
+			codes: [
+				"invalid_trigger",
+				"invalid_trigger_kind",
+				"invalid_trigger_run_mode",
+				"invalid_trigger_concurrency",
+			],
+		}),
+		planningNode({
+			id: "resolutions_accounted",
+			layer: "repairability",
+			standardType: "repairability",
+			weight: 10,
+			cost: 10,
+			hardGate: true,
+			description:
+				"Planning resolutions use a known kind, carry required evidence, and route-back resolutions return to decision authority before implementation.",
+			codes: [
+				"invalid_resolution",
+				"invalid_resolution_kind",
+				"route_back_resolution",
+			],
+		}),
+		planningNode({
+			id: "traceability_refs_canonical",
+			layer: "trace_fidelity",
+			standardType: "trace_fidelity",
+			weight: 8,
+			cost: 8,
+			hardGate: true,
+			description:
+				"Planning refs are canonical trace, KB, Git, digest, source, or test refs.",
+			codes: ["invalid_traceability_ref"],
+		}),
+	],
+};
+
+function planningNode(
+	node: Omit<
+		LoopQualityGraphNode<PlanningExitIssueCode>,
+		"method" | "repairTarget"
+	> & {
+		method?: LoopQualityGraphNode<PlanningExitIssueCode>["method"];
+		repairTarget?: LoopQualityGraphNode<PlanningExitIssueCode>["repairTarget"];
+	},
+): LoopQualityGraphNode<PlanningExitIssueCode> {
+	const resolved: LoopQualityGraphNode<PlanningExitIssueCode> = {
+		method: node.method || loopQualityMethodForMode(node.mode),
+		gate: node.hardGate || node.layer === "hard_gate" ? "hard" : "soft",
+		timeoutMs: 50,
+		repairTarget: "planning",
+		...node,
+	};
+	return {
+		...resolved,
+		judge: resolved.judge || loopQualityJudgeSpecForNode(resolved),
+	};
+}
+
 export function evaluatePlanningExit(
 	input: PlanningExitInput,
 ): PlanningExitResult {
 	const issues = collectPlanningExitIssues(input);
-	const qualityStandards = planningQualityStandards(issues);
-	const verdict =
-		blockedIssues(issues).length > 0
-			? "block"
-			: issues.length === 0
-				? "pass"
-				: "fail";
-	const workUnitIds = input.workItems.map((item) => item.id);
+	const qualityStandards = evaluatePlanningExitGraph(issues);
+	return planningExitResultFromQuality({
+		input,
+		issues,
+		qualityStandards,
+	});
+}
+
+export async function evaluatePlanningExitWithRunner(
+	input: PlanningExitInput,
+): Promise<PlanningExitResult> {
+	const issues = collectPlanningExitIssues(input);
+	const quality = await runPlanningQualityStandards(
+		PLANNING_LOOP_GRAPH,
+		issues,
+		{
+			...(input.qualityJudge || {}),
+			judgeInput: input.qualityJudge?.judgeInput || planningJudgeInput(input),
+		},
+	);
+	return planningExitResultFromQuality({
+		input,
+		issues,
+		qualityStandards: quality.standards,
+		qualityRunner: quality,
+	});
+}
+
+function planningJudgeInput(input: PlanningExitInput): Record<string, unknown> {
+	return {
+		loop: "planning",
+		decisionRefs: input.decisionRefs,
+		workItems: input.workItems.map((item) => ({
+			id: item.id,
+			title: item.title,
+			decisionRefs: item.decisionRefs,
+			outcome: item.outcome,
+			technicalRequirements: item.technicalRequirements,
+			acceptance: item.acceptance,
+			acceptanceCriteria: item.acceptanceCriteria,
+			componentRefs: item.componentRefs,
+			pathScopes: item.pathScopes,
+			planningDepth: item.planningDepth,
+			verification: item.verification,
+			workerProfile: item.workerProfile,
+			planningAssessment: item.planningAssessment,
+			dependsOn: item.dependsOn,
+			trigger: item.trigger,
+		})),
+		resolutions: input.resolutions,
+		componentMap: input.componentMap,
+	};
+}
+
+function planningExitResultFromQuality(input: {
+	input: PlanningExitInput;
+	issues: PlanningExitIssue[];
+	qualityStandards: PlanningExitResult["qualityStandards"];
+	qualityRunner?: RunLoopQualityGraphResult;
+}): PlanningExitResult {
+	const remediation = input.issues.map(issueRemediation);
+	const diagnostics = qualityDiagnosticsFromStandards(
+		input.qualityStandards || [],
+		remediation,
+	);
+	const verdict = planningVerdictFromQuality(
+		input.issues,
+		input.qualityStandards || [],
+	);
+	const workUnitIds = input.input.workItems.map((item) => item.id);
 	return {
 		passed: verdict === "pass",
 		verdict,
-		issues,
-		criteria: criteriaFromQualityStandards(qualityStandards),
-		qualityStandards,
-		findings: issues.map(issueFinding),
-		remediation: issues.map(issueRemediation),
-		route: planningRoute(verdict, issues, workUnitIds),
-		coveredDecisionRefs: coveredDecisionRefs(input),
+		issues: input.issues,
+		criteria: criteriaFromQualityStandards(input.qualityStandards || []),
+		qualityStandards: input.qualityStandards,
+		qualityGraph: loopQualityGraphRef(PLANNING_LOOP_GRAPH),
+		...(input.qualityRunner
+			? { qualityRunner: loopQualityRunnerSummary(input.qualityRunner.runner) }
+			: {}),
+		findings: input.issues.map(issueFinding),
+		remediation,
+		diagnostics,
+		route: planningRoute(verdict, input.issues, workUnitIds),
+		routePlan: planningRoutePlan(verdict, input.issues, workUnitIds),
+		coveredDecisionRefs: coveredDecisionRefs(input.input),
 		workUnitIds,
 	};
+}
+
+export function evaluatePlanningExitGraph(issues: PlanningExitIssue[]) {
+	return evaluatePlanningQualityStandards(PLANNING_LOOP_GRAPH, issues);
 }
 
 export function collectPlanningExitIssues(
@@ -763,6 +1107,25 @@ function coveredDecisionRefs(input: PlanningExitInput): string[] {
 	);
 }
 
+function planningVerdictFromQuality(
+	issues: PlanningExitIssue[],
+	standards: PlanningExitResult["qualityStandards"],
+): "pass" | "fail" | "block" {
+	if (
+		blockedIssues(issues).length > 0 ||
+		standards?.some((standard) => standard.status === "blocked")
+	) {
+		return "block";
+	}
+	if (
+		issues.length === 0 &&
+		standards?.every((standard) => loopQualityStandardSatisfied(standard))
+	) {
+		return "pass";
+	}
+	return "fail";
+}
+
 function planningRoute(
 	verdict: PlanningExitVerdict,
 	issues: PlanningExitIssue[],
@@ -781,9 +1144,67 @@ function blockedIssues(issues: PlanningExitIssue[]): PlanningExitIssue[] {
 	return issues.filter((issue) => issue.route === "user");
 }
 
+function planningRoutePlan(
+	verdict: PlanningExitVerdict,
+	issues: PlanningExitIssue[],
+	workUnitIds: string[],
+): LoopRoutePlan {
+	const route = planningRoute(verdict, issues, workUnitIds);
+	const refs = issues.length ? issues.flatMap(planningIssueRefs) : workUnitIds;
+	if (route === "implementation") {
+		return {
+			target: "implementation",
+			kind: "advance",
+			rationale: "Planning produced worker-ready implementation work units.",
+			refs,
+		};
+	}
+	if (route === "close") {
+		return {
+			target: "close",
+			kind: "advance",
+			rationale:
+				"Planning resolved the accepted decisions without implementation work.",
+			refs,
+		};
+	}
+	if (route === "decision") {
+		return {
+			target: "decision",
+			kind: routeKindForPlanningIssues(issues),
+			rationale:
+				"Planning found ambiguity or authority needs that must return to decision before implementation.",
+			refs,
+		};
+	}
+	if (route === "user") {
+		return {
+			target: "decision",
+			kind: "authority_validation",
+			rationale:
+				"Planning needs explicit user authority, represented as a decision-loop request.",
+			refs,
+		};
+	}
+	return {
+		target: "continue",
+		kind: "continue",
+		rationale: "Planning must continue until work units are worker-ready.",
+		refs,
+	};
+}
+
+function routeKindForPlanningIssues(issues: PlanningExitIssue[]): string {
+	if (issues.some((issue) => issue.code === "route_back_resolution")) {
+		return "scope_change";
+	}
+	if (issues.some((issue) => issue.route === "decision"))
+		return "clarification";
+	return "continue";
+}
+
 function uncertaintyRoute(owner: string): ExitRoute {
-	if (owner === "decision") return "decision";
-	if (owner === "user") return "user";
+	if (owner === "decision" || owner === "user") return "decision";
 	return "planning";
 }
 
@@ -884,6 +1305,12 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 		"Use runMode new_trace so each due execution has an independent accountable trace.",
 	invalid_trigger_concurrency:
 		"Use concurrency skip_if_active, queue, or replace.",
+	semantic_work_unit_not_atomic:
+		"Split or narrow the work unit until an independent judge can verify one worker can complete it atomically.",
+	semantic_acceptance_not_testable:
+		"Rewrite acceptance criteria and verification until an independent judge can verify they are testable.",
+	semantic_scope_too_broad:
+		"Narrow path scopes, dependencies, or outcomes until an independent judge can verify minimal scope.",
 };
 
 function planningRemediationAction(issue: PlanningExitIssue): string {

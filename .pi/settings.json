@@ -1,5 +1,6 @@
 {
   "packages": [
-    "npm:pi-lens"
+    "npm:pi-lens",
+    ".."
   ]
 }

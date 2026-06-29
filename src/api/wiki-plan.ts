@@ -1,4 +1,5 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import {
 	assertKnownInputKeys,
 	requiredArrayField,
@@ -6,7 +7,7 @@ import {
 } from "./input-validation.ts";
 import type { SourceMapContract } from "../knowledge/source-map.ts";
 import {
-	runPlanningIteration,
+	runPlanningIterationWithRunner,
 	type PlanningIterationInput,
 	type PlanningIterationResult,
 } from "../planning/iteration.ts";
@@ -79,7 +80,10 @@ export async function runWikiPlan(
 	requiredArrayField("wiki_plan", "decisionEvents", input.decisionEvents);
 	const mode = input.mode || "preview";
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
-	const loopInput = planningIterationInput(input);
+	const qualityJudge = await resolveLoopQualityJudgeExecutionOptions({
+		repoRoot: input.repoRoot,
+	});
+	const loopInput = planningIterationInput(input, qualityJudge);
 	if (mode === "append") {
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
@@ -88,7 +92,7 @@ export async function runWikiPlan(
 			nextSequence,
 			expectedTraceId: input.expectedTraceId ?? input.traceId,
 			run: ({ startSequence }) =>
-				runPlanningIteration({ ...loopInput, startSequence }),
+				runPlanningIterationWithRunner({ ...loopInput, startSequence }),
 		});
 		return {
 			mode,
@@ -98,7 +102,7 @@ export async function runWikiPlan(
 			append: result.append,
 		};
 	}
-	const loopResult = runPlanningIteration({
+	const loopResult = await runPlanningIterationWithRunner({
 		...loopInput,
 		startSequence: nextSequence,
 	});
@@ -118,6 +122,7 @@ export async function runWikiPlan(
 
 function planningIterationInput(
 	input: RunWikiPlanInput,
+	qualityJudge: PlanningIterationInput["qualityJudge"],
 ): PlanningIterationInput {
 	return {
 		traceId: requiredStringField("wiki_plan", "traceId", input.traceId),
@@ -127,6 +132,7 @@ function planningIterationInput(
 		resolutions: input.resolutions,
 		resolutionInputs: input.resolutionInputs,
 		componentMap: input.componentMap,
+		qualityJudge,
 		parentId: input.parentId,
 		createdAt: input.createdAt,
 	};

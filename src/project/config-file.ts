@@ -82,6 +82,7 @@ export function configFileToPartialWikiConfig(
 		},
 		retention: objectRecord(record.retention),
 		hosts: objectRecord(record.hosts),
+		quality: objectRecord(record.quality),
 	};
 }
 

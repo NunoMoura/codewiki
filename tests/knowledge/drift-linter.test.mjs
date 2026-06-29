@@ -35,7 +35,7 @@ describe("knowledge drift linter", () => {
 			{
 				path: ".agents/skills/codewiki-decide/SKILL.md",
 				content:
-					"Repo-local CodeWiki dogfooding is enabled; hosts.cli is legacy.",
+					"Project-local CodeWiki dogfooding must not say .pi/extensions/codewiki.ts loads or hosts.cli is legacy.",
 				scopes: ["operating_guidance"],
 			},
 		]);
@@ -53,8 +53,8 @@ describe("knowledge drift linter", () => {
 				],
 				[
 					".agents/skills/codewiki-decide/SKILL.md",
-					"repo_local_dogfood_disabled",
-					"Repo-local CodeWiki dogfooding is enabled",
+					"repo_local_dogfood_boundary",
+					".pi/extensions/codewiki.ts loads",
 				],
 			],
 		);

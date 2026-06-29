@@ -3,7 +3,7 @@ import type {
 	ImplementationExitInput,
 } from "../../src/implementation/types.ts";
 import type { LabCase } from "../runner/types.ts";
-import type { ImplementationLabInput } from "./exit.ts";
+import type { ImplementationLabInput } from "./loop.ts";
 
 export const implementationCases: LabCase<ImplementationLabInput>[] = [
 	{
@@ -62,6 +62,20 @@ export const implementationCases: LabCase<ImplementationLabInput>[] = [
 		},
 		expected: "fail",
 		weight: 15,
+		expectedFailures: [
+			{
+				standardId: "implementation.check_result_specificity",
+				failureClass: "verification",
+			},
+			{
+				standardId: "implementation.acceptance_evidence_specificity",
+				failureClass: "evidence",
+			},
+			{
+				standardId: "implementation.assessment_specificity",
+				failureClass: "specificity",
+			},
+		],
 	},
 	{
 		id: "failed-check",
@@ -86,6 +100,81 @@ export const implementationCases: LabCase<ImplementationLabInput>[] = [
 		},
 		expected: "fail",
 		weight: 10,
+		expectedFailures: [
+			{
+				standardId: "implementation.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "implementation.checks_and_verification",
+				failureClass: "verification",
+			},
+			{
+				standardId: "implementation.check_result_specificity",
+				failureClass: "verification",
+			},
+		],
+	},
+	{
+		id: "missing-content-proof",
+		loop: "implementation",
+		description:
+			"Implementation without content proof fails even when checks and acceptance evidence are present.",
+		input: {
+			plan: { planningRefs: ["trace:PW-1"] },
+			implementation: implementationInput(
+				implementationChange({
+					id: "IC-no-proof",
+					contentProof: undefined,
+				}),
+			),
+		},
+		expected: "fail",
+		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "implementation.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "implementation.change_and_content_proof",
+				failureClass: "evidence",
+			},
+		],
+	},
+	{
+		id: "unknown-acceptance-criterion",
+		loop: "implementation",
+		description:
+			"Implementation evidence that cites an unknown planning criterion fails acceptance coverage.",
+		input: {
+			plan: { planningRefs: ["trace:PW-1"] },
+			implementation: implementationInput(
+				implementationChange({
+					id: "IC-unknown-criterion",
+					acceptanceEvidenceItems: [
+						{
+							criterionId: "AC-unknown",
+							summary:
+								"Evidence cites a criterion that planning did not define.",
+							evidenceRefs: ["tests/lab/loop-exit-score.test.mjs"],
+						},
+					],
+				}),
+			),
+		},
+		expected: "fail",
+		weight: 12,
+		expectedFailures: [
+			{
+				standardId: "implementation.production_exit_contract",
+				failureClass: "contract",
+			},
+			{
+				standardId: "implementation.acceptance_evidence_coverage",
+				failureClass: "traceability",
+			},
+		],
 	},
 ];
 

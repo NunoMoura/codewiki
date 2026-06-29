@@ -28,4 +28,4 @@ Use this skill after decision output exits and needs executable work.
 
 ## Stop conditions
 
-Stop and route back to decision when accepted intent is missing, ambiguous, or contradicted by current docs. Block when work overlaps another unit without dependency ordering or lacks verifiable acceptance.
+Stop and route back to decision when accepted intent is missing, ambiguous, contradicted by current docs, or needs user clarification/validation. Block only for non-semantic external waits or resource constraints.

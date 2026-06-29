@@ -134,8 +134,112 @@ describe("wiki_implement core facade", () => {
 		);
 		await assert.rejects(
 			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad" }),
-			/wiki_implement requires planningEvents array/,
+			/requires planningEvents or direct implementation decisionEvents/,
 		);
+	});
+
+	it("previews implementation directly from an approved decision route", async () => {
+		const root = await fixture();
+		try {
+			const traceId = "TRACE-wiki-implement-direct";
+			const table = createDecisionTable({
+				id: `${traceId}-DT`,
+				createdAt: "2026-06-11T00:00:01.000Z",
+				updatedAt: "2026-06-11T00:00:01.000Z",
+				rows: [
+					{
+						id: "DTR-implement-direct",
+						currentState:
+							"Small implementation fixes currently require planning.",
+						desiredState:
+							"Small scoped implementation fixes can skip planning safely.",
+						rationale:
+							"The direct route preserves traceability with lower ceremony.",
+						...decisionQualityFields(),
+						approval: "approved",
+						routeTarget: "implementation",
+						routeRationale:
+							"The change is low-risk, source-scoped, and has targeted checks.",
+						implementationMode: "targeted_checks",
+						directImplementationScope: {
+							pathScopes: ["src/feature.ts"],
+							verification: ["node --test tests/feature.test.mjs"],
+							acceptanceCriteria: [
+								{
+									id: "AC-001",
+									text: "Direct implementation evidence covers the decision.",
+								},
+							],
+						},
+						sourceRefs: ["kb:system/implementation-loop.md"],
+					},
+				],
+			});
+			const decision = runDecisionIteration({
+				traceId,
+				table,
+				createdAt: "2026-06-11T00:00:01.000Z",
+			});
+			const directRef = approvedDecisionRef(decision.traceEvents);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				decisionEvents: decision.traceEvents,
+				nextSequence: 5,
+				createdAt: "2026-06-11T00:00:02.000Z",
+				changeInputs: [changeInput(directRef)],
+			});
+
+			assert.equal(result.iterationEvent.event, "evidence_accepted");
+			assert.equal(result.loopResult.planningRefs[0], directRef);
+			assert.equal(result.loopResult.readyForClosure, true);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("routes implementation uncertainty back to decision", async () => {
+		const root = await fixture();
+		try {
+			const traceId = "TRACE-wiki-implement-route-back";
+			const events = planningEvents(traceId);
+			const planningRef = planningWorkRef(events);
+			const change = changeInput(planningRef);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				planningEvents: events,
+				nextSequence: 9,
+				createdAt: "2026-06-11T00:00:03.000Z",
+				changeInputs: [
+					{
+						...change,
+						implementationAssessment: {
+							...change.implementationAssessment,
+							uncertainties: ["Needs user validation before closure."],
+							uncertaintyOwner: "user",
+							uncertaintyResolution:
+								"Route to decision for authority validation before continuing.",
+						},
+					},
+				],
+			});
+
+			assert.equal(result.iterationEvent.event, "route_back_requested");
+			assert.equal(result.loopResult.exit.route, "decision");
+			assert.equal(
+				result.iterationEvent.data.exit.routePlan.target,
+				"decision",
+			);
+			assert.equal(
+				result.iterationEvent.data.exit.routePlan.kind,
+				"clarification",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("previews implementation with snapshot and automatic content proof", async () => {
@@ -171,6 +275,169 @@ describe("wiki_implement core facade", () => {
 				/^sha256:[a-f0-9]{64}$/,
 			);
 			assert.equal(result.snapshot.files.includes("src/feature.ts"), true);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("auto-runs TS/JS review evidence during preview", async () => {
+		const root = await fixture();
+		try {
+			await writeFile(
+				join(root, "package.json"),
+				JSON.stringify({
+					name: "fixture",
+					scripts: {
+						typecheck:
+							"node -e \"console.error('src/feature.ts(1,1): error TS9999: Broken type.'); process.exit(1)\"",
+					},
+				}),
+			);
+			const traceId = "TRACE-wiki-implement-auto-review";
+			const events = planningEvents(traceId);
+			const planningRef = planningWorkRef(events);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				planningEvents: events,
+				nextSequence: 9,
+				createdAt: "2026-06-11T00:00:03.000Z",
+				changeInputs: [changeInput(planningRef)],
+			});
+
+			assert.equal(result.iterationEvent.event, "evidence_rejected");
+			assert.equal(result.loopResult.readyForClosure, false);
+			assert.equal(
+				result.loopResult.exit.issues.some(
+					(issue) => issue.code === "review_blocking_diagnostic",
+				),
+				true,
+			);
+			assert.equal(
+				result.loopResult.exit.issues.some(
+					(issue) => issue.code === "review_missing_acceptance_evidence_link",
+				),
+				false,
+			);
+			assert.equal(
+				result.iterationEvent.data.output.reviewEvidenceReports.some((report) =>
+					report.sources?.some((source) => source.id === "tsjs.typescript"),
+				),
+				true,
+			);
+			assert.equal(result.reviewEvidence.autoEvidence, true);
+			assert.equal(
+				result.reviewEvidence.selectedPackIds.includes("tsjs.typescript"),
+				true,
+			);
+			assert.equal(
+				result.reviewEvidence.skippedPacks.some(
+					(pack) =>
+						pack.id === "python.ruff" && pack.reason === "no-matching-files",
+				),
+				true,
+			);
+			assert.equal(result.reviewEvidence.summary.diagnostics.error, 1);
+			assert.equal(
+				result.reviewEvidence.summary.blockingDiagnostics[0].sourceId,
+				"tsjs.typescript",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("honors project config that disables automatic review evidence", async () => {
+		const root = await fixture();
+		try {
+			await mkdir(join(root, ".codewiki"), { recursive: true });
+			await writeFile(
+				join(root, ".codewiki", "config.json"),
+				JSON.stringify({
+					quality: { review: { autoEvidence: false } },
+				}),
+			);
+			await writeFile(
+				join(root, "package.json"),
+				JSON.stringify({
+					name: "fixture",
+					scripts: {
+						typecheck:
+							"node -e \"console.error('src/feature.ts(1,1): error TS9999: Broken type.'); process.exit(1)\"",
+					},
+				}),
+			);
+			const traceId = "TRACE-wiki-implement-auto-review-disabled";
+			const events = planningEvents(traceId);
+			const planningRef = planningWorkRef(events);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				planningEvents: events,
+				nextSequence: 9,
+				createdAt: "2026-06-11T00:00:03.000Z",
+				changeInputs: [changeInput(planningRef)],
+			});
+
+			assert.equal(result.iterationEvent.event, "evidence_accepted");
+			assert.equal(result.loopResult.readyForClosure, true);
+			assert.deepEqual(
+				result.iterationEvent.data.output.reviewEvidenceReports,
+				[],
+			);
+			assert.equal(result.reviewEvidence.enabled, true);
+			assert.equal(result.reviewEvidence.autoEvidence, false);
+			assert.equal(result.reviewEvidence.summary.reportCount, 0);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("blocks when a required review pack does not run", async () => {
+		const root = await fixture();
+		try {
+			await mkdir(join(root, ".codewiki"), { recursive: true });
+			await writeFile(
+				join(root, ".codewiki", "config.json"),
+				JSON.stringify({
+					quality: {
+						review: {
+							enabledPacks: ["tsjs.typescript"],
+							requiredPacks: ["tsjs.typescript"],
+						},
+					},
+				}),
+			);
+			await writeFile(join(root, "package.json"), '{"name":"fixture"}\n');
+			const traceId = "TRACE-wiki-implement-required-review-pack";
+			const events = planningEvents(traceId);
+			const planningRef = planningWorkRef(events);
+			const result = await runWikiImplement({
+				repoRoot: root,
+				mode: "preview",
+				traceId,
+				planningEvents: events,
+				nextSequence: 9,
+				createdAt: "2026-06-11T00:00:03.000Z",
+				changeInputs: [changeInput(planningRef)],
+			});
+
+			assert.equal(result.iterationEvent.event, "evidence_rejected");
+			assert.equal(result.loopResult.readyForClosure, false);
+			assert.deepEqual(result.reviewEvidence.requiredPackIds, [
+				"tsjs.typescript",
+			]);
+			assert.equal(result.reviewEvidence.summary.packRuns[0].status, "not-run");
+			assert.equal(
+				result.reviewEvidence.summary.blockingDiagnostics.some((diagnostic) =>
+					diagnostic.message.includes(
+						"Required review pack tsjs.typescript did not pass",
+					),
+				),
+				true,
+			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
@@ -289,7 +556,9 @@ describe("wiki_implement core facade", () => {
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
 			assert.equal(state.events.at(-1)?.event, "evidence_accepted");
+			assertQualityGraphIdentity(state.events.at(-1), "implementation.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
+			assertQualityGraphIdentity(state.latestCheckpoint, "implementation.loop");
 			await assert.rejects(
 				() =>
 					runWikiImplement({
@@ -306,3 +575,15 @@ describe("wiki_implement core facade", () => {
 		}
 	});
 });
+
+function assertQualityGraphIdentity(record, graphId) {
+	const outputGraph = record?.data?.output?.qualityGraph;
+	const exitGraph = record?.data?.exit?.qualityGraph;
+	const checkpointGraph = record?.data?.qualityGraph;
+	const graph = outputGraph || exitGraph || checkpointGraph;
+	assert.equal(graph?.id, graphId);
+	assert.equal(graph?.version, "0.3.0.loop.7");
+	assert.equal(graph?.schemaVersion, 2);
+	assert.match(graph?.hash, /^sha256:/);
+	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
+}

@@ -1,9 +1,14 @@
+import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import type { PlanningTrigger } from "../planning/types.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
-import { loopQualityReadiness, planningIterationClaimable } from "./quality.ts";
+import {
+	loopIterationQualityComplete,
+	loopQualityReadiness,
+	planningIterationClaimable,
+} from "./quality.ts";
 import type {
 	BlockerView,
 	TraceViewInput,
@@ -181,8 +186,8 @@ function workUnitStatus(input: {
 }
 
 function plannedDecisionRefs(records: TraceRecord[]): Set<string> {
-	return new Set(
-		loopOutputEvents(records, "planning")
+	return new Set([
+		...loopOutputEvents(records, "planning")
 			.filter(planningIterationClaimable)
 			.flatMap((event) => [
 				...objectList(objectRecord(event.data?.output).workItems).flatMap(
@@ -192,7 +197,10 @@ function plannedDecisionRefs(records: TraceRecord[]): Set<string> {
 					(resolution) => text(resolution.decisionRef),
 				),
 			]),
-	);
+		...directImplementationDecisionsFromRecords(records).map(
+			(direct) => direct.ref,
+		),
+	]);
 }
 
 function implementationRefsByPlanningRef(
@@ -328,54 +336,83 @@ function blockersForRefs(
 }
 
 function approvedDecisionRows(records: TraceRecord[]): DecisionProjection[] {
-	return loopOutputEvents(records, "decision").flatMap((event) =>
-		objectList(objectRecord(event.data?.output).approvedRows).map((row) => {
-			const id = text(row.id) || event.id;
-			const sourceEventId = iterationSubref(event, "row", id);
-			return {
-				id,
-				traceId: event.traceId,
-				title: text(row.desiredState) || text(row.question) || id,
-				traceRefs: unique([sourceEventId, event.id, ...event.refs]),
-				sourceEventId,
-			};
-		}),
-	);
-}
-
-function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
-	return loopOutputEvents(records, "planning").flatMap((event) => {
-		const quality = loopQualityReadiness(event);
-		return objectList(objectRecord(event.data?.output).workItems).map(
-			(item) => {
-				const id = text(item.id) || event.id;
-				const sourceEventId = iterationSubref(event, "work", id);
-				const decisionRefs = stringList(item.decisionRefs);
-				const pathScopes = stringList(item.pathScopes);
+	return loopOutputEvents(records, "decision")
+		.filter(loopIterationQualityComplete)
+		.flatMap((event) =>
+			objectList(objectRecord(event.data?.output).approvedRows).map((row) => {
+				const id = text(row.id) || event.id;
+				const sourceEventId = iterationSubref(event, "row", id);
 				return {
 					id,
 					traceId: event.traceId,
-					title: text(item.title) || id,
-					traceRefs: unique([
-						sourceEventId,
-						event.id,
-						id,
-						...decisionRefs,
-						...pathScopes,
-					]),
-					decisionRefs,
-					planningRefs: [sourceEventId],
-					componentRefs: stringList(item.componentRefs),
-					pathScopes,
-					dependsOn: stringList(item.dependsOn),
-					...triggerProperty(item.trigger),
-					qualityStandards: quality.standards,
-					qualityBlockers: quality.blockers,
+					title: text(row.desiredState) || text(row.question) || id,
+					traceRefs: unique([sourceEventId, event.id, ...event.refs]),
 					sourceEventId,
 				};
-			},
+			}),
 		);
-	});
+}
+
+function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
+	const planned = loopOutputEvents(records, "planning")
+		.filter(planningIterationExited)
+		.flatMap((event) => {
+			const quality = loopQualityReadiness(event);
+			return objectList(objectRecord(event.data?.output).workItems).map(
+				(item) => {
+					const id = text(item.id) || event.id;
+					const sourceEventId = iterationSubref(event, "work", id);
+					const decisionRefs = stringList(item.decisionRefs);
+					const pathScopes = stringList(item.pathScopes);
+					return {
+						id,
+						traceId: event.traceId,
+						title: text(item.title) || id,
+						traceRefs: unique([
+							sourceEventId,
+							event.id,
+							id,
+							...decisionRefs,
+							...pathScopes,
+						]),
+						decisionRefs,
+						planningRefs: [sourceEventId],
+						componentRefs: stringList(item.componentRefs),
+						pathScopes,
+						dependsOn: stringList(item.dependsOn),
+						...triggerProperty(item.trigger),
+						qualityStandards: quality.standards,
+						qualityBlockers: quality.blockers,
+						sourceEventId,
+					};
+				},
+			);
+		});
+	return [
+		...planned,
+		...directImplementationDecisionsFromRecords(records).map((direct) => ({
+			id: direct.id,
+			traceId: direct.traceId,
+			title: direct.title,
+			traceRefs: unique([
+				direct.ref,
+				direct.sourceEventId,
+				...direct.pathScopes,
+			]),
+			decisionRefs: direct.decisionRefs,
+			planningRefs: [direct.ref],
+			componentRefs: direct.componentRefs,
+			pathScopes: direct.pathScopes,
+			dependsOn: [],
+			qualityStandards: [],
+			qualityBlockers: [],
+			sourceEventId: direct.ref,
+		})),
+	];
+}
+
+function planningIterationExited(event: TraceEvent): boolean {
+	return text(objectRecord(event.data?.exit).status) === "exit";
 }
 
 function triggerProperty(value: unknown): {

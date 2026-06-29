@@ -4,18 +4,28 @@ import {
 	loopExitFromEvaluation,
 	loopProgressFromEvaluation,
 } from "../traces/events.ts";
+import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
 import { normalizeTraceRefs } from "../traces/refs.ts";
 import type {
 	TailCheckpoint,
 	TraceEvent,
 	TraceRecord,
 } from "../traces/types.ts";
-import { evaluateDecisionExit, type DecisionExitResult } from "./exit.ts";
+import {
+	evaluateDecisionExit,
+	evaluateDecisionExitWithRunner,
+	type DecisionExitResult,
+} from "./loop.ts";
 import { approvedDecisionRows, createDecisionTable } from "./table.ts";
+import {
+	decisionTypeDefinitionById,
+	normalizeDecisionTypeId,
+} from "./type-definitions.ts";
 import type {
 	ActiveTraceGoal,
 	CurrentStatePacket,
 	DecisionOutput,
+	DecisionOutputTypeProfile,
 	DecisionRow,
 	DecisionTable,
 	DecisionTableInput,
@@ -29,6 +39,7 @@ export interface DecisionIterationInput {
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
 	activeTraceGoals?: ActiveTraceGoal[];
+	qualityJudge?: LoopQualityJudgeExecutionOptions;
 	requirementIds?: string[];
 	parentId?: string | null;
 	startSequence?: number;
@@ -66,35 +77,79 @@ export function runDecisionIteration(
 		knowledgeDelta: output.knowledgeDelta,
 		activeTraceGoals: input.activeTraceGoals,
 	});
-	const draftTraceEvents: TraceEvent[] = [];
-	const traceEvents = decisionTraceEvents({
+	return decisionIterationResult({
 		input,
+		table,
 		output,
 		exit,
 		approvedRows,
 		createdAt,
 		baseSequence,
 	});
-	const checkpoint = createLoopTailCheckpoint({
-		traceId: input.traceId,
-		loop: "decision",
-		id: `${input.traceId}:decision:checkpoint:${baseSequence}`,
-		parentId: traceEvents.at(-1)?.id || output.id,
-		firstKeptRecordId: traceEvents.at(-1)?.id || output.id,
+}
+
+export async function runDecisionIterationWithRunner(
+	input: DecisionIterationInput,
+): Promise<DecisionIterationResult> {
+	const table = input.table ?? createDecisionTable(input.tableInput ?? {});
+	const approvedRows = approvedDecisionRows(table);
+	const createdAt = input.createdAt || table.updatedAt;
+	const baseSequence = input.startSequence ?? 1;
+	const output = decisionOutput({
+		input,
+		table,
+		approvedRows,
 		createdAt,
-		exit,
-		sourceRefs: output.refs,
+		baseSequence,
 	});
-	return {
+	const exit = await evaluateDecisionExitWithRunner(table, {
+		currentStatePacket: output.currentStatePacket,
+		knowledgeDelta: output.knowledgeDelta,
+		activeTraceGoals: input.activeTraceGoals,
+		qualityJudge: input.qualityJudge,
+	});
+	return decisionIterationResult({
+		input,
 		table,
 		output,
 		exit,
 		approvedRows,
+		createdAt,
+		baseSequence,
+	});
+}
+
+function decisionIterationResult(input: {
+	input: DecisionIterationInput;
+	table: DecisionTable;
+	output: DecisionOutput;
+	exit: DecisionExitResult;
+	approvedRows: DecisionRow[];
+	createdAt: string;
+	baseSequence: number;
+}): DecisionIterationResult {
+	const draftTraceEvents: TraceEvent[] = [];
+	const traceEvents = decisionTraceEvents(input);
+	const checkpoint = createLoopTailCheckpoint({
+		traceId: input.input.traceId,
+		loop: "decision",
+		id: `${input.input.traceId}:decision:checkpoint:${input.baseSequence}`,
+		parentId: traceEvents.at(-1)?.id || input.output.id,
+		firstKeptRecordId: traceEvents.at(-1)?.id || input.output.id,
+		createdAt: input.createdAt,
+		exit: input.exit,
+		sourceRefs: input.output.refs,
+	});
+	return {
+		table: input.table,
+		output: input.output,
+		exit: input.exit,
+		approvedRows: input.approvedRows,
 		draftTraceEvents,
 		traceEvents,
 		checkpoint,
 		traceRecords: [...traceEvents, checkpoint],
-		readyForPlanning: exit.passed,
+		readyForPlanning: input.exit.route === "planning",
 	};
 }
 
@@ -121,6 +176,7 @@ function decisionOutput(input: {
 		summary: input.table.summary || decisionSummary(input.approvedRows),
 		approvedRowIds: input.approvedRows.map((row) => row.id),
 		requirementIds: input.input.requirementIds || [],
+		decisionTypeProfiles: decisionTypeProfiles(input.approvedRows),
 		knowledgeDelta,
 		currentStatePacket,
 		refs: normalizeTraceRefs([
@@ -170,6 +226,26 @@ function inferredKnowledgeDelta(rows: DecisionRow[]): KnowledgeDelta {
 	};
 }
 
+function decisionTypeProfiles(
+	rows: DecisionRow[],
+): DecisionOutputTypeProfile[] {
+	return rows.flatMap((row) => {
+		const definition = decisionTypeDefinitionById(
+			normalizeDecisionTypeId(row.decisionType || row.decisionKind),
+		);
+		if (!definition) return [];
+		return [
+			{
+				rowId: row.id,
+				decisionType: definition.id,
+				pipelineProfileId: definition.pipelineProfile.id,
+				loopQualityProfileId: definition.loopQualityProfile.id,
+				evidencePolicy: definition.evidencePolicy,
+			},
+		];
+	});
+}
+
 function decisionSummary(rows: DecisionRow[]): string {
 	if (rows.length === 0) return "Decision candidate has no approved rows.";
 	return rows.map((row) => `${row.id}: ${row.desiredState}`).join(" ");
@@ -200,9 +276,13 @@ function decisionTraceEvents(input: {
 				summary: output.summary,
 				approvedRows: approvedRows.map(decisionRowData),
 				approvedRowIds: output.approvedRowIds,
+				decisionTypeProfiles: output.decisionTypeProfiles || [],
 				currentStatePacket: output.currentStatePacket,
 				knowledgeDelta: output.knowledgeDelta,
+				qualityGraph: exit.qualityGraph,
 				qualityStandards: exit.qualityStandards,
+				qualityDiagnostics: exit.diagnostics,
+				qualityRunner: exit.qualityRunner,
 				issueCodes: exit.issues.map((issue) => issue.code),
 			},
 			exit: loopExitFromEvaluation("decision", exit),
@@ -216,6 +296,7 @@ function decisionRowData(row: DecisionRow): Record<string, unknown> {
 		id: row.id,
 		question: row.question,
 		decisionKind: row.decisionKind,
+		decisionType: row.decisionType,
 		currentState: row.currentState,
 		currentStateRefs: [...row.sourceRefs, ...row.proofRefs],
 		desiredState: row.desiredState,
@@ -225,6 +306,11 @@ function decisionRowData(row: DecisionRow): Record<string, unknown> {
 		effort: row.effort,
 		workScale: row.workScale,
 		planningDepth: row.planningDepth,
+		routeTarget: row.routeTarget,
+		routeKind: row.routeKind,
+		routeRationale: row.routeRationale,
+		implementationMode: row.implementationMode,
+		directImplementationScope: row.directImplementationScope,
 		affectedLayers: row.affectedLayers,
 		risk: row.risk,
 		approvalAuthority: row.approvalAuthority,

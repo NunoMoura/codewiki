@@ -1,6 +1,6 @@
 # Planning Loop
 
-The planning loop owns executable work shaping. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Every accepted project-affecting decision enters planning; small work uses a micro-plan instead of skipping planning.
+The planning loop owns executable work shaping and trace-queue health. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting decisions enter planning; tiny/small low-risk decisions may bypass planning only when the Decision loop records a safe direct implementation route.
 
 ## Loop authority
 
@@ -8,6 +8,7 @@ The planning loop owns:
 
 - work-unit materialization;
 - dependency ordering;
+- trace-queue ordering, conflict, starvation, deferral, and route-back policy;
 - path scopes and conflict strategy;
 - component refs and test strategy;
 - acceptance criteria ids;
@@ -24,17 +25,17 @@ The planning loop does not own product decisions, code changes, worker execution
 One planning cycle does this work:
 
 ```text
-observe accepted decision output + KB/source/trace refs
+observe accepted decision output + KB/source/trace refs + active trace queue
 map decisions and questions to executable work units
 assign component refs, path scopes, dependencies, and acceptance criteria
-identify conflicts, deferrals, and runtime scheduling constraints
+identify trace-queue conflicts, stale decisions, deferrals, starvation risk, route-back needs, and runtime scheduling constraints
 update planning output
 check planning exit conditions
 append planning.work_units_created
 continue, exit, route back, or block
 ```
 
-Planning should refine or split work until implementation can proceed without guessing scope or acceptance. For tiny or small low-risk decisions, planning may emit a micro-plan: one self-contained work unit with explicit acceptance criteria, path scopes, and verification, but no dependency graph ceremony.
+Planning should refine or split work until implementation can proceed without guessing scope or acceptance. For tiny or small low-risk decisions that still route to Planning, planning may emit a micro-plan: one self-contained work unit with explicit acceptance criteria, path scopes, and verification, but no dependency graph ceremony.
 
 ## Loop output
 
@@ -59,9 +60,9 @@ Planning loop output is the high-signal packet implementation and runtime need:
 
 Planning output should not include code changes, test results, or worker-local execution evidence.
 
-A micro-plan is still a planning artifact. It must cover exactly one accepted decision ref, have no dependencies, stay low-risk by decision classification, and carry enough acceptance/verification detail for implementation to proceed immediately. If planning discovers ambiguity, dependencies, broader path scope, or a need to split work, it must promote the work to standard planning or route back to decision.
+A micro-plan is still a planning artifact. It must cover exactly one accepted decision ref, have no dependencies, stay low-risk by decision classification, and carry enough acceptance/verification detail for implementation to proceed immediately. If planning discovers ambiguity, dependencies, broader path scope, or a need to split work, it must promote the work to standard planning or route back to decision. If planning needs user clarification or validation, it routes to the Decision loop rather than blocking directly.
 
-## Exit quality standards
+## Loop quality standards
 
 The planning loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
 
@@ -96,7 +97,9 @@ Planning output is not a roadmap file. It is trace truth. Generated views projec
 planning.work_units_created output -> work-plan view -> work-queue view -> runtime scheduling
 ```
 
-The work-plan view is per-trace detail. The work-queue view is cross-trace scheduling state.
+The work-plan view is per-trace detail. The trace queue is the product concept for cross-trace ordering, health, cards, and blockers. The work-queue view is the runtime claim projection over Planning-approved ready work units.
+
+A trace that remains `needs_planning` is a Planning-owned queue condition, not runtime truth to resolve heuristically. Planning must cover the decision refs with work units, defer them with rationale, route them back to Decision or the user, or record why they are non-executable. Runtime and hosts may surface the condition, but they must not invent semantic work from the raw decision rows.
 
 ## Trace iteration data
 

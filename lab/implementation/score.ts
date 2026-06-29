@@ -3,14 +3,14 @@ import { IEC_LOSS, scoreLoop } from "../runner/score.ts";
 import type { LabLoopScore, LabVerdict } from "../runner/types.ts";
 import { implementationCases } from "./cases.ts";
 import {
-	implementationExitCandidate,
+	implementationLoopCandidate,
 	type ImplementationLabInput,
-} from "./exit.ts";
+} from "./loop.ts";
 
 export function evaluateImplementationCandidate(
 	input: ImplementationLabInput,
 ): LabVerdict {
-	return runLabExit({ input, standards: implementationExitCandidate.standards })
+	return runLabExit({ input, standards: implementationLoopCandidate.standards })
 		.verdict;
 }
 
@@ -19,8 +19,7 @@ export function scoreImplementationExit(): LabLoopScore {
 		loop: "implementation",
 		metric: "IEC",
 		cases: implementationCases,
-		standards: implementationExitCandidate.standards,
-		evaluate: evaluateImplementationCandidate,
+		standards: implementationLoopCandidate.standards,
 		lossMatrix: IEC_LOSS,
 	});
 }

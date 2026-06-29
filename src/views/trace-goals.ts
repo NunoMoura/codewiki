@@ -1,3 +1,4 @@
+import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
@@ -192,7 +193,7 @@ function decisionRows(records: TraceRecord[]): DecisionProjection[] {
 
 function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 	const implementationRefs = implementedPlanningRefs(records);
-	return loopOutputEvents(records, "planning")
+	const planned = loopOutputEvents(records, "planning")
 		.filter(planningIterationClaimable)
 		.flatMap((event) =>
 			objectList(objectRecord(event.data?.output).workItems).map((item) => {
@@ -207,6 +208,16 @@ function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 				};
 			}),
 		);
+	return [
+		...planned,
+		...directImplementationDecisionsFromRecords(records).map((direct) => ({
+			id: direct.id,
+			ref: direct.ref,
+			decisionRefs: direct.decisionRefs,
+			pathScopes: direct.pathScopes,
+			implemented: implementationRefs.has(direct.ref),
+		})),
+	];
 }
 
 function resolutionsFromTrace(records: TraceRecord[]): ResolutionProjection[] {

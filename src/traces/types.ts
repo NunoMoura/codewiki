@@ -106,11 +106,34 @@ export interface LoopExitConditionResult {
 	refs?: string[];
 }
 
+export type LoopRouteTarget = TraceLoop | "blocked" | "continue" | "close";
+export type LoopRouteKind =
+	| "advance"
+	| "direct_implementation"
+	| "clarification"
+	| "authority_validation"
+	| "scope_change"
+	| "continue"
+	| "blocked";
+export type ImplementationMode = "tdd" | "targeted_checks";
+
+export interface LoopRoutePlan {
+	target: LoopRouteTarget;
+	kind: LoopRouteKind | string;
+	rationale: string;
+	implementationMode?: ImplementationMode | string;
+	refs?: string[];
+}
+
 export interface LoopIterationExit {
 	status: LoopExitStatus;
 	conditions: LoopExitConditionResult[];
+	qualityGraph?: ExitQualityGraphRef;
+	diagnostics?: LoopQualityDiagnostic[];
+	qualityRunner?: LoopQualityRunnerSummary;
 	targetLoop?: TraceLoop | null;
 	nextAction?: string;
+	routePlan?: LoopRoutePlan;
 }
 
 export interface LoopIterationProgress {
@@ -133,14 +156,33 @@ export interface LoopIterationData {
 export type ExitVerdict = "pass" | "fail" | "block";
 export type ExitRoute = TraceLoop | "user" | "observe" | "close";
 export type ExitCriterionStatus = ExitVerdict;
-export type LoopQualityStandardStatus = "met" | "unmet" | "blocked";
+export type LoopQualityStandardStatus =
+	| "met"
+	| "unmet"
+	| "blocked"
+	| "not_applicable"
+	| "escalated";
 export type LoopQualityStandardMode = "deterministic" | "agent" | "user";
+export type LoopQualityStandardMethod =
+	| "deterministic"
+	| "agent_self_assessment"
+	| "model_judge"
+	| "human_authority"
+	| "external_evidence";
+export type LoopQualityStandardGate = "hard" | "soft" | "score_only";
 
 export interface ExitCriterionResult {
 	id: string;
 	status: ExitCriterionStatus;
 	message?: string;
 	refs?: string[];
+}
+
+export interface ExitQualityGraphRef {
+	id: string;
+	version: string;
+	schemaVersion: number;
+	hash: string;
 }
 
 export interface LoopQualityStandardResult {
@@ -152,6 +194,18 @@ export interface LoopQualityStandardResult {
 	message?: string;
 	refs?: string[];
 	evidenceRefs?: string[];
+	graphId?: string;
+	graphVersion?: string;
+	graphHash?: string;
+	layer?: string;
+	standardType?: string;
+	method?: LoopQualityStandardMethod | string;
+	gate?: LoopQualityStandardGate | string;
+	cost?: number;
+	timeoutMs?: number;
+	score?: number;
+	scoreThreshold?: number;
+	repairTarget?: string;
 }
 
 export interface ExitFinding {
@@ -170,11 +224,58 @@ export interface ExitRemediationItem {
 	blocking: boolean;
 }
 
+export interface LoopQualityDiagnostic {
+	standardId: string;
+	severity: "blocking" | "warning" | "info";
+	method?: LoopQualityStandardMethod | string;
+	gate?: LoopQualityStandardGate | string;
+	message: string;
+	refs: string[];
+	score?: number;
+	scoreThreshold?: number;
+	repair: string;
+	repairTarget?: string;
+	route?: ExitRoute;
+}
+
+export interface LoopQualityRunnerJudgeSummary {
+	status: "pass" | "fail" | "block";
+	promptVersion: string;
+	cached: boolean;
+	cacheKey: string;
+	confidence?: number;
+	score?: number;
+}
+
+export interface LoopQualityRunnerNodeSummary {
+	id: string;
+	method: string;
+	gate: string;
+	cost: number;
+	status: "pass" | "fail" | "block" | "skip";
+	latencyMs: number;
+	score?: number;
+	judge?: LoopQualityRunnerJudgeSummary;
+	skippedBy?: string;
+}
+
+export interface LoopQualityRunnerSummary {
+	graphId: string;
+	graphVersion: string;
+	status: "pass" | "fail" | "block";
+	latencyMs: number;
+	nodes: LoopQualityRunnerNodeSummary[];
+}
+
 export interface ExitDetails {
 	verdict: ExitVerdict;
 	criteria: ExitCriterionResult[];
 	qualityStandards?: LoopQualityStandardResult[];
+	qualityGraph?: ExitQualityGraphRef;
 	findings: ExitFinding[];
 	remediation: ExitRemediationItem[];
+	diagnostics?: LoopQualityDiagnostic[];
+	qualityRunner?: LoopQualityRunnerSummary;
 	route: ExitRoute;
+	routePlan?: LoopRoutePlan;
 }

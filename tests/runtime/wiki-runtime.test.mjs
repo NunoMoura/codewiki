@@ -172,6 +172,46 @@ describe("wiki_runtime core facade", () => {
 		assert.equal(result.append, undefined);
 	});
 
+	it("ignores raw decision items during work-unit claim selection", async () => {
+		const mixedQueue = queue();
+		mixedQueue.items.unshift({
+			id: "DTR-runtime-decision",
+			kind: "decision",
+			status: "ready",
+			traceId: "TRACE-runtime",
+			title: "Raw decision should go through planning",
+			traceRefs: ["TRACE-runtime:decision:iteration:1"],
+			decisionRefs: ["TRACE-runtime:decision:iteration:1#row:DTR-runtime"],
+			planningRefs: [],
+			componentRefs: [],
+			pathScopes: ["src/runtime/raw-decision.ts"],
+			dependsOn: [],
+			blockers: [],
+			qualityStandards: [],
+			qualityBlockers: [],
+			sourceEventId: "TRACE-runtime:decision:iteration:1",
+		});
+
+		const result = await runWikiRuntime({
+			mode: "preview",
+			queue: mixedQueue,
+			maxWorkers: 2,
+			createdAt: "2026-06-11T00:00:01.000Z",
+			nextSequenceByTrace: { "TRACE-runtime": 1 },
+		});
+
+		assert.deepEqual(
+			result.plan.selected.map((item) => item.workUnitId),
+			["WU-runtime-a", "WU-runtime-b"],
+		);
+		assert.equal(
+			result.plan.selected.some(
+				(item) => item.workUnitId === "DTR-runtime-decision",
+			),
+			false,
+		);
+	});
+
 	it("uses config worker limits and blocks unsafe append attempts", async () => {
 		const configured = await runWikiRuntime({
 			mode: "preview",

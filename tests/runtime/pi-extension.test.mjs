@@ -233,7 +233,7 @@ describe("Pi extension adapter", () => {
 		);
 		assert.deepEqual(
 			pi.events.map((event) => event.eventName),
-			["before_agent_start", "session_start"],
+			["before_agent_start", "tool_result", "session_start"],
 		);
 		assert.deepEqual(
 			pi.messageRenderers.map((renderer) => renderer.customType),
@@ -278,9 +278,9 @@ describe("Pi extension adapter", () => {
 			const renderer = pi.messageRenderers.find(
 				(candidate) => candidate.customType === CODEWIKI_COMMAND_MESSAGE_TYPE,
 			).renderer;
-			assert.deepEqual(
-				renderer(pi.messages[0], {}, {}).render(80).slice(0, 3),
-				["CodeWiki Board", "", "┌───────┬───────┬──────┐"],
+			assert.equal(
+				renderer(pi.messages[0], {}, {}).render(80)[0],
+				"CodeWiki Trace Queue",
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -657,7 +657,7 @@ describe("Pi extension adapter", () => {
 			});
 			assert.equal(board.command, "state");
 			assert.equal(board.view, "board");
-			assert.match(notifications.at(-1), /CodeWiki Board/);
+			assert.match(notifications.at(-1), /CodeWiki Trace Queue/);
 
 			const resume = await resumeCommand.handler("", {
 				cwd: root,
@@ -698,12 +698,11 @@ describe("Pi extension adapter", () => {
 			assert.equal(board.data.runtimeBoard.summary.readyWorkUnits, 0);
 			assert.equal(board.data.next.action, "decide");
 			assert.equal(board.data.append.byTrace["TRACE-pi"].nextSequence, 1);
-			assert.deepEqual(board.rendered.slice(0, 3), [
-				"CodeWiki Board",
+			assert.deepEqual(board.rendered.slice(0, 2), [
+				"CodeWiki Trace Queue",
 				"",
-				"┌───────┬───────┬──────┐",
 			]);
-			assert.match(notifications.at(-1), /CodeWiki Board/);
+			assert.match(notifications.at(-1), /CodeWiki Trace Queue/);
 			assert.match(notifications.at(-1), /├/);
 			assert.equal(statuses.length, 1);
 			assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
@@ -837,6 +836,7 @@ describe("Pi extension adapter", () => {
 			);
 
 			assert.match(result.content[0].text, /wiki_state: all view/);
+			assert.match(result.content[0].text, /active work item/);
 			assert.deepEqual(result.details.result.traceIds, ["TRACE-pi"]);
 			assert.equal(result.details.result.sourceOwners, undefined);
 

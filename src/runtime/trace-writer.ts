@@ -30,7 +30,7 @@ export interface AppendSemanticLoopReportInput<
 	expectedBytes: number;
 	nextSequence: number;
 	expectedTraceId?: string;
-	run: (input: { startSequence: number }) => TResult;
+	run: (input: { startSequence: number }) => TResult | Promise<TResult>;
 }
 
 export interface AppendSemanticLoopReportResult<
@@ -71,7 +71,7 @@ export async function appendSemanticLoopReport<
 			data: { nextSequence: input.nextSequence },
 		});
 	}
-	const loopResult = input.run({ startSequence: input.nextSequence });
+	const loopResult = await input.run({ startSequence: input.nextSequence });
 	const iterationEvent = assertSemanticLoopReportBatch({
 		records: loopResult.traceRecords,
 		loop: input.loop,

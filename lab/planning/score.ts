@@ -2,10 +2,10 @@ import { runLabExit } from "../runner/engine.ts";
 import { PEC_LOSS, scoreLoop } from "../runner/score.ts";
 import type { LabLoopScore, LabVerdict } from "../runner/types.ts";
 import { planningCases } from "./cases.ts";
-import { planningExitCandidate, type PlanningLabInput } from "./exit.ts";
+import { planningLoopCandidate, type PlanningLabInput } from "./loop.ts";
 
 export function evaluatePlanningCandidate(input: PlanningLabInput): LabVerdict {
-	return runLabExit({ input, standards: planningExitCandidate.standards })
+	return runLabExit({ input, standards: planningLoopCandidate.standards })
 		.verdict;
 }
 
@@ -14,8 +14,7 @@ export function scorePlanningExit(): LabLoopScore {
 		loop: "planning",
 		metric: "PEC",
 		cases: planningCases,
-		standards: planningExitCandidate.standards,
-		evaluate: evaluatePlanningCandidate,
+		standards: planningLoopCandidate.standards,
 		lossMatrix: PEC_LOSS,
 	});
 }

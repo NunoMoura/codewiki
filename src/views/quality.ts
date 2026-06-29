@@ -99,7 +99,9 @@ export function loopQualityReadiness(event: TraceEvent): LoopQualityReadiness {
 	const requiredIds = new Set(required.map((standard) => standard.id));
 	const extras = provided.filter((standard) => !requiredIds.has(standard.id));
 	const standards = [...required, ...extras];
-	const unmet = standards.filter((standard) => standard.status !== "met");
+	const unmet = standards.filter((standard) =>
+		qualityStatusBlocks(standard.status),
+	);
 	return {
 		loop,
 		traceId: event.traceId,
@@ -121,6 +123,7 @@ export function qualityBlockersFromTrace(
 	records: TraceRecord[],
 ): BlockerView[] {
 	return loopIterationEvents(records).flatMap((event) => {
+		if (supersededByLaterLoopIteration(event, records)) return [];
 		const readiness = loopQualityReadiness(event);
 		if (readiness.ready) return [];
 		return [
@@ -135,6 +138,19 @@ export function qualityBlockersFromTrace(
 			},
 		];
 	});
+}
+
+function supersededByLaterLoopIteration(
+	event: TraceEvent,
+	records: TraceRecord[],
+): boolean {
+	return records.some(
+		(record) =>
+			record.type === "trace_event" &&
+			record.traceId === event.traceId &&
+			record.loop === event.loop &&
+			record.sequence > event.sequence,
+	);
 }
 
 function loopIterationEvents(records: TraceRecord[]): TraceEvent[] {
@@ -174,6 +190,11 @@ function loopQualitySummary(
 		blocked: standards.filter((standard) => standard.status === "blocked")
 			.length,
 		missing: standards.filter((standard) => standard.status === "missing")
+			.length,
+		notApplicable: standards.filter(
+			(standard) => standard.status === "not_applicable",
+		).length,
+		escalated: standards.filter((standard) => standard.status === "escalated")
 			.length,
 	};
 }
@@ -220,10 +241,22 @@ function standardBlockerMessage(
 
 function qualityStatus(value: unknown): QualityStandardSummary["status"] {
 	const status = text(value);
-	if (status === "met" || status === "unmet" || status === "blocked") {
+	if (
+		status === "met" ||
+		status === "unmet" ||
+		status === "blocked" ||
+		status === "not_applicable" ||
+		status === "escalated"
+	) {
 		return status;
 	}
 	return "missing";
+}
+
+function qualityStatusBlocks(
+	status: QualityStandardSummary["status"],
+): boolean {
+	return status === "unmet" || status === "blocked" || status === "missing";
 }
 
 function qualityMode(value: unknown): QualityStandardSummary["mode"] {

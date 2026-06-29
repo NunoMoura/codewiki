@@ -1,10 +1,17 @@
 import {
+	evaluateLoopQualityGraph,
+	runLoopQualityGraphEvaluation,
+	type LoopQualityJudgeExecutionOptions,
+	type RunLoopQualityGraphResult,
+} from "../loops/evaluator.ts";
+import type { LoopQualityGraph, LoopQualityGraphNode } from "../loops/graph.ts";
+import {
 	buildLoopQualityStandard,
 	criteriaFromQualityStandards,
 	type LoopQualityStandardDefinition,
-} from "../loops/standards.ts";
+} from "../loops/quality-standards.ts";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
-import type { DecisionExitIssue, DecisionExitIssueCode } from "./exit.ts";
+import type { DecisionExitIssue, DecisionExitIssueCode } from "./loop.ts";
 import type { DecisionRow } from "./types.ts";
 
 export { criteriaFromQualityStandards };
@@ -26,7 +33,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "intention_understood",
 			weight: 14,
 			description:
-				"Approved rows state the user intention as current state, desired state, and rationale.",
+				"Approved rows provide current state, desired state, and rationale fields for the user intention.",
 			codes: [
 				"missing_current_state",
 				"missing_desired_state",
@@ -44,7 +51,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "cost_understood",
 			weight: 7,
 			description:
-				"Approved rows expose maintainer impact and a bounded effort estimate.",
+				"Approved rows expose maintainer impact and a bounded effort estimate for later semantic cost review.",
 			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
 		},
 		{
@@ -78,7 +85,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			weight: 12,
 			mode: "agent",
 			description:
-				"The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests.",
+				"The agent records its judgment that the user's good-faith intention is aligned with real user value and the project's long-term interests.",
 			codes: ["missing_agent_assessment", "agent_assessment_not_aligned"],
 		},
 		{
@@ -147,7 +154,18 @@ export const DECISION_KIND_QUALITY_STANDARDS: Record<
 		weight: 8,
 		description:
 			"Approved rows classify the decision kind so kind-specific quality can apply inside the decision loop.",
-		codes: ["missing_decision_kind", "invalid_decision_kind"],
+		codes: [
+			"missing_decision_kind",
+			"invalid_decision_kind",
+			"missing_decision_type",
+			"unknown_decision_type",
+			"decision_type_kind_mismatch",
+			"pipeline_profile_route_conflict",
+			"pipeline_profile_planning_depth_conflict",
+			"pipeline_profile_direct_route_disallowed",
+			"pipeline_profile_direct_scale_disallowed",
+			"pipeline_profile_direct_risk_disallowed",
+		],
 	},
 	debug_decision_focused: {
 		id: "debug_decision_focused",
@@ -235,6 +253,101 @@ export function decisionQualityStandards(
 		),
 		...decisionKindQualityStandards(issues, approvedRows),
 	];
+}
+
+export interface EvaluateDecisionQualityStandardsInput {
+	graph: LoopQualityGraph<DecisionExitIssueCode>;
+	issues: DecisionExitIssue[];
+	approvedRows: DecisionRow[];
+}
+
+export function evaluateDecisionQualityStandards(
+	input: EvaluateDecisionQualityStandardsInput,
+): LoopQualityStandardResult[] {
+	return evaluateLoopQualityGraph(decisionQualityGraphOptions(input));
+}
+
+export interface RunDecisionQualityStandardsInput
+	extends EvaluateDecisionQualityStandardsInput,
+		LoopQualityJudgeExecutionOptions {}
+
+export function runDecisionQualityStandards(
+	input: RunDecisionQualityStandardsInput,
+): Promise<RunLoopQualityGraphResult> {
+	return runLoopQualityGraphEvaluation({
+		...decisionQualityGraphOptions(input),
+		judge: input.judge,
+		judgeCache: input.judgeCache,
+		judgeMethods: input.judgeMethods,
+		judgeInput: input.judgeInput,
+	});
+}
+
+function decisionQualityGraphOptions({
+	graph,
+	issues,
+	approvedRows,
+}: EvaluateDecisionQualityStandardsInput) {
+	const evidenceRefs = approvedRows.flatMap((row) => [
+		...row.sourceRefs,
+		...row.proofRefs,
+	]);
+	return {
+		graph,
+		nodes: activeDecisionQualityStandardNodes(graph, issues, approvedRows),
+		issues,
+		issueCode: (issue: DecisionExitIssue) => issue.code,
+		issueMessage: (issue: DecisionExitIssue) => issue.message,
+		issueRefs: decisionIssueRefs,
+		isBlockingIssue: isBlockingDecisionIssue,
+		evidenceRefs: (node: LoopQualityGraphNode<DecisionExitIssueCode>) =>
+			evidenceStandardIds.has(node.id) ? evidenceRefs : undefined,
+	};
+}
+
+export function activeDecisionQualityStandardNodes(
+	graph: LoopQualityGraph<DecisionExitIssueCode>,
+	issues: DecisionExitIssue[],
+	approvedRows: DecisionRow[],
+): LoopQualityGraphNode<DecisionExitIssueCode>[] {
+	return graph.nodes.filter((node) => {
+		if (node.id === "decision_kind_classified") {
+			return (
+				approvedRows.length > 0 ||
+				hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
+			);
+		}
+		if (node.id === "debug_decision_focused") {
+			return (
+				hasKind(approvedRows, "debug") ||
+				hasCodePrefix(issues, "missing_debug_")
+			);
+		}
+		if (node.id === "fix_decision_reproducible") {
+			return (
+				hasKind(approvedRows, "fix") || hasCodePrefix(issues, "missing_fix_")
+			);
+		}
+		if (node.id === "harden_decision_boundary") {
+			return (
+				hasKind(approvedRows, "harden") ||
+				hasCodePrefix(issues, "missing_harden_")
+			);
+		}
+		if (node.id === "improve_decision_outcome") {
+			return (
+				hasKind(approvedRows, "improve") ||
+				hasCodePrefix(issues, "missing_improve_")
+			);
+		}
+		if (node.id === "migrate_decision_equivalent") {
+			return (
+				hasKind(approvedRows, "migrate") ||
+				hasCodePrefix(issues, "missing_migrate_")
+			);
+		}
+		return true;
+	});
 }
 
 function decisionKindQualityStandards(

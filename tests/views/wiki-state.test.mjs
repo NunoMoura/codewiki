@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { buildWikiState } from "../../src/api/state.ts";
+import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
 import { createDecisionTable } from "../../src/decision/table.ts";
@@ -14,9 +15,7 @@ function nextSequence(events) {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.loop === "decision",
-	);
+	const iteration = events.find((event) => event.loop === "decision");
 	const row = iteration?.data?.output?.approvedRows?.[0];
 	assert.ok(iteration);
 	assert.ok(row);
@@ -90,10 +89,13 @@ describe("wiki_state core facade", () => {
 			"Implement planned work unit WU-state.",
 		);
 		assert.equal(state.workPlan?.cards[0].id, "WU-state");
-		assert.equal(state.quality?.summary.planning.met, 13);
+		assert.equal(state.quality?.summary.planning.met, 16);
 		assert.equal(state.workQueue.summary.ready, 1);
 		assert.equal(state.traceBoard.summary.needs_implementation, 1);
 		assert.equal(state.traceBoard.traces[0].status, "needs_implementation");
+		assert.equal(state.traceQueue.cards[0].traceId, "TRACE-state");
+		assert.equal(state.traceQueue.cards[0].rowCount, 1);
+		assert.equal(state.traceQueue.cards[0].items[0].id, "WU-state");
 		assert.equal(state.triggers.triggers.length, 0);
 		assert.equal(state.runtimeBoard.summary.readyWorkUnits, 1);
 		assert.equal(state.runtimeBoard.summary.selectedClaims, 1);
@@ -112,6 +114,125 @@ describe("wiki_state core facade", () => {
 			tool: "wiki_implement",
 			workUnitId: "WU-state",
 		});
+	});
+
+	it("ignores non-exited planning work items in queue projections", () => {
+		const records = traceRecords("TRACE-state-planning-repair");
+		const planning = records.find(
+			(record) => record.type === "trace_event" && record.loop === "planning",
+		);
+		assert.ok(planning);
+		const blockedPlanning = JSON.parse(JSON.stringify(planning));
+		blockedPlanning.id = `${planning.id}-blocked`;
+		blockedPlanning.sequence = planning.sequence + 1;
+		blockedPlanning.event = "planning_blocked";
+		blockedPlanning.data.exit.status = "continue";
+		blockedPlanning.data.output.workItems[0].id = "WU-ghost";
+		blockedPlanning.data.output.workItems[0].title = "Ghost blocked plan";
+		blockedPlanning.data.output.workItems[0].pathScopes = ["src/ghost.ts"];
+
+		const state = buildWikiState({
+			records: [...records, blockedPlanning],
+			generatedAt: "2026-06-11T00:00:03.000Z",
+		});
+
+		assert.deepEqual(
+			state.workPlan?.cards.map((card) => card.id),
+			["WU-state"],
+		);
+		assert.equal(
+			state.workQueue.items.some((item) => item.id === "WU-ghost"),
+			false,
+		);
+		assert.equal(
+			state.workQueue.items.some((item) => item.id === "WU-state"),
+			true,
+		);
+	});
+
+	it("clears planning blockers superseded by a later planning exit", () => {
+		const records = traceRecords("TRACE-state-planning-superseded");
+		const planning = records.find(
+			(record) => record.type === "trace_event" && record.loop === "planning",
+		);
+		assert.ok(planning);
+		const nonPlanningRecords = records.filter((record) => record !== planning);
+		const blockedPlanning = JSON.parse(JSON.stringify(planning));
+		blockedPlanning.id = `${planning.id}-blocked`;
+		blockedPlanning.sequence = planning.sequence;
+		blockedPlanning.event = "planning_blocked";
+		blockedPlanning.data.exit.status = "continue";
+		blockedPlanning.data.exit.conditions = [
+			{
+				id: "dependency_order_clear",
+				status: "unmet",
+				message: "Old planning blocker should be superseded.",
+				refs: ["WU-state"],
+			},
+		];
+		const acceptedPlanning = JSON.parse(JSON.stringify(planning));
+		acceptedPlanning.id = `${planning.id}-accepted`;
+		acceptedPlanning.sequence = planning.sequence + 1;
+
+		const state = buildWikiState({
+			records: [...nonPlanningRecords, blockedPlanning, acceptedPlanning],
+			generatedAt: "2026-06-11T00:00:03.000Z",
+		});
+
+		assert.equal(
+			state.blockers?.blockers.some((blocker) =>
+				blocker.message.includes("Old planning blocker"),
+			),
+			false,
+		);
+		assert.deepEqual(
+			state.workPlan?.cards.map((card) => card.id),
+			["WU-state"],
+		);
+	});
+
+	it("summarizes cached fast review findings", () => {
+		const records = traceRecords("TRACE-state-review-cache");
+		const cache = new InMemoryReviewEvidenceCache();
+		cache.record({
+			traceId: "TRACE-state-review-cache",
+			createdAt: "2026-06-11T00:00:02.500Z",
+			report: {
+				phase: "fast",
+				changedPaths: ["src/api/state.ts"],
+				sources: [
+					{
+						id: "common.fast.blocking-diagnostics",
+						kind: "common",
+						layer: "common",
+						summary: "Fast diagnostics",
+					},
+				],
+				diagnostics: [
+					{
+						path: "src/api/state.ts",
+						severity: "error",
+						message: "Cached fast blocker.",
+						sourceId: "common.fast.blocking-diagnostics",
+						range: { startLine: 12 },
+					},
+				],
+			},
+		});
+
+		const state = buildWikiState({
+			records,
+			traceId: "TRACE-state-review-cache",
+			generatedAt: "2026-06-11T00:00:03.000Z",
+			reviewEvidenceCache: cache,
+		});
+
+		assert.equal(state.reviewEvidence?.cachedFast.reportCount, 1);
+		assert.equal(state.reviewEvidence?.cachedFast.diagnostics.error, 1);
+		assert.equal(
+			state.reviewEvidence?.blockers[0],
+			"common.fast.blocking-diagnostics: src/api/state.ts:12 Cached fast blocker.",
+		);
 	});
 
 	it("omits append handles for closed traces", () => {

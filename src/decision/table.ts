@@ -3,6 +3,7 @@ import {
 	normalizeDecisionApprovalStatus,
 	normalizeTraceabilityExemption,
 } from "./approval.ts";
+import { normalizeDecisionTypeId } from "./type-definitions.ts";
 import type {
 	DecisionRow,
 	DecisionRowActionFailure,
@@ -82,6 +83,11 @@ function normalizeDecisionRow(
 		id,
 		question: firstText(row.question, row.id, id),
 		decisionKind: normalizeDecisionKind(row.decisionKind),
+		decisionType: normalizeDecisionTypeId(
+			row.decisionType ??
+				row.decision_type ??
+				normalizeDecisionKind(row.decisionKind),
+		),
 		currentState: text(row.currentState),
 		desiredState: text(row.desiredState),
 		rationale: text(row.rationale),
@@ -92,6 +98,7 @@ function normalizeDecisionRow(
 		planningDepth: normalizePlanningDepth(
 			row.planningDepth ?? row.planning_depth,
 		),
+		...normalizeRouteFields(row),
 		affectedLayers: unique(stringList(row.affectedLayers)),
 		risk: text(row.risk),
 		approval: normalizeDecisionApprovalStatus(row.approval),
@@ -200,6 +207,9 @@ function cloneDecisionRow(row: DecisionRow): DecisionRow {
 		alternatives: [...row.alternatives],
 		sourceRefs: [...row.sourceRefs],
 		proofRefs: [...row.proofRefs],
+		directImplementationScope: cloneDirectImplementationScope(
+			row.directImplementationScope,
+		),
 		targetRefs: [...row.targetRefs],
 		failureModes: [...row.failureModes],
 		nonGoals: [...row.nonGoals],
@@ -256,6 +266,125 @@ function normalizePlanningDepth(value: unknown): string {
 	return normalized;
 }
 
+function normalizeRouteFields(
+	row: DecisionRowInput,
+): Pick<
+	DecisionRow,
+	| "routeTarget"
+	| "routeKind"
+	| "routeRationale"
+	| "implementationMode"
+	| "directImplementationScope"
+> {
+	const routeTarget = normalizeRouteTarget(
+		row.routeTarget ??
+			row.route_target ??
+			row.nextLoop ??
+			row.next_loop ??
+			row.nextRoute ??
+			row.next_route,
+	);
+	const implementationMode = normalizeImplementationMode(
+		row.implementationMode ??
+			row.implementation_mode ??
+			row.testPolicy ??
+			row.test_policy,
+	);
+	return {
+		routeTarget,
+		routeKind: normalizeRouteKind(row.routeKind ?? row.route_kind, routeTarget),
+		routeRationale: text(row.routeRationale ?? row.route_rationale),
+		...(implementationMode ? { implementationMode } : {}),
+		directImplementationScope: normalizeDirectImplementationScope(
+			row.directImplementationScope ?? row.direct_implementation_scope,
+		),
+	};
+}
+
+function normalizeRouteTarget(value: unknown): string {
+	const normalized = text(value).toLowerCase().replace(/_/g, "-");
+	if (!normalized) return "planning";
+	if (["plan", "planning", "planning-implementation"].includes(normalized)) {
+		return "planning";
+	}
+	if (
+		[
+			"implement",
+			"implementation",
+			"direct-implementation",
+			"implementation-direct",
+		].includes(normalized)
+	) {
+		return "implementation";
+	}
+	return normalized;
+}
+
+function normalizeImplementationMode(value: unknown): string {
+	const normalized = text(value).toLowerCase().replace(/-/g, "_");
+	if (
+		["targeted", "checks", "targeted_checks", "without_tdd", "no_tdd"].includes(
+			normalized,
+		)
+	) {
+		return "targeted_checks";
+	}
+	if (["test_first", "test_first_tdd"].includes(normalized)) return "tdd";
+	return normalized;
+}
+
+function normalizeRouteKind(value: unknown, routeTarget: string): string {
+	const normalized = text(value).toLowerCase().replace(/-/g, "_");
+	if (normalized) return normalized;
+	return routeTarget === "implementation" ? "direct_implementation" : "advance";
+}
+
+function normalizeDirectImplementationScope(
+	value: DecisionRowInput["directImplementationScope"],
+): DecisionRow["directImplementationScope"] {
+	return {
+		acceptance: unique(stringList(value?.acceptance)),
+		acceptanceCriteria: normalizeAcceptanceCriteria([
+			...objectList(value?.acceptanceCriteria),
+			...objectList(value?.acceptance_criteria),
+		]),
+		componentRefs: unique([
+			...stringList(value?.componentRefs),
+			...stringList(value?.component_refs),
+		]),
+		pathScopes: unique([
+			...stringList(value?.pathScopes),
+			...stringList(value?.path_scopes),
+		]),
+		verification: unique(stringList(value?.verification)),
+	};
+}
+
+function normalizeAcceptanceCriteria(
+	criteria: unknown[],
+): DecisionRow["directImplementationScope"]["acceptanceCriteria"] {
+	return objectList<{ id?: string; text?: string }>(criteria).map(
+		(criterion, index) => ({
+			id: text(criterion.id) || `AC-${String(index + 1).padStart(3, "0")}`,
+			text: text(criterion.text),
+		}),
+	);
+}
+
+function cloneDirectImplementationScope(
+	scope: DecisionRow["directImplementationScope"],
+): DecisionRow["directImplementationScope"] {
+	return {
+		acceptance: [...scope.acceptance],
+		acceptanceCriteria: scope.acceptanceCriteria.map((criterion) => ({
+			...criterion,
+		})),
+		componentRefs: [...scope.componentRefs],
+		pathScopes: [...scope.pathScopes],
+		verification: [...scope.verification],
+	};
+}
+
 function firstText(...values: unknown[]): string {
 	for (const value of values) {
 		const result = text(value);
@@ -271,6 +400,14 @@ function text(value: unknown): string {
 function stringList(value: unknown): string[] {
 	return Array.isArray(value)
 		? value.map((item) => text(item)).filter(Boolean)
+		: [];
+}
+
+function objectList<T = Record<string, unknown>>(value: unknown): T[] {
+	return Array.isArray(value)
+		? value.filter(
+				(item): item is T => typeof item === "object" && item !== null,
+			)
 		: [];
 }
 
