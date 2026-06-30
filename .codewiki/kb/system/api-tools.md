@@ -1,3 +1,29 @@
+---
+type: Concept
+title: API Tool Surface
+description: "CodeWiki should be operated through a small set of explicit tools backed by the same core package APIs. The tools are required for CodeWiki as a software-development OS: without them, an agent can read files, but it cannot safely execute semantic loop iterations and trace state updates. Runtime coordination remains backend/host plumbing, not a model-facing mega-tool."
+tags:
+  - codewiki
+  - system
+  - api
+  - tools
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: skills
+codewiki_components:
+  - skills
+codewiki_source_patterns:
+  - .agents/skills/**
+codewiki_test_patterns:
+  - tests/knowledge/skills.test.mjs
+codewiki_role: host_guidance
+codewiki_source_map:
+  - id: skills
+    source_patterns:
+      - .agents/skills/**
+    test_patterns:
+      - tests/knowledge/skills.test.mjs
+    role: host_guidance
+---
 # API Tool Surface
 
 CodeWiki should be operated through a small set of explicit tools backed by the same core package APIs. The tools are required for CodeWiki as a software-development OS: without them, an agent can read files, but it cannot safely execute semantic loop iterations and trace state updates. Runtime coordination remains backend/host plumbing, not a model-facing mega-tool.

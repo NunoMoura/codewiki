@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Future External Users
+description: Future external users may include people and agents working through CLI, TUI, MCP, editor panels, service agents, package APIs, or optional runtime programs.
+tags:
+  - codewiki
+  - product
+  - users
+  - external
+timestamp: 2026-06-30T00:00:00Z
+---
 # Future External Users
 
 Future external users may include people and agents working through CLI, TUI, MCP, editor panels, service agents, package APIs, or optional runtime programs.

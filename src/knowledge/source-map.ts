@@ -161,9 +161,9 @@ export function validateSourceMap(
 	map: SourceMapContract,
 	input: SourceMapValidationInput = {},
 ): SourceMapValidationIssue[] {
+	void input.markdown;
 	return [
 		...duplicateComponentIssues(map),
-		...frontmatterIssues(input.markdown || []),
 		...artifactIssues(map, input.artifactPaths || []),
 		...sourceOwnerIssues(map, input.sourcePaths || []),
 	];
@@ -185,21 +185,6 @@ function duplicateComponentIssues(
 			}),
 		];
 	});
-}
-
-function frontmatterIssues(
-	markdown: SourceMapMarkdownEntry[],
-): SourceMapValidationIssue[] {
-	return markdown.flatMap((entry) =>
-		entry.hasFrontmatter
-			? [
-					issue("frontmatter_not_allowed", {
-						path: entry.path,
-						message: `${entry.path} uses frontmatter; KB Markdown must start with body content.`,
-					}),
-				]
-			: [],
-	);
 }
 
 function artifactIssues(

@@ -12,6 +12,7 @@ import { join, relative } from "node:path";
 import { describe, it } from "node:test";
 import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
 import { loadWikiConfigFile } from "../../src/project/config-file.ts";
+import { validateOkfBundle } from "../../src/knowledge/okf-validation.ts";
 import {
 	parseSourceMapYaml,
 	sourceMapOwnerForPath,
@@ -108,7 +109,7 @@ describe("project bootstrap", () => {
 		}
 	});
 
-	it("writes target scaffold without frontmatter or legacy truth roots", async () => {
+	it("writes target scaffold with OKF frontmatter and without legacy truth roots", async () => {
 		const root = await fixture();
 		try {
 			const result = await bootstrapCodewiki(root);
@@ -149,12 +150,32 @@ describe("project bootstrap", () => {
 						"---\n",
 					),
 				}));
+			const markdownFiles = await Promise.all(markdown);
 			const issues = validateSourceMap(sourceMap, {
 				artifactPaths: files,
 				sourcePaths: ["src/index.ts"],
-				markdown: await Promise.all(markdown),
+				markdown: markdownFiles,
 			});
 			assert.deepEqual(issues, []);
+			assert.equal(
+				markdownFiles.every((entry) => entry.hasFrontmatter),
+				true,
+			);
+			const okf = validateOkfBundle(
+				await Promise.all(
+					markdownFiles.map(async (entry) => ({
+						path: entry.path.replace(/^\.codewiki\/kb\//, ""),
+						content: await readFile(join(root, entry.path), "utf8"),
+					})),
+				),
+			);
+			assert.deepEqual(okf.issues, []);
+			assert.equal(
+				okf.documents.find(
+					(document) => document.path === "system/knowledge.md",
+				)?.frontmatter?.codewiki_component,
+				"knowledge",
+			);
 
 			const second = await bootstrapCodewiki(root);
 			assert.equal(second.updated.length, 0);

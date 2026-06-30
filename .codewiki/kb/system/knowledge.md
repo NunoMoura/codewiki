@@ -1,3 +1,32 @@
+---
+type: Concept
+title: Knowledge
+description: Knowledge is the durable intended truth for product and system design. It is not a log, generated view, task archive, trace archive, or code artifact store.
+tags:
+  - codewiki
+  - system
+  - knowledge
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: knowledge
+codewiki_components:
+  - knowledge
+codewiki_source_patterns:
+  - src/knowledge/**
+  - .codewiki/kb/**
+codewiki_test_patterns:
+  - tests/knowledge/**
+  - tests/scaffold.test.mjs
+codewiki_role: hot_knowledge
+codewiki_source_map:
+  - id: knowledge
+    source_patterns:
+      - src/knowledge/**
+      - .codewiki/kb/**
+    test_patterns:
+      - tests/knowledge/**
+      - tests/scaffold.test.mjs
+    role: hot_knowledge
+---
 # Knowledge
 
 ## Responsibility

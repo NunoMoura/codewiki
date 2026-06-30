@@ -1,3 +1,16 @@
+---
+type: Concept
+title: Adapters and UI Component
+description: Adapters and UI surfaces translate host commands, panels, tools, and local views into CodeWiki API calls. They do not own canonical semantics; they preserve the same behavior across Pi chat/status docks, optional CLI/MCP wrappers, and future harnesses.
+tags:
+  - codewiki
+  - system
+  - components
+  - adapters
+  - and
+  - ui
+timestamp: 2026-06-30T00:00:00Z
+---
 # Adapters and UI Component
 
 ## Responsibility

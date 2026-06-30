@@ -1,3 +1,37 @@
+---
+type: Concept
+title: Decision Loop
+description: The decision loop owns product and system intent and KB meaning updates. It turns user goals, current project state, alternatives, risks, and knowledge impact into user-validated decision rows that can become an accepted decision output Planning can trust.
+tags:
+  - codewiki
+  - system
+  - decision
+  - loop
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: decision
+codewiki_components:
+  - decision
+codewiki_source_patterns:
+  - src/decision/**
+  - src/api/decision.ts
+codewiki_test_patterns:
+  - tests/decision/**
+  - tests/helpers/decision-row.mjs
+codewiki_trace_events:
+  - decision.rows_approved
+codewiki_role: semantic_loop
+codewiki_source_map:
+  - id: decision
+    source_patterns:
+      - src/decision/**
+      - src/api/decision.ts
+    test_patterns:
+      - tests/decision/**
+      - tests/helpers/decision-row.mjs
+    trace_events:
+      - decision.rows_approved
+    role: semantic_loop
+---
 # Decision Loop
 
 The decision loop owns product and system intent and KB meaning updates. It turns user goals, current project state, alternatives, risks, and knowledge impact into user-validated decision rows that can become an accepted decision output Planning can trust.

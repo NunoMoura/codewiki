@@ -1,3 +1,15 @@
+---
+type: Concept
+title: Extension and Workflow Authors
+description: Extension and workflow authors use CodeWiki's structure and capability contracts without adopting CodeWiki as a sandbox, telemetry runtime, or general execution framework.
+tags:
+  - codewiki
+  - product
+  - users
+  - package
+  - authors
+timestamp: 2026-06-30T00:00:00Z
+---
 # Extension and Workflow Authors
 
 Extension and workflow authors use CodeWiki's structure and capability contracts without adopting CodeWiki as a sandbox, telemetry runtime, or general execution framework.

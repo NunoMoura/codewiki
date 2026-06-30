@@ -1,3 +1,16 @@
+---
+type: Concept
+title: Decision to Planning Flow
+description: Planning may start only from a decision iteration whose exit status is `exit`.
+tags:
+  - codewiki
+  - system
+  - flows
+  - decision
+  - to
+  - planning
+timestamp: 2026-06-30T00:00:00Z
+---
 # Decision to Planning Flow
 
 Planning may start only from a decision iteration whose exit status is `exit`.

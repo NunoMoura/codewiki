@@ -1,3 +1,50 @@
+---
+type: Concept
+title: Implementation Loop
+description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output, or an eligible direct implementation decision row, into verified project changes.
+tags:
+  - codewiki
+  - system
+  - implementation
+  - loop
+timestamp: 2026-06-30T00:00:00Z
+codewiki_components:
+  - git
+  - implementation
+codewiki_source_patterns:
+  - src/git/**
+  - src/implementation/**
+  - src/api/implementation.ts
+codewiki_test_patterns:
+  - tests/implementation/**
+  - tests/runtime/git-status.test.mjs
+  - tests/runtime/worktrees.test.mjs
+  - tests/helpers/implementation-change.mjs
+codewiki_trace_events:
+  - implementation.evidence_accepted
+codewiki_roles:
+  - content_proof
+  - semantic_loop
+codewiki_source_map:
+  - id: git
+    source_patterns:
+      - src/git/**
+    test_patterns:
+      - tests/implementation/**
+      - tests/runtime/git-status.test.mjs
+      - tests/runtime/worktrees.test.mjs
+    role: content_proof
+  - id: implementation
+    source_patterns:
+      - src/implementation/**
+      - src/api/implementation.ts
+    test_patterns:
+      - tests/implementation/**
+      - tests/helpers/implementation-change.mjs
+    trace_events:
+      - implementation.evidence_accepted
+    role: semantic_loop
+---
 # Implementation Loop
 
 The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output, or an eligible direct implementation decision row, into verified project changes.

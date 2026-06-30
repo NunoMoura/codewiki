@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Runtime Component
+description: Runtime reads traces and derived views, chooses the next safe action, coordinates claims and workers, validates append safety, writes trace records, enforces progress boundaries, manages temporary data, and orchestrates retention. It does not invent semantic truth and is not a fourth semantic loop.
+tags:
+  - codewiki
+  - system
+  - components
+  - runtime
+timestamp: 2026-06-30T00:00:00Z
+---
 # Runtime Component
 
 ## Responsibility

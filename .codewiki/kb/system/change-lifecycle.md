@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Change Lifecycle
+description: A CodeWiki change starts as user intent and becomes durable when it is represented consistently in KB, JSONL traces, source/tests, and Git proof.
+tags:
+  - codewiki
+  - system
+  - change
+  - lifecycle
+timestamp: 2026-06-30T00:00:00Z
+---
 # Change Lifecycle
 
 A CodeWiki change starts as user intent and becomes durable when it is represented consistently in KB, JSONL traces, source/tests, and Git proof.

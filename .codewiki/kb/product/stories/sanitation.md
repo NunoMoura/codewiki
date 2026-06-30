@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Sanitize Historical State
+description: As a maintainer, I want hot CodeWiki state to stay small while full history remains recoverable.
+tags:
+  - codewiki
+  - product
+  - stories
+  - sanitation
+timestamp: 2026-06-30T00:00:00Z
+---
 # Sanitize Historical State
 
 As a maintainer, I want hot CodeWiki state to stay small while full history remains recoverable.

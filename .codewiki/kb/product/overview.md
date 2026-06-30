@@ -1,3 +1,13 @@
+---
+type: Concept
+title: Product
+description: CodeWiki exists to keep repository intent fresh, explicit, actionable, and recoverable for humans and agents.
+tags:
+  - codewiki
+  - product
+  - overview
+timestamp: 2026-06-30T00:00:00Z
+---
 # Product
 
 CodeWiki exists to keep repository intent fresh, explicit, actionable, and recoverable for humans and agents.

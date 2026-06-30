@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Alignment Model
+description: Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.
+tags:
+  - codewiki
+  - system
+  - alignment
+  - model
+timestamp: 2026-06-30T00:00:00Z
+---
 # Alignment Model
 
 Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.

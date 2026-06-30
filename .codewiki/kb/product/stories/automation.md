@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Use Loop-Governed Automation
+description: As a user, I want an agent to advance CodeWiki work automatically while staying bounded by explicit loop, exit-condition, budget, and approval boundaries, so progress can continue without losing alignment with my intent.
+tags:
+  - codewiki
+  - product
+  - stories
+  - automation
+timestamp: 2026-06-30T00:00:00Z
+---
 # Use Loop-Governed Automation
 
 As a user, I want an agent to advance CodeWiki work automatically while staying bounded by explicit loop, exit-condition, budget, and approval boundaries, so progress can continue without losing alignment with my intent.

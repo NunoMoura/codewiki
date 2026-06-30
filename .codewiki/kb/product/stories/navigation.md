@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Navigate With Low Token Cost
+description: As an agent or maintainer, I want compact trace-backed status first so I can choose the right next context without loading the whole knowledge base or trace history into the session.
+tags:
+  - codewiki
+  - product
+  - stories
+  - navigation
+timestamp: 2026-06-30T00:00:00Z
+---
 # Navigate With Low Token Cost
 
 As an agent or maintainer, I want compact trace-backed status first so I can choose the right next context without loading the whole knowledge base or trace history into the session.

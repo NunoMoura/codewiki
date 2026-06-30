@@ -1,3 +1,57 @@
+---
+type: Concept
+title: Runtime
+description: "Runtime is CodeWiki's outer control loop. It is not a semantic loop and it does not own semantic truth. It is the sole trace writer: semantic loops produce appendable reports, and runtime validates and appends trace records."
+tags:
+  - codewiki
+  - system
+  - runtime
+timestamp: 2026-06-30T00:00:00Z
+codewiki_components:
+  - error_handling
+  - runtime
+codewiki_source_patterns:
+  - src/error-handling/**
+  - src/runtime/**
+codewiki_test_patterns:
+  - tests/runtime/**
+codewiki_trace_events:
+  - runtime.work_unit.claimed
+  - runtime.work_unit.claim.released
+  - runtime.work_unit.claim.expired
+  - runtime.work_unit.claim.cancelled
+  - runtime.host.started
+  - runtime.host.observed
+  - runtime.host.blocked
+  - runtime.host.completed
+  - runtime.host.stopped
+codewiki_roles:
+  - shared_error_contracts
+  - outer_loop_coordination
+codewiki_source_map:
+  - id: error_handling
+    source_patterns:
+      - src/error-handling/**
+    test_patterns:
+      - tests/runtime/**
+    role: shared_error_contracts
+  - id: runtime
+    source_patterns:
+      - src/runtime/**
+    test_patterns:
+      - tests/runtime/**
+    trace_events:
+      - runtime.work_unit.claimed
+      - runtime.work_unit.claim.released
+      - runtime.work_unit.claim.expired
+      - runtime.work_unit.claim.cancelled
+      - runtime.host.started
+      - runtime.host.observed
+      - runtime.host.blocked
+      - runtime.host.completed
+      - runtime.host.stopped
+    role: outer_loop_coordination
+---
 # Runtime
 
 Runtime is CodeWiki's outer control loop. It is not a semantic loop and it does not own semantic truth. It is the sole trace writer: semantic loops produce appendable reports, and runtime validates and appends trace records.

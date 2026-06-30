@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Pi TUI Diagram Rendering
+description: CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode. The desired later user experience is default-on trace goal cards derived from `wiki_state` views, not additional slash-command sprawl.
+tags:
+  - codewiki
+  - product
+  - uis
+  - terminal
+timestamp: 2026-06-30T00:00:00Z
+---
 # Pi TUI Diagram Rendering
 
 CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode. The desired later user experience is default-on trace goal cards derived from `wiki_state` views, not additional slash-command sprawl.

@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Migration Audit
+description: CodeWiki has completed the useful migration audit from the old implementation into the clean `src/**` scaffold. The `_OLD_VERSION/**` archive has been removed; archived Pi extension code, graph truth roots, roadmap truth roots, validation roots, and CodeWiki-owned compaction must not be reintroduced wholesale.
+tags:
+  - codewiki
+  - system
+  - migration
+  - audit
+timestamp: 2026-06-30T00:00:00Z
+---
 # Migration Audit
 
 CodeWiki has completed the useful migration audit from the old implementation into the clean `src/**` scaffold. The `_OLD_VERSION/**` archive has been removed; archived Pi extension code, graph truth roots, roadmap truth roots, validation roots, and CodeWiki-owned compaction must not be reintroduced wholesale.

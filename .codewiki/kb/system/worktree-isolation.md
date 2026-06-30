@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Worktree Isolation
+description: The old worktree-isolation workflow is deprecated during the rebuild. Useful ideas should migrate into `src/runtime/**` and `src/git/**` as trace-owned claims, leases, work-unit claim boundaries, budgets, and content-evidence requirements.
+tags:
+  - codewiki
+  - system
+  - worktree
+  - isolation
+timestamp: 2026-06-30T00:00:00Z
+---
 # Worktree Isolation
 
 The old worktree-isolation workflow is deprecated during the rebuild. Useful ideas should migrate into `src/runtime/**` and `src/git/**` as trace-owned claims, leases, work-unit claim boundaries, budgets, and content-evidence requirements.

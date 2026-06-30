@@ -1,8 +1,51 @@
+---
+type: Concept
+title: Source Map
+description: "`source-map.yaml` is the canonical machine-readable mapping between CodeWiki docs, source paths, tests, generated views, and trace/event responsibilities during OKF migration."
+tags:
+  - codewiki
+  - system
+  - source
+  - map
+timestamp: 2026-06-30T00:00:00Z
+codewiki_components:
+  - project
+  - utils
+codewiki_source_patterns:
+  - src/project/**
+  - src/utils/**
+codewiki_test_patterns:
+  - tests/scaffold.test.mjs
+  - tests/project/**
+  - tests/implementation/repo-proof.test.mjs
+  - tests/runtime/wiki-config.test.mjs
+codewiki_roles:
+  - project_boundary
+  - domain_free_primitives
+codewiki_test_policy: inherited
+codewiki_test_rationale: Domain-free utilities are tested through owning consumers until a utility grows its own contract.
+codewiki_source_map:
+  - id: project
+    source_patterns:
+      - src/project/**
+    test_patterns:
+      - tests/scaffold.test.mjs
+      - tests/project/**
+      - tests/implementation/repo-proof.test.mjs
+      - tests/runtime/wiki-config.test.mjs
+    role: project_boundary
+  - id: utils
+    source_patterns:
+      - src/utils/**
+    role: domain_free_primitives
+    test_policy: inherited
+    test_rationale: Domain-free utilities are tested through owning consumers until a utility grows its own contract.
+---
 # Source Map
 
-`source-map.yaml` is the only canonical machine-readable mapping between CodeWiki docs, source paths, tests, generated views, and trace/event responsibilities.
+`source-map.yaml` is the canonical machine-readable mapping between CodeWiki docs, source paths, tests, generated views, and trace/event responsibilities during OKF migration.
 
-KB Markdown must not use frontmatter. Doc identity is the canonical `kb:<relative-path>` ref. Human title is the first `#` heading.
+KB Markdown concepts use OKF v0.1 frontmatter. CodeWiki ownership fields in that frontmatter are generated from `source-map.yaml`; they are exchange metadata, not a second hand-maintained ownership source. Doc identity remains the canonical `kb:<relative-path>` ref. Human title remains the first `#` heading.
 
 ## Why one map
 
@@ -32,7 +75,7 @@ Rules:
 - each component needs one owning doc;
 - each component needs tests or explicit no-test rationale;
 - diagrams map concepts, not source ownership;
-- Markdown frontmatter is forbidden.
+- OKF frontmatter ownership fields are generated from this map until read-path parity allows deprecation.
 
 ## Validation policy
 
@@ -42,11 +85,11 @@ Source-map validation checks must verify:
 - every mapped owning doc exists;
 - every mapped test pattern matches tests or has explicit test rationale;
 - source-map source docs exist;
-- KB Markdown files do not start with frontmatter.
+- KB Markdown concept files validate as OKF documents when frontmatter is present.
 
 Validation helpers are pure. They accept repo file lists and Markdown/frontmatter presence facts from callers rather than reading the filesystem directly.
 
-If ownership mapping is needed, add it to `source-map.yaml`. If conceptual diagram metadata is needed, keep it in the owning diagram YAML without making it source ownership truth. If doc metadata is needed, derive it from path, first heading, Git, or source-map entries.
+If ownership mapping is needed, add it to `source-map.yaml` while it remains canonical. If conceptual diagram metadata is needed, keep it in the owning diagram YAML without making it source ownership truth. If exchange metadata is needed, derive it from path, first heading, Git, or generated source-map extension fields.
 
 ## Agent navigation rule
 

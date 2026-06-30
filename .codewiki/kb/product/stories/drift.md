@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Prevent Horizontal and Vertical Drift
+description: As a maintainer, I want CodeWiki to detect contradictions between intent, docs, loop outputs, traces, evidence, tests, code, and Git proof so the knowledge base remains trustworthy.
+tags:
+  - codewiki
+  - product
+  - stories
+  - drift
+timestamp: 2026-06-30T00:00:00Z
+---
 # Prevent Horizontal and Vertical Drift
 
 As a maintainer, I want CodeWiki to detect contradictions between intent, docs, loop outputs, traces, evidence, tests, code, and Git proof so the knowledge base remains trustworthy.

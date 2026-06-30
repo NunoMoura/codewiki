@@ -1,3 +1,50 @@
+---
+type: Concept
+title: Pi Extension
+description: The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. This checkout uses controlled repo-local dogfooding through the project-local package path `..` in `.pi/settings.json`; Pi resolves relative package paths against the settings file, so `..` points at the package root. It intentionally does not auto-load CodeWiki through a `.pi/extensions/codewiki.ts` shim. Rebuild `dist/**` and restart/reload Pi before relying on repo-local dogfood after source changes. Temp-project package smokes also exercise `dist/pi/extension.js`.
+tags:
+  - codewiki
+  - system
+  - extension
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: pi
+codewiki_components:
+  - pi
+codewiki_source_patterns:
+  - src/pi/**
+codewiki_test_patterns:
+  - tests/runtime/pi-worker-start.test.mjs
+  - tests/runtime/pi-extension.test.mjs
+  - tests/runtime/pi-install-smoke.mjs
+  - tests/runtime/pi-install-scope.test.mjs
+  - tests/runtime/pi-process-session.test.mjs
+  - tests/runtime/pi-rpc-smoke.mjs
+  - tests/runtime/pi-tool-mutation-smoke.mjs
+  - tests/runtime/pi-worker-results.test.mjs
+  - tests/runtime/package-install-smoke.mjs
+  - tests/runtime/project-local-install-smoke.mjs
+  - tests/runtime/external-package-lifecycle-smoke.mjs
+  - tests/runtime/external-package-failures-smoke.mjs
+codewiki_role: host_adapter
+codewiki_source_map:
+  - id: pi
+    source_patterns:
+      - src/pi/**
+    test_patterns:
+      - tests/runtime/pi-worker-start.test.mjs
+      - tests/runtime/pi-extension.test.mjs
+      - tests/runtime/pi-install-smoke.mjs
+      - tests/runtime/pi-install-scope.test.mjs
+      - tests/runtime/pi-process-session.test.mjs
+      - tests/runtime/pi-rpc-smoke.mjs
+      - tests/runtime/pi-tool-mutation-smoke.mjs
+      - tests/runtime/pi-worker-results.test.mjs
+      - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/project-local-install-smoke.mjs
+      - tests/runtime/external-package-lifecycle-smoke.mjs
+      - tests/runtime/external-package-failures-smoke.mjs
+    role: host_adapter
+---
 # Pi Extension
 
 The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. This checkout uses controlled repo-local dogfooding through the project-local package path `..` in `.pi/settings.json`; Pi resolves relative package paths against the settings file, so `..` points at the package root. It intentionally does not auto-load CodeWiki through a `.pi/extensions/codewiki.ts` shim. Rebuild `dist/**` and restart/reload Pi before relying on repo-local dogfood after source changes. Temp-project package smokes also exercise `dist/pi/extension.js`.

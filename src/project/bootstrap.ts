@@ -7,6 +7,15 @@ import {
 	writeFile,
 } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
+import { serializeOkfDocument } from "../knowledge/okf-frontmatter.ts";
+import {
+	mergeOkfSourceMapExtension,
+	okfSourceMapExtensionForDoc,
+} from "../knowledge/okf-source-map.ts";
+import {
+	parseSourceMapYaml,
+	type SourceMapContract,
+} from "../knowledge/source-map.ts";
 import { resolveWikiConfig } from "./config.ts";
 import { WIKI_CONFIG_PATH } from "./config-file.ts";
 
@@ -81,6 +90,7 @@ const EXCLUDED_NAMES = new Set([
 	"dist",
 	"coverage",
 ]);
+const OKF_BOOTSTRAP_TIMESTAMP = "2026-06-30T00:00:00Z";
 
 export async function bootstrapCodewiki(
 	repoRoot: string,
@@ -197,8 +207,9 @@ function starterFiles(
 	project: string,
 	boundaries: BootstrapBoundary[],
 ): Record<string, string> {
-	return {
-		[WIKI_CONFIG_PATH]: configJson(project),
+	const sourceMapText = sourceMapYaml(boundaries);
+	const sourceMap = parseSourceMapYaml(sourceMapText);
+	const markdownFiles: Record<string, string> = {
 		".codewiki/kb/lexicon.md": lexiconDoc(project),
 		".codewiki/kb/product/overview.md": productOverviewDoc(project),
 		".codewiki/kb/product/users/maintainers.md": simpleDoc(
@@ -240,12 +251,77 @@ function starterFiles(
 		".codewiki/kb/system/runtime.md": runtimeDoc(),
 		".codewiki/kb/system/knowledge.md": knowledgeDoc(),
 		".codewiki/kb/system/source-map.md": sourceMapDoc(),
-		".codewiki/kb/system/source-map.yaml": sourceMapYaml(boundaries),
+	};
+	return {
+		[WIKI_CONFIG_PATH]: configJson(project),
+		...Object.fromEntries(
+			Object.entries(markdownFiles).map(([path, body]) => [
+				path,
+				starterOkfConcept(path, body, sourceMap),
+			]),
+		),
+		".codewiki/kb/system/source-map.yaml": sourceMapText,
 	};
 }
 
 function configJson(project: string): string {
 	return `${JSON.stringify(resolveWikiConfig({ project }), null, "\t")}\n`;
+}
+
+function starterOkfConcept(
+	path: string,
+	body: string,
+	sourceMap: SourceMapContract,
+): string {
+	const frontmatter = {
+		type: "Concept",
+		title: markdownTitle(body),
+		description: markdownDescription(body),
+		tags: okfTagsForPath(path),
+		timestamp: OKF_BOOTSTRAP_TIMESTAMP,
+	};
+	const extension = okfSourceMapExtensionForDoc(sourceMap, path);
+	return serializeOkfDocument({
+		frontmatter: extension
+			? mergeOkfSourceMapExtension(frontmatter, extension)
+			: frontmatter,
+		body,
+	});
+}
+
+function markdownTitle(body: string): string {
+	return body.match(/^#\s+(.+)$/m)?.[1]?.trim() || "CodeWiki Knowledge";
+}
+
+function markdownDescription(body: string): string {
+	return (
+		body
+			.split(/\n\n+/)
+			.map((paragraph) => paragraph.trim().replace(/\s+/g, " "))
+			.find(
+				(paragraph) =>
+					paragraph &&
+					!paragraph.startsWith("#") &&
+					!paragraph.startsWith("```") &&
+					!paragraph.startsWith("- "),
+			) || markdownTitle(body)
+	);
+}
+
+function okfTagsForPath(path: string): string[] {
+	return uniqueStrings([
+		"codewiki",
+		...path
+			.replace(/^\.codewiki\/kb\//, "")
+			.replace(/\.md$/, "")
+			.split(/[/\s_-]+/),
+	]);
+}
+
+function uniqueStrings(values: string[]): string[] {
+	return Array.from(
+		new Set(values.map((value) => value.toLowerCase().trim()).filter(Boolean)),
+	);
 }
 
 function lexiconDoc(project: string): string {
@@ -287,11 +363,11 @@ function runtimeDoc(): string {
 }
 
 function knowledgeDoc(): string {
-	return `# Knowledge\n\nKnowledge lives in \`.codewiki/kb/**\`. Product docs explain user-facing intent. System docs explain architecture and loop behavior. Markdown files must start with body content, not frontmatter.\n`;
+	return `# Knowledge\n\nKnowledge lives in \`.codewiki/kb/**\`. Product docs explain user-facing intent. System docs explain architecture and loop behavior. Markdown concept docs use OKF v0.1 frontmatter with CodeWiki extension fields generated from \`source-map.yaml\` where ownership exists.\n`;
 }
 
 function sourceMapDoc(): string {
-	return `# Source Map\n\n\`source-map.yaml\` maps source, tests, generated views, trace events, and owning KB docs. It is the machine-readable ownership contract used by loop exit conditions and project checks.\n`;
+	return `# Source Map\n\n\`source-map.yaml\` maps source, tests, generated views, trace events, and owning KB docs. It remains the canonical machine-readable ownership contract while OKF concept frontmatter carries generated CodeWiki extension fields for knowledge exchange.\n`;
 }
 
 function simpleDoc(title: string, body: string): string {
@@ -328,7 +404,7 @@ function sourceMapYaml(boundaries: BootstrapBoundary[]): string {
 		"    - dist/**",
 		"    - coverage/**",
 		"rules:",
-		"  - Source ownership is declared here; KB Markdown frontmatter is forbidden.",
+		"  - Source ownership is declared here; generated OKF extension fields derive from this map.",
 		"  - Every active source ownership root needs one owning doc and tests or an explicit no-test rationale.",
 		"components:",
 		"  package:",

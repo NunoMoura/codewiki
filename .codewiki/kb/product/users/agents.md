@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Agents and Subagents
+description: Agents use CodeWiki as persistent project memory and loop-governed orchestration state through host adapters. They need compact current state, clear source-of-truth boundaries, scoped runtime claims for parallel coordination, wait/heartbeat signals, and explicit exit conditions before they change knowledge, source, tests, or publication state.
+tags:
+  - codewiki
+  - product
+  - users
+  - agents
+timestamp: 2026-06-30T00:00:00Z
+---
 # Agents and Subagents
 
 Agents use CodeWiki as persistent project memory and loop-governed orchestration state through host adapters. They need compact current state, clear source-of-truth boundaries, scoped runtime claims for parallel coordination, wait/heartbeat signals, and explicit exit conditions before they change knowledge, source, tests, or publication state.

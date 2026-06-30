@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
 	extractOkfMarkdownLinks,
@@ -9,10 +10,31 @@ import {
 	parseOkfDocument,
 	serializeOkfDocument,
 } from "../../src/knowledge/okf-frontmatter.ts";
+import { generateOkfSourceMapExtensions } from "../../src/knowledge/okf-source-map.ts";
 import {
 	okfConceptDocuments,
 	validateOkfBundle,
 } from "../../src/knowledge/okf-validation.ts";
+import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
+
+function collectFiles(root) {
+	const output = [];
+	for (const name of readdirSync(root).sort()) {
+		const path = `${root}/${name}`;
+		if (statSync(path).isDirectory()) output.push(...collectFiles(path));
+		else output.push(path);
+	}
+	return output;
+}
+
+function readKbBundle() {
+	return collectFiles(".codewiki/kb")
+		.filter((path) => path.endsWith(".md"))
+		.map((path) => ({
+			path: path.replace(/^\.codewiki\/kb\//, ""),
+			content: readFileSync(path, "utf8"),
+		}));
+}
 
 const validConcept = `---
 type: Playbook
@@ -57,6 +79,34 @@ describe("Open Knowledge Format v0.1", () => {
 
 		assert.deepEqual(reparsed.frontmatter, document.frontmatter);
 		assert.equal(reparsed.body, document.body);
+	});
+
+	it("validates the active CodeWiki KB as OKF concepts", () => {
+		const bundle = readKbBundle();
+		const result = validateOkfBundle(bundle);
+		const sourceMap = parseSourceMapYaml(
+			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
+		);
+		const documentsByPath = new Map(
+			result.documents.map((document) => [`.codewiki/kb/${document.path}`, document]),
+		);
+
+		assert.deepEqual(result.issues, []);
+		assert.equal(result.conceptCount, bundle.length);
+		for (const extension of generateOkfSourceMapExtensions(sourceMap).filter(
+			(candidate) => candidate.path.startsWith(".codewiki/kb/"),
+		)) {
+			const frontmatter = documentsByPath.get(extension.path)?.frontmatter;
+			assert.ok(frontmatter, `missing OKF frontmatter for ${extension.path}`);
+			for (const [key, value] of Object.entries(extension.fields)) {
+				assert.deepEqual(frontmatter[key], value, `${extension.path} ${key}`);
+			}
+		}
+		for (const path of collectFiles(".codewiki/traces").filter((candidate) =>
+			candidate.endsWith(".jsonl"),
+		)) {
+			assert.equal(readFileSync(path, "utf8").startsWith("---\n"), false);
+		}
 	});
 
 	it("validates required concept frontmatter and type", () => {

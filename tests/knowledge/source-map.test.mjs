@@ -76,7 +76,7 @@ describe("source ownership map", () => {
 		);
 	});
 
-	it("validates active repo ownership and frontmatter-free KB docs", () => {
+	it("validates active repo ownership with OKF-frontmatter KB docs", () => {
 		const map = parseSourceMapYaml(sourceMapText);
 		const issues = validateSourceMap(map, {
 			artifactPaths: activeArtifactPaths(),

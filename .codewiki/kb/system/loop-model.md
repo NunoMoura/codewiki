@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Loop Model
+description: CodeWiki is a trace-backed software-development OS built around loops.
+tags:
+  - codewiki
+  - system
+  - loop
+  - model
+timestamp: 2026-06-30T00:00:00Z
+---
 # Loop Model
 
 CodeWiki is a trace-backed software-development OS built around loops.

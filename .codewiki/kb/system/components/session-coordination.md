@@ -1,3 +1,15 @@
+---
+type: Concept
+title: Session Coordination Component
+description: Session coordination prevents unsafe overlap between agents and records short-lived operational state. It tracks runtime claims, wait/heartbeat queues, worker/session refs, optional worktree metadata, and isolation evidence.
+tags:
+  - codewiki
+  - system
+  - components
+  - session
+  - coordination
+timestamp: 2026-06-30T00:00:00Z
+---
 # Session Coordination Component
 
 ## Responsibility

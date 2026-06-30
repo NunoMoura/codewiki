@@ -1,3 +1,12 @@
+---
+type: Concept
+title: Lexicon
+description: This file is CodeWiki's active vocabulary contract. Desired-state docs, skills, user-facing tools, command help, generated views, and trace summaries should use these terms.
+tags:
+  - codewiki
+  - lexicon
+timestamp: 2026-06-30T00:00:00Z
+---
 # Lexicon
 
 This file is CodeWiki's active vocabulary contract. Desired-state docs, skills, user-facing tools, command help, generated views, and trace summaries should use these terms.

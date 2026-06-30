@@ -1,3 +1,15 @@
+---
+type: Concept
+title: API Facade Component
+description: The API facade is the stable boundary that exposes CodeWiki operations to adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations. It converts external requests into typed CodeWiki capabilities and keeps callers away from direct `.codewiki/` file mutation.
+tags:
+  - codewiki
+  - system
+  - components
+  - api
+  - facade
+timestamp: 2026-06-30T00:00:00Z
+---
 # API Facade Component
 
 ## Responsibility

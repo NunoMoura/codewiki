@@ -1,3 +1,28 @@
+---
+type: Concept
+title: Lab
+description: The CodeWiki lab is the isolated experimentation area for improving loop exit conditions before changing production loop behavior. It replaces the previous benchmark-first approach during core hardening.
+tags:
+  - codewiki
+  - system
+  - lab
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: lab
+codewiki_components:
+  - lab
+codewiki_source_patterns:
+  - lab/**
+codewiki_test_patterns:
+  - tests/lab/**
+codewiki_role: loop_exit_experimentation
+codewiki_source_map:
+  - id: lab
+    source_patterns:
+      - lab/**
+    test_patterns:
+      - tests/lab/**
+    role: loop_exit_experimentation
+---
 # Lab
 
 The CodeWiki lab is the isolated experimentation area for improving loop exit

@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Pi Terminal UX
+description: CodeWiki is backend-first for the current architecture wave, but Pi terminal rendering is now a primary product surface because it makes the agent's semantic work observable without spending extra model tokens.
+tags:
+  - codewiki
+  - system
+  - terminal
+  - ui
+timestamp: 2026-06-30T00:00:00Z
+---
 # Pi Terminal UX
 
 CodeWiki is backend-first for the current architecture wave, but Pi terminal rendering is now a primary product surface because it makes the agent's semantic work observable without spending extra model tokens.

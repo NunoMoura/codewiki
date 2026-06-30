@@ -1,3 +1,16 @@
+---
+type: Concept
+title: Planning to Implementation Flow
+description: Implementation and runtime scheduling may start only from a planning iteration whose exit status is `exit`.
+tags:
+  - codewiki
+  - system
+  - flows
+  - planning
+  - to
+  - implementation
+timestamp: 2026-06-30T00:00:00Z
+---
 # Planning to Implementation Flow
 
 Implementation and runtime scheduling may start only from a planning iteration whose exit status is `exit`.

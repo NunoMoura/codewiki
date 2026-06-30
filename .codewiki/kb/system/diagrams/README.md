@@ -1,3 +1,14 @@
+---
+type: Concept
+title: System Diagram Raw Data
+description: This folder stores canonical raw data for system diagrams. The raw data should be easy for agents to read, edit, diff, and validate. The UI can render these specs as Mermaid, Cytoscape, custom SVG, or another local renderer, but renderer output is not canonical truth unless a future task explicitly promotes it.
+tags:
+  - codewiki
+  - system
+  - diagrams
+  - readme
+timestamp: 2026-06-30T00:00:00Z
+---
 # System Diagram Raw Data
 
 This folder stores canonical raw data for system diagrams. The raw data should be easy for agents to read, edit, diff, and validate. The UI can render these specs as Mermaid, Cytoscape, custom SVG, or another local renderer, but renderer output is not canonical truth unless a future task explicitly promotes it.

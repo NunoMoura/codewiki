@@ -1,3 +1,74 @@
+---
+type: Concept
+title: Traces
+description: CodeWiki traces are the durable workflow and state record for software work. One trace represents one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
+tags:
+  - codewiki
+  - system
+  - traces
+timestamp: 2026-06-30T00:00:00Z
+codewiki_components:
+  - traces
+  - views
+codewiki_source_patterns:
+  - src/traces/**
+  - src/api/traces.ts
+  - src/views/**
+  - src/api/views.ts
+codewiki_test_patterns:
+  - tests/traces/**
+  - tests/views/**
+codewiki_trace_events:
+  - trace_head
+  - trace_event
+  - tail_checkpoint
+  - trace_close
+codewiki_generated_views:
+  - .codewiki/views/status.json
+  - .codewiki/views/resume.json
+  - .codewiki/views/work-plan.json
+  - .codewiki/views/work-queue.json
+  - .codewiki/views/trace-board.json
+  - .codewiki/views/triggers.json
+  - .codewiki/views/runtime-board.json
+  - .codewiki/views/quality.json
+  - .codewiki/views/blockers.json
+  - .codewiki/views/conflicts.json
+codewiki_roles:
+  - state_truth
+  - generated_projection
+codewiki_source_map:
+  - id: traces
+    source_patterns:
+      - src/traces/**
+      - src/api/traces.ts
+    test_patterns:
+      - tests/traces/**
+    trace_events:
+      - trace_head
+      - trace_event
+      - tail_checkpoint
+      - trace_close
+    role: state_truth
+  - id: views
+    source_patterns:
+      - src/views/**
+      - src/api/views.ts
+    test_patterns:
+      - tests/views/**
+    generated_views:
+      - .codewiki/views/status.json
+      - .codewiki/views/resume.json
+      - .codewiki/views/work-plan.json
+      - .codewiki/views/work-queue.json
+      - .codewiki/views/trace-board.json
+      - .codewiki/views/triggers.json
+      - .codewiki/views/runtime-board.json
+      - .codewiki/views/quality.json
+      - .codewiki/views/blockers.json
+      - .codewiki/views/conflicts.json
+    role: generated_projection
+---
 # Traces
 
 ## Responsibility

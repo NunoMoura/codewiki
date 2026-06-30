@@ -1,3 +1,47 @@
+---
+type: Concept
+title: Planning Loop
+description: The planning loop owns executable work shaping and trace-queue health. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting decisions enter planning; tiny/small low-risk decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+tags:
+  - codewiki
+  - system
+  - planning
+  - loop
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: planning
+codewiki_components:
+  - planning
+codewiki_source_patterns:
+  - src/planning/**
+  - src/api/planning.ts
+codewiki_test_patterns:
+  - tests/planning/**
+  - tests/helpers/planning-work.mjs
+codewiki_trace_events:
+  - planning.work_units_created
+codewiki_generated_views:
+  - .codewiki/views/work-plan.json
+  - .codewiki/views/work-queue.json
+  - .codewiki/views/triggers.json
+  - .codewiki/views/quality.json
+codewiki_role: semantic_loop
+codewiki_source_map:
+  - id: planning
+    source_patterns:
+      - src/planning/**
+      - src/api/planning.ts
+    test_patterns:
+      - tests/planning/**
+      - tests/helpers/planning-work.mjs
+    generated_views:
+      - .codewiki/views/work-plan.json
+      - .codewiki/views/work-queue.json
+      - .codewiki/views/triggers.json
+      - .codewiki/views/quality.json
+    trace_events:
+      - planning.work_units_created
+    role: semantic_loop
+---
 # Planning Loop
 
 The planning loop owns executable work shaping and trace-queue health. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting decisions enter planning; tiny/small low-risk decisions may bypass planning only when the Decision loop records a safe direct implementation route.

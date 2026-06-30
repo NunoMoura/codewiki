@@ -1,3 +1,15 @@
+---
+type: Concept
+title: Production readiness audit
+description: "Status: controlled dogfood enabled for `TRACE-production-readiness-audit`."
+tags:
+  - codewiki
+  - system
+  - production
+  - readiness
+  - audit
+timestamp: 2026-06-30T00:00:00Z
+---
 # Production readiness audit
 
 Status: controlled dogfood enabled for `TRACE-production-readiness-audit`.

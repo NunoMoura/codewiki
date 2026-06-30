@@ -1,3 +1,15 @@
+---
+type: Concept
+title: Knowledge Base Component
+description: The knowledge base stores intended product and system truth. Parser code loads Markdown, headings, diagram refs, links, source-map entries, and source refs so semantic loops, exit conditions, and generated views can reason about the project.
+tags:
+  - codewiki
+  - system
+  - components
+  - knowledge
+  - base
+timestamp: 2026-06-30T00:00:00Z
+---
 # Knowledge Base Component
 
 ## Responsibility

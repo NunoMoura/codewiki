@@ -1,3 +1,16 @@
+---
+type: Concept
+title: Resume Context Boundary
+description: The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.
+tags:
+  - codewiki
+  - system
+  - flows
+  - resume
+  - context
+  - boundary
+timestamp: 2026-06-30T00:00:00Z
+---
 # Resume Context Boundary
 
 The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.

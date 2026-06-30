@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Maintainers
+description: Maintainers use CodeWiki to keep current intent, trace-backed work state, implementation evidence, and publication readiness close to the repository.
+tags:
+  - codewiki
+  - product
+  - users
+  - maintainers
+timestamp: 2026-06-30T00:00:00Z
+---
 # Maintainers
 
 Maintainers use CodeWiki to keep current intent, trace-backed work state, implementation evidence, and publication readiness close to the repository.

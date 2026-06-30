@@ -1,3 +1,37 @@
+---
+type: Concept
+title: Loop Contracts
+description: "CodeWiki has exactly three semantic loops: decision, planning, and implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, or recovery loop."
+tags:
+  - codewiki
+  - system
+  - loop
+  - contracts
+timestamp: 2026-06-30T00:00:00Z
+codewiki_component: loop_standards
+codewiki_components:
+  - loop_standards
+codewiki_source_patterns:
+  - src/loops/**
+codewiki_test_patterns:
+  - tests/loops/**
+  - tests/decision/**
+  - tests/planning/**
+  - tests/implementation/**
+  - tests/lab/**
+codewiki_role: loop_standard_engine
+codewiki_source_map:
+  - id: loop_standards
+    source_patterns:
+      - src/loops/**
+    test_patterns:
+      - tests/loops/**
+      - tests/decision/**
+      - tests/planning/**
+      - tests/implementation/**
+      - tests/lab/**
+    role: loop_standard_engine
+---
 # Loop Contracts
 
 CodeWiki has exactly three semantic loops: decision, planning, and implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, or recovery loop.

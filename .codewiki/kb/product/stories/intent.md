@@ -1,3 +1,14 @@
+---
+type: Concept
+title: Maintain Fresh Intent
+description: As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before planning or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
+tags:
+  - codewiki
+  - product
+  - stories
+  - intent
+timestamp: 2026-06-30T00:00:00Z
+---
 # Maintain Fresh Intent
 
 As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before planning or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
