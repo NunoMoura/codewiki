@@ -98,6 +98,19 @@ trace_close          # optional final lifecycle record
 
 The trace file is its own hot catalog entry. The `.codewiki/traces/` directory is the active working set: hot files are active or recently closing traces, and project state loaders only read files matching `TRACE-*.jsonl`. Completed traces are closed and compacted only after implementation evidence exits and the full trace body is preserved by a Git restore ref. Closed detail can be replaced by compact hot stubs after required evidence is committed. Closed traces are terminal and do not receive append handles. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog, central `.codewiki/traces.jsonl`, or trace-index truth file.
 
+## OKF boundary
+
+Open Knowledge Format applies to `.codewiki/kb/**/*.md` only. Trace files under `.codewiki/traces/TRACE-*.jsonl` are outside OKF even when an OKF export or validator scans the repository. They are JSONL workflow truth, not Markdown concepts, not OKF `index.md` or `log.md`, and never YAML-frontmatter documents.
+
+OKF export and validation must filter repository inputs through the CodeWiki boundary rule before calling OKF parsers:
+
+```text
+include: .codewiki/kb/**/*.md
+exclude: .codewiki/traces/TRACE-*.jsonl
+```
+
+Trace append, compaction, and hydration keep using the trace schema and Git restore refs described here. OKF import/export can cite trace refs as evidence strings, but it must not parse, rewrite, compact, hydrate, or otherwise own trace JSONL. The source of truth for workflow state remains the append-only trace line stream plus retained stubs and Git restore refs.
+
 ## Record types
 
 ### `trace_head`
