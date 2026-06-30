@@ -21,10 +21,7 @@ function collectFiles(root) {
 }
 
 function repoBoundaryFiles() {
-	return [
-		...collectFiles(".codewiki/kb"),
-		...collectFiles(".codewiki/traces"),
-	]
+	return [...collectFiles(".codewiki/kb"), ...collectFiles(".codewiki/traces")]
 		.filter((path) => path.endsWith(".md") || path.endsWith(".jsonl"))
 		.map((path) => ({ path, content: readFileSync(path, "utf8") }));
 }
@@ -71,8 +68,14 @@ describe("OKF trace boundary", () => {
 			okfFiles.some((file) => file.path.startsWith(".codewiki/traces/")),
 			false,
 		);
-		assert.equal(okfFiles.some((file) => file.path.endsWith(".jsonl")), false);
-		assert.equal(okfFiles.some((file) => file.path === "index.md"), true);
+		assert.equal(
+			okfFiles.some((file) => file.path.endsWith(".jsonl")),
+			false,
+		);
+		assert.equal(
+			okfFiles.some((file) => file.path === "index.md"),
+			true,
+		);
 		assert.deepEqual(result.issues, []);
 		assert.equal(result.conceptCount, 43);
 		assert.equal(result.reservedCount, 4);
@@ -80,10 +83,12 @@ describe("OKF trace boundary", () => {
 
 	it("does not parse trace files as OKF concepts", () => {
 		const traceFiles = codeWikiTraceBoundaryEntries(repoBoundaryFiles());
-		const okfFiles = codeWikiOkfBundleFiles(traceFiles.map((entry) => ({
-			path: entry.path,
-			content: "---\ntype: Concept\n---\n# Trap\n",
-		})));
+		const okfFiles = codeWikiOkfBundleFiles(
+			traceFiles.map((entry) => ({
+				path: entry.path,
+				content: "---\ntype: Concept\n---\n# Trap\n",
+			})),
+		);
 
 		assert.equal(traceFiles.length > 0, true);
 		assert.equal(

@@ -56,8 +56,8 @@ export function codeWikiTraceBoundaryEntries(
 ): CodeWikiOkfBoundaryEntry[] {
 	return files
 		.map((file) => classifyCodeWikiOkfBoundary(file.path))
-		.filter((entry) =>
-			entry.kind === "trace_jsonl" || entry.kind === "trace_other"
+		.filter(
+			(entry) => entry.kind === "trace_jsonl" || entry.kind === "trace_other",
 		)
 		.sort((left, right) => left.path.localeCompare(right.path));
 }

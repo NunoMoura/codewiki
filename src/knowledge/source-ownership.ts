@@ -45,9 +45,7 @@ export function okfSourceOwnershipExtensionsFromBundle(
 		.flatMap((file) => {
 			const document = parseOkfDocument(file.path, file.content);
 			if (document.kind !== "concept" || !document.frontmatter) return [];
-			const fields = sourceOwnershipFieldsFromFrontmatter(
-				document.frontmatter,
-			);
+			const fields = sourceOwnershipFieldsFromFrontmatter(document.frontmatter);
 			return fields ? [{ path: document.path, fields }] : [];
 		})
 		.sort((left, right) => left.path.localeCompare(right.path));
@@ -63,7 +61,9 @@ export function sourceOwnershipMapFromOkfBundle(
 		sourceRefs: options.sourceRefs || options.migrationMap?.sourceRefs,
 		id: options.id || options.migrationMap?.id,
 	});
-	const okfComponentIds = new Set(okfMap.components.map((component) => component.id));
+	const okfComponentIds = new Set(
+		okfMap.components.map((component) => component.id),
+	);
 	return {
 		...okfMap,
 		components: [
@@ -149,7 +149,10 @@ export function validateSourceOwnershipFromOkfBundle(
 	input: SourceMapValidationInput = {},
 	options: SourceOwnershipCompatibilityOptions = {},
 ): SourceMapValidationIssue[] {
-	return validateSourceMap(sourceOwnershipMapFromOkfBundle(files, options), input);
+	return validateSourceMap(
+		sourceOwnershipMapFromOkfBundle(files, options),
+		input,
+	);
 }
 
 function sourceOwnershipFieldsFromFrontmatter(
@@ -207,9 +210,7 @@ function sourceOwnershipFieldsFromFrontmatter(
 	};
 }
 
-function structuredComponents(
-	value: unknown,
-): CodeWikiOkfSourceMapComponent[] {
+function structuredComponents(value: unknown): CodeWikiOkfSourceMapComponent[] {
 	if (!Array.isArray(value)) return [];
 	return value.flatMap((item) => {
 		const record = objectRecord(item);
