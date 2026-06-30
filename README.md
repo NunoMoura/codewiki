@@ -46,6 +46,20 @@ The active migration record lives in `.codewiki/kb/system/migration-audit.md`. D
 
 CodeWiki source remains TypeScript-first during the rebuild. Npm packages are built to `dist/**` before packing because Node does not strip TypeScript inside `node_modules`; installed packages target Node.js `>=20.6.0`. Local source commands and tests still use `node --experimental-strip-types`, so use Node.js `>=22.6.0` for development on this scaffold.
 
+## OKF compatibility
+
+CodeWiki exports and validates `.codewiki/kb/**/*.md` as Open Knowledge Format v0.1. Trace files remain outside OKF: `.codewiki/traces/TRACE-*.jsonl` is workflow truth and is filtered before OKF parsing.
+
+```ts
+import { runWikiOkf } from "codewiki";
+
+const validation = runWikiOkf({ action: "validate", files });
+const exported = runWikiOkf({ action: "export", files });
+const consumed = runWikiOkf({ action: "consume", files: exported.files });
+```
+
+`validate` and `export` default to CodeWiki KB scope and only include `.codewiki/kb/**/*.md`. `consume` defaults to generic OKF bundle scope for imported OKF markdown. Unknown producer frontmatter fields are preserved during consume/export round trips. OKF compatibility is format-level only; CodeWiki does not depend on BigQuery, Gemini, Google Cloud Knowledge Catalog, or the Google OKF reference agent.
+
 ## Development commands
 
 ```bash

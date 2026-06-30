@@ -92,6 +92,7 @@ describe("fresh scaffold", () => {
 			"runWikiConfig",
 			"runWikiDecide",
 			"runWikiImplement",
+			"runWikiOkf",
 			"runWikiPlan",
 			"runWikiRuntime",
 			"sourceLayout",

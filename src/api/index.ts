@@ -3,6 +3,7 @@ export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";
 export * from "./wiki-decide.ts";
 export * from "./wiki-implement.ts";
+export * from "./wiki-okf.ts";
 export * from "./wiki-plan.ts";
 export * from "./wiki-runtime.ts";
 export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
