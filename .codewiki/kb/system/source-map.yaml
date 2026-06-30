@@ -20,7 +20,7 @@ defaults:
     - "**/*.d.ts"
     - "**/*.tgz"
 rules:
-  - Source ownership is declared here; KB Markdown frontmatter is forbidden.
+  - Source ownership is declared here during OKF migration; generated OKF extension fields must be derived from this map until parity supports deprecation.
   - Subpaths inherit the nearest owning component unless a more specific component entry exists.
   - Every active source ownership root needs one owning doc and tests or an explicit no-test rationale.
   - Diagrams map concepts; this file maps source ownership.
