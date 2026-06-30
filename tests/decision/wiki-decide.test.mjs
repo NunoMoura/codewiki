@@ -60,6 +60,9 @@ describe("wiki_decide core facade", () => {
 		assert.equal(result.iterationEvent.sequence, 2);
 		assert.equal(result.loopResult.readyForPlanning, true);
 		assert.equal(result.append, undefined);
+		assert.match(result.renderedDecisionTable.markdown, /\| Row ID \| Decision \|/);
+		assert.match(result.renderedDecisionTable.markdown, /DTR-wiki-decide/);
+		assert.match(result.renderedDecisionTable.digest, /^sha256:/);
 	});
 
 	it("routes low-risk scoped decisions directly to implementation", async () => {
@@ -130,6 +133,51 @@ describe("wiki_decide core facade", () => {
 				createdAt: "2026-06-11T00:00:00.000Z",
 			});
 			const first = await appendTraceRecord(root, head, 0);
+			const preview = await runWikiDecide({
+				mode: "preview",
+				traceId,
+				nextSequence: 1,
+				createdAt: "2026-06-11T00:00:01.000Z",
+				tableInput: tableInput(),
+			});
+			await assert.rejects(
+				() =>
+					runWikiDecide({
+						repoRoot: root,
+						mode: "append",
+						expectedBytes: first.nextBytes,
+						traceId,
+						nextSequence: 1,
+						createdAt: "2026-06-11T00:00:01.000Z",
+						tableInput: tableInput(),
+					}),
+				/rendered decision table/,
+			);
+			await assert.rejects(
+				() =>
+					runWikiDecide({
+						repoRoot: root,
+						mode: "append",
+						expectedBytes: first.nextBytes,
+						traceId,
+						nextSequence: 1,
+						createdAt: "2026-06-11T00:00:01.000Z",
+						tableInput: {
+							...tableInput(),
+							rows: [
+								{
+									...tableInput().rows[0],
+									desiredState: "A changed table must need new approval.",
+								},
+							],
+						},
+						decisionTableApproval: {
+							approved: true,
+							renderedTableDigest: preview.renderedDecisionTable.digest,
+						},
+					}),
+				/does not match the current rendered table/,
+			);
 			const result = await runWikiDecide({
 				repoRoot: root,
 				mode: "append",
@@ -138,6 +186,10 @@ describe("wiki_decide core facade", () => {
 				nextSequence: 1,
 				createdAt: "2026-06-11T00:00:01.000Z",
 				tableInput: tableInput(),
+				decisionTableApproval: {
+					approved: true,
+					renderedTableDigest: preview.renderedDecisionTable.digest,
+				},
 			});
 			const readBack = await readTrace(join(root, traceFilePath(traceId)));
 			const state = replayTrace(readBack.records);
@@ -155,6 +207,10 @@ describe("wiki_decide core facade", () => {
 						mode: "append",
 						traceId,
 						tableInput: tableInput(),
+						decisionTableApproval: {
+							approved: true,
+							renderedTableDigest: preview.renderedDecisionTable.digest,
+						},
 					}),
 				/expectedBytes/,
 			);

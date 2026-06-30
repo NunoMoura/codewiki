@@ -26,7 +26,7 @@ function approvedDecisionRef(events) {
 }
 
 async function decision(traceId, options = {}) {
-	return runWikiDecide({
+	const input = {
 		mode: options.mode || "preview",
 		repoRoot: options.repoRoot,
 		expectedBytes: options.expectedBytes,
@@ -49,7 +49,15 @@ async function decision(traceId, options = {}) {
 				},
 			],
 		},
-	});
+	};
+	if (input.mode === "append") {
+		const preview = await runWikiDecide({ ...input, mode: "preview" });
+		input.decisionTableApproval = {
+			approved: true,
+			renderedTableDigest: preview.renderedDecisionTable.digest,
+		};
+	}
+	return runWikiDecide(input);
 }
 
 function workItemInput(decisionEventId) {

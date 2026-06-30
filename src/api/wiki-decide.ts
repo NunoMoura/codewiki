@@ -3,6 +3,11 @@ import {
 	type DecisionIterationInput,
 	type DecisionIterationResult,
 } from "../decision/iteration.ts";
+import {
+	decisionTableMarkdownDigest,
+	renderDecisionTableMarkdown,
+} from "../decision/table-rendering.ts";
+import { createDecisionTable } from "../decision/table.ts";
 import type {
 	CurrentStatePacket,
 	DecisionTable,
@@ -24,6 +29,19 @@ import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiDecideMode = "preview" | "append";
 
+export interface DecisionTableApprovalInput {
+	approved?: boolean;
+	renderedTableDigest?: string;
+	renderedTableMarkdown?: string;
+	approvedBy?: string;
+	approvedAt?: string;
+}
+
+export interface RenderedDecisionTable {
+	markdown: string;
+	digest: string;
+}
+
 export interface RunWikiDecideInput {
 	traceId: string;
 	table?: DecisionTable;
@@ -38,6 +56,7 @@ export interface RunWikiDecideInput {
 	expectedBytes?: number;
 	nextSequence?: number;
 	expectedTraceId?: string;
+	decisionTableApproval?: DecisionTableApprovalInput;
 }
 
 export interface RunWikiDecideResult {
@@ -45,6 +64,7 @@ export interface RunWikiDecideResult {
 	traceId: string;
 	loopResult: DecisionIterationResult;
 	iterationEvent: TraceEvent;
+	renderedDecisionTable: RenderedDecisionTable;
 	append?: AppendSemanticLoopReportResult<DecisionIterationResult>["append"];
 }
 
@@ -62,6 +82,7 @@ const WIKI_DECIDE_INPUT_KEYS = [
 	"expectedBytes",
 	"nextSequence",
 	"expectedTraceId",
+	"decisionTableApproval",
 ] as const;
 
 export async function runWikiDecide(
@@ -79,7 +100,13 @@ export async function runWikiDecide(
 		repoRoot: input.repoRoot,
 	});
 	const loopInput = decisionIterationInput(input, qualityJudge);
+	const renderedDecisionTable = renderedDecisionTableFor(loopInput.table!);
 	if (mode === "append") {
+		assertAppendPreflightInput(input);
+		assertDecisionTableApproval(
+			input.decisionTableApproval,
+			renderedDecisionTable,
+		);
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			loop: "decision",
@@ -94,6 +121,7 @@ export async function runWikiDecide(
 			traceId: result.traceId,
 			loopResult: result.loopResult,
 			iterationEvent: result.iterationEvent,
+			renderedDecisionTable,
 			append: result.append,
 		};
 	}
@@ -112,6 +140,7 @@ export async function runWikiDecide(
 		traceId: iterationEvent.traceId,
 		loopResult,
 		iterationEvent,
+		renderedDecisionTable,
 	};
 }
 
@@ -121,8 +150,7 @@ function decisionIterationInput(
 ): DecisionIterationInput {
 	return {
 		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
-		table: input.table,
-		tableInput: input.tableInput,
+		table: input.table ?? createDecisionTable(input.tableInput ?? {}),
 		knowledgeDelta: input.knowledgeDelta,
 		currentStatePacket: input.currentStatePacket,
 		qualityJudge,
@@ -130,6 +158,54 @@ function decisionIterationInput(
 		parentId: input.parentId,
 		createdAt: input.createdAt,
 	};
+}
+
+function assertAppendPreflightInput(input: RunWikiDecideInput): void {
+	requiredRepoRoot(input.repoRoot);
+	requiredExpectedBytes(input.expectedBytes);
+	requiredNextSequence(input.nextSequence ?? Number.NaN);
+}
+
+function renderedDecisionTableFor(table: DecisionTable): RenderedDecisionTable {
+	const markdown = renderDecisionTableMarkdown(table);
+	return { markdown, digest: decisionTableMarkdownDigest(markdown) };
+}
+
+function assertDecisionTableApproval(
+	approval: DecisionTableApprovalInput | undefined,
+	rendered: RenderedDecisionTable,
+): void {
+	if (!approval?.approved) {
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "missing_required",
+			field: "decisionTableApproval.approved",
+			message:
+				"wiki_decide append mode requires explicit approval of the rendered decision table.",
+		});
+	}
+	const approvedDigest = approval.renderedTableMarkdown
+		? decisionTableMarkdownDigest(approval.renderedTableMarkdown)
+		: approval.renderedTableDigest?.trim();
+	if (!approvedDigest) {
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "missing_required",
+			field: "decisionTableApproval.renderedTableDigest",
+			message:
+				"wiki_decide append mode requires the approved rendered table digest or markdown.",
+		});
+	}
+	if (approvedDigest !== rendered.digest) {
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "invalid_input",
+			field: "decisionTableApproval.renderedTableDigest",
+			message:
+				"wiki_decide append mode rejected a decision table approval digest that does not match the current rendered table.",
+			data: { expected: rendered.digest, actual: approvedDigest },
+		});
+	}
 }
 
 function requiredNextSequence(value: number): number {
