@@ -66,7 +66,7 @@ Knowledge docs should use sparse intentional Markdown links for human navigation
 
 Generated views derive machine relationships from explicit refs, curated Markdown links, trace iteration data, source-map ownership, source/test facts, and Git refs. If a relationship is mainly needed for routing, drift detection, freshness, backlinks, doc-code mapping, or current-state views, it belongs in generated views rather than hand-maintained prose.
 
-Markdown frontmatter is forbidden in the target model. Exact code/test/view ownership belongs in `system/source-map.yaml`. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs. Reusable drift lint rules live in source so readiness checks, future commands, and tests share one terminology contract instead of duplicating stale-wording scans.
+CodeWiki is migrating hot knowledge toward OKF v0.1 markdown/frontmatter concepts. During migration, `system/source-map.yaml` remains the canonical KB-code-test ownership source; generated OKF extension fields will project that ownership into concept frontmatter before source-map deprecation is considered. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs. Reusable drift lint rules live in source so readiness checks, future commands, and tests share one terminology contract instead of duplicating stale-wording scans.
 
 ## Rules
 
