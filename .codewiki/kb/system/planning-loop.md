@@ -13,7 +13,6 @@ codewiki_components:
   - planning
 codewiki_source_patterns:
   - src/planning/**
-  - src/api/planning.ts
 codewiki_test_patterns:
   - tests/planning/**
   - tests/helpers/planning-work.mjs
@@ -29,7 +28,6 @@ codewiki_source_map:
   - id: planning
     source_patterns:
       - src/planning/**
-      - src/api/planning.ts
     test_patterns:
       - tests/planning/**
       - tests/helpers/planning-work.mjs

@@ -14,7 +14,6 @@ codewiki_components:
 codewiki_source_patterns:
   - src/git/**
   - src/implementation/**
-  - src/api/implementation.ts
 codewiki_test_patterns:
   - tests/implementation/**
   - tests/runtime/git-status.test.mjs
@@ -37,7 +36,6 @@ codewiki_source_map:
   - id: implementation
     source_patterns:
       - src/implementation/**
-      - src/api/implementation.ts
     test_patterns:
       - tests/implementation/**
       - tests/helpers/implementation-change.mjs

@@ -40,11 +40,10 @@ describe("OKF source-map extension generation", () => {
 		);
 		assert.equal(decision?.codewiki_component, "decision");
 		assert.deepEqual(decision?.codewiki_components, ["decision"]);
-		assert.deepEqual(decision?.codewiki_source_patterns, [
-			"src/decision/**",
-			"src/api/decision.ts",
+		assert.deepEqual(decision?.codewiki_source_patterns, ["src/decision/**"]);
+		assert.deepEqual(decision?.codewiki_trace_events, [
+			"decision.rows_approved",
 		]);
-		assert.deepEqual(decision?.codewiki_trace_events, ["decision.rows_approved"]);
 
 		const api = okfSourceMapExtensionForDoc(
 			sourceMap,
@@ -83,10 +82,7 @@ describe("OKF source-map extension generation", () => {
 		assert.equal(merged.type, "Reference");
 		assert.equal(merged.unknown_producer_key, "preserve me");
 		assert.equal(merged.codewiki_component, "decision");
-		assert.deepEqual(merged.codewiki_source_patterns, [
-			"src/decision/**",
-			"src/api/decision.ts",
-		]);
+		assert.deepEqual(merged.codewiki_source_patterns, ["src/decision/**"]);
 	});
 
 	it("round-trips source-map ownership through generated OKF extension metadata", () => {

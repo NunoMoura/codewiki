@@ -55,13 +55,17 @@ codewiki_source_map:
 
 Target facade roots:
 
-- `src/api/decision.ts`
-- `src/api/planning.ts`
-- `src/api/implementation.ts`
+- `src/api/index.ts`
+- `src/api/state.ts`
+- `src/api/wiki-decide.ts`
+- `src/api/wiki-plan.ts`
+- `src/api/wiki-implement.ts`
+- `src/api/wiki-archive.ts`
+- `src/api/wiki-config.ts`
+- `src/api/wiki-okf.ts`
+- `src/api/wiki-runtime.ts`
 - `src/api/traces.ts`
 - `src/api/views.ts`
-- `src/api/state.ts`
-- `src/api/index.ts`
 
 The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, or validation roots. Read-only state is exposed as `src/api/state.ts`, which folds active trace records into view-shaped projections without treating stored views as truth. Project-backed state adds append handles (`expectedBytes` and `nextSequence`) and a compact `next` action hint so agents can call the right semantic loop tool safely. Source-map/path explanation belongs in explain/source-map APIs, not `wiki_state`.
 

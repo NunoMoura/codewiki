@@ -13,7 +13,6 @@ codewiki_components:
   - decision
 codewiki_source_patterns:
   - src/decision/**
-  - src/api/decision.ts
 codewiki_test_patterns:
   - tests/decision/**
   - tests/helpers/decision-row.mjs
@@ -24,7 +23,6 @@ codewiki_source_map:
   - id: decision
     source_patterns:
       - src/decision/**
-      - src/api/decision.ts
     test_patterns:
       - tests/decision/**
       - tests/helpers/decision-row.mjs
