@@ -41,7 +41,11 @@ The high-signal packet produced by a semantic loop iteration. Loop output contai
 
 ## Exit condition
 
-A structured condition that decides whether a loop iteration can exit, must continue, must route back, or is blocked. Exit conditions are the loop-local trust boundary for output acceptance.
+A structured condition that decides whether a loop iteration can exit, must
+continue, must route back, or is blocked. Exit conditions are the loop-local
+trust boundary for output acceptance. User-facing UX should call these
+**Ready Checks** when explaining whether a Sprint Proposal, Sprint Plan, or Task
+can advance.
 
 ## Exit status
 
@@ -64,7 +68,11 @@ One append-only JSONL trace event written by runtime to record a semantic loop r
 
 ## Trace
 
-Append-only JSONL state and recovery record under `.codewiki/traces/TRACE-*.jsonl`. A trace records semantic loop iterations, runtime coordination events, checkpoints, refs, and compact recovery facts for one accountable change journey.
+Append-only JSONL state and recovery record under
+`.codewiki/traces/TRACE-*.jsonl`. A trace records semantic loop iterations,
+runtime coordination events, checkpoints, refs, and compact recovery facts for
+one accountable change journey. In product language, this is the technical
+backing for a **Sprint Record**.
 
 ## `refs`
 
@@ -80,7 +88,11 @@ The semantic loop that accepts user intent, requirements, alternatives, risks, a
 
 ## Planning loop
 
-The semantic loop that turns exited decision output into work units, dependencies, path scopes, acceptance criteria, component refs, conflicts, and verification strategy. It exits only when implementation and runtime can trust the planning output.
+The semantic loop that turns exited Decision output into Tasks, dependencies,
+path scopes, acceptance criteria, component refs, conflicts, and verification
+strategy. It exits only when implementation and runtime can trust the planning
+output. Low-level trace data may still call these work items or work units for
+compatibility.
 
 ## Implementation loop
 
@@ -108,11 +120,40 @@ traces, append handles, route hints, and repair loops.
 
 User Experience: how clear and useful CodeWiki is for the human developer.
 
+## Product workflow terms
+
+These terms are canonical in product docs, command help, generated views, and
+user-facing terminal rendering.
+
+| Term | Meaning | Technical backing |
+| --- | --- | --- |
+| Sprint Proposal | Draft package of Decisions being shaped and validated with the user before accountable work exists. | Decision table while stored or rendered inside the Decision loop. |
+| Decision | User-approved intent, requirement, risk choice, or product/system direction inside a Sprint Proposal. | Decision row and row id inside trace data. |
+| Sprint | Approved accountable change journey created after user-approved Decisions pass Decision ready checks. | One trace-backed workflow lifecycle. |
+| Sprint Record | Durable append-only record for a Sprint. | `.codewiki/traces/TRACE-*.jsonl` trace file. |
+| Sprint Queue | User-facing list of active and completed Sprints. | Generated view/projection over traces and work queues. |
+| Sprint Card | User-facing projection for one Sprint in the Sprint Queue. | Derived card/widget data; never a separate truth file. |
+| Task | Planning-created, parallel-safe, assignable work that covers one or more approved Decisions. | Planning work item / work unit in trace data. |
+| Assignment | Runtime claim of one Planning-approved Task by a worker or session. | Runtime claim trace event. |
+| Ready Checks | User-facing name for loop exit conditions and quality standards that must pass before work advances. | Exit-condition and quality-graph internals. |
+| Needs Review | User-facing status when earlier authority is required before work can proceed. | `route_back` exit status. |
+| Blocked | User-facing status when an external wait, resource, host capability, or policy prevents progress. | `blocked` exit status. |
+| Done | User-facing status for accepted completed work. | Passed implementation/archive closure state. |
+
+Implementation workers may use private scratchpads or checklists inside an
+assigned Task. These are execution aids, not Planning truth, Sprint Queue items,
+or runtime-claimable units.
+
+Host/session terms such as decision host, trace host, worker session, process
+session, and runtime claim are technical architecture terms. They should appear
+in runtime or host-adapter docs only when that topology matters.
+
 ## Route-back
 
 A loop iteration status indicating that an earlier semantic loop owns the
-required authority. Example: implementation routes back to planning for bad path
-scopes, or to decision for ambiguous product/API behavior or user validation.
+required authority. User-facing UX should say **Needs Review**. Example:
+implementation routes back to planning for bad path scopes, or to decision for
+ambiguous product/API behavior or user validation.
 
 ## Blocked
 
@@ -120,7 +161,9 @@ A loop iteration status indicating that external user input, resource availabili
 
 ## Runtime claim
 
-Trace-owned coordination event that grants a worker or session a bounded work scope. Claims prevent unsafe overlap but do not replace trace truth, source/tests, or Git proof.
+Trace-owned coordination event that grants a worker or session a bounded Task
+Assignment. Claims prevent unsafe overlap but do not replace trace truth,
+source/tests, or Git proof.
 
 ## Worker result
 
@@ -186,6 +229,15 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | gateway | loop-local exit conditions |
 | gate verdict | exit status |
 | validation report | exit condition result |
+| board | Sprint Queue; compatibility flag/name only where already public |
+| trace board | Sprint Queue |
+| trace queue | Sprint Queue; internal generated view only |
+| card / trace card | Sprint Card |
+| decision table | Sprint Proposal; internal Decision-loop table shape only |
+| decision row / row | Decision; row id only for trace refs |
+| work unit / work item | Task; internal Planning trace shape only |
+| sub-task / planner to-do list | Task, or worker-local scratchpad/checklist |
+| route_back | Needs Review; `route_back` only in internals |
 | roadmap | work-plan/work-queue generated views over traces |
 | graph truth | generated views over traces/KB/source/Git |
 | telemetry trace | JSONL trace |

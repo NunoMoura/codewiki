@@ -60,7 +60,7 @@ Runtime is CodeWiki's outer control loop. It is not a semantic loop and it does 
 while active work exists:
   read traces and derived views
   inspect loop outputs and exit conditions
-  invoke the semantic loop named by trace-derived state, or run a mechanical coordination action already authorized by Planning
+  invoke the semantic loop named by trace-derived state, or run a mechanical Task Assignment already authorized by Planning
   append semantic loop report or runtime coordination event
 ```
 
@@ -74,12 +74,12 @@ Runtime owns:
 - ephemeral leases and lock helpers;
 - scheduling and automation policy;
 - progress budgets and stop conditions;
-- work-unit claim selection and worker-start handoff;
+- Task Assignment / work-unit claim selection and worker-start handoff;
 - lifecycle and retention orchestration;
 - temporary working data under `.codewiki/runtime/tmp/**`;
 - host session refs and Pi-native compaction boundaries.
 
-Runtime does not invent accepted requirements, choose among raw decisions semantically, create work-plan truth, create implementation evidence, own loop outputs, treat generated views as truth, or define loop quality standards. Those are KB/source/Git/semantic-loop concerns until runtime appends them as trace records. Views own the derived calculations and cacheable projections over traces; runtime reads those views to coordinate, but traces remain truth. Shared error contracts and recovery hints live under `src/error-handling/**`; runtime consumes them without making error handling a semantic loop.
+Runtime does not invent accepted requirements, choose among raw Decisions semantically, create work-plan truth, create implementation evidence, own loop outputs, treat generated views as truth, or define loop quality standards. Those are KB/source/Git/semantic-loop concerns until runtime appends them as trace records. Views own the derived calculations and cacheable projections over traces; runtime reads those views to coordinate, but traces remain truth. Shared error contracts and recovery hints live under `src/error-handling/**`; runtime consumes them without making error handling a semantic loop.
 
 ## Hosts
 
@@ -92,6 +92,8 @@ CodeWiki has one runtime kernel/coordinator. It may be driven by different host 
 | Worker host | Narrow execution worker for one planned work unit, usually in an isolated worktree; returns evidence to the trace host instead of appending semantic truth directly. |
 
 A single process may act in different roles over time. The role describes what authority the host has for the current action. The main host is not a singleton daemon: parallel Pi sessions in the same repository are parallel main-host instances that coordinate through trace reads, active-trace conflict checks, and expected-byte append safety.
+
+Host/session roles are internal runtime topology. User-facing UX should show Sprint Queue, Sprint Cards, Decisions, Tasks, Assignments, and review/blocker status instead of exposing decision host, trace host, or worker session concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime decision table
 
@@ -111,7 +113,7 @@ A single process may act in different roles over time. The role describes what a
 
 ## Work-unit claim selection
 
-Runtime work-unit claim selection is a pure projection over the generated `work-queue` view. It selects `ready` Planning-owned work units up to `maxWorkers`, counts active claims against capacity, and holds work that overlaps path scopes with already claimed or selected work. The generated `runtime-board` view combines `trace-board`, `work-queue`, `triggers`, and optional runtime previews so hosts and future UI surfaces can see pending coordination without creating a new truth root.
+Runtime work-unit claim selection is a pure projection over the generated `work-queue` view. In product language, it creates Task Assignments. It selects `ready` Planning-owned Tasks up to `maxWorkers`, counts active claims against capacity, and holds work that overlaps path scopes with already claimed or selected work. The generated `runtime-board` view combines Sprint Queue-compatible state, `work-queue`, `triggers`, and optional runtime previews so hosts and future UI surfaces can see pending coordination without creating a new truth root.
 
 The selection emits claim candidates only:
 
@@ -119,7 +121,7 @@ The selection emits claim candidates only:
 work-queue -> selected[] + held[]
 ```
 
-It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted work-unit claim selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. Runtime claim selection ignores raw decision items; those must enter Planning first so Planning can own trace-queue ordering, conflicts, starvation, deferrals, and route-back policy. The claim append helper groups claim events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
+It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted Task Assignment selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. Runtime claim selection ignores raw Decision items; those must enter Planning first so Planning can own Sprint Queue ordering, conflicts, starvation, deferrals, and route-back policy. The claim append helper groups claim events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
 
 ## Claim events
 

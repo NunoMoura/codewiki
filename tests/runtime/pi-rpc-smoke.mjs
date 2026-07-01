@@ -150,7 +150,7 @@ try {
 		(message) =>
 			message.type === "extension_ui_request" &&
 			message.method === "notify" &&
-			message.message.includes("CodeWiki Trace Queue"),
+			message.message.includes("CodeWiki Sprint Queue"),
 		stderrRef,
 	);
 	await waitFor(
@@ -158,7 +158,7 @@ try {
 		(message) => message.type === "response" && message.id === "state",
 		stderrRef,
 	);
-	assert.match(stateNotice.message, /To do/);
+	assert.match(stateNotice.message, /Ready/);
 	assert.match(stateNotice.message, /├/);
 	assert.equal(
 		messages.some((message) => message.type === "agent_start"),

@@ -97,6 +97,22 @@ Generated views derive machine relationships from explicit refs, curated Markdow
 
 CodeWiki is migrating hot knowledge toward OKF v0.1 markdown/frontmatter concepts. During migration, `system/source-map.yaml` remains the canonical KB-code-test ownership source; generated OKF extension fields will project that ownership into concept frontmatter before source-map deprecation is considered. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs. Reusable drift lint rules live in source so readiness checks, future commands, and tests share one terminology contract instead of duplicating stale-wording scans.
 
+## OKF and Sprint workflow boundary
+
+CodeWiki product concepts such as Sprint Proposal, Decision, Sprint,
+Sprint Record, Sprint Queue, Sprint Card, Task, Assignment, Ready Checks, and
+Needs Review are defined in `.codewiki/kb/**/*.md` as OKF-compatible knowledge.
+
+Actual Sprint instances are not KB documents. Their durable workflow truth
+remains trace JSONL under `.codewiki/traces/TRACE-*.jsonl`. Generated
+Sprint Queue and Sprint Card output is a projection/widget over traces, work
+queues, source refs, and Git proof; it must not become a second state root.
+
+A Sprint Record is the product-facing bridge to trace persistence. Use
+Sprint/Sprint Record in product-facing docs and renderers, but keep `trace`,
+trace event ids, row ids, work item ids, and claim ids where storage, recovery,
+tests, or runtime coordination require exact technical refs.
+
 ## Rules
 
 - Keep current intended truth in knowledge; do not accumulate old decisions as raw history.

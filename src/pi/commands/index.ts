@@ -315,6 +315,7 @@ function stateViewData(snapshot: WikiStateSnapshot, view: StateView): unknown {
 	}
 	if (view === "board") {
 		return {
+			traceQueue: snapshot.traceQueue,
 			workPlan: snapshot.workPlan,
 			workQueue: snapshot.workQueue,
 			runtimeBoard: snapshot.runtimeBoard,

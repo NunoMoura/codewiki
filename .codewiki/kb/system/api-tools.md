@@ -70,7 +70,7 @@ The normal internal agent surface is small and phase-aligned.
 
 | Tool | Responsibility | Mutates truth? |
 | --- | --- | --- |
-| `wiki_state` | Read active trace-derived state summaries, board packets, quality, and blockers. Views are output shape, not truth input. | No |
+| `wiki_state` | Read active trace-derived state summaries, Sprint Queue packets, quality, and blockers. Views are output shape, not truth input. | No |
 | `wiki_decide` | Run decision-loop iterations from intent, current-state refs, KB propagation evidence, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, triggers, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
@@ -85,7 +85,7 @@ There is no standalone current tool for split output generation or split exit ev
 | --- | --- | --- | --- |
 | Internal agent | `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, `wiki_config` | Trace-derived read model; checked semantic loop preview/append; guarded archive/config mutation. | Runtime mega-tool, split loop output/evaluation tools, or source-map explain inside `wiki_state`. |
 | Host/runtime | Package APIs such as `runWikiRuntime()`, host lifecycle helpers, worker-start helpers, handoff manifest helpers. | Work-unit claim selection, heartbeat-cycle Run starts, lease expiry, worker session transport, release events, append-safe coordination writes. | Semantic approval, Planning-owned work invention, or treating worker output as proof before implementation validation. |
-| User/Pi commands | `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Compact observability, active trace cards, source-map/path explanation, effective config, setup readiness. | Grouped namespace commands, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
+| User/Pi commands | `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Compact observability, active Sprint Cards, source-map/path explanation, effective config, setup readiness. | Grouped namespace commands, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
 
 The core reduced-tool facade shape now exists for the current tool set:
 
@@ -113,7 +113,7 @@ Supported `view` values stay intentionally small:
 | View | Purpose |
 | --- | --- |
 | `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
-| `board` | Card-ready trace-queue context: one card per trace, row/work subitems, per-trace work plan when selected, runtime-board projection, next action, and append handles for active traces. |
+| `board` | Compatibility selector for Sprint Queue context: one Sprint Card per trace, Decision/Task subitems, per-trace plan when selected, runtime projection, next action, and append handles for active traces. |
 | `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
 | `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
 | `all` | Debug/maintenance payload containing all derived projections. |
@@ -139,7 +139,7 @@ Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` command
 
 | Command | Backend action |
 | --- | --- |
-| `/wiki-state` | Compact state summary from `wiki_state`; flags can request board, quality, blockers, detail, or JSON. |
+| `/wiki-state` | Compact state summary from `wiki_state`; flags can request Sprint Queue (`board` compatibility), quality, blockers, detail, or JSON. |
 | `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
 | `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
@@ -151,7 +151,7 @@ Users may ask for decisions, planning, implementation, automation, or archive wo
 
 Pi command rendering and future trace/view rendering are product UX surfaces. Wiki tools execute loops and return compact agent handles; they should not register rich TUI renderers for calls or results.
 
-Post-bootstrap user-facing observability is append-driven. Decision table validation is the pre-append exception: candidates are shown to the user for approval/edit/reject before becoming decision-loop input.
+Post-bootstrap user-facing observability is append-driven. Sprint Proposal validation is the pre-append exception: candidate Decisions are shown to the user for approval/edit/reject before becoming decision-loop input.
 
 ```text
 wiki_* append -> trace record -> derived view -> renderer
@@ -159,9 +159,11 @@ wiki_* append -> trace record -> derived view -> renderer
 
 Preview mode is agent-private validation. It can fail fast and guide the agent, but it should not update user-facing progress UI because it is not proof of durable work.
 
-`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-state`, `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. Loop progress, quality, blockers, workers, host lifecycle events, and completion receipts should render from appended trace records and generated views, not from raw tool payloads.
+`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-state`, `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. Loop progress, Ready Checks, blockers, workers, host lifecycle events, and completion receipts should render from appended Sprint Records and generated views, not from raw tool payloads.
 
 Renderers are UI-only and must not become hidden state. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
+
+Sprint Cards and Sprint Queue renderers are projections over trace-derived state. They must not write card files or create a separate Board state root. Existing `board` API/view names are compatibility selectors until a separate API migration is planned.
 
 ## Skills
 

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Implementation Loop
-description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output, or an eligible direct implementation decision row, into verified project changes.
+description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Tasks, or an eligible direct implementation Decision, into verified project changes.
 tags:
   - codewiki
   - system
@@ -47,7 +47,7 @@ codewiki_source_map:
 ---
 # Implementation Loop
 
-The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted planning output, or an eligible direct implementation decision row, into verified project changes.
+The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Tasks, or an eligible direct implementation Decision, into verified project changes.
 
 ## Loop authority
 
@@ -72,9 +72,9 @@ The implementation loop does not own new product decisions, planning scope chang
 One implementation cycle does this work:
 
 ```text
-observe accepted planning output or direct implementation decision + source/test/Git/runtime refs
+observe accepted Planning Task output or direct implementation Decision + source/test/Git/runtime refs
 claim or receive worker work when needed
-change code/docs/tests inside planned scope
+change code/docs/tests inside assigned Task scope
 run checks and collect evidence
 aggregate worker outputs and final content proof
 update implementation output
@@ -83,13 +83,13 @@ append implementation.evidence_accepted
 continue, exit, route back, or block
 ```
 
-Implementation should keep noisy logs and scratch under runtime temp or external tool output. The loop output should contain only the evidence required to prove exit conditions.
+Implementation should keep noisy logs and scratch under runtime temp or external tool output. Workers may use private scratchpads or checklists inside the assigned Task, but those are execution aids, not Planning truth or runtime-claimable units. The loop output should contain only the evidence required to prove exit conditions.
 
 ## Loop output
 
 Implementation loop output is the high-signal packet needed to close or publish the trace:
 
-- covered planning refs or direct implementation decision refs;
+- covered Planning Task refs or direct implementation Decision refs;
 - changed code/docs/test paths;
 - check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
 - acceptance evidence mapped to planning acceptance criterion ids;
@@ -106,7 +106,7 @@ Implementation loop output is the high-signal packet needed to close or publish 
 - route-back questions for planning or decision when authority is missing;
 - canonical refs proving the output.
 
-Implementation output should not include full logs, private scratch, unbounded diffs, or product decisions made during coding.
+Implementation output should not include full logs, private scratch, unbounded diffs, or product Decisions made during coding. If local decomposition shows that the assigned Task is too broad, overlapping, or underspecified, implementation routes back to Planning instead of creating new Sprint Plan truth.
 
 ## Loop quality standards
 

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Planning Loop
-description: The planning loop owns executable work shaping and trace-queue health. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting decisions enter planning; tiny/small low-risk decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+description: The planning loop owns executable Task shaping and Sprint Queue health. It turns accepted Decisions into parallel-safe Tasks, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting Decisions enter planning; tiny/small low-risk Decisions may bypass planning only when the Decision loop records a safe direct implementation route.
 tags:
   - codewiki
   - system
@@ -44,15 +44,17 @@ codewiki_source_map:
 ---
 # Planning Loop
 
-The planning loop owns executable work shaping and trace-queue health. It turns accepted decision output into work units, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting decisions enter planning; tiny/small low-risk decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+The planning loop owns executable Task shaping and Sprint Queue health. It turns accepted Decisions into parallel-safe Tasks, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting Decisions enter planning; tiny/small low-risk Decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+
+Compatibility wording: the planning loop owns executable work shaping and trace-queue health; in current product UX, this means Planning owns Sprint Queue health and Task shaping.
 
 ## Loop authority
 
 The planning loop owns:
 
-- work-unit materialization;
+- Task materialization from approved Decisions;
 - dependency ordering;
-- trace-queue ordering, conflict, starvation, deferral, and route-back policy;
+- Sprint Queue ordering, conflict, starvation, deferral, and route-back policy;
 - path scopes and conflict strategy;
 - component refs and test strategy;
 - acceptance criteria ids;
@@ -70,23 +72,25 @@ One planning cycle does this work:
 
 ```text
 observe accepted decision output + KB/source/trace refs + active trace queue
-map decisions and questions to executable work units
+map Decisions and questions to executable Tasks
 assign component refs, path scopes, dependencies, and acceptance criteria
-identify trace-queue conflicts, stale decisions, deferrals, starvation risk, route-back needs, and runtime scheduling constraints
+identify Sprint Queue conflicts, stale Decisions, deferrals, starvation risk, route-back needs, and runtime scheduling constraints
 update planning output
 check planning exit conditions
 append planning.work_units_created
 continue, exit, route back, or block
 ```
 
-Planning should refine or split work until implementation can proceed without guessing scope or acceptance. For tiny or small low-risk decisions that still route to Planning, planning may emit a micro-plan: one self-contained work unit with explicit acceptance criteria, path scopes, and verification, but no dependency graph ceremony.
+Planning should refine or split work until implementation can proceed without guessing scope or acceptance. For tiny or small low-risk Decisions that still route to Planning, planning may emit a micro-plan: one self-contained Task with explicit acceptance criteria, path scopes, and verification, but no dependency graph ceremony.
+
+Planning does not need to create mandatory to-do lists or micro-steps inside each Task. A Task is the claimable unit; if a step needs separate ownership or scheduling, Planning should make it a Task instead of a private checklist item.
 
 ## Loop output
 
 Planning loop output is the high-signal packet implementation and runtime need:
 
-- work units with stable ids;
-- decision refs each work unit covers;
+- Tasks with stable ids;
+- Decision refs each Task covers;
 - concrete technical requirements for implementation;
 - acceptance criteria with stable ids;
 - component refs from the source map;
@@ -95,16 +99,16 @@ Planning loop output is the high-signal packet implementation and runtime need:
 - optional trigger (`id`, `kind`, `runMode`, `concurrency`, `runKeyTemplate`, `owner`, `trigger`, and canonical refs) for recurring schedule, event trigger, hook, or manual heartbeat work;
 - conflict notes and scheduling holds;
 - verification strategy;
-- planning depth (`micro` for compact one-unit handoff or `standard` for normal planning);
+- planning depth (`micro` for compact one-Task handoff or `standard` for normal planning);
 - worker profile and agent assessment of independence, implementation readiness, right sizing, and uncertainty resolution;
 - resolutions using known kinds: work-unit, deferred, already-implemented, route-back, knowledge-only, or non-executable;
 - deferrals with owner, trigger, rationale, and evidence when allowed;
 - route-back resolutions with owner, trigger, rationale, and evidence when decision authority is missing;
 - canonical refs proving the output.
 
-Planning output should not include code changes, test results, or worker-local execution evidence.
+Planning output should not include code changes, test results, planner-authored to-do lists, or worker-local execution evidence. Implementation workers may use private scratchpads/checklists later, but those are not Sprint Plan truth.
 
-A micro-plan is still a planning artifact. It must cover exactly one accepted decision ref, have no dependencies, stay low-risk by decision classification, and carry enough acceptance/verification detail for implementation to proceed immediately. If planning discovers ambiguity, dependencies, broader path scope, or a need to split work, it must promote the work to standard planning or route back to decision. If planning needs user clarification or validation, it routes to the Decision loop rather than blocking directly.
+A micro-plan is still a planning artifact. It must cover exactly one accepted Decision ref, have no dependencies, stay low-risk by Decision classification, and carry enough acceptance/verification detail for implementation to proceed immediately. If planning discovers ambiguity, dependencies, broader path scope, or a need to split work, it must promote the work to standard planning or route back to Decision. If planning needs user clarification or validation, it routes to the Decision loop rather than blocking directly.
 
 ## Loop quality standards
 
@@ -112,14 +116,14 @@ The planning loop can exit only when loop-owned quality standards are met or exp
 
 | Quality standard | Mode | Required signal |
 | --- | --- | --- |
-| decision_coverage_complete | deterministic | Every accepted decision ref is covered by a work unit or explicit resolution. |
-| worker_units_self_contained | deterministic | Work units have stable ids, decision refs, outcome, acceptance criteria, and bounded path scopes. |
-| technical_requirements_complete | deterministic | Each work item breaks decision intent into concrete implementation requirements. |
+| decision_coverage_complete | deterministic | Every accepted Decision ref is covered by a Task or explicit resolution. |
+| worker_units_self_contained | deterministic | Tasks have stable ids, Decision refs, outcome, acceptance criteria, and bounded path scopes. |
+| technical_requirements_complete | deterministic | Each Task breaks Decision intent into concrete implementation requirements. |
 | acceptance_and_verification_testable | deterministic | Acceptance criteria have stable ids/text and verification refs or commands are present. |
-| planning_depth_accounted | deterministic | Work items declare micro or standard planning depth; micro-plans cover one decision and have no dependencies. |
-| worker_assignment_ready | agent | Agent assesses the unit as independent and implementation-ready, and a worker profile is declared. |
-| uncertainty_resolved | agent | No unresolved planning uncertainty remains; decision or user authority is routed instead of leaking into implementation. |
-| work_unit_right_sized | agent | Unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or claim batch. |
+| planning_depth_accounted | deterministic | Tasks declare micro or standard planning depth; micro-plans cover one Decision and have no dependencies. |
+| worker_assignment_ready | agent | Agent assesses the Task as independent and implementation-ready, and a worker profile is declared. |
+| uncertainty_resolved | agent | No unresolved planning uncertainty remains; Decision or user authority is routed instead of leaking into implementation. |
+| work_unit_right_sized | agent | Task is neither Sprint-sized nor tiny busywork; Sprint remains the accountable grouping. |
 | source_ownership_aligned | deterministic | Component refs exist in the source map and cover declared paths/tests. |
 | dependency_order_clear | deterministic | Dependencies exist, are acyclic, and order overlapping path scopes. |
 | triggers_valid | deterministic | Triggers use known kinds (`schedule`, `trigger`, `hook`, `manual`), `runMode: new_trace`, valid concurrency (`skip_if_active`, `queue`, `replace`), run key template, owner, trigger source, and canonical refs. |
@@ -141,9 +145,9 @@ Planning output is not a roadmap file. It is trace truth. Generated views projec
 planning.work_units_created output -> work-plan view -> work-queue view -> runtime scheduling
 ```
 
-The work-plan view is per-trace detail. The trace queue is the product concept for cross-trace ordering, health, cards, and blockers. The work-queue view is the runtime claim projection over Planning-approved ready work units.
+The work-plan view is per-trace detail. The Sprint Queue is the product concept for cross-trace ordering, health, cards, and blockers. The work-queue view is the runtime claim projection over Planning-approved ready Tasks.
 
-A trace that remains `needs_planning` is a Planning-owned queue condition, not runtime truth to resolve heuristically. Planning must cover the decision refs with work units, defer them with rationale, route them back to Decision or the user, or record why they are non-executable. Runtime and hosts may surface the condition, but they must not invent semantic work from the raw decision rows.
+A trace that remains `needs_planning` is a Planning-owned queue condition, not runtime truth to resolve heuristically. Planning must cover the Decision refs with Tasks, defer them with rationale, route them back to Decision or the user, or record why they are non-executable. Runtime and hosts may surface the condition, but they must not invent semantic work from raw Decisions. Compatibility wording: runtime and hosts must not invent semantic work from the raw decision rows.
 
 ## Trace iteration data
 

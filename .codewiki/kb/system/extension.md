@@ -145,9 +145,16 @@ read-only `wiki_state` check, followed by preview-mode `wiki_decide`,
 `wiki_plan`, or `wiki_implement` calls before any guarded append. Fast edit
 feedback may run as a hook, but it is not a substitute for durable trace records.
 Mutation-capable tools must keep expected-byte/sequence guards, project-local
-install scope, and manual preview review. Unattended worker start, auto-merge,
-and auto-publish remain disabled until a separate gate and decision trace approve
-them.
+install scope, and manual preview review. Decision appends also need the rendered
+Sprint Proposal / decision-table approval digest. Unattended worker start,
+auto-merge, and auto-publish remain disabled until a separate gate and decision
+trace approve them.
+
+For CodeWiki refactors inside this checkout, use the registered `wiki_*` tool
+surface rather than the transitional CLI: `wiki_state`, then `wiki_decide`,
+`wiki_plan`, and `wiki_implement` preview/append cycles. Keep Sprint Queue,
+Sprint Card, Decision, and Task wording in user-facing guidance while retaining
+trace and work-unit refs where storage or runtime coordination requires them.
 
 ## Rebuild rules
 

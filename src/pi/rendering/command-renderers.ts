@@ -311,7 +311,7 @@ function renderBoard(
 		.filter((card) => card.status === "finished" || card.closed)
 		.map(traceCardLabel);
 	return [
-		"CodeWiki Trace Queue",
+		truncate("CodeWiki Sprint Queue", renderWidth(options)),
 		"",
 		...boardTable({ todo, doing, done }, options),
 	];
@@ -386,7 +386,7 @@ function boardTable(
 		columns.doing[index] || "",
 		columns.done[index] || "",
 	]);
-	return tableLines(["To do", "Doing", "Done"], rows, options);
+	return tableLines(["Ready", "Working", "Done"], rows, options);
 }
 
 function tableLines(
@@ -433,7 +433,32 @@ function section(
 }
 
 function traceCardLabel(card: TraceQueueCard): string {
-	return `${card.traceId} ${card.status} rows:${card.rowCount} work:${card.items.length} ${card.title}`.trim();
+	const parts = [
+		card.traceId,
+		cardStatusLabel(card),
+		`decisions:${card.rowCount}`,
+		`tasks:${card.items.length}`,
+		card.nextLoop ? `next:${card.nextLoop}` : "",
+		card.unresolvedDecisionRefs.length
+			? `needs-review:${card.unresolvedDecisionRefs.length}`
+			: "",
+		card.blockers.length ? `blocked:${card.blockers.length}` : "",
+		card.title,
+	];
+	return parts.filter(Boolean).join(" ").trim();
+}
+
+function cardStatusLabel(card: TraceQueueCard): string {
+	if (card.closed) return "Done";
+	if (card.status === "needs_decision") return "Needs Review";
+	if (card.status === "needs_planning") return "Ready for Planning";
+	if (card.status === "needs_implementation") return "Ready for Implementation";
+	if (card.status === "blocked") return "Blocked";
+	if (card.status === "deferred") return "Deferred";
+	if (card.status === "finished") return "Done";
+	if (card.status === "closed_complete") return "Done";
+	if (card.status === "closed_incomplete") return "Needs Review";
+	return card.status;
 }
 
 function border(left: string, join: string, right: string, widths: number[]) {

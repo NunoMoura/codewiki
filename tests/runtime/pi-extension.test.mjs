@@ -280,7 +280,7 @@ describe("Pi extension adapter", () => {
 			).renderer;
 			assert.equal(
 				renderer(pi.messages[0], {}, {}).render(80)[0],
-				"CodeWiki Trace Queue",
+				"CodeWiki Sprint Queue",
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -657,7 +657,7 @@ describe("Pi extension adapter", () => {
 			});
 			assert.equal(board.command, "state");
 			assert.equal(board.view, "board");
-			assert.match(notifications.at(-1), /CodeWiki Trace Queue/);
+			assert.match(notifications.at(-1), /CodeWiki Sprint Queue/);
 
 			const resume = await resumeCommand.handler("", {
 				cwd: root,
@@ -693,16 +693,17 @@ describe("Pi extension adapter", () => {
 			assert.equal(board.command, "state");
 			assert.equal(board.view, "board");
 			assert.equal(board.json, false);
+			assert.ok(board.data.traceQueue);
 			assert.ok(board.data.workQueue);
 			assert.ok(board.data.runtimeBoard);
 			assert.equal(board.data.runtimeBoard.summary.readyWorkUnits, 0);
 			assert.equal(board.data.next.action, "decide");
 			assert.equal(board.data.append.byTrace["TRACE-pi"].nextSequence, 1);
 			assert.deepEqual(board.rendered.slice(0, 2), [
-				"CodeWiki Trace Queue",
+				"CodeWiki Sprint Queue",
 				"",
 			]);
-			assert.match(notifications.at(-1), /CodeWiki Trace Queue/);
+			assert.match(notifications.at(-1), /CodeWiki Sprint Queue/);
 			assert.match(notifications.at(-1), /├/);
 			assert.equal(statuses.length, 1);
 			assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
@@ -741,7 +742,7 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("command renderers truncate long board cells for narrow widths", () => {
+	it("command renderers truncate long Sprint Queue cells for narrow widths", () => {
 		const lines = renderStateCommand(
 			{
 				workQueue: {
@@ -760,8 +761,28 @@ describe("Pi extension adapter", () => {
 		);
 
 		assert.ok(lines.every((line) => line.length <= 42));
+		assert.match(lines.join("\n"), /Sprint Queue/);
+		assert.match(lines.join("\n"), /Ready/);
 		assert.match(lines.join("\n"), /…/);
 		assert.match(lines.join("\n"), /├/);
+
+		const wideLines = renderStateCommand(
+			{
+				workQueue: {
+					items: [
+						{
+							id: "WU-long",
+							title: "Render a long Sprint Card",
+							status: "ready",
+						},
+					],
+				},
+			},
+			"board",
+			{ width: 120 },
+		);
+		assert.match(wideLines.join("\n"), /decisions:0/);
+		assert.match(wideLines.join("\n"), /tasks:1/);
 	});
 
 	it("/wiki-explain describes projects, flows, and owned paths", async () => {

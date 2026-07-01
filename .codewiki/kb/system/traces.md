@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Traces
-description: CodeWiki traces are the durable workflow and state record for software work. One trace represents one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
+description: CodeWiki traces are the durable workflow and state record for software work. In product language, one trace is the Sprint Record for one accountable change journey.
 tags:
   - codewiki
   - system
@@ -73,9 +73,9 @@ codewiki_source_map:
 
 ## Responsibility
 
-CodeWiki traces are the durable workflow and state record for software work. One trace represents one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
+CodeWiki traces are the durable workflow and state record for software work. In product language, one trace is the Sprint Record for one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
 
-A trace is append-only. Old lines are never rewritten. Runtime is the sole trace writer: semantic loops report appendable loop output and exit results to runtime, and runtime validates sequence/byte safety before appending trace records. Current status is exposed through generated views that derive their calculations from traces, compact checkpoints, KB/source refs, and Git refs.
+A trace is append-only. Old lines are never rewritten. Runtime is the sole trace writer: semantic loops report appendable loop output and exit results to runtime, and runtime validates sequence/byte safety before appending trace records. Current Sprint Queue and Sprint Card status is exposed through generated views that derive their calculations from traces, compact checkpoints, KB/source refs, and Git refs.
 
 ## Canonical storage
 
@@ -109,7 +109,7 @@ include: .codewiki/kb/**/*.md
 exclude: .codewiki/traces/TRACE-*.jsonl
 ```
 
-Trace append, compaction, and hydration keep using the trace schema and Git restore refs described here. OKF import/export can cite trace refs as evidence strings, but it must not parse, rewrite, compact, hydrate, or otherwise own trace JSONL. The source of truth for workflow state remains the append-only trace line stream plus retained stubs and Git restore refs.
+Trace append, compaction, and hydration keep using the trace schema and Git restore refs described here. OKF import/export can cite trace refs as evidence strings, but it must not parse, rewrite, compact, hydrate, or otherwise own trace JSONL. Product concepts such as Sprint Queue, Sprint Card, and Task are defined in OKF KB docs; actual Sprint instances and progress remain the append-only trace line stream plus retained stubs and Git restore refs.
 
 ## Record types
 
@@ -208,7 +208,7 @@ planning
 implementation
 ```
 
-Each semantic loop produces one appendable semantic report as the durable boundary. Runtime appends that report as a trace event after validation. The trace event stores `loop` as the semantic authority and `event` as the specific fact, read conceptually as `loop.event`, such as `decision.rows_approved`, `planning.work_units_created`, or `implementation.evidence_accepted`. Loop-specific rows, work items, and implementation changes live inside the event output and are referenced with subrefs such as `trace:<event-id>#row:<id>`, `trace:<event-id>#work:<id>`, and `trace:<event-id>#change:<id>`.
+Each semantic loop produces one appendable semantic report as the durable boundary. Runtime appends that report as a trace event after validation. The trace event stores `loop` as the semantic authority and `event` as the specific fact, read conceptually as `loop.event`, such as `decision.rows_approved`, `planning.work_units_created`, or `implementation.evidence_accepted`. Loop-specific Decisions, Tasks, and implementation changes live inside the event output and are referenced with technical subrefs such as `trace:<event-id>#row:<id>`, `trace:<event-id>#work:<id>`, and `trace:<event-id>#change:<id>`.
 
 `appendSemanticLoopReport()` is the runtime-owned append helper for this boundary. It validates one target semantic output event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap. Low-level append helpers also validate every record against the current trace schema before writing, so stale generic event names such as `decision.iteration` are rejected before they can corrupt hot traces.
 
@@ -289,7 +289,7 @@ Views answer questions quickly and own the disposable calculations needed for st
 
 View projections show active work, not every historical repair attempt. A later semantic-loop iteration for the same trace and loop supersedes previous non-exit blockers, decision queues ignore non-exited decision attempts, accepted planning work excludes non-exited planning attempts from work-plan/work-queue, and conflict projections ignore work units already completed by implementation evidence.
 
-`work-plan` is the per-trace planning projection. `trace-queue` is the product concept for cross-trace goal state: one card per accountable trace, row subitems inside the card, current status, blockers, and next semantic loop. `trace-board` remains a compatibility renderer/projection for trace goal status. `work-queue` is the runtime claim selection projection over Planning-approved work units, not raw decisions. `triggers` derives scheduled/event/hook/manual trigger state from planning work items, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines trace-board/trace-queue-compatible state, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation quality standards for internal tools and future TUI surfaces. A terminal board, pinned card, or kanban display renders views; it is not its own truth root.
+`work-plan` is the per-trace planning projection. `trace-queue` is the internal generated view for the Sprint Queue product concept: one card per accountable trace, rendered as a Sprint Card with Decision subitems, current status, blockers, and next semantic loop. `trace-board` remains a compatibility renderer/projection for Sprint goal status. `work-queue` is the runtime claim selection projection over Planning-approved Tasks, not raw Decisions. `triggers` derives scheduled/event/hook/manual trigger state from planning Tasks, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines Sprint Queue-compatible state, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation Ready Checks for internal tools and future TUI surfaces. A terminal board, pinned card, or kanban display renders Sprint Queue views; it is not its own truth root.
 
 ## Trace data and refs
 

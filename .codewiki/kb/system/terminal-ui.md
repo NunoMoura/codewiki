@@ -13,7 +13,7 @@ timestamp: 2026-06-30T00:00:00Z
 
 CodeWiki is backend-first for the current architecture wave, but Pi terminal rendering is now a primary product surface because it makes the agent's semantic work observable without spending extra model tokens.
 
-Previous browser/control-room UI surfaces remain deprecated. Terminal UX should render current CodeWiki state and canonical diagrams from traces, KB, generated views, loop exit-condition results, and source refs. Tool payloads are agent handles, not the durable user observability surface.
+Previous browser/control-room UI surfaces remain deprecated. Terminal UX should render current CodeWiki state and canonical diagrams from traces, KB, generated views, Ready Checks, and source refs. Tool payloads are agent handles, not the durable user observability surface.
 
 ## Command-triggered surfaces
 
@@ -21,13 +21,13 @@ Active command direction is intentionally small. Each command has one direct sla
 
 | Command | Purpose |
 | --- | --- |
-| `/wiki-state [flags]` | Compact state summary; flags can render trace-board/work-queue/triggers board, quality, blockers, detail, or JSON. |
-| `/wiki-resume` | Continue from the trace-derived resume view, latest loop outputs, unmet exit conditions, and source refs. |
+| `/wiki-state [flags]` | Compact state summary; flags can render the Sprint Queue, Task queue, triggers, quality, blockers, detail, or JSON. |
+| `/wiki-resume` | Continue from the trace-derived resume view, latest loop outputs, unmet Ready Checks, and source refs. |
 | `/wiki-explain [target]` | Explain the whole project, a component, a flow, or a path from KB, source-map ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Start CodeWiki in a greenfield or brownfield repository through explicit backend setup/bootstrap calls, then render a human ready summary. |
 | `/wiki-config` | Inspect CodeWiki preferences/configuration; writes require explicit confirmation. |
 
-There is no separate public `status` name; CodeWiki standardizes on `state` for user commands and internal tooling. Board, quality, blockers, and JSON are state render flags rather than separate direct slash commands, except `resume`, which is high-frequency user intent.
+There is no separate public `status` name; CodeWiki standardizes on `state` for user commands and internal tooling. Sprint Queue, quality, blockers, and JSON are state render flags rather than separate direct slash commands, except `resume`, which is high-frequency user intent. Existing `board` flag names are compatibility render selectors for the Sprint Queue, not a separate product concept.
 
 ## Tool and trace rendering
 
@@ -36,14 +36,20 @@ Bootstrap keeps rich command rendering because it runs before a project has usef
 The durable user-facing observability path is append-driven:
 
 ```text
-append trace record -> update derived view -> render trace/view surface
+approve Sprint Proposal -> append Sprint Record -> update derived view -> render Sprint Queue/Card surface
 ```
 
 Preview results are agent-private validation drafts. Only appended trace records should update post-bootstrap user observability.
 
+## Sprint Queue lifecycle
+
+A Sprint Proposal contains Decisions that the user validates. When the Decisions are approved and Decision Ready Checks pass, CodeWiki appends a Sprint Record. The Sprint then appears as a Sprint Card in the Sprint Queue. Planning turns the approved Decisions into parallel-safe Tasks, and implementation progress updates the same card from appended evidence.
+
+Sprint Cards are projections or Pi widgets over trace state. They are never separate truth files, and they should not appear from preview-only loop output.
+
 `src/pi/tui/index.ts` is a pure renderer facade for command renderers plus the CodeWiki footer status helper. It may be imported by commands/tests without writing state or depending on the Pi SDK. The footer is UI-only: it summarizes CodeWiki state and must not become workflow truth.
 
-Renderers use consistent table-first layouts where tables clarify structured state and plain text carries guidance. The active bootstrap renderer shows project/status identity, bootstrap action counts, optional preserved/stale path tables, and plain-text next steps. Future trace/view renderers should show active workstreams and trace goal states from appended trace state, not from raw tool payloads.
+Renderers use consistent table-first layouts where tables clarify structured state and plain text carries guidance. The active bootstrap renderer shows project/status identity, bootstrap action counts, optional preserved/stale path tables, and plain-text next steps. Future trace/view renderers should show active Sprints and Sprint Card states from appended Sprint Records, not from raw tool payloads.
 
 The header row must be separated from content with a horizontal rule. Table rendering should reserve terminal margin and use display-width-aware truncation so right borders do not wrap or drift in Pi notifications. Bootstrap and footer rendering should expose the active extension artifact so dogfood users can distinguish local checkout, project-local package, and non-project package execution. Rendered output is not canonical truth and must not create hidden UI-only state.
 
@@ -65,7 +71,7 @@ The renderer should use Unicode box drawing by default and ASCII fallback when n
 
 - No browser dashboard.
 - No status panel or dock UI.
-- No Board or Map product UI.
+- No standalone Board or Map product UI.
 - No Product/System navigation panel work.
 - No full generated graph renderer by default.
 - No hidden terminal-only workflow state.

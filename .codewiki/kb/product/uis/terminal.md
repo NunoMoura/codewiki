@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi TUI Diagram Rendering
-description: CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode. The desired later user experience is default-on trace goal cards derived from `wiki_state` views, not additional slash-command sprawl.
+description: CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams and Sprint Cards from `wiki_state` views.
 tags:
   - codewiki
   - product
@@ -11,7 +11,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Pi TUI Diagram Rendering
 
-CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode. The desired later user experience is default-on trace goal cards derived from `wiki_state` views, not additional slash-command sprawl.
+CodeWiki is backend-first for the current architecture wave. Previous product UI surfaces are deprecated for now. The retained near-term UI direction is Pi TUI support for rendering source-backed system diagrams as ASCII/Unicode plus default-on Sprint Cards derived from `wiki_state` views, not additional slash-command sprawl.
 
 ## Scope
 
@@ -38,7 +38,7 @@ The following are not active product surfaces in this wave:
 - browser Control Room;
 - archived status UI commands.
 
-Backend status and continuation remain available through `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. When future Pi widget/card support is researched, each active trace should render as an expandable goal card created from active trace views: decision coverage, planning work units, runtime coordination status, implementation evidence, blockers, and close readiness.
+Backend status and continuation remain available through `wiki_state`, generated views derived from traces, loop outputs, and Ready Checks. When future Pi widget/card support is researched, each active Sprint should render as an expandable Sprint Card created from active trace views: Decision coverage, Planning Tasks, runtime Assignment status, implementation evidence, blockers, Needs Review prompts, and close readiness.
 
 ## Success signals
 
@@ -51,7 +51,7 @@ Backend status and continuation remain available through `wiki_state`, generated
 
 - No browser dashboard.
 - No status panel or dock UI.
-- No standalone Board or Map command surface.
+- No standalone Board or Map command surface; the Sprint Queue is a state view.
 - No product/system navigation panel work.
 - No broad generated-view visualizer.
 

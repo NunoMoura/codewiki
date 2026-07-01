@@ -273,6 +273,12 @@ try {
 					nextSequence: 1,
 					createdAt: "2026-06-17T00:00:01.000Z",
 					tableInput: decisionTableInput(),
+					decisionTableApproval: {
+						approved: true,
+						renderedTableDigest: preview.renderedDecisionTable.digest,
+						approvedBy: "pi-tool-mutation-smoke",
+						approvedAt: "2026-06-17T00:00:01.000Z",
+					},
 				},
 			},
 			undefined,
