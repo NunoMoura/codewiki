@@ -173,16 +173,16 @@ function implementationQuality(overrides = {}) {
 	};
 }
 
-function decisionTableInput(createdAt) {
+function sprintProposalInput(createdAt) {
 	return {
-		id: "DT-external-package-lifecycle",
+		id: "SP-external-package-lifecycle",
 		summary: "Add an external package lifecycle lifecycle smoke.",
 		createdAt,
 		updatedAt: createdAt,
 		sourceRefs: ["README.md", "src/external-feature.js"],
-		rows: [
+		changes: [
 			{
-				id: "DTR-external-package-lifecycle",
+				id: "CHG-external-package-lifecycle",
 				decisionKind: "harden",
 				currentState:
 					"Repo-local self-testing can hide install, bootstrap, and package-extension lifecycle drift.",
@@ -205,7 +205,7 @@ function decisionTableInput(createdAt) {
 						"The smoke adds validation only; package API and extension behavior stay unchanged.",
 				}),
 				approval: "approved",
-				sourceRefs: ["README.md", ".codewiki/kb/system/runtime.md"],
+				sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
 				proofRefs: ["tests/runtime/external-package-lifecycle-smoke.mjs"],
 			},
 		],
@@ -221,7 +221,7 @@ function workItemInput(decisionRef) {
 			"A fresh external project can bootstrap CodeWiki, append guarded lifecycle records, collect a worker output file, release the claim, and close the trace.",
 		...planningQuality({
 			acceptance: [
-				"Installed /wiki-state fails before bootstrap and succeeds after bootstrap.",
+				"Installed internal wiki_state fails before bootstrap and /wiki-dashboard serves the Sprints Queue after bootstrap.",
 				"Decision, planning, runtime, implementation, release, and archive writes use expected byte/sequence guards.",
 				"Runtime host completion collects a real worker output file under project-local .codewiki/runtime/tmp.",
 				"The final trace is closed and the work queue marks the work done before close.",
@@ -283,10 +283,10 @@ function approvedDecisionRef(decided) {
 	const iteration = decided.loopResult.traceEvents.find(
 		(event) => event.loop === "decision",
 	);
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(planned) {
@@ -357,7 +357,7 @@ try {
 	const pi = mockPi();
 	codewikiExtension(pi.api);
 	const bootstrapCommand = commandByName(pi, "wiki-bootstrap");
-	const stateCommand = commandByName(pi, "wiki-state");
+	const dashboardCommand = commandByName(pi, "wiki-dashboard");
 	const stateTool = toolByName(pi, "wiki_state");
 	const decideTool = toolByName(pi, "wiki_decide");
 	const planTool = toolByName(pi, "wiki_plan");
@@ -382,8 +382,17 @@ try {
 		ctx,
 	);
 	assert.equal(bootstrap.data.created.includes(".codewiki/config.json"), true);
-	const emptyState = await stateCommand.handler("--board --json", ctx);
-	assert.equal(emptyState.data.workQueue.summary.ready, 0);
+	const emptyState = await stateTool.execute(
+		"post-bootstrap-state",
+		{ view: "board" },
+		undefined,
+		undefined,
+		ctx,
+	);
+	assert.equal(emptyState.details.result.data.workQueue.summary.ready, 0);
+	const dashboard = await dashboardCommand.handler("--no-open", ctx);
+	assert.equal(dashboard.command, "dashboard");
+	assert.match(dashboard.url, /^http:\/\/127\.0\.0\.1:/);
 
 	const traceId = "TRACE-external-package-lifecycle";
 	const tracePath = join(
@@ -402,6 +411,21 @@ try {
 		),
 	);
 
+	const preview = assertToolResult(
+		await executeTool(
+			decideTool,
+			{
+				traceId,
+				mode: "preview",
+				allowNonProjectInstall: true,
+				createdAt: "2026-06-18T09:00:01.000Z",
+				proposalInput: sprintProposalInput("2026-06-18T09:00:01.000Z"),
+			},
+			ctx,
+			"decide-preview",
+		),
+		/wiki_decide: completed preview run\./,
+	);
 	const decided = assertToolResult(
 		await executeTool(
 			decideTool,
@@ -412,7 +436,13 @@ try {
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				createdAt: "2026-06-18T09:00:01.000Z",
-				tableInput: decisionTableInput("2026-06-18T09:00:01.000Z"),
+				proposalInput: sprintProposalInput("2026-06-18T09:00:01.000Z"),
+				sprintProposalApproval: {
+					approved: true,
+					renderedProposalDigest: preview.renderedSprintProposal.digest,
+					approvedBy: "external-package-lifecycle-smoke",
+					approvedAt: "2026-06-18T09:00:01.000Z",
+				},
 			},
 			ctx,
 			"decide",
@@ -444,11 +474,14 @@ try {
 	assert.equal(planned.loopResult.exit.passed, true);
 	const planningRef = planningWorkRef(planned);
 
-	const board = await stateCommand.handler(
-		`--board --trace ${traceId} --json`,
+	const board = await stateTool.execute(
+		"ready-board",
+		{ view: "board", traceId },
+		undefined,
+		undefined,
 		ctx,
 	);
-	assert.equal(board.data.workQueue.summary.ready, 1);
+	assert.equal(board.details.result.data.workQueue.summary.ready, 1);
 	const checkCommand = "node tests/external-feature.test.mjs";
 	run(
 		process.execPath,
@@ -476,7 +509,7 @@ try {
 			repoRoot: projectRoot,
 			createdAt: "2026-06-18T09:00:03.000Z",
 			config: { runtime: { automation: "assist", maxWorkers: 1 } },
-			queue: board.data.workQueue,
+			queue: board.details.result.data.workQueue,
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [traceId]: 3 },
 			expectedBytesByTrace: { [traceId]: await expectedBytes(tracePath) },
@@ -514,11 +547,14 @@ try {
 		true,
 	);
 
-	const doneBoard = await stateCommand.handler(
-		`--board --trace ${traceId} --json`,
+	const doneBoard = await stateTool.execute(
+		"done-board",
+		{ view: "board", traceId },
+		undefined,
+		undefined,
 		ctx,
 	);
-	assert.equal(doneBoard.data.workQueue.summary.done, 1);
+	assert.equal(doneBoard.details.result.data.workQueue.summary.done, 1);
 	const recordsBeforeClose = readTraceRecords(tracePath);
 	const archived = assertToolResult(
 		await executeTool(
@@ -542,11 +578,14 @@ try {
 		/wiki_archive: completed append run\./,
 	);
 	assert.equal(archived.releaseNotes.closed, true);
-	const closedState = await stateCommand.handler(
-		`--all --trace ${traceId} --json`,
+	const closedState = await stateTool.execute(
+		"closed-state",
+		{ view: "all", traceId },
+		undefined,
+		undefined,
 		ctx,
 	);
-	assert.equal(closedState.data.resume.closed, true);
+	assert.equal(closedState.details.result.data.resume.closed, true);
 	assert.equal(statSync(tracePath).size > 0, true);
 	console.log(
 		JSON.stringify(

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
 import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
@@ -12,13 +12,14 @@ import {
 	previewRuntimeHostHandoff,
 	reviveRuntimeHostWorkerSessions,
 	runRuntimeHostOnce,
+	watchRuntimeHostWorkerSessions,
 } from "../../src/runtime/host-runner.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -41,7 +42,7 @@ function queue(pathScope = "src/runtime/a.ts") {
 				traceId: "TRACE-host-runner",
 				title: "Host runner work",
 				traceRefs: ["TRACE-host-runner:planning:work:1"],
-				decisionRefs: ["TRACE-host-runner:decision:row:1"],
+				decisionRefs: ["TRACE-host-runner:decision:change:1"],
 				planningRefs: ["TRACE-host-runner:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: [pathScope],
@@ -165,25 +166,25 @@ function planningEventsForHostOnce(traceId, options = {}) {
 	const workUnitId = options.workUnitId || "WU-host-once";
 	const sourcePath = options.sourcePath || "src/feature.ts";
 	const testPath = options.testPath || "tests/feature.test.mjs";
-	const table = createDecisionTable({
+	const proposal = createSprintProposal({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-15T00:00:01.000Z",
 		updatedAt: "2026-06-15T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-host-once",
+				id: "CHG-host-once",
 				currentState: "Runtime handoff is preview-only.",
 				desiredState: "Host can run one bounded worker cycle.",
 				rationale: "Adapter-owned orchestration needs trace claim safety.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/runtime.md"],
+				sourceRefs: ["kb:system/components/runtime.md"],
 			},
 		],
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		table,
+		proposal,
 		createdAt: "2026-06-15T00:00:01.000Z",
 	});
 	const decisionRef = approvedDecisionRef(decision.traceEvents);
@@ -211,19 +212,15 @@ function planningEventsForHostOnce(traceId, options = {}) {
 }
 
 function approvedDecisionRef(events) {
-	const iteration = events.find(
-		(event) => event.loop === "decision",
-	);
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const iteration = events.find((event) => event.loop === "decision");
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-host-once") {
-	const iteration = events.find(
-		(event) => event.loop === "planning",
-	);
+	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
@@ -511,6 +508,95 @@ describe("runtime host worker session revive", () => {
 			"WU-host-once: No session resume adapter configured.",
 		);
 	});
+
+	it("watches revived terminal workers and collects output without starting new sessions", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-host-watch-"));
+		try {
+			const outputFile = join(root, "worker-output.txt");
+			await writeFile(
+				outputFile,
+				[
+					"```codewiki-worker-report",
+					JSON.stringify({
+						status: "completed",
+						workUnitRef:
+							"trace:TRACE-host-once:planning:iteration:1#work:WU-host-once",
+						changedFiles: ["src/runtime/a.ts"],
+						checksRun: ["node --test tests/runtime/a.test.mjs"],
+						contentProofRefs: ["sha256:abc"],
+						changes: [
+							{
+								id: "CH-host-watch",
+								planningRefs: [
+									"trace:TRACE-host-once:planning:iteration:1#work:WU-host-once",
+								],
+								codePaths: ["src/runtime/a.ts"],
+								testPaths: ["tests/runtime/a.test.mjs"],
+								checkResults: [
+									{
+										command: "node --test tests/runtime/a.test.mjs",
+										status: "pass",
+									},
+								],
+								acceptanceEvidenceItems: [
+									{
+										criterionId: "AC-001",
+										summary: "Worker evidence collected.",
+										evidenceRefs: ["tests/runtime/a.test.mjs"],
+									},
+								],
+							},
+						],
+					}),
+					"```",
+					"",
+				].join("\n"),
+			);
+
+			const watched = await watchRuntimeHostWorkerSessions({
+				workerStatuses: [
+					{
+						workerId: "host-worker-001",
+						workUnitId: "WU-host-once",
+						traceId: "TRACE-host-once",
+						state: "running",
+						planningRefs: [
+							"trace:TRACE-host-once:planning:iteration:1#work:WU-host-once",
+						],
+						sessionId: "session-1",
+						outputRef: outputFile,
+					},
+				],
+				sessionFactory: {
+					async create() {
+						assert.fail("create should not run during watch");
+					},
+					resume(input) {
+						return {
+							state: "completed",
+							sessionId: input.sessionId,
+							outputFile: input.outputFile,
+						};
+					},
+				},
+			});
+
+			assert.equal(watched.workerStatuses[0].state, "completed");
+			assert.equal(watched.completions.length, 1);
+			assert.equal(watched.workerResults[0].status, "completed");
+			assert.deepEqual(watched.workerResults[0].changedFiles, [
+				"src/runtime/a.ts",
+			]);
+			assert.equal(watched.hostErrors.length, 0);
+			assert.equal(watched.releaseCheck.status, "blocked");
+			assert.equal(
+				watched.releaseCheck.reason,
+				"implementation_preview_missing",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
 });
 
 describe("runtime host one-shot execution", () => {
@@ -578,6 +664,7 @@ describe("runtime host one-shot execution", () => {
 				workUnitId: "WU-host-once",
 				traceId: fixture.traceId,
 				state: "completed",
+				planningRefs: [fixture.planningRef],
 				claimId: "claim-WU-host-once-001",
 				sessionId: "session-host-worker-001",
 				sessionFile: "/tmp/host-worker-001.jsonl",

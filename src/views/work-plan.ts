@@ -163,8 +163,8 @@ function directWorkItem(
 		planningAssessment: {
 			stance: "worker_ready",
 			workUnitSize: "right_sized",
-			rightSizing: "Decision row is approved for direct implementation.",
-			independence: "Direct implementation is bounded by the decision row.",
+			rightSizing: "Proposed change is approved for direct implementation.",
+			independence: "Direct implementation is bounded by the proposed change.",
 			implementationReadiness: direct.routeRationale,
 			uncertainties: [],
 			concerns: [],

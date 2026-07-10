@@ -1,5 +1,10 @@
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
+	closeInProcessCodewikiDashboardServer,
+	restoreCodewikiDashboardServer,
+} from "../../dashboard/index.ts";
+import { findCodewikiProjectRoot } from "../../project/root.ts";
+import {
 	resolveCodewikiExtensionIdentity,
 	type CodewikiExtensionIdentity,
 } from "../identity.ts";
@@ -9,20 +14,49 @@ import type {
 } from "../types.ts";
 
 export const CODEWIKI_FOOTER_STATUS_KEY = "codewiki";
+const LEGACY_WIDGET_KEYS = ["codewiki-cards"];
 
 export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 	if (typeof pi.on !== "function") return;
-	pi.on("session_start", (_event, ctx) => {
-		const projectRoot = typeof ctx.cwd === "string" ? ctx.cwd : undefined;
+	pi.on("session_shutdown", async (_event, ctx) => {
+		const projectRoot = await resolveEventProjectRoot(ctx);
+		if (projectRoot) {
+			await closeInProcessCodewikiDashboardServer(projectRoot).catch(
+				() => undefined,
+			);
+		}
+	});
+	pi.on("session_start", async (_event, ctx) => {
+		const cwd = typeof ctx.cwd === "string" ? ctx.cwd : process.cwd();
+		const projectRoot = await resolveEventProjectRoot(ctx);
 		const identity = resolveCodewikiExtensionIdentity(
 			import.meta.url,
-			projectRoot,
+			projectRoot ?? cwd,
 		);
+		if (projectRoot) {
+			await restoreCodewikiDashboardServer(projectRoot).catch(() => undefined);
+		}
+		clearLegacyCodewikiWidgets(ctx);
 		setCodewikiFooterStatus(
 			ctx,
-			`CodeWiki ${identity.footerLabel} · /wiki-state`,
+			`CodeWiki ${identity.footerLabel} · dashboard: /wiki-dashboard`,
 		);
 	});
+}
+
+async function resolveEventProjectRoot(
+	ctx: CodewikiExtensionContext,
+): Promise<string | undefined> {
+	const cwd = typeof ctx.cwd === "string" ? ctx.cwd : process.cwd();
+	return await findCodewikiProjectRoot(cwd).catch(() => undefined);
+}
+
+export function clearLegacyCodewikiWidgets(
+	ctx: CodewikiExtensionContext,
+): void {
+	for (const key of LEGACY_WIDGET_KEYS) {
+		ctx.ui?.setWidget?.(key, undefined);
+	}
 }
 
 export function setCodewikiFooterStatus(

@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
+	CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS,
+	CODEWIKI_SOURCE_OWNERSHIP_ID,
+	CODEWIKI_SOURCE_OWNERSHIP_REFS,
 	okfSourceOwnershipExtensionsFromBundle,
 	sourceOwnershipComponentById,
 	sourceOwnershipMapFromOkfBundle,
@@ -10,17 +13,10 @@ import {
 	validateSourceOwnershipFromOkfBundle,
 } from "../../src/knowledge/source-ownership.ts";
 import {
-	parseSourceMapYaml,
 	pathMatchesPattern,
 	sourceMapExcluded,
 	sourceMapOwnerForPath,
 } from "../../src/knowledge/source-map.ts";
-
-const sourceMapText = readFileSync(
-	".codewiki/kb/system/source-map.yaml",
-	"utf8",
-);
-const sourceMap = parseSourceMapYaml(sourceMapText);
 
 function collectFiles(root) {
 	const output = [];
@@ -55,10 +51,6 @@ function knowledgeBundleFiles() {
 		.map((path) => ({ path, content: readFileSync(path, "utf8") }));
 }
 
-function sourceOwnershipOptions() {
-	return { migrationMap: sourceMap };
-}
-
 function byId(components) {
 	return new Map(components.map((component) => [component.id, component]));
 }
@@ -68,46 +60,43 @@ function unique(values) {
 }
 
 describe("OKF-backed source ownership", () => {
-	it("reconstructs the current source-map contract from OKF frontmatter", () => {
-		const ownership = sourceOwnershipMapFromOkfBundle(
-			knowledgeBundleFiles(),
-			sourceOwnershipOptions(),
-		);
-		const expected = byId(sourceMap.components);
-		const actual = byId(ownership.components);
+	it("builds the active ownership map from OKF frontmatter only", () => {
+		const ownership = sourceOwnershipMapFromOkfBundle(knowledgeBundleFiles());
+		const components = byId(ownership.components);
 
-		assert.equal(ownership.id, sourceMap.id);
-		assert.deepEqual(ownership.sourceRefs, sourceMap.sourceRefs);
-		assert.deepEqual(ownership.defaults, sourceMap.defaults);
-		assert.equal(ownership.components.length, sourceMap.components.length);
-		for (const [id, component] of expected) {
-			assert.deepEqual(actual.get(id), component, `component ${id}`);
-		}
+		assert.equal(ownership.id, CODEWIKI_SOURCE_OWNERSHIP_ID);
+		assert.deepEqual(ownership.sourceRefs, CODEWIKI_SOURCE_OWNERSHIP_REFS);
+		assert.deepEqual(ownership.defaults, CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS);
+		assert.equal(existsSync(".codewiki/kb/system/source-map.yaml"), false);
+		assert.equal(
+			components.get("knowledge")?.doc,
+			".codewiki/kb/system/components/knowledge.md",
+		);
+		assert.equal(
+			components.get("dashboard")?.doc,
+			".codewiki/kb/product/uis/terminal.md",
+		);
+		assert.equal(components.get("package")?.doc, "README.md");
 	});
 
 	it("answers current owner, component, and test queries from OKF metadata", () => {
 		const bundle = knowledgeBundleFiles();
-		const options = sourceOwnershipOptions();
-		const ownership = sourceOwnershipMapFromOkfBundle(bundle, options);
+		const ownership = sourceOwnershipMapFromOkfBundle(bundle);
 
 		assert.equal(
-			sourceOwnershipComponentById(bundle, "knowledge", options)?.doc,
-			".codewiki/kb/system/knowledge.md",
+			sourceOwnershipComponentById(bundle, "knowledge")?.doc,
+			".codewiki/kb/system/components/knowledge.md",
 		);
 		assert.equal(
-			sourceOwnershipOwnerForPath(
-				bundle,
-				"src/knowledge/source-ownership.ts",
-				options,
-			)?.id,
+			sourceOwnershipOwnerForPath(bundle, "src/knowledge/source-ownership.ts")
+				?.id,
 			"knowledge",
 		);
 		for (const path of collectFiles("src")) {
-			if (sourceMapExcluded(sourceMap, path)) continue;
-			assert.equal(
-				sourceMapOwnerForPath(ownership, path)?.id,
-				sourceMapOwnerForPath(sourceMap, path)?.id,
-				`owner mismatch for ${path}`,
+			if (sourceMapExcluded(ownership, path)) continue;
+			assert.ok(
+				sourceMapOwnerForPath(ownership, path),
+				`missing owner for ${path}`,
 			);
 		}
 		for (const path of collectFiles("tests")) {
@@ -115,44 +104,43 @@ describe("OKF-backed source ownership", () => {
 				ownership.components.some((component) =>
 					sourceOwnershipSupportsTestPath(component, path),
 				),
-				sourceMap.components.some((component) =>
-					component.testPatterns.some((pattern) =>
-						pathMatchesPattern(path, pattern),
-					),
-				),
-				`test ownership mismatch for ${path}`,
+				true,
+				`missing test owner for ${path}`,
 			);
 		}
 	});
 
-	it("validates active repo ownership through the OKF compatibility view", () => {
+	it("validates active repo ownership through OKF metadata", () => {
 		const issues = validateSourceOwnershipFromOkfBundle(
 			knowledgeBundleFiles(),
 			{
 				artifactPaths: activeArtifactPaths(),
 				sourcePaths: collectFiles("src"),
 			},
-			sourceOwnershipOptions(),
 		);
 
 		assert.deepEqual(issues, []);
 	});
 
-	it("keeps source-map.yaml as a deprecated migration fixture until parity is complete", () => {
-		const docs = readFileSync(".codewiki/kb/system/source-map.md", "utf8");
+	it("exports source ownership extension fields from OKF concepts", () => {
 		const extensions = okfSourceOwnershipExtensionsFromBundle(
 			knowledgeBundleFiles(),
 		);
+		const packageExtension = extensions.find((extension) =>
+			extension.fields.codewiki_components.includes("package"),
+		);
 
-		assert.match(sourceMapText, /id: spec\.system\.source-map/);
-		assert.match(docs, /deprecated migration input/i);
-		assert.match(docs, /must not be removed/i);
 		assert.equal(extensions.length > 0, true);
+		assert.ok(packageExtension);
 		assert.equal(
-			extensions.some((extension) =>
-				extension.fields.codewiki_components.includes("package"),
+			packageExtension.fields.codewiki_source_map.some(
+				(component) => component.doc === "README.md",
 			),
-			false,
+			true,
+		);
+		assert.equal(
+			pathMatchesPattern("src/dashboard/server.ts", "src/dashboard/**"),
+			true,
 		);
 	});
 });

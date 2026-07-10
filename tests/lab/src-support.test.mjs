@@ -26,19 +26,19 @@ describe("src loop exits support the lab substrate", () => {
 	it("exposes decision issue collection and a versioned production quality graph", () => {
 		const input = decisionCases[0].input;
 		const collected = collectDecisionExitIssues(
-			input.decisionTable,
+			input.sprintProposal,
 			input.options,
 		);
-		const evaluated = evaluateDecisionExit(input.decisionTable, input.options);
+		const evaluated = evaluateDecisionExit(input.sprintProposal, input.options);
 		const standards = evaluateDecisionExitGraph(
 			collected.issues,
-			collected.approvedRows,
+			collected.approvedChanges,
 		);
 
 		assert.deepEqual(collected.issues, evaluated.issues);
 		assert.deepEqual(
-			collected.approvedRows.map((row) => row.id),
-			evaluated.approvedRowIds,
+			collected.approvedChanges.map((change) => change.id),
+			evaluated.approvedChangeIds,
 		);
 		assert.deepEqual(standards, evaluated.qualityStandards);
 		assertGraphShape(DECISION_LOOP_GRAPH, "decision.loop");
@@ -73,7 +73,7 @@ describe("src loop exits support the lab substrate", () => {
 function assertGraphShape(graph, graphId) {
 	assert.equal(graph.graphId, graphId);
 	assert.equal(typeof graph.graphVersion, "string");
-	assert.equal(graph.schemaVersion, 2);
+	assert.equal(graph.schemaVersion, 3);
 	assert.equal(Array.isArray(graph.layers), true);
 	assert.equal(Array.isArray(graph.nodes), true);
 	assert.equal(graph.nodes.length > 0, true);

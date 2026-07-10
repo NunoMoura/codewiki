@@ -1,6 +1,6 @@
-import type { DecisionRow, DecisionTable } from "./types.ts";
+import type { ProposedChange, SprintProposal } from "./types.ts";
 
-export interface DecisionStateDeltaRow {
+export interface DecisionStateDelta {
 	id: string;
 	currentState: string;
 	desiredState: string;
@@ -10,39 +10,47 @@ export interface DecisionStateDeltaRow {
 	missingFields: string[];
 }
 
-export function decisionStateDeltaRows(table: DecisionTable): DecisionStateDeltaRow[] {
-	return table.rows
-		.filter((row) => row.approval === "approved")
-		.map((row) => decisionRowStateDelta(row));
+export function decisionStateDeltas(
+	proposal: SprintProposal,
+): DecisionStateDelta[] {
+	return proposal.changes
+		.filter((change) => change.approval === "approved")
+		.map((change) => decisionChangeStateDelta(change));
 }
 
-export function decisionStateDeltaGaps(table: DecisionTable): string[] {
-	const rows = decisionStateDeltaRows(table);
-	if (table.rows.length > 0 && rows.length === 0) return ["decision:no_approved_rows"];
-	return rows.flatMap((row) =>
-		row.missingFields.map((field) => `decision_row:${row.id}:${field}`),
+export function decisionStateDeltaGaps(proposal: SprintProposal): string[] {
+	const changes = decisionStateDeltas(proposal);
+	if (proposal.changes.length > 0 && changes.length === 0) {
+		return ["decision:no_approved_changes"];
+	}
+	return changes.flatMap((change) =>
+		change.missingFields.map(
+			(field) => `decision_change:${change.id}:${field}`,
+		),
 	);
 }
 
-export function decisionPropagationRefs(table: DecisionTable): string[] {
+export function decisionPropagationRefs(proposal: SprintProposal): string[] {
 	return Array.from(
-		new Set(decisionStateDeltaRows(table).flatMap((row) => row.sourceRefs)),
+		new Set(
+			decisionStateDeltas(proposal).flatMap((change) => change.sourceRefs),
+		),
 	);
 }
 
-function decisionRowStateDelta(row: DecisionRow): DecisionStateDeltaRow {
+function decisionChangeStateDelta(change: ProposedChange): DecisionStateDelta {
 	const missingFields = [
-		row.currentState ? "" : "missing_current_state",
-		row.desiredState ? "" : "missing_desired_state",
-		row.rationale ? "" : "missing_rationale",
+		change.currentState ? "" : "missing_current_state",
+		change.desiredState ? "" : "missing_desired_state",
+		change.rationale ? "" : "missing_rationale",
 	].filter(Boolean);
 	return {
-		id: row.id,
-		currentState: row.currentState,
-		desiredState: row.desiredState,
-		rationale: row.rationale,
-		affectedLayers: [...row.affectedLayers],
-		sourceRefs: [...row.sourceRefs, ...row.proofRefs],
+		id: change.id,
+		currentState: change.currentState,
+		desiredState: change.desiredState,
+		rationale: change.rationale,
+		affectedLayers: [...change.affectedLayers],
+		sourceRefs: [...change.sourceRefs, ...change.proofRefs],
 		missingFields,
 	};
 }

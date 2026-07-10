@@ -9,6 +9,38 @@ export interface CodewikiExtensionUi {
 	width?: number;
 	notify(message: string, level?: "info" | "warning" | "error" | string): void;
 	setStatus?(key: string, value: string | undefined): void;
+	setWidget?(
+		key: string,
+		value: string[] | undefined,
+		options?: { placement?: "aboveEditor" | "belowEditor" },
+	): void;
+	custom?<T>(
+		factory: (
+			tui: CodewikiTuiHandle,
+			theme: unknown,
+			keybindings: unknown,
+			done: (result: T) => void,
+		) => CodewikiRenderComponent | Promise<CodewikiRenderComponent>,
+		options?: CodewikiCustomUiOptions,
+	): Promise<T>;
+	pasteToEditor?(text: string): void;
+}
+
+export interface CodewikiTuiHandle {
+	requestRender?(): void;
+}
+
+export interface CodewikiOverlayHandle {
+	focus?(): void;
+	unfocus?(): void;
+	setHidden?(hidden: boolean): void;
+	hide?(): void;
+}
+
+export interface CodewikiCustomUiOptions {
+	overlay?: boolean;
+	overlayOptions?: Record<string, unknown>;
+	onHandle?: (handle: CodewikiOverlayHandle) => void;
 }
 
 export interface CodewikiExtensionContext {

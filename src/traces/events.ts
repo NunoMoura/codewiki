@@ -45,7 +45,7 @@ export interface CreateLoopIterationEventInput {
 }
 
 export const SEMANTIC_TRACE_EVENT_NAMES = {
-	decision: ["rows_approved", "user_input_required", "decision_blocked"],
+	decision: ["changes_approved", "user_input_required", "decision_blocked"],
 	planning: [
 		"work_units_created",
 		"decisions_resolved",
@@ -107,7 +107,7 @@ function loopIterationEventName(
 }
 
 function decisionEventName(exit: LoopIterationExit): DecisionTraceEventName {
-	if (exit.status === "exit") return "rows_approved";
+	if (exit.status === "exit") return "changes_approved";
 	if (exit.targetLoop === null || exit.status === "blocked") {
 		return "user_input_required";
 	}

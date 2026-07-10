@@ -122,7 +122,7 @@ export interface DecisionDirectImplementationScope {
 	verification: string[];
 }
 
-export interface DecisionRowInput {
+export interface ProposedChangeInput {
 	id?: string;
 	question?: string;
 	decisionKind?: DecisionKind | string;
@@ -192,7 +192,7 @@ export interface DecisionRowInput {
 	rollbackPlan?: string;
 }
 
-export interface DecisionRow {
+export interface ProposedChange {
 	id: string;
 	question: string;
 	decisionKind: DecisionKind | string;
@@ -248,20 +248,20 @@ export interface DecisionRow {
 	rollbackPlan?: string;
 }
 
-export interface DecisionTableInput {
+export interface SprintProposalInput {
 	id?: string;
 	summary?: string;
 	sourceRefs?: string[];
-	rows?: DecisionRowInput[];
+	changes?: ProposedChangeInput[];
 	createdAt?: string;
 	updatedAt?: string;
 }
 
-export interface DecisionTable {
+export interface SprintProposal {
 	id: string;
 	summary: string;
 	sourceRefs: string[];
-	rows: DecisionRow[];
+	changes: ProposedChange[];
 	createdAt: string;
 	updatedAt: string;
 }
@@ -282,8 +282,8 @@ export interface CurrentStatePacket {
 	contentProof?: ContentProof;
 }
 
-export interface DecisionOutputTypeProfile {
-	rowId: string;
+export interface ApprovedChangeTypeProfile {
+	changeId: string;
 	decisionType: string;
 	pipelineProfileId: string;
 	loopQualityProfileId: string;
@@ -302,33 +302,33 @@ export interface ActiveTraceGoal {
 export interface DecisionOutput {
 	id: string;
 	traceId: string;
-	tableId: string;
+	proposalId: string;
 	summary: string;
-	approvedRowIds: string[];
+	approvedChangeIds: string[];
 	requirementIds: string[];
-	decisionTypeProfiles?: DecisionOutputTypeProfile[];
+	decisionTypeProfiles?: ApprovedChangeTypeProfile[];
 	knowledgeDelta: KnowledgeDelta;
 	currentStatePacket: CurrentStatePacket;
 	refs: string[];
 	createdAt: string;
 }
 
-export type DecisionRowAction =
+export type ProposedChangeAction =
 	| "accept"
 	| "reject"
 	| "defer"
 	| "alternative"
 	| "edit";
 
-export interface DecisionRowActionInput {
-	rowId: string;
-	action: DecisionRowAction;
-	row?: DecisionRowInput;
+export interface ProposedChangeActionInput {
+	changeId: string;
+	action: ProposedChangeAction;
+	change?: ProposedChangeInput;
 	alternative?: string;
 }
 
-export interface DecisionRowActionFailure {
-	rowId: string;
+export interface ProposedChangeActionFailure {
+	changeId: string;
 	action: string;
 	error: string;
 }

@@ -21,28 +21,28 @@ export const PLANNING_QUALITY_STANDARDS: LoopQualityStandardDefinition<PlanningE
 			id: "decision_coverage_complete",
 			weight: 12,
 			description:
-				"Every accepted decision ref is covered by a work unit or explicit resolution.",
+				"Every Decision ref is covered by a Task or explicit resolution.",
 			codes: ["missing_decision_coverage", "unknown_decision_ref"],
 		},
 		{
 			id: "worker_units_self_contained",
 			weight: 12,
 			description:
-				"Each work item has enough bounded context to be claimed by one implementation worker.",
+				"Each Task has enough bounded context to be assigned to one implementation worker.",
 			codes: ["invalid_work_item", "duplicate_work_item_id"],
 		},
 		{
 			id: "technical_requirements_complete",
 			weight: 12,
 			description:
-				"Each work item breaks decision intent into concrete technical requirements.",
+				"Each Task breaks Decision intent into concrete technical requirements.",
 			codes: ["missing_technical_requirements"],
 		},
 		{
 			id: "acceptance_and_verification_testable",
 			weight: 14,
 			description:
-				"Each work item has stable acceptance criteria and verification refs or commands.",
+				"Each Task has stable acceptance criteria and verification refs or commands.",
 			codes: [
 				"invalid_acceptance_criterion",
 				"duplicate_acceptance_criterion_id",
@@ -53,7 +53,7 @@ export const PLANNING_QUALITY_STANDARDS: LoopQualityStandardDefinition<PlanningE
 			id: "planning_depth_accounted",
 			weight: 8,
 			description:
-				"Each work item declares standard or micro planning depth; micro-plans stay dependency-free and cover one decision.",
+				"Each Task declares standard or micro planning depth; micro-plans stay dependency-free and cover one Decision.",
 			codes: [
 				"invalid_planning_depth",
 				"invalid_micro_plan_dependency",
@@ -65,7 +65,7 @@ export const PLANNING_QUALITY_STANDARDS: LoopQualityStandardDefinition<PlanningE
 			weight: 12,
 			mode: "agent",
 			description:
-				"Each work item declares worker profile and agent judgment that the unit is independent and implementation-ready.",
+				"Each Task declares worker profile and agent judgment that it is independent and implementation-ready.",
 			codes: [
 				"missing_worker_profile",
 				"missing_planning_assessment",
@@ -88,7 +88,7 @@ export const PLANNING_QUALITY_STANDARDS: LoopQualityStandardDefinition<PlanningE
 			weight: 10,
 			mode: "agent",
 			description:
-				"Each work unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or claim batch.",
+				"Each Task is neither Sprint-sized nor tiny busywork; the Sprint remains the Decision bundle.",
 			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
 		},
 		{

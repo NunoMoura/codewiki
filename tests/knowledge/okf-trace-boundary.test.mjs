@@ -48,7 +48,7 @@ describe("OKF trace boundary", () => {
 			false,
 		);
 		assert.equal(
-			isCodeWikiTraceJsonlPath(".codewiki/kb/system/traces.md"),
+			isCodeWikiTraceJsonlPath(".codewiki/kb/system/components/traces.md"),
 			false,
 		);
 	});
@@ -77,8 +77,8 @@ describe("OKF trace boundary", () => {
 			true,
 		);
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 43);
-		assert.equal(result.reservedCount, 4);
+		assert.equal(result.conceptCount, 42);
+		assert.equal(result.reservedCount, 10);
 	});
 
 	it("does not parse trace files as OKF concepts", () => {

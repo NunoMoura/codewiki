@@ -26,6 +26,6 @@ As a maintainer, I want CodeWiki to detect contradictions between intent, docs, 
 ## Related docs
 
 - [Maintainers](../users/maintainers.md)
-- [Alignment Model](../../system/alignment-model.md)
-- [Loop Model](../../system/loop-model.md)
-- [API](../../system/api.md)
+- [Alignment Model](../../system/components/alignment-model.md)
+- [Loop Model](../../system/components/loop-model.md)
+- [API](../../system/components/api.md)

@@ -83,7 +83,7 @@ function knowledgeDriftFiles() {
 }
 
 describe("install readiness checklist", () => {
-	it("exposes packaged Pi extension metadata for controlled repo-local dogfooding", () => {
+	it("exposes packaged Pi extension metadata while repo-local dogfood is disabled", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
@@ -100,8 +100,24 @@ describe("install readiness checklist", () => {
 		]);
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
 		assert.equal(
-			packageJson.scripts["test:self-dogfood-ready"],
+			packageJson.scripts["test:self-dogfood-candidate"],
 			"npm run audit:codewiki && npm run lab:gate && npm run lab:pipeline -- --gate",
+		);
+		assert.equal(
+			packageJson.scripts["test:self-dogfood-ready"],
+			"npm run self-dogfood:baseline:verify -- --require-clean && npm run test:self-dogfood-candidate && npm run test:self-dogfood-shadow",
+		);
+		assert.match(
+			packageJson.scripts["self-dogfood:baseline:create"],
+			/create-self-dogfood-baseline\.mjs/,
+		);
+		assert.match(
+			packageJson.scripts["self-dogfood:baseline:verify"],
+			/verify-self-dogfood-baseline\.mjs/,
+		);
+		assert.match(
+			packageJson.scripts["test:self-dogfood-shadow"],
+			/run-self-dogfood-shadow\.mjs/,
 		);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
@@ -123,10 +139,10 @@ describe("install readiness checklist", () => {
 
 	it("keeps the internal agent tool surface small and exact", () => {
 		assert.deepEqual([...CODEWIKI_TOOL_NAMES], expectedToolNames);
-		assert.equal(
-			readFileSync("src/pi/tools/index.ts", "utf8").includes("wiki_runtime"),
-			false,
-		);
+		const toolSource = readFileSync("src/pi/tools/index.ts", "utf8");
+		assert.equal(toolSource.includes("wiki_runtime"), false);
+		assert.match(toolSource, /Internal agent read/);
+		assert.match(toolSource, /not a user command/);
 	});
 
 	it("keeps only semantic loop skills", () => {
@@ -140,13 +156,14 @@ describe("install readiness checklist", () => {
 		const prompt = renderCodewikiPromptInstructions();
 		assert.equal(CODEWIKI_PROMPT_GUIDELINES.length <= 4, true);
 		assert.equal(prompt.length < 900, true);
-		assert.match(prompt, /wiki_state/);
+		assert.match(prompt, /internal wiki_state/);
 		assert.match(prompt, /wiki_decide/);
 		assert.match(prompt, /wiki_plan/);
 		assert.match(prompt, /wiki_implement/);
 		assert.doesNotMatch(prompt, /wiki_runtime/);
 		assert.doesNotMatch(prompt, /wiki_config/);
 		assert.doesNotMatch(prompt, /wiki_archive/);
+		assert.match(prompt, /\/wiki-dashboard opens/);
 	});
 
 	it("keeps runtime and source-map details out of the agent-facing state surface", () => {
@@ -222,6 +239,27 @@ describe("install readiness checklist", () => {
 		assert.equal(existsSync(".codewiki/traces/trace-index.jsonl"), false);
 	});
 
+	it("documents the OKF bundle boundary without demoting CodeWiki extensions", () => {
+		const knowledgeDoc = readFileSync(
+			".codewiki/kb/system/components/knowledge.md",
+			"utf8",
+		);
+		assert.match(knowledgeDoc, /\.codewiki\/kb\/\*\*/);
+		assert.match(knowledgeDoc, /OKF v0\.1 markdown\/frontmatter bundle/);
+		assert.match(
+			knowledgeDoc,
+			/trace JSONL under `\.codewiki\/traces\/TRACE-\*\.jsonl`/,
+		);
+		assert.match(
+			knowledgeDoc,
+			/Sprints Queue and Sprint Trace output is a read-only projection/,
+		);
+		assert.match(
+			knowledgeDoc,
+			/OKF concept frontmatter is the active KB-code-test ownership source/,
+		);
+	});
+
 	it("keeps hot trace files valid under the current schema", () => {
 		for (const fileName of readdirSync(".codewiki/traces")) {
 			if (!/^TRACE-.*\.jsonl$/.test(fileName)) continue;
@@ -236,17 +274,20 @@ describe("install readiness checklist", () => {
 
 	it("keeps only Pi and MCP product host config keys", () => {
 		assert.deepEqual(Object.keys(codewikiConfig.hosts).sort(), ["mcp", "pi"]);
-		assert.equal(codewikiConfig.hosts.pi.enabled, true);
+		assert.equal(codewikiConfig.hosts.pi.enabled, false);
 		assert.equal(codewikiConfig.hosts.mcp.enabled, false);
 	});
 
 	it("recommends project-local CodeWiki installation", () => {
 		const readme = readFileSync("README.md", "utf8");
 		const extensionDoc = readFileSync(
-			".codewiki/kb/system/extension.md",
+			".codewiki/kb/system/components/extension.md",
 			"utf8",
 		);
-		const runtimeDoc = readFileSync(".codewiki/kb/system/runtime.md", "utf8");
+		const runtimeDoc = readFileSync(
+			".codewiki/kb/system/components/runtime.md",
+			"utf8",
+		);
 		assert.match(readme, /not published to the npm registry yet/);
 		assert.match(extensionDoc, /not published to the npm registry yet/);
 		assert.match(readme, /future registry package name is still TBD/);
@@ -262,11 +303,11 @@ describe("install readiness checklist", () => {
 	it("documents and scripts the self-dogfood re-enable gate", () => {
 		const readme = readFileSync("README.md", "utf8");
 		const extensionDoc = readFileSync(
-			".codewiki/kb/system/extension.md",
+			".codewiki/kb/system/components/extension.md",
 			"utf8",
 		);
 		const loopContracts = readFileSync(
-			".codewiki/kb/system/loop-contracts.md",
+			".codewiki/kb/system/components/loop-contracts.md",
 			"utf8",
 		);
 		const audit = packageJson.scripts["audit:codewiki"];
@@ -292,29 +333,37 @@ describe("install readiness checklist", () => {
 			assert.match(content, /sequence/i);
 		}
 		for (const content of [readme, extensionDoc]) {
-			assert.match(content, /Self-dogfood status: enabled/i);
+			assert.match(content, /Self-dogfood status: disabled/i);
 			assert.match(content, /TRACE-self-dogfood-reenabled-v1/);
-			assert.match(content, /supervised CodeWiki Pi-tool dogfood/i);
+			assert.match(content, /historical evidence/i);
+			assert.match(content, /immutable baseline/i);
+			assert.match(content, /shadow mode/i);
 		}
 		assert.match(extensionDoc, /wiki_state/);
 		assert.match(extensionDoc, /preview-mode/);
 		assert.match(loopContracts, /fast edit feedback is never enough/);
-		assert.match(loopContracts, /repo-local Pi-tool dogfood is enabled/);
+		assert.match(loopContracts, /Pi-tool dogfood is currently disabled/);
 	});
 
 	it("documents loop/runtime/host boundaries and trace queue ownership", () => {
 		const loopContracts = readFileSync(
-			".codewiki/kb/system/loop-contracts.md",
+			".codewiki/kb/system/components/loop-contracts.md",
 			"utf8",
 		);
-		const runtimeDoc = readFileSync(".codewiki/kb/system/runtime.md", "utf8");
+		const runtimeDoc = readFileSync(
+			".codewiki/kb/system/components/runtime.md",
+			"utf8",
+		);
 		const planningDoc = readFileSync(
-			".codewiki/kb/system/planning-loop.md",
+			".codewiki/kb/system/components/planning-loop.md",
 			"utf8",
 		);
-		const tracesDoc = readFileSync(".codewiki/kb/system/traces.md", "utf8");
+		const tracesDoc = readFileSync(
+			".codewiki/kb/system/components/traces.md",
+			"utf8",
+		);
 		const implementationDoc = readFileSync(
-			".codewiki/kb/system/implementation-loop.md",
+			".codewiki/kb/system/components/implementation-loop.md",
 			"utf8",
 		);
 		assert.match(loopContracts, /Planning .*trace-queue/i);
@@ -328,10 +377,10 @@ describe("install readiness checklist", () => {
 		);
 		assert.match(
 			planningDoc,
-			/must not invent semantic work from the raw decision rows/i,
+			/must not invent semantic work from the raw proposed changes/i,
 		);
 		assert.match(tracesDoc, /trace-queue.*product concept/i);
-		assert.match(tracesDoc, /one card per accountable trace/i);
+		assert.match(tracesDoc, /one Sprint Trace per accountable trace/i);
 		assert.match(tracesDoc, /post-commit archive pipeline|Git restore ref/i);
 		assert.match(tracesDoc, /compact hot stubs|compact.*stub/i);
 		assert.match(implementationDoc, /does not own .*\.codewiki\/kb/i);
@@ -344,18 +393,18 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("keeps repo-local CodeWiki dogfooding explicit and project-local", () => {
+	it("keeps repo-local CodeWiki dogfooding disabled pending a pinned baseline", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
 		assert.equal(packages.includes("npm:pi-lens"), true);
-		assert.equal(packages.includes(".."), true);
+		assert.equal(packages.includes(".."), false);
 		assert.equal(packages.includes("."), false);
-		assert.equal(resolve(".pi", ".."), process.cwd());
 		assert.notEqual(resolve(".pi", "."), process.cwd());
 		assert.deepEqual(
 			packages.filter((entry) => JSON.stringify(entry).includes("codewiki")),
 			[],
 		);
+		assert.equal(codewikiConfig.hosts.pi.enabled, false);
 		assert.equal(existsSync(".pi/extensions/codewiki.ts"), false);
 		assert.equal(existsSync(".pi/extensions"), false);
 		assert.equal(

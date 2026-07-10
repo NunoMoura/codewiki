@@ -23,19 +23,19 @@ For the current architecture wave, CodeWiki is backend-first. The active product
 - Git-backed content proof and retention;
 - package APIs and future host adapters.
 
-Product docs own user definitions, user stories, value, workflows, and non-goals. They do not define active visual UI surfaces for this wave.
+Product docs own user definitions, user stories, value, workflows, and non-goals. They define only the active Pi session and local dashboard surfaces retained for this wave.
 
 ## UI position
 
-All previous product UI surfaces are deprecated for now, including status panels, status docks, Board, Map, Product/System navigation panels, and browser Control Room concepts.
+Previous status panels, status docks, Board, Map, Product/System navigation panels, write-capable browser Control Room concepts, and persistent terminal card widgets are deprecated for now.
 
-The only retained UI direction is future Pi TUI support. That direction is intentionally narrow: Pi TUI may render source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
+The retained UI direction is a focused Pi conversation plus a local read-only retro dashboard opened by `/wiki-dashboard`. The dashboard renders the Sprints Queue as horizontal Sprint Trace bars and expands each trace into Trace Detail. Pi TUI support remains for focused command output and source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
 
-Backend state and continuation remain available through tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-state` and `/wiki-state` are the preferred command shapes for summary output; no separate status command is planned.
+Backend state and continuation remain available through internal tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-dashboard` is the only public state/dashboard command; the former state alias is removed. No separate status command is planned.
 
 ## Product boundaries
 
-Tools, commands, skills, temporary CLI harness access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [API Tool Surface](../system/api-tools.md), and [Extension](../system/extension.md).
+Tools, commands, skills, temporary CLI harness access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/components/api.md), [API Tool Surface](../system/components/api-tools.md), and [Extension](../system/components/extension.md).
 
 CodeWiki core is harness-agnostic. Pi is a primary host adapter, not the core. MCP adapters should expose the same semantics when added. The source CLI remains a temporary development/test harness and is not a product host.
 
@@ -62,4 +62,4 @@ CodeWiki should optimize for the best achievable code quality with the least use
 - [Use Loop-Governed Automation](stories/automation.md)
 - [Low-Token Navigation](stories/navigation.md)
 - [Lexicon](../lexicon.md)
-- [System Overview](../system/overview.md)
+- [System Overview](../system/components/overview.md)

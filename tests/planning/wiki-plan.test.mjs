@@ -10,7 +10,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function nextSequence(events) {
@@ -19,10 +19,10 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 async function decision(traceId, options = {}) {
@@ -33,28 +33,28 @@ async function decision(traceId, options = {}) {
 		traceId,
 		nextSequence: options.nextSequence || 1,
 		createdAt: "2026-06-11T00:00:01.000Z",
-		tableInput: {
+		proposalInput: {
 			id: `${traceId}-DT`,
 			createdAt: "2026-06-11T00:00:01.000Z",
 			updatedAt: "2026-06-11T00:00:01.000Z",
-			rows: [
+			changes: [
 				{
-					id: "DTR-wiki-plan",
+					id: "CHG-wiki-plan",
 					currentState: "Planning callers use iteration runner directly.",
 					desiredState: "wiki_plan wraps planning output and append safely.",
 					rationale: "Avoid split output/exit public workflow.",
 					...decisionQualityFields(),
 					approval: "approved",
-					sourceRefs: ["kb:system/planning-loop.md"],
+					sourceRefs: ["kb:system/components/planning-loop.md"],
 				},
 			],
 		},
 	};
 	if (input.mode === "append") {
 		const preview = await runWikiDecide({ ...input, mode: "preview" });
-		input.decisionTableApproval = {
+		input.sprintProposalApproval = {
 			approved: true,
-			renderedTableDigest: preview.renderedDecisionTable.digest,
+			renderedProposalDigest: preview.renderedSprintProposal.digest,
 		};
 	}
 	return runWikiDecide(input);
@@ -198,8 +198,8 @@ function assertQualityGraphIdentity(record, graphId) {
 	const checkpointGraph = record?.data?.qualityGraph;
 	const graph = outputGraph || exitGraph || checkpointGraph;
 	assert.equal(graph?.id, graphId);
-	assert.equal(graph?.version, "0.3.0.loop.5");
-	assert.equal(graph?.schemaVersion, 2);
+	assert.equal(graph?.version, "0.3.0.loop.6");
+	assert.equal(graph?.schemaVersion, 3);
 	assert.match(graph?.hash, /^sha256:/);
 	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
 }

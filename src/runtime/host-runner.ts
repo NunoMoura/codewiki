@@ -91,6 +91,20 @@ interface ResumeRuntimeHostWorkerSessionsResult {
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 }
 
+export interface WatchRuntimeHostWorkerSessionsInput {
+	workerStatuses: RuntimeDisposableWorkerStatus[];
+	sessionFactory: PiWorkerSessionFactory;
+}
+
+export interface WatchRuntimeHostWorkerSessionsResult {
+	workerStatuses: RuntimeDisposableWorkerStatus[];
+	completions: PiWorkerCompletionInput[];
+	workerResults: ImplementationWorkerResultInput[];
+	hostErrors: CodewikiHostError[];
+	releaseCheck: RuntimeHostReleaseCheck;
+	remediation?: RuntimeHostRemediation;
+}
+
 interface RunRuntimeHostOnceInput {
 	runtime: RunWikiRuntimeInput;
 	implementationInputs: RuntimeHostImplementationInput[];
@@ -190,6 +204,130 @@ export async function reviveRuntimeHostWorkerSessions(
 		}),
 	);
 	return { workerStatuses };
+}
+
+export async function watchRuntimeHostWorkerSessions(
+	input: WatchRuntimeHostWorkerSessionsInput,
+): Promise<WatchRuntimeHostWorkerSessionsResult> {
+	const revived = await reviveRuntimeHostWorkerSessions(input);
+	const terminal = revived.workerStatuses.filter(isTerminalWorkerStatus);
+	if (terminal.length === 0) {
+		return {
+			workerStatuses: revived.workerStatuses,
+			completions: [],
+			workerResults: [],
+			hostErrors: detachedHostErrors(revived.workerStatuses),
+			releaseCheck: {
+				status: "blocked",
+				reason: "workers_still_running",
+				blockers: ["No terminal worker sessions are ready to collect."],
+			},
+		};
+	}
+	const completions = await collectPiWorkerOutputFiles(
+		terminal.map(workerStartFromStatus),
+	);
+	const workerResults = collectPiWorkerResults(completions);
+	const hostErrors = completionHostErrors(completions, workerResults);
+	const releaseCheck = releaseCheckForHostCompletion(workerResults, []);
+	return {
+		workerStatuses: mergeWatchedWorkerResults(
+			revived.workerStatuses,
+			workerResults,
+			hostErrors,
+		),
+		completions,
+		workerResults,
+		hostErrors,
+		releaseCheck,
+		...optionalRemediation(
+			remediationForHostCompletion(releaseCheck, workerResults, [], hostErrors),
+		),
+	};
+}
+
+function isTerminalWorkerStatus(
+	status: RuntimeDisposableWorkerStatus,
+): boolean {
+	return ["completed", "blocked", "failed"].includes(status.state);
+}
+
+function detachedHostErrors(
+	statuses: RuntimeDisposableWorkerStatus[],
+): CodewikiHostError[] {
+	return statuses.flatMap((status) => status.remediation?.hostErrors || []);
+}
+
+function workerStartFromStatus(
+	status: RuntimeDisposableWorkerStatus,
+): PiWorkerStartResult {
+	return {
+		workerId: status.workerId,
+		workUnitId: status.workUnitId,
+		traceId: status.traceId,
+		planningRefs: [...(status.planningRefs || [])],
+		...(status.claimId ? { claimId: status.claimId } : {}),
+		...(status.sessionId ? { sessionId: status.sessionId } : {}),
+		...(status.sessionFile ? { sessionFile: status.sessionFile } : {}),
+		...(status.outputRef ? { outputFile: status.outputRef } : {}),
+		...(status.pid ? { pid: status.pid } : {}),
+		status: status.state === "failed" ? "failed" : "started",
+	};
+}
+
+function mergeWatchedWorkerResults(
+	statuses: RuntimeDisposableWorkerStatus[],
+	workerResults: ImplementationWorkerResultInput[],
+	hostErrors: CodewikiHostError[],
+): RuntimeDisposableWorkerStatus[] {
+	const results = new Map(
+		workerResults.map((result) => [
+			hostErrorKey(result.workerId, result.workUnitId),
+			result,
+		]),
+	);
+	const errors = hostErrorMap(hostErrors);
+	return statuses.map((status) => {
+		const result = results.get(
+			hostErrorKey(status.workerId, status.workUnitId),
+		);
+		if (!result) return status;
+		const state = workerStatus(result);
+		const error = errors.get(hostErrorKey(status.workerId, status.workUnitId));
+		return {
+			...status,
+			state,
+			planningRefs:
+				result.planningRefs ?? result.planning_refs ?? status.planningRefs,
+			...((result.sessionId ?? result.session_id)
+				? { sessionId: result.sessionId ?? result.session_id }
+				: {}),
+			...((result.sessionFile ?? result.session_file)
+				? { sessionFile: result.sessionFile ?? result.session_file }
+				: {}),
+			...(error ? { remediation: workerResultRemediation(error) } : {}),
+		};
+	});
+}
+
+function workerResultRemediation(error: CodewikiHostError) {
+	return {
+		reason: "worker_completion_error",
+		route: "retry_worker",
+		blockers: [error.message],
+		refs: [...error.refs],
+		suggestedActions: [
+			"Inspect worker output and session references.",
+			"Release the claim before retrying a failed worker.",
+		],
+		hostErrors: [error],
+	};
+}
+
+function optionalRemediation(remediation: RuntimeHostRemediation | undefined): {
+	remediation?: RuntimeHostRemediation;
+} {
+	return remediation ? { remediation } : {};
 }
 
 export async function previewRuntimeHostHandoff(
@@ -1280,6 +1418,7 @@ function disposableWorkerStatusesFromResult(
 			workUnitId: worker.workUnitId,
 			traceId: worker.traceId,
 			state,
+			planningRefs: [...worker.planningRefs],
 			...(worker.claimId ? { claimId: worker.claimId } : {}),
 			...(worker.pid ? { pid: worker.pid } : {}),
 			...(worker.sessionId ? { sessionId: worker.sessionId } : {}),

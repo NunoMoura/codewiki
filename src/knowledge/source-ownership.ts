@@ -23,12 +23,29 @@ import {
 } from "./source-map.ts";
 import type { OkfBundleFile } from "./okf-validation.ts";
 
-export interface SourceOwnershipCompatibilityOptions {
+export interface SourceOwnershipOptions {
 	id?: string;
 	defaults?: SourceMapDefaults;
 	sourceRefs?: string[];
-	migrationMap?: SourceMapContract;
 }
+
+export const CODEWIKI_SOURCE_OWNERSHIP_ID = "spec.system.source-ownership";
+export const CODEWIKI_SOURCE_OWNERSHIP_REFS = [
+	".codewiki/kb/system/components/source-map.md",
+];
+export const CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS: SourceMapDefaults = {
+	inheritance: true,
+	maxOwnerDepth: 2,
+	excluded: [
+		"node_modules/**",
+		".pi/**",
+		".git/**",
+		"coverage/**",
+		"dist/**",
+		"**/*.d.ts",
+		"**/*.tgz",
+	],
+};
 
 export type SourceOwnershipMap = SourceMapContract;
 export type SourceOwnershipComponent = SourceMapComponent;
@@ -53,32 +70,20 @@ export function okfSourceOwnershipExtensionsFromBundle(
 
 export function sourceOwnershipMapFromOkfBundle(
 	files: OkfBundleFile[],
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceOwnershipMap {
-	const okfMap = sourceMapFromOkfSourceMapExtensions({
+	return sourceMapFromOkfSourceMapExtensions({
 		extensions: okfSourceOwnershipExtensionsFromBundle(files),
-		defaults: options.defaults || options.migrationMap?.defaults,
-		sourceRefs: options.sourceRefs || options.migrationMap?.sourceRefs,
-		id: options.id || options.migrationMap?.id,
+		defaults: options.defaults || CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS,
+		sourceRefs: options.sourceRefs || CODEWIKI_SOURCE_OWNERSHIP_REFS,
+		id: options.id || CODEWIKI_SOURCE_OWNERSHIP_ID,
 	});
-	const okfComponentIds = new Set(
-		okfMap.components.map((component) => component.id),
-	);
-	return {
-		...okfMap,
-		components: [
-			...okfMap.components,
-			...(options.migrationMap?.components.filter(
-				(component) => !okfComponentIds.has(component.id),
-			) || []),
-		],
-	};
 }
 
 export function sourceOwnershipOwnerForPath(
 	files: OkfBundleFile[],
 	path: string,
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceOwnershipComponent | undefined {
 	return sourceMapOwnerForPath(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -89,7 +94,7 @@ export function sourceOwnershipOwnerForPath(
 export function sourceOwnershipComponentsForPath(
 	files: OkfBundleFile[],
 	path: string,
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceOwnershipComponent[] {
 	return sourceMapComponentsForPath(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -100,7 +105,7 @@ export function sourceOwnershipComponentsForPath(
 export function sourceOwnershipComponentById(
 	files: OkfBundleFile[],
 	id: string,
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceOwnershipComponent | undefined {
 	return sourceMapComponentById(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -111,7 +116,7 @@ export function sourceOwnershipComponentById(
 export function sourceOwnershipComponentsForRefs(
 	files: OkfBundleFile[],
 	componentRefs: string[],
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceOwnershipComponent[] {
 	return componentsForRefs(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -122,7 +127,7 @@ export function sourceOwnershipComponentsForRefs(
 export function unknownSourceOwnershipRefs(
 	files: OkfBundleFile[],
 	componentRefs: string[],
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): string[] {
 	return unknownComponentRefs(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -147,7 +152,7 @@ export function sourceOwnershipSupportsTestPath(
 export function validateSourceOwnershipFromOkfBundle(
 	files: OkfBundleFile[],
 	input: SourceMapValidationInput = {},
-	options: SourceOwnershipCompatibilityOptions = {},
+	options: SourceOwnershipOptions = {},
 ): SourceMapValidationIssue[] {
 	return validateSourceMap(
 		sourceOwnershipMapFromOkfBundle(files, options),
@@ -221,6 +226,7 @@ function structuredComponents(value: unknown): CodeWikiOkfSourceMapComponent[] {
 		return [
 			{
 				id,
+				...(stringValue(record.doc) ? { doc: stringValue(record.doc) } : {}),
 				source_patterns: stringList(record.source_patterns),
 				test_patterns: stringList(record.test_patterns),
 				...(generatedViews.length ? { generated_views: generatedViews } : {}),

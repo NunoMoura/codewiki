@@ -17,6 +17,21 @@ function sessionInput(overrides = {}) {
 	};
 }
 
+async function waitForOutputFile(outputFile, expected) {
+	let lastError;
+	for (let attempt = 0; attempt < 40; attempt++) {
+		try {
+			const content = await readFile(outputFile, "utf8");
+			if (content.includes(expected)) return content;
+			lastError = new Error(`output did not contain ${expected}: ${content}`);
+		} catch (error) {
+			lastError = error;
+		}
+		await new Promise((resolve) => setTimeout(resolve, 25));
+	}
+	throw lastError;
+}
+
 describe("Pi process session factory", () => {
 	it("builds deterministic Pi CLI process inputs through a runner seam", async () => {
 		const calls = [];
@@ -205,6 +220,36 @@ describe("Pi process session factory", () => {
 			assert.equal(
 				(await readFile(outputFile, "utf8")).trim(),
 				"hello from pi worker",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+			await rm(base, { recursive: true, force: true });
+		}
+	});
+
+	it("redirects detached process output for later worker collection", async () => {
+		const base = join(process.cwd(), ".tmp-worktrees/pi-process-session");
+		await mkdir(base, { recursive: true });
+		const root = await mkdtemp(join(base, "detached-"));
+		try {
+			const outputFile = join(root, "detached-worker.jsonl");
+			const factory = createPiProcessSessionFactory({
+				command: process.execPath,
+				args: ["-e", "setTimeout(() => console.log(process.argv.at(-1)), 25)"],
+				outputFile,
+				detached: true,
+			});
+			const session = await factory.create(sessionInput());
+
+			await session.prompt("hello from detached pi worker");
+
+			assert.equal(session.outputFile, outputFile);
+			assert.equal(typeof session.pid, "number");
+			assert.equal(
+				(
+					await waitForOutputFile(outputFile, "hello from detached pi worker")
+				).trim(),
+				"hello from detached pi worker",
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });

@@ -1,4 +1,4 @@
-import type { WorktreeRef } from "../git/worktrees.ts";
+import type { WorktreeCommand, WorktreeRef } from "../git/worktrees.ts";
 import type { PiWorkerSessionInput } from "../pi/worker-start.ts";
 import type { CodewikiHostError } from "../error-handling/host-errors.ts";
 import { createPiWorkerPrompt } from "../pi/worker-start.ts";
@@ -13,7 +13,7 @@ import type {
 } from "./work-unit-claim-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
 
-export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v1";
+export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v2";
 export type RuntimeDisposableWorkerState =
 	| "starting"
 	| "running"
@@ -36,6 +36,7 @@ export interface RuntimeDisposableWorkerStatus {
 	workUnitId: string;
 	traceId: string;
 	state: RuntimeDisposableWorkerState;
+	planningRefs?: string[];
 	claimId?: string;
 	pid?: number;
 	sessionId?: string;
@@ -110,9 +111,9 @@ export interface RuntimeHandoffWorker {
 export interface RuntimeHandoffWorktreeCommands {
 	execute: "host_explicit_only";
 	dryRunDefault: true;
-	worktreePrepare: string[];
-	worktreeVerify: string[];
-	worktreeCleanup: string[];
+	worktreePrepare: WorktreeCommand[];
+	worktreeVerify: WorktreeCommand[];
+	worktreeCleanup: WorktreeCommand[];
 }
 
 export interface RuntimeHandoffCompletionContract {
@@ -144,7 +145,7 @@ export function createRuntimeHandoffManifest(
 		handoffWorker({ item, claimMetadata, worktrees, options }),
 	);
 	return {
-		schemaVersion: "codewiki.runtime.handoff.v1",
+		schemaVersion: "codewiki.runtime.handoff.v2",
 		kind: "runtime_handoff",
 		runtime: runtimeSummary(options.runtime, claimEvents),
 		claimEvents,
@@ -215,6 +216,7 @@ function handoffWorkerStatuses(
 		workUnitId: worker.workUnitId,
 		traceId: worker.traceId,
 		state: "starting",
+		planningRefs: [...worker.planningRefs],
 		...(worker.claimId ? { claimId: worker.claimId } : {}),
 	}));
 }

@@ -4,9 +4,9 @@ title: CodeWiki Trace State Lifecycle
 kind: state_lifecycle
 purpose: Show target trace lifecycle states, semantic loop iteration outcomes, runtime coordination, and cleanup boundaries.
 source_docs:
-  - .codewiki/kb/system/loop-model.md
-  - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/runtime.md
+  - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/runtime.md
 renderer:
   preferred: state_machine
   fallback: mermaid_state
@@ -31,13 +31,13 @@ transitions:
   - from: decision_active
     to: planning_active
     trigger: decision iteration exits
-    trace_event: decision.rows_approved
+    trace_event: decision.changes_approved
     exit_status: exit
     cleanup: clean decision tmp after durable refs exist
   - from: decision_active
     to: blocked
     trigger: decision iteration blocks or continues without progress
-    trace_event: decision.rows_approved
+    trace_event: decision.changes_approved
     exit_status: blocked
     cleanup: preserve decision tmp when remediation needs it
   - from: planning_active
@@ -79,7 +79,7 @@ transitions:
   - from: route_back
     to: decision_active
     trigger: target loop is decision
-    trace_event: decision.rows_approved
+    trace_event: decision.changes_approved
   - from: route_back
     to: planning_active
     trigger: target loop is planning

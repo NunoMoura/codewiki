@@ -89,19 +89,17 @@ export async function runLoopGraph<TContext>({
 			);
 		}
 
-		const blockers = ready.flatMap((node) =>
-			(node.dependsOn || []).filter((dependency) =>
-				isFailedHardGate(reports.get(dependency)),
-			),
-		);
 		const skipped = ready.filter((node) =>
 			(node.dependsOn || []).some((dependency) =>
 				isFailedHardGate(reports.get(dependency)),
 			),
 		);
 		for (const node of skipped) {
+			const blocker = (node.dependsOn || []).find((dependency) =>
+				isFailedHardGate(reports.get(dependency)),
+			);
 			pending.delete(node.id);
-			reports.set(node.id, skippedReport(node, blockers[0] || "hard_gate"));
+			reports.set(node.id, skippedReport(node, blocker || "hard_gate"));
 		}
 
 		const runnable = ready.filter((node) => !reports.has(node.id));
@@ -220,15 +218,21 @@ async function withTimeout<T>(
 	standardId: string,
 ): Promise<T> {
 	if (!timeoutMs) return promise;
-	return Promise.race([
-		promise,
-		new Promise<never>((_, reject) => {
-			setTimeout(
-				() => reject(new Error(`Loop standard ${standardId} timed out.`)),
-				timeoutMs,
-			);
-		}),
-	]);
+	let timeout: NodeJS.Timeout | undefined;
+	try {
+		return await Promise.race([
+			promise,
+			new Promise<never>((_, reject) => {
+				timeout = setTimeout(
+					() => reject(new Error(`Loop standard ${standardId} timed out.`)),
+					timeoutMs,
+				);
+				timeout.unref();
+			}),
+		]);
+	} finally {
+		if (timeout) clearTimeout(timeout);
+	}
 }
 
 function assertUniqueNodeIds<TContext>(

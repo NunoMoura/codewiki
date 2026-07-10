@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { evaluateDecisionExit } from "../../src/decision/loop.ts";
 import { evaluateImplementationExit } from "../../src/implementation/loop.ts";
 import { qualityDiagnosticsFromStandards } from "../../src/loops/feedback.ts";
@@ -52,19 +52,19 @@ describe("loop quality repair feedback", () => {
 
 	it("adds compact diagnostics to decision exits", () => {
 		const exit = evaluateDecisionExit(
-			createDecisionTable({ id: "DT-empty", rows: [] }),
+			createSprintProposal({ id: "SP-empty", changes: [] }),
 		);
 
 		assert.equal(exit.passed, false);
 		assert.ok(exit.diagnostics.length > 0);
 		assert.equal(exit.diagnostics[0].severity, "blocking");
-		assert.equal(exit.diagnostics[0].standardId, "decision_table_ready");
-		assert.match(exit.diagnostics[0].repair, /decision/i);
+		assert.equal(exit.diagnostics[0].standardId, "sprint_proposal_ready");
+		assert.match(exit.diagnostics[0].repair, /proposed change/i);
 	});
 
 	it("adds compact diagnostics to planning exits", () => {
 		const exit = evaluatePlanningExit({
-			decisionRefs: ["trace:TRACE-demo:decision:iteration:1#row:DTR-1"],
+			decisionRefs: ["trace:TRACE-demo:decision:iteration:1#change:CHG-1"],
 			workItems: [],
 			resolutions: [],
 		});

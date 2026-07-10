@@ -13,8 +13,8 @@ import { describe, it } from "node:test";
 import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
 import { loadWikiConfigFile } from "../../src/project/config-file.ts";
 import { validateOkfBundle } from "../../src/knowledge/okf-validation.ts";
+import { sourceOwnershipMapFromOkfBundle } from "../../src/knowledge/source-ownership.ts";
 import {
-	parseSourceMapYaml,
 	sourceMapOwnerForPath,
 	validateSourceMap,
 } from "../../src/knowledge/source-map.ts";
@@ -116,7 +116,10 @@ describe("project bootstrap", () => {
 			assert.equal(result.project, "bootstrap-fixture");
 			assert.equal(result.brownfield, true);
 			assert.ok(result.created.includes(".codewiki/config.json"));
-			assert.ok(result.created.includes(".codewiki/kb/system/source-map.yaml"));
+			assert.equal(
+				result.created.includes(".codewiki/kb/system/source-map.yaml"),
+				false,
+			);
 			assert.equal(
 				result.created.some((path) => path.includes("roadmap")),
 				false,
@@ -130,15 +133,6 @@ describe("project bootstrap", () => {
 			assert.equal(config.project, "bootstrap-fixture");
 			assert.equal(config.hosts.pi.enabled, false);
 
-			const sourceMapText = await readFile(
-				join(root, ".codewiki/kb/system/source-map.yaml"),
-				"utf8",
-			);
-			const sourceMap = parseSourceMapYaml(sourceMapText);
-			assert.equal(
-				sourceMapOwnerForPath(sourceMap, "src/index.ts")?.id,
-				"source",
-			);
 			const files = await collectFiles(root);
 			const markdown = files
 				.filter(
@@ -151,6 +145,18 @@ describe("project bootstrap", () => {
 					),
 				}));
 			const markdownFiles = await Promise.all(markdown);
+			const sourceMap = sourceOwnershipMapFromOkfBundle(
+				await Promise.all(
+					markdownFiles.map(async (entry) => ({
+						path: entry.path,
+						content: await readFile(join(root, entry.path), "utf8"),
+					})),
+				),
+			);
+			assert.equal(
+				sourceMapOwnerForPath(sourceMap, "src/index.ts")?.id,
+				"source",
+			);
 			const issues = validateSourceMap(sourceMap, {
 				artifactPaths: files,
 				sourcePaths: ["src/index.ts"],
@@ -158,7 +164,9 @@ describe("project bootstrap", () => {
 			});
 			assert.deepEqual(issues, []);
 			assert.equal(
-				markdownFiles.every((entry) => entry.hasFrontmatter),
+				markdownFiles
+					.filter((entry) => !entry.path.endsWith("/index.md"))
+					.every((entry) => entry.hasFrontmatter),
 				true,
 			);
 			const okf = validateOkfBundle(
@@ -172,7 +180,7 @@ describe("project bootstrap", () => {
 			assert.deepEqual(okf.issues, []);
 			assert.equal(
 				okf.documents.find(
-					(document) => document.path === "system/knowledge.md",
+					(document) => document.path === "system/components/knowledge.md",
 				)?.frontmatter?.codewiki_component,
 				"knowledge",
 			);

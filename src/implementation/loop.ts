@@ -60,7 +60,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 	ImplementationExitIssue["code"]
 > = {
 	graphId: "implementation.loop",
-	graphVersion: "0.3.0.loop.8",
+	graphVersion: "0.3.0.loop.9",
 	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	layers: loopGraphLayers([
 		"hard_gate",
@@ -197,7 +197,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 			cost: 12,
 			hardGate: true,
 			description:
-				"Changed source/test paths align with source-map component ownership and test coverage.",
+				"Changed source/test paths align with OKF source ownership and test coverage.",
 			codes: [
 				"missing_component_ref",
 				"unknown_component_ref",
@@ -1159,7 +1159,7 @@ function invalidComponentContractIssues(
 				{
 					code: "invalid_component_contract" as const,
 					componentRef: component.id,
-					message: `Source-map component ${component.id} is missing ${missing.join(", ")}.`,
+					message: `Source ownership component ${component.id} is missing ${missing.join(", ")}.`,
 				},
 			];
 		},
@@ -1498,9 +1498,7 @@ function archiveDispositionIssues(
 	} else if (action === "retain_hot") {
 		if (!reason) invalidReasons.push("retain_hot requires an explicit reason");
 	} else if (action !== "post_commit_compact") {
-		invalidReasons.push(
-			"action must be post_commit_compact or retain_hot",
-		);
+		invalidReasons.push("action must be post_commit_compact or retain_hot");
 	}
 	return invalidReasons.length
 		? [
@@ -1980,10 +1978,12 @@ const IMPLEMENTATION_REMEDIATION: Record<
 		"Map implementation evidence to every planned acceptance criterion id.",
 	unknown_acceptance_criterion:
 		"Use acceptance criterion ids emitted by the planning work unit.",
-	missing_component_ref: "Attach planning componentRefs from source-map.yaml.",
-	unknown_component_ref: "Use component ids declared in source-map.yaml.",
+	missing_component_ref:
+		"Attach planning componentRefs from OKF ownership metadata.",
+	unknown_component_ref:
+		"Use component ids declared in OKF ownership metadata.",
 	invalid_component_contract:
-		"Complete the source-map component entry with doc, source, and tests.",
+		"Complete the OKF ownership entry with doc, source, and tests.",
 	path_outside_component_scope:
 		"Move the change into the declared component scope or re-plan with the correct component.",
 	missing_component_test_coverage:

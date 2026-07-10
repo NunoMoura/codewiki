@@ -16,7 +16,7 @@ timestamp: 2026-06-30T00:00:00Z
 Planning may start only from a decision iteration whose exit status is `exit`.
 
 ```text
-decision.rows_approved(exit) -> planning.work_units_created
+decision.changes_approved(exit) -> planning.work_units_created
 ```
 
 Decision output gives planning:
@@ -33,6 +33,6 @@ Planning must route back to decision instead of guessing when product/system aut
 
 Related docs:
 
-- [Decision Loop](../decision-loop.md)
-- [Planning Loop](../planning-loop.md)
-- [Loop Model](../loop-model.md)
+- [Decision Loop](../components/decision-loop.md)
+- [Planning Loop](../components/planning-loop.md)
+- [Loop Model](../components/loop-model.md)

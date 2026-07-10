@@ -69,7 +69,7 @@ describe("wiki_config core facade", () => {
 	it("documents review pack configuration recipes", async () => {
 		const readme = await readFile("README.md", "utf8");
 		const loopContracts = await readFile(
-			".codewiki/kb/system/loop-contracts.md",
+			".codewiki/kb/system/components/loop-contracts.md",
 			"utf8",
 		);
 		const docs = `${readme}\n${loopContracts}`;
@@ -203,6 +203,35 @@ describe("wiki_config core facade", () => {
 			);
 			assert.equal(disk.project, "legacy-demo");
 			assert.equal(disk.runtime.automation, "assist");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("rejects unknown config keys instead of silently ignoring typos", async () => {
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					quality: { review: { enabld: false } },
+				}),
+			/wiki_config\.quality\.review\.enabld.*unknown/i,
+		);
+		assert.throws(
+			() => runWikiConfig({ patch: { runtime: { maxWorker: 4 } } }),
+			/wiki_config\.patch\.runtime\.maxWorker.*unknown/i,
+		);
+
+		const root = await mkdtemp(join(tmpdir(), "codewiki-config-unknown-"));
+		try {
+			await mkdir(join(root, ".codewiki"), { recursive: true });
+			await writeFile(
+				join(root, ".codewiki", "config.json"),
+				JSON.stringify({ project: "demo", unexpected: true }),
+			);
+			await assert.rejects(
+				() => loadWikiConfigFile(root),
+				/\.codewiki\/config\.json\.unexpected.*unknown/i,
+			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

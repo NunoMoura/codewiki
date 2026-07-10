@@ -12,28 +12,28 @@ import {
 } from "../loops/quality-standards.ts";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
 import type { DecisionExitIssue, DecisionExitIssueCode } from "./loop.ts";
-import type { DecisionRow } from "./types.ts";
+import type { ProposedChange } from "./types.ts";
 
 export { criteriaFromQualityStandards };
 
 export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<DecisionExitIssueCode>[] =
 	[
 		{
-			id: "decision_table_ready",
+			id: "sprint_proposal_ready",
 			weight: 8,
 			description:
-				"Decision table has at least one approved row and stable row ids.",
+				"Decision loop output has at least one Decision and stable Decision ids.",
 			codes: [
-				"no_decision_rows",
-				"no_approved_rows",
-				"duplicate_decision_row_id",
+				"no_proposed_changes",
+				"no_approved_changes",
+				"duplicate_change_id",
 			],
 		},
 		{
 			id: "intention_understood",
 			weight: 14,
 			description:
-				"Approved rows provide current state, desired state, and rationale fields for the user intention.",
+				"Decisions provide current state, desired state, and rationale fields for the user intention.",
 			codes: [
 				"missing_current_state",
 				"missing_desired_state",
@@ -44,21 +44,21 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "user_value_clear",
 			weight: 10,
 			description:
-				"Approved rows explain how the intention benefits users or improves user outcomes.",
+				"Decisions explain how the intention benefits users or improves user outcomes.",
 			codes: ["missing_user_impact"],
 		},
 		{
 			id: "cost_understood",
 			weight: 7,
 			description:
-				"Approved rows expose maintainer impact and a bounded effort estimate for later semantic cost review.",
+				"Decisions expose maintainer impact and a bounded effort estimate for later semantic cost review.",
 			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
 		},
 		{
 			id: "work_routing_classified",
 			weight: 10,
 			description:
-				"Approved rows classify work scale and choose micro or standard planning before planning handoff.",
+				"Decisions classify work scale and choose micro or standard planning before planning handoff.",
 			codes: [
 				"missing_work_scale",
 				"invalid_work_scale",
@@ -72,7 +72,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "recommendation_justified",
 			weight: 9,
 			description:
-				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
+				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why Decisions should proceed.",
 			codes: [
 				"missing_recommendation",
 				"invalid_recommendation",
@@ -92,7 +92,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "approval_safety",
 			weight: 18,
 			description:
-				"High-risk approved rows have explicit user approval authority and a canonical approval ref.",
+				"High-risk Decisions have explicit user approval authority and a canonical approval ref.",
 			codes: ["missing_high_risk_approval", "invalid_approval_ref"],
 		},
 		{
@@ -106,7 +106,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "evidence_sufficient",
 			weight: 12,
 			description:
-				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk rows.",
+				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk Decisions.",
 			codes: [
 				"missing_traceability_ref",
 				"missing_high_risk_evidence",
@@ -117,7 +117,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "risks_and_alternatives_considered",
 			weight: 10,
 			description:
-				"Approved rows declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
+				"Decisions declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
 			codes: [
 				"missing_risk",
 				"invalid_risk",
@@ -129,7 +129,7 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			id: "active_trace_conflicts_resolved",
 			weight: 16,
 			description:
-				"Approved rows do not conflict with active trace goals unless the conflict is merged, superseded, deferred, or otherwise resolved.",
+				"Decisions do not conflict with active trace goals unless the conflict is merged, superseded, deferred, or otherwise resolved.",
 			codes: ["active_trace_conflict"],
 		},
 		{
@@ -153,7 +153,7 @@ export const DECISION_KIND_QUALITY_STANDARDS: Record<
 		id: "decision_kind_classified",
 		weight: 8,
 		description:
-			"Approved rows classify the decision kind so kind-specific quality can apply inside the decision loop.",
+			"Decisions classify the decision kind so kind-specific quality can apply inside the decision loop.",
 		codes: [
 			"missing_decision_kind",
 			"invalid_decision_kind",
@@ -233,11 +233,11 @@ export const DECISION_KIND_QUALITY_STANDARDS: Record<
 
 export function decisionQualityStandards(
 	issues: DecisionExitIssue[],
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): LoopQualityStandardResult[] {
-	const evidenceRefs = approvedRows.flatMap((row) => [
-		...row.sourceRefs,
-		...row.proofRefs,
+	const evidenceRefs = approvedChanges.flatMap((change) => [
+		...change.sourceRefs,
+		...change.proofRefs,
 	]);
 	return [
 		...BASE_DECISION_QUALITY_STANDARDS.map((definition) =>
@@ -251,14 +251,14 @@ export function decisionQualityStandards(
 				issues,
 			),
 		),
-		...decisionKindQualityStandards(issues, approvedRows),
+		...decisionKindQualityStandards(issues, approvedChanges),
 	];
 }
 
 export interface EvaluateDecisionQualityStandardsInput {
 	graph: LoopQualityGraph<DecisionExitIssueCode>;
 	issues: DecisionExitIssue[];
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 }
 
 export function evaluateDecisionQualityStandards(
@@ -286,15 +286,15 @@ export function runDecisionQualityStandards(
 function decisionQualityGraphOptions({
 	graph,
 	issues,
-	approvedRows,
+	approvedChanges,
 }: EvaluateDecisionQualityStandardsInput) {
-	const evidenceRefs = approvedRows.flatMap((row) => [
-		...row.sourceRefs,
-		...row.proofRefs,
+	const evidenceRefs = approvedChanges.flatMap((change) => [
+		...change.sourceRefs,
+		...change.proofRefs,
 	]);
 	return {
 		graph,
-		nodes: activeDecisionQualityStandardNodes(graph, issues, approvedRows),
+		nodes: activeDecisionQualityStandardNodes(graph, issues, approvedChanges),
 		issues,
 		issueCode: (issue: DecisionExitIssue) => issue.code,
 		issueMessage: (issue: DecisionExitIssue) => issue.message,
@@ -308,41 +308,41 @@ function decisionQualityGraphOptions({
 export function activeDecisionQualityStandardNodes(
 	graph: LoopQualityGraph<DecisionExitIssueCode>,
 	issues: DecisionExitIssue[],
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): LoopQualityGraphNode<DecisionExitIssueCode>[] {
 	return graph.nodes.filter((node) => {
 		if (node.id === "decision_kind_classified") {
 			return (
-				approvedRows.length > 0 ||
+				approvedChanges.length > 0 ||
 				hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
 			);
 		}
 		if (node.id === "debug_decision_focused") {
 			return (
-				hasKind(approvedRows, "debug") ||
+				hasKind(approvedChanges, "debug") ||
 				hasCodePrefix(issues, "missing_debug_")
 			);
 		}
 		if (node.id === "fix_decision_reproducible") {
 			return (
-				hasKind(approvedRows, "fix") || hasCodePrefix(issues, "missing_fix_")
+				hasKind(approvedChanges, "fix") || hasCodePrefix(issues, "missing_fix_")
 			);
 		}
 		if (node.id === "harden_decision_boundary") {
 			return (
-				hasKind(approvedRows, "harden") ||
+				hasKind(approvedChanges, "harden") ||
 				hasCodePrefix(issues, "missing_harden_")
 			);
 		}
 		if (node.id === "improve_decision_outcome") {
 			return (
-				hasKind(approvedRows, "improve") ||
+				hasKind(approvedChanges, "improve") ||
 				hasCodePrefix(issues, "missing_improve_")
 			);
 		}
 		if (node.id === "migrate_decision_equivalent") {
 			return (
-				hasKind(approvedRows, "migrate") ||
+				hasKind(approvedChanges, "migrate") ||
 				hasCodePrefix(issues, "missing_migrate_")
 			);
 		}
@@ -352,11 +352,11 @@ export function activeDecisionQualityStandardNodes(
 
 function decisionKindQualityStandards(
 	issues: DecisionExitIssue[],
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): LoopQualityStandardResult[] {
 	const standards: LoopQualityStandardResult[] = [];
 	if (
-		approvedRows.length > 0 ||
+		approvedChanges.length > 0 ||
 		hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
 	) {
 		standards.push(
@@ -367,7 +367,7 @@ function decisionKindQualityStandards(
 		);
 	}
 	if (
-		hasKind(approvedRows, "debug") ||
+		hasKind(approvedChanges, "debug") ||
 		hasCodePrefix(issues, "missing_debug_")
 	) {
 		standards.push(
@@ -377,7 +377,10 @@ function decisionKindQualityStandards(
 			),
 		);
 	}
-	if (hasKind(approvedRows, "fix") || hasCodePrefix(issues, "missing_fix_")) {
+	if (
+		hasKind(approvedChanges, "fix") ||
+		hasCodePrefix(issues, "missing_fix_")
+	) {
 		standards.push(
 			buildDecisionStandard(
 				DECISION_KIND_QUALITY_STANDARDS.fix_decision_reproducible,
@@ -386,7 +389,7 @@ function decisionKindQualityStandards(
 		);
 	}
 	if (
-		hasKind(approvedRows, "harden") ||
+		hasKind(approvedChanges, "harden") ||
 		hasCodePrefix(issues, "missing_harden_")
 	) {
 		standards.push(
@@ -397,7 +400,7 @@ function decisionKindQualityStandards(
 		);
 	}
 	if (
-		hasKind(approvedRows, "improve") ||
+		hasKind(approvedChanges, "improve") ||
 		hasCodePrefix(issues, "missing_improve_")
 	) {
 		standards.push(
@@ -408,7 +411,7 @@ function decisionKindQualityStandards(
 		);
 	}
 	if (
-		hasKind(approvedRows, "migrate") ||
+		hasKind(approvedChanges, "migrate") ||
 		hasCodePrefix(issues, "missing_migrate_")
 	) {
 		standards.push(
@@ -422,7 +425,7 @@ function decisionKindQualityStandards(
 }
 
 export function decisionIssueRefs(issue: DecisionExitIssue): string[] {
-	if (issue.rowId) return [`decision-row:${issue.rowId}`];
+	if (issue.changeId) return [`decision-change:${issue.changeId}`];
 	if (issue.ref) return [issue.ref];
 	return [];
 }
@@ -462,8 +465,8 @@ function hasAnyIssue(
 	return issues.some((issue) => codes.includes(issue.code));
 }
 
-function hasKind(rows: DecisionRow[], kind: string): boolean {
-	return rows.some((row) => row.decisionKind === kind);
+function hasKind(changes: ProposedChange[], kind: string): boolean {
+	return changes.some((change) => change.decisionKind === kind);
 }
 
 function hasCodePrefix(issues: DecisionExitIssue[], prefix: string): boolean {

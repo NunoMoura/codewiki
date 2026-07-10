@@ -23,6 +23,7 @@ export const CODEWIKI_OKF_SOURCE_MAP_EXTENSION_KEYS = [
 
 export interface CodeWikiOkfSourceMapComponent {
 	id: string;
+	doc?: string;
 	source_patterns: string[];
 	test_patterns: string[];
 	generated_views?: string[];
@@ -125,7 +126,9 @@ function okfSourceMapExtensionFields(
 		left.id.localeCompare(right.id),
 	);
 	const componentIds = ordered.map((component) => component.id);
-	const roles = uniqueStrings(ordered.flatMap((component) => optional(component.role)));
+	const roles = uniqueStrings(
+		ordered.flatMap((component) => optional(component.role)),
+	);
 	const testPolicies = uniqueStrings(
 		ordered.flatMap((component) => optional(component.testPolicy)),
 	);
@@ -189,7 +192,7 @@ function sourceMapComponentsFromStructuredExtension(
 		return [
 			{
 				id: component.id,
-				doc: normalizeOkfPath(extension.path),
+				doc: normalizeOkfPath(component.doc || extension.path),
 				sourcePatterns: uniqueStrings(component.source_patterns),
 				testPatterns: uniqueStrings(component.test_patterns),
 				generatedViews: uniqueStrings(component.generated_views || []),

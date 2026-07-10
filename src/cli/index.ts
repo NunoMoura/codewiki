@@ -27,6 +27,7 @@ import {
 	updateWikiConfigFile,
 } from "../project/config-file.ts";
 import { buildProjectWikiState } from "../project/state-file.ts";
+import { parseJsonObject } from "../utils/json.ts";
 
 export interface CliResult {
 	status: number;
@@ -153,12 +154,17 @@ async function archiveCommand(
 async function requiredInput<T>(flags: Record<string, string[]>): Promise<T> {
 	const inputPath = one(flags.input);
 	if (!inputPath) throw new Error("Command requires --input <file|->.");
-	return withOverrides(JSON.parse(await readInput(inputPath)), flags) as T;
+	return withOverrides(
+		parseJsonObject(await readInput(inputPath), `CLI input ${inputPath}`),
+		flags,
+	) as T;
 }
 
 async function optionalInput<T>(flags: Record<string, string[]>): Promise<T> {
 	const inputPath = one(flags.input);
-	const input = inputPath ? JSON.parse(await readInput(inputPath)) : {};
+	const input = inputPath
+		? parseJsonObject(await readInput(inputPath), `CLI input ${inputPath}`)
+		: {};
 	return withOverrides(input, flags) as T;
 }
 

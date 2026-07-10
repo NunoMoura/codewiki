@@ -11,10 +11,17 @@ export interface WorktreeRef {
 	baseSha?: string;
 }
 
+export interface WorktreeProcessCommand {
+	executable: string;
+	args: string[];
+}
+
+export type WorktreeCommand = string | WorktreeProcessCommand;
+
 export interface WorktreeCommandPlan {
-	worktreePrepare: string[];
-	worktreeVerify: string[];
-	worktreeCleanup: string[];
+	worktreePrepare: WorktreeCommand[];
+	worktreeVerify: WorktreeCommand[];
+	worktreeCleanup: WorktreeCommand[];
 }
 
 export interface RuntimeWorktreePlan {
@@ -61,7 +68,7 @@ export interface WorktreeCommandRunnerResult {
 }
 
 export type WorktreeCommandRunner = (
-	command: string,
+	command: WorktreeCommand,
 	context: WorktreeCommandExecutionContext,
 ) =>
 	| Promise<WorktreeCommandRunnerResult | void>
@@ -180,7 +187,7 @@ async function executeWorktreeStep(
 async function executeWorktreeCommand(
 	plan: RuntimeWorktreePlan,
 	step: WorktreeCommandStep,
-	command: string,
+	command: WorktreeCommand,
 	commandIndex: number,
 	options: Pick<ExecuteRuntimeWorktreeCommandsOptions, "runner"> & {
 		dryRun: boolean;
@@ -200,7 +207,7 @@ async function executeWorktreeCommand(
 function executionRecordBase(
 	plan: RuntimeWorktreePlan,
 	step: WorktreeCommandStep,
-	command: string,
+	command: WorktreeCommand,
 	commandIndex: number,
 	options: { dryRun: boolean },
 ): WorktreeCommandExecutionContext &
@@ -208,7 +215,7 @@ function executionRecordBase(
 	return {
 		plan,
 		step,
-		command,
+		command: worktreeCommandDisplay(command),
 		commandIndex,
 		dryRun: options.dryRun,
 		workUnitId: plan.workUnitId,
@@ -220,7 +227,7 @@ function executionRecordBase(
 function commandsForStep(
 	plan: RuntimeWorktreePlan,
 	step: WorktreeCommandStep,
-): string[] {
+): WorktreeCommand[] {
 	return plan.commands[commandKeyForStep(step)];
 }
 
@@ -322,18 +329,43 @@ function commandPlan(
 	const branch = worktree.branch || "codewiki/worktree";
 	return {
 		worktreePrepare: [
-			`git worktree add -B ${JSON.stringify(branch)} ${JSON.stringify(worktree.path)} ${JSON.stringify(baseRef)}`,
+			processCommand("git", [
+				"worktree",
+				"add",
+				"-B",
+				branch,
+				worktree.path,
+				baseRef,
+			]),
 			...setupCommands,
 		],
 		worktreeVerify: [
-			`git -C ${JSON.stringify(worktree.path)} rev-parse HEAD`,
-			`git -C ${JSON.stringify(worktree.path)} status --porcelain`,
+			processCommand("git", ["-C", worktree.path, "rev-parse", "HEAD"]),
+			processCommand("git", ["-C", worktree.path, "status", "--porcelain"]),
 		],
 		worktreeCleanup: [
-			`git worktree remove ${JSON.stringify(worktree.path)}`,
-			"git worktree prune",
+			processCommand("git", ["worktree", "remove", worktree.path]),
+			processCommand("git", ["worktree", "prune"]),
 		],
 	};
+}
+
+function processCommand(
+	executable: string,
+	args: string[],
+): WorktreeProcessCommand {
+	return { executable, args };
+}
+
+function worktreeCommandDisplay(command: WorktreeCommand): string {
+	if (typeof command === "string") return command;
+	return [command.executable, ...command.args]
+		.map((argument) =>
+			/^[A-Za-z0-9_./:@%+=,-]+$/.test(argument)
+				? argument
+				: JSON.stringify(argument),
+		)
+		.join(" ");
 }
 
 function dirtyPathsOverlap(

@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
 	generateOkfSourceMapExtensions,
@@ -9,45 +8,84 @@ import {
 	sourceMapFromOkfSourceMapExtensions,
 } from "../../src/knowledge/okf-source-map.ts";
 import {
-	parseSourceMapYaml,
 	sourceMapExcluded,
 	sourceMapOwnerForPath,
 } from "../../src/knowledge/source-map.ts";
 
-const sourceMap = parseSourceMapYaml(
-	readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
-);
-
-function collectFiles(root) {
-	const output = [];
-	for (const name of readdirSync(root)) {
-		const path = `${root}/${name}`;
-		if (statSync(path).isDirectory()) output.push(...collectFiles(path));
-		else output.push(path);
-	}
-	return output;
-}
+const sourceMap = {
+	id: "spec.test.source-ownership",
+	sourceRefs: [".codewiki/kb/system/components/source-map.md"],
+	defaults: {
+		inheritance: true,
+		maxOwnerDepth: 2,
+		excluded: ["dist/**"],
+	},
+	components: [
+		{
+			id: "decision",
+			doc: ".codewiki/kb/system/components/decision-loop.md",
+			sourcePatterns: ["src/decision/**"],
+			testPatterns: ["tests/decision/**"],
+			generatedViews: [],
+			traceEvents: ["decision.changes_approved"],
+			role: "semantic_loop",
+		},
+		{
+			id: "api",
+			doc: ".codewiki/kb/system/components/api.md",
+			sourcePatterns: ["src/api/**"],
+			testPatterns: ["tests/scaffold.test.mjs"],
+			generatedViews: [],
+			traceEvents: [],
+			role: "public_facade",
+		},
+		{
+			id: "cli",
+			doc: ".codewiki/kb/system/components/api.md",
+			sourcePatterns: ["src/cli/**"],
+			testPatterns: ["tests/runtime/cli.test.mjs"],
+			generatedViews: [],
+			traceEvents: [],
+			role: "temporary_development_harness",
+		},
+		{
+			id: "knowledge",
+			doc: ".codewiki/kb/system/components/knowledge.md",
+			sourcePatterns: ["src/knowledge/**", ".codewiki/kb/**"],
+			testPatterns: ["tests/knowledge/**"],
+			generatedViews: [],
+			traceEvents: [],
+			role: "hot_knowledge",
+		},
+	],
+};
 
 function byId(components) {
 	return new Map(components.map((component) => [component.id, component]));
 }
 
-describe("OKF source-map extension generation", () => {
+function stripUndefined(value) {
+	return Object.fromEntries(
+		Object.entries(value).filter(([, entry]) => entry !== undefined),
+	);
+}
+
+describe("OKF source ownership extension generation", () => {
 	it("generates CodeWiki OKF extension fields for single and shared docs", () => {
 		const decision = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/decision-loop.md",
+			".codewiki/kb/system/components/decision-loop.md",
 		);
 		assert.equal(decision?.codewiki_component, "decision");
 		assert.deepEqual(decision?.codewiki_components, ["decision"]);
 		assert.deepEqual(decision?.codewiki_source_patterns, ["src/decision/**"]);
 		assert.deepEqual(decision?.codewiki_trace_events, [
-			"decision.rows_approved",
+			"decision.changes_approved",
 		]);
 
 		const api = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/api.md",
+			".codewiki/kb/system/components/api.md",
 		);
 		assert.equal("codewiki_component" in api, false);
 		assert.deepEqual(api?.codewiki_components, ["api", "cli"]);
@@ -65,7 +103,7 @@ describe("OKF source-map extension generation", () => {
 	it("merges generated extension fields while preserving unknown producer metadata", () => {
 		const fields = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/decision-loop.md",
+			".codewiki/kb/system/components/decision-loop.md",
 		);
 		assert.ok(fields);
 		const merged = mergeOkfSourceMapExtension(
@@ -85,7 +123,7 @@ describe("OKF source-map extension generation", () => {
 		assert.deepEqual(merged.codewiki_source_patterns, ["src/decision/**"]);
 	});
 
-	it("round-trips source-map ownership through generated OKF extension metadata", () => {
+	it("round-trips source ownership through generated OKF extension metadata", () => {
 		const extensions = generateOkfSourceMapExtensions(sourceMap);
 		const reconstructed = sourceMapFromOkfSourceMapExtensions({
 			extensions,
@@ -100,16 +138,18 @@ describe("OKF source-map extension generation", () => {
 		for (const [id, component] of expected) {
 			const generated = actual.get(id);
 			assert.ok(generated, `missing generated component ${id}`);
-			assert.deepEqual(generated, component);
+			assert.deepEqual(stripUndefined(generated), component);
 		}
-		for (const path of collectFiles("src")) {
-			if (sourceMapExcluded(sourceMap, path)) continue;
-			assert.equal(
-				sourceMapOwnerForPath(reconstructed, path)?.id,
-				sourceMapOwnerForPath(sourceMap, path)?.id,
-				`owner mismatch for ${path}`,
-			);
-		}
+		assert.equal(sourceMapExcluded(reconstructed, "dist/index.js"), true);
+		assert.equal(
+			sourceMapOwnerForPath(reconstructed, "src/knowledge/okf-source-map.ts")
+				?.id,
+			"knowledge",
+		);
+		assert.equal(
+			sourceMapOwnerForPath(reconstructed, "src/cli/index.ts")?.id,
+			"cli",
+		);
 	});
 
 	it("answers owner queries from generated OKF extension fields", () => {
@@ -126,6 +166,61 @@ describe("OKF source-map extension generation", () => {
 				defaults: sourceMap.defaults,
 			})?.id,
 			"cli",
+		);
+	});
+
+	it("allows structured OKF extensions to point at non-KB owner docs", () => {
+		const reconstructed = sourceMapFromOkfSourceMapExtensions({
+			defaults: sourceMap.defaults,
+			extensions: [
+				{
+					path: ".codewiki/kb/system/components/package.md",
+					fields: {
+						codewiki_components: ["package"],
+						codewiki_source_patterns: ["package.json"],
+						codewiki_test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+						codewiki_source_map: [
+							{
+								id: "package",
+								doc: "README.md",
+								source_patterns: ["package.json"],
+								test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+								role: "package_entrypoint",
+							},
+						],
+					},
+				},
+			],
+		});
+
+		assert.equal(reconstructed.components[0].id, "package");
+		assert.equal(reconstructed.components[0].doc, "README.md");
+		assert.equal(
+			okfSourceMapOwnerForPath(
+				[
+					{
+						path: ".codewiki/kb/system/components/package.md",
+						fields: {
+							codewiki_components: ["package"],
+							codewiki_source_patterns: ["package.json"],
+							codewiki_test_patterns: [
+								"tests/runtime/package-install-smoke.mjs",
+							],
+							codewiki_source_map: [
+								{
+									id: "package",
+									doc: "README.md",
+									source_patterns: ["package.json"],
+									test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+								},
+							],
+						},
+					},
+				],
+				"package.json",
+				{ defaults: sourceMap.defaults },
+			)?.doc,
+			"README.md",
 		);
 	});
 });

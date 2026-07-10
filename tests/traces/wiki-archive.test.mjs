@@ -12,7 +12,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -25,26 +25,26 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const decision = await runWikiDecide({
 		traceId,
 		createdAt: "2026-06-11T00:00:01.000Z",
-		tableInput: {
+		proposalInput: {
 			id: "DT-archive",
 			createdAt: "2026-06-11T00:00:01.000Z",
 			updatedAt: "2026-06-11T00:00:01.000Z",
-			rows: [
+			changes: [
 				{
-					id: "DTR-archive",
+					id: "CHG-archive",
 					currentState: "Retention stub built manually.",
 					desiredState: "wiki_archive previews retention refs.",
 					rationale: "Archive must preserve restore refs.",
 					...decisionQualityFields(),
 					approval: "approved",
-					sourceRefs: ["kb:system/traces.md"],
+					sourceRefs: ["kb:system/components/traces.md"],
 				},
 			],
 		},
 	});
 	const decisionEvent = decision.loopResult.traceEvents[0];
-	const decisionRow = decisionEvent.data.output.approvedRows[0];
-	const decisionRef = `trace:${decisionEvent.id}#row:${decisionRow.id}`;
+	const decisionRow = decisionEvent.data.output.approvedChanges[0];
+	const decisionRef = `trace:${decisionEvent.id}#change:${decisionRow.id}`;
 	const planning = await runWikiPlan({
 		traceId,
 		decisionEvents: decision.loopResult.traceEvents,
@@ -144,19 +144,19 @@ describe("wiki_archive core facade", () => {
 		const decision = await runWikiDecide({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			tableInput: {
+			proposalInput: {
 				id: "DT-archive-incomplete",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
-				rows: [
+				changes: [
 					{
-						id: "DTR-archive-incomplete",
+						id: "CHG-archive-incomplete",
 						currentState: "Trace close can happen too early.",
 						desiredState: "Trace close waits for goal coverage.",
 						rationale: "Closed incomplete traces hide unfinished goals.",
 						...decisionQualityFields(),
 						approval: "approved",
-						sourceRefs: ["kb:system/traces.md"],
+						sourceRefs: ["kb:system/components/traces.md"],
 					},
 				],
 			},
@@ -331,19 +331,19 @@ describe("wiki_archive core facade", () => {
 		const decision = await runWikiDecide({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			tableInput: {
+			proposalInput: {
 				id: "DT-archive-compact-incomplete",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
-				rows: [
+				changes: [
 					{
-						id: "DTR-archive-compact-incomplete",
+						id: "CHG-archive-compact-incomplete",
 						currentState: "Trace compact can happen too early.",
 						desiredState: "Trace compact waits for implementation exit.",
 						rationale: "Compacting incomplete traces hides unfinished work.",
 						...decisionQualityFields(),
 						approval: "approved",
-						sourceRefs: ["kb:system/traces.md"],
+						sourceRefs: ["kb:system/components/traces.md"],
 					},
 				],
 			},

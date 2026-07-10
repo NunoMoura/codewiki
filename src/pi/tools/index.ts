@@ -127,12 +127,12 @@ function wikiStateTool(): CodewikiToolDefinition {
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
-			"Read CodeWiki trace-backed status, board, blockers, and quality views for the current project.",
+			"Internal agent read of CodeWiki trace-backed status, Sprint Traces, blockers, and quality views for the current project.",
 		promptSnippet:
-			"Read CodeWiki state for the current repository from active trace records.",
+			"Read internal CodeWiki state for the current repository from active trace records.",
 		promptGuidelines: [
-			"Use wiki_state before CodeWiki decision, planning, implementation, archive, or coordination-sensitive work to inspect current trace-backed state.",
-			"wiki_state does not write files and should not be replaced by shelling out to the transitional CodeWiki CLI.",
+			"Use internal wiki_state before CodeWiki decision, planning, implementation, archive, or coordination-sensitive work to inspect current trace-backed state.",
+			"wiki_state does not write files and is not a user command; users see the read-only /wiki-dashboard Sprints Queue instead.",
 		],
 		executionMode: "parallel",
 		parameters: Type.Object(

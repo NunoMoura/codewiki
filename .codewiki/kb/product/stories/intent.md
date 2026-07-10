@@ -26,5 +26,5 @@ As a maintainer or agent, I want CodeWiki to capture and challenge current proje
 
 - [Maintainers](../users/maintainers.md)
 - [Product](../overview.md)
-- [Decision Loop](../../system/decision-loop.md)
-- [System Overview](../../system/overview.md)
+- [Decision Loop](../../system/components/decision-loop.md)
+- [System Overview](../../system/components/overview.md)

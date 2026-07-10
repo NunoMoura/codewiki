@@ -236,8 +236,8 @@ export const implementationLoopCandidate = {
 	loop: "implementation",
 	metric: "IEC",
 	graphId: "implementation.loop.lab",
-	graphVersion: "0.3.0.lab.1",
-	schemaVersion: 2,
+	graphVersion: "0.3.0.lab.2",
+	schemaVersion: 3,
 	layers: [
 		"hard_gate",
 		"input_contract",

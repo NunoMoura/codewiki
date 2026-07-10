@@ -30,7 +30,7 @@
 	},
 	"hosts": {
 		"pi": {
-			"enabled": true
+			"enabled": false
 		},
 		"mcp": {
 			"enabled": false

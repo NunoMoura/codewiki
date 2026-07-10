@@ -7,7 +7,7 @@ The old implementation archive has been removed after the migration audit. The r
 ## Current posture
 
 - Package metadata exposes the Pi extension for external Pi installs through `pi.extensions`.
-- Repo-local Pi settings load pi-lens and this package through the project-local package path (`..`, relative to `.pi/settings.json`) for controlled dogfooding; do not add a `.pi/extensions/codewiki.ts` shim.
+- Repo-local Pi settings load pi-lens only while CodeWiki self-dogfood is disabled. CodeWiki package candidates are exercised through packed installs in disposable external projects; do not add a `.pi/extensions/codewiki.ts` shim.
 - Project-local `.agents/skills/codewiki-*` skills are limited to semantic loop playbooks: decide, plan, and implement.
 - `.codewiki/kb/**` remains source-of-truth documentation for intended product/system design.
 - `.codewiki/traces/TRACE-*.jsonl` is the intended workflow/state truth model, following Pi's session JSONL pattern.
@@ -24,6 +24,8 @@ src/
   decision/
   planning/
   implementation/
+  loops/
+  dashboard/
   traces/
   views/
   knowledge/
@@ -40,7 +42,7 @@ The semantic loop roots are `decision`, `planning`, and `implementation`. Each l
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<trace>/<loop>/`. It is cleaned on loop exit after durable trace/KB/source refs exist, preserved on continue/route-back/block when remediation needs it, replaced by superseding iterations, and removed at trace close.
 
-The active migration record lives in `.codewiki/kb/system/migration-audit.md`. Do not restore the old implementation wholesale; recover any future idea only through a new accepted decision, targeted source changes, and tests.
+The active migration record lives in `.codewiki/kb/system/flows/migration-audit.md`. Do not restore the old implementation wholesale; recover any future idea only through a new accepted decision, targeted source changes, and tests.
 
 ## Requirements
 
@@ -74,7 +76,11 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
-npm run test:self-dogfood-ready
+npm run test:self-dogfood-candidate
+npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by <name>
+CODEWIKI_BASELINE_MANIFEST=<path> npm run self-dogfood:baseline:verify
+CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-shadow
+CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-ready
 npm run lab
 npm run lab:gate
 npm run lab:forge -- --json
@@ -88,10 +94,10 @@ Smoke command roles:
 
 - `npm run test:pi-install`: isolated Pi install smoke with temporary Pi settings.
 - `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki-bootstrap` and
-  `/wiki-state --board` without a model turn.
+  `/wiki-dashboard --no-open` dashboard command rendering without a model turn.
 - `npm run test:pi-mutation`: isolated Pi extension tool mutation smoke;
   previews first, rejects unguarded append, appends with expected bytes/sequence,
-  and verifies `/wiki-state`.
+  and verifies internal state through `wiki_state`.
 - `npm run test:project-local-install`: installs the packed package under a
   fresh project's `.pi/npm/node_modules/codewiki` path and verifies bootstrap,
   config write, and guarded decision append without controlled-test overrides.
@@ -103,9 +109,24 @@ Smoke command roles:
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
 - `npm run test:readiness`: package, state-shape, install-gate, and stale
   wording checks.
-- `npm run test:self-dogfood-ready`: the heavy gate for fully enabling
-  CodeWiki tools inside this repository; it runs the full package/Pi audit plus
-  lab gates before repo-local self-dogfood policy can be changed.
+- `npm run test:self-dogfood-candidate`: runs the full package/Pi audit and lab
+  gates for the current candidate without granting it authority over itself.
+- `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
+  <name>`: refuses a dirty checkout, reruns candidate gates, packs the reviewed
+  commit, and writes a host-owned ignored manifest under `.pi/npm/codewiki-baselines/**`
+  containing the Git tree content proof, package SHA-256, review identity, and
+  gate results.
+- `npm run self-dogfood:baseline:verify`: requires
+  `CODEWIKI_BASELINE_MANIFEST`, verifies the manifest, tarball bytes, Git commit,
+  and tree, and can enforce a clean candidate checkout.
+- `npm run test:self-dogfood-shadow`: installs the verified package under a
+  disposable project's `.pi/npm`, runs baseline `wiki_state`, read-only
+  `wiki_config`, and `wiki_decide` preview calls, and proves the source config and
+  traces kept the same digest.
+- `npm run test:self-dogfood-ready`: requires a clean candidate plus a verified
+  baseline manifest, reruns candidate gates, and then runs the disposable shadow
+  smoke. Passing still does not re-enable repo-local tools without explicit
+  approval.
 - `npm run lab`: scores the Decision, Planning, and Implementation candidate
   exit standards with DEC, PEC, and IEC.
 - `npm run lab:gate`: fails while any lab score exposes false-pass or
@@ -133,9 +154,9 @@ CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` stat
 and is intended to be compatible with external sandbox, worktree, container, or
 agent-harness isolation.
 
-Repo-local Pi settings load `pi-lens` plus this package through the local package path (`..`, relative to `.pi/settings.json`) for controlled dogfooding. Pi resolves relative package paths against the settings file, so `.` would point at `.pi/` rather than the package root. Do not add a repo-local `.pi/extensions/codewiki.ts` shim; the checkout should exercise the same package manifest path that packed/local installs use. Rebuild `dist/**` and restart/reload Pi before relying on the repo-local extension after source changes.
+Repo-local Pi settings intentionally load pi-lens without CodeWiki while the self-dogfood baseline is being rebuilt. Candidate CodeWiki packages must be packed and installed into disposable external projects for lifecycle testing. Future self-dogfood must load an immutable package built from a reviewed baseline commit; it must not load the mutable source checkout through `..` while that checkout is changing. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
 
-Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-state`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. Prefer read-only `/wiki-state` and `/wiki-explain` during early package use; mutation-capable tools still require explicit expected byte/sequence checks.
+Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. `/wiki-dashboard` opens the local read-only Sprints Queue in a browser. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
 
 ## Trace archive cleanup
 
@@ -149,7 +170,7 @@ CodeWiki owns Implementation review. External tools such as TypeScript, ESLint, 
 
 CodeWiki detects the language of changed files by path and extension, similar to Pi-lens file-kind dispatch. A mixed TypeScript/Python/Go/Rust/shell project does not need per-language setup for pack selection: by default, CodeWiki enables all built-in packs and runs only the packs matching the changed paths. Project config is an override for teams that want to disable, allowlist, require, or budget packs.
 
-Project config lives at `.codewiki/config.json`. Review behavior is controlled under `quality.review`:
+Project config lives at `.codewiki/config.json`. Config keys are strict at every nesting level; unknown or misspelled keys fail with their full path instead of being ignored. Review behavior is controlled under `quality.review`:
 
 ```json
 {
@@ -293,7 +314,8 @@ Disable project review policy entirely. Explicit `reviewEvidenceReports` passed 
 Current supported posture:
 
 - Project-local packed/local package installation; no public npm publish yet.
-- Supervised `/wiki-*` and `wiki_*` use inside the repository being documented.
+- Supervised `/wiki-*` and `wiki_*` use in external or controlled projects;
+  repo-local use in this source checkout remains disabled.
 - Guarded trace mutation with expected byte and sequence checks.
 - Runtime worker output treated as untrusted transport until `wiki_implement`
   validates implementation evidence.
@@ -322,28 +344,32 @@ Fully using CodeWiki `wiki_*` tools inside this repository is a separate,
 supervised self-dogfood step from public production automation. It is not enabled
 merely because the package can be built.
 
-Self-dogfood status: enabled for this source checkout by
-`trace:TRACE-self-dogfood-reenabled-v1#row:DTR-self-dogfood-reenable-approved`
-after `npm run test:self-dogfood-ready` passed and the gate implementation trace
-reported matching content proof.
+Self-dogfood status: disabled while the current refactor establishes a clean,
+reviewed, immutable baseline. The earlier
+`trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
+is historical evidence, not approval for the current working tree.
 
-The self-dogfood re-enable gate remains the ongoing safety bar:
+The self-dogfood re-enable gate is:
 
-1. `npm run test:self-dogfood-ready` passes from a clean checkout state.
-2. The latest self-repo CodeWiki implementation trace covers every touched source,
-   test, README, and KB path and its content proof matches the current files.
-3. No generated/disposable `.codewiki/**` roots outside `config.json`, `kb/`,
+1. A reviewed clean commit is packed with
+   `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
+   <name>`. Its host-owned ignored manifest under
+   `.pi/npm/codewiki-baselines/**` pins the commit, Git tree content proof,
+   package byte count, SHA-256, reviewer, and passing candidate gates.
+2. With `CODEWIKI_BASELINE_MANIFEST` pointing at that manifest,
+   `npm run test:self-dogfood-ready` verifies the immutable controller, requires
+   a clean candidate checkout, reruns candidate gates, and executes shadow
+   reads/previews. The mutable candidate checkout does not judge itself.
+3. Disposable external dogfood covers successful lifecycle runs, append
+   conflicts, malformed worker output, worktree failures, and cleanup.
+4. The baseline package produces acceptable read-only and preview results in
+   shadow mode before it may append this repository's trace truth.
+5. No generated/disposable `.codewiki/**` roots outside `config.json`, `kb/`,
    `traces/`, and `views/` are treated as active truth.
-4. Repo-local Pi still loads CodeWiki only through the project-local package path
-   in `.pi/settings.json`; no `.pi/extensions/codewiki.ts` shim or global/user
-   install is used for mutation workflows.
-5. A durable decision trace explicitly approves self-dogfood re-enable and states
-   the remaining limits: preview before append, expected byte/sequence guards,
-   no unattended worker start, no auto-merge, and no auto-publish.
+6. Explicit approval enables only supervised use: preview before append,
+   expected byte/sequence guards, no unattended worker start, no auto-merge, and
+   no auto-publish.
 
-Current repo operating guidance allows supervised CodeWiki Pi-tool dogfood in
-this checkout. Start with read-only `wiki_state`, then use preview-mode
-`wiki_decide`, `wiki_plan`, or `wiki_implement` before any guarded append. Keep
-expected-byte/sequence guards, project-local install scope, and manual review of
-mutation previews. Do not enable unattended worker start, auto-merge, or
-auto-publish without a new gate and decision trace.
+Current repo operating guidance requires normal Pi file tools, tests, and Git.
+Do not use CodeWiki `wiki_*` tools in this checkout until the pinned-baseline gate
+is satisfied and the repo-local package setting is explicitly re-enabled.

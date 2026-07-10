@@ -124,10 +124,10 @@ function reducedLoopInput(event: TraceEvent & { loop: LabLoop }): unknown {
 	if (event.loop === "decision") {
 		return {
 			prompt: text(output.summary) || text(data.trigger),
-			decisionTable: {
-				id: `${event.id}:decision-table`,
+			sprintProposal: {
+				id: `${event.id}:decision-proposal`,
 				sourceRefs: event.refs,
-				rows: arrayValue(output.approvedRows),
+				changes: arrayValue(output.approvedChanges),
 			},
 		};
 	}

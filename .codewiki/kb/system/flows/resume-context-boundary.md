@@ -21,5 +21,5 @@ Current rule: use Pi native compaction only. Do not run CodeWiki-owned compactio
 
 ## Related docs
 
-- [Runtime](../runtime.md)
-- [Traces](../traces.md)
+- [Runtime](../components/runtime.md)
+- [Traces](../components/traces.md)

@@ -86,7 +86,7 @@ function traceGoalViewFromRecords(
 	generatedAt?: string,
 ): TraceGoalView {
 	const state = replayTrace(records);
-	const decisions = decisionRows(records);
+	const decisions = decisionChanges(records);
 	const workUnits = workUnitsFromTrace(records);
 	const resolutions = resolutionsFromTrace(records);
 	const decisionRefs = decisions.map((decision) => decision.ref);
@@ -170,20 +170,20 @@ function traceGoalStatus(input: {
 	return "finished";
 }
 
-function decisionRows(records: TraceRecord[]): DecisionProjection[] {
+function decisionChanges(records: TraceRecord[]): DecisionProjection[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedRows).map((row) => {
-				const id = text(row.id) || event.id;
+			objectList(objectRecord(event.data?.output).approvedChanges).map((change) => {
+				const id = text(change.id) || event.id;
 				return {
 					id,
-					ref: iterationSubref(event, "row", id),
-					title: text(row.desiredState) || text(row.question) || id,
+					ref: iterationSubref(event, "change", id),
+					title: text(change.desiredState) || text(change.question) || id,
 					sourceRefs: unique([
-						...stringList(row.currentStateRefs),
-						...stringList(row.sourceRefs),
-						...stringList(row.targetRefs),
+						...stringList(change.currentStateRefs),
+						...stringList(change.sourceRefs),
+						...stringList(change.targetRefs),
 						...event.refs,
 					]),
 				};

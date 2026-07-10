@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
+import { parseJsonObject } from "../../src/utils/json.ts";
 import type {
 	LabCase,
 	LabExpectedFailure,
@@ -46,7 +47,10 @@ export function loadLabHoldoutBundle({
 			"Lab holdout files must live outside the repository so candidate agents cannot inspect or edit them.",
 		);
 	}
-	const parsed = JSON.parse(readFileSync(resolvedFilePath, "utf8"));
+	const parsed = parseJsonObject(
+		readFileSync(resolvedFilePath, "utf8"),
+		`lab holdout file ${resolvedFilePath}`,
+	);
 	return validateHoldoutBundle(parsed, resolvedFilePath);
 }
 

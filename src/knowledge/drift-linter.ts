@@ -58,8 +58,8 @@ export const CODEWIKI_KNOWLEDGE_DRIFT_RULES: KnowledgeDriftRule[] = [
 	{
 		id: "public_state_command",
 		scope: "product_documentation",
-		pattern: /\bwiki_status\b|\/wiki[-\s]+status\b/,
-		message: "Public UX must use /wiki-state, not status.",
+		pattern: /\bwiki_status\b|\/wiki[-\s]+status\b|\/wiki-state(?:`|\s|$)/,
+		message: "Public UX must use /wiki-dashboard, not status or /wiki-state.",
 	},
 	{
 		id: "folded_trace_product_concept",

@@ -109,7 +109,7 @@ try {
 		stderrRef,
 	);
 	assert.equal(commands.success, true);
-	for (const name of ["wiki-state", "wiki-bootstrap"]) {
+	for (const name of ["wiki-dashboard", "wiki-bootstrap"]) {
 		assert.equal(
 			commands.data.commands.some((command) => command.name === name),
 			true,
@@ -143,23 +143,27 @@ try {
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "kb")), true);
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "traces")), true);
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "views")), true);
+	messages.length = 0;
 
-	send({ id: "state", type: "prompt", message: "/wiki-state --board" });
-	const stateNotice = await waitFor(
+	send({
+		id: "dashboard",
+		type: "prompt",
+		message: "/wiki-dashboard --no-open",
+	});
+	const dashboardNotice = await waitFor(
 		messages,
 		(message) =>
 			message.type === "extension_ui_request" &&
 			message.method === "notify" &&
-			message.message.includes("CodeWiki Sprint Queue"),
+			message.message.includes("Click to open CodeWiki dashboard"),
 		stderrRef,
 	);
 	await waitFor(
 		messages,
-		(message) => message.type === "response" && message.id === "state",
+		(message) => message.type === "response" && message.id === "dashboard",
 		stderrRef,
 	);
-	assert.match(stateNotice.message, /Ready/);
-	assert.match(stateNotice.message, /├/);
+	assert.match(dashboardNotice.message, /Click to open CodeWiki dashboard/);
 	assert.equal(
 		messages.some((message) => message.type === "agent_start"),
 		false,
@@ -171,7 +175,7 @@ try {
 				ok: true,
 				command: "/wiki-*",
 				bootstrapRendered: bootstrapNotice.message.split("\n").slice(0, 4),
-				stateRendered: stateNotice.message.split("\n").slice(0, 4),
+				dashboardRendered: dashboardNotice.message.split("\n").slice(0, 4),
 			},
 			null,
 			2,

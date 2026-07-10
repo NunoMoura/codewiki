@@ -26,7 +26,7 @@ export const pipelineCases: PipelineCase[] = [
 				},
 			],
 			decision: {
-				rowId: "DEC-package-boundary",
+				changeId: "DEC-package-boundary",
 				refs: [
 					"README.md",
 					"package.json",
@@ -103,7 +103,7 @@ export const pipelineCases: PipelineCase[] = [
 				},
 			],
 			decision: {
-				rowId: "DEC-weighted-standards",
+				changeId: "DEC-weighted-standards",
 				refs: [".codewiki/kb/system/lab.md", "lab/runner/score.ts"],
 				facts: ["fact-standard-weights", "fact-loss-weights"],
 			},
@@ -153,7 +153,7 @@ export const pipelineCases: PipelineCase[] = [
 				},
 			],
 			decision: {
-				rowId: "DEC-runtime-board",
+				changeId: "DEC-runtime-board",
 				refs: ["src/runtime/board.ts", "src/views/trace-board.ts"],
 				facts: ["fact-board-source", "fact-board-command"],
 			},

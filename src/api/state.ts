@@ -33,6 +33,7 @@ import type {
 	StatusView,
 	TraceBoardView,
 	TraceQueueView,
+	TraceViewInput,
 	WorkPlanView,
 	WorkQueueView,
 } from "../views/types.ts";
@@ -114,6 +115,7 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 	const traceViewInput = selectedRecords
 		? { records: selectedRecords, generatedAt: input.generatedAt }
 		: undefined;
+	const selected = buildSelectedTraceViews(traceViewInput);
 	const projectViewInput = {
 		records: input.records,
 		generatedAt: input.generatedAt,
@@ -122,18 +124,6 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 	const traceQueue = buildTraceQueueView(projectViewInput);
 	const traceBoard = buildTraceBoardView(projectViewInput);
 	const triggers = buildTriggersView(projectViewInput);
-	const status = traceViewInput ? buildStatusView(traceViewInput) : undefined;
-	const resume = traceViewInput ? buildResumeView(traceViewInput) : undefined;
-	const workPlan = traceViewInput
-		? buildWorkPlanView(traceViewInput)
-		: undefined;
-	const blockers = traceViewInput
-		? buildBlockersView(traceViewInput)
-		: undefined;
-	const conflicts = traceViewInput
-		? buildConflictsView(traceViewInput)
-		: undefined;
-	const quality = traceViewInput ? buildQualityView(traceViewInput) : undefined;
 	const reviewEvidence = buildWikiStateReviewEvidence({
 		records: selectedRecords || input.records,
 		traceId: selectedTraceId,
@@ -141,40 +131,56 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 		generatedAt: input.generatedAt,
 		maxAgeMs: input.reviewEvidenceMaxAgeMs,
 	});
+	const runtimeBoard = buildRuntimeBoard({
+		generatedAt: input.generatedAt,
+		traceBoard,
+		workQueue,
+		triggers,
+		maxWorkers: input.runtimeMaxWorkers,
+		runtimeResultPreview: input.runtimeResultPreview,
+	});
+	const next = nextStateAction({
+		selectedTraceId,
+		status: selected.status,
+		resume: selected.resume,
+		traceBoard,
+	});
 	return {
 		generatedAt: input.generatedAt,
 		traceIds: fold.traceIds,
 		...(selectedTraceId ? { selectedTraceId } : {}),
-		...(status ? { status } : {}),
-		...(resume ? { resume } : {}),
-		...(workPlan ? { workPlan } : {}),
-		...(blockers ? { blockers } : {}),
-		...(conflicts ? { conflicts } : {}),
-		...(quality ? { quality } : {}),
+		...selected,
 		...(reviewEvidence ? { reviewEvidence } : {}),
 		workQueue,
 		traceQueue,
 		traceBoard,
 		triggers,
-		runtimeBoard: buildRuntimeBoard({
-			generatedAt: input.generatedAt,
-			traceBoard,
-			workQueue,
-			triggers,
-			maxWorkers: input.runtimeMaxWorkers,
-			runtimeResultPreview: input.runtimeResultPreview,
-		}),
+		runtimeBoard,
 		...appendHandles(
 			openTraceIds(traceBoard),
 			input.records,
 			input.expectedBytesByTrace,
 		),
-		next: nextStateAction({
-			selectedTraceId,
-			status,
-			resume,
-			traceBoard,
-		}),
+		next,
+	};
+}
+
+function buildSelectedTraceViews(input: TraceViewInput | undefined): {
+	status?: StatusView;
+	resume?: ResumeView;
+	workPlan?: WorkPlanView;
+	blockers?: BlockersView;
+	conflicts?: ConflictsView;
+	quality?: QualityView;
+} {
+	if (!input) return {};
+	return {
+		status: buildStatusView(input),
+		resume: buildResumeView(input),
+		workPlan: buildWorkPlanView(input),
+		blockers: buildBlockersView(input),
+		conflicts: buildConflictsView(input),
+		quality: buildQualityView(input),
 	};
 }
 
@@ -368,7 +374,7 @@ function selectedTraceNextAction(
 	if (status.currentLoop === "decision") {
 		return {
 			action: "decide",
-			reason: resume?.nextAction || "Create or approve decision rows.",
+			reason: resume?.nextAction || "Create or approve proposed changes.",
 			traceId,
 			tool: "wiki_decide",
 		};

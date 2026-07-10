@@ -1,4 +1,10 @@
-import { exec, type ExecException, type ExecOptions } from "node:child_process";
+import {
+	exec,
+	execFile,
+	type ExecException,
+	type ExecFileOptions,
+	type ExecOptions,
+} from "node:child_process";
 import type {
 	WorktreeCommandRunner,
 	WorktreeCommandRunnerResult,
@@ -14,6 +20,17 @@ export type ShellWorktreeCommandExec = (
 	) => void,
 ) => unknown;
 
+export type WorktreeCommandExecFile = (
+	executable: string,
+	args: string[],
+	options: ExecFileOptions,
+	callback: (
+		error: ExecException | null,
+		stdout: string | Buffer,
+		stderr: string | Buffer,
+	) => void,
+) => unknown;
+
 export interface CreateShellWorktreeCommandRunnerOptions {
 	cwd?: string;
 	env?: NodeJS.ProcessEnv;
@@ -21,23 +38,46 @@ export interface CreateShellWorktreeCommandRunnerOptions {
 	maxBufferBytes?: number;
 	shell?: string;
 	exec?: ShellWorktreeCommandExec;
+	execFile?: WorktreeCommandExecFile;
 }
 
 export function createShellWorktreeCommandRunner(
 	options: CreateShellWorktreeCommandRunnerOptions = {},
 ): WorktreeCommandRunner {
-	const run = (options.exec || exec) as ShellWorktreeCommandExec;
+	const runShell = (options.exec || exec) as ShellWorktreeCommandExec;
+	const runProcess = (options.execFile || execFile) as WorktreeCommandExecFile;
 	return (command) =>
 		new Promise<WorktreeCommandRunnerResult>((resolve) => {
-			run(command, shellExecOptions(options), (error, stdout, stderr) => {
-				resolve(shellRunnerResult(error, stdout, stderr));
-			});
+			const callback = (
+				error: ExecException | null,
+				stdout: string | Buffer,
+				stderr: string | Buffer,
+			) => resolve(shellRunnerResult(error, stdout, stderr));
+			if (typeof command === "string") {
+				runShell(command, shellExecOptions(options), callback);
+				return;
+			}
+			runProcess(
+				command.executable,
+				command.args,
+				processExecOptions(options),
+				callback,
+			);
 		});
 }
 
 function shellExecOptions(
 	options: CreateShellWorktreeCommandRunnerOptions,
 ): ExecOptions {
+	return {
+		...processExecOptions(options),
+		...(options.shell ? { shell: options.shell } : {}),
+	};
+}
+
+function processExecOptions(
+	options: CreateShellWorktreeCommandRunnerOptions,
+): Omit<ExecOptions, "shell"> {
 	return {
 		windowsHide: true,
 		...(options.cwd ? { cwd: options.cwd } : {}),
@@ -48,7 +88,6 @@ function shellExecOptions(
 		...(Number.isInteger(options.maxBufferBytes)
 			? { maxBuffer: options.maxBufferBytes }
 			: {}),
-		...(options.shell ? { shell: options.shell } : {}),
 	};
 }
 

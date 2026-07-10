@@ -82,7 +82,7 @@ describe("lab candidate contract", () => {
 			assert.equal(candidate.metric, EXPECTED_METRICS[loop]);
 			assert.equal(candidate.graphId, `${loop}.loop.lab`);
 			assert.equal(typeof candidate.graphVersion, "string");
-			assert.equal(candidate.schemaVersion, 2);
+			assert.equal(candidate.schemaVersion, 3);
 			assert.equal(Array.isArray(candidate.layers), true);
 			assert.equal(Array.isArray(candidate.standards), true);
 			assert.equal(candidate.standards.length > 0, true);

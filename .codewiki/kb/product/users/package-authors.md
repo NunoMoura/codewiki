@@ -35,7 +35,7 @@ They need stable semantics for:
 
 ## Related docs
 
-- [CodeWiki API](../../system/api.md)
-- [API Tool Surface](../../system/api-tools.md)
-- [Loop Model](../../system/loop-model.md)
-- [Extension](../../system/extension.md)
+- [CodeWiki API](../../system/components/api.md)
+- [API Tool Surface](../../system/components/api-tools.md)
+- [Loop Model](../../system/components/loop-model.md)
+- [Extension](../../system/components/extension.md)

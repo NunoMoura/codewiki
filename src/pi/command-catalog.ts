@@ -1,5 +1,5 @@
 export type CodewikiSubcommand =
-	| "state"
+	| "dashboard"
 	| "resume"
 	| "explain"
 	| "config"
@@ -14,11 +14,10 @@ export interface CodewikiDirectCommandSpec {
 
 export const CODEWIKI_DIRECT_COMMANDS: readonly CodewikiDirectCommandSpec[] = [
 	{
-		name: "wiki-state",
-		subcommand: "state",
-		syntax:
-			"/wiki-state [--board|--quality|--blockers|--all] [--trace <id>] [--json]",
-		description: "show project state",
+		name: "wiki-dashboard",
+		subcommand: "dashboard",
+		syntax: "/wiki-dashboard [--no-open] [--json]",
+		description: "open the local read-only Sprints Queue dashboard",
 	},
 	{
 		name: "wiki-resume",
@@ -47,7 +46,7 @@ export const CODEWIKI_DIRECT_COMMANDS: readonly CodewikiDirectCommandSpec[] = [
 ] as const;
 
 export const CODEWIKI_COMMAND_NAMES = [
-	"wiki-state",
+	"wiki-dashboard",
 	"wiki-resume",
 	"wiki-explain",
 	"wiki-config",

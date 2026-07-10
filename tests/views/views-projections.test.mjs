@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
@@ -27,51 +27,51 @@ import {
 	viewFilePath,
 	writeNamedView,
 } from "../../src/api/views.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
-	const table = createDecisionTable({
-		id: "DT-views",
+	const proposal = createSprintProposal({
+		id: "SP-views",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-views",
+				id: "CHG-views",
 				question: "How should views represent trace state?",
 				currentState: "Old graph/roadmap state owns generated status.",
 				desiredState: "Generated views project trace records.",
 				rationale: "Views are disposable caches.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/traces.md"],
+				sourceRefs: ["kb:system/components/traces.md"],
 			},
 		],
 	});
 	return runDecisionIteration({
 		traceId,
-		table,
+		proposal,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	}).traceEvents;
 }
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function directDecisionEvents(traceId = "TRACE-direct-route") {
-	const table = createDecisionTable({
-		id: "DT-direct-route",
+	const proposal = createSprintProposal({
+		id: "SP-direct-route",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-direct-route",
+				id: "CHG-direct-route",
 				currentState: "Small fixes require planning ceremony.",
 				desiredState:
 					"Small scoped fixes can route directly to implementation.",
@@ -91,13 +91,13 @@ function directDecisionEvents(traceId = "TRACE-direct-route") {
 						},
 					],
 				},
-				sourceRefs: ["kb:system/loop-contracts.md"],
+				sourceRefs: ["kb:system/components/loop-contracts.md"],
 			},
 		],
 	});
 	return runDecisionIteration({
 		traceId,
-		table,
+		proposal,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	}).traceEvents;
 }
@@ -421,7 +421,7 @@ describe("trace-backed views", () => {
 		const workQueue = buildWorkQueueView(input);
 		const status = buildStatusView(input);
 
-		assert.equal(workPlan.cards[0].id, "DTR-direct-route");
+		assert.equal(workPlan.cards[0].id, "CHG-direct-route");
 		assert.equal(workPlan.cards[0].status, "todo");
 		assert.equal(workQueue.items[0].kind, "work-unit");
 		assert.equal(workQueue.items[0].status, "ready");
@@ -449,7 +449,7 @@ describe("trace-backed views", () => {
 						runKeyTemplate: "planned:${date}",
 						owner: "implementation",
 						trigger: "cron:0 9 * * 1",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -475,7 +475,7 @@ describe("trace-backed views", () => {
 						runKeyTemplate: "enabled:${event}",
 						owner: "implementation",
 						trigger: "github:check.failed",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -501,7 +501,7 @@ describe("trace-backed views", () => {
 						runKeyTemplate: "enabled-only:${manual}",
 						owner: "implementation",
 						trigger: "manual:runtime",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -582,7 +582,7 @@ describe("trace-backed views", () => {
 						runKeyTemplate: "due:${week}",
 						owner: "implementation",
 						trigger: "cron:0 9 * * 1",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -639,7 +639,7 @@ describe("trace-backed views", () => {
 						runKeyTemplate: "view:${event}",
 						owner: "implementation",
 						trigger: "github:check.failed",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -710,7 +710,9 @@ describe("trace-backed views", () => {
 	});
 
 	it("uses latest planning exit for close readiness when a plan is superseded", () => {
-		const { head, decisions, plan } = plannedTrace("TRACE-views-plan-superseded");
+		const { head, decisions, plan } = plannedTrace(
+			"TRACE-views-plan-superseded",
+		);
 		const decisionRef = approvedDecisionRef(decisions);
 		const correctedPlan = runPlanningIteration({
 			traceId: head.traceId,
@@ -823,7 +825,7 @@ describe("trace-backed views", () => {
 				{
 					decisionRef: decisionRef,
 					kind: "route-back",
-					evidenceRefs: ["kb:system/traces.md"],
+					evidenceRefs: ["kb:system/components/traces.md"],
 					owner: "architecture",
 					trigger: "Need user decision.",
 					rationale: "Conflicting path ownership needs route-back.",
@@ -899,16 +901,27 @@ describe("trace-backed views", () => {
 			(record) => record.loop === "implementation",
 		);
 		decision.data.output.qualityStandards =
-			decision.data.output.qualityStandards.map((standard) =>
-				standard.id === "knowledge_impact_accounted"
+			decision.data.output.qualityStandards.map((standard) => {
+				if (standard.id === "sprint_proposal_ready") {
+					const legacy = {
+						...standard,
+						description:
+							"Sprint Proposal has at least one approved change and stable change ids.",
+					};
+					delete legacy.layer;
+					delete legacy.standardType;
+					delete legacy.gate;
+					return legacy;
+				}
+				return standard.id === "knowledge_impact_accounted"
 					? {
 							...standard,
 							status: "unmet",
 							message: "Decision knowledge impact is incomplete.",
-							refs: ["DTR-views"],
+							refs: ["CHG-views"],
 						}
-					: standard,
-			);
+					: standard;
+			});
 		implementation.data.output.qualityStandards =
 			implementation.data.output.qualityStandards.map((standard) =>
 				standard.id === "release_safety_approved"
@@ -926,6 +939,13 @@ describe("trace-backed views", () => {
 		const resume = buildResumeView(input);
 
 		assert.equal(quality.iterations.length, 3);
+		const sprintProposalReady = quality.iterations[0].standards.find(
+			(standard) => standard.id === "sprint_proposal_ready",
+		);
+		assert.equal(sprintProposalReady.layer, "input_contract");
+		assert.equal(sprintProposalReady.standardType, "loop_contract");
+		assert.equal(sprintProposalReady.gate, "hard");
+		assert.doesNotMatch(sprintProposalReady.description, /approved change/i);
 		assert.equal(quality.summary.decision.unmet, 1);
 		assert.equal(quality.summary.implementation.blocked, 1);
 		assert.equal(
@@ -994,7 +1014,7 @@ describe("trace-backed views", () => {
 		assert.equal(queue.summary.waiting, 1);
 		assert.equal(queue.summary.claimed, 1);
 		assert.equal(queue.summary.done, 1);
-		assert.equal(byId["DTR-views"].status, "backlog");
+		assert.equal(byId["CHG-views"].status, "backlog");
 		assert.equal(byId["WU-ready"].status, "ready");
 		assert.equal(byId["WU-waiting"].status, "waiting");
 		assert.equal(byId["WU-claimed"].status, "claimed");
@@ -1002,7 +1022,7 @@ describe("trace-backed views", () => {
 		assert.equal(byId["WU-done"].status, "done");
 	});
 
-	it("projects trace queue cards as one card per trace with row subitems", () => {
+	it("projects trace queue cards as one card per trace with change subitems", () => {
 		const ready = queueTrace("TRACE-card-ready", {
 			workUnitId: "WU-card-ready",
 		});

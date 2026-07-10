@@ -40,7 +40,7 @@ function trigger(overrides = {}) {
 		traceTitle: "CI trigger",
 		workUnitId: "WU-ci",
 		planningRef: "trace:TRACE-trigger:planning:iteration:1#work:WU-ci",
-		decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#row:DTR-ci"],
+		decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
 		pathScopes: ["src/runtime/coordinator"],
 		trigger: {
 			id: "TRG-ci",
@@ -50,7 +50,7 @@ function trigger(overrides = {}) {
 			runKeyTemplate: "ci:${week}",
 			owner: "implementation",
 			trigger: "cron:0 9 * * 1",
-			refs: ["kb:system/runtime.md"],
+			refs: ["kb:system/components/runtime.md"],
 		},
 		enabledBy: ["trace:TRACE-trigger:implementation:iteration:1#change:IC-ci"],
 		runs: [],
@@ -58,7 +58,7 @@ function trigger(overrides = {}) {
 		refs: [
 			"TRACE-trigger",
 			"trace:TRACE-trigger:planning:iteration:1#work:WU-ci",
-			"kb:system/runtime.md",
+			"kb:system/components/runtime.md",
 		],
 		sourceEventId: "TRACE-trigger:planning:iteration:1",
 		...overrides,
@@ -70,7 +70,7 @@ function trigger(overrides = {}) {
 			runKeyTemplate: "ci:${week}",
 			owner: "implementation",
 			trigger: "cron:0 9 * * 1",
-			refs: ["kb:system/runtime.md"],
+			refs: ["kb:system/components/runtime.md"],
 			...(overrides.trigger || {}),
 		},
 	};
@@ -208,11 +208,11 @@ describe("runtime coordinator heartbeat queue", () => {
 			intent: "scheduled",
 			triggerId: "TRG-ci",
 			reason: "weekly-ci",
-			refs: ["kb:system/runtime.md"],
+			refs: ["kb:system/components/runtime.md"],
 			data: {
 				runKey: "ci:2026-W24",
 				traceId: "TRACE-ci-2026-W24",
-				sourceRef: "kb:system/runtime.md",
+				sourceRef: "kb:system/components/runtime.md",
 			},
 		});
 

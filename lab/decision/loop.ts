@@ -8,12 +8,12 @@ import type {
 	DecisionExitOptions,
 	DecisionExitResult,
 } from "../../src/decision/loop.ts";
-import type { DecisionTable } from "../../src/decision/types.ts";
+import type { SprintProposal } from "../../src/decision/types.ts";
 import type { LabCandidateStandards, LabStandard } from "../runner/types.ts";
 
 export interface DecisionLabInput {
 	prompt: string;
-	decisionTable: DecisionTable;
+	sprintProposal: SprintProposal;
 	options?: DecisionExitOptions;
 }
 
@@ -31,7 +31,7 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 			"Production decision exit contract must still pass before the lab candidate can exit.",
 		evaluate(input) {
 			const exit = evaluateDecisionExit(
-				input.decisionTable,
+				input.sprintProposal,
 				input.options || {},
 			);
 			return productionExitResult("decision.production_exit_contract", exit);
@@ -43,10 +43,10 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 		cost: 8,
 		standardType: "loop_contract",
 		description:
-			"Decision rows must include required current state, desired state, rationale, recommendation, and kind fields.",
+			"Proposed changes must include required current state, desired state, rationale, recommendation, and kind fields.",
 		codes: [
-			"no_decision_rows",
-			"no_approved_rows",
+			"no_proposed_changes",
+			"no_approved_changes",
 			"missing_current_state",
 			"missing_desired_state",
 			"missing_rationale",
@@ -151,11 +151,11 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 		standardType: "user_value",
 		description:
 			"Approved decisions must explain concrete current state, desired state, and rationale instead of vague placeholders.",
-		fields(row) {
+		fields(change) {
 			return [
-				{ label: "currentState", value: row.currentState },
-				{ label: "desiredState", value: row.desiredState },
-				{ label: "rationale", value: row.rationale },
+				{ label: "currentState", value: change.currentState },
+				{ label: "desiredState", value: change.desiredState },
+				{ label: "rationale", value: change.rationale },
 			];
 		},
 	}),
@@ -166,10 +166,10 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 		standardType: "user_value",
 		description:
 			"Approved decisions must state concrete user and maintainer impact.",
-		fields(row) {
+		fields(change) {
 			return [
-				{ label: "userImpact", value: row.userImpact },
-				{ label: "maintainerImpact", value: row.maintainerImpact },
+				{ label: "userImpact", value: change.userImpact },
+				{ label: "maintainerImpact", value: change.maintainerImpact },
 			];
 		},
 	}),
@@ -180,23 +180,23 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 		standardType: "project_fit",
 		description:
 			"Approved decisions must include concrete agent assessment for user alignment and project benefit.",
-		fields(row) {
+		fields(change) {
 			return [
 				{
 					label: "recommendationRationale",
-					value: row.recommendationRationale,
+					value: change.recommendationRationale,
 				},
 				{
 					label: "agentAssessment.userAlignment",
-					value: row.agentAssessment.userAlignment,
+					value: change.agentAssessment.userAlignment,
 				},
 				{
 					label: "agentAssessment.projectBenefit",
-					value: row.agentAssessment.projectBenefit,
+					value: change.agentAssessment.projectBenefit,
 				},
 				{
 					label: "agentAssessment.rationale",
-					value: row.agentAssessment.rationale,
+					value: change.agentAssessment.rationale,
 				},
 			];
 		},
@@ -207,8 +207,8 @@ export const decisionLoopCandidate = {
 	loop: "decision",
 	metric: "DEC",
 	graphId: "decision.loop.lab",
-	graphVersion: "0.3.0.lab.1",
-	schemaVersion: 2,
+	graphVersion: "0.3.0.lab.2",
+	schemaVersion: 3,
 	layers: [
 		"hard_gate",
 		"input_contract",
@@ -252,7 +252,7 @@ function decisionIssueCodeStandard({
 		description,
 		evaluate(input) {
 			const failures = collectDecisionExitIssues(
-				input.decisionTable,
+				input.sprintProposal,
 				input.options || {},
 			).issues.filter((issue) => codeSet.has(issue.code));
 			return {
@@ -288,7 +288,7 @@ function decisionSpecificityStandard({
 	cost: number;
 	standardType: LabStandard<DecisionLabInput>["standardType"];
 	description: string;
-	fields(row: DecisionTable["rows"][number]): SpecificityField[];
+	fields(change: SprintProposal["changes"][number]): SpecificityField[];
 }): LabStandard<DecisionLabInput> {
 	return {
 		id,
@@ -302,7 +302,7 @@ function decisionSpecificityStandard({
 		description,
 		evaluate(input) {
 			const failures = decisionSpecificityFailures(
-				input.decisionTable.rows,
+				input.sprintProposal.changes,
 				fields,
 			);
 			return {
@@ -340,15 +340,17 @@ interface SpecificityField {
 }
 
 function decisionSpecificityFailures(
-	rows: DecisionTable["rows"],
-	fieldsForRow: (row: DecisionTable["rows"][number]) => SpecificityField[],
+	changes: SprintProposal["changes"],
+	fieldsForRow: (
+		change: SprintProposal["changes"][number],
+	) => SpecificityField[],
 ): { messages: string[]; totalFields: number; weakFields: number } {
 	let totalFields = 0;
 	let weakFields = 0;
 	const messages: string[] = [];
-	for (const row of rows) {
-		if (row.approval !== "approved") continue;
-		const fields = fieldsForRow(row);
+	for (const change of changes) {
+		if (change.approval !== "approved") continue;
+		const fields = fieldsForRow(change);
 		totalFields += fields.length;
 		const weakLabels = fields
 			.filter((field) => isWeakDecisionText(field.value))
@@ -356,7 +358,7 @@ function decisionSpecificityFailures(
 		weakFields += weakLabels.length;
 		if (weakLabels.length > 0) {
 			messages.push(
-				`Decision row ${row.id} has vague fields: ${weakLabels.join(", ")}.`,
+				`Proposed change ${change.id} has vague fields: ${weakLabels.join(", ")}.`,
 			);
 		}
 	}
@@ -401,7 +403,7 @@ function productionExitResult(id: string, exit: DecisionExitResult) {
 function issueEvidence(issues: DecisionExitIssue[]) {
 	return issues.map((issue) => ({
 		kind: "decision-issue",
-		ref: issue.rowId ? `${issue.code}:${issue.rowId}` : issue.code,
+		ref: issue.changeId ? `${issue.code}:${issue.changeId}` : issue.code,
 		summary: issue.message,
 	}));
 }

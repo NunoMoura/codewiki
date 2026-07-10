@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import {
 	createRuntimeClaimEvent,
@@ -13,31 +13,31 @@ import {
 } from "../../src/implementation/evidence.ts";
 import { evaluateImplementationExit } from "../../src/implementation/loop.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function planningEvents() {
-	const table = createDecisionTable({
-		id: "DT-implementation",
+	const proposal = createSprintProposal({
+		id: "SP-implementation",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-001",
+				id: "CHG-001",
 				question: "How should implementation evidence be represented?",
 				currentState: "Implementation iteration files own evidence.",
 				desiredState: "Implementation trace events own evidence refs.",
 				rationale: "Matches traces-first model.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/traces.md"],
+				sourceRefs: ["kb:system/components/traces.md"],
 			},
 		],
 	});
 	const decisionTraceEvents = runDecisionIteration({
 		traceId: "TRACE-implementation",
-		table,
+		proposal,
 	}).traceEvents;
 	const decisionRef = approvedDecisionRef(decisionTraceEvents);
 	const plan = runPlanningIteration({
@@ -65,10 +65,10 @@ function planningEvents() {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkEvent(events, workUnitId = "WU-001") {
@@ -105,12 +105,12 @@ function runtimeClaimEvent(planningEvent, overrides = {}) {
 
 function componentMap() {
 	return {
-		sourceRefs: [".codewiki/kb/system/source-map.yaml"],
+		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
 		defaults: { inheritance: true, excluded: [] },
 		components: [
 			{
 				id: "implementation",
-				doc: ".codewiki/kb/system/implementation-loop.md",
+				doc: ".codewiki/kb/system/components/implementation-loop.md",
 				sourcePatterns: ["src/implementation/**"],
 				testPatterns: ["tests/implementation/**"],
 				generatedViews: [],
@@ -1207,7 +1207,9 @@ describe("implementation iteration runner", () => {
 						{
 							criterionId: "AC-001",
 							summary: "Evidence exists but is not a component test ref.",
-							evidenceRefs: [".codewiki/kb/system/loop-contracts.md"],
+							evidenceRefs: [
+								".codewiki/kb/system/components/loop-contracts.md",
+							],
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:def456" },
@@ -1317,7 +1319,7 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-docs",
 					planning_refs: [planningEvent.id],
-					doc_paths: [".codewiki/kb/system/traces.md"],
+					doc_paths: [".codewiki/kb/system/components/traces.md"],
 					checks_run: ["npm test"],
 					check_results: [{ command: "npm test", status: "pass" }],
 					acceptance_evidence: ["Trace docs updated."],
@@ -1325,7 +1327,7 @@ describe("implementation iteration runner", () => {
 						{
 							criterion_id: "AC-001",
 							summary: "Trace docs updated.",
-							evidence_refs: [".codewiki/kb/system/traces.md"],
+							evidence_refs: [".codewiki/kb/system/components/traces.md"],
 						},
 					],
 					content_proof: { commit: "abc123", tree: "def456" },

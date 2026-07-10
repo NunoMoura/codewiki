@@ -57,7 +57,7 @@ export async function updateWikiConfigFile(
 export function configFileToPartialWikiConfig(
 	value: unknown,
 ): PartialWikiConfig {
-	const record = objectRecord(value);
+	const record = validateConfigFileKeys(value);
 	const runtime = objectRecord(record.runtime);
 	const codewiki = objectRecord(record.codewiki);
 	const agency = objectRecord(codewiki.agency);
@@ -84,6 +84,88 @@ export function configFileToPartialWikiConfig(
 		hosts: objectRecord(record.hosts),
 		quality: objectRecord(record.quality),
 	};
+}
+
+function validateConfigFileKeys(value: unknown): Record<string, unknown> {
+	const record = requiredObjectRecord(value, WIKI_CONFIG_PATH);
+	assertKnownKeys(record, WIKI_CONFIG_PATH, [
+		"project",
+		"runtime",
+		"retention",
+		"hosts",
+		"quality",
+		"project_name",
+		"codewiki",
+	]);
+	const codewiki = optionalObjectRecord(
+		record.codewiki,
+		`${WIKI_CONFIG_PATH}.codewiki`,
+	);
+	if (codewiki) {
+		assertKnownKeys(codewiki, `${WIKI_CONFIG_PATH}.codewiki`, ["agency"]);
+		const agency = optionalObjectRecord(
+			codewiki.agency,
+			`${WIKI_CONFIG_PATH}.codewiki.agency`,
+		);
+		if (agency) {
+			assertKnownKeys(agency, `${WIKI_CONFIG_PATH}.codewiki.agency`, [
+				"parallelism",
+				"approval_cadence",
+				"stop_gates",
+			]);
+			const parallelism = optionalObjectRecord(
+				agency.parallelism,
+				`${WIKI_CONFIG_PATH}.codewiki.agency.parallelism`,
+			);
+			if (parallelism) {
+				assertKnownKeys(
+					parallelism,
+					`${WIKI_CONFIG_PATH}.codewiki.agency.parallelism`,
+					["max_sessions"],
+				);
+			}
+		}
+	}
+	return record;
+}
+
+function optionalObjectRecord(
+	value: unknown,
+	path: string,
+): Record<string, unknown> | undefined {
+	return value === undefined ? undefined : requiredObjectRecord(value, path);
+}
+
+function requiredObjectRecord(
+	value: unknown,
+	path: string,
+): Record<string, unknown> {
+	if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+		return value as Record<string, unknown>;
+	}
+	throw createCodewikiConfigError({
+		path,
+		code: "invalid_type",
+		message: `${path} must be a JSON object.`,
+		value,
+	});
+}
+
+function assertKnownKeys(
+	record: Record<string, unknown>,
+	path: string,
+	allowed: readonly string[],
+): void {
+	for (const key of Object.keys(record)) {
+		if (allowed.includes(key)) continue;
+		const keyPath = `${path}.${key}`;
+		throw createCodewikiConfigError({
+			path: keyPath,
+			code: "unknown_key",
+			message: `${keyPath} is an unknown config key.`,
+			value: record[key],
+		});
+	}
 }
 
 function configPath(repoRoot: string): string {

@@ -156,22 +156,47 @@ async function runPiProcessCommand(
 	input: PiProcessCommandRunnerInput,
 ): Promise<PiProcessCommandResult> {
 	await mkdir(dirname(input.outputFile), { recursive: true });
+	if (input.detached) return await runDetachedPiProcessCommand(input);
+	return await runForegroundPiProcessCommand(input);
+}
+
+async function runDetachedPiProcessCommand(
+	input: PiProcessCommandRunnerInput,
+): Promise<PiProcessCommandResult> {
+	const { open } = await import("node:fs/promises");
+	const output = await open(input.outputFile, "a");
+	try {
+		return await new Promise((resolve, reject) => {
+			const child = spawn(input.command, input.args, {
+				cwd: input.cwd,
+				env: input.env,
+				detached: true,
+				stdio: ["ignore", output.fd, output.fd],
+			});
+			child.once("error", reject);
+			child.once("spawn", () => {
+				child.unref();
+				resolve({
+					pid: child.pid,
+					outputFile: input.outputFile,
+				});
+			});
+		});
+	} finally {
+		await output.close();
+	}
+}
+
+async function runForegroundPiProcessCommand(
+	input: PiProcessCommandRunnerInput,
+): Promise<PiProcessCommandResult> {
 	return await new Promise((resolve, reject) => {
 		const child = spawn(input.command, input.args, {
 			cwd: input.cwd,
 			env: input.env,
-			detached: input.detached,
-			stdio: input.detached ? "ignore" : ["ignore", "pipe", "pipe"],
+			detached: false,
+			stdio: ["ignore", "pipe", "pipe"],
 		});
-		if (input.detached) {
-			child.once("error", reject);
-			child.unref();
-			resolve({
-				pid: child.pid,
-				outputFile: input.outputFile,
-			});
-			return;
-		}
 		let stdout = "";
 		let stderr = "";
 		child.stdout?.setEncoding("utf8");

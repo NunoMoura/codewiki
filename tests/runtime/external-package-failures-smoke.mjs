@@ -163,16 +163,16 @@ function implementationQuality(overrides = {}) {
 	};
 }
 
-function decisionTableInput(traceId, createdAt) {
+function sprintProposalInput(traceId, createdAt) {
 	return {
-		id: `DT-${traceId}`,
+		id: `SP-${traceId}`,
 		summary: "Prepare external package failure-path runtime lifecycle.",
 		createdAt,
 		updatedAt: createdAt,
 		sourceRefs: ["README.md", "src/external-feature.js"],
-		rows: [
+		changes: [
 			{
-				id: `DTR-${traceId}`,
+				id: `CHG-${traceId}`,
 				decisionKind: "harden",
 				currentState:
 					"Happy-path package lifecycle exists, but installed-package terminal failure behavior also needs proof.",
@@ -196,7 +196,7 @@ function decisionTableInput(traceId, createdAt) {
 						"Validation is added without broadening public API or unattended runtime authority.",
 				}),
 				approval: "approved",
-				sourceRefs: ["README.md", ".codewiki/kb/system/runtime.md"],
+				sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
 				proofRefs: ["tests/external-feature.test.mjs"],
 			},
 		],
@@ -267,10 +267,10 @@ function approvedDecisionRef(decided) {
 	const iteration = decided.loopResult.traceEvents.find(
 		(event) => event.loop === "decision",
 	);
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(planned) {
@@ -406,9 +406,10 @@ async function newProject(root, installed, name) {
 	installed.codewikiExtension(pi.api);
 	const commands = {
 		bootstrap: commandByName(pi, "wiki-bootstrap"),
-		state: commandByName(pi, "wiki-state"),
+		dashboard: commandByName(pi, "wiki-dashboard"),
 	};
 	const tools = {
+		state: toolByName(pi, "wiki_state"),
 		decide: toolByName(pi, "wiki_decide"),
 		plan: toolByName(pi, "wiki_plan"),
 	};
@@ -449,6 +450,21 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 			"2026-06-18T11:00:00.000Z",
 		),
 	);
+	const preview = assertToolResult(
+		await executeTool(
+			project.tools.decide,
+			{
+				traceId,
+				mode: "preview",
+				allowNonProjectInstall: true,
+				createdAt: "2026-06-18T11:00:01.000Z",
+				proposalInput: sprintProposalInput(traceId, "2026-06-18T11:00:01.000Z"),
+			},
+			project.ctx,
+			`${traceId}-decide-preview`,
+		),
+		/wiki_decide: completed preview run\./,
+	);
 	const decided = assertToolResult(
 		await executeTool(
 			project.tools.decide,
@@ -459,7 +475,13 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				createdAt: "2026-06-18T11:00:01.000Z",
-				tableInput: decisionTableInput(traceId, "2026-06-18T11:00:01.000Z"),
+				proposalInput: sprintProposalInput(traceId, "2026-06-18T11:00:01.000Z"),
+				sprintProposalApproval: {
+					approved: true,
+					renderedProposalDigest: preview.renderedSprintProposal.digest,
+					approvedBy: "external-package-failures-smoke",
+					approvedAt: "2026-06-18T11:00:01.000Z",
+				},
 			},
 			project.ctx,
 			`${traceId}-decide`,
@@ -496,12 +518,14 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 }
 
 async function board(project, traceId) {
-	return (
-		await project.commands.state.handler(
-			traceId ? `--board --trace ${traceId} --json` : "--board --json",
-			project.ctx,
-		)
-	).data.workQueue;
+	const result = await project.tools.state.execute(
+		traceId ? `${traceId}-state` : "all-state",
+		{ view: "board", ...(traceId ? { traceId } : {}) },
+		undefined,
+		undefined,
+		project.ctx,
+	);
+	return result.details.result.data.workQueue;
 }
 
 function mergeQueues(...queues) {

@@ -4,10 +4,10 @@ import { buildWikiState } from "../../src/api/state.ts";
 import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function nextSequence(events) {
@@ -16,10 +16,10 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function traceRecords(traceId = "TRACE-state") {
@@ -28,26 +28,26 @@ function traceRecords(traceId = "TRACE-state") {
 		title: "Read wiki state from traces",
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
-	const table = createDecisionTable({
+	const proposal = createSprintProposal({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		updatedAt: "2026-06-11T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-state",
+				id: "CHG-state",
 				question: "How should state be read?",
 				currentState: "State reads could depend on stored view files.",
 				desiredState: "State reads active project traces.",
 				rationale: "Views are disposable projections, not truth.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/api-tools.md"],
+				sourceRefs: ["kb:system/components/api-tools.md"],
 			},
 		],
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		table,
+		proposal,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	});
 	const decisionRef = approvedDecisionRef(decision.traceEvents);

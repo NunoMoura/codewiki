@@ -58,7 +58,7 @@ describe("implementation common fast feedback", () => {
 	it("warns for KB and trace artifacts instead of treating them as code", () => {
 		const result = runCommonFastFeedback({
 			changedPaths: [
-				".codewiki/kb/system/loop-contracts.md",
+				".codewiki/kb/system/components/loop-contracts.md",
 				".codewiki/traces/TRACE-owned-implementation-review-sprint.jsonl",
 			],
 		});

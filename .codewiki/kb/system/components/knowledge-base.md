@@ -33,6 +33,6 @@ The knowledge base stores intended product and system truth. Parser code loads M
 
 ## Related docs
 
-- [System overview](../overview.md)
-- [Source map](../source-map.md)
+- [System overview](overview.md)
+- [Source map](source-map.md)
 - [Component map](../diagrams/component-map.yaml)

@@ -91,7 +91,7 @@ function decisionFactIssues(
 ): PipelineEvaluationIssue[] {
 	return missingFacts(
 		"decision_missing_fact",
-		"decision row",
+		"proposed change",
 		input.expectedFacts.map((fact) => fact.id),
 		input.decision.facts,
 	);
@@ -115,13 +115,13 @@ function planningRefIssues(
 	input: PipelineCaseInput,
 ): PipelineEvaluationIssue[] {
 	return input.planning.workItems.flatMap((workItem) =>
-		workItem.decisionRefs.includes(input.decision.rowId)
+		workItem.decisionRefs.includes(input.decision.changeId)
 			? []
 			: [
 					{
 						id: "planning_missing_decision_ref",
 						severity: "error" as const,
-						message: `Planning work item ${workItem.id} does not reference decision row ${input.decision.rowId}.`,
+						message: `Planning work item ${workItem.id} does not reference proposed change ${input.decision.changeId}.`,
 					},
 				],
 	);

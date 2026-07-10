@@ -28,6 +28,6 @@ User-opened sessions and subagents run focused work from CodeWiki refs with fres
 
 - [Low-Token Navigation](../stories/navigation.md)
 - [Use Loop-Governed Automation](../stories/automation.md)
-- [CodeWiki API](../../system/api.md)
-- [Loop Model](../../system/loop-model.md)
-- [Runtime](../../system/runtime.md)
+- [CodeWiki API](../../system/components/api.md)
+- [Loop Model](../../system/components/loop-model.md)
+- [Runtime](../../system/components/runtime.md)

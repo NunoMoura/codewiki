@@ -3,7 +3,8 @@ import { CodewikiError } from "./codewiki-error.ts";
 export type CodewikiConfigErrorCode =
 	| "missing_required"
 	| "invalid_value"
-	| "invalid_type";
+	| "invalid_type"
+	| "unknown_key";
 
 export interface CodewikiConfigErrorInput {
 	path: string;

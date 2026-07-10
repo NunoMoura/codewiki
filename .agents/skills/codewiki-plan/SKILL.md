@@ -10,7 +10,7 @@ Use this skill after approved Decisions exit and need executable, parallel-safe 
 ## Ground rules
 
 - Start from `wiki_state` for current trace-backed context.
-- Planning consumes `decision.rows_approved` output.
+- Planning consumes `decision.changes_approved` output.
 - Planning owns Tasks, dependencies, path scopes, acceptance criteria, verification refs, and triggers.
 - Planning does not edit source/docs/tests for implementation.
 - Tasks are stored as internal work items and referenced as `trace:<iteration-id>#work:<work-id>`.

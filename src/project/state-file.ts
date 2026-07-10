@@ -15,12 +15,14 @@ export interface BuildProjectWikiStateInput {
 	generatedAt?: string;
 	reviewEvidenceCache?: ReviewEvidenceCacheReader;
 	reviewEvidenceMaxAgeMs?: number;
+	traceFiles?: ProjectTraceFiles;
 }
 
 export async function buildProjectWikiState(
 	input: BuildProjectWikiStateInput,
 ): Promise<WikiStateSnapshot> {
-	const traceFiles = await readProjectTraceFiles(input.repoRoot);
+	const traceFiles =
+		input.traceFiles || (await readProjectTraceFiles(input.repoRoot));
 	return buildWikiState({
 		records: traceFiles.records,
 		traceId: input.traceId,
@@ -38,12 +40,12 @@ export async function readProjectTraceRecords(
 	return (await readProjectTraceFiles(repoRoot)).records;
 }
 
-interface ProjectTraceFiles {
+export interface ProjectTraceFiles {
 	records: TraceRecord[];
 	expectedBytesByTrace: Record<string, number>;
 }
 
-async function readProjectTraceFiles(
+export async function readProjectTraceFiles(
 	repoRoot: string,
 ): Promise<ProjectTraceFiles> {
 	const tracesDir = join(repoRoot, ".codewiki", "traces");

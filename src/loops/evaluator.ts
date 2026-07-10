@@ -178,12 +178,15 @@ export async function runLoopQualityGraphEvaluation<
 		nodes,
 		...(judgeResolutions ? { judgeResolutions } : {}),
 	};
+	const activeNodeIds = new Set(nodes.map((node) => node.id));
 	const runner = await runLoopGraph({
 		graphId: options.graph.graphId,
 		graphVersion: options.graph.graphVersion,
 		context,
 		failFastHardGates: options.failFastHardGates ?? false,
-		nodes: nodes.map((node) => runnerNodeForStandard<TIssue, TCode>(node)),
+		nodes: nodes.map((node) =>
+			runnerNodeForStandard<TIssue, TCode>(node, activeNodeIds),
+		),
 	});
 	return {
 		standards: runner.nodes.map(
@@ -196,6 +199,7 @@ export async function runLoopQualityGraphEvaluation<
 
 function runnerNodeForStandard<TIssue, TCode extends string>(
 	node: LoopQualityGraphNode<TCode>,
+	activeNodeIds: ReadonlySet<string>,
 ): LoopGraphRunnerNode<ResolvedRunLoopQualityGraphOptions<TIssue, TCode>> {
 	const gate =
 		node.gate ||
@@ -207,6 +211,13 @@ function runnerNodeForStandard<TIssue, TCode extends string>(
 		gate,
 		cost: node.cost,
 		...(node.timeoutMs ? { timeoutMs: node.timeoutMs } : {}),
+		...(node.dependsOn
+			? {
+					dependsOn: node.dependsOn.filter((dependency) =>
+						activeNodeIds.has(dependency),
+					),
+				}
+			: {}),
 		repairTarget: node.repairTarget,
 		run: (context) => {
 			const localStandard = evaluateLoopQualityGraph({

@@ -262,8 +262,8 @@ export const planningLoopCandidate = {
 	loop: "planning",
 	metric: "PEC",
 	graphId: "planning.loop.lab",
-	graphVersion: "0.3.0.lab.1",
-	schemaVersion: 2,
+	graphVersion: "0.3.0.lab.2",
+	schemaVersion: 3,
 	layers: [
 		"hard_gate",
 		"input_contract",

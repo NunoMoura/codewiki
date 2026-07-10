@@ -35,6 +35,6 @@ Implementation must route back to planning for insufficient acceptance, bad path
 
 Related docs:
 
-- [Planning Loop](../planning-loop.md)
-- [Implementation Loop](../implementation-loop.md)
-- [Runtime](../runtime.md)
+- [Planning Loop](../components/planning-loop.md)
+- [Implementation Loop](../components/implementation-loop.md)
+- [Runtime](../components/runtime.md)

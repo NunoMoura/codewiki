@@ -3,6 +3,9 @@ export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
 export const sourceLayout = {
 	loopRoots: ["decision", "planning", "implementation"],
 	supportRoots: [
+		"api",
+		"loops",
+		"dashboard",
 		"traces",
 		"views",
 		"knowledge",

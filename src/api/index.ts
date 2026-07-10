@@ -10,10 +10,10 @@ export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
 export type { SourceLayout } from "../index.ts";
 export type {
 	CurrentStatePacket,
-	DecisionOutputTypeProfile,
-	DecisionRow,
-	DecisionTable,
-	DecisionTableInput,
+	ApprovedChangeTypeProfile,
+	ProposedChange,
+	SprintProposal,
+	SprintProposalInput,
 	KnowledgeDelta,
 } from "../decision/types.ts";
 export type {
@@ -51,10 +51,12 @@ export type {
 export type {
 	ExecuteRuntimeWorktreeCommandsOptions,
 	RuntimeWorktreePlan,
+	WorktreeCommand,
 	WorktreeCommandExecutionRecord,
 	WorktreeCommandExecutionResult,
 	WorktreeCommandRunner,
 	WorktreeCommandStep,
+	WorktreeProcessCommand,
 	WorktreeRef,
 } from "../git/worktrees.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";

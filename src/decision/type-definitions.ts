@@ -319,7 +319,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 	definition({
 		id: "direct_implementation",
 		description:
-			"A low-risk scoped row that may skip Planning only when explicit validation and path scope are present.",
+			"A low-risk scoped change that may skip Planning only when explicit validation and path scope are present.",
 		decisionKind: "direct_implementation",
 		routing: pipelineProfile({
 			id: "pipeline.direct_implementation",

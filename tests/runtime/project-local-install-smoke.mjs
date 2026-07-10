@@ -11,7 +11,7 @@ import { mkdir, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
@@ -72,16 +72,16 @@ function traceHead(traceId, title, createdAt) {
 	return `${JSON.stringify({ type: "trace_head", traceId, title, createdAt })}\n`;
 }
 
-function decisionTableInput(createdAt) {
+function sprintProposalInput(createdAt) {
 	return {
-		id: "DT-project-local-install-smoke",
+		id: "SP-project-local-install-smoke",
 		summary: "Prove project-local package install mutation.",
 		createdAt,
 		updatedAt: createdAt,
 		sourceRefs: ["README.md"],
-		rows: [
+		changes: [
 			{
-				id: "DTR-project-local-install-smoke",
+				id: "CHG-project-local-install-smoke",
 				decisionKind: "harden",
 				currentState: "Mutation guards require project-local package installs.",
 				desiredState:
@@ -141,7 +141,8 @@ try {
 	const pi = mockPi();
 	codewikiExtension(pi.api);
 	const bootstrapCommand = commandByName(pi, "wiki-bootstrap");
-	const stateCommand = commandByName(pi, "wiki-state");
+	const dashboardCommand = commandByName(pi, "wiki-dashboard");
+	const stateTool = toolByName(pi, "wiki_state");
 	const decideTool = toolByName(pi, "wiki_decide");
 	const configTool = toolByName(pi, "wiki_config");
 	const notifications = [];
@@ -200,6 +201,23 @@ try {
 			"2026-06-18T14:00:00.000Z",
 		),
 	);
+	const preview = assertToolResult(
+		await decideTool.execute(
+			"decide-preview",
+			{
+				input: {
+					traceId,
+					mode: "preview",
+					createdAt: "2026-06-18T14:00:01.000Z",
+					proposalInput: sprintProposalInput("2026-06-18T14:00:01.000Z"),
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_decide: completed preview run\./,
+	);
 	const decided = assertToolResult(
 		await decideTool.execute(
 			"decide-append",
@@ -210,7 +228,13 @@ try {
 					expectedBytes: await expectedBytes(tracePath),
 					nextSequence: 1,
 					createdAt: "2026-06-18T14:00:01.000Z",
-					tableInput: decisionTableInput("2026-06-18T14:00:01.000Z"),
+					proposalInput: sprintProposalInput("2026-06-18T14:00:01.000Z"),
+					sprintProposalApproval: {
+						approved: true,
+						renderedProposalDigest: preview.renderedSprintProposal.digest,
+						approvedBy: "project-local-install-smoke",
+						approvedAt: "2026-06-18T14:00:01.000Z",
+					},
 				},
 			},
 			undefined,
@@ -222,11 +246,17 @@ try {
 	assert.equal(decided.loopResult.exit.passed, true);
 	assert.equal(decided.iterationEvent.data.exit.status, "exit");
 	assert.equal((await stat(tracePath)).size > 0, true);
-	const state = await stateCommand.handler(
-		`--board --trace ${traceId} --json`,
+	const state = await stateTool.execute(
+		"post-decision-state",
+		{ view: "board", traceId },
+		undefined,
+		undefined,
 		ctx,
 	);
-	assert.equal(state.data.workQueue.summary.ready, 0);
+	assert.equal(state.details.result.data.workQueue.summary.ready, 0);
+	const dashboard = await dashboardCommand.handler("--no-open", ctx);
+	assert.equal(dashboard.command, "dashboard");
+	assert.match(dashboard.url, /^http:\/\/127\.0\.0\.1:/);
 	assert.equal(
 		notifications.some((notice) => notice.level === "warning"),
 		false,

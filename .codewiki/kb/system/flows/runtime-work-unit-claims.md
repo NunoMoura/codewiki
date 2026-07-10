@@ -27,7 +27,7 @@ Runtime is the orchestrator and trace writer. It does not close traces by itself
 
 ## Related docs
 
-- [Runtime](../runtime.md)
-- [Traces](../traces.md)
-- [Planning Loop](../planning-loop.md)
-- [Implementation Loop](../implementation-loop.md)
+- [Runtime](../components/runtime.md)
+- [Traces](../components/traces.md)
+- [Planning Loop](../components/planning-loop.md)
+- [Implementation Loop](../components/implementation-loop.md)

@@ -4,7 +4,9 @@ import {
 	mkdir,
 	mkdtemp,
 	readFile,
+	readdir,
 	rm,
+	stat,
 	writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -16,16 +18,16 @@ import {
 	CODEWIKI_PROMPT_MARKER,
 	codewikiPromptHooksAvailable,
 } from "../../src/pi/prompt/index.ts";
+import { closeCodewikiDashboardServer } from "../../src/dashboard/index.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
 	renderBootstrapCommand,
-	renderStateCommand,
 } from "../../src/pi/tui/index.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -69,7 +71,9 @@ function mockPi(options = {}) {
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-pi-extension-"));
 	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
-	await mkdir(join(root, ".codewiki", "kb", "system"), { recursive: true });
+	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
+		recursive: true,
+	});
 	await mkdir(join(root, "src", "api"), { recursive: true });
 	await writeFile(
 		join(root, ".codewiki", "traces", "TRACE-pi.jsonl"),
@@ -82,25 +86,23 @@ async function fixture() {
 		]),
 	);
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "source-map.yaml"),
+		join(root, ".codewiki", "kb", "system", "components", "api.md"),
 		[
-			"id: test-source-map",
-			"source_docs:",
-			"  - kb:system/source-map.md",
-			"defaults:",
-			"  inheritance: true",
-			"  excluded: []",
-			"components:",
-			"  api:",
-			"    doc: kb:system/api.md",
-			"    source_patterns:",
-			"      - src/api/**",
-			"    test_patterns:",
-			"      - tests/api/**",
-			"    generated_views:",
-			"      - .codewiki/views/status.json",
-			"    trace_events:",
-			"      - decision.rows_approved",
+			"---",
+			"type: Concept",
+			"title: API",
+			"description: API fixture.",
+			"codewiki_component: api",
+			"codewiki_source_patterns:",
+			"  - src/api/**",
+			"codewiki_test_patterns:",
+			"  - tests/api/**",
+			"codewiki_generated_views:",
+			"  - .codewiki/views/status.json",
+			"codewiki_trace_events:",
+			"  - decision.changes_approved",
+			"---",
+			"# API",
 			"",
 		].join("\n"),
 	);
@@ -120,20 +122,20 @@ async function writeImplementationFixtureFiles(root) {
 	);
 }
 
-function decisionTableInput(traceId) {
+function sprintProposalInput(traceId) {
 	return {
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-17T00:00:01.000Z",
 		updatedAt: "2026-06-17T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-pi-preview",
+				id: "CHG-pi-preview",
 				currentState: "Pi extension adapter lacks preview coverage.",
 				desiredState: "Pi extension adapter previews CodeWiki loop facades.",
 				rationale: "Mocked Pi tests prevent unsafe CLI fallback.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/api-tools.md"],
+				sourceRefs: ["kb:system/components/api-tools.md"],
 			},
 		],
 	};
@@ -145,10 +147,10 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-pi-preview") {
@@ -233,7 +235,12 @@ describe("Pi extension adapter", () => {
 		);
 		assert.deepEqual(
 			pi.events.map((event) => event.eventName),
-			["before_agent_start", "tool_result", "session_start"],
+			[
+				"before_agent_start",
+				"tool_result",
+				"session_shutdown",
+				"session_start",
+			],
 		);
 		assert.deepEqual(
 			pi.messageRenderers.map((renderer) => renderer.customType),
@@ -258,16 +265,16 @@ describe("Pi extension adapter", () => {
 		assert.equal(packageJson.pi.skills, undefined);
 	});
 
-	it("renders direct command output as a plain custom message in TUI mode", async () => {
+	it("renders rich read commands as plain custom messages in TUI mode", async () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi({ sendMessage: true });
 			codewikiExtension(pi.api);
 			const command = pi.commands.find(
-				(candidate) => candidate.name === "wiki-state",
+				(candidate) => candidate.name === "wiki-resume",
 			).command;
 
-			await command.handler("--board", {
+			await command.handler("", {
 				cwd: root,
 				mode: "tui",
 				ui: { notify: () => assert.fail("notify fallback should not be used") },
@@ -280,7 +287,12 @@ describe("Pi extension adapter", () => {
 			).renderer;
 			assert.equal(
 				renderer(pi.messages[0], {}, {}).render(80)[0],
-				"CodeWiki Sprint Queue",
+				"CodeWiki Resume",
+			);
+			assert.ok(
+				renderer({ details: { lines: ["x".repeat(1100)] } }, {}, {})
+					.render(80)
+					.every((line) => line.length <= 80),
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -309,7 +321,44 @@ describe("Pi extension adapter", () => {
 
 		assert.equal(statuses.length, 1);
 		assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
-		assert.match(statuses[0].value, /^CodeWiki \S+ local · \/wiki-state$/);
+		assert.match(
+			statuses[0].value,
+			/^CodeWiki \S+ local · dashboard: \/wiki-dashboard$/,
+		);
+	});
+
+	it("does not install persistent Pi widgets for CodeWiki state", async () => {
+		const root = await fixture();
+		try {
+			const pi = mockPi();
+			codewikiExtension(pi.api);
+			const widgets = [];
+
+			for (const hook of pi.events.filter(
+				(event) => event.eventName === "session_start",
+			)) {
+				await hook.handler(
+					{ reason: "startup" },
+					{
+						cwd: root,
+						mode: "tui",
+						ui: {
+							notify() {},
+							setStatus() {},
+							setWidget(key, value, options) {
+								widgets.push({ key, value, options });
+							},
+						},
+					},
+				);
+			}
+
+			assert.deepEqual(widgets, [
+				{ key: "codewiki-cards", value: undefined, options: undefined },
+			]);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("injects CodeWiki prompt guidance once when Pi event hooks exist", async () => {
@@ -476,7 +525,7 @@ describe("Pi extension adapter", () => {
 						mode: "preview",
 						nextSequence: 1,
 						createdAt: "2026-06-17T00:00:01.000Z",
-						tableInput: decisionTableInput("TRACE-pi-preview"),
+						proposalInput: sprintProposalInput("TRACE-pi-preview"),
 					},
 				},
 				undefined,
@@ -487,7 +536,7 @@ describe("Pi extension adapter", () => {
 				decidedResult,
 				/wiki_decide: completed preview run\./,
 			);
-			assert.equal(decided.iterationEvent.event, "rows_approved");
+			assert.equal(decided.iterationEvent.event, "changes_approved");
 			assert.equal(decided.append, undefined);
 
 			const decisionRef = approvedDecisionRef(decided.loopResult.traceEvents);
@@ -644,20 +693,20 @@ describe("Pi extension adapter", () => {
 			const notifications = [];
 			const pi = mockPi();
 			codewikiExtension(pi.api);
-			const stateCommand = pi.commands.find(
-				(candidate) => candidate.name === "wiki-state",
+			const dashboardCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-dashboard",
 			).command;
 			const resumeCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-resume",
 			).command;
 
-			const board = await stateCommand.handler("--board", {
+			const dashboard = await dashboardCommand.handler("--no-open", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
-			assert.equal(board.command, "state");
-			assert.equal(board.view, "board");
-			assert.match(notifications.at(-1), /CodeWiki Sprint Queue/);
+			assert.equal(dashboard.command, "dashboard");
+			assert.match(dashboard.url, /^http:\/\/127\.0\.0\.1:/);
+			assert.match(notifications.at(-1), /Click to open CodeWiki dashboard/);
 
 			const resume = await resumeCommand.handler("", {
 				cwd: root,
@@ -665,69 +714,234 @@ describe("Pi extension adapter", () => {
 			});
 			assert.equal(resume.command, "resume");
 		} finally {
+			await closeCodewikiDashboardServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
 	});
 
-	it("/wiki-state flags and /wiki-resume return focused views", async () => {
+	it("/wiki-dashboard recreates a missing daemon log directory", async () => {
+		const root = await fixture();
+		const tempRoot = await mkdtemp(join(tmpdir(), "codewiki-dashboard-test-"));
+		const dashboardTmp = join(tempRoot, "missing-tmp");
+		const previousTmp = process.env.CODEWIKI_DASHBOARD_TMPDIR;
+		process.env.CODEWIKI_DASHBOARD_TMPDIR = dashboardTmp;
+		await rm(dashboardTmp, { recursive: true, force: true });
+		try {
+			const notifications = [];
+			const pi = mockPi();
+			codewikiExtension(pi.api);
+			const dashboardCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-dashboard",
+			).command;
+
+			const dashboard = await dashboardCommand.handler("--no-open", {
+				cwd: root,
+				ui: { notify: (message) => notifications.push(message) },
+			});
+
+			assert.equal(dashboard.command, "dashboard");
+			assert.match(dashboard.url, /^http:\/\/127\.0\.0\.1:/);
+			assert.equal((await fetch(dashboard.url)).status, 200);
+			assert.match(notifications.at(-1), /Click to open CodeWiki dashboard/);
+			if (process.platform !== "win32") {
+				const endpointDirectory = join(dashboardTmp, "codewiki-dashboard");
+				assert.equal((await stat(endpointDirectory)).mode & 0o777, 0o700);
+				const endpointFiles = await readdir(endpointDirectory);
+				assert.ok(endpointFiles.length >= 2);
+				for (const path of endpointFiles) {
+					assert.equal(
+						(await stat(join(endpointDirectory, path))).mode & 0o777,
+						0o600,
+					);
+				}
+			}
+		} finally {
+			await closeCodewikiDashboardServer(root);
+			if (previousTmp === undefined)
+				delete process.env.CODEWIKI_DASHBOARD_TMPDIR;
+			else process.env.CODEWIKI_DASHBOARD_TMPDIR = previousTmp;
+			await rm(root, { recursive: true, force: true });
+			await rm(tempRoot, { recursive: true, force: true });
+		}
+	});
+
+	it("/wiki-dashboard serves a read-only Sprints Queue and /wiki-resume returns focused views", async () => {
 		const root = await fixture();
 		try {
 			const notifications = [];
-			const statuses = [];
+			const widgets = [];
 			const pi = mockPi();
 			codewikiExtension(pi.api);
-			const stateCommand = pi.commands.find(
-				(candidate) => candidate.name === "wiki-state",
+			const dashboardCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-dashboard",
 			).command;
 			const resumeCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-resume",
 			).command;
-
-			const board = await stateCommand.handler("--board", {
+			const ctx = {
 				cwd: root,
+				mode: "tui",
 				ui: {
+					width: 80,
 					notify: (message) => notifications.push(message),
-					setStatus: (key, value) => statuses.push({ key, value }),
+					setWidget: (key, value) => widgets.push({ key, value }),
 				},
-			});
-			assert.equal(board.command, "state");
-			assert.equal(board.view, "board");
-			assert.equal(board.json, false);
-			assert.ok(board.data.traceQueue);
-			assert.ok(board.data.workQueue);
-			assert.ok(board.data.runtimeBoard);
-			assert.equal(board.data.runtimeBoard.summary.readyWorkUnits, 0);
-			assert.equal(board.data.next.action, "decide");
-			assert.equal(board.data.append.byTrace["TRACE-pi"].nextSequence, 1);
-			assert.deepEqual(board.rendered.slice(0, 2), [
-				"CodeWiki Sprint Queue",
-				"",
-			]);
-			assert.match(notifications.at(-1), /CodeWiki Sprint Queue/);
-			assert.match(notifications.at(-1), /├/);
-			assert.equal(statuses.length, 1);
-			assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
+			};
+
+			const opened = await dashboardCommand.handler("--no-open", ctx);
+			assert.equal(opened.command, "dashboard");
+			assert.equal(opened.opened, false);
+			assert.equal(opened.rendered.length, 1);
+			assert.match(opened.rendered[0], /Click to open CodeWiki dashboard/);
+			assert.doesNotMatch(opened.rendered[0], /\u001B/);
+			assert.equal(widgets.length, 0);
+
+			const dashboardUrl = new URL(opened.url);
+			const dashboardToken = new URLSearchParams(
+				dashboardUrl.hash.slice(1),
+			).get("token");
+			assert.ok(dashboardToken);
+			assert.equal(dashboardUrl.search, "");
+			assert.match(dashboardUrl.hash, /^#token=/);
+			const htmlResponse = await fetch(opened.url);
+			const html = await htmlResponse.text();
+			assert.equal(htmlResponse.headers.get("referrer-policy"), "no-referrer");
+			assert.equal(
+				htmlResponse.headers.get("x-content-type-options"),
+				"nosniff",
+			);
 			assert.match(
-				statuses[0].value,
-				/^CodeWiki \S+ path: 1 trace\(s\) · ready 0 · blocked 0 · open$/,
+				htmlResponse.headers.get("content-security-policy"),
+				/default-src 'none'/,
 			);
+			assert.doesNotMatch(html, new RegExp(dashboardToken));
+			assert.match(html, /id="summary"/);
+			assert.match(html, /codewiki-logo/);
+			assert.match(html, /data:image\/png;base64,/);
+			assert.doesNotMatch(html, /src="\/assets\/codewiki-logo\.png/);
+			assert.match(html, /Repo:/);
+			assert.match(html, /header-dashboard/);
+			assert.match(html, /aria-label="Filter traces"/);
+			assert.match(html, /aria-expanded/);
+			assert.match(html, /isInteractiveDashboardTarget/);
+			assert.match(html, /focusSelectedTrace/);
+			assert.doesNotMatch(html, /<label for="search">/);
+			assert.doesNotMatch(html, /mission-title/);
+			assert.doesNotMatch(html, /CodeWiki \/ local observability/);
+			assert.doesNotMatch(html, /Sprint trace control/);
+			assert.doesNotMatch(html, /trace-ribbon/);
+			assert.doesNotMatch(html, /trace-decision/);
+			assert.match(html, /quality-strip/);
+			assert.match(html, /--check-color/);
+			assert.doesNotMatch(html, /--check-color-next/);
+			assert.doesNotMatch(html, /logoSmoothSegmentGradient/);
+			assert.doesNotMatch(html, /--strip-fill-width/);
+			assert.doesNotMatch(html, /mask-image: repeating-linear-gradient/);
+			assert.doesNotMatch(html, /stripFillWidth/);
+			assert.match(html, /--logo-progress-gradient/);
+			assert.match(html, /linear-gradient\(to top,/);
+			assert.match(html, /color-mix\(in srgb, var\(--check-color\)/);
+			assert.match(html, /quality-count/);
+			assert.match(html, /quality-layer/);
+			assert.match(html, /quality-type/);
+			assert.doesNotMatch(html, /quality-bundle/);
+			assert.match(html, /qualityAggregateStatusText/);
+			assert.match(html, /QUALITY_LAYER_ORDER/);
+			assert.match(html, /QUALITY_STANDARD_FALLBACKS/);
+			assert.match(html, /canonicalQualityText/);
+			assert.doesNotMatch(html, /trace-feed/);
+			assert.match(html, /detail-tabs/);
+			assert.match(html, /border: 0;/);
+			assert.match(html, /terminal-block/);
+			assert.match(html, /loop-panel/);
+			assert.match(html, /loop-section/);
+			assert.match(html, /quality-meta/);
+			assert.doesNotMatch(html, /renderLoopOverview/);
+			assert.doesNotMatch(html, /loop-overview/);
+			assert.doesNotMatch(html, /loop-subsection/);
+			assert.doesNotMatch(html, /report-metrics/);
+			assert.match(html, /knowledge base changes/);
+			assert.match(html, /touched files/);
+			assert.doesNotMatch(html, /System Summary/);
+			assert.doesNotMatch(html, /Trace Detail/);
 
-			const narrow = await stateCommand.handler("--board", {
-				cwd: root,
-				ui: { width: 20, notify: (message) => notifications.push(message) },
-			});
-			assert.ok(
-				narrow.rendered.every((line) => line.length <= 20),
-				"narrow command render should fit the requested width",
+			const logoUrl = new URL(opened.url);
+			logoUrl.pathname = "/assets/codewiki-logo.png";
+			const logoResponse = await fetch(logoUrl);
+			assert.equal(logoResponse.status, 200);
+			assert.equal(logoResponse.headers.get("content-type"), "image/png");
+			const logoBytes = new Uint8Array(await logoResponse.arrayBuffer());
+			assert.deepEqual(
+				Array.from(logoBytes.slice(0, 8)),
+				[137, 80, 78, 71, 13, 10, 26, 10],
 			);
+			assert.equal(logoBytes[25], 6);
 
-			const quality = await stateCommand.handler("--quality --json", {
-				cwd: root,
-				ui: { notify: (message) => notifications.push(message) },
-			});
-			assert.equal(quality.view, "quality");
-			assert.equal(quality.json, true);
-			assert.match(notifications.at(-1), /JSON returned/);
+			const staleApiUrl = new URL(opened.url);
+			staleApiUrl.hash = "";
+			staleApiUrl.pathname = "/api/state";
+			staleApiUrl.searchParams.set("token", "stale");
+			assert.equal((await fetch(staleApiUrl)).status, 403);
+
+			const url = new URL(opened.url);
+			url.hash = "";
+			url.pathname = "/api/state";
+			url.searchParams.set("token", dashboardToken);
+			const state = await (await fetch(url)).json();
+			assert.equal(state.projectName, root.split("/").at(-1));
+			assert.equal(state.summary.archived, 0);
+			assert.equal(Object.hasOwn(state.summary, "closed"), false);
+			assert.equal(state.sprintsQueue[0].traceId, "TRACE-pi");
+			assert.ok(state.sprintsQueue[0].qualityChecks.length > 0);
+			assert.equal(
+				typeof state.sprintsQueue[0].qualityChecks[0].standardType,
+				"string",
+			);
+			assert.equal(
+				typeof state.sprintsQueue[0].qualityChecks[0].layer,
+				"string",
+			);
+			assert.ok(state.sprintsQueue[0].primaryQualityChecks.length > 0);
+			assert.ok(state.sprintsQueue[0].activities.length > 0);
+			assert.equal(state.sprintsQueue[0].loopSections.length, 3);
+			const decisionSection = state.sprintsQueue[0].loopSections.find(
+				(section) => section.loop === "decision",
+			);
+			assert.ok(decisionSection);
+			assert.equal(decisionSection.report.summary, "");
+			assert.deepEqual(decisionSection.report.bullets, []);
+			assert.match(
+				decisionSection.report.metrics.join("\n"),
+				/^iterations: \d+$/m,
+			);
+			assert.match(
+				decisionSection.report.metrics.join("\n"),
+				/^tokens: not recorded$/m,
+			);
+			assert.ok(Object.hasOwn(state.sprintsQueue[0].touchedFiles, "tests"));
+			assert.equal(typeof state.sprintsQueue[0].qualityCaption, "string");
+			assert.match(state.sprintsQueue[0].currentAction, /proposed changes/i);
+			const blockedUrl = new URL(opened.url);
+			blockedUrl.hash = "";
+			blockedUrl.pathname = "/api/state";
+			blockedUrl.search = "";
+			assert.equal((await fetch(blockedUrl)).status, 403);
+			assert.equal((await fetch(url, { method: "POST" })).status, 405);
+
+			for (const hook of pi.events.filter(
+				(event) => event.eventName === "session_shutdown",
+			)) {
+				await hook.handler({ reason: "reload" }, ctx);
+			}
+			assert.equal((await fetch(opened.url)).status, 200);
+			for (const hook of pi.events.filter(
+				(event) => event.eventName === "session_start",
+			)) {
+				await hook.handler({ reason: "reload" }, ctx);
+			}
+			assert.equal((await fetch(opened.url)).status, 200);
+			const reopened = await dashboardCommand.handler("--no-open", ctx);
+			assert.equal(reopened.url, opened.url);
 
 			const resume = await resumeCommand.handler("", {
 				cwd: root,
@@ -738,51 +952,9 @@ describe("Pi extension adapter", () => {
 			assert.match(notifications.at(-1), /CodeWiki Resume/);
 			assert.match(resume.rendered.join("\n"), /Next\s+│ Loop\s+│ Active work/);
 		} finally {
+			await closeCodewikiDashboardServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
-	});
-
-	it("command renderers truncate long Sprint Queue cells for narrow widths", () => {
-		const lines = renderStateCommand(
-			{
-				workQueue: {
-					items: [
-						{
-							id: "WU-long",
-							title:
-								"Render a very long board item without breaking table width",
-							status: "ready",
-						},
-					],
-				},
-			},
-			"board",
-			{ width: 42 },
-		);
-
-		assert.ok(lines.every((line) => line.length <= 42));
-		assert.match(lines.join("\n"), /Sprint Queue/);
-		assert.match(lines.join("\n"), /Ready/);
-		assert.match(lines.join("\n"), /…/);
-		assert.match(lines.join("\n"), /├/);
-
-		const wideLines = renderStateCommand(
-			{
-				workQueue: {
-					items: [
-						{
-							id: "WU-long",
-							title: "Render a long Sprint Card",
-							status: "ready",
-						},
-					],
-				},
-			},
-			"board",
-			{ width: 120 },
-		);
-		assert.match(wideLines.join("\n"), /decisions:0/);
-		assert.match(wideLines.join("\n"), /tasks:1/);
 	});
 
 	it("/wiki-explain describes projects, flows, and owned paths", async () => {
@@ -910,7 +1082,7 @@ describe("Pi extension adapter", () => {
 			assert.match(notifications.at(-1), /\.codewiki\/roadmap/);
 			assert.match(result.rendered.join("\n"), /Action\s+│ Count\s+│ Meaning/);
 			assert.match(result.rendered.join("\n"), /Next\n• You are ready/);
-			assert.match(result.rendered.join("\n"), /\/wiki-state/);
+			assert.match(result.rendered.join("\n"), /\/wiki-dashboard/);
 			for (const line of result.rendered.filter((line) => line.includes("│"))) {
 				assert.ok(line.length <= 78, line);
 			}

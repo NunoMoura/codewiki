@@ -1,5 +1,3 @@
-import { parse as parseYaml } from "yaml";
-
 export interface SourceMapDefaults {
 	inheritance: boolean;
 	maxOwnerDepth?: number;
@@ -55,23 +53,6 @@ export interface SourceMapValidationInput {
 	artifactPaths?: string[];
 	sourcePaths?: string[];
 	markdown?: SourceMapMarkdownEntry[];
-}
-
-export function parseSourceMapYaml(source: string): SourceMapContract {
-	return sourceMapFromUnknown(parseYaml(source));
-}
-
-export function sourceMapFromUnknown(value: unknown): SourceMapContract {
-	const document = objectRecord(value);
-	return {
-		id: text(document.id) || undefined,
-		sourceRefs: unique([
-			...stringList(document.source_docs),
-			...stringList(document.sourceDocs),
-		]),
-		defaults: defaultsFromUnknown(document.defaults),
-		components: componentsFromUnknown(document.components),
-	};
 }
 
 export function sourceMapExcluded(
@@ -181,7 +162,7 @@ function duplicateComponentIssues(
 		return [
 			issue("duplicate_component_id", {
 				componentId: component.id,
-				message: `Duplicate source-map component ${component.id}.`,
+				message: `Duplicate source ownership component ${component.id}.`,
 			}),
 		];
 	});
@@ -220,7 +201,7 @@ function componentArtifactIssues(
 					issue("missing_component_doc", {
 						componentId: component.id,
 						path: component.doc,
-						message: `Source-map component ${component.id} doc ${component.doc} does not exist.`,
+						message: `Source ownership component ${component.id} doc ${component.doc} does not exist.`,
 					}),
 				]),
 		...missingPatternIssues(component, artifactPaths),
@@ -240,7 +221,7 @@ function missingPatternIssues(
 						issue("missing_source_pattern_artifact", {
 							componentId: component.id,
 							pattern,
-							message: `Source-map component ${component.id} source pattern ${pattern} matches no artifact.`,
+							message: `Source ownership component ${component.id} source pattern ${pattern} matches no artifact.`,
 						}),
 					],
 		),
@@ -251,7 +232,7 @@ function missingPatternIssues(
 						issue("missing_test_pattern_artifact", {
 							componentId: component.id,
 							pattern,
-							message: `Source-map component ${component.id} test pattern ${pattern} matches no artifact.`,
+							message: `Source ownership component ${component.id} test pattern ${pattern} matches no artifact.`,
 						}),
 					],
 		),
@@ -265,7 +246,7 @@ function missingTestContractIssues(
 	return [
 		issue("missing_test_contract", {
 			componentId: component.id,
-			message: `Source-map component ${component.id} needs tests or explicit test rationale.`,
+			message: `Source ownership component ${component.id} needs tests or explicit test rationale.`,
 		}),
 	];
 }
@@ -281,7 +262,7 @@ function sourceOwnerIssues(
 		return [
 			issue("missing_source_owner", {
 				path,
-				message: `Source file ${path} has no source-map owner.`,
+				message: `Source file ${path} has no OKF source owner.`,
 			}),
 		];
 	});
@@ -307,60 +288,6 @@ function issue(
 	input: Omit<SourceMapValidationIssue, "code">,
 ): SourceMapValidationIssue {
 	return { code, ...input };
-}
-
-function defaultsFromUnknown(value: unknown): SourceMapDefaults {
-	const defaults = objectRecord(value);
-	return {
-		inheritance: booleanValue(defaults.inheritance, { fallback: true }),
-		maxOwnerDepth: numberValue(
-			defaults.max_owner_depth ?? defaults.maxOwnerDepth,
-		),
-		excluded: unique([
-			...stringList(defaults.excluded),
-			...stringList(defaults.exclude),
-		]),
-	};
-}
-
-function componentsFromUnknown(value: unknown): SourceMapComponent[] {
-	const components = objectRecord(value);
-	return Object.entries(components)
-		.map(([id, raw]) => componentFromUnknown(id, raw))
-		.filter((component) => component.id && component.doc);
-}
-
-function componentFromUnknown(id: string, value: unknown): SourceMapComponent {
-	const component = objectRecord(value);
-	return {
-		id,
-		doc: text(component.doc),
-		sourcePatterns: unique([
-			...stringList(component.source),
-			...stringList(component.sources),
-			...stringList(component.source_patterns),
-			...stringList(component.sourcePatterns),
-		]),
-		testPatterns: unique([
-			...stringList(component.tests),
-			...stringList(component.test),
-			...stringList(component.test_patterns),
-			...stringList(component.testPatterns),
-		]),
-		generatedViews: unique([
-			...stringList(component.generated_views),
-			...stringList(component.generatedViews),
-		]),
-		traceEvents: unique([
-			...stringList(component.trace_events),
-			...stringList(component.traceEvents),
-		]),
-		role: text(component.role) || undefined,
-		testPolicy:
-			text(component.test_policy ?? component.testPolicy) || undefined,
-		testRationale:
-			text(component.test_rationale ?? component.testRationale) || undefined,
-	};
 }
 
 function matchesAny(path: string, patterns: string[]): boolean {
@@ -441,31 +368,6 @@ function normalizeComponentRef(value: string): string {
 	return normalized.startsWith("component.")
 		? normalized.slice("component.".length)
 		: normalized;
-}
-
-function booleanValue(value: unknown, options: { fallback: boolean }): boolean {
-	if (typeof value === "boolean") return value;
-	const output = text(value).toLowerCase();
-	if (output === "true") return true;
-	if (output === "false") return false;
-	return options.fallback;
-}
-
-function numberValue(value: unknown): number | undefined {
-	const output = Number(value);
-	return Number.isFinite(output) ? output : undefined;
-}
-
-function objectRecord(value: unknown): Record<string, unknown> {
-	return typeof value === "object" && value !== null
-		? (value as Record<string, unknown>)
-		: {};
-}
-
-function stringList(value: unknown): string[] {
-	return Array.isArray(value)
-		? value.map((item) => text(item)).filter(Boolean)
-		: [];
 }
 
 function text(value: unknown): string {

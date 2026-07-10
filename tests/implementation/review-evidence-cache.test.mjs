@@ -1,37 +1,37 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function planningTraceEvents(traceId = "TRACE-review-evidence-cache") {
 	const decision = runDecisionIteration({
 		traceId,
-		table: createDecisionTable({
-			id: "DT-cache",
+		proposal: createSprintProposal({
+			id: "SP-cache",
 			createdAt: "2026-06-26T00:00:00.000Z",
 			updatedAt: "2026-06-26T00:00:00.000Z",
-			rows: [
+			changes: [
 				{
-					id: "DTR-cache",
+					id: "CHG-cache",
 					question: "Should implementation evidence be cached?",
 					currentState: "Fast feedback evidence is transient.",
 					desiredState: "Implementation can reuse cached review evidence.",
 					rationale: "Cached diagnostics should survive until loop exit.",
 					...decisionQualityFields(),
 					approval: "approved",
-					sourceRefs: ["kb:system/loop-contracts.md"],
+					sourceRefs: ["kb:system/components/loop-contracts.md"],
 				},
 			],
 		}),
 	});
 	const decisionEvent = decision.traceEvents[0];
-	const decisionRef = `trace:${decisionEvent.id}#row:DTR-cache`;
+	const decisionRef = `trace:${decisionEvent.id}#change:CHG-cache`;
 	return runPlanningIteration({
 		traceId,
 		decisionEvents: decision.traceEvents,

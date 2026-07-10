@@ -8,14 +8,12 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { serializeOkfDocument } from "../knowledge/okf-frontmatter.ts";
+import { generateOkfDirectoryIndexes } from "../knowledge/okf-index.ts";
 import {
 	mergeOkfSourceMapExtension,
 	okfSourceMapExtensionForDoc,
 } from "../knowledge/okf-source-map.ts";
-import {
-	parseSourceMapYaml,
-	type SourceMapContract,
-} from "../knowledge/source-map.ts";
+import type { SourceMapContract } from "../knowledge/source-map.ts";
 import { resolveWikiConfig } from "./config.ts";
 import { WIKI_CONFIG_PATH } from "./config-file.ts";
 
@@ -65,6 +63,8 @@ const TARGET_DIRECTORIES = [
 	".codewiki/kb/product/users",
 	".codewiki/kb/product/stories",
 	".codewiki/kb/product/uis",
+	".codewiki/kb/system/components",
+	".codewiki/kb/system/flows",
 	".codewiki/kb/system/diagrams",
 	".codewiki/traces",
 	".codewiki/views",
@@ -207,9 +207,8 @@ function starterFiles(
 	project: string,
 	boundaries: BootstrapBoundary[],
 ): Record<string, string> {
-	const sourceMapText = sourceMapYaml(boundaries);
-	const sourceMap = parseSourceMapYaml(sourceMapText);
-	const markdownFiles: Record<string, string> = {
+	const sourceMap = starterSourceOwnershipMap(boundaries);
+	const conceptBodies: Record<string, string> = {
 		".codewiki/kb/lexicon.md": lexiconDoc(project),
 		".codewiki/kb/product/overview.md": productOverviewDoc(project),
 		".codewiki/kb/product/users/maintainers.md": simpleDoc(
@@ -232,35 +231,54 @@ function starterFiles(
 			"Terminal UI",
 			"Terminal and CLI surfaces expose disposable views over KB and trace truth.",
 		),
-		".codewiki/kb/system/overview.md": systemOverviewDoc(project, boundaries),
-		".codewiki/kb/system/loop-model.md": loopModelDoc(),
-		".codewiki/kb/system/decision-loop.md": loopDoc(
+		".codewiki/kb/system/components/overview.md": systemOverviewDoc(
+			project,
+			boundaries,
+		),
+		".codewiki/kb/system/components/loop-model.md": loopModelDoc(),
+		".codewiki/kb/system/components/decision-loop.md": loopDoc(
 			"Decision Loop",
 			"Decision iterations capture accepted intent, alternatives, risks, and knowledge impact before planning starts.",
 		),
-		".codewiki/kb/system/planning-loop.md": loopDoc(
+		".codewiki/kb/system/components/planning-loop.md": loopDoc(
 			"Planning Loop",
 			"Planning iterations map approved decision refs into executable work units, dependencies, acceptance criteria, and explicit non-executable resolutions.",
 		),
-		".codewiki/kb/system/implementation-loop.md": loopDoc(
+		".codewiki/kb/system/components/implementation-loop.md": loopDoc(
 			"Implementation Loop",
 			"Implementation iterations record source changes, tests, evidence, worker claims, and coverage of planned work refs.",
 		),
-		".codewiki/kb/system/traces.md": tracesDoc(),
-		".codewiki/kb/system/api.md": apiDoc(),
-		".codewiki/kb/system/runtime.md": runtimeDoc(),
-		".codewiki/kb/system/knowledge.md": knowledgeDoc(),
-		".codewiki/kb/system/source-map.md": sourceMapDoc(),
+		".codewiki/kb/system/components/traces.md": tracesDoc(),
+		".codewiki/kb/system/components/api.md": apiDoc(),
+		".codewiki/kb/system/components/runtime.md": runtimeDoc(),
+		".codewiki/kb/system/components/knowledge.md": knowledgeDoc(),
+		".codewiki/kb/system/components/package.md": packageDoc(project),
+		".codewiki/kb/system/components/source-map.md": sourceMapDoc(),
 	};
+	const conceptFiles = Object.fromEntries(
+		Object.entries(conceptBodies).map(([path, body]) => [
+			path,
+			starterOkfConcept(path, body, sourceMap),
+		]),
+	);
+	const navigationFiles = {
+		".codewiki/kb/system/diagrams/index.md": systemDiagramsIndexDoc(),
+	};
+	const indexFiles = Object.fromEntries(
+		generateOkfDirectoryIndexes(
+			Object.entries({ ...conceptFiles, ...navigationFiles }).map(
+				([path, content]) => ({
+					path: path.replace(/^\.codewiki\/kb\//, ""),
+					content,
+				}),
+			),
+		).map((index) => [`.codewiki/kb/${index.path}`, index.content]),
+	);
 	return {
 		[WIKI_CONFIG_PATH]: configJson(project),
-		...Object.fromEntries(
-			Object.entries(markdownFiles).map(([path, body]) => [
-				path,
-				starterOkfConcept(path, body, sourceMap),
-			]),
-		),
-		".codewiki/kb/system/source-map.yaml": sourceMapText,
+		...conceptFiles,
+		...navigationFiles,
+		...indexFiles,
 	};
 }
 
@@ -280,13 +298,40 @@ function starterOkfConcept(
 		tags: okfTagsForPath(path),
 		timestamp: OKF_BOOTSTRAP_TIMESTAMP,
 	};
-	const extension = okfSourceMapExtensionForDoc(sourceMap, path);
+	const extension =
+		okfSourceMapExtensionForDoc(sourceMap, path) ||
+		packageOkfSourceMapExtension(sourceMap, path);
 	return serializeOkfDocument({
 		frontmatter: extension
 			? mergeOkfSourceMapExtension(frontmatter, extension)
 			: frontmatter,
 		body,
 	});
+}
+
+function packageOkfSourceMapExtension(
+	sourceMap: SourceMapContract,
+	path: string,
+) {
+	if (path !== ".codewiki/kb/system/components/package.md") return undefined;
+	const component = sourceMap.components.find((item) => item.id === "package");
+	if (!component) return undefined;
+	return {
+		codewiki_component: component.id,
+		codewiki_components: [component.id],
+		codewiki_source_patterns: [...component.sourcePatterns],
+		codewiki_test_patterns: [...component.testPatterns],
+		...(component.role ? { codewiki_role: component.role } : {}),
+		codewiki_source_map: [
+			{
+				id: component.id,
+				doc: component.doc,
+				source_patterns: [...component.sourcePatterns],
+				test_patterns: [...component.testPatterns],
+				...(component.role ? { role: component.role } : {}),
+			},
+		],
+	};
 }
 
 function markdownTitle(body: string): string {
@@ -351,7 +396,7 @@ function loopDoc(title: string, body: string): string {
 }
 
 function tracesDoc(): string {
-	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`rows_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
+	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`changes_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
 }
 
 function apiDoc(): string {
@@ -363,18 +408,43 @@ function runtimeDoc(): string {
 }
 
 function knowledgeDoc(): string {
-	return `# Knowledge\n\nKnowledge lives in \`.codewiki/kb/**\`. Product docs explain user-facing intent. System docs explain architecture and loop behavior. Markdown concept docs use OKF v0.1 frontmatter with CodeWiki extension fields generated from \`source-map.yaml\` where ownership exists.\n`;
+	return `# Knowledge\n\nKnowledge lives in \`.codewiki/kb/**\`. Product docs explain user-facing intent. System docs explain architecture and loop behavior. Markdown concept docs use OKF v0.1 frontmatter with CodeWiki extension fields as the active ownership read path.\n`;
 }
 
 function sourceMapDoc(): string {
-	return `# Source Map\n\n\`source-map.yaml\` maps source, tests, generated views, trace events, and owning KB docs. It remains the canonical machine-readable ownership contract while OKF concept frontmatter carries generated CodeWiki extension fields for knowledge exchange.\n`;
+	return `# Source Ownership\n\nOKF concept frontmatter maps source, tests, generated views, trace events, and owning docs. There is no separate source-map YAML truth file.\n`;
+}
+
+function packageDoc(project: string): string {
+	return `# Package Boundary\n\n${project} package metadata, README, TypeScript entrypoint, and install checks define the package distribution boundary.\n`;
+}
+
+function systemDiagramsIndexDoc(): string {
+	return [
+		"# System Diagrams",
+		"",
+		"Canonical diagram data lives in YAML files in this directory.",
+		"Renderer output is not source truth.",
+		"",
+		"## Diagrams",
+		"",
+		"* `architecture.yaml` - High-level architecture map.",
+		"* `component-map.yaml` - Runtime component relationships.",
+		"* `context-map.yaml` - Users, access surfaces, and project boundary.",
+		"* `data-model.yaml` - Durable entities and evidence relationships.",
+		"* `key-flow.yaml` - Primary user/agent workflow sequence.",
+		"* `state-lifecycle.yaml` - Semantic loop and runtime state lifecycle.",
+		"",
+	].join("\n");
 }
 
 function simpleDoc(title: string, body: string): string {
 	return `# ${title}\n\n${body}\n`;
 }
 
-function sourceMapYaml(boundaries: BootstrapBoundary[]): string {
+function starterSourceOwnershipMap(
+	boundaries: BootstrapBoundary[],
+): SourceMapContract {
 	const sourcePatterns = boundaries
 		.filter((boundary) => boundary.kind === "source")
 		.map((boundary) => boundary.path);
@@ -384,75 +454,85 @@ function sourceMapYaml(boundaries: BootstrapBoundary[]): string {
 	const docPatterns = boundaries
 		.filter((boundary) => boundary.kind === "docs")
 		.map((boundary) => boundary.path);
-	return [
-		"schema_version: 1",
-		"id: spec.system.source-map",
-		"title: CodeWiki Source Ownership Map",
-		"kind: source_map",
-		"purpose: Canonical machine-readable mapping between source ownership roots, KB docs, tests, generated views, and trace/event responsibilities.",
-		"source_docs:",
-		"  - .codewiki/kb/system/source-map.md",
-		"  - .codewiki/kb/system/loop-model.md",
-		"  - .codewiki/kb/system/overview.md",
-		"defaults:",
-		"  inheritance: true",
-		"  max_owner_depth: 2",
-		"  excluded:",
-		"    - node_modules/**",
-		"    - .git/**",
-		"    - .pi/**",
-		"    - dist/**",
-		"    - coverage/**",
-		"rules:",
-		"  - Source ownership is declared here; generated OKF extension fields derive from this map.",
-		"  - Every active source ownership root needs one owning doc and tests or an explicit no-test rationale.",
-		"components:",
-		"  package:",
-		"    doc: README.md",
-		"    source:",
-		"      - package.json",
-		"      - README.md",
-		"    tests:",
-		...(testPatterns.length > 0
-			? testPatterns.map((pattern) => `      - ${pattern}`)
-			: ["      - .codewiki/kb/system/source-map.yaml"]),
-		"    role: package_entrypoint",
-		"  knowledge:",
-		"    doc: .codewiki/kb/system/knowledge.md",
-		"    source:",
-		"      - .codewiki/kb/**",
-		"    tests:",
-		"      - .codewiki/kb/system/source-map.yaml",
-		"    role: hot_knowledge",
-		...(sourcePatterns.length > 0
-			? [
-					"  source:",
-					"    doc: .codewiki/kb/system/overview.md",
-					"    source:",
-					...sourcePatterns.map((pattern) => `      - ${pattern}`),
-					"    tests:",
-					...(testPatterns.length > 0
-						? testPatterns.map((pattern) => `      - ${pattern}`)
-						: [
-								"    test_policy: inherited",
-								"    test_rationale: No test root detected during bootstrap.",
-							]),
-					"    role: implementation_source",
-				]
-			: []),
-		...(docPatterns.length > 0
-			? [
-					"  repo_docs:",
-					"    doc: .codewiki/kb/product/overview.md",
-					"    source:",
-					...docPatterns.map((pattern) => `      - ${pattern}`),
-					"    test_policy: inherited",
-					"    test_rationale: Repository documentation is reviewed through knowledge and source ownership checks.",
-					"    role: repository_docs",
-				]
-			: []),
-		"",
-	].join("\n");
+	return {
+		id: "spec.system.source-ownership",
+		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
+		defaults: {
+			inheritance: true,
+			maxOwnerDepth: 2,
+			excluded: [
+				"node_modules/**",
+				".git/**",
+				".pi/**",
+				"dist/**",
+				"coverage/**",
+			],
+		},
+		components: [
+			{
+				id: "package",
+				doc: "README.md",
+				sourcePatterns: ["package.json", "README.md"],
+				testPatterns,
+				generatedViews: [],
+				traceEvents: [],
+				role: "package_entrypoint",
+				...(testPatterns.length === 0
+					? {
+							testPolicy: "inherited",
+							testRationale: "No test root detected during bootstrap.",
+						}
+					: {}),
+			},
+			{
+				id: "knowledge",
+				doc: ".codewiki/kb/system/components/knowledge.md",
+				sourcePatterns: [".codewiki/kb/**"],
+				testPatterns: [],
+				generatedViews: [],
+				traceEvents: [],
+				role: "hot_knowledge",
+				testPolicy: "inherited",
+				testRationale:
+					"Knowledge docs are validated through OKF/source ownership checks.",
+			},
+			...(sourcePatterns.length > 0
+				? [
+						{
+							id: "source",
+							doc: ".codewiki/kb/system/components/overview.md",
+							sourcePatterns,
+							testPatterns,
+							generatedViews: [],
+							traceEvents: [],
+							role: "implementation_source",
+							...(testPatterns.length === 0
+								? {
+										testPolicy: "inherited",
+										testRationale: "No test root detected during bootstrap.",
+									}
+								: {}),
+						},
+					]
+				: []),
+			...(docPatterns.length > 0
+				? [
+						{
+							id: "repo_docs",
+							doc: ".codewiki/kb/product/overview.md",
+							sourcePatterns: docPatterns,
+							testPatterns: [],
+							generatedViews: [],
+							traceEvents: [],
+							role: "repository_docs",
+							testPolicy: "inherited",
+							testRationale:
+								"Repository documentation is reviewed through knowledge and source ownership checks.",
+						},
+					]
+				: []),
+		],
+	};
 }
 
 async function bootstrapProjectName(

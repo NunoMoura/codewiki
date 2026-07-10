@@ -10,11 +10,11 @@ describe("trace-derived case forge", () => {
 			traceHead(),
 			decisionEvent({
 				status: "exit",
-				event: "rows_approved",
+				event: "changes_approved",
 				output: {
 					summary:
 						"Approve audit after checking /home/nuno/private/project/src/file.ts and preserving trace refs.",
-					approvedRows: [
+					approvedChanges: [
 						{
 							id: "D-1",
 							currentState: "Uses /tmp/secret-worktree/source.ts.",
@@ -118,7 +118,7 @@ function planningEvent({ sequence, event, status, conditions = [] }) {
 		sequence,
 		status,
 		output: {
-			decisionRefs: ["trace:TRACE-forge:decision:iteration:1#row:D-1"],
+			decisionRefs: ["trace:TRACE-forge:decision:iteration:1#change:D-1"],
 			workItems: [],
 			resolutions: [],
 			issueCodes: [],

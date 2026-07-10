@@ -21,10 +21,10 @@ function goal(overrides = {}) {
 		status: "needs_planning",
 		closable: false,
 		closed: false,
-		decisionRefs: ["trace:TRACE-life:decision:iteration:1#row:DTR-life"],
+		decisionRefs: ["trace:TRACE-life:decision:iteration:1#change:CHG-life"],
 		plannedDecisionRefs: [],
 		unresolvedDecisionRefs: [
-			"trace:TRACE-life:decision:iteration:1#row:DTR-life",
+			"trace:TRACE-life:decision:iteration:1#change:CHG-life",
 		],
 		deferredDecisionRefs: [],
 		workUnitRefs: [],
@@ -80,7 +80,7 @@ function status(overrides = {}) {
 		},
 		blockers: [],
 		qualityBlockers: [],
-		sourceRefs: ["trace:TRACE-life:decision:iteration:1#row:DTR-life"],
+		sourceRefs: ["trace:TRACE-life:decision:iteration:1#change:CHG-life"],
 		...overrides,
 	};
 }
@@ -109,7 +109,7 @@ function workItem(overrides = {}) {
 		traceId: "TRACE-life",
 		title: "Implement lifecycle",
 		traceRefs: ["trace:TRACE-life:planning:iteration:1#work:WU-life"],
-		decisionRefs: ["trace:TRACE-life:decision:iteration:1#row:DTR-life"],
+		decisionRefs: ["trace:TRACE-life:decision:iteration:1#change:CHG-life"],
 		planningRefs: ["trace:TRACE-life:planning:iteration:1#work:WU-life"],
 		componentRefs: ["runtime"],
 		pathScopes: ["src/runtime/lifecycle.ts"],
@@ -237,7 +237,7 @@ describe("runtime host lifecycle", () => {
 		assert.equal(event.data.actions[0].kind, "run_planning");
 		assert.deepEqual(event.refs, [
 			"TRACE-life",
-			"trace:TRACE-life:decision:iteration:1#row:DTR-life",
+			"trace:TRACE-life:decision:iteration:1#change:CHG-life",
 		]);
 	});
 

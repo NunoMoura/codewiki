@@ -4,12 +4,12 @@ title: CodeWiki Component and Container Map
 kind: component_map
 purpose: Show major CodeWiki domain, application, adapter, truth, runtime, view, and proof components with dependency direction.
 source_docs:
-  - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/loop-model.md
-  - .codewiki/kb/system/api-tools.md
-  - .codewiki/kb/system/source-map.md
-  - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/runtime.md
+  - .codewiki/kb/system/components/overview.md
+  - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/api-tools.md
+  - .codewiki/kb/system/components/source-map.md
+  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/runtime.md
 renderer:
   preferred: layered_graph
   fallback: mermaid_flowchart
@@ -35,57 +35,57 @@ nodes:
     label: CLI / Pi / MCP adapters
     group: surfaces
     kind: host_adapter
-    source: .codewiki/kb/system/api-tools.md
+    source: .codewiki/kb/system/components/api-tools.md
   - id: api
     label: CodeWiki core API
     group: api_layer
     kind: application
-    source: .codewiki/kb/system/api.md
+    source: .codewiki/kb/system/components/api.md
   - id: wiki_tools
     label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_archive / wiki_config
     group: api_layer
     kind: tool_surface
-    source: .codewiki/kb/system/api-tools.md
+    source: .codewiki/kb/system/components/api-tools.md
   - id: runtime
     label: Runtime outer loop
     group: runtime_layer
     kind: coordination
-    source: .codewiki/kb/system/runtime.md
+    source: .codewiki/kb/system/components/runtime.md
   - id: decision_loop
     label: Decision loop
     group: loop_layer
     kind: semantic_loop
-    source: .codewiki/kb/system/decision-loop.md
+    source: .codewiki/kb/system/components/decision-loop.md
   - id: planning_loop
     label: Planning loop
     group: loop_layer
     kind: semantic_loop
-    source: .codewiki/kb/system/planning-loop.md
+    source: .codewiki/kb/system/components/planning-loop.md
   - id: implementation_loop
     label: Implementation loop
     group: loop_layer
     kind: semantic_loop
-    source: .codewiki/kb/system/implementation-loop.md
+    source: .codewiki/kb/system/components/implementation-loop.md
   - id: knowledge
     label: Hot knowledge base
     group: truth_layer
     kind: durable_truth
-    source: .codewiki/kb/system/knowledge.md
+    source: .codewiki/kb/system/components/knowledge.md
   - id: traces
     label: JSONL trace truth
     group: truth_layer
     kind: durable_truth
-    source: .codewiki/kb/system/traces.md
+    source: .codewiki/kb/system/components/traces.md
   - id: views
     label: Generated views
     group: truth_layer
     kind: generated_projection
-    source: .codewiki/kb/system/source-map.md
+    source: .codewiki/kb/system/components/source-map.md
   - id: runtime_tmp
     label: Runtime temp scratch
     group: runtime_layer
     kind: transient_state
-    source: .codewiki/kb/system/runtime.md
+    source: .codewiki/kb/system/components/runtime.md
   - id: code_tests
     label: Source + tests
     group: proof_layer
@@ -98,7 +98,7 @@ nodes:
     label: Retention / archive / hydrate / restore
     group: proof_layer
     kind: retention_pipeline
-    source: .codewiki/kb/system/traces.md
+    source: .codewiki/kb/system/components/traces.md
 edges:
   - from: user_intent
     to: host_adapters

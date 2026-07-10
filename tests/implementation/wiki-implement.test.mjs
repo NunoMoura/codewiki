@@ -6,7 +6,7 @@ import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
 import { collectPiWorkerResults } from "../../src/pi/worker-results.ts";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/work-unit-claims.ts";
@@ -16,16 +16,16 @@ import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-implement") {
@@ -55,25 +55,25 @@ async function fixture() {
 }
 
 function planningEvents(traceId) {
-	const table = createDecisionTable({
+	const proposal = createSprintProposal({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		updatedAt: "2026-06-11T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-implement",
+				id: "CHG-implement",
 				currentState: "Implementation callers wire proof manually.",
 				desiredState: "wiki_implement prepares proof and appends safely.",
 				rationale: "Avoid partial or weak implementation trace writes.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/implementation-loop.md"],
+				sourceRefs: ["kb:system/components/implementation-loop.md"],
 			},
 		],
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		table,
+		proposal,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	});
 	const decisionRef = approvedDecisionRef(decision.traceEvents);
@@ -142,13 +142,13 @@ describe("wiki_implement core facade", () => {
 		const root = await fixture();
 		try {
 			const traceId = "TRACE-wiki-implement-direct";
-			const table = createDecisionTable({
+			const proposal = createSprintProposal({
 				id: `${traceId}-DT`,
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
-				rows: [
+				changes: [
 					{
-						id: "DTR-implement-direct",
+						id: "CHG-implement-direct",
 						currentState:
 							"Small implementation fixes currently require planning.",
 						desiredState:
@@ -171,13 +171,13 @@ describe("wiki_implement core facade", () => {
 								},
 							],
 						},
-						sourceRefs: ["kb:system/implementation-loop.md"],
+						sourceRefs: ["kb:system/components/implementation-loop.md"],
 					},
 				],
 			});
 			const decision = runDecisionIteration({
 				traceId,
-				table,
+				proposal,
 				createdAt: "2026-06-11T00:00:01.000Z",
 			});
 			const directRef = approvedDecisionRef(decision.traceEvents);
@@ -582,8 +582,8 @@ function assertQualityGraphIdentity(record, graphId) {
 	const checkpointGraph = record?.data?.qualityGraph;
 	const graph = outputGraph || exitGraph || checkpointGraph;
 	assert.equal(graph?.id, graphId);
-	assert.equal(graph?.version, "0.3.0.loop.8");
-	assert.equal(graph?.schemaVersion, 2);
+	assert.equal(graph?.version, "0.3.0.loop.9");
+	assert.equal(graph?.schemaVersion, 3);
 	assert.match(graph?.hash, /^sha256:/);
 	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
 }

@@ -11,11 +11,11 @@ import {
 	serializeOkfDocument,
 } from "../../src/knowledge/okf-frontmatter.ts";
 import { generateOkfSourceMapExtensions } from "../../src/knowledge/okf-source-map.ts";
+import { sourceOwnershipMapFromOkfBundle } from "../../src/knowledge/source-ownership.ts";
 import {
 	okfConceptDocuments,
 	validateOkfBundle,
 } from "../../src/knowledge/okf-validation.ts";
-import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
 
 function collectFiles(root) {
 	const output = [];
@@ -36,6 +36,12 @@ function readKbBundle() {
 		}));
 }
 
+function readFullPathKbBundle() {
+	return collectFiles(".codewiki/kb")
+		.filter((path) => path.endsWith(".md"))
+		.map((path) => ({ path, content: readFileSync(path, "utf8") }));
+}
+
 const validConcept = `---
 type: Playbook
 title: Incident response
@@ -49,7 +55,7 @@ codewiki_source_patterns:
 ---
 # Steps
 
-See [runtime](./runtime.md) and [traces](/system/traces.md).
+See [runtime](./runtime.md) and [traces](/system/components/traces.md).
 `;
 
 describe("Open Knowledge Format v0.1", () => {
@@ -63,7 +69,7 @@ describe("Open Knowledge Format v0.1", () => {
 		assert.match(document.body, /^# Steps/);
 		assert.deepEqual(
 			extractOkfMarkdownLinks(document.body).map((link) => link.target),
-			["./runtime.md", "/system/traces.md"],
+			["./runtime.md", "/system/components/traces.md"],
 		);
 		assert.equal(okfConceptId("index.md"), undefined);
 		assert.equal(okfDocumentKind("product/index.md"), "index");
@@ -84,16 +90,17 @@ describe("Open Knowledge Format v0.1", () => {
 	it("validates the active CodeWiki KB as OKF concepts", () => {
 		const bundle = readKbBundle();
 		const result = validateOkfBundle(bundle);
-		const sourceMap = parseSourceMapYaml(
-			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
-		);
+		const sourceMap = sourceOwnershipMapFromOkfBundle(readFullPathKbBundle());
 		const documentsByPath = new Map(
-			result.documents.map((document) => [`.codewiki/kb/${document.path}`, document]),
+			result.documents.map((document) => [
+				`.codewiki/kb/${document.path}`,
+				document,
+			]),
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 43);
-		assert.equal(result.reservedCount, 4);
+		assert.equal(result.conceptCount, 42);
+		assert.equal(result.reservedCount, 10);
 		for (const extension of generateOkfSourceMapExtensions(sourceMap).filter(
 			(candidate) => candidate.path.startsWith(".codewiki/kb/"),
 		)) {

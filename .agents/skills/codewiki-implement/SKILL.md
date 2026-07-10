@@ -10,7 +10,7 @@ Use this skill when executing a Planning Task or direct implementation Decision 
 ## Ground rules
 
 - Start from `wiki_state` for current trace-backed context.
-- Implementation consumes `planning.work_units_created` output or direct implementation `decision.rows_approved` rows.
+- Implementation consumes `planning.work_units_created` output or direct implementation `decision.changes_approved` changes.
 - User-facing guidance should call those claimable planning outputs Tasks; keep work-unit refs only for trace ids and runtime internals.
 - Implementation owns source/docs/tests changes, checks, acceptance evidence, and content proof.
 - Edit only files required by the selected work unit and acceptance criteria.

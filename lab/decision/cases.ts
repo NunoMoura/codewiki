@@ -1,7 +1,7 @@
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import type {
-	DecisionRowInput,
-	DecisionTable,
+	ProposedChangeInput,
+	SprintProposal,
 } from "../../src/decision/types.ts";
 import type { LabCase } from "../runner/types.ts";
 import type { DecisionLabInput } from "./loop.ts";
@@ -15,7 +15,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt:
 				"Improve loop exit standards with deterministic adversarial coverage.",
-			decisionTable: decisionTable(decisionRow()),
+			sprintProposal: sprintProposal(proposedChange()),
 		},
 		expected: "pass",
 		weight: 10,
@@ -27,8 +27,8 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			"Presence-only decision content uses short generic text while satisfying current fields.",
 		input: {
 			prompt: "Improve docs.",
-			decisionTable: decisionTable(
-				decisionRow({
+			sprintProposal: sprintProposal(
+				proposedChange({
 					id: "D-vague",
 					decisionKind: "docs",
 					currentState: "ok",
@@ -71,8 +71,8 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			"High-risk approved decision without explicit user approval blocks before planning.",
 		input: {
 			prompt: "Approve high-risk runtime and API change.",
-			decisionTable: decisionTable(
-				decisionRow({
+			sprintProposal: sprintProposal(
+				proposedChange({
 					id: "D-risk",
 					risk: "high",
 					affectedLayers: ["api", "runtime"],
@@ -106,8 +106,8 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			"High-risk hardening decision exits when scope, alternatives, proof, and explicit user authority are present.",
 		input: {
 			prompt: "Approve supervised high-risk package boundary hardening.",
-			decisionTable: decisionTable(
-				decisionRow({
+			sprintProposal: sprintProposal(
+				proposedChange({
 					id: "D-risk-approved",
 					decisionKind: "harden",
 					risk: "high",
@@ -142,8 +142,8 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			"Migration decision without rollback plan fails because planning cannot safely execute it.",
 		input: {
 			prompt: "Migrate trace state layout without rollback guidance.",
-			decisionTable: decisionTable(
-				decisionRow({
+			sprintProposal: sprintProposal(
+				proposedChange({
 					id: "D-migrate",
 					decisionKind: "migrate",
 					sourceBehavior:
@@ -174,15 +174,15 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 	},
 ];
 
-function decisionTable(row: DecisionRowInput): DecisionTable {
-	return createDecisionTable({
-		id: "DT-lab",
+function sprintProposal(change: ProposedChangeInput): SprintProposal {
+	return createSprintProposal({
+		id: "SP-lab",
 		sourceRefs: ["kb:system/decision-loop.md"],
-		rows: [row],
+		changes: [change],
 	});
 }
 
-function decisionRow(overrides: DecisionRowInput = {}): DecisionRowInput {
+function proposedChange(overrides: ProposedChangeInput = {}): ProposedChangeInput {
 	return {
 		id: "D-good",
 		question: "Should loop exit standards become measurable?",

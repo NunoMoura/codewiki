@@ -13,18 +13,18 @@ import {
 	projectLocalInstallWarning,
 } from "../install-scope.ts";
 import { resolveCodewikiExtensionIdentity } from "../identity.ts";
+import {
+	buildCodewikiDashboardUrlMessage,
+	startCodewikiDashboardServer,
+} from "../../dashboard/index.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
-	renderCodewikiStateFooterStatus,
 	renderConfigCommand,
 	renderExplainCommand,
 	renderResumeCommand,
-	renderStateCommand,
-	setCodewikiFooterStatus,
 	type CommandRenderOptions,
 } from "../tui/index.ts";
-import type { WikiStateSnapshot } from "../../api/state.ts";
 import type {
 	CodewikiCommandDefinition,
 	CodewikiExtensionApi,
@@ -59,7 +59,7 @@ async function dispatchWikiCommand(
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
-	if (subcommand === "state") return await stateCommand(args, ctx, pi);
+	if (subcommand === "dashboard") return await dashboardCommand(args, ctx, pi);
 	if (subcommand === "resume") return await resumeCommand(args, ctx, pi);
 	if (subcommand === "explain") return await explainCommand(args, ctx, pi);
 	if (subcommand === "config") return await configCommand(args, ctx, pi);
@@ -67,48 +67,60 @@ async function dispatchWikiCommand(
 	throw new Error(`Unknown CodeWiki command: ${subcommand}`);
 }
 
-type StateView = "summary" | "board" | "quality" | "blockers" | "all";
-
-interface StateCommandOptions {
-	view: StateView;
+interface DashboardCommandOptions {
 	json: boolean;
-	traceId?: string;
+	open?: boolean;
 }
 
-async function stateCommand(
+interface DashboardCommandResult {
+	command: "dashboard";
+	json: boolean;
+	url: string;
+	opened: boolean;
+	rendered: string[];
+}
+
+async function dashboardCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
-	const options = parseStateOptions(args);
-	const root = await requireCodewikiRoot(ctx);
-	notifyInstallWarning(ctx, root);
-	const snapshot = await buildProjectWikiState({
-		repoRoot: root,
-		traceId: options.traceId,
-	});
-	const data = stateViewData(snapshot, options.view);
-	const renderOptions = commandRenderOptions(ctx, root);
-	const rendered = renderStateCommand(snapshot, options.view, renderOptions);
+	const options = parseDashboardOptions(args);
+	const result = await startDashboard(ctx, options);
 	emitCommandOutput(
 		pi,
 		ctx,
 		options.json
-			? `CodeWiki state ${options.view}: JSON returned.`
-			: rendered.join("\n"),
-		rendered,
+			? "CodeWiki dashboard: JSON returned."
+			: result.rendered.join("\n"),
+		result.rendered,
 	);
-	setCodewikiFooterStatus(
-		ctx,
-		stateFooterStatus(snapshot, renderOptions.extensionIdentity),
-	);
+	return result;
+}
+
+async function startDashboard(
+	ctx: CodewikiExtensionContext,
+	options: DashboardCommandOptions,
+): Promise<DashboardCommandResult> {
+	const root = await requireCodewikiRoot(ctx);
+	notifyInstallWarning(ctx, root);
+	const open = options.open ?? (!options.json && ctx.mode === "tui");
+	const dashboard = await startCodewikiDashboardServer({
+		repoRoot: root,
+		open,
+		persistent: true,
+	});
 	return {
-		command: "state",
-		view: options.view,
+		command: "dashboard",
 		json: options.json,
-		data,
-		rendered,
+		url: dashboard.url,
+		opened: dashboard.opened,
+		rendered: renderDashboardMessage(dashboard.url),
 	};
+}
+
+function renderDashboardMessage(url: string): string[] {
+	return [buildCodewikiDashboardUrlMessage(url)];
 }
 
 async function resumeCommand(
@@ -224,35 +236,22 @@ async function bootstrapCommand(
 	return { command: "bootstrap", json: options.json, data: result, rendered };
 }
 
-function parseStateOptions(args: string[]): StateCommandOptions {
-	const options: StateCommandOptions = { view: "summary", json: false };
-	for (let index = 0; index < args.length; index++) {
-		const arg = args[index];
+function parseDashboardOptions(args: string[]): DashboardCommandOptions {
+	const options: DashboardCommandOptions = { json: false };
+	for (const arg of args) {
 		if (arg === "--json") {
 			options.json = true;
 			continue;
 		}
-		if (arg === "--board") {
-			options.view = "board";
+		if (arg === "--no-open") {
+			options.open = false;
 			continue;
 		}
-		if (arg === "--quality") {
-			options.view = "quality";
+		if (arg === "--open") {
+			options.open = true;
 			continue;
 		}
-		if (arg === "--blockers") {
-			options.view = "blockers";
-			continue;
-		}
-		if (arg === "--all") {
-			options.view = "all";
-			continue;
-		}
-		if (arg === "--trace") {
-			options.traceId = requiredFlagValue("state", arg, args[++index]);
-			continue;
-		}
-		throw new Error(`Unsupported /wiki-state option: ${arg}`);
+		throw new Error(`Unsupported /wiki-dashboard option: ${arg}`);
 	}
 	return options;
 }
@@ -302,32 +301,6 @@ function parseExplainOptions(args: string[]): {
 	return { json, ...(target.length ? { target: target.join(" ") } : {}) };
 }
 
-function stateViewData(snapshot: WikiStateSnapshot, view: StateView): unknown {
-	if (view === "summary") {
-		return {
-			traceIds: snapshot.traceIds,
-			status: snapshot.status,
-			resume: snapshot.resume,
-			workQueueSummary: snapshot.workQueue.summary,
-			next: snapshot.next,
-			append: snapshot.append,
-		};
-	}
-	if (view === "board") {
-		return {
-			traceQueue: snapshot.traceQueue,
-			workPlan: snapshot.workPlan,
-			workQueue: snapshot.workQueue,
-			runtimeBoard: snapshot.runtimeBoard,
-			next: snapshot.next,
-			append: snapshot.append,
-		};
-	}
-	if (view === "quality") return snapshot.quality;
-	if (view === "blockers") return snapshot.blockers;
-	return snapshot;
-}
-
 async function requireCodewikiRoot(
 	ctx: CodewikiExtensionContext,
 ): Promise<string> {
@@ -338,16 +311,6 @@ async function requireCodewikiRoot(
 		);
 	}
 	return root;
-}
-
-function stateFooterStatus(
-	snapshot: WikiStateSnapshot,
-	identity: CommandRenderOptions["extensionIdentity"],
-): string {
-	const status = renderCodewikiStateFooterStatus(snapshot);
-	return identity
-		? status.replace(/^CodeWiki:/, `CodeWiki ${identity.footerLabel}:`)
-		: status;
 }
 
 function emitCommandOutput(

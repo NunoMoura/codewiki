@@ -188,6 +188,11 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 export function runWikiConfig(
 	input: RunWikiConfigInput = {},
 ): RunWikiConfigResult {
+	assertKnownKeys(input, "wiki_config", ["current", "patch"]);
+	if (input.current !== undefined)
+		validatePartialWikiConfigKeys(input.current, "wiki_config.current");
+	if (input.patch !== undefined)
+		validatePartialWikiConfigKeys(input.patch, "wiki_config.patch");
 	const current = resolveWikiConfig(input.current);
 	const config = resolveWikiConfig(mergeWikiConfigPatch(current, input.patch));
 	return {
@@ -197,6 +202,7 @@ export function runWikiConfig(
 }
 
 export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
+	validatePartialWikiConfigKeys(input, "wiki_config");
 	const config: WikiConfig = {
 		project: text(input.project) || DEFAULT_WIKI_CONFIG.project,
 		runtime: {
@@ -595,6 +601,147 @@ function assertOptionalPositiveInteger(value: unknown, path: string): void {
 			path,
 			message: `wiki_config ${path} must be >= 1 when set.`,
 			value,
+		});
+	}
+}
+
+function validatePartialWikiConfigKeys(value: unknown, path: string): void {
+	const config = assertConfigObject(value, path);
+	assertKnownKeys(config, path, [
+		"project",
+		"runtime",
+		"retention",
+		"hosts",
+		"quality",
+	]);
+	const runtime = optionalConfigObject(config.runtime, `${path}.runtime`);
+	if (runtime) {
+		assertKnownKeys(runtime, `${path}.runtime`, [
+			"maxWorkers",
+			"worktreeIsolation",
+			"worktreeSetupCommands",
+			"automation",
+			"agency",
+			"budgets",
+			"approval",
+			"stopConditions",
+		]);
+		const budgets = optionalConfigObject(
+			runtime.budgets,
+			`${path}.runtime.budgets`,
+		);
+		if (budgets) {
+			assertKnownKeys(budgets, `${path}.runtime.budgets`, [
+				"maxSeconds",
+				"maxIterations",
+				"maxChangedFiles",
+				"maxTraceBytes",
+			]);
+		}
+		const approval = optionalConfigObject(
+			runtime.approval,
+			`${path}.runtime.approval`,
+		);
+		if (approval) {
+			assertKnownKeys(approval, `${path}.runtime.approval`, [
+				"cadence",
+				"destructiveAction",
+				"riskEscalation",
+				"requireExpectedBytes",
+			]);
+		}
+	}
+	const retention = optionalConfigObject(config.retention, `${path}.retention`);
+	if (retention) {
+		assertKnownKeys(retention, `${path}.retention`, [
+			"enabled",
+			"archiveRefPrefix",
+			"hotTraceLimit",
+			"requireCloseRecord",
+			"hydrateOnDemand",
+		]);
+	}
+	const hosts = optionalConfigObject(config.hosts, `${path}.hosts`);
+	if (hosts) {
+		assertKnownKeys(hosts, `${path}.hosts`, ["pi", "mcp"]);
+		for (const host of ["pi", "mcp"] as const) {
+			const hostConfig = optionalConfigObject(
+				hosts[host],
+				`${path}.hosts.${host}`,
+			);
+			if (hostConfig)
+				assertKnownKeys(hostConfig, `${path}.hosts.${host}`, ["enabled"]);
+		}
+	}
+	const quality = optionalConfigObject(config.quality, `${path}.quality`);
+	if (quality) {
+		assertKnownKeys(quality, `${path}.quality`, ["judge", "review"]);
+		const judge = optionalConfigObject(quality.judge, `${path}.quality.judge`);
+		if (judge) {
+			assertKnownKeys(judge, `${path}.quality.judge`, [
+				"enabled",
+				"provider",
+				"endpoint",
+				"promptVersion",
+				"timeoutMs",
+			]);
+		}
+		const review = optionalConfigObject(
+			quality.review,
+			`${path}.quality.review`,
+		);
+		if (review) {
+			assertKnownKeys(review, `${path}.quality.review`, [
+				"enabled",
+				"autoEvidence",
+				"includeCachedEvidence",
+				"timeoutMs",
+				"fastTimeoutMs",
+				"maxCachedEvidenceAgeMs",
+				"enabledPacks",
+				"disabledPacks",
+				"requiredPacks",
+			]);
+		}
+	}
+}
+
+function optionalConfigObject(
+	value: unknown,
+	path: string,
+): Record<string, unknown> | undefined {
+	return value === undefined ? undefined : assertConfigObject(value, path);
+}
+
+function assertConfigObject(
+	value: unknown,
+	path: string,
+): Record<string, unknown> {
+	if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+		return value as Record<string, unknown>;
+	}
+	throw createCodewikiConfigError({
+		path,
+		code: "invalid_type",
+		message: `${path} must be an object.`,
+		value,
+	});
+}
+
+function assertKnownKeys(
+	value: unknown,
+	path: string,
+	allowed: readonly string[],
+): void {
+	const record = assertConfigObject(value, path);
+	for (const key of Object.keys(record)) {
+		if (allowed.includes(key)) continue;
+		const keyPath = `${path}.${key}`;
+		throw createCodewikiConfigError({
+			path: keyPath,
+			code: "unknown_key",
+			message: `${keyPath} is an unknown config key.`,
+			value: record[key],
 		});
 	}
 }

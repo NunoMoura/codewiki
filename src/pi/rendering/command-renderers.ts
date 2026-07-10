@@ -1,24 +1,11 @@
-import type { WikiStateSnapshot } from "../../api/state.ts";
+import { truncateToWidth, visibleWidth } from "./width.ts";
 import type { BootstrapResult } from "../../project/bootstrap.ts";
 import { CODEWIKI_DIRECT_COMMANDS } from "../command-catalog.ts";
 import type { CodewikiExtensionIdentity } from "../identity.ts";
 import type { ProjectExplainView } from "../../project/explain.ts";
 import type { WikiConfigFileResult } from "../../project/config-file.ts";
 import type { RunWikiConfigResult } from "../../project/config.ts";
-import type {
-	BlockersView,
-	QualityView,
-	ResumeView,
-	TraceQueueCard,
-	WorkQueueItem,
-} from "../../views/types.ts";
-
-export type WikiStateCommandView =
-	| "summary"
-	| "board"
-	| "quality"
-	| "blockers"
-	| "all";
+import type { ResumeView } from "../../views/types.ts";
 
 export interface CommandRenderOptions {
 	width?: number;
@@ -26,29 +13,6 @@ export interface CommandRenderOptions {
 	minColumnWidth?: number;
 	extensionIdentity?: CodewikiExtensionIdentity;
 }
-
-export function renderStateCommand(
-	snapshot: WikiStateSnapshot,
-	view: WikiStateCommandView,
-	options: CommandRenderOptions = {},
-): string[] {
-	if (view === "board") return renderBoard(traceQueueCards(snapshot), options);
-	if (view === "quality") return renderQuality(snapshot.quality, options);
-	if (view === "blockers") return renderBlockers(snapshot.blockers, options);
-	if (view === "all") {
-		return [
-			...renderStateSummary(snapshot, options),
-			"",
-			...renderBoard(traceQueueCards(snapshot), options),
-			"",
-			...renderQuality(snapshot.quality, options),
-			"",
-			...renderBlockers(snapshot.blockers, options),
-		];
-	}
-	return renderStateSummary(snapshot, options);
-}
-
 export function renderResumeCommand(
 	resume: ResumeView | undefined,
 	options: CommandRenderOptions = {},
@@ -93,9 +57,9 @@ export function renderExplainCommand(
 ): string[] {
 	const width = renderWidth(options);
 	return [
-		truncate(`CodeWiki Explain — ${view.title}`, width),
+		truncateToWidth(`CodeWiki Explain — ${view.title}`, width),
 		"",
-		truncate(view.summary || "No summary available.", width),
+		truncateToWidth(view.summary || "No summary available.", width),
 		...view.sections.flatMap((item) =>
 			section(item.title, item.items, options),
 		),
@@ -229,166 +193,6 @@ function pathTableSection(
 	return ["", title, "", ...tableLines(headers, rows, options)];
 }
 
-function renderStateSummary(
-	snapshot: WikiStateSnapshot,
-	options: CommandRenderOptions,
-): string[] {
-	const queue = snapshot.workQueue.summary;
-	return [
-		"CodeWiki State",
-		"",
-		...tableLines(
-			["Traces", "Ready", "Blocked", "Done"],
-			[
-				[
-					String(snapshot.traceIds.length),
-					String(queue.ready),
-					String(queue.blocked),
-					String(queue.done),
-				],
-			],
-			options,
-		),
-		...section("Next", [snapshot.next.reason], options),
-	];
-}
-
-function traceQueueCards(snapshot: WikiStateSnapshot): TraceQueueCard[] {
-	return (
-		snapshot.traceQueue?.cards ||
-		workQueueItemsAsTraceCards(snapshot.workQueue.items)
-	);
-}
-
-function workQueueItemsAsTraceCards(items: WorkQueueItem[]): TraceQueueCard[] {
-	return items.map((item) => ({
-		traceId: item.traceId || item.id,
-		title: item.title,
-		status: item.status === "done" ? "finished" : "needs_implementation",
-		closed: false,
-		decisionRefs: item.decisionRefs || [],
-		rowCount: (item.decisionRefs || []).length,
-		plannedDecisionRefs: item.decisionRefs || [],
-		unresolvedDecisionRefs: [],
-		workUnitRefs: item.planningRefs || [],
-		pathScopes: item.pathScopes || [],
-		blockers: item.blockers || [],
-		nextLoop: "implementation",
-		items: [
-			{
-				id: item.id,
-				kind: item.kind || "work-unit",
-				status: item.status,
-				title: item.title,
-				decisionRefs: item.decisionRefs || [],
-				planningRefs: item.planningRefs || [],
-				pathScopes: item.pathScopes || [],
-				blockers: item.blockers || [],
-			},
-		],
-	}));
-}
-
-function renderBoard(
-	cards: TraceQueueCard[],
-	options: CommandRenderOptions,
-): string[] {
-	const todo = cards
-		.filter((card) =>
-			[
-				"needs_decision",
-				"needs_planning",
-				"needs_implementation",
-				"blocked",
-				"deferred",
-			].includes(card.status),
-		)
-		.map(traceCardLabel);
-	const doing = cards
-		.filter((card) => card.items.some((item) => item.status === "claimed"))
-		.map(traceCardLabel);
-	const done = cards
-		.filter((card) => card.status === "finished" || card.closed)
-		.map(traceCardLabel);
-	return [
-		truncate("CodeWiki Sprint Queue", renderWidth(options)),
-		"",
-		...boardTable({ todo, doing, done }, options),
-	];
-}
-
-function renderQuality(
-	quality: QualityView | undefined,
-	options: CommandRenderOptions,
-): string[] {
-	if (!quality) {
-		return [
-			"CodeWiki Quality",
-			"",
-			"Select a trace with --trace to render loop quality.",
-		];
-	}
-	return [
-		"CodeWiki Quality",
-		"",
-		...tableLines(
-			["Loop", "Met", "Unmet", "Blocked"],
-			(["decision", "planning", "implementation"] as const).map((loop) => [
-				loop,
-				String(quality.summary[loop].met),
-				String(quality.summary[loop].unmet + quality.summary[loop].missing),
-				String(quality.summary[loop].blocked),
-			]),
-			options,
-		),
-		...section(
-			"Blockers",
-			quality.blockers.length ? quality.blockers : ["none"],
-			options,
-		),
-	];
-}
-
-function renderBlockers(
-	blockers: BlockersView | undefined,
-	options: CommandRenderOptions,
-): string[] {
-	const items = blockers?.blockers || [];
-	return [
-		"CodeWiki Blockers",
-		"",
-		...tableLines(
-			["Kind", "Owner", "Message"],
-			items.length
-				? items.map((item) => [item.kind, item.ownerRef, item.message])
-				: [["—", "—", "none"]],
-			options,
-		),
-	];
-}
-
-function boardTable(
-	columns: {
-		todo: string[];
-		doing: string[];
-		done: string[];
-	},
-	options: CommandRenderOptions,
-): string[] {
-	const height = Math.max(
-		1,
-		columns.todo.length,
-		columns.doing.length,
-		columns.done.length,
-	);
-	const rows = Array.from({ length: height }, (_, index) => [
-		columns.todo[index] || "",
-		columns.doing[index] || "",
-		columns.done[index] || "",
-	]);
-	return tableLines(["Ready", "Working", "Done"], rows, options);
-}
-
 function tableLines(
 	headers: string[],
 	rows: string[][],
@@ -403,8 +207,8 @@ function tableLines(
 			Math.min(
 				maxColumnWidth,
 				Math.max(
-					visibleLength(header),
-					...safeRows.map((row) => visibleLength(row[index] || "")),
+					visibleWidth(header),
+					...safeRows.map((row) => visibleWidth(row[index] || "")),
 				),
 			),
 		),
@@ -427,38 +231,9 @@ function section(
 	const width = renderWidth(options);
 	return [
 		"",
-		truncate(title, width),
-		...items.map((item) => truncate(`• ${item}`, width)),
+		truncateToWidth(title, width),
+		...items.map((item) => truncateToWidth(`• ${item}`, width)),
 	];
-}
-
-function traceCardLabel(card: TraceQueueCard): string {
-	const parts = [
-		card.traceId,
-		cardStatusLabel(card),
-		`decisions:${card.rowCount}`,
-		`tasks:${card.items.length}`,
-		card.nextLoop ? `next:${card.nextLoop}` : "",
-		card.unresolvedDecisionRefs.length
-			? `needs-review:${card.unresolvedDecisionRefs.length}`
-			: "",
-		card.blockers.length ? `blocked:${card.blockers.length}` : "",
-		card.title,
-	];
-	return parts.filter(Boolean).join(" ").trim();
-}
-
-function cardStatusLabel(card: TraceQueueCard): string {
-	if (card.closed) return "Done";
-	if (card.status === "needs_decision") return "Needs Review";
-	if (card.status === "needs_planning") return "Ready for Planning";
-	if (card.status === "needs_implementation") return "Ready for Implementation";
-	if (card.status === "blocked") return "Blocked";
-	if (card.status === "deferred") return "Deferred";
-	if (card.status === "finished") return "Done";
-	if (card.status === "closed_complete") return "Done";
-	if (card.status === "closed_incomplete") return "Needs Review";
-	return card.status;
 }
 
 function border(left: string, join: string, right: string, widths: number[]) {
@@ -472,8 +247,8 @@ function rowLine(row: string[], widths: number[]): string {
 }
 
 function padCell(value: string, width: number): string {
-	const text = truncate(value, width);
-	return text + " ".repeat(Math.max(0, width - visibleLength(text)));
+	const text = truncateToWidth(value, width);
+	return text + " ".repeat(Math.max(0, width - visibleWidth(text)));
 }
 
 function fitColumnWidths(
@@ -516,69 +291,4 @@ function renderWidth(options: CommandRenderOptions): number | undefined {
 
 function sum(values: number[]): number {
 	return values.reduce((total, value) => total + value, 0);
-}
-
-function truncate(value: string, width: number | undefined): string {
-	if (width === undefined) return value;
-	if (width < 1) return "";
-	if (visibleLength(value) <= width) return value;
-	const targetWidth = Math.max(0, width - 1);
-	let used = 0;
-	let output = "";
-	for (const character of Array.from(value)) {
-		const width = characterWidth(character);
-		if (used + width > targetWidth) break;
-		output += character;
-		used += width;
-	}
-	return `${output}…`;
-}
-
-function visibleLength(value: string): number {
-	return Array.from(stripAnsi(value)).reduce(
-		(total, character) => total + characterWidth(character),
-		0,
-	);
-}
-
-function stripAnsi(value: string): string {
-	return value.replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, "");
-}
-
-function characterWidth(character: string): number {
-	const code = character.codePointAt(0) ?? 0;
-	if (code === 0) return 0;
-	if (code < 32 || (code >= 0x7f && code < 0xa0)) return 0;
-	if (isCombiningMark(code)) return 0;
-	if (isWideCodePoint(code)) return 2;
-	return 1;
-}
-
-function isCombiningMark(code: number): boolean {
-	return (
-		(code >= 0x0300 && code <= 0x036f) ||
-		(code >= 0x1ab0 && code <= 0x1aff) ||
-		(code >= 0x1dc0 && code <= 0x1dff) ||
-		(code >= 0x20d0 && code <= 0x20ff) ||
-		(code >= 0xfe00 && code <= 0xfe0f) ||
-		(code >= 0xfe20 && code <= 0xfe2f)
-	);
-}
-
-function isWideCodePoint(code: number): boolean {
-	return (
-		(code >= 0x1100 && code <= 0x115f) ||
-		code === 0x2329 ||
-		code === 0x232a ||
-		(code >= 0x2e80 && code <= 0xa4cf && code !== 0x303f) ||
-		(code >= 0xac00 && code <= 0xd7a3) ||
-		(code >= 0xf900 && code <= 0xfaff) ||
-		(code >= 0xfe10 && code <= 0xfe19) ||
-		(code >= 0xfe30 && code <= 0xfe6f) ||
-		(code >= 0xff00 && code <= 0xff60) ||
-		(code >= 0xffe0 && code <= 0xffe6) ||
-		(code >= 0x1f300 && code <= 0x1f64f) ||
-		(code >= 0x1f900 && code <= 0x1f9ff) ||
-		(code >= 0x20000 && code <= 0x3fffd)
-	);
 }

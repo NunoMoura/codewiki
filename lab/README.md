@@ -182,7 +182,7 @@ not prove that trace facts survive across the whole pipeline.
 Carryover Efficiency. PCE uses production-shaped trace events to check that:
 
 - decision facts appear in planning work;
-- planning work references decision rows;
+- planning work references proposed changes;
 - implementation evidence preserves expected facts;
 - implementation evidence references planning work;
 - implementation evidence covers planning acceptance criteria.

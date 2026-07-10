@@ -109,3 +109,59 @@ test("turns standard runner timeout into a blocking diagnostic", async () => {
 	assert.equal(report.status, "block");
 	assert.match(report.diagnostics[0].message, /timed out/);
 });
+
+test("attributes each skipped node to its own failed dependency", async () => {
+	const report = await runLoopGraph({
+		graphId: "test.loop",
+		graphVersion: "test",
+		context: {},
+		failFastHardGates: false,
+		nodes: [
+			node("hard-a", () => ({ status: "fail" }), { gate: "hard" }),
+			node("hard-b", () => ({ status: "fail" }), { gate: "hard" }),
+			node("dependent-a", () => ({ status: "pass" }), {
+				dependsOn: ["hard-a"],
+			}),
+			node("dependent-b", () => ({ status: "pass" }), {
+				dependsOn: ["hard-b"],
+			}),
+		],
+	});
+
+	assert.equal(
+		report.nodes.find((item) => item.id === "dependent-a").skippedBy,
+		"hard-a",
+	);
+	assert.equal(
+		report.nodes.find((item) => item.id === "dependent-b").skippedBy,
+		"hard-b",
+	);
+});
+
+test("clears a node timeout after the node settles", async () => {
+	const originalSetTimeout = globalThis.setTimeout;
+	const originalClearTimeout = globalThis.clearTimeout;
+	const timeoutHandle = { unref() {} };
+	let cleared = false;
+	globalThis.setTimeout = () => timeoutHandle;
+	globalThis.clearTimeout = (handle) => {
+		if (handle === timeoutHandle) cleared = true;
+	};
+	try {
+		await runLoopGraph({
+			graphId: "test.loop",
+			graphVersion: "test",
+			context: {},
+			nodes: [
+				node("timed-standard", () => ({ status: "pass" }), {
+					timeoutMs: 1_000,
+				}),
+			],
+		});
+	} finally {
+		globalThis.setTimeout = originalSetTimeout;
+		globalThis.clearTimeout = originalClearTimeout;
+	}
+
+	assert.equal(cleared, true);
+});

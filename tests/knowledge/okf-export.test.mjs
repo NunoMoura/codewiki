@@ -34,12 +34,12 @@ describe("OKF export compatibility API", () => {
 		assert.equal(validation.okfVersion, "0.1");
 		assert.equal(validation.scope, "codewiki-kb");
 		assert.deepEqual(validation.validation.issues, []);
-		assert.equal(validation.validation.conceptCount, 43);
-		assert.equal(validation.validation.reservedCount, 4);
+		assert.equal(validation.validation.conceptCount, 42);
+		assert.equal(validation.validation.reservedCount, 10);
 		assert.equal(exported.action, "export");
 		assert.equal(exported.okfVersion, "0.1");
 		assert.deepEqual(exported.validation.issues, []);
-		assert.equal(exported.files.length, 47);
+		assert.equal(exported.files.length, 52);
 		assert.equal(
 			exported.files.some((file) => file.path === "index.md"),
 			true,

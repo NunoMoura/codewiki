@@ -8,7 +8,7 @@ import {
 	buildLoopQualityJudgePrompt,
 } from "../../src/loops/judge-prompts.ts";
 import { resolveLoopQualityJudgeProviderConfig } from "../../src/loops/judge-provider.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 const ENV_KEYS = [
 	"CODEWIKI_LOOP_QUALITY_JUDGE_URL",
@@ -28,14 +28,14 @@ afterEach(() => {
 	}
 });
 
-function tableInput() {
+function proposalInput() {
 	return {
 		id: "DT-judge-provider",
 		createdAt: "2026-06-25T00:00:01.000Z",
 		updatedAt: "2026-06-25T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-judge-provider",
+				id: "CHG-judge-provider",
 				currentState: "Decision loop judge provider is not configured.",
 				desiredState:
 					"Decision loop judge provider can independently review agent assessment.",
@@ -43,7 +43,7 @@ function tableInput() {
 					"Independent review reduces false-pass risk without requiring a model by default.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/loop-contracts.md"],
+				sourceRefs: ["kb:system/components/loop-contracts.md"],
 			},
 		],
 	};
@@ -155,11 +155,11 @@ describe("loop quality judge provider", () => {
 					traceId: "TRACE-judge-provider",
 					nextSequence: 1,
 					createdAt: "2026-06-25T00:00:01.000Z",
-					tableInput: tableInput(),
+					proposalInput: proposalInput(),
 				});
 
 				assert.equal(calls.length, 1);
-				assert.match(calls[0].prompt.user, /DTR-judge-provider/);
+				assert.match(calls[0].prompt.user, /CHG-judge-provider/);
 				assert.deepEqual(
 					calls[0].requests.map((request) => request.standardId),
 					[

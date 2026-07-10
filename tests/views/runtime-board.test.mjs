@@ -11,7 +11,7 @@ function workItem(id, status, overrides = {}) {
 		traceId: overrides.traceId || "TRACE-runtime-board",
 		title: overrides.title || id,
 		traceRefs: overrides.traceRefs || [`trace:${id}`],
-		decisionRefs: overrides.decisionRefs || ["trace:decision#row:DTR-board"],
+		decisionRefs: overrides.decisionRefs || ["trace:decision#change:CHG-board"],
 		planningRefs: overrides.planningRefs || [`trace:planning#work:${id}`],
 		componentRefs: overrides.componentRefs || ["runtime"],
 		pathScopes: overrides.pathScopes || [`src/${id}.ts`],
@@ -127,7 +127,7 @@ function triggers() {
 					runKeyTemplate: "board:${date}",
 					owner: "implementation",
 					trigger: "cron:0 9 * * 1",
-					refs: ["kb:system/runtime.md"],
+					refs: ["kb:system/components/runtime.md"],
 				},
 				enabledBy: ["trace:implementation#change:IC-board"],
 				due: {

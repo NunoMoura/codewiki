@@ -70,7 +70,7 @@ function decisionQueueItems(
 	blockers: BlockerView[],
 ): WorkQueueItem[] {
 	const planningCoverage = plannedDecisionRefs(records);
-	return approvedDecisionRows(records).flatMap((decision) => {
+	return approvedChanges(records).flatMap((decision) => {
 		const itemBlockers = blockersForRefs(blockers, decision.traceRefs);
 		if (
 			planningCoverage.has(decision.sourceEventId) &&
@@ -335,17 +335,17 @@ function blockersForRefs(
 	);
 }
 
-function approvedDecisionRows(records: TraceRecord[]): DecisionProjection[] {
+function approvedChanges(records: TraceRecord[]): DecisionProjection[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedRows).map((row) => {
-				const id = text(row.id) || event.id;
-				const sourceEventId = iterationSubref(event, "row", id);
+			objectList(objectRecord(event.data?.output).approvedChanges).map((change) => {
+				const id = text(change.id) || event.id;
+				const sourceEventId = iterationSubref(event, "change", id);
 				return {
 					id,
 					traceId: event.traceId,
-					title: text(row.desiredState) || text(row.question) || id,
+					title: text(change.desiredState) || text(change.question) || id,
 					traceRefs: unique([sourceEventId, event.id, ...event.refs]),
 					sourceEventId,
 				};

@@ -32,6 +32,6 @@ There is no target `src/session/**` root.
 
 ## Related docs
 
-- [Runtime](../runtime.md)
-- [Worktree Isolation](../worktree-isolation.md)
-- [Implementation Loop](../implementation-loop.md)
+- [Runtime](runtime.md)
+- [Worktree Isolation](worktree-isolation.md)
+- [Implementation Loop](implementation-loop.md)

@@ -46,7 +46,7 @@ function nextAction(
 	activeCard?: WorkPlanCard,
 ): string {
 	if (blockers.length > 0) return `Resolve blocker: ${blockers[0]}`;
-	if (currentLoop === "decision") return "Create or approve decision rows.";
+	if (currentLoop === "decision") return "Create or approve proposed changes.";
 	if (currentLoop === "planning")
 		return "Plan approved decision events into work units or explicit resolutions.";
 	if (currentLoop === "implementation") {

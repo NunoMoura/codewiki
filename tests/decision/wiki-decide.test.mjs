@@ -9,22 +9,22 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
-function tableInput(id = "DT-wiki-decide") {
+function proposalInput(id = "SP-wiki-decide") {
 	return {
 		id,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		updatedAt: "2026-06-11T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-wiki-decide",
+				id: "CHG-wiki-decide",
 				currentState: "Decision callers use iteration runner directly.",
 				desiredState: "wiki_decide wraps decision output and append safely.",
 				rationale: "Avoid split output/exit public workflow.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/decision-loop.md"],
+				sourceRefs: ["kb:system/components/decision-loop.md"],
 			},
 		],
 	};
@@ -41,7 +41,7 @@ describe("wiki_decide core facade", () => {
 			/wiki_decide received unsupported input field intent/,
 		);
 		await assert.rejects(
-			() => runWikiDecide({ tableInput: tableInput() }),
+			() => runWikiDecide({ proposalInput: proposalInput() }),
 			/wiki_decide requires traceId/,
 		);
 	});
@@ -52,17 +52,31 @@ describe("wiki_decide core facade", () => {
 			traceId: "TRACE-wiki-decide-preview",
 			nextSequence: 2,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			tableInput: tableInput(),
+			proposalInput: proposalInput(),
 		});
 
 		assert.equal(result.mode, "preview");
-		assert.equal(result.iterationEvent.event, "rows_approved");
+		assert.equal(result.iterationEvent.event, "changes_approved");
 		assert.equal(result.iterationEvent.sequence, 2);
 		assert.equal(result.loopResult.readyForPlanning, true);
 		assert.equal(result.append, undefined);
-		assert.match(result.renderedDecisionTable.markdown, /\| Row ID \| Decision \|/);
-		assert.match(result.renderedDecisionTable.markdown, /DTR-wiki-decide/);
-		assert.match(result.renderedDecisionTable.digest, /^sha256:/);
+		assert.match(
+			result.renderedSprintProposal.markdown,
+			/### Proposed Change: CHG-wiki-decide/,
+		);
+		assert.match(
+			result.renderedSprintProposal.markdown,
+			/\*\*Current state\*\*/,
+		);
+		assert.match(
+			result.renderedSprintProposal.markdown,
+			/\*\*Proposed change\*\*/,
+		);
+		assert.match(
+			result.renderedSprintProposal.markdown,
+			/\*\*Agent opinion\*\*/,
+		);
+		assert.match(result.renderedSprintProposal.digest, /^sha256:/);
 	});
 
 	it("routes low-risk scoped decisions directly to implementation", async () => {
@@ -71,23 +85,23 @@ describe("wiki_decide core facade", () => {
 			traceId: "TRACE-wiki-decide-direct-implementation",
 			nextSequence: 2,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			tableInput: tableInput("DT-wiki-decide-direct"),
+			proposalInput: proposalInput("SP-wiki-decide-direct"),
 		});
-		const row = result.iterationEvent.data.output.approvedRows[0];
+		const change = result.iterationEvent.data.output.approvedChanges[0];
 
 		assert.equal(result.loopResult.exit.route, "planning");
-		assert.equal(row.routeTarget, "planning");
+		assert.equal(change.routeTarget, "planning");
 
 		const direct = await runWikiDecide({
 			mode: "preview",
 			traceId: "TRACE-wiki-decide-direct-implementation",
 			nextSequence: 2,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			tableInput: {
-				...tableInput("DT-wiki-decide-direct"),
-				rows: [
+			proposalInput: {
+				...proposalInput("SP-wiki-decide-direct"),
+				changes: [
 					{
-						...tableInput("DT-wiki-decide-direct").rows[0],
+						...proposalInput("SP-wiki-decide-direct").changes[0],
 						routeTarget: "implementation",
 						routeRationale:
 							"The change is low-risk, scoped, and has targeted validation.",
@@ -118,7 +132,7 @@ describe("wiki_decide core facade", () => {
 			"direct_implementation",
 		);
 		assert.equal(
-			direct.iterationEvent.data.output.approvedRows[0].implementationMode,
+			direct.iterationEvent.data.output.approvedChanges[0].implementationMode,
 			"targeted_checks",
 		);
 	});
@@ -138,7 +152,7 @@ describe("wiki_decide core facade", () => {
 				traceId,
 				nextSequence: 1,
 				createdAt: "2026-06-11T00:00:01.000Z",
-				tableInput: tableInput(),
+				proposalInput: proposalInput(),
 			});
 			await assert.rejects(
 				() =>
@@ -149,9 +163,9 @@ describe("wiki_decide core facade", () => {
 						traceId,
 						nextSequence: 1,
 						createdAt: "2026-06-11T00:00:01.000Z",
-						tableInput: tableInput(),
+						proposalInput: proposalInput(),
 					}),
-				/rendered decision table/,
+				/rendered Sprint Proposal/,
 			);
 			await assert.rejects(
 				() =>
@@ -162,21 +176,21 @@ describe("wiki_decide core facade", () => {
 						traceId,
 						nextSequence: 1,
 						createdAt: "2026-06-11T00:00:01.000Z",
-						tableInput: {
-							...tableInput(),
-							rows: [
+						proposalInput: {
+							...proposalInput(),
+							changes: [
 								{
-									...tableInput().rows[0],
-									desiredState: "A changed table must need new approval.",
+									...proposalInput().changes[0],
+									desiredState: "A changed proposal must need new approval.",
 								},
 							],
 						},
-						decisionTableApproval: {
+						sprintProposalApproval: {
 							approved: true,
-							renderedTableDigest: preview.renderedDecisionTable.digest,
+							renderedProposalDigest: preview.renderedSprintProposal.digest,
 						},
 					}),
-				/does not match the current rendered table/,
+				/does not match the current rendered proposal/,
 			);
 			const result = await runWikiDecide({
 				repoRoot: root,
@@ -185,10 +199,10 @@ describe("wiki_decide core facade", () => {
 				traceId,
 				nextSequence: 1,
 				createdAt: "2026-06-11T00:00:01.000Z",
-				tableInput: tableInput(),
-				decisionTableApproval: {
+				proposalInput: proposalInput(),
+				sprintProposalApproval: {
 					approved: true,
-					renderedTableDigest: preview.renderedDecisionTable.digest,
+					renderedProposalDigest: preview.renderedSprintProposal.digest,
 				},
 			});
 			const readBack = await readTrace(join(root, traceFilePath(traceId)));
@@ -196,7 +210,7 @@ describe("wiki_decide core facade", () => {
 
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
-			assert.equal(state.events.at(-1)?.event, "rows_approved");
+			assert.equal(state.events.at(-1)?.event, "changes_approved");
 			assertQualityGraphIdentity(state.events.at(-1), "decision.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);
 			assertQualityGraphIdentity(state.latestCheckpoint, "decision.loop");
@@ -206,10 +220,10 @@ describe("wiki_decide core facade", () => {
 						repoRoot: root,
 						mode: "append",
 						traceId,
-						tableInput: tableInput(),
-						decisionTableApproval: {
+						proposalInput: proposalInput(),
+						sprintProposalApproval: {
 							approved: true,
-							renderedTableDigest: preview.renderedDecisionTable.digest,
+							renderedProposalDigest: preview.renderedSprintProposal.digest,
 						},
 					}),
 				/expectedBytes/,
@@ -226,8 +240,8 @@ function assertQualityGraphIdentity(record, graphId) {
 	const checkpointGraph = record?.data?.qualityGraph;
 	const graph = outputGraph || exitGraph || checkpointGraph;
 	assert.equal(graph?.id, graphId);
-	assert.equal(graph?.version, "0.3.0.loop.5");
-	assert.equal(graph?.schemaVersion, 2);
+	assert.equal(graph?.version, "0.3.0.loop.6");
+	assert.equal(graph?.schemaVersion, 3);
 	assert.match(graph?.hash, /^sha256:/);
 	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);
 }

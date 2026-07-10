@@ -5,7 +5,7 @@ import type {
 	TraceLoop,
 } from "../traces/types.ts";
 
-export const LOOP_QUALITY_GRAPH_SCHEMA_VERSION = 2;
+export const LOOP_QUALITY_GRAPH_SCHEMA_VERSION = 3;
 
 export type LoopQualityLayer =
 	| "hard_gate"
@@ -74,6 +74,7 @@ export interface LoopQualityGraphNode<TCode extends string> {
 	cost: number;
 	gate?: LoopQualityGate;
 	timeoutMs?: number;
+	dependsOn?: string[];
 	mode?: LoopQualityStandardMode;
 	evidenceRefs?: string[];
 	hardGate?: boolean;
@@ -103,9 +104,99 @@ export function loopQualityGraphRef<TCode extends string>(
 export function loopQualityGraphHash<TCode extends string>(
 	graph: LoopQualityGraph<TCode>,
 ): string {
+	assertValidLoopQualityGraph(graph);
 	return `sha256:${createHash("sha256")
 		.update(stableJson(graph))
 		.digest("hex")}`;
+}
+
+export function assertValidLoopQualityGraph<TCode extends string>(
+	graph: LoopQualityGraph<TCode>,
+): void {
+	if (graph.schemaVersion !== LOOP_QUALITY_GRAPH_SCHEMA_VERSION) {
+		throw new Error(
+			`Loop quality graph ${graph.graphId || "<unknown>"} uses unsupported schema version ${graph.schemaVersion}.`,
+		);
+	}
+	if (!graph.graphId.trim())
+		throw new Error("Loop quality graph id is required.");
+	if (!graph.graphVersion.trim()) {
+		throw new Error(`Loop quality graph ${graph.graphId} version is required.`);
+	}
+	assertUniqueGraphValues(graph.layers, graph.graphId, "layer");
+	const nodeIds = graph.nodes.map((node) => node.id);
+	assertUniqueGraphValues(nodeIds, graph.graphId, "node id");
+	const knownNodes = new Set(nodeIds);
+	const knownLayers = new Set(graph.layers);
+	for (const node of graph.nodes) {
+		if (!node.id.trim()) {
+			throw new Error(
+				`Loop quality graph ${graph.graphId} has an empty node id.`,
+			);
+		}
+		if (!knownLayers.has(node.layer)) {
+			throw new Error(
+				`Loop quality graph ${graph.graphId} node ${node.id} uses undeclared layer ${node.layer}.`,
+			);
+		}
+		const dependencies = node.dependsOn || [];
+		assertUniqueGraphValues(
+			dependencies,
+			`${graph.graphId} node ${node.id}`,
+			"dependency",
+		);
+		for (const dependency of dependencies) {
+			if (!knownNodes.has(dependency)) {
+				throw new Error(
+					`Loop quality graph ${graph.graphId} node ${node.id} has unknown dependency ${dependency}.`,
+				);
+			}
+			if (dependency === node.id) {
+				throw new Error(
+					`Loop quality graph ${graph.graphId} node ${node.id} cannot depend on itself.`,
+				);
+			}
+		}
+	}
+	assertAcyclicGraphDependencies(graph);
+}
+
+function assertUniqueGraphValues(
+	values: readonly string[],
+	graphId: string,
+	label: string,
+): void {
+	const seen = new Set<string>();
+	for (const value of values) {
+		if (seen.has(value)) {
+			throw new Error(
+				`Loop quality graph ${graphId} has duplicate ${label} ${value}.`,
+			);
+		}
+		seen.add(value);
+	}
+}
+
+function assertAcyclicGraphDependencies<TCode extends string>(
+	graph: LoopQualityGraph<TCode>,
+): void {
+	const byId = new Map(graph.nodes.map((node) => [node.id, node]));
+	const visiting = new Set<string>();
+	const visited = new Set<string>();
+	const visit = (nodeId: string): void => {
+		if (visited.has(nodeId)) return;
+		if (visiting.has(nodeId)) {
+			throw new Error(
+				`Loop quality graph ${graph.graphId} contains a dependency cycle at ${nodeId}.`,
+			);
+		}
+		visiting.add(nodeId);
+		for (const dependency of byId.get(nodeId)?.dependsOn || [])
+			visit(dependency);
+		visiting.delete(nodeId);
+		visited.add(nodeId);
+	};
+	for (const node of graph.nodes) visit(node.id);
 }
 
 export function loopQualityMethodForMode(

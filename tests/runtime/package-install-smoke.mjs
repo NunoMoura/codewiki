@@ -86,7 +86,7 @@ const tui = await import(pathToFileURL(join(packageRoot, "dist", "pi", "tui", "i
 assert.equal(extension.piExtensionAvailable, true);
 assert.equal(prompt.codewikiPromptHooksAvailable, true);
 assert.equal(tui.codewikiTuiRenderersAvailable, true);
-assert.equal(typeof tui.renderStateCommand, "function");
+assert.equal(typeof tui.renderBootstrapCommand, "function");
 assert.equal(typeof extension.default, "function");
 const tools = [];
 const commands = [];
@@ -113,6 +113,7 @@ assert.deepEqual(tools, [
 assert.deepEqual(events.map((event) => event.eventName), [
 	"before_agent_start",
 	"tool_result",
+	"session_shutdown",
 	"session_start",
 ]);
 const promptHook = events.find((event) => event.eventName === "before_agent_start");
@@ -132,9 +133,12 @@ await footerHook.handler(
 );
 assert.equal(statuses.length, 1);
 assert.equal(statuses[0].key, "codewiki");
-assert.match(statuses[0].value, /^CodeWiki \\S+ non-project · \\/wiki-state$/);
+assert.match(
+	statuses[0].value,
+	/^CodeWiki \\S+ non-project · dashboard: \\/wiki-dashboard$/,
+);
 assert.deepEqual(commands, [
-	"wiki-state",
+	"wiki-dashboard",
 	"wiki-resume",
 	"wiki-explain",
 	"wiki-config",
@@ -144,7 +148,7 @@ const injected = await promptHook.handler({ systemPrompt: "base" }, { cwd: proce
 assert.match(injected.systemPrompt, /CodeWiki Pi guidance/);
 assert.equal(injected.systemPrompt.includes("wiki_state"), true);
 assert.equal(injected.systemPrompt.includes("wiki_decide"), true);
-assert.equal(injected.systemPrompt.includes("/wiki-*"), true);
+assert.equal(injected.systemPrompt.includes("/wiki-dashboard opens"), true);
 assert.equal(injected.systemPrompt.includes("/wiki or"), false);
 assert.deepEqual(await promptHook.handler({ systemPrompt: injected.systemPrompt }, { cwd: process.cwd() }), {});
 `,

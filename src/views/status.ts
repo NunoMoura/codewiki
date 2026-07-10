@@ -124,8 +124,8 @@ function decisionRefs(records: TraceRecord[]): string[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedRows).map((row) =>
-				iterationSubref(event, "row", text(row.id)),
+			objectList(objectRecord(event.data?.output).approvedChanges).map((change) =>
+				iterationSubref(event, "change", text(change.id)),
 			),
 		);
 }
@@ -134,7 +134,7 @@ function directImplementationDecisionRefsForStatus(
 	records: TraceRecord[],
 ): string[] {
 	return directImplementationDecisionsFromRecords(records).map(
-		(row) => row.ref,
+		(change) => change.ref,
 	);
 }
 

@@ -24,6 +24,6 @@ As an agent or maintainer, I want compact trace-backed status first so I can cho
 ## Related docs
 
 - [Agents](../users/agents.md)
-- [Loop Model](../../system/loop-model.md)
-- [Traces](../../system/traces.md)
-- [API](../../system/api.md)
+- [Loop Model](../../system/components/loop-model.md)
+- [Traces](../../system/components/traces.md)
+- [API](../../system/components/api.md)

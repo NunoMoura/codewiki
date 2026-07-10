@@ -4,12 +4,12 @@ title: CodeWiki Intent-to-Implementation Flow
 kind: sequence_flow
 purpose: Show target flow from user intent through semantic loop iterations, runtime coordination, JSONL traces, generated views, and Git evidence.
 source_docs:
-  - .codewiki/kb/system/loop-model.md
-  - .codewiki/kb/system/decision-loop.md
-  - .codewiki/kb/system/planning-loop.md
-  - .codewiki/kb/system/implementation-loop.md
-  - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/runtime.md
+  - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/decision-loop.md
+  - .codewiki/kb/system/components/planning-loop.md
+  - .codewiki/kb/system/components/implementation-loop.md
+  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/runtime.md
 renderer:
   preferred: mermaid_sequence
   fallback: custom_sequence
@@ -20,27 +20,27 @@ participants:
   - id: runtime
     label: Runtime outer loop
     kind: coordination
-    source: .codewiki/kb/system/runtime.md
+    source: .codewiki/kb/system/components/runtime.md
   - id: decision
     label: Decision loop
     kind: semantic_loop
-    source: .codewiki/kb/system/decision-loop.md
+    source: .codewiki/kb/system/components/decision-loop.md
   - id: planning
     label: Planning loop
     kind: semantic_loop
-    source: .codewiki/kb/system/planning-loop.md
+    source: .codewiki/kb/system/components/planning-loop.md
   - id: implementation
     label: Implementation loop
     kind: semantic_loop
-    source: .codewiki/kb/system/implementation-loop.md
+    source: .codewiki/kb/system/components/implementation-loop.md
   - id: traces
     label: JSONL traces
     kind: durable_truth
-    source: .codewiki/kb/system/traces.md
+    source: .codewiki/kb/system/components/traces.md
   - id: views
     label: Generated views
     kind: generated_projection
-    source: .codewiki/kb/system/source-map.md
+    source: .codewiki/kb/system/components/source-map.md
   - id: git
     label: Git content evidence
     kind: executable_truth
@@ -56,7 +56,7 @@ steps:
   - id: append_decision
     from: decision
     to: traces
-    message: appends decision.rows_approved with output, exit status, conditions, progress, and refs
+    message: appends decision.changes_approved with output, exit status, conditions, progress, and refs
   - id: run_planning
     from: runtime
     to: planning

@@ -8,29 +8,13 @@ import { formatTraceText } from "../../src/traces/writer.ts";
 
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-explain-"));
-	await mkdir(join(root, ".codewiki", "kb", "system"), { recursive: true });
+	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
+		recursive: true,
+	});
 	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "source-map.yaml"),
-		[
-			"id: test-source-map",
-			"source_docs:",
-			"  - .codewiki/kb/system/source-map.md",
-			"defaults:",
-			"  inheritance: true",
-			"  excluded: []",
-			"components:",
-			"  api:",
-			"    doc: .codewiki/kb/system/api.md",
-			"    source_patterns:",
-			"      - src/api/**",
-			"    test_patterns:",
-			"      - tests/api/**",
-			"    trace_events:",
-			"      - planning.work_units_created",
-			"    role: public_facade",
-			"",
-		].join("\n"),
+		join(root, ".codewiki", "kb", "system", "components", "api.md"),
+		apiDoc(),
 	);
 	await writeFile(
 		join(root, ".codewiki", "traces", "TRACE-explain.jsonl"),
@@ -80,6 +64,40 @@ async function fixture() {
 	return root;
 }
 
+async function okfOnlyFixture() {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-explain-okf-"));
+	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
+		recursive: true,
+	});
+	await writeFile(
+		join(root, ".codewiki", "kb", "system", "components", "api.md"),
+		apiDoc(),
+	);
+	return root;
+}
+
+function apiDoc() {
+	return [
+		"---",
+		"type: Concept",
+		"title: API",
+		"description: Public API facade.",
+		"codewiki_component: api",
+		"codewiki_source_patterns:",
+		"  - src/api/**",
+		"codewiki_test_patterns:",
+		"  - tests/api/**",
+		"codewiki_trace_events:",
+		"  - planning.work_units_created",
+		"codewiki_role: public_facade",
+		"---",
+		"# API",
+		"",
+		"Public API facade.",
+		"",
+	].join("\n");
+}
+
 describe("project explain", () => {
 	it("explains path owners, tests, trace refs, and quality", async () => {
 		const root = await fixture();
@@ -119,6 +137,25 @@ describe("project explain", () => {
 				target: "tests/api/index.test.mjs",
 			});
 			assert.equal(testPath.owner?.componentId, "api");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("explains ownership from OKF metadata", async () => {
+		const root = await okfOnlyFixture();
+		try {
+			const view = await buildProjectExplainView({
+				repoRoot: root,
+				target: "src/api/index.ts",
+			});
+
+			assert.equal(view.kind, "path");
+			assert.equal(view.owner?.componentId, "api");
+			assert.deepEqual(view.refs, [
+				".codewiki/kb/system/components/api.md",
+				".codewiki/kb/system/components/source-map.md",
+			]);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

@@ -1,53 +1,53 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
-import { parseSourceMapYaml } from "../../src/knowledge/source-map.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
+import { sourceOwnershipMapFromOkfBundle } from "../../src/knowledge/source-ownership.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { evaluatePlanningExit } from "../../src/planning/loop.ts";
 import { normalizePlanningWorkItems } from "../../src/planning/materialization.ts";
 import { orderWorkItems } from "../../src/planning/ordering.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function decisionEvents() {
-	const table = createDecisionTable({
-		id: "DT-planning",
+	const proposal = createSprintProposal({
+		id: "SP-planning",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-001",
+				id: "CHG-001",
 				question: "What owns workflow state?",
 				currentState: "Generated graph owns workflow state.",
 				desiredState: "JSONL traces own workflow state.",
 				rationale: "Matches Pi session-inspired model.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: ["kb:system/traces.md"],
+				sourceRefs: ["kb:system/components/traces.md"],
 			},
 		],
 	});
-	return runDecisionIteration({ traceId: "TRACE-planning", table }).traceEvents;
+	return runDecisionIteration({ traceId: "TRACE-planning", proposal }).traceEvents;
 }
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function componentMap() {
 	return {
-		sourceRefs: [".codewiki/kb/system/source-map.yaml"],
+		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
 		defaults: { inheritance: true, excluded: [] },
 		components: [
 			{
 				id: "planning",
-				doc: ".codewiki/kb/system/planning-loop.md",
+				doc: ".codewiki/kb/system/components/planning-loop.md",
 				sourcePatterns: ["src/planning/**"],
 				testPatterns: ["tests/planning/**"],
 				generatedViews: [],
@@ -55,6 +55,22 @@ function componentMap() {
 			},
 		],
 	};
+}
+
+function collectFiles(root) {
+	const output = [];
+	for (const name of readdirSync(root).sort()) {
+		const path = `${root}/${name}`;
+		if (statSync(path).isDirectory()) output.push(...collectFiles(path));
+		else output.push(path);
+	}
+	return output;
+}
+
+function knowledgeBundleFiles() {
+	return collectFiles(".codewiki/kb")
+		.filter((path) => path.endsWith(".md"))
+		.map((path) => ({ path, content: readFileSync(path, "utf8") }));
 }
 
 describe("planning iteration runner", () => {
@@ -157,7 +173,7 @@ describe("planning iteration runner", () => {
 		const invalid = normalizePlanningWorkItems([
 			{
 				id: "WU-micro-invalid",
-				decisionRefs: [decisionRef, "trace:other:decision:iteration:1#row:DTR"],
+				decisionRefs: [decisionRef, "trace:other:decision:iteration:1#change:CHG"],
 				outcome: "Broad work wrongly marked as micro.",
 				...planningQualityFields({ planningDepth: "micro" }),
 				acceptance: ["Micro constraints should fail."],
@@ -174,7 +190,7 @@ describe("planning iteration runner", () => {
 			resolutions: [],
 		});
 		const invalidExit = evaluatePlanningExit({
-			decisionRefs: [decisionRef, "trace:other:decision:iteration:1#row:DTR"],
+			decisionRefs: [decisionRef, "trace:other:decision:iteration:1#change:CHG"],
 			workItems: invalid,
 			resolutions: [],
 		});
@@ -196,10 +212,8 @@ describe("planning iteration runner", () => {
 		);
 	});
 
-	it("parses KB source-map component contracts", () => {
-		const map = parseSourceMapYaml(
-			readFileSync(".codewiki/kb/system/source-map.yaml", "utf8"),
-		);
+	it("parses KB OKF ownership component contracts", () => {
+		const map = sourceOwnershipMapFromOkfBundle(knowledgeBundleFiles());
 
 		assert.equal(
 			map.components.some((component) => component.id === "implementation"),
@@ -230,7 +244,7 @@ describe("planning iteration runner", () => {
 		);
 	});
 
-	it("links planning work to source-map components", () => {
+	it("links planning work to OKF ownership components", () => {
 		const decisions = decisionEvents();
 		const decisionRef = approvedDecisionRef(decisions);
 		const result = runPlanningIteration({
@@ -260,13 +274,13 @@ describe("planning iteration runner", () => {
 		);
 		assert.equal(
 			result.traceEvents[0].refs.includes(
-				".codewiki/kb/system/source-map.yaml",
+				".codewiki/kb/system/components/source-map.md",
 			),
 			true,
 		);
 	});
 
-	it("blocks work outside declared source-map components", () => {
+	it("blocks work outside declared OKF ownership components", () => {
 		const decisionRef = approvedDecisionRef(decisionEvents());
 		const exit = evaluatePlanningExit({
 			decisionRefs: [decisionRef],
@@ -373,7 +387,7 @@ describe("planning iteration runner", () => {
 						runKeyTemplate: "weekly-check:${isoWeek}",
 						owner: "implementation",
 						trigger: "cron:0 9 * * 1",
-						refs: ["kb:system/runtime.md"],
+						refs: ["kb:system/components/runtime.md"],
 					},
 				},
 			],
@@ -388,14 +402,14 @@ describe("planning iteration runner", () => {
 			runKeyTemplate: "weekly-check:${isoWeek}",
 			owner: "implementation",
 			trigger: "cron:0 9 * * 1",
-			refs: ["kb:system/runtime.md"],
+			refs: ["kb:system/components/runtime.md"],
 		});
 		assert.deepEqual(
 			result.traceEvents[0].data?.output?.workItems?.[0]?.trigger,
 			result.workItems[0].trigger,
 		);
 		assert.equal(
-			result.traceEvents[0].refs.includes("kb:system/runtime.md"),
+			result.traceEvents[0].refs.includes("kb:system/components/runtime.md"),
 			true,
 		);
 		assert.equal(
@@ -533,7 +547,7 @@ describe("planning iteration runner", () => {
 		);
 	});
 
-	it("blocks accepted decision rows without planning coverage", () => {
+	it("blocks accepted proposed changes without planning coverage", () => {
 		const decisions = decisionEvents();
 		const result = runPlanningIteration({
 			traceId: "TRACE-planning",
@@ -583,7 +597,7 @@ describe("planning iteration runner", () => {
 					trigger: "after traces module lands",
 					rationale: "Runtime needs trace append primitives first.",
 					...decisionQualityFields(),
-					evidenceRefs: ["kb:system/traces.md"],
+					evidenceRefs: ["kb:system/components/traces.md"],
 				},
 			],
 		});
@@ -608,7 +622,7 @@ describe("planning iteration runner", () => {
 				{
 					decisionRef,
 					kind: "routeback",
-					evidenceRefs: ["kb:system/planning-loop.md"],
+					evidenceRefs: ["kb:system/components/planning-loop.md"],
 				},
 			],
 		});
@@ -638,7 +652,7 @@ describe("planning iteration runner", () => {
 				{
 					decisionRef,
 					kind: "route-back",
-					evidenceRefs: ["kb:system/planning-loop.md"],
+					evidenceRefs: ["kb:system/components/planning-loop.md"],
 				},
 			],
 		});
@@ -656,7 +670,7 @@ describe("planning iteration runner", () => {
 					owner: "decision",
 					trigger: "decision authority needed before implementation",
 					rationale: "Accepted intent changed beyond planning authority.",
-					evidenceRefs: ["kb:system/planning-loop.md"],
+					evidenceRefs: ["kb:system/components/planning-loop.md"],
 				},
 			],
 		});

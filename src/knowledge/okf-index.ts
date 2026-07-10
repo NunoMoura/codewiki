@@ -52,7 +52,7 @@ export function generateOkfDirectoryIndex(
 	const directory = normalizeOkfDirectory(options.directory || "");
 	const documents = conceptDocuments(files);
 	const concepts = directConceptEntries(documents, directory);
-	const directories = childDirectoryEntries(documents, directory);
+	const directories = childDirectoryEntries(files, documents, directory);
 	const content = renderOkfDirectoryIndex({
 		directory,
 		title: options.title,
@@ -71,7 +71,16 @@ export function generateOkfDirectoryIndex(
 
 export function generateOkfDirectoryIndexes(
 	files: OkfBundleFile[],
-	directories: string[] = ["", "product", "system"],
+	directories: string[] = [
+		"",
+		"product",
+		"product/stories",
+		"product/uis",
+		"product/users",
+		"system",
+		"system/components",
+		"system/flows",
+	],
 ): OkfDirectoryIndex[] {
 	return directories.map((directory) =>
 		generateOkfDirectoryIndex(files, {
@@ -137,6 +146,7 @@ function directConceptEntries(
 }
 
 function childDirectoryEntries(
+	files: OkfBundleFile[],
 	documents: OkfDocument[],
 	directory: string,
 ): OkfIndexEntry[] {
@@ -145,6 +155,9 @@ function childDirectoryEntries(
 		const child = childDirectoryFor(document.path, directory);
 		if (!child) continue;
 		childCounts.set(child, (childCounts.get(child) || 0) + 1);
+	}
+	for (const child of reservedIndexChildDirectories(files, directory)) {
+		if (!childCounts.has(child)) childCounts.set(child, 0);
 	}
 	return Array.from(childCounts.entries())
 		.map(([child, count]) => ({
@@ -155,6 +168,20 @@ function childDirectoryEntries(
 			conceptCount: count,
 		}))
 		.sort(compareEntries);
+}
+
+function reservedIndexChildDirectories(
+	files: OkfBundleFile[],
+	directory: string,
+): string[] {
+	return files
+		.map((file) => normalizeOkfPath(file.path))
+		.filter((path) => path.endsWith("/index.md"))
+		.map((path) => path.replace(/\/index\.md$/, ""))
+		.filter(
+			(path) => childDirectoryFor(`${path}/placeholder.md`, directory) === path,
+		)
+		.sort();
 }
 
 function conceptDocuments(files: OkfBundleFile[]): OkfDocument[] {
@@ -179,7 +206,10 @@ function okfDocumentDirectory(path: string): string {
 	return parent === "." ? "" : parent;
 }
 
-function childDirectoryFor(path: string, directory: string): string | undefined {
+function childDirectoryFor(
+	path: string,
+	directory: string,
+): string | undefined {
 	const normalized = normalizeOkfPath(path);
 	const rest = directory ? normalized.slice(directory.length + 1) : normalized;
 	if (directory && !normalized.startsWith(`${directory}/`)) return undefined;
@@ -229,8 +259,10 @@ function titleWord(value: string): string {
 		["ui", "UI"],
 		["uis", "UIs"],
 	]);
-	return acronym.get(value.toLowerCase()) ||
-		`${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
+	return (
+		acronym.get(value.toLowerCase()) ||
+		`${value.slice(0, 1).toUpperCase()}${value.slice(1)}`
+	);
 }
 
 function renderIndexEntry(entry: OkfIndexEntry): string {

@@ -4,14 +4,15 @@ import {
 	type DecisionIterationResult,
 } from "../decision/iteration.ts";
 import {
-	decisionTableMarkdownDigest,
-	renderDecisionTableMarkdown,
-} from "../decision/table-rendering.ts";
-import { createDecisionTable } from "../decision/table.ts";
+	hardeningQuestionsFromIssues,
+	sprintProposalMarkdownDigest,
+	renderSprintProposalMarkdown,
+} from "../decision/proposal-rendering.ts";
+import { createSprintProposal } from "../decision/proposal.ts";
 import type {
 	CurrentStatePacket,
-	DecisionTable,
-	DecisionTableInput,
+	SprintProposal,
+	SprintProposalInput,
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
@@ -29,23 +30,23 @@ import type { TraceEvent } from "../traces/types.ts";
 
 export type WikiDecideMode = "preview" | "append";
 
-export interface DecisionTableApprovalInput {
+export interface SprintProposalApprovalInput {
 	approved?: boolean;
-	renderedTableDigest?: string;
-	renderedTableMarkdown?: string;
+	renderedProposalDigest?: string;
+	renderedProposalMarkdown?: string;
 	approvedBy?: string;
 	approvedAt?: string;
 }
 
-export interface RenderedDecisionTable {
+export interface RenderedSprintProposal {
 	markdown: string;
 	digest: string;
 }
 
 export interface RunWikiDecideInput {
 	traceId: string;
-	table?: DecisionTable;
-	tableInput?: DecisionTableInput;
+	proposal?: SprintProposal;
+	proposalInput?: SprintProposalInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
 	requirementIds?: string[];
@@ -56,7 +57,7 @@ export interface RunWikiDecideInput {
 	expectedBytes?: number;
 	nextSequence?: number;
 	expectedTraceId?: string;
-	decisionTableApproval?: DecisionTableApprovalInput;
+	sprintProposalApproval?: SprintProposalApprovalInput;
 }
 
 export interface RunWikiDecideResult {
@@ -64,14 +65,14 @@ export interface RunWikiDecideResult {
 	traceId: string;
 	loopResult: DecisionIterationResult;
 	iterationEvent: TraceEvent;
-	renderedDecisionTable: RenderedDecisionTable;
+	renderedSprintProposal: RenderedSprintProposal;
 	append?: AppendSemanticLoopReportResult<DecisionIterationResult>["append"];
 }
 
 const WIKI_DECIDE_INPUT_KEYS = [
 	"traceId",
-	"table",
-	"tableInput",
+	"proposal",
+	"proposalInput",
 	"knowledgeDelta",
 	"currentStatePacket",
 	"requirementIds",
@@ -82,7 +83,7 @@ const WIKI_DECIDE_INPUT_KEYS = [
 	"expectedBytes",
 	"nextSequence",
 	"expectedTraceId",
-	"decisionTableApproval",
+	"sprintProposalApproval",
 ] as const;
 
 export async function runWikiDecide(
@@ -100,12 +101,19 @@ export async function runWikiDecide(
 		repoRoot: input.repoRoot,
 	});
 	const loopInput = decisionIterationInput(input, qualityJudge);
-	const renderedDecisionTable = renderedDecisionTableFor(loopInput.table!);
+	const previewLoopResult = await runDecisionIterationWithRunner({
+		...loopInput,
+		startSequence: nextSequence,
+	});
+	const renderedSprintProposal = renderedSprintProposalFor(
+		loopInput.proposal!,
+		previewLoopResult,
+	);
 	if (mode === "append") {
 		assertAppendPreflightInput(input);
-		assertDecisionTableApproval(
-			input.decisionTableApproval,
-			renderedDecisionTable,
+		assertSprintProposalApproval(
+			input.sprintProposalApproval,
+			renderedSprintProposal,
 		);
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
@@ -121,16 +129,12 @@ export async function runWikiDecide(
 			traceId: result.traceId,
 			loopResult: result.loopResult,
 			iterationEvent: result.iterationEvent,
-			renderedDecisionTable,
+			renderedSprintProposal,
 			append: result.append,
 		};
 	}
-	const loopResult = await runDecisionIterationWithRunner({
-		...loopInput,
-		startSequence: nextSequence,
-	});
 	const iterationEvent = assertSemanticLoopReportBatch({
-		records: loopResult.traceRecords,
+		records: previewLoopResult.traceRecords,
 		loop: "decision",
 		nextSequence,
 		expectedTraceId: input.expectedTraceId ?? traceId,
@@ -138,9 +142,9 @@ export async function runWikiDecide(
 	return {
 		mode,
 		traceId: iterationEvent.traceId,
-		loopResult,
+		loopResult: previewLoopResult,
 		iterationEvent,
-		renderedDecisionTable,
+		renderedSprintProposal,
 	};
 }
 
@@ -150,7 +154,7 @@ function decisionIterationInput(
 ): DecisionIterationInput {
 	return {
 		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
-		table: input.table ?? createDecisionTable(input.tableInput ?? {}),
+		proposal: input.proposal ?? createSprintProposal(input.proposalInput ?? {}),
 		knowledgeDelta: input.knowledgeDelta,
 		currentStatePacket: input.currentStatePacket,
 		qualityJudge,
@@ -166,43 +170,48 @@ function assertAppendPreflightInput(input: RunWikiDecideInput): void {
 	requiredNextSequence(input.nextSequence ?? Number.NaN);
 }
 
-function renderedDecisionTableFor(table: DecisionTable): RenderedDecisionTable {
-	const markdown = renderDecisionTableMarkdown(table);
-	return { markdown, digest: decisionTableMarkdownDigest(markdown) };
+function renderedSprintProposalFor(
+	proposal: SprintProposal,
+	loopResult: DecisionIterationResult,
+): RenderedSprintProposal {
+	const markdown = renderSprintProposalMarkdown(proposal, {
+		hardeningQuestions: hardeningQuestionsFromIssues(loopResult.exit.issues),
+	});
+	return { markdown, digest: sprintProposalMarkdownDigest(markdown) };
 }
 
-function assertDecisionTableApproval(
-	approval: DecisionTableApprovalInput | undefined,
-	rendered: RenderedDecisionTable,
+function assertSprintProposalApproval(
+	approval: SprintProposalApprovalInput | undefined,
+	rendered: RenderedSprintProposal,
 ): void {
 	if (!approval?.approved) {
 		throw createCodewikiApiError({
 			operation: "wiki_decide",
 			code: "missing_required",
-			field: "decisionTableApproval.approved",
+			field: "sprintProposalApproval.approved",
 			message:
-				"wiki_decide append mode requires explicit approval of the rendered decision table.",
+				"wiki_decide append mode requires explicit approval of the rendered Sprint Proposal.",
 		});
 	}
-	const approvedDigest = approval.renderedTableMarkdown
-		? decisionTableMarkdownDigest(approval.renderedTableMarkdown)
-		: approval.renderedTableDigest?.trim();
+	const approvedDigest = approval.renderedProposalMarkdown
+		? sprintProposalMarkdownDigest(approval.renderedProposalMarkdown)
+		: approval.renderedProposalDigest?.trim();
 	if (!approvedDigest) {
 		throw createCodewikiApiError({
 			operation: "wiki_decide",
 			code: "missing_required",
-			field: "decisionTableApproval.renderedTableDigest",
+			field: "sprintProposalApproval.renderedProposalDigest",
 			message:
-				"wiki_decide append mode requires the approved rendered table digest or markdown.",
+				"wiki_decide append mode requires the approved rendered proposal digest or markdown.",
 		});
 	}
 	if (approvedDigest !== rendered.digest) {
 		throw createCodewikiApiError({
 			operation: "wiki_decide",
 			code: "invalid_input",
-			field: "decisionTableApproval.renderedTableDigest",
+			field: "sprintProposalApproval.renderedProposalDigest",
 			message:
-				"wiki_decide append mode rejected a decision table approval digest that does not match the current rendered table.",
+				"wiki_decide append mode rejected a sprint proposal approval digest that does not match the current rendered proposal.",
 			data: { expected: rendered.digest, actual: approvedDigest },
 		});
 	}

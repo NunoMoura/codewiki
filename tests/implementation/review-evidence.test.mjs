@@ -22,7 +22,7 @@ describe("implementation review evidence protocol", () => {
 				["test", "javascript", true, "implementation"],
 			],
 			[
-				".codewiki/kb/system/loop-contracts.md",
+				".codewiki/kb/system/components/loop-contracts.md",
 				["kb", "markdown", false, "decision"],
 			],
 			[
@@ -49,7 +49,7 @@ describe("implementation review evidence protocol", () => {
 			);
 		}
 		assert.equal(isCodeBearingArtifact("src/index.ts"), true);
-		assert.equal(isCodeBearingArtifact(".codewiki/kb/system/lab.md"), false);
+		assert.equal(isCodeBearingArtifact(".codewiki/kb/system/components/lab.md"), false);
 	});
 
 	it("normalizes common and language-specific evidence into one report", () => {

@@ -26,9 +26,9 @@ export function buildPipelineTrace(
 		iteration: 1,
 		trigger: input.userIntent,
 		output: {
-			rows: [
+			approvedChanges: [
 				{
-					id: input.decision.rowId,
+					id: input.decision.changeId,
 					refs: input.decision.refs,
 					facts: input.decision.facts,
 				},
@@ -38,13 +38,14 @@ export function buildPipelineTrace(
 			status: "exit",
 			conditions: [{ id: "decision_exit", status: "met" }],
 			targetLoop: "planning",
-			nextAction: "Plan implementation work from approved decision rows.",
+			nextAction: "Plan implementation work from approved proposed changes.",
 		},
 		progress: {
-			changedRefs: [input.decision.rowId, ...input.decision.refs],
+			changedRefs: [input.decision.changeId, ...input.decision.refs],
 			newlyMetConditions: ["decision_exit"],
 			repeatedFailures: [],
-			nextSafeAction: "Plan implementation work from approved decision rows.",
+			nextSafeAction:
+				"Plan implementation work from approved proposed changes.",
 		},
 	});
 	const planningEvent = createLoopIterationEvent({

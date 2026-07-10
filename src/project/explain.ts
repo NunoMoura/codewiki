@@ -1,13 +1,14 @@
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import {
-	parseSourceMapYaml,
 	pathMatchesPattern,
 	sourceMapComponentById,
 	sourceMapOwnerForPath,
 	type SourceMapComponent,
 	type SourceMapContract,
 } from "../knowledge/source-map.ts";
+import { sourceOwnershipMapFromOkfBundle } from "../knowledge/source-ownership.ts";
+import type { OkfBundleFile } from "../knowledge/okf-validation.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import { buildQualityView } from "../views/quality.ts";
@@ -70,19 +71,51 @@ interface BuildProjectExplainInput {
 async function readProjectSourceMap(
 	repoRoot: string,
 ): Promise<SourceMapContract | undefined> {
-	const sourceMapPath = join(
-		repoRoot,
-		".codewiki",
-		"kb",
-		"system",
-		"source-map.yaml",
-	);
+	const bundleFiles = await readKnowledgeBundleFiles(repoRoot);
+	if (bundleFiles.length === 0) return undefined;
+	const ownership = sourceOwnershipMapFromOkfBundle(bundleFiles);
+	return ownership.components.length > 0 ? ownership : undefined;
+}
+
+async function readKnowledgeBundleFiles(
+	repoRoot: string,
+): Promise<OkfBundleFile[]> {
+	const kbRoot = join(repoRoot, ".codewiki", "kb");
+	return await readKnowledgeBundleDirectory(kbRoot, ".codewiki/kb");
+}
+
+async function readKnowledgeBundleDirectory(
+	absolutePath: string,
+	relativePath: string,
+): Promise<OkfBundleFile[]> {
+	let entries: Array<{ name: string; isDirectory(): boolean }>;
 	try {
-		return parseSourceMapYaml(await readFile(sourceMapPath, "utf8"));
+		entries = await readdir(absolutePath, { withFileTypes: true });
 	} catch (error) {
-		if (isNotFound(error)) return undefined;
+		if (isNotFound(error)) return [];
 		throw error;
 	}
+	const nested = await Promise.all(
+		entries.sort(byName).map(async (entry) => {
+			const childAbsolute = join(absolutePath, entry.name);
+			const childRelative = `${relativePath}/${entry.name}`;
+			if (entry.isDirectory()) {
+				return await readKnowledgeBundleDirectory(childAbsolute, childRelative);
+			}
+			if (!entry.name.endsWith(".md")) return [];
+			return [
+				{
+					path: childRelative,
+					content: await readFile(childAbsolute, "utf8"),
+				},
+			];
+		}),
+	);
+	return nested.flat();
+}
+
+function byName(left: { name: string }, right: { name: string }): number {
+	return left.name.localeCompare(right.name);
 }
 
 export async function buildProjectExplainView(
@@ -130,7 +163,7 @@ async function projectExplain(
 	);
 	const system = await readKbSummary(
 		repoRoot,
-		".codewiki/kb/system/overview.md",
+		".codewiki/kb/system/components/overview.md",
 	);
 	return {
 		kind: "project",
@@ -141,8 +174,8 @@ async function projectExplain(
 			"CodeWiki is a Pi-native software-development OS backed by KB docs, append-only traces, and generated views.",
 		refs: [
 			".codewiki/kb/product/overview.md",
-			".codewiki/kb/system/overview.md",
-			".codewiki/kb/system/api-tools.md",
+			".codewiki/kb/system/components/overview.md",
+			".codewiki/kb/system/components/api-tools.md",
 		],
 		sections: [
 			{
@@ -156,8 +189,8 @@ async function projectExplain(
 			{
 				title: "User experience",
 				items: [
-					"Primary host UX is Pi-owned /wiki-* commands and wiki_* tools.",
-					"Tool rendering should expose semantic progress without adding model-token cost.",
+					"Primary host UX is the read-only /wiki-dashboard Sprints Queue plus focused /wiki-* commands.",
+					"Internal wiki_* tools provide agent trace context without becoming user UX.",
 				],
 			},
 			...(flows.length
@@ -177,7 +210,7 @@ function componentExplain(component: SourceMapComponent): ProjectExplainView {
 		target: component.id,
 		kind: "component",
 		title: `Component: ${component.id}`,
-		summary: component.role || `Source-map component ${component.id}.`,
+		summary: component.role || `Source owner component ${component.id}.`,
 		refs: [component.doc],
 		owner: ownerSummary(component),
 		sections: [
@@ -201,14 +234,17 @@ function pathExplain(
 			target,
 			kind: "path",
 			title: `Path: ${target}`,
-			summary: "No source-map owner was found for this path.",
-			refs: unique([".codewiki/kb/system/source-map.yaml", ...traceRefs]),
+			summary: "No OKF source owner was found for this path.",
+			refs: unique([
+				".codewiki/kb/system/components/source-map.md",
+				...traceRefs,
+			]),
 			traceRefs,
 			quality,
 			sections: [
 				{
 					title: "Next",
-					items: ["Add or adjust source-map ownership before broad edits."],
+					items: ["Add or adjust OKF ownership metadata before broad edits."],
 				},
 				{ title: "Trace refs", items: traceRefs },
 				{ title: "Quality", items: qualityItems(quality) },
@@ -222,7 +258,7 @@ function pathExplain(
 		summary: `Owned by component ${owner.id}.`,
 		refs: unique([
 			owner.doc,
-			".codewiki/kb/system/source-map.yaml",
+			".codewiki/kb/system/components/source-map.md",
 			...traceRefs,
 		]),
 		owner: ownerSummary(owner),
@@ -260,7 +296,7 @@ function unknownExplain(
 		kind: "unknown",
 		title: `CodeWiki explanation: ${target}`,
 		summary: "No exact component, flow, or path owner matched this target.",
-		refs: [".codewiki/kb/system/source-map.yaml"],
+		refs: [".codewiki/kb/system/components/source-map.md"],
 		sections: [
 			{ title: "Known components", items: components.slice(0, 12) },
 			{ title: "Known flows", items: flows.slice(0, 12) },
@@ -345,13 +381,13 @@ function eventTraceRefsForPath(
 ): string[] {
 	return unique([
 		...(refsTouchPath(event.refs, target, owner) ? [`trace:${event.id}`] : []),
-		...decisionRowRefsForPath(event, target, owner),
+		...decisionChangeRefsForPath(event, target, owner),
 		...planningWorkRefsForPath(event, target, owner),
 		...implementationChangeRefsForPath(event, target, owner),
 	]);
 }
 
-function decisionRowRefsForPath(
+function decisionChangeRefsForPath(
 	event: TraceEvent,
 	target: string,
 	owner: SourceMapComponent | undefined,
@@ -359,12 +395,12 @@ function decisionRowRefsForPath(
 	if (event.loop !== "decision") return [];
 	const output = objectRecord(event.data?.output);
 	return [
-		...objectList(output.approvedRows),
+		...objectList(output.approvedChanges),
 		...objectList(output.rejectedRows),
 		...objectList(output.deferredRows),
 	]
-		.filter((row) => refsTouchPath(stringList(row.sourceRefs), target, owner))
-		.map((row) => `trace:${event.id}#row:${text(row.id) || "unknown"}`);
+		.filter((change) => refsTouchPath(stringList(change.sourceRefs), target, owner))
+		.map((change) => `trace:${event.id}#change:${text(change.id) || "unknown"}`);
 }
 
 function planningWorkRefsForPath(

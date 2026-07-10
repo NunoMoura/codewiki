@@ -11,7 +11,5 @@ export {
 	renderConfigCommand,
 	renderExplainCommand,
 	renderResumeCommand,
-	renderStateCommand,
 	type CommandRenderOptions,
-	type WikiStateCommandView,
 } from "../rendering/command-renderers.ts";

@@ -32,6 +32,6 @@ Technical distribution details belong under system API, adapter, and extension d
 
 ## Related docs
 
-- [CodeWiki API](../../system/api.md)
-- [API Tool Surface](../../system/api-tools.md)
-- [Extension](../../system/extension.md)
+- [CodeWiki API](../../system/components/api.md)
+- [API Tool Surface](../../system/components/api-tools.md)
+- [Extension](../../system/components/extension.md)

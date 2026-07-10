@@ -1,5 +1,6 @@
 import type { PlanningTrigger } from "../planning/types.ts";
 import type {
+	LoopQualityStandardGate,
 	LoopQualityStandardMode,
 	LoopQualityStandardStatus,
 	TraceLoop,
@@ -47,6 +48,11 @@ export interface QualityStandardSummary {
 	weight?: number;
 	description: string;
 	message?: string;
+	standardType?: string;
+	layer?: string;
+	gate?: LoopQualityStandardGate | string;
+	score?: number;
+	scoreThreshold?: number;
 	refs: string[];
 	evidenceRefs?: string[];
 }

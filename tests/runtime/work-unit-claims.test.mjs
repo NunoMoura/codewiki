@@ -20,7 +20,7 @@ import {
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
-	const decisionRef = `trace:${traceId}:decision:iteration:1#row:DTR-${workUnitId}`;
+	const decisionRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
 	return {
 		type: "trace_event",
 		id: `${traceId}:planning:iteration:${sequence}`,

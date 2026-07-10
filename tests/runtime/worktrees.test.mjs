@@ -20,7 +20,7 @@ function item(id, pathScopes = [`src/${id}.ts`]) {
 }
 
 describe("runtime worktree planning", () => {
-	it("creates deterministic worktree refs and shell commands", () => {
+	it("creates deterministic worktree refs and process commands", () => {
 		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
@@ -43,7 +43,17 @@ describe("runtime worktree planning", () => {
 		assert.equal(plan.worktree?.baseRef, "abc1234");
 		assert.equal(plan.worktree?.baseSha, "abc1234");
 		assert.deepEqual(plan.commands.worktreePrepare, [
-			'git worktree add -B "codewiki/TRACE-worktree/WU-one/worker-custom" "/tmp/repo/codewiki/.codewiki/runtime/tmp/TRACE-worktree/worktree/WU-one/worker-custom" "abc1234"',
+			{
+				executable: "git",
+				args: [
+					"worktree",
+					"add",
+					"-B",
+					"codewiki/TRACE-worktree/WU-one/worker-custom",
+					"/tmp/repo/codewiki/.codewiki/runtime/tmp/TRACE-worktree/worktree/WU-one/worker-custom",
+					"abc1234",
+				],
+			},
 		]);
 	});
 
@@ -59,6 +69,22 @@ describe("runtime worktree planning", () => {
 			plan.worktree?.path,
 			"/sandbox/custom-worktrees/TRACE-worktree/WU-one/worker-custom",
 		);
+	});
+
+	it("keeps generated command arguments literal", () => {
+		const baseRef = "refs/heads/main$(touch should-not-run)";
+		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
+			mode: "worktree",
+			repoRoot: "/tmp/repo/codewiki",
+			worktreeRoot: "/sandbox/$(touch should-not-run)",
+			baseRef,
+		});
+
+		const command = plan.commands.worktreePrepare[0];
+		assert.equal(typeof command, "object");
+		assert.equal(command.executable, "git");
+		assert.equal(command.args.at(-1), baseRef);
+		assert.match(command.args.at(-2), /\$\(touch should-not-run\)/);
 	});
 
 	it("adds optional setup commands to explicit worktree prepare", async () => {
@@ -77,17 +103,15 @@ describe("runtime worktree planning", () => {
 			steps: ["worktree.prepare"],
 		});
 		assert.deepEqual(
-			dryRun.records.map((record) => [
-				record.commandIndex,
-				record.command,
-				record.skipped,
-			]),
+			dryRun.records.map((record) => [record.commandIndex, record.skipped]),
 			[
-				[0, plan.commands.worktreePrepare[0], true],
-				[1, "npm install", true],
-				[2, "npm test -- --runInBand", true],
+				[0, true],
+				[1, true],
+				[2, true],
 			],
 		);
+		assert.match(dryRun.records[0].command, /^git worktree add /);
+		assert.equal(dryRun.records[1].command, "npm install");
 	});
 
 	it("dry-runs planned worktree commands by default", async () => {
@@ -174,12 +198,14 @@ describe("runtime worktree planning", () => {
 		);
 	});
 
-	it("creates an explicit host shell runner for worktree commands", async () => {
+	it("runs generated commands without a shell and explicit setup through a shell", async () => {
 		const [plan] = planRuntimeWorkUnitClaimWorktrees([item("WU-one")], {
 			mode: "worktree",
 			repoRoot: "/tmp/repo/codewiki",
+			setupCommands: ["npm install"],
 		});
-		const calls = [];
+		const processCalls = [];
+		const shellCalls = [];
 		const runner = createShellWorktreeCommandRunner({
 			cwd: "/tmp/repo/codewiki",
 			env: { CODEWIKI_TEST: "1" },
@@ -187,24 +213,37 @@ describe("runtime worktree planning", () => {
 			maxBufferBytes: 456,
 			shell: "/bin/sh",
 			exec(command, options, callback) {
-				calls.push({ command, options });
+				shellCalls.push({ command, options });
+				callback(null, "setup\n", "");
+			},
+			execFile(executable, args, options, callback) {
+				processCalls.push({ executable, args, options });
 				callback(null, "verified\n", "");
 			},
 		});
 
 		const result = await executeRuntimeWorktreeCommands(plan, {
 			dryRun: false,
-			steps: ["worktree.verify"],
+			steps: ["worktree.prepare", "worktree.verify"],
 			runner,
 		});
 
-		assert.equal(calls.length, 2);
-		assert.equal(calls[0].options.cwd, "/tmp/repo/codewiki");
-		assert.deepEqual(calls[0].options.env, { CODEWIKI_TEST: "1" });
-		assert.equal(calls[0].options.timeout, 123);
-		assert.equal(calls[0].options.maxBuffer, 456);
-		assert.equal(calls[0].options.shell, "/bin/sh");
-		assert.equal(calls[0].options.windowsHide, true);
+		assert.equal(processCalls.length, 3);
+		assert.equal(processCalls[0].executable, "git");
+		assert.deepEqual(processCalls[0].args.slice(0, 3), [
+			"worktree",
+			"add",
+			"-B",
+		]);
+		assert.equal(processCalls[0].options.cwd, "/tmp/repo/codewiki");
+		assert.deepEqual(processCalls[0].options.env, { CODEWIKI_TEST: "1" });
+		assert.equal(processCalls[0].options.timeout, 123);
+		assert.equal(processCalls[0].options.maxBuffer, 456);
+		assert.equal(processCalls[0].options.shell, undefined);
+		assert.equal(processCalls[0].options.windowsHide, true);
+		assert.equal(shellCalls.length, 1);
+		assert.equal(shellCalls[0].command, "npm install");
+		assert.equal(shellCalls[0].options.shell, "/bin/sh");
 		assert.equal(result.records[0].stdout, "verified\n");
 		assert.equal(result.records[0].exitCode, 0);
 	});
@@ -215,7 +254,7 @@ describe("runtime worktree planning", () => {
 			repoRoot: "/tmp/repo/codewiki",
 		});
 		const runner = createShellWorktreeCommandRunner({
-			exec(_command, _options, callback) {
+			execFile(_executable, _args, _options, callback) {
 				const error = new Error("Command failed");
 				error.code = 2;
 				callback(error, "", "bad worktree");

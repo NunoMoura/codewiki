@@ -23,8 +23,6 @@ All notable changes to this project will be documented in this file.
 - Added `npm run lab:forge` for reducing trace JSONL into sanitized,
   human-labeled draft case material without treating raw traces as truth.
 - Expanded visible DEC, PEC, and IEC seed corpora from 3 to 5 cases per loop.
-- Fixed repo-local dogfood settings to use `..` from `.pi/settings.json`, because
-  Pi resolves relative package paths against the settings file.
 - Hardened trace append helpers to validate records before writing, preventing
   stale generic semantic event names from corrupting hot trace files.
 - Fixed trace-derived view projections to ignore superseded non-exit decision
@@ -84,6 +82,10 @@ All notable changes to this project will be documented in this file.
 - Added lab loss v2 reason labels: fail/block cases can declare expected
   standard failures plus failure classes, so route-correct wrong-reason exits
   still lose score.
+- Added reviewed self-dogfood baseline creation and verification with clean Git
+  enforcement, Git tree content proof, package SHA-256 pinning, reviewer refs,
+  and disposable state/config/decision-preview shadow execution that verifies
+  source config and trace bytes remain unchanged.
 
 ### Changed
 
@@ -107,6 +109,28 @@ All notable changes to this project will be documented in this file.
 - Changed deterministic production quality nodes from binary-only scores to
   partial 0-100 scores based on activated issue coverage while preserving
   fail-closed route status and hard-gate behavior.
+- Changed generated Git worktree operations from shell command strings to
+  structured executable-and-argument commands, with runtime handoff schema v2.
+  Explicit project setup commands remain host-approved shell commands.
+- Upgraded quality graph schema to v3 with validated node dependencies, cycle
+  rejection, and dependency-aware runner scheduling.
+- Disabled repo-local CodeWiki loading until a clean immutable baseline passes
+  packed external, shadow, and explicit approval gates.
+
+### Fixed
+
+- Cleared loop-standard timeout handles after node settlement and attributed
+  skipped standards to their actual failed dependency.
+- Restricted dashboard endpoint metadata, bearer tokens, and daemon logs to the
+  current OS user on POSIX hosts.
+- Prevented dashboard keyboard shortcuts and trace toggles from interfering with
+  nested controls, while adding keyboard focus and expansion state to trace cards.
+- Updated the packed-package smoke contract for the dashboard shutdown hook.
+- Rejected unknown config keys at every nested config boundary instead of
+  silently discarding misspelled policy fields.
+- Moved the dashboard launch token from the request URL into a fragment-backed
+  session capability, added restrictive browser headers, and removed duplicate
+  trace-file reads from dashboard refreshes.
 
 ### Notes
 

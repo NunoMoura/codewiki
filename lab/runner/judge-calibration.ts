@@ -14,6 +14,7 @@ import {
 	type LoopQualityJudgeVerdict,
 } from "../../src/loops/judge.ts";
 import type { LoopQualityStandardMethod } from "../../src/traces/types.ts";
+import { parseJsonObject } from "../../src/utils/json.ts";
 import type { LabVerdict } from "./types.ts";
 
 export interface JudgeCalibrationCase {
@@ -103,7 +104,10 @@ export function loadJudgeCalibrationBundle({
 			"Judge calibration holdout files must live outside the repository so candidate agents cannot inspect or edit them.",
 		);
 	}
-	const parsed = JSON.parse(readFileSync(resolvedFilePath, "utf8"));
+	const parsed = parseJsonObject(
+		readFileSync(resolvedFilePath, "utf8"),
+		`judge calibration file ${resolvedFilePath}`,
+	);
 	return validateJudgeCalibrationBundle(parsed, resolvedFilePath);
 }
 

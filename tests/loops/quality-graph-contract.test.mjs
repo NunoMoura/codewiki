@@ -5,8 +5,14 @@ import {
 	DECISION_LOOP_GRAPH,
 	evaluateDecisionExitGraph,
 } from "../../src/decision/loop.ts";
-import { evaluateLoopQualityGraph } from "../../src/loops/evaluator.ts";
-import { LOOP_QUALITY_GRAPH_SCHEMA_VERSION } from "../../src/loops/graph.ts";
+import {
+	evaluateLoopQualityGraph,
+	runLoopQualityGraphEvaluation,
+} from "../../src/loops/evaluator.ts";
+import {
+	assertValidLoopQualityGraph,
+	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+} from "../../src/loops/graph.ts";
 import { validateLoopQualityProfile } from "../../src/loops/quality-profile.ts";
 import {
 	IMPLEMENTATION_LOOP_GRAPH,
@@ -26,7 +32,7 @@ const LOOP_GRAPHS = [
 				[
 					{
 						code: node.codes[0],
-						rowId: "DTR-node-contract",
+						changeId: "CHG-node-contract",
 						message: `synthetic ${node.codes[0]}`,
 					},
 				],
@@ -66,7 +72,7 @@ describe("loop quality graph contracts", () => {
 	for (const { loop, graph, evaluateNodeIssue } of LOOP_GRAPHS) {
 		it(`${loop} graph classifies standards for fast AX feedback`, () => {
 			assert.equal(graph.graphId, `${loop}.loop`);
-			assert.equal(graph.schemaVersion, 2);
+			assert.equal(graph.schemaVersion, LOOP_QUALITY_GRAPH_SCHEMA_VERSION);
 			assert.equal(graph.nodes.length > 0, true);
 			assertUnique(graph.nodes.map((node) => node.id));
 
@@ -156,7 +162,7 @@ it("applies quality profile activation masks without mutating graph identity", (
 			covered_standard: {
 				state: "not_applicable",
 				reason: "covered_by_invariant",
-				refs: ["kb:system/loop-model.md"],
+				refs: ["kb:system/components/loop-model.md"],
 			},
 		},
 	};
@@ -180,6 +186,132 @@ it("applies quality profile activation masks without mutating graph identity", (
 			nodes: { hard_standard: { state: "not_applicable" } },
 		}).some((issue) => issue.code === "missing_inactive_reason"),
 		true,
+	);
+});
+
+it("rejects duplicate, unknown, and cyclic graph dependencies", () => {
+	const graph = {
+		graphId: "toy.loop",
+		graphVersion: "dependency-validation",
+		schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+		layers: ["hard_gate", "input_contract"],
+		nodes: [
+			{
+				id: "first",
+				description: "First standard.",
+				codes: ["a"],
+				layer: "hard_gate",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "hard",
+			},
+			{
+				id: "second",
+				description: "Second standard.",
+				codes: ["b"],
+				layer: "input_contract",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "soft",
+				dependsOn: ["first"],
+			},
+		],
+	};
+
+	assert.doesNotThrow(() => assertValidLoopQualityGraph(graph));
+	assert.throws(
+		() =>
+			assertValidLoopQualityGraph({
+				...graph,
+				nodes: [graph.nodes[0], { ...graph.nodes[1], id: "first" }],
+			}),
+		/duplicate node id first/i,
+	);
+	assert.throws(
+		() =>
+			assertValidLoopQualityGraph({
+				...graph,
+				nodes: [graph.nodes[0], { ...graph.nodes[1], dependsOn: ["missing"] }],
+			}),
+		/unknown dependency missing/i,
+	);
+	assert.throws(
+		() =>
+			assertValidLoopQualityGraph({
+				...graph,
+				nodes: [{ ...graph.nodes[0], dependsOn: ["second"] }, graph.nodes[1]],
+			}),
+		/dependency cycle/i,
+	);
+});
+
+it("schedules graph dependencies while preserving independent standards", async () => {
+	const graph = {
+		graphId: "toy.loop",
+		graphVersion: "dependency-runner",
+		schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
+		layers: ["hard_gate", "input_contract"],
+		nodes: [
+			{
+				id: "hard",
+				description: "Hard standard.",
+				codes: ["hard_failure"],
+				layer: "hard_gate",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "hard",
+			},
+			{
+				id: "dependent",
+				description: "Dependent standard.",
+				codes: ["dependent_failure"],
+				layer: "input_contract",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "soft",
+				dependsOn: ["hard"],
+			},
+			{
+				id: "independent",
+				description: "Independent standard.",
+				codes: ["independent_failure"],
+				layer: "input_contract",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "soft",
+			},
+		],
+	};
+	const result = await runLoopQualityGraphEvaluation({
+		graph,
+		issues: [{ code: "hard_failure", message: "hard failed" }],
+		issueCode: (issue) => issue.code,
+		issueMessage: (issue) => issue.message,
+		issueRefs: () => [],
+	});
+
+	assert.equal(
+		result.runner.nodes.find((node) => node.id === "dependent").skippedBy,
+		"hard",
+	);
+	assert.equal(
+		result.runner.nodes.find((node) => node.id === "independent").status,
+		"pass",
 	);
 });
 

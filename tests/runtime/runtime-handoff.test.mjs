@@ -23,7 +23,7 @@ function queue() {
 				traceId: "TRACE-handoff",
 				title: "Handoff A",
 				traceRefs: ["TRACE-handoff:planning:work:1"],
-				decisionRefs: ["TRACE-handoff:decision:row:1"],
+				decisionRefs: ["TRACE-handoff:decision:change:1"],
 				planningRefs: ["TRACE-handoff:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/a.ts"],
@@ -40,7 +40,7 @@ function queue() {
 				traceId: "TRACE-handoff",
 				title: "Handoff B",
 				traceRefs: ["TRACE-handoff:planning:work:2"],
-				decisionRefs: ["TRACE-handoff:decision:row:1"],
+				decisionRefs: ["TRACE-handoff:decision:change:1"],
 				planningRefs: ["TRACE-handoff:planning:work:2"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/b.ts"],
@@ -76,7 +76,7 @@ describe("runtime handoff manifest", () => {
 			promptSuffix: "HANDOFF_SUFFIX",
 		});
 
-		assert.equal(manifest.schemaVersion, "codewiki.runtime.handoff.v1");
+		assert.equal(manifest.schemaVersion, "codewiki.runtime.handoff.v2");
 		assert.equal(manifest.kind, "runtime_handoff");
 		assert.deepEqual(manifest.actions, [
 			"runtime.claims",
@@ -125,12 +125,17 @@ describe("runtime handoff manifest", () => {
 			"host_explicit_only",
 		);
 		assert.equal(manifest.workers[0].worktreeCommands.dryRunDefault, true);
-		assert.equal(
-			manifest.workers[0].worktreeCommands.worktreePrepare[0].startsWith(
-				"git worktree add",
-			),
-			true,
-		);
+		assert.deepEqual(manifest.workers[0].worktreeCommands.worktreePrepare[0], {
+			executable: "git",
+			args: [
+				"worktree",
+				"add",
+				"-B",
+				"codewiki/TRACE-handoff/WU-handoff-a/host-worker-001",
+				"/tmp/repo/codewiki/.codewiki/runtime/tmp/TRACE-handoff/worktree/WU-handoff-a/host-worker-001",
+				"HEAD",
+			],
+		});
 		assert.equal(
 			manifest.workers[0].sessionInput.prompt.includes("Worker owns local TDD"),
 			true,
@@ -211,6 +216,7 @@ describe("runtime handoff manifest", () => {
 			workUnitId: "WU-handoff-a",
 			traceId: "TRACE-handoff",
 			state: "starting",
+			planningRefs: ["TRACE-handoff:planning:work:1"],
 		});
 		assert.deepEqual(manifest.workers[0].worktreeCommands.worktreePrepare, []);
 		assert.equal(

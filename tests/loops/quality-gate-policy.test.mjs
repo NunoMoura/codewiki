@@ -7,7 +7,7 @@ import { PLANNING_LOOP_GRAPH } from "../../src/planning/loop.ts";
 
 const EXPECTED_HARD_GATES = {
 	decision: [
-		"decision_table_ready",
+		"sprint_proposal_ready",
 		"intention_understood",
 		"work_routing_classified",
 		"loop_route_safe",

@@ -8,8 +8,8 @@ source_docs:
   - .codewiki/kb/product/users/agents.md
   - .codewiki/kb/product/users/package-authors.md
   - .codewiki/kb/product/users/external-users.md
-  - .codewiki/kb/system/extension.md
-  - .codewiki/kb/system/api.md
+  - .codewiki/kb/system/components/extension.md
+  - .codewiki/kb/system/components/api.md
 renderer:
   preferred: graph
   fallback: mermaid_flowchart
@@ -33,19 +33,19 @@ systems:
   - id: pi_codewiki_surface
     label: Pi-hosted CodeWiki surface
     boundary: codewiki
-    source: .codewiki/kb/system/terminal-ui.md
+    source: .codewiki/kb/system/components/terminal-ui.md
   - id: pi_adapter
     label: Pi adapter
     boundary: codewiki
-    source: .codewiki/kb/system/extension.md
+    source: .codewiki/kb/system/components/extension.md
   - id: codewiki_api
     label: CodeWiki API
     boundary: codewiki
-    source: .codewiki/kb/system/api.md
+    source: .codewiki/kb/system/components/api.md
   - id: repo_contract
     label: Repo-local .codewiki contract
     boundary: repository
-    source: .codewiki/kb/system/knowledge.md
+    source: .codewiki/kb/system/components/knowledge.md
   - id: git_remote
     label: Git remotes
     boundary: external

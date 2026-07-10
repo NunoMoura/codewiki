@@ -1,6 +1,8 @@
 import type { CodewikiRenderComponent } from "../types.ts";
+import { truncateToWidth } from "./width.ts";
 
 export const CODEWIKI_COMMAND_MESSAGE_TYPE = "codewiki.command";
+const DASHBOARD_CTA_PREFIX = "▸ Click to open CodeWiki dashboard: ";
 
 export function renderCodewikiCommandMessage(
 	message: unknown,
@@ -19,21 +21,26 @@ function linesComponent(
 	theme: unknown,
 ): CodewikiRenderComponent {
 	return {
-		render: () => lines.map((line) => colorText(theme, line)),
+		render: (width: number) =>
+			lines.map((line) => truncateToWidth(colorText(theme, line), width)),
 		invalidate: () => undefined,
 	};
 }
 
 function colorText(theme: unknown, text: string): string {
 	const fg = record(theme).fg;
-	if (typeof fg === "function") {
-		try {
-			return String(fg("text", text));
-		} catch {
-			return text;
+	if (typeof fg !== "function") return text;
+	try {
+		if (text.startsWith(DASHBOARD_CTA_PREFIX)) {
+			const url = text.slice(DASHBOARD_CTA_PREFIX.length);
+			return `${String(fg("text", DASHBOARD_CTA_PREFIX))}${String(
+				fg("accent", url),
+			)}`;
 		}
+		return String(fg("text", text));
+	} catch {
+		return text;
 	}
-	return text;
 }
 
 function textContent(content: unknown): string {

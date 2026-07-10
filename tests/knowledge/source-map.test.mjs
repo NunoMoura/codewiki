@@ -1,18 +1,12 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
-import { pathMatchesPattern } from "../../src/knowledge/source-map.ts";
 import {
-	parseSourceMapYaml,
+	pathMatchesPattern,
 	sourceMapExcluded,
 	sourceMapOwnerForPath,
 	validateSourceMap,
 } from "../../src/knowledge/source-map.ts";
-
-const sourceMapText = readFileSync(
-	".codewiki/kb/system/source-map.yaml",
-	"utf8",
-);
 
 function collectFiles(root) {
 	const output = [];
@@ -44,51 +38,82 @@ function activeArtifactPaths() {
 	]);
 }
 
-function knowledgeMarkdown() {
-	return collectFiles(".codewiki/kb")
-		.filter((path) => path.endsWith(".md"))
-		.map((path) => ({
-			path,
-			hasFrontmatter: readFileSync(path, "utf8").startsWith("---\n"),
-		}));
-}
-
 function unique(values) {
 	return Array.from(new Set(values));
 }
 
-describe("source ownership map", () => {
-	it("parses canonical source ownership", () => {
-		const map = parseSourceMapYaml(sourceMapText);
+function sampleSourceMap() {
+	return {
+		id: "spec.test.source-ownership",
+		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
+		defaults: {
+			inheritance: true,
+			maxOwnerDepth: 2,
+			excluded: ["node_modules/**", "dist/**"],
+		},
+		components: [
+			{
+				id: "traces",
+				doc: ".codewiki/kb/system/components/traces.md",
+				sourcePatterns: ["src/traces/**", "src/api/traces.ts"],
+				testPatterns: ["tests/traces/**"],
+				generatedViews: [],
+				traceEvents: ["trace_head", "trace_event"],
+				role: "state_truth",
+			},
+			{
+				id: "implementation",
+				doc: ".codewiki/kb/system/components/implementation-loop.md",
+				sourcePatterns: ["src/implementation/**"],
+				testPatterns: ["tests/implementation/**"],
+				generatedViews: [],
+				traceEvents: ["implementation.evidence_accepted"],
+				role: "semantic_loop",
+			},
+		],
+	};
+}
 
-		assert.equal(map.id, "spec.system.source-map");
-		assert.equal(
-			sourceMapExcluded(map, "node_modules/codewiki/index.js"),
-			true,
-		);
+describe("source ownership map helpers", () => {
+	it("answers ownership from an in-memory OKF-derived contract", () => {
+		const map = sampleSourceMap();
+
+		assert.equal(sourceMapExcluded(map, "dist/index.js"), true);
 		assert.equal(
 			sourceMapOwnerForPath(map, "src/traces/append.ts")?.id,
 			"traces",
 		);
 		assert.equal(
 			sourceMapOwnerForPath(map, "src/implementation/workers.ts")?.doc,
-			".codewiki/kb/system/implementation-loop.md",
+			".codewiki/kb/system/components/implementation-loop.md",
 		);
 	});
 
-	it("validates active repo ownership with OKF-frontmatter KB docs", () => {
-		const map = parseSourceMapYaml(sourceMapText);
+	it("validates ownership contracts without reading source-map.yaml", () => {
+		const map = sampleSourceMap();
 		const issues = validateSourceMap(map, {
 			artifactPaths: activeArtifactPaths(),
-			sourcePaths: collectFiles("src"),
-			markdown: knowledgeMarkdown(),
+			sourcePaths: ["src/traces/append.ts", "src/implementation/iteration.ts"],
 		});
 
 		assert.deepEqual(issues, []);
 	});
 
-	it("maps every active test file to at least one component", () => {
-		const map = parseSourceMapYaml(sourceMapText);
+	it("matches every active test file through explicit glob helpers", () => {
+		const map = {
+			...sampleSourceMap(),
+			components: [
+				{
+					id: "tests",
+					doc: ".codewiki/kb/system/components/source-map.md",
+					sourcePatterns: ["tests/**"],
+					testPatterns: ["tests/**"],
+					generatedViews: [],
+					traceEvents: [],
+					role: "test_contract",
+				},
+			],
+		};
 		const unmappedTests = collectFiles("tests").filter(
 			(path) =>
 				map.components.some((component) =>

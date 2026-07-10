@@ -26,6 +26,6 @@ As a maintainer, I want hot CodeWiki state to stay small while full history rema
 ## Related docs
 
 - [Maintainers](../users/maintainers.md)
-- [Traces](../../system/traces.md)
-- [Knowledge](../../system/knowledge.md)
-- [System Overview](../../system/overview.md)
+- [Traces](../../system/components/traces.md)
+- [Knowledge](../../system/components/knowledge.md)
+- [System Overview](../../system/components/overview.md)

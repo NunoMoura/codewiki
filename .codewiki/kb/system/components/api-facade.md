@@ -37,7 +37,7 @@ There is no target API facade over old stored-state, roadmap, session, artifact-
 
 ## Related docs
 
-- [System overview](../overview.md)
-- [Loop Model](../loop-model.md)
-- [API Tool Surface](../api-tools.md)
-- [Source map](../source-map.md)
+- [System overview](overview.md)
+- [Loop Model](loop-model.md)
+- [API Tool Surface](api-tools.md)
+- [Source map](source-map.md)

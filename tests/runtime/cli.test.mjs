@@ -34,29 +34,6 @@ async function fixture() {
 		join(root, ".codewiki", "traces", "NOT-A-TRACE.jsonl"),
 		"not json\n",
 	);
-	await writeFile(
-		join(root, ".codewiki", "kb", "system", "source-map.yaml"),
-		[
-			"id: test-source-map",
-			"source_docs:",
-			"  - kb:system/source-map.md",
-			"defaults:",
-			"  inheritance: true",
-			"  excluded: []",
-			"components:",
-			"  api:",
-			"    doc: kb:system/api.md",
-			"    source_patterns:",
-			"      - src/api/**",
-			"    test_patterns:",
-			"      - tests/api/**",
-			"    generated_views:",
-			"      - .codewiki/views/status.json",
-			"    trace_events:",
-			"      - decision.rows_approved",
-			"",
-		].join("\n"),
-	);
 	return root;
 }
 
@@ -236,7 +213,7 @@ describe("CLI adapter", () => {
 			const commandInputs = {
 				decide: {
 					traceId: "TRACE-cli-command",
-					tableInput: { rows: [] },
+					proposalInput: { changes: [] },
 				},
 				plan: {
 					traceId: "TRACE-cli-command",

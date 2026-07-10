@@ -85,9 +85,9 @@ const SMOKE_LOOPS: SmokeLoopSpec[] = [
 		graphVersion: "smoke",
 		judgeInput: {
 			loop: "decision",
-			approvedRows: [
+			approvedChanges: [
 				{
-					id: "DTR-smoke",
+					id: "CHG-smoke",
 					currentState:
 						"Decision standards need semantic review after deterministic fields pass.",
 					desiredState:

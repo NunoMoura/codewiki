@@ -35,7 +35,7 @@ function triggers() {
 				traceTitle: "CI trigger",
 				workUnitId: "WU-ci",
 				planningRef: "trace:TRACE-trigger:planning:iteration:1#work:WU-ci",
-				decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#row:DTR-ci"],
+				decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
 				pathScopes: ["src/runtime"],
 				trigger: {
 					id: "TRG-ci",
@@ -45,7 +45,7 @@ function triggers() {
 					runKeyTemplate: "ci:${week}",
 					owner: "implementation",
 					trigger: "cron:0 9 * * 1",
-					refs: ["kb:system/runtime.md"],
+					refs: ["kb:system/components/runtime.md"],
 				},
 				enabledBy: [
 					"trace:TRACE-trigger:implementation:iteration:1#change:IC-ci",
@@ -120,7 +120,7 @@ function queue() {
 				traceId: "TRACE-runtime",
 				title: "Runtime A",
 				traceRefs: ["TRACE-runtime:planning:work:1"],
-				decisionRefs: ["TRACE-runtime:decision:row:1"],
+				decisionRefs: ["TRACE-runtime:decision:change:1"],
 				planningRefs: ["TRACE-runtime:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/a.ts"],
@@ -137,7 +137,7 @@ function queue() {
 				traceId: "TRACE-runtime",
 				title: "Runtime B",
 				traceRefs: ["TRACE-runtime:planning:work:2"],
-				decisionRefs: ["TRACE-runtime:decision:row:1"],
+				decisionRefs: ["TRACE-runtime:decision:change:1"],
 				planningRefs: ["TRACE-runtime:planning:work:2"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/b.ts"],
@@ -175,13 +175,13 @@ describe("wiki_runtime core facade", () => {
 	it("ignores raw decision items during work-unit claim selection", async () => {
 		const mixedQueue = queue();
 		mixedQueue.items.unshift({
-			id: "DTR-runtime-decision",
+			id: "CHG-runtime-decision",
 			kind: "decision",
 			status: "ready",
 			traceId: "TRACE-runtime",
 			title: "Raw decision should go through planning",
 			traceRefs: ["TRACE-runtime:decision:iteration:1"],
-			decisionRefs: ["TRACE-runtime:decision:iteration:1#row:DTR-runtime"],
+			decisionRefs: ["TRACE-runtime:decision:iteration:1#change:CHG-runtime"],
 			planningRefs: [],
 			componentRefs: [],
 			pathScopes: ["src/runtime/raw-decision.ts"],
@@ -206,7 +206,7 @@ describe("wiki_runtime core facade", () => {
 		);
 		assert.equal(
 			result.plan.selected.some(
-				(item) => item.workUnitId === "DTR-runtime-decision",
+				(item) => item.workUnitId === "CHG-runtime-decision",
 			),
 			false,
 		);

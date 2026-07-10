@@ -106,9 +106,9 @@ and Implementation prevent drift without inventing another semantic loop.
 
 ## Direct implementation route
 
-A Decision-loop route for tiny or small low-risk work where approved rows carry
-explicit scope and validation, allowing Implementation to consume the decision
-row without a Planning iteration. This is still trace-backed and still requires
+A Decision-loop route for tiny or small low-risk work where approved changes carry
+explicit scope and validation, allowing Implementation to consume the Decision
+without a Planning iteration. This is still trace-backed and still requires
 implementation evidence.
 
 ## AX
@@ -127,21 +127,22 @@ user-facing terminal rendering.
 
 | Term | Meaning | Technical backing |
 | --- | --- | --- |
-| Sprint Proposal | Draft package of Decisions being shaped and validated with the user before accountable work exists. | Decision table while stored or rendered inside the Decision loop. |
-| Decision | User-approved intent, requirement, risk choice, or product/system direction inside a Sprint Proposal. | Decision row and row id inside trace data. |
+| Sprint Proposal | Draft package of Proposed Changes being shaped and validated with the user before accountable work exists. | Sprint proposal while stored or rendered inside the Decision loop. |
+| Decision | User-approved intent, requirement, risk choice, or product/system direction inside a Sprint Proposal. | Proposed change and change id inside trace data. |
 | Sprint | Approved accountable change journey created after user-approved Decisions pass Decision ready checks. | One trace-backed workflow lifecycle. |
 | Sprint Record | Durable append-only record for a Sprint. | `.codewiki/traces/TRACE-*.jsonl` trace file. |
-| Sprint Queue | User-facing list of active and completed Sprints. | Generated view/projection over traces and work queues. |
-| Sprint Card | User-facing projection for one Sprint in the Sprint Queue. | Derived card/widget data; never a separate truth file. |
+| Sprints Queue | User-facing ordered list of active and completed Sprints. | Generated view/projection over traces and work queues. |
+| Sprint Trace | User-facing horizontal lifecycle/progress bar for one Sprint in the Sprints Queue. | Derived trace projection; never a separate truth file. |
+| Trace Detail | Expanded Sprint Trace view with workers, blockers, refs, paths, and current action. | Derived trace projection; never a separate truth file. |
 | Task | Planning-created, parallel-safe, assignable work that covers one or more approved Decisions. | Planning work item / work unit in trace data. |
 | Assignment | Runtime claim of one Planning-approved Task by a worker or session. | Runtime claim trace event. |
 | Ready Checks | User-facing name for loop exit conditions and quality standards that must pass before work advances. | Exit-condition and quality-graph internals. |
 | Needs Review | User-facing status when earlier authority is required before work can proceed. | `route_back` exit status. |
 | Blocked | User-facing status when an external wait, resource, host capability, or policy prevents progress. | `blocked` exit status. |
-| Done | User-facing status for accepted completed work. | Passed implementation/archive closure state. |
+| Archived | User-facing status for accepted completed work that has reached durable retention. | Passed implementation plus archive/retention closure state. |
 
 Implementation workers may use private scratchpads or checklists inside an
-assigned Task. These are execution aids, not Planning truth, Sprint Queue items,
+assigned Task. These are execution aids, not Planning truth, Sprints Queue items,
 or runtime-claimable units.
 
 Host/session terms such as decision host, trace host, worker session, process
@@ -229,12 +230,14 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | gateway | loop-local exit conditions |
 | gate verdict | exit status |
 | validation report | exit condition result |
-| board | Sprint Queue; compatibility flag/name only where already public |
-| trace board | Sprint Queue |
-| trace queue | Sprint Queue; internal generated view only |
-| card / trace card | Sprint Card |
-| decision table | Sprint Proposal; internal Decision-loop table shape only |
-| decision row / row | Decision; row id only for trace refs |
+| board | Sprints Queue; compatibility flag/name only where already public |
+| trace board | Sprints Queue |
+| trace queue | Sprints Queue; internal generated view only |
+| card / trace card | Sprint Trace |
+| Sprint Card | Sprint Trace |
+| Sprint Queue | Sprints Queue |
+| sprint proposal | Sprint Proposal; internal Decision-loop proposal shape only |
+| proposed change | Decision after approval; change id only for trace refs |
 | work unit / work item | Task; internal Planning trace shape only |
 | sub-task / planner to-do list | Task, or worker-local scratchpad/checklist |
 | route_back | Needs Review; `route_back` only in internals |
@@ -244,13 +247,13 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | garbage collection / GC | retention/archive/hydrate/restore pipeline |
 | agency subsystem | runtime automation/config policy |
 
-Deprecated terms may appear in this replacement table only; the old implementation archive has been removed.
+Deprecated terms may appear in this replacement list only; the old implementation archive has been removed.
 
 ## Related docs
 
-- [Loop Model](system/loop-model.md)
-- [Decision Loop](system/decision-loop.md)
-- [Planning Loop](system/planning-loop.md)
-- [Implementation Loop](system/implementation-loop.md)
-- [Traces](system/traces.md)
-- [API Tool Surface](system/api-tools.md)
+- [Loop Model](system/components/loop-model.md)
+- [Decision Loop](system/components/decision-loop.md)
+- [Planning Loop](system/components/planning-loop.md)
+- [Implementation Loop](system/components/implementation-loop.md)
+- [Traces](system/components/traces.md)
+- [API Tool Surface](system/components/api-tools.md)

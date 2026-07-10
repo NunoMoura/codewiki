@@ -35,7 +35,7 @@ import {
 	isBlockingDecisionIssue,
 	runDecisionQualityStandards,
 } from "./quality-standards.ts";
-import { approvedDecisionRows } from "./table.ts";
+import { approvedProposalChanges } from "./proposal.ts";
 import {
 	DECISION_IMPLEMENTATION_MODE_VALUES,
 	DECISION_KIND_VALUES,
@@ -44,14 +44,14 @@ import {
 	DECISION_WORK_SCALE_VALUES,
 	type ActiveTraceGoal,
 	type CurrentStatePacket,
-	type DecisionRow,
-	type DecisionTable,
+	type ProposedChange,
+	type SprintProposal,
 	type KnowledgeDelta,
 } from "./types.ts";
 
 export type DecisionExitIssueCode =
-	| "no_decision_rows"
-	| "no_approved_rows"
+	| "no_proposed_changes"
+	| "no_approved_changes"
 	| "missing_current_state"
 	| "missing_desired_state"
 	| "missing_rationale"
@@ -124,7 +124,7 @@ export type DecisionExitIssueCode =
 	| "missing_high_risk_scope"
 	| "missing_high_risk_alternative"
 	| "missing_high_risk_evidence"
-	| "duplicate_decision_row_id"
+	| "duplicate_change_id"
 	| "invalid_traceability_ref"
 	| "missing_knowledge_delta"
 	| "invalid_knowledge_ref"
@@ -133,7 +133,7 @@ export type DecisionExitIssueCode =
 
 export interface DecisionExitIssue {
 	code: DecisionExitIssueCode;
-	rowId?: string;
+	changeId?: string;
 	ref?: string;
 	message: string;
 }
@@ -148,17 +148,17 @@ export interface DecisionExitOptions {
 export interface DecisionExitResult extends ExitDetails {
 	passed: boolean;
 	issues: DecisionExitIssue[];
-	approvedRowIds: string[];
+	approvedChangeIds: string[];
 }
 
 export interface DecisionExitIssueCollection {
 	issues: DecisionExitIssue[];
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 }
 
 export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 	graphId: "decision.loop",
-	graphVersion: "0.3.0.loop.5",
+	graphVersion: "0.3.0.loop.6",
 	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	layers: loopGraphLayers([
 		"hard_gate",
@@ -173,18 +173,18 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 	]),
 	nodes: [
 		decisionNode({
-			id: "decision_table_ready",
+			id: "sprint_proposal_ready",
 			layer: "input_contract",
 			standardType: "loop_contract",
 			weight: 8,
 			cost: 8,
 			hardGate: true,
 			description:
-				"Decision table has at least one approved row and stable row ids.",
+				"Decision loop output has at least one Decision and stable Decision ids.",
 			codes: [
-				"no_decision_rows",
-				"no_approved_rows",
-				"duplicate_decision_row_id",
+				"no_proposed_changes",
+				"no_approved_changes",
+				"duplicate_change_id",
 			],
 		}),
 		decisionNode({
@@ -195,7 +195,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 14,
 			hardGate: true,
 			description:
-				"Approved rows provide current state, desired state, and rationale fields for the user intention.",
+				"Decisions provide current state, desired state, and rationale fields for the user intention.",
 			codes: [
 				"missing_current_state",
 				"missing_desired_state",
@@ -209,7 +209,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			weight: 10,
 			cost: 10,
 			description:
-				"Approved rows explain how the intention benefits users or improves user outcomes.",
+				"Decisions explain how the intention benefits users or improves user outcomes.",
 			codes: ["missing_user_impact"],
 		}),
 		decisionNode({
@@ -219,7 +219,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			weight: 7,
 			cost: 7,
 			description:
-				"Approved rows expose maintainer impact and a bounded effort estimate for later semantic cost review.",
+				"Decisions expose maintainer impact and a bounded effort estimate for later semantic cost review.",
 			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
 		}),
 		decisionNode({
@@ -230,7 +230,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 10,
 			hardGate: true,
 			description:
-				"Approved rows classify work scale and choose micro or standard planning before planning handoff.",
+				"Decisions classify work scale and choose micro or standard planning before planning handoff.",
 			codes: [
 				"missing_work_scale",
 				"invalid_work_scale",
@@ -248,7 +248,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 10,
 			hardGate: true,
 			description:
-				"Approved rows choose an explicit next loop; direct implementation is limited to low-risk scoped work with validation.",
+				"Decisions choose an explicit next loop; direct implementation is limited to low-risk scoped work with validation.",
 			codes: [
 				"invalid_route_target",
 				"missing_route_rationale",
@@ -267,7 +267,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			weight: 9,
 			cost: 9,
 			description:
-				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why approved rows should proceed.",
+				"The agent gives a clear approve/reject/defer/ask-user recommendation and explains why Decisions should proceed.",
 			codes: [
 				"missing_recommendation",
 				"invalid_recommendation",
@@ -328,7 +328,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 18,
 			hardGate: true,
 			description:
-				"High-risk approved rows have explicit user approval authority and a canonical approval ref.",
+				"High-risk Decisions have explicit user approval authority and a canonical approval ref.",
 			codes: ["missing_high_risk_approval", "invalid_approval_ref"],
 		}),
 		decisionNode({
@@ -350,7 +350,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 12,
 			hardGate: true,
 			description:
-				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk rows.",
+				"Decision evidence is sufficient for planning to trust the intention, including stronger proof for high-risk Decisions.",
 			codes: [
 				"missing_traceability_ref",
 				"missing_high_risk_evidence",
@@ -365,7 +365,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 10,
 			hardGate: true,
 			description:
-				"Approved rows declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
+				"Decisions declare a valid risk tier; high-risk intentions identify affected layers and alternatives before implementation work is planned.",
 			codes: [
 				"missing_risk",
 				"invalid_risk",
@@ -381,7 +381,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 16,
 			hardGate: true,
 			description:
-				"Approved rows do not conflict with active trace goals unless the conflict is resolved.",
+				"Decisions do not conflict with active trace goals unless the conflict is resolved.",
 			codes: ["active_trace_conflict"],
 		}),
 		decisionNode({
@@ -406,7 +406,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			cost: 8,
 			hardGate: true,
 			description:
-				"Approved rows classify the decision kind so kind-specific quality can apply inside the decision loop.",
+				"Decisions classify the decision kind so kind-specific quality can apply inside the decision loop.",
 			codes: [
 				"missing_decision_kind",
 				"invalid_decision_kind",
@@ -523,150 +523,159 @@ function decisionNode(
 }
 
 export function collectDecisionExitIssues(
-	table: DecisionTable,
+	proposal: SprintProposal,
 	options: DecisionExitOptions = {},
 ): DecisionExitIssueCollection {
 	const issues: DecisionExitIssue[] = [];
-	if (table.rows.length === 0) {
+	if (proposal.changes.length === 0) {
 		issues.push({
-			code: "no_decision_rows",
-			message: "Decision exit requires at least one row.",
+			code: "no_proposed_changes",
+			message: "Decision exit requires at least one change.",
 		});
 	}
-	const approvedRows = approvedDecisionRows(table);
-	issues.push(...tableTraceabilityRefIssues(table));
-	if (table.rows.length > 0 && approvedRows.length === 0) {
+	const approvedChanges = approvedProposalChanges(proposal);
+	issues.push(...proposalTraceabilityRefIssues(proposal));
+	if (proposal.changes.length > 0 && approvedChanges.length === 0) {
 		issues.push({
-			code: "no_approved_rows",
-			message: "Decision exit requires at least one approved row.",
+			code: "no_approved_changes",
+			message: "Decision exit requires at least one Decision.",
 		});
 	}
-	issues.push(...duplicateRowIssues(table.rows));
+	issues.push(...duplicateRowIssues(proposal.changes));
 	issues.push(
 		...currentStatePacketIssues({
-			approvedRows,
+			approvedChanges,
 			packet:
 				options.currentStatePacket ||
-				currentStatePacketFromRows(table, approvedRows),
+				currentStatePacketFromRows(proposal, approvedChanges),
 			validateRefs: Boolean(options.currentStatePacket),
 		}),
 	);
-	for (const row of approvedRows) {
+	for (const change of approvedChanges) {
 		issues.push(
-			...approvedRowIssues(row),
-			...workRoutingIssues(row),
-			...directRouteIssues(row),
-			...decisionTypePolicyIssues(row),
-			...decisionKindQualityIssues(row),
-			...recommendationQualityIssues(row),
-			...agentAssessmentQualityIssues(row),
-			...riskQualityIssues(row),
-			...highRiskQualityIssues(row),
-			...traceabilityRefIssues(row),
+			...approvedRowIssues(change),
+			...workRoutingIssues(change),
+			...directRouteIssues(change),
+			...decisionTypePolicyIssues(change),
+			...decisionKindQualityIssues(change),
+			...recommendationQualityIssues(change),
+			...agentAssessmentQualityIssues(change),
+			...riskQualityIssues(change),
+			...highRiskQualityIssues(change),
+			...traceabilityRefIssues(change),
 		);
 	}
-	issues.push(...knowledgeDeltaIssues(approvedRows, options.knowledgeDelta));
+	issues.push(...knowledgeDeltaIssues(approvedChanges, options.knowledgeDelta));
 	issues.push(
-		...activeTraceConflictIssues(approvedRows, options.activeTraceGoals || []),
+		...activeTraceConflictIssues(
+			approvedChanges,
+			options.activeTraceGoals || [],
+		),
 	);
-	return { issues, approvedRows };
+	return { issues, approvedChanges };
 }
 
 export function evaluateDecisionExit(
-	table: DecisionTable,
+	proposal: SprintProposal,
 	options: DecisionExitOptions = {},
 ): DecisionExitResult {
-	const { issues, approvedRows } = collectDecisionExitIssues(table, options);
-	const qualityStandards = evaluateDecisionExitGraph(issues, approvedRows);
+	const { issues, approvedChanges } = collectDecisionExitIssues(
+		proposal,
+		options,
+	);
+	const qualityStandards = evaluateDecisionExitGraph(issues, approvedChanges);
 	return decisionExitResultFromQuality({
 		issues,
-		approvedRows,
+		approvedChanges,
 		qualityStandards,
 	});
 }
 
 export async function evaluateDecisionExitWithRunner(
-	table: DecisionTable,
+	proposal: SprintProposal,
 	options: DecisionExitOptions = {},
 ): Promise<DecisionExitResult> {
-	const { issues, approvedRows } = collectDecisionExitIssues(table, options);
+	const { issues, approvedChanges } = collectDecisionExitIssues(
+		proposal,
+		options,
+	);
 	const quality = await runDecisionQualityStandards({
 		graph: DECISION_LOOP_GRAPH,
 		issues,
-		approvedRows,
+		approvedChanges,
 		...(options.qualityJudge || {}),
 		judgeInput:
 			options.qualityJudge?.judgeInput ||
-			decisionJudgeInput(table, options, approvedRows),
+			decisionJudgeInput(proposal, options, approvedChanges),
 	});
 	return decisionExitResultFromQuality({
 		issues,
-		approvedRows,
+		approvedChanges,
 		qualityStandards: quality.standards,
 		qualityRunner: quality,
 	});
 }
 
 function decisionJudgeInput(
-	table: DecisionTable,
+	proposal: SprintProposal,
 	options: DecisionExitOptions,
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): Record<string, unknown> {
 	return {
 		loop: "decision",
-		table: {
-			id: table.id,
-			summary: table.summary,
-			sourceRefs: table.sourceRefs,
+		proposal: {
+			id: proposal.id,
+			summary: proposal.summary,
+			sourceRefs: proposal.sourceRefs,
 		},
-		approvedRows: approvedRows.map((row) => ({
-			id: row.id,
-			decisionKind: row.decisionKind,
-			decisionType: row.decisionType,
-			currentState: row.currentState,
-			desiredState: row.desiredState,
-			rationale: row.rationale,
-			userImpact: row.userImpact,
-			maintainerImpact: row.maintainerImpact,
-			effort: row.effort,
-			workScale: row.workScale,
-			planningDepth: row.planningDepth,
-			routeTarget: row.routeTarget,
-			routeKind: row.routeKind,
-			routeRationale: row.routeRationale,
-			risk: row.risk,
-			affectedLayers: row.affectedLayers,
-			recommendation: row.recommendation,
-			recommendationRationale: row.recommendationRationale,
-			agentAssessment: row.agentAssessment,
-			targetRefs: row.targetRefs,
-			sourceRefs: row.sourceRefs,
-			proofRefs: row.proofRefs,
-			currentPain: row.currentPain,
-			desiredOutcome: row.desiredOutcome,
-			successSignal: row.successSignal,
-			nonGoals: row.nonGoals,
-			hypothesis: row.hypothesis,
-			invariant: row.invariant,
-			probe: row.probe,
-			expectedSafeBehavior: row.expectedSafeBehavior,
-			stopCondition: row.stopCondition,
-			reproduction: row.reproduction,
-			expectedBehavior: row.expectedBehavior,
-			regressionPlan: row.regressionPlan,
-			safetyBoundary: row.safetyBoundary,
-			failureModes: row.failureModes,
-			negativeTestPlan: row.negativeTestPlan,
-			compatibilityImpact: row.compatibilityImpact,
-			sourceBehavior: row.sourceBehavior,
-			targetBehavior: row.targetBehavior,
-			preservedInvariants: row.preservedInvariants,
-			equivalenceProof: row.equivalenceProof,
-			rollbackPlan: row.rollbackPlan,
+		approvedChanges: approvedChanges.map((change) => ({
+			id: change.id,
+			decisionKind: change.decisionKind,
+			decisionType: change.decisionType,
+			currentState: change.currentState,
+			desiredState: change.desiredState,
+			rationale: change.rationale,
+			userImpact: change.userImpact,
+			maintainerImpact: change.maintainerImpact,
+			effort: change.effort,
+			workScale: change.workScale,
+			planningDepth: change.planningDepth,
+			routeTarget: change.routeTarget,
+			routeKind: change.routeKind,
+			routeRationale: change.routeRationale,
+			risk: change.risk,
+			affectedLayers: change.affectedLayers,
+			recommendation: change.recommendation,
+			recommendationRationale: change.recommendationRationale,
+			agentAssessment: change.agentAssessment,
+			targetRefs: change.targetRefs,
+			sourceRefs: change.sourceRefs,
+			proofRefs: change.proofRefs,
+			currentPain: change.currentPain,
+			desiredOutcome: change.desiredOutcome,
+			successSignal: change.successSignal,
+			nonGoals: change.nonGoals,
+			hypothesis: change.hypothesis,
+			invariant: change.invariant,
+			probe: change.probe,
+			expectedSafeBehavior: change.expectedSafeBehavior,
+			stopCondition: change.stopCondition,
+			reproduction: change.reproduction,
+			expectedBehavior: change.expectedBehavior,
+			regressionPlan: change.regressionPlan,
+			safetyBoundary: change.safetyBoundary,
+			failureModes: change.failureModes,
+			negativeTestPlan: change.negativeTestPlan,
+			compatibilityImpact: change.compatibilityImpact,
+			sourceBehavior: change.sourceBehavior,
+			targetBehavior: change.targetBehavior,
+			preservedInvariants: change.preservedInvariants,
+			equivalenceProof: change.equivalenceProof,
+			rollbackPlan: change.rollbackPlan,
 		})),
 		currentStatePacket:
 			options.currentStatePacket ||
-			currentStatePacketFromRows(table, approvedRows),
+			currentStatePacketFromRows(proposal, approvedChanges),
 		knowledgeDelta: options.knowledgeDelta,
 		activeTraceGoals: options.activeTraceGoals,
 	};
@@ -674,7 +683,7 @@ function decisionJudgeInput(
 
 function decisionExitResultFromQuality(input: {
 	issues: DecisionExitIssue[];
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 	qualityStandards: DecisionExitResult["qualityStandards"];
 	qualityRunner?: RunLoopQualityGraphResult;
 }): DecisionExitResult {
@@ -700,9 +709,9 @@ function decisionExitResultFromQuality(input: {
 		findings: input.issues.map(issueFinding),
 		remediation,
 		diagnostics,
-		route: decisionExitRoute(verdict, input.approvedRows),
-		routePlan: decisionRoutePlan(verdict, input.approvedRows, input.issues),
-		approvedRowIds: input.approvedRows.map((row) => row.id),
+		route: decisionExitRoute(verdict, input.approvedChanges),
+		routePlan: decisionRoutePlan(verdict, input.approvedChanges, input.issues),
+		approvedChangeIds: input.approvedChanges.map((change) => change.id),
 	};
 }
 
@@ -727,19 +736,19 @@ function decisionVerdictFromQuality(
 
 export function decisionExitRoute(
 	verdict: "pass" | "fail" | "block",
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): "decision" | "planning" | "implementation" | "user" {
 	if (verdict === "block") return "user";
 	if (verdict !== "pass") return "decision";
-	return approvedRows.length > 0 &&
-		approvedRows.every((row) => row.routeTarget === "implementation")
+	return approvedChanges.length > 0 &&
+		approvedChanges.every((change) => change.routeTarget === "implementation")
 		? "implementation"
 		: "planning";
 }
 
 function decisionRoutePlan(
 	verdict: "pass" | "fail" | "block",
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 	issues: DecisionExitIssue[],
 ): LoopRoutePlan {
 	if (verdict === "block") {
@@ -748,7 +757,7 @@ function decisionRoutePlan(
 			kind: "authority_validation",
 			rationale:
 				"Decision exit needs user authority before another semantic loop can proceed.",
-			refs: decisionRouteRefs(issues, approvedRows),
+			refs: decisionRouteRefs(issues, approvedChanges),
 		};
 	}
 	if (verdict !== "pass") {
@@ -757,44 +766,47 @@ function decisionRoutePlan(
 			kind: "continue",
 			rationale:
 				"Decision exit did not meet quality standards; continue the decision loop.",
-			refs: decisionRouteRefs(issues, approvedRows),
+			refs: decisionRouteRefs(issues, approvedChanges),
 		};
 	}
 	const directImplementation =
-		approvedRows.length > 0 &&
-		approvedRows.every((row) => row.routeTarget === "implementation");
+		approvedChanges.length > 0 &&
+		approvedChanges.every((change) => change.routeTarget === "implementation");
 	if (directImplementation) {
 		return {
 			target: "implementation",
 			kind: "direct_implementation",
-			rationale: approvedRows
-				.map((row) => row.routeRationale)
+			rationale: approvedChanges
+				.map((change) => change.routeRationale)
 				.filter(Boolean)
 				.join(" "),
-			implementationMode: implementationModeForRows(approvedRows),
-			refs: approvedRows.map((row) => `decision-row:${row.id}`),
+			implementationMode: implementationModeForRows(approvedChanges),
+			refs: approvedChanges.map((change) => `decision-change:${change.id}`),
 		};
 	}
 	return {
 		target: "planning",
 		kind: "advance",
-		rationale: "Approved decision rows require planning before implementation.",
-		refs: approvedRows.map((row) => `decision-row:${row.id}`),
+		rationale:
+			"Approved proposed changes require planning before implementation.",
+		refs: approvedChanges.map((change) => `decision-change:${change.id}`),
 	};
 }
 
 function decisionRouteRefs(
 	issues: DecisionExitIssue[],
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ): string[] {
 	return issues.length
 		? issues.flatMap(decisionIssueRefs)
-		: approvedRows.map((row) => `decision-row:${row.id}`);
+		: approvedChanges.map((change) => `decision-change:${change.id}`);
 }
 
-function implementationModeForRows(rows: DecisionRow[]): string | undefined {
+function implementationModeForRows(
+	changes: ProposedChange[],
+): string | undefined {
 	const modes = new Set(
-		rows.map((row) => row.implementationMode).filter(Boolean),
+		changes.map((change) => change.implementationMode).filter(Boolean),
 	);
 	if (modes.size === 1) return [...modes][0];
 	return modes.size > 1 ? "targeted_checks" : undefined;
@@ -802,198 +814,200 @@ function implementationModeForRows(rows: DecisionRow[]): string | undefined {
 
 export function evaluateDecisionExitGraph(
 	issues: DecisionExitIssue[],
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 ) {
 	return evaluateDecisionQualityStandards({
 		graph: DECISION_LOOP_GRAPH,
 		issues,
-		approvedRows,
+		approvedChanges,
 	});
 }
 
-function approvedRowIssues(row: DecisionRow): DecisionExitIssue[] {
+function approvedRowIssues(change: ProposedChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!row.currentState) {
+	if (!change.currentState) {
 		issues.push({
 			code: "missing_current_state",
-			rowId: row.id,
-			message: `Decision row ${row.id} is missing current state.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} is missing current state.`,
 		});
 	}
-	if (!row.desiredState) {
+	if (!change.desiredState) {
 		issues.push({
 			code: "missing_desired_state",
-			rowId: row.id,
-			message: `Decision row ${row.id} is missing desired state.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} is missing desired state.`,
 		});
 	}
-	if (!row.rationale) {
+	if (!change.rationale) {
 		issues.push({
 			code: "missing_rationale",
-			rowId: row.id,
-			message: `Decision row ${row.id} is missing rationale.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} is missing rationale.`,
 		});
 	}
-	if (!row.userImpact) {
+	if (!change.userImpact) {
 		issues.push({
 			code: "missing_user_impact",
-			rowId: row.id,
-			message: `Decision row ${row.id} must explain user impact.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must explain user impact.`,
 		});
 	}
-	if (!row.maintainerImpact) {
+	if (!change.maintainerImpact) {
 		issues.push({
 			code: "missing_maintainer_impact",
-			rowId: row.id,
-			message: `Decision row ${row.id} must explain maintainer impact.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must explain maintainer impact.`,
 		});
 	}
-	if (!row.effort) {
+	if (!change.effort) {
 		issues.push({
 			code: "missing_effort",
-			rowId: row.id,
-			message: `Decision row ${row.id} must estimate effort.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must estimate effort.`,
 		});
-	} else if (!isAllowed(row.effort, ["low", "medium", "high"])) {
+	} else if (!isAllowed(change.effort, ["low", "medium", "high"])) {
 		issues.push({
 			code: "invalid_effort",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid effort ${row.effort}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid effort ${change.effort}.`,
 		});
 	}
-	if (row.sourceRefs.length === 0 && !row.noKbImpactReason) {
+	if (change.sourceRefs.length === 0 && !change.noKbImpactReason) {
 		issues.push({
 			code: "missing_traceability_ref",
-			rowId: row.id,
-			message: `Decision row ${row.id} needs source refs or no-KB-impact rationale.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} needs source refs or no-KB-impact rationale.`,
 		});
 	}
 	return issues;
 }
 
-function workRoutingIssues(row: DecisionRow): DecisionExitIssue[] {
+function workRoutingIssues(change: ProposedChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!row.workScale) {
+	if (!change.workScale) {
 		issues.push({
 			code: "missing_work_scale",
-			rowId: row.id,
-			message: `Decision row ${row.id} must classify workScale.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must classify workScale.`,
 		});
-	} else if (!isAllowed(row.workScale, [...DECISION_WORK_SCALE_VALUES])) {
+	} else if (!isAllowed(change.workScale, [...DECISION_WORK_SCALE_VALUES])) {
 		issues.push({
 			code: "invalid_work_scale",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid workScale ${row.workScale}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid workScale ${change.workScale}.`,
 		});
 	}
-	if (!row.planningDepth) {
+	if (!change.planningDepth) {
 		issues.push({
 			code: "missing_planning_depth",
-			rowId: row.id,
-			message: `Decision row ${row.id} must classify planningDepth.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must classify planningDepth.`,
 		});
 	} else if (
-		!isAllowed(row.planningDepth, [...DECISION_PLANNING_DEPTH_VALUES])
+		!isAllowed(change.planningDepth, [...DECISION_PLANNING_DEPTH_VALUES])
 	) {
 		issues.push({
 			code: "invalid_planning_depth",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid planningDepth ${row.planningDepth}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid planningDepth ${change.planningDepth}.`,
 		});
 	}
-	if (row.planningDepth === "micro") {
-		if (!["tiny", "small"].includes(row.workScale)) {
+	if (change.planningDepth === "micro") {
+		if (!["tiny", "small"].includes(change.workScale)) {
 			issues.push({
 				code: "invalid_micro_plan_scale",
-				rowId: row.id,
-				message: `Decision row ${row.id} can use micro planning only for tiny or small work.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} can use micro planning only for tiny or small work.`,
 			});
 		}
-		if (row.risk !== "low") {
+		if (change.risk !== "low") {
 			issues.push({
 				code: "invalid_micro_plan_risk",
-				rowId: row.id,
-				message: `Decision row ${row.id} can use micro planning only for low-risk work.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} can use micro planning only for low-risk work.`,
 			});
 		}
 	}
 	return issues;
 }
 
-function directRouteIssues(row: DecisionRow): DecisionExitIssue[] {
+function directRouteIssues(change: ProposedChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!isAllowed(row.routeTarget, [...DECISION_ROUTE_TARGET_VALUES])) {
+	if (!isAllowed(change.routeTarget, [...DECISION_ROUTE_TARGET_VALUES])) {
 		issues.push({
 			code: "invalid_route_target",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid routeTarget ${row.routeTarget}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid routeTarget ${change.routeTarget}.`,
 		});
 	}
-	if (row.routeTarget !== "implementation") return issues;
-	if (!row.routeRationale) {
+	if (change.routeTarget !== "implementation") return issues;
+	if (!change.routeRationale) {
 		issues.push({
 			code: "missing_route_rationale",
-			rowId: row.id,
-			message: `Decision row ${row.id} needs rationale for direct implementation routing.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} needs rationale for direct implementation routing.`,
 		});
 	}
-	if (!row.implementationMode) {
+	if (!change.implementationMode) {
 		issues.push({
 			code: "missing_direct_implementation_mode",
-			rowId: row.id,
-			message: `Decision row ${row.id} needs implementationMode for direct implementation.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} needs implementationMode for direct implementation.`,
 		});
 	} else if (
-		!isAllowed(row.implementationMode, [...DECISION_IMPLEMENTATION_MODE_VALUES])
+		!isAllowed(change.implementationMode, [
+			...DECISION_IMPLEMENTATION_MODE_VALUES,
+		])
 	) {
 		issues.push({
 			code: "invalid_direct_implementation_mode",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid implementationMode ${row.implementationMode}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid implementationMode ${change.implementationMode}.`,
 		});
 	}
-	if (!["tiny", "small"].includes(row.workScale)) {
+	if (!["tiny", "small"].includes(change.workScale)) {
 		issues.push({
 			code: "invalid_direct_implementation_scale",
-			rowId: row.id,
-			message: `Decision row ${row.id} can route directly to implementation only for tiny or small work.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} can route directly to implementation only for tiny or small work.`,
 		});
 	}
-	if (row.risk !== "low") {
+	if (change.risk !== "low") {
 		issues.push({
 			code: "invalid_direct_implementation_risk",
-			rowId: row.id,
-			message: `Decision row ${row.id} can route directly to implementation only for low-risk work.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} can route directly to implementation only for low-risk work.`,
 		});
 	}
-	if (row.directImplementationScope.pathScopes.length === 0) {
+	if (change.directImplementationScope.pathScopes.length === 0) {
 		issues.push({
 			code: "missing_direct_implementation_scope",
-			rowId: row.id,
-			message: `Decision row ${row.id} needs direct implementation pathScopes.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} needs direct implementation pathScopes.`,
 		});
 	}
-	if (row.directImplementationScope.verification.length === 0) {
+	if (change.directImplementationScope.verification.length === 0) {
 		issues.push({
 			code: "missing_direct_implementation_validation",
-			rowId: row.id,
-			message: `Decision row ${row.id} needs direct implementation verification commands or refs.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} needs direct implementation verification commands or refs.`,
 		});
 	}
 	return issues;
 }
 
-function decisionTypePolicyIssues(row: DecisionRow): DecisionExitIssue[] {
+function decisionTypePolicyIssues(change: ProposedChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	const decisionType = normalizeDecisionTypeId(
-		row.decisionType || row.decisionKind,
+		change.decisionType || change.decisionKind,
 	);
 	if (!decisionType) {
 		return [
 			{
 				code: "missing_decision_type",
-				rowId: row.id,
-				message: `Decision row ${row.id} must resolve to a decision type.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} must resolve to a decision type.`,
 			},
 		];
 	}
@@ -1002,259 +1016,277 @@ function decisionTypePolicyIssues(row: DecisionRow): DecisionExitIssue[] {
 		return [
 			{
 				code: "unknown_decision_type",
-				rowId: row.id,
-				message: `Decision row ${row.id} uses unknown decision type ${decisionType}.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} uses unknown decision type ${decisionType}.`,
 			},
 		];
 	}
 	if (
 		definition.decisionKind !== "direct_implementation" &&
-		definition.decisionKind !== row.decisionKind
+		definition.decisionKind !== change.decisionKind
 	) {
 		issues.push({
 			code: "decision_type_kind_mismatch",
-			rowId: row.id,
-			message: `Decision row ${row.id} type ${definition.id} expects decisionKind ${definition.decisionKind}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} type ${definition.id} expects decisionKind ${definition.decisionKind}.`,
 		});
 	}
 	const profile = definition.pipelineProfile;
-	if (!isAllowed(row.routeTarget, profile.allowedRouteTargets)) {
+	if (!isAllowed(change.routeTarget, profile.allowedRouteTargets)) {
 		issues.push({
 			code: "pipeline_profile_route_conflict",
-			rowId: row.id,
-			message: `Decision row ${row.id} routeTarget ${row.routeTarget} is not allowed by pipeline profile ${profile.id}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} routeTarget ${change.routeTarget} is not allowed by pipeline profile ${profile.id}.`,
 		});
 	}
 	if (
-		row.planningDepth &&
-		!isAllowed(row.planningDepth, profile.allowedPlanningDepth)
+		change.planningDepth &&
+		!isAllowed(change.planningDepth, profile.allowedPlanningDepth)
 	) {
 		issues.push({
 			code: "pipeline_profile_planning_depth_conflict",
-			rowId: row.id,
-			message: `Decision row ${row.id} planningDepth ${row.planningDepth} is not allowed by pipeline profile ${profile.id}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} planningDepth ${change.planningDepth} is not allowed by pipeline profile ${profile.id}.`,
 		});
 	}
-	if (row.routeTarget === "implementation") {
+	if (change.routeTarget === "implementation") {
 		if (!profile.directImplementationAllowed) {
 			issues.push({
 				code: "pipeline_profile_direct_route_disallowed",
-				rowId: row.id,
-				message: `Decision row ${row.id} cannot route directly to implementation under pipeline profile ${profile.id}.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} cannot route directly to implementation under pipeline profile ${profile.id}.`,
 			});
 		}
-		if (!isAllowed(row.workScale, profile.allowedDirectImplementationScales)) {
+		if (
+			!isAllowed(change.workScale, profile.allowedDirectImplementationScales)
+		) {
 			issues.push({
 				code: "pipeline_profile_direct_scale_disallowed",
-				rowId: row.id,
-				message: `Decision row ${row.id} workScale ${row.workScale} cannot use direct implementation under pipeline profile ${profile.id}.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} workScale ${change.workScale} cannot use direct implementation under pipeline profile ${profile.id}.`,
 			});
 		}
-		if (riskExceeds(row.risk, profile.maxDirectImplementationRisk)) {
+		if (riskExceeds(change.risk, profile.maxDirectImplementationRisk)) {
 			issues.push({
 				code: "pipeline_profile_direct_risk_disallowed",
-				rowId: row.id,
-				message: `Decision row ${row.id} risk ${row.risk} exceeds direct implementation risk ${profile.maxDirectImplementationRisk} for pipeline profile ${profile.id}.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} risk ${change.risk} exceeds direct implementation risk ${profile.maxDirectImplementationRisk} for pipeline profile ${profile.id}.`,
 			});
 		}
 	}
 	return issues;
 }
 
-function decisionKindQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+function decisionKindQualityIssues(
+	change: ProposedChange,
+): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!row.decisionKind) {
+	if (!change.decisionKind) {
 		issues.push({
 			code: "missing_decision_kind",
-			rowId: row.id,
-			message: `Decision row ${row.id} must declare decisionKind.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must declare decisionKind.`,
 		});
 		return issues;
 	}
-	if (!isAllowed(row.decisionKind, [...DECISION_KIND_VALUES])) {
+	if (!isAllowed(change.decisionKind, [...DECISION_KIND_VALUES])) {
 		issues.push({
 			code: "invalid_decision_kind",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid decisionKind ${row.decisionKind}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid decisionKind ${change.decisionKind}.`,
 		});
 		return issues;
 	}
-	if (row.decisionKind === "debug") {
-		if (row.targetRefs.length === 0) {
-			issues.push(kindIssue(row, "missing_debug_target", "name target refs"));
-		}
-		if (!row.hypothesis) {
+	if (change.decisionKind === "debug") {
+		if (change.targetRefs.length === 0) {
 			issues.push(
-				kindIssue(row, "missing_debug_hypothesis", "state a hypothesis"),
+				kindIssue(change, "missing_debug_target", "name target refs"),
 			);
 		}
-		if (!row.invariant) {
+		if (!change.hypothesis) {
+			issues.push(
+				kindIssue(change, "missing_debug_hypothesis", "state a hypothesis"),
+			);
+		}
+		if (!change.invariant) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_debug_invariant",
 					"state an invariant or failure boundary",
 				),
 			);
 		}
-		if (!row.probe) {
+		if (!change.probe) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_debug_probe",
 					"define a probe or reproduction plan",
 				),
 			);
 		}
-		if (!row.expectedSafeBehavior) {
+		if (!change.expectedSafeBehavior) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_debug_expected_safe_behavior",
 					"state expected safe behavior",
 				),
 			);
 		}
-		if (!row.stopCondition) {
+		if (!change.stopCondition) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_debug_stop_condition",
 					"state a stop condition",
 				),
 			);
 		}
 	}
-	if (row.decisionKind === "fix") {
-		if (!row.reproduction) {
-			issues.push(
-				kindIssue(row, "missing_fix_reproduction", "describe the reproduction"),
-			);
-		}
-		if (!row.expectedBehavior) {
+	if (change.decisionKind === "fix") {
+		if (!change.reproduction) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
+					"missing_fix_reproduction",
+					"describe the reproduction",
+				),
+			);
+		}
+		if (!change.expectedBehavior) {
+			issues.push(
+				kindIssue(
+					change,
 					"missing_fix_expected_behavior",
 					"state expected behavior",
 				),
 			);
 		}
-		if (!row.regressionPlan) {
+		if (!change.regressionPlan) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_fix_regression_plan",
 					"define a regression test plan",
 				),
 			);
 		}
 	}
-	if (row.decisionKind === "harden") {
-		if (!row.safetyBoundary) {
-			issues.push(
-				kindIssue(row, "missing_harden_boundary", "name the safety boundary"),
-			);
-		}
-		if (row.failureModes.length === 0) {
+	if (change.decisionKind === "harden") {
+		if (!change.safetyBoundary) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
+					"missing_harden_boundary",
+					"name the safety boundary",
+				),
+			);
+		}
+		if (change.failureModes.length === 0) {
+			issues.push(
+				kindIssue(
+					change,
 					"missing_harden_failure_modes",
 					"list failure or abuse modes",
 				),
 			);
 		}
-		if (!row.negativeTestPlan) {
+		if (!change.negativeTestPlan) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_harden_negative_test_plan",
 					"define negative test coverage",
 				),
 			);
 		}
-		if (!row.compatibilityImpact) {
+		if (!change.compatibilityImpact) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_harden_compatibility_impact",
 					"state compatibility impact",
 				),
 			);
 		}
 	}
-	if (row.decisionKind === "improve") {
-		if (!row.currentPain) {
-			issues.push(
-				kindIssue(row, "missing_improve_current_pain", "describe current pain"),
-			);
-		}
-		if (!row.desiredOutcome) {
+	if (change.decisionKind === "improve") {
+		if (!change.currentPain) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
+					"missing_improve_current_pain",
+					"describe current pain",
+				),
+			);
+		}
+		if (!change.desiredOutcome) {
+			issues.push(
+				kindIssue(
+					change,
 					"missing_improve_desired_outcome",
 					"state desired outcome",
 				),
 			);
 		}
-		if (!row.successSignal) {
+		if (!change.successSignal) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_improve_success_signal",
 					"define success signal",
 				),
 			);
 		}
-		if (row.nonGoals.length === 0) {
+		if (change.nonGoals.length === 0) {
 			issues.push(
-				kindIssue(row, "missing_improve_non_goals", "list non-goals"),
+				kindIssue(change, "missing_improve_non_goals", "list non-goals"),
 			);
 		}
 	}
-	if (row.decisionKind === "migrate") {
-		if (!row.sourceBehavior) {
+	if (change.decisionKind === "migrate") {
+		if (!change.sourceBehavior) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_migrate_source_behavior",
 					"describe source behavior",
 				),
 			);
 		}
-		if (!row.targetBehavior) {
+		if (!change.targetBehavior) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_migrate_target_behavior",
 					"describe target behavior",
 				),
 			);
 		}
-		if (row.preservedInvariants.length === 0) {
+		if (change.preservedInvariants.length === 0) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_migrate_preserved_invariants",
 					"list preserved invariants",
 				),
 			);
 		}
-		if (!row.equivalenceProof) {
+		if (!change.equivalenceProof) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_migrate_equivalence_proof",
 					"define equivalence proof",
 				),
 			);
 		}
-		if (!row.rollbackPlan) {
+		if (!change.rollbackPlan) {
 			issues.push(
 				kindIssue(
-					row,
+					change,
 					"missing_migrate_rollback_plan",
 					"state rollback or containment plan",
 				),
@@ -1265,20 +1297,20 @@ function decisionKindQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 }
 
 function kindIssue(
-	row: DecisionRow,
+	change: ProposedChange,
 	code: DecisionExitIssueCode,
 	requirement: string,
 ): DecisionExitIssue {
 	return {
 		code,
-		rowId: row.id,
-		message: `${row.decisionKind} decision row ${row.id} must ${requirement}.`,
+		changeId: change.id,
+		message: `${change.decisionKind} proposed change ${change.id} must ${requirement}.`,
 	};
 }
 
 function issueFinding(issue: DecisionExitIssue): ExitFinding {
 	return {
-		id: `decision:${issue.code}:${issue.rowId || "table"}`,
+		id: `decision:${issue.code}:${issue.changeId || "proposal"}`,
 		severity: "error",
 		criterion: issue.code,
 		message: issue.message,
@@ -1289,12 +1321,12 @@ function issueFinding(issue: DecisionExitIssue): ExitFinding {
 }
 
 function currentStatePacketIssues(input: {
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 	packet: CurrentStatePacket;
 	validateRefs: boolean;
 }): DecisionExitIssue[] {
-	const { approvedRows, packet, validateRefs } = input;
-	if (approvedRows.length === 0) return [];
+	const { approvedChanges, packet, validateRefs } = input;
+	if (approvedChanges.length === 0) return [];
 	const issues: DecisionExitIssue[] = [];
 	if (packet.refs.length === 0) {
 		issues.push({
@@ -1316,82 +1348,99 @@ function currentStatePacketIssues(input: {
 }
 
 function currentStatePacketFromRows(
-	table: DecisionTable,
-	approvedRows: DecisionRow[],
+	proposal: SprintProposal,
+	approvedChanges: ProposedChange[],
 ): CurrentStatePacket {
 	return {
-		summary: approvedRows.map((row) => row.currentState).join(" "),
+		summary: approvedChanges.map((change) => change.currentState).join(" "),
 		refs: [
-			...table.sourceRefs,
-			...approvedRows.flatMap((row) => [...row.sourceRefs, ...row.proofRefs]),
+			...proposal.sourceRefs,
+			...approvedChanges.flatMap((change) => [
+				...change.sourceRefs,
+				...change.proofRefs,
+			]),
 		],
 	};
 }
 
-function duplicateRowIssues(rows: DecisionRow[]): DecisionExitIssue[] {
+function duplicateRowIssues(changes: ProposedChange[]): DecisionExitIssue[] {
 	const counts = new Map<string, number>();
-	for (const row of rows) counts.set(row.id, (counts.get(row.id) || 0) + 1);
+	for (const change of changes)
+		counts.set(change.id, (counts.get(change.id) || 0) + 1);
 	return [...counts.entries()]
 		.filter(([, count]) => count > 1)
-		.map(([rowId]) => ({
-			code: "duplicate_decision_row_id" as const,
-			rowId,
-			message: `Decision row id ${rowId} appears more than once.`,
+		.map(([changeId]) => ({
+			code: "duplicate_change_id" as const,
+			changeId,
+			message: `Decision change id ${changeId} appears more than once.`,
 		}));
 }
 
-function tableTraceabilityRefIssues(table: DecisionTable): DecisionExitIssue[] {
-	return invalidTraceRefs(table.sourceRefs).map((ref) => ({
+function proposalTraceabilityRefIssues(
+	proposal: SprintProposal,
+): DecisionExitIssue[] {
+	return invalidTraceRefs(proposal.sourceRefs).map((ref) => ({
 		code: "invalid_traceability_ref" as const,
 		ref,
-		message: `Decision table ${table.id} has non-canonical source ref ${ref}.`,
+		message: `Sprint Proposal ${proposal.id} has non-canonical source ref ${ref}.`,
 	}));
 }
 
-function traceabilityRefIssues(row: DecisionRow): DecisionExitIssue[] {
-	return invalidTraceRefs([...row.sourceRefs, ...row.proofRefs]).map((ref) => ({
-		code: "invalid_traceability_ref" as const,
-		rowId: row.id,
-		ref,
-		message: `Decision row ${row.id} has non-canonical ref ${ref}.`,
-	}));
+function traceabilityRefIssues(change: ProposedChange): DecisionExitIssue[] {
+	return invalidTraceRefs([...change.sourceRefs, ...change.proofRefs]).map(
+		(ref) => ({
+			code: "invalid_traceability_ref" as const,
+			changeId: change.id,
+			ref,
+			message: `Proposed change ${change.id} has non-canonical ref ${ref}.`,
+		}),
+	);
 }
 
-function recommendationQualityIssues(row: DecisionRow): DecisionExitIssue[] {
+function recommendationQualityIssues(
+	change: ProposedChange,
+): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!row.recommendation) {
+	if (!change.recommendation) {
 		issues.push({
 			code: "missing_recommendation",
-			rowId: row.id,
-			message: `Decision row ${row.id} must include an agent recommendation.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must include an agent recommendation.`,
 		});
 	} else if (
-		!isAllowed(row.recommendation, ["approve", "reject", "defer", "ask_user"])
+		!isAllowed(change.recommendation, [
+			"approve",
+			"reject",
+			"defer",
+			"ask_user",
+		])
 	) {
 		issues.push({
 			code: "invalid_recommendation",
-			rowId: row.id,
-			message: `Decision row ${row.id} has invalid recommendation ${row.recommendation}.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} has invalid recommendation ${change.recommendation}.`,
 		});
-	} else if (row.recommendation !== "approve") {
+	} else if (change.recommendation !== "approve") {
 		issues.push({
 			code: "recommendation_not_approve",
-			rowId: row.id,
-			message: `Approved decision row ${row.id} must be recommended for approval by the agent.`,
+			changeId: change.id,
+			message: `Approved proposed change ${change.id} must be recommended for approval by the agent.`,
 		});
 	}
-	if (!row.recommendationRationale) {
+	if (!change.recommendationRationale) {
 		issues.push({
 			code: "missing_recommendation_rationale",
-			rowId: row.id,
-			message: `Decision row ${row.id} must justify the agent recommendation.`,
+			changeId: change.id,
+			message: `Proposed change ${change.id} must justify the agent recommendation.`,
 		});
 	}
 	return issues;
 }
 
-function agentAssessmentQualityIssues(row: DecisionRow): DecisionExitIssue[] {
-	const assessment = row.agentAssessment;
+function agentAssessmentQualityIssues(
+	change: ProposedChange,
+): DecisionExitIssue[] {
+	const assessment = change.agentAssessment;
 	const missingStance = !assessment.stance;
 	const missingUserAlignment = !assessment.userAlignment;
 	const missingProjectBenefit = !assessment.projectBenefit;
@@ -1405,8 +1454,8 @@ function agentAssessmentQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 		return [
 			{
 				code: "missing_agent_assessment",
-				rowId: row.id,
-				message: `Decision row ${row.id} needs an agent assessment of user alignment, project benefit, and rationale.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} needs an agent assessment of user alignment, project benefit, and rationale.`,
 			},
 		];
 	}
@@ -1414,119 +1463,121 @@ function agentAssessmentQualityIssues(row: DecisionRow): DecisionExitIssue[] {
 		return [
 			{
 				code: "agent_assessment_not_aligned",
-				rowId: row.id,
-				message: `Agent assessment for decision row ${row.id} does not validate the intention as aligned.`,
+				changeId: change.id,
+				message: `Agent assessment for proposed change ${change.id} does not validate the intention as aligned.`,
 			},
 		];
 	}
 	return [];
 }
 
-function riskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
-	if (!row.risk) {
+function riskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
+	if (!change.risk) {
 		return [
 			{
 				code: "missing_risk" as const,
-				rowId: row.id,
-				message: `Decision row ${row.id} must declare risk as low, medium, or high.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} must declare risk as low, medium, or high.`,
 			},
 		];
 	}
-	if (!isAllowed(row.risk, ["low", "medium", "high"])) {
+	if (!isAllowed(change.risk, ["low", "medium", "high"])) {
 		return [
 			{
 				code: "invalid_risk" as const,
-				rowId: row.id,
-				message: `Decision row ${row.id} has invalid risk ${row.risk}.`,
+				changeId: change.id,
+				message: `Proposed change ${change.id} has invalid risk ${change.risk}.`,
 			},
 		];
 	}
 	return [];
 }
 
-function highRiskQualityIssues(row: DecisionRow): DecisionExitIssue[] {
-	if (!isHighRisk(row)) return [];
+function highRiskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
+	if (!isHighRisk(change)) return [];
 	const issues: DecisionExitIssue[] = [];
-	if (row.affectedLayers.length === 0) {
+	if (change.affectedLayers.length === 0) {
 		issues.push({
 			code: "missing_high_risk_scope",
-			rowId: row.id,
-			message: `High-risk decision row ${row.id} must name affected layers.`,
+			changeId: change.id,
+			message: `High-risk proposed change ${change.id} must name affected layers.`,
 		});
 	}
-	if (row.alternatives.length === 0) {
+	if (change.alternatives.length === 0) {
 		issues.push({
 			code: "missing_high_risk_alternative",
-			rowId: row.id,
-			message: `High-risk decision row ${row.id} must record at least one alternative.`,
+			changeId: change.id,
+			message: `High-risk proposed change ${change.id} must record at least one alternative.`,
 		});
 	}
-	if (row.proofRefs.length === 0) {
+	if (change.proofRefs.length === 0) {
 		issues.push({
 			code: "missing_high_risk_evidence",
-			rowId: row.id,
-			message: `High-risk decision row ${row.id} needs proof refs for research, prior art, validation, or explicit user guidance.`,
+			changeId: change.id,
+			message: `High-risk proposed change ${change.id} needs proof refs for research, prior art, validation, or explicit user guidance.`,
 		});
 	}
-	if (row.approvalAuthority !== "user" || !row.approvalRef) {
+	if (change.approvalAuthority !== "user" || !change.approvalRef) {
 		issues.push({
 			code: "missing_high_risk_approval",
-			rowId: row.id,
-			message: `High-risk decision row ${row.id} requires explicit user approval authority and approval ref.`,
+			changeId: change.id,
+			message: `High-risk proposed change ${change.id} requires explicit user approval authority and approval ref.`,
 		});
 	} else {
-		const [invalidApprovalRef] = invalidTraceRefs([row.approvalRef]);
+		const [invalidApprovalRef] = invalidTraceRefs([change.approvalRef]);
 		if (invalidApprovalRef) {
 			issues.push({
 				code: "invalid_approval_ref",
-				rowId: row.id,
+				changeId: change.id,
 				ref: invalidApprovalRef,
-				message: `High-risk decision row ${row.id} has non-canonical approval ref ${invalidApprovalRef}.`,
+				message: `High-risk proposed change ${change.id} has non-canonical approval ref ${invalidApprovalRef}.`,
 			});
 		}
 	}
 	return issues;
 }
 
-function isHighRisk(row: DecisionRow): boolean {
+function isHighRisk(change: ProposedChange): boolean {
 	return (
-		String(row.risk || "")
+		String(change.risk || "")
 			.trim()
 			.toLowerCase() === "high"
 	);
 }
 
 function activeTraceConflictIssues(
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 	activeTraceGoals: ActiveTraceGoal[],
 ): DecisionExitIssue[] {
 	if (activeTraceGoals.length === 0) return [];
-	return approvedRows.flatMap((row) => {
-		const rowRefs = [...row.sourceRefs, ...row.targetRefs].filter(isPathRef);
-		if (rowRefs.length === 0) return [];
+	return approvedChanges.flatMap((change) => {
+		const changeRefs = [...change.sourceRefs, ...change.targetRefs].filter(
+			isPathRef,
+		);
+		if (changeRefs.length === 0) return [];
 		return activeTraceGoals.flatMap((goal) => {
-			const overlaps = overlappingPathScopes(rowRefs, goal.pathScopes || []);
+			const overlaps = overlappingPathScopes(changeRefs, goal.pathScopes || []);
 			if (overlaps.length === 0) return [];
 			return overlaps.map((overlap) => ({
 				code: "active_trace_conflict" as const,
-				rowId: row.id,
+				changeId: change.id,
 				ref: overlap,
-				message: `Decision row ${row.id} overlaps active trace ${goal.traceId} on ${overlap}; merge, supersede, defer, or record a non-conflict rationale before approval.`,
+				message: `Proposed change ${change.id} overlaps active trace ${goal.traceId} on ${overlap}; merge, supersede, defer, or record a non-conflict rationale before approval.`,
 			}));
 		});
 	});
 }
 
 function knowledgeDeltaIssues(
-	approvedRows: DecisionRow[],
+	approvedChanges: ProposedChange[],
 	knowledgeDelta?: KnowledgeDelta,
 ): DecisionExitIssue[] {
-	if (approvedRows.length === 0) return [];
-	const rowsRequireKnowledge = approvedRows.some(
-		(row) => !row.noKbImpactReason,
+	if (approvedChanges.length === 0) return [];
+	const changesRequireKnowledge = approvedChanges.some(
+		(change) => !change.noKbImpactReason,
 	);
 	if (!knowledgeDelta) {
-		return rowsRequireKnowledge
+		return changesRequireKnowledge
 			? [
 					{
 						code: "missing_knowledge_delta" as const,
@@ -1538,7 +1589,7 @@ function knowledgeDeltaIssues(
 	}
 	const issues: DecisionExitIssue[] = [];
 	if (
-		rowsRequireKnowledge &&
+		changesRequireKnowledge &&
 		knowledgeDelta.updatedRefs.length === 0 &&
 		!knowledgeDelta.noImpactReason
 	) {
@@ -1577,15 +1628,17 @@ function issueRemediation(issue: DecisionExitIssue): ExitRemediationItem {
 }
 
 const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
-	no_decision_rows: "Create at least one decision row.",
-	no_approved_rows:
-		"Approve, reject, or defer the decision rows; at least one approved row is required for planning.",
-	missing_current_state: "Ground the decision row in current KB/source state.",
-	missing_desired_state: "State the desired target state for the decision row.",
+	no_proposed_changes: "Create at least one proposed change.",
+	no_approved_changes:
+		"Approve, reject, or defer the Proposed Changes; at least one Decision is required for planning.",
+	missing_current_state:
+		"Ground the proposed change in current KB/source state.",
+	missing_desired_state:
+		"State the desired target state for the proposed change.",
 	missing_rationale:
 		"Add rationale explaining why this decision should be accepted.",
 	missing_decision_kind:
-		"Classify the decision row as debug, fix, harden, improve, migrate, docs, or release.",
+		"Classify the proposed change as debug, fix, harden, improve, migrate, docs, or release.",
 	invalid_decision_kind:
 		"Use decisionKind debug, fix, harden, improve, migrate, docs, or release.",
 	missing_decision_type:
@@ -1593,7 +1646,7 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	unknown_decision_type:
 		"Use a built-in decision type or register a guarded project decision type before planning.",
 	decision_type_kind_mismatch:
-		"Align decisionType with decisionKind or split the row into the correct type.",
+		"Align decisionType with decisionKind or split the change into the correct type.",
 	pipeline_profile_route_conflict:
 		"Choose a routeTarget allowed by the selected decision type pipeline profile.",
 	pipeline_profile_planning_depth_conflict:
@@ -1664,9 +1717,9 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	invalid_micro_plan_risk:
 		"Use micro planning only for low-risk work; otherwise choose standard planning.",
 	invalid_route_target:
-		"Choose routeTarget planning or implementation for the approved row.",
+		"Choose routeTarget planning or implementation for the Decision.",
 	missing_route_rationale:
-		"Explain why this row is safe to route directly to implementation.",
+		"Explain why this change is safe to route directly to implementation.",
 	missing_direct_implementation_mode:
 		"Choose implementationMode tdd or targeted_checks for direct implementation.",
 	invalid_direct_implementation_mode:
@@ -1684,7 +1737,7 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	invalid_recommendation:
 		"Use recommendation approve, reject, defer, or ask_user.",
 	recommendation_not_approve:
-		"Keep approved rows only when the agent recommends approval; otherwise route to user with alternatives.",
+		"Keep Decisions only when the agent recommends approval; otherwise route to user with alternatives.",
 	missing_recommendation_rationale:
 		"Explain why the agent recommendation follows from the evidence.",
 	missing_agent_assessment:
@@ -1698,7 +1751,7 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	semantic_risk_tier_implausible:
 		"Revise risk tier, route, scope, or authority evidence until the risk classification is plausible.",
 	missing_high_risk_approval:
-		"Capture explicit user approval authority and a canonical approval ref for high-risk rows.",
+		"Capture explicit user approval authority and a canonical approval ref for high-risk Decisions.",
 	missing_risk: "Declare decision risk as low, medium, or high.",
 	invalid_risk: "Use risk low, medium, or high.",
 	invalid_approval_ref:
@@ -1715,7 +1768,7 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"Add at least one viable alternative for the high-risk intention.",
 	missing_high_risk_evidence:
 		"Attach proof refs for research, prior art, validation, or explicit user guidance.",
-	duplicate_decision_row_id: "Give every decision row a stable unique id.",
+	duplicate_change_id: "Give every proposed change a stable unique id.",
 	invalid_traceability_ref:
 		"Replace weak refs with canonical KB, trace, Git, digest, source, or test refs.",
 	missing_knowledge_delta:

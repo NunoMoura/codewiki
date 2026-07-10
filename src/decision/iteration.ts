@@ -16,7 +16,7 @@ import {
 	evaluateDecisionExitWithRunner,
 	type DecisionExitResult,
 } from "./loop.ts";
-import { approvedDecisionRows, createDecisionTable } from "./table.ts";
+import { approvedProposalChanges, createSprintProposal } from "./proposal.ts";
 import {
 	decisionTypeDefinitionById,
 	normalizeDecisionTypeId,
@@ -25,17 +25,17 @@ import type {
 	ActiveTraceGoal,
 	CurrentStatePacket,
 	DecisionOutput,
-	DecisionOutputTypeProfile,
-	DecisionRow,
-	DecisionTable,
-	DecisionTableInput,
+	ApprovedChangeTypeProfile,
+	ProposedChange,
+	SprintProposal,
+	SprintProposalInput,
 	KnowledgeDelta,
 } from "./types.ts";
 
 export interface DecisionIterationInput {
 	traceId: string;
-	table?: DecisionTable;
-	tableInput?: DecisionTableInput;
+	proposal?: SprintProposal;
+	proposalInput?: SprintProposalInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
 	activeTraceGoals?: ActiveTraceGoal[];
@@ -47,10 +47,10 @@ export interface DecisionIterationInput {
 }
 
 export interface DecisionIterationResult {
-	table: DecisionTable;
+	proposal: SprintProposal;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 	draftTraceEvents: TraceEvent[];
 	traceEvents: TraceEvent[];
 	checkpoint: TailCheckpoint;
@@ -61,28 +61,29 @@ export interface DecisionIterationResult {
 export function runDecisionIteration(
 	input: DecisionIterationInput,
 ): DecisionIterationResult {
-	const table = input.table ?? createDecisionTable(input.tableInput ?? {});
-	const approvedRows = approvedDecisionRows(table);
-	const createdAt = input.createdAt || table.updatedAt;
+	const proposal =
+		input.proposal ?? createSprintProposal(input.proposalInput ?? {});
+	const approvedChanges = approvedProposalChanges(proposal);
+	const createdAt = input.createdAt || proposal.updatedAt;
 	const baseSequence = input.startSequence ?? 1;
 	const output = decisionOutput({
 		input,
-		table,
-		approvedRows,
+		proposal,
+		approvedChanges,
 		createdAt,
 		baseSequence,
 	});
-	const exit = evaluateDecisionExit(table, {
+	const exit = evaluateDecisionExit(proposal, {
 		currentStatePacket: output.currentStatePacket,
 		knowledgeDelta: output.knowledgeDelta,
 		activeTraceGoals: input.activeTraceGoals,
 	});
 	return decisionIterationResult({
 		input,
-		table,
+		proposal,
 		output,
 		exit,
-		approvedRows,
+		approvedChanges,
 		createdAt,
 		baseSequence,
 	});
@@ -91,18 +92,19 @@ export function runDecisionIteration(
 export async function runDecisionIterationWithRunner(
 	input: DecisionIterationInput,
 ): Promise<DecisionIterationResult> {
-	const table = input.table ?? createDecisionTable(input.tableInput ?? {});
-	const approvedRows = approvedDecisionRows(table);
-	const createdAt = input.createdAt || table.updatedAt;
+	const proposal =
+		input.proposal ?? createSprintProposal(input.proposalInput ?? {});
+	const approvedChanges = approvedProposalChanges(proposal);
+	const createdAt = input.createdAt || proposal.updatedAt;
 	const baseSequence = input.startSequence ?? 1;
 	const output = decisionOutput({
 		input,
-		table,
-		approvedRows,
+		proposal,
+		approvedChanges,
 		createdAt,
 		baseSequence,
 	});
-	const exit = await evaluateDecisionExitWithRunner(table, {
+	const exit = await evaluateDecisionExitWithRunner(proposal, {
 		currentStatePacket: output.currentStatePacket,
 		knowledgeDelta: output.knowledgeDelta,
 		activeTraceGoals: input.activeTraceGoals,
@@ -110,10 +112,10 @@ export async function runDecisionIterationWithRunner(
 	});
 	return decisionIterationResult({
 		input,
-		table,
+		proposal,
 		output,
 		exit,
-		approvedRows,
+		approvedChanges,
 		createdAt,
 		baseSequence,
 	});
@@ -121,10 +123,10 @@ export async function runDecisionIterationWithRunner(
 
 function decisionIterationResult(input: {
 	input: DecisionIterationInput;
-	table: DecisionTable;
+	proposal: SprintProposal;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 	createdAt: string;
 	baseSequence: number;
 }): DecisionIterationResult {
@@ -141,10 +143,10 @@ function decisionIterationResult(input: {
 		sourceRefs: input.output.refs,
 	});
 	return {
-		table: input.table,
+		proposal: input.proposal,
 		output: input.output,
 		exit: input.exit,
-		approvedRows: input.approvedRows,
+		approvedChanges: input.approvedChanges,
 		draftTraceEvents,
 		traceEvents,
 		checkpoint,
@@ -155,33 +157,33 @@ function decisionIterationResult(input: {
 
 function decisionOutput(input: {
 	input: DecisionIterationInput;
-	table: DecisionTable;
-	approvedRows: DecisionRow[];
+	proposal: SprintProposal;
+	approvedChanges: ProposedChange[];
 	createdAt: string;
 	baseSequence: number;
 }): DecisionOutput {
 	const knowledgeDelta =
-		input.input.knowledgeDelta || inferredKnowledgeDelta(input.approvedRows);
+		input.input.knowledgeDelta || inferredKnowledgeDelta(input.approvedChanges);
 	const currentStatePacket =
 		input.input.currentStatePacket ||
 		inferredCurrentStatePacket({
-			table: input.table,
-			approvedRows: input.approvedRows,
+			proposal: input.proposal,
+			approvedChanges: input.approvedChanges,
 			createdAt: input.createdAt,
 		});
 	return {
 		id: `${input.input.traceId}:decision:output:${input.baseSequence}`,
 		traceId: input.input.traceId,
-		tableId: input.table.id,
-		summary: input.table.summary || decisionSummary(input.approvedRows),
-		approvedRowIds: input.approvedRows.map((row) => row.id),
+		proposalId: input.proposal.id,
+		summary: input.proposal.summary || decisionSummary(input.approvedChanges),
+		approvedChangeIds: input.approvedChanges.map((change) => change.id),
 		requirementIds: input.input.requirementIds || [],
-		decisionTypeProfiles: decisionTypeProfiles(input.approvedRows),
+		decisionTypeProfiles: decisionTypeProfiles(input.approvedChanges),
 		knowledgeDelta,
 		currentStatePacket,
 		refs: normalizeTraceRefs([
-			...input.table.sourceRefs,
-			...input.approvedRows.flatMap((row) => row.sourceRefs),
+			...input.proposal.sourceRefs,
+			...input.approvedChanges.flatMap((change) => change.sourceRefs),
 			...currentStatePacket.refs,
 			...knowledgeDelta.updatedRefs,
 		]),
@@ -190,36 +192,40 @@ function decisionOutput(input: {
 }
 
 function inferredCurrentStatePacket(input: {
-	table: DecisionTable;
-	approvedRows: DecisionRow[];
+	proposal: SprintProposal;
+	approvedChanges: ProposedChange[];
 	createdAt: string;
 }): CurrentStatePacket {
 	return {
-		summary: currentStateSummary(input.approvedRows),
+		summary: currentStateSummary(input.approvedChanges),
 		refs: normalizeTraceRefs([
-			...input.table.sourceRefs,
-			...input.approvedRows.flatMap((row) => [
-				...row.sourceRefs,
-				...row.proofRefs,
+			...input.proposal.sourceRefs,
+			...input.approvedChanges.flatMap((change) => [
+				...change.sourceRefs,
+				...change.proofRefs,
 			]),
 		]),
 		observedAt: input.createdAt,
 	};
 }
 
-function currentStateSummary(rows: DecisionRow[]): string {
-	if (rows.length === 0) return "No approved decision rows observed.";
-	return rows.map((row) => `${row.id}: ${row.currentState}`).join(" ");
+function currentStateSummary(changes: ProposedChange[]): string {
+	if (changes.length === 0) return "No Decisions observed.";
+	return changes
+		.map((change) => `${change.id}: ${change.currentState}`)
+		.join(" ");
 }
 
-function inferredKnowledgeDelta(rows: DecisionRow[]): KnowledgeDelta {
+function inferredKnowledgeDelta(changes: ProposedChange[]): KnowledgeDelta {
 	return {
-		updatedRefs: normalizeTraceRefs(rows.flatMap((row) => row.sourceRefs)),
+		updatedRefs: normalizeTraceRefs(
+			changes.flatMap((change) => change.sourceRefs),
+		),
 		sections: [],
-		...(rows.every((row) => row.noKbImpactReason)
+		...(changes.every((change) => change.noKbImpactReason)
 			? {
 					noImpactReason: normalizeTraceRefs(
-						rows.map((row) => row.noKbImpactReason || ""),
+						changes.map((change) => change.noKbImpactReason || ""),
 					).join(" "),
 				}
 			: {}),
@@ -227,16 +233,16 @@ function inferredKnowledgeDelta(rows: DecisionRow[]): KnowledgeDelta {
 }
 
 function decisionTypeProfiles(
-	rows: DecisionRow[],
-): DecisionOutputTypeProfile[] {
-	return rows.flatMap((row) => {
+	changes: ProposedChange[],
+): ApprovedChangeTypeProfile[] {
+	return changes.flatMap((change) => {
 		const definition = decisionTypeDefinitionById(
-			normalizeDecisionTypeId(row.decisionType || row.decisionKind),
+			normalizeDecisionTypeId(change.decisionType || change.decisionKind),
 		);
 		if (!definition) return [];
 		return [
 			{
-				rowId: row.id,
+				changeId: change.id,
 				decisionType: definition.id,
 				pipelineProfileId: definition.pipelineProfile.id,
 				loopQualityProfileId: definition.loopQualityProfile.id,
@@ -246,20 +252,22 @@ function decisionTypeProfiles(
 	});
 }
 
-function decisionSummary(rows: DecisionRow[]): string {
-	if (rows.length === 0) return "Decision candidate has no approved rows.";
-	return rows.map((row) => `${row.id}: ${row.desiredState}`).join(" ");
+function decisionSummary(changes: ProposedChange[]): string {
+	if (changes.length === 0) return "Sprint has no Decisions.";
+	return changes
+		.map((change) => `${change.id}: ${change.desiredState}`)
+		.join(" ");
 }
 
 function decisionTraceEvents(input: {
 	input: DecisionIterationInput;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedRows: DecisionRow[];
+	approvedChanges: ProposedChange[];
 	createdAt: string;
 	baseSequence: number;
 }): TraceEvent[] {
-	const { output, exit, approvedRows, createdAt, baseSequence } = input;
+	const { output, exit, approvedChanges, createdAt, baseSequence } = input;
 	return [
 		createLoopIterationEvent({
 			traceId: output.traceId,
@@ -274,8 +282,8 @@ function decisionTraceEvents(input: {
 			output: {
 				id: output.id,
 				summary: output.summary,
-				approvedRows: approvedRows.map(decisionRowData),
-				approvedRowIds: output.approvedRowIds,
+				approvedChanges: approvedChanges.map(proposedChangeData),
+				approvedChangeIds: output.approvedChangeIds,
 				decisionTypeProfiles: output.decisionTypeProfiles || [],
 				currentStatePacket: output.currentStatePacket,
 				knowledgeDelta: output.knowledgeDelta,
@@ -291,56 +299,56 @@ function decisionTraceEvents(input: {
 	];
 }
 
-function decisionRowData(row: DecisionRow): Record<string, unknown> {
+function proposedChangeData(change: ProposedChange): Record<string, unknown> {
 	return {
-		id: row.id,
-		question: row.question,
-		decisionKind: row.decisionKind,
-		decisionType: row.decisionType,
-		currentState: row.currentState,
-		currentStateRefs: [...row.sourceRefs, ...row.proofRefs],
-		desiredState: row.desiredState,
-		rationale: row.rationale,
-		userImpact: row.userImpact,
-		maintainerImpact: row.maintainerImpact,
-		effort: row.effort,
-		workScale: row.workScale,
-		planningDepth: row.planningDepth,
-		routeTarget: row.routeTarget,
-		routeKind: row.routeKind,
-		routeRationale: row.routeRationale,
-		implementationMode: row.implementationMode,
-		directImplementationScope: row.directImplementationScope,
-		affectedLayers: row.affectedLayers,
-		risk: row.risk,
-		approvalAuthority: row.approvalAuthority,
-		approvalRef: row.approvalRef,
-		recommendation: row.recommendation,
-		recommendationRationale: row.recommendationRationale,
-		agentAssessment: row.agentAssessment,
-		changeType: row.changeType,
-		noKbImpactReason: row.noKbImpactReason,
-		targetRefs: row.targetRefs,
-		hypothesis: row.hypothesis,
-		invariant: row.invariant,
-		probe: row.probe,
-		expectedSafeBehavior: row.expectedSafeBehavior,
-		stopCondition: row.stopCondition,
-		reproduction: row.reproduction,
-		expectedBehavior: row.expectedBehavior,
-		regressionPlan: row.regressionPlan,
-		safetyBoundary: row.safetyBoundary,
-		failureModes: row.failureModes,
-		negativeTestPlan: row.negativeTestPlan,
-		compatibilityImpact: row.compatibilityImpact,
-		currentPain: row.currentPain,
-		desiredOutcome: row.desiredOutcome,
-		successSignal: row.successSignal,
-		nonGoals: row.nonGoals,
-		sourceBehavior: row.sourceBehavior,
-		targetBehavior: row.targetBehavior,
-		preservedInvariants: row.preservedInvariants,
-		equivalenceProof: row.equivalenceProof,
-		rollbackPlan: row.rollbackPlan,
+		id: change.id,
+		question: change.question,
+		decisionKind: change.decisionKind,
+		decisionType: change.decisionType,
+		currentState: change.currentState,
+		currentStateRefs: [...change.sourceRefs, ...change.proofRefs],
+		desiredState: change.desiredState,
+		rationale: change.rationale,
+		userImpact: change.userImpact,
+		maintainerImpact: change.maintainerImpact,
+		effort: change.effort,
+		workScale: change.workScale,
+		planningDepth: change.planningDepth,
+		routeTarget: change.routeTarget,
+		routeKind: change.routeKind,
+		routeRationale: change.routeRationale,
+		implementationMode: change.implementationMode,
+		directImplementationScope: change.directImplementationScope,
+		affectedLayers: change.affectedLayers,
+		risk: change.risk,
+		approvalAuthority: change.approvalAuthority,
+		approvalRef: change.approvalRef,
+		recommendation: change.recommendation,
+		recommendationRationale: change.recommendationRationale,
+		agentAssessment: change.agentAssessment,
+		changeType: change.changeType,
+		noKbImpactReason: change.noKbImpactReason,
+		targetRefs: change.targetRefs,
+		hypothesis: change.hypothesis,
+		invariant: change.invariant,
+		probe: change.probe,
+		expectedSafeBehavior: change.expectedSafeBehavior,
+		stopCondition: change.stopCondition,
+		reproduction: change.reproduction,
+		expectedBehavior: change.expectedBehavior,
+		regressionPlan: change.regressionPlan,
+		safetyBoundary: change.safetyBoundary,
+		failureModes: change.failureModes,
+		negativeTestPlan: change.negativeTestPlan,
+		compatibilityImpact: change.compatibilityImpact,
+		currentPain: change.currentPain,
+		desiredOutcome: change.desiredOutcome,
+		successSignal: change.successSignal,
+		nonGoals: change.nonGoals,
+		sourceBehavior: change.sourceBehavior,
+		targetBehavior: change.targetBehavior,
+		preservedInvariants: change.preservedInvariants,
+		equivalenceProof: change.equivalenceProof,
+		rollbackPlan: change.rollbackPlan,
 	};
 }

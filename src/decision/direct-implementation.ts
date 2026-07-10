@@ -23,8 +23,8 @@ export function directImplementationDecisionsFromRecords(
 		if (!isTraceEvent(record) || record.loop !== "decision") return [];
 		if (!isExitedIteration(record)) return [];
 		const output = objectRecord(record.data?.output);
-		const rows = objectList(output.approvedRows);
-		return rows.flatMap((row) => directDecisionProjection(record, row));
+		const changes = objectList(output.approvedChanges);
+		return changes.flatMap((change) => directDecisionProjection(record, change));
 	});
 }
 
@@ -32,30 +32,30 @@ export function directImplementationDecisionRefs(
 	records: Array<TraceRecord | TraceEvent>,
 ): string[] {
 	return directImplementationDecisionsFromRecords(records).map(
-		(row) => row.ref,
+		(change) => change.ref,
 	);
 }
 
 function directDecisionProjection(
 	event: TraceEvent,
-	row: Record<string, unknown>,
+	change: Record<string, unknown>,
 ): DirectImplementationDecisionProjection[] {
-	const routeTarget = text(row.routeTarget).toLowerCase().replace(/_/g, "-");
+	const routeTarget = text(change.routeTarget).toLowerCase().replace(/_/g, "-");
 	if (routeTarget !== "implementation") return [];
-	const id = text(row.id);
+	const id = text(change.id);
 	if (!id) return [];
-	const scope = objectRecord(row.directImplementationScope);
-	const ref = `trace:${event.id}#row:${id}`;
+	const scope = objectRecord(change.directImplementationScope);
+	const ref = `trace:${event.id}#change:${id}`;
 	const pathScopes = unique([
 		...stringList(scope.pathScopes),
-		...stringList(row.targetRefs),
+		...stringList(change.targetRefs),
 	]);
-	const acceptanceCriteria = normalizedAcceptanceCriteria(row, scope);
+	const acceptanceCriteria = normalizedAcceptanceCriteria(change, scope);
 	return [
 		{
 			id,
 			ref,
-			title: text(row.summary) || id,
+			title: text(change.summary) || id,
 			traceId: event.traceId,
 			sourceEventId: event.id,
 			decisionRefs: [ref],
@@ -65,20 +65,20 @@ function directDecisionProjection(
 			acceptance: unique([
 				...stringList(scope.acceptance),
 				...acceptanceCriteria.map((criterion) => criterion.text),
-				text(row.successSignal),
-				text(row.expectedBehavior),
-				text(row.desiredOutcome),
-				text(row.desiredState),
+				text(change.successSignal),
+				text(change.expectedBehavior),
+				text(change.desiredOutcome),
+				text(change.desiredState),
 			]),
 			acceptanceCriteria,
-			implementationMode: text(row.implementationMode) || undefined,
-			routeRationale: text(row.routeRationale),
+			implementationMode: text(change.implementationMode) || undefined,
+			routeRationale: text(change.routeRationale),
 		},
 	];
 }
 
 function normalizedAcceptanceCriteria(
-	row: Record<string, unknown>,
+	change: Record<string, unknown>,
 	scope: Record<string, unknown>,
 ): Array<{ id: string; text: string }> {
 	const criteria = objectList(scope.acceptanceCriteria)
@@ -89,11 +89,11 @@ function normalizedAcceptanceCriteria(
 		.filter((criterion) => criterion.text);
 	if (criteria.length) return criteria;
 	const fallbackText =
-		text(row.successSignal) ||
-		text(row.expectedBehavior) ||
-		text(row.desiredOutcome) ||
-		text(row.desiredState);
-	return fallbackText ? [{ id: `AC-${text(row.id)}`, text: fallbackText }] : [];
+		text(change.successSignal) ||
+		text(change.expectedBehavior) ||
+		text(change.desiredOutcome) ||
+		text(change.desiredState);
+	return fallbackText ? [{ id: `AC-${text(change.id)}`, text: fallbackText }] : [];
 }
 
 function isTraceEvent(record: TraceRecord | TraceEvent): record is TraceEvent {

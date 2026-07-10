@@ -104,7 +104,7 @@ export const IMPLEMENTATION_QUALITY_STANDARDS: LoopQualityStandardDefinition<
 		id: "source_ownership_aligned",
 		weight: 12,
 		description:
-			"Changed source/test paths align with source-map component ownership and test coverage.",
+			"Changed source/test paths align with OKF source ownership and test coverage.",
 		codes: [
 			"missing_component_ref",
 			"unknown_component_ref",

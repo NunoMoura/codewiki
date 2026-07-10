@@ -130,7 +130,7 @@ export interface PlanningExitResult extends ExitDetails {
 
 export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 	graphId: "planning.loop",
-	graphVersion: "0.3.0.loop.5",
+	graphVersion: "0.3.0.loop.6",
 	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	layers: loopGraphLayers([
 		"hard_gate",
@@ -154,7 +154,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			cost: 12,
 			hardGate: true,
 			description:
-				"Every accepted decision ref is covered by a work unit or explicit resolution.",
+				"Every Decision ref is covered by a Task or explicit resolution.",
 			codes: ["missing_decision_coverage", "unknown_decision_ref"],
 		}),
 		planningNode({
@@ -165,7 +165,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			cost: 12,
 			hardGate: true,
 			description:
-				"Each work item has enough bounded context to be claimed by one implementation worker.",
+				"Each Task has enough bounded context to be assigned to one implementation worker.",
 			codes: ["invalid_work_item", "duplicate_work_item_id"],
 		}),
 		planningNode({
@@ -175,7 +175,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			weight: 12,
 			cost: 12,
 			description:
-				"Each work item breaks decision intent into concrete technical requirements.",
+				"Each Task breaks Decision intent into concrete technical requirements.",
 			codes: ["missing_technical_requirements"],
 		}),
 		planningNode({
@@ -186,7 +186,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			cost: 14,
 			hardGate: true,
 			description:
-				"Each work item has stable acceptance criteria and verification refs or commands.",
+				"Each Task has stable acceptance criteria and verification refs or commands.",
 			codes: [
 				"invalid_acceptance_criterion",
 				"duplicate_acceptance_criterion_id",
@@ -201,7 +201,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			cost: 8,
 			hardGate: true,
 			description:
-				"Each work item declares standard or micro planning depth; micro-plans stay dependency-free and cover one decision.",
+				"Each Task declares standard or micro planning depth; micro-plans stay dependency-free and cover one Decision.",
 			codes: [
 				"invalid_planning_depth",
 				"invalid_micro_plan_dependency",
@@ -216,7 +216,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			weight: 12,
 			cost: 12,
 			description:
-				"Each work item declares worker profile and agent judgment that the unit is independent and implementation-ready.",
+				"Each Task declares worker profile and agent judgment that it is independent and implementation-ready.",
 			codes: [
 				"missing_worker_profile",
 				"missing_planning_assessment",
@@ -231,7 +231,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			weight: 12,
 			cost: 12,
 			description:
-				"Independent judge verifies each work unit is atomic enough for one implementation worker and is not a disguised sprint.",
+				"Independent judge verifies each Task is atomic enough for one implementation worker and is not a disguised Sprint.",
 			codes: ["semantic_work_unit_not_atomic"],
 		}),
 		planningNode({
@@ -253,7 +253,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			weight: 10,
 			cost: 10,
 			description:
-				"Independent judge verifies path scopes and dependencies are no broader than needed for the accepted decisions.",
+				"Independent judge verifies path scopes and dependencies are no broader than needed for the Decisions.",
 			codes: ["semantic_scope_too_broad"],
 		}),
 		planningNode({
@@ -278,7 +278,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			weight: 10,
 			cost: 10,
 			description:
-				"Each work unit is neither sprint-sized nor tiny busywork; sprint remains a grouping or claim batch.",
+				"Each Task is neither Sprint-sized nor tiny busywork; the Sprint remains the Decision bundle.",
 			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
 		}),
 		planningNode({
@@ -810,7 +810,7 @@ function invalidComponentContractIssues(
 				{
 					code: "invalid_component_contract" as const,
 					componentRef: component.id,
-					message: `Source-map component ${component.id} is missing ${missing.join(", ")}.`,
+					message: `Source ownership component ${component.id} is missing ${missing.join(", ")}.`,
 				},
 			];
 		},
@@ -1276,10 +1276,11 @@ const PLANNING_REMEDIATION: Record<PlanningExitIssueCode, string> = {
 	duplicate_acceptance_criterion_id:
 		"Give each acceptance criterion within a work item a unique id.",
 	missing_component_ref:
-		"Attach componentRefs from source-map.yaml to the work item.",
-	unknown_component_ref: "Use component ids declared in source-map.yaml.",
+		"Attach componentRefs from OKF ownership metadata to the work item.",
+	unknown_component_ref:
+		"Use component ids declared in OKF ownership metadata.",
 	invalid_component_contract:
-		"Complete the source-map component entry with doc, source, and tests.",
+		"Complete the OKF ownership entry with doc, source, and tests.",
 	path_outside_component_scope:
 		"Align path scopes with declared component ownership or choose the correct component.",
 	verification_outside_component_tests:

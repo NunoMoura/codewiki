@@ -196,7 +196,7 @@ Good quality-standard nodes are semantic, scored, and repairable:
 ```text
 implementation evidence links each claim to a changed file and a check result
 planning work units have non-overlapping path scopes unless dependency-ordered
-decision rows include specific user and maintainer impact
+proposed changes include specific user and maintainer impact
 trace facts survive decision -> planning -> implementation handoff
 ```
 

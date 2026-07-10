@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { invalidTraceRefs } from "../../src/traces/refs.ts";
 import {
 	TraceAppendConflictError,
@@ -27,7 +27,7 @@ import {
 	createTraceCloseRecord,
 	TRACE_LOOP_VALUES,
 } from "../../src/api/traces.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 function sampleRecords() {
 	const head = createTraceHead({
@@ -42,10 +42,10 @@ function sampleRecords() {
 		traceId: head.traceId,
 		sequence: 1,
 		loop: "decision",
-		event: "rows_approved",
-		refs: ["kb:system/traces.md", "src/traces/schema.ts"],
+		event: "changes_approved",
+		refs: ["kb:system/components/traces.md", "src/traces/schema.ts"],
 		createdAt: "2026-06-11T00:00:01.000Z",
-		data: { rowId: "DTR-001" },
+		data: { changeId: "CHG-001" },
 	};
 	const checkpoint = createTailCheckpoint({
 		id: "tail-0001",
@@ -89,7 +89,7 @@ describe("trace JSONL core", () => {
 			planningRef:
 				"trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-trigger",
 			runKey: "dependency-check:2026-W24",
-			sourceRef: "kb:system/runtime.md",
+			sourceRef: "kb:system/components/runtime.md",
 			createdAt: "2026-06-11T00:00:00.000Z",
 		});
 		const parsed = parseTraceText(formatTraceText([head]));
@@ -105,7 +105,7 @@ describe("trace JSONL core", () => {
 			"TRG-dependency-check",
 			"trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-trigger",
 			"dependency-check:2026-W24",
-			"kb:system/runtime.md",
+			"kb:system/components/runtime.md",
 		]);
 		assert.throws(
 			() =>
@@ -135,12 +135,12 @@ describe("trace JSONL core", () => {
 		assert.equal(state.events.length, 1);
 		assert.equal(state.latestCheckpoint?.id, "tail-0001");
 		assert.deepEqual(state.refs, [
-			"kb:system/traces.md",
+			"kb:system/components/traces.md",
 			"src/traces/schema.ts",
 		]);
-		assert.equal(traceHasEvent(records, "rows_approved"), true);
+		assert.equal(traceHasEvent(records, "changes_approved"), true);
 		assert.deepEqual(traceRefs(records), [
-			"kb:system/traces.md",
+			"kb:system/components/traces.md",
 			"src/traces/schema.ts",
 			"git:tree:abc123",
 		]);
@@ -255,20 +255,20 @@ describe("trace JSONL core", () => {
 				createdAt: "2026-06-11T00:00:00.000Z",
 			});
 			const first = await appendTraceRecord(root, head, 0);
-			const table = createDecisionTable({
-				id: "DT-loop-append",
+			const proposal = createSprintProposal({
+				id: "SP-loop-append",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
-				rows: [
+				changes: [
 					{
-						id: "DTR-loop-append",
+						id: "CHG-loop-append",
 						currentState: "Loop writes are assembled before append.",
 						desiredState:
 							"Runtime appends semantic loop reports as one checked batch.",
 						rationale: "Avoid partial durable semantic state.",
 						...decisionQualityFields(),
 						approval: "approved",
-						sourceRefs: ["kb:system/traces.md"],
+						sourceRefs: ["kb:system/components/traces.md"],
 					},
 				],
 			});
@@ -281,7 +281,7 @@ describe("trace JSONL core", () => {
 				run: ({ startSequence }) =>
 					runDecisionIteration({
 						traceId: head.traceId,
-						table,
+						proposal,
 						startSequence,
 						createdAt: "2026-06-11T00:00:01.000Z",
 					}),
@@ -289,7 +289,7 @@ describe("trace JSONL core", () => {
 			const readBack = await readTrace(join(root, traceFilePath(head.traceId)));
 			const state = replayTrace(readBack.records);
 
-			assert.equal(result.iterationEvent.event, "rows_approved");
+			assert.equal(result.iterationEvent.event, "changes_approved");
 			assert.equal(result.iterationEvent.sequence, 1);
 			assert.equal(result.append.records.length, 2);
 			assert.equal(state.events.at(-1)?.id, result.iterationEvent.id);
@@ -306,7 +306,7 @@ describe("trace JSONL core", () => {
 						run: ({ startSequence }) =>
 							runDecisionIteration({
 								traceId: head.traceId,
-								table,
+								proposal,
 								startSequence,
 								createdAt: "2026-06-11T00:00:02.000Z",
 							}),

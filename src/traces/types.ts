@@ -36,7 +36,7 @@ export interface TraceHead {
 }
 
 export type DecisionTraceEventName =
-	| "rows_approved"
+	| "changes_approved"
 	| "user_input_required"
 	| "decision_blocked";
 export type PlanningTraceEventName =

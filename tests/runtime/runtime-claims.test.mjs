@@ -35,7 +35,7 @@ function planningEvent() {
 		loop: "planning",
 		event: "work_units_created",
 		refs: [
-			"trace:TRACE-runtime:decision:iteration:1#row:DTR-runtime",
+			"trace:TRACE-runtime:decision:iteration:1#change:CHG-runtime",
 			"src/runtime",
 		],
 		createdAt: "2026-06-11T00:00:01.000Z",
@@ -48,7 +48,7 @@ function planningEvent() {
 						id: "WU-runtime",
 						title: "Schedule runtime work",
 						decisionRefs: [
-							"trace:TRACE-runtime:decision:iteration:1#row:DTR-runtime",
+							"trace:TRACE-runtime:decision:iteration:1#change:CHG-runtime",
 						],
 						componentRefs: ["component.runtime"],
 						pathScopes: ["src/runtime"],

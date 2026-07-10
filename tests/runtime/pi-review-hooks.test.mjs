@@ -194,7 +194,7 @@ describe("CodeWiki Pi review hooks", () => {
 		const result = await handler(
 			{
 				toolName: "edit",
-				args: { path: ".codewiki/kb/system/loop-contracts.md" },
+				args: { path: ".codewiki/kb/system/components/loop-contracts.md" },
 				result: { success: true },
 			},
 			{ cwd: process.cwd() },

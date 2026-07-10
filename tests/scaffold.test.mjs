@@ -11,6 +11,9 @@ const buildTsconfig = JSON.parse(readFileSync("tsconfig.build.json", "utf8"));
 const readme = readFileSync("README.md", "utf8");
 
 const expectedSupportRoots = [
+	"api",
+	"loops",
+	"dashboard",
 	"traces",
 	"views",
 	"knowledge",

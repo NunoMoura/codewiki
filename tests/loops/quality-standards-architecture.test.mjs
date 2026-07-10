@@ -5,7 +5,10 @@ import {
 	DECISION_LOOP_GRAPH,
 	evaluateDecisionExitGraph,
 } from "../../src/decision/loop.ts";
-import { evaluateDecisionQualityStandards } from "../../src/decision/quality-standards.ts";
+import {
+	decisionQualityStandards,
+	evaluateDecisionQualityStandards,
+} from "../../src/decision/quality-standards.ts";
 import {
 	IMPLEMENTATION_LOOP_GRAPH,
 	evaluateImplementationExitGraph,
@@ -16,21 +19,25 @@ import {
 	PLANNING_LOOP_GRAPH,
 	evaluatePlanningExitGraph,
 } from "../../src/planning/loop.ts";
-import { evaluatePlanningQualityStandards } from "../../src/planning/quality-standards.ts";
+import {
+	evaluatePlanningQualityStandards,
+	planningQualityStandards,
+} from "../../src/planning/quality-standards.ts";
+import { buildQualityView } from "../../src/views/quality.ts";
 
 describe("loop quality-standard architecture", () => {
 	it("keeps decision standard implementation in decision/quality-standards", () => {
 		const issues = [
 			{
 				code: "missing_current_state",
-				rowId: "DTR-1",
-				message: "Decision row DTR-1 is missing current state.",
+				changeId: "CHG-1",
+				message: "Proposed change CHG-1 is missing current state.",
 			},
 		];
 		const direct = evaluateDecisionQualityStandards({
 			graph: DECISION_LOOP_GRAPH,
 			issues,
-			approvedRows: [],
+			approvedChanges: [],
 		});
 
 		assert.deepEqual(direct, evaluateDecisionExitGraph(issues, []));
@@ -45,7 +52,7 @@ describe("loop quality-standard architecture", () => {
 		const issues = [
 			{
 				code: "missing_decision_coverage",
-				decisionRef: "trace:TRACE-demo:decision:iteration:1#row:DTR-1",
+				decisionRef: "trace:TRACE-demo:decision:iteration:1#change:CHG-1",
 				message: "Decision ref is not covered.",
 			},
 		];
@@ -76,6 +83,67 @@ describe("loop quality-standard architecture", () => {
 		assert.deepEqual(direct, evaluateImplementationExitGraph(issues));
 		assert.equal(direct[2].id, "acceptance_evidence_complete");
 		assert.equal(direct[2].status, "unmet");
+	});
+
+	it("uses product terms in quality standard descriptions", () => {
+		const descriptions = [
+			...decisionQualityStandards([], []),
+			...DECISION_LOOP_GRAPH.nodes,
+			...planningQualityStandards([]),
+			...PLANNING_LOOP_GRAPH.nodes,
+		].map((standard) => standard.description || "");
+
+		for (const description of descriptions) {
+			assert.doesNotMatch(
+				description,
+				/\b(row|rows|table|tables|approved change|approved changes|work item|work items|work unit|work units)\b/i,
+			);
+		}
+	});
+
+	it("normalizes legacy trace quality standard descriptions", () => {
+		const quality = buildQualityView({
+			records: [
+				{
+					type: "trace_head",
+					traceId: "TRACE-quality-legacy",
+					title: "Legacy quality text",
+					createdAt: "2026-07-07T00:00:00.000Z",
+				},
+				{
+					type: "trace_event",
+					id: "TRACE-quality-legacy:decision:iteration:1",
+					traceId: "TRACE-quality-legacy",
+					sequence: 1,
+					loop: "decision",
+					event: "changes_approved",
+					refs: [],
+					createdAt: "2026-07-07T00:00:00.000Z",
+					data: {
+						output: {
+							qualityStandards: [
+								{
+									id: "sprint_proposal_ready",
+									status: "met",
+									mode: "deterministic",
+									description:
+										"Sprint Proposal has at least one approved row and stable row ids.",
+									refs: [],
+								},
+							],
+						},
+						exit: { status: "exit" },
+					},
+				},
+			],
+		});
+		const description = quality.iterations[0].standards[0].description;
+
+		assert.equal(
+			description,
+			"Decision loop output has at least one Decision and stable Decision ids.",
+		);
+		assert.doesNotMatch(description, /\b(row|rows|table|tables)\b/i);
 	});
 
 	it("keeps shared standard helpers in loops/quality-standards", () => {

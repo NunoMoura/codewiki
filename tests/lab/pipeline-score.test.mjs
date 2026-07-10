@@ -16,7 +16,7 @@ describe("CodeWiki pipeline lab", () => {
 				.filter((record) => record.type === "trace_event")
 				.map((record) => `${record.loop}.${record.event}`),
 			[
-				"decision.rows_approved",
+				"decision.changes_approved",
 				"planning.work_units_created",
 				"implementation.evidence_accepted",
 			],

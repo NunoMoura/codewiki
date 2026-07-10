@@ -24,6 +24,6 @@ Claim status is runtime coordination evidence only. Traces, loop outputs, source
 
 ## Related docs
 
-- [Runtime](../runtime.md)
-- [Implementation Loop](../implementation-loop.md)
-- [Traces](../traces.md)
+- [Runtime](../components/runtime.md)
+- [Implementation Loop](../components/implementation-loop.md)
+- [Traces](../components/traces.md)

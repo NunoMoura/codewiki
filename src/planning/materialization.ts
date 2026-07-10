@@ -107,8 +107,8 @@ export function decisionRefsFromEvents(events: TraceEvent[]): string[] {
 			if (event.loop !== "decision") {
 				return [];
 			}
-			return objectList(objectRecord(event.data?.output).approvedRows).map(
-				(row) => iterationSubref(event, "row", text(row.id)),
+			return objectList(objectRecord(event.data?.output).approvedChanges).map(
+				(change) => iterationSubref(event, "change", text(change.id)),
 			);
 		}),
 	);

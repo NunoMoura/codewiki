@@ -4,14 +4,14 @@ title: CodeWiki System Architecture
 kind: architecture_map
 purpose: "Show the target CodeWiki architecture during the rebuild: runtime outer loop, semantic loops, KB truth, JSONL trace truth, generated views, host adapters, and Git evidence."
 source_docs:
-  - .codewiki/kb/system/overview.md
-  - .codewiki/kb/system/loop-model.md
-  - .codewiki/kb/system/decision-loop.md
-  - .codewiki/kb/system/planning-loop.md
-  - .codewiki/kb/system/implementation-loop.md
-  - .codewiki/kb/system/traces.md
-  - .codewiki/kb/system/runtime.md
-  - .codewiki/kb/system/api-tools.md
+  - .codewiki/kb/system/components/overview.md
+  - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/decision-loop.md
+  - .codewiki/kb/system/components/planning-loop.md
+  - .codewiki/kb/system/components/implementation-loop.md
+  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/runtime.md
+  - .codewiki/kb/system/components/api-tools.md
 renderer:
   preferred: layered_projection
   fallback: mermaid_flowchart
@@ -39,42 +39,42 @@ nodes:
     label: CLI / Pi / MCP adapters
     group: surfaces
     kind: host_adapter
-    source: .codewiki/kb/system/api-tools.md
+    source: .codewiki/kb/system/components/api-tools.md
   - id: runtime
     label: Runtime outer loop
     group: runtime
     kind: coordination
-    source: .codewiki/kb/system/runtime.md
+    source: .codewiki/kb/system/components/runtime.md
   - id: decision
     label: Decision loop
     group: loops
     kind: semantic_loop
-    source: .codewiki/kb/system/decision-loop.md
+    source: .codewiki/kb/system/components/decision-loop.md
   - id: planning
     label: Planning loop
     group: loops
     kind: semantic_loop
-    source: .codewiki/kb/system/planning-loop.md
+    source: .codewiki/kb/system/components/planning-loop.md
   - id: implementation
     label: Implementation loop
     group: loops
     kind: semantic_loop
-    source: .codewiki/kb/system/implementation-loop.md
+    source: .codewiki/kb/system/components/implementation-loop.md
   - id: kb
     label: Hot knowledge base
     group: truth
     kind: durable_truth
-    source: .codewiki/kb/system/knowledge.md
+    source: .codewiki/kb/system/components/knowledge.md
   - id: traces
     label: JSONL traces
     group: truth
     kind: durable_truth
-    source: .codewiki/kb/system/traces.md
+    source: .codewiki/kb/system/components/traces.md
   - id: views
     label: Generated views
     group: generated
     kind: generated_projection
-    source: .codewiki/kb/system/source-map.md
+    source: .codewiki/kb/system/components/source-map.md
   - id: git
     label: Git commits / trees / restore refs
     group: evidence

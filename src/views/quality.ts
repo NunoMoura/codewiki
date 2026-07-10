@@ -1,6 +1,10 @@
+import { DECISION_LOOP_GRAPH } from "../decision/loop.ts";
 import { decisionQualityStandards } from "../decision/quality-standards.ts";
+import { IMPLEMENTATION_LOOP_GRAPH } from "../implementation/loop.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
+import { PLANNING_LOOP_GRAPH } from "../planning/loop.ts";
 import { planningQualityStandards } from "../planning/quality-standards.ts";
+import type { LoopQualityGraphNode } from "../loops/graph.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
 import type {
 	LoopQualityStandardResult,
@@ -17,11 +21,33 @@ import type {
 	TraceViewInput,
 } from "./types.ts";
 
+interface QualityStandardGraphMetadata {
+	layer?: string;
+	standardType?: string;
+	gate?: string;
+	scoreThreshold?: number;
+}
+
+const QUALITY_GRAPH_METADATA_BY_LOOP = {
+	decision: qualityGraphMetadataById(DECISION_LOOP_GRAPH.nodes),
+	planning: qualityGraphMetadataById(PLANNING_LOOP_GRAPH.nodes),
+	implementation: qualityGraphMetadataById(IMPLEMENTATION_LOOP_GRAPH.nodes),
+} satisfies Record<TraceLoop, Map<string, QualityStandardGraphMetadata>>;
+
 const REQUIRED_QUALITY_STANDARDS: Record<TraceLoop, QualityStandardSummary[]> =
 	{
-		decision: normalizeStandards(decisionQualityStandards([], [])),
-		planning: normalizeStandards(planningQualityStandards([])),
-		implementation: normalizeStandards(implementationQualityStandards([])),
+		decision: normalizeStandards(
+			decisionQualityStandards([], []),
+			QUALITY_GRAPH_METADATA_BY_LOOP.decision,
+		),
+		planning: normalizeStandards(
+			planningQualityStandards([]),
+			QUALITY_GRAPH_METADATA_BY_LOOP.planning,
+		),
+		implementation: normalizeStandards(
+			implementationQualityStandards([]),
+			QUALITY_GRAPH_METADATA_BY_LOOP.implementation,
+		),
 	};
 
 export interface LoopQualityReadiness {
@@ -90,11 +116,16 @@ export function loopQualityReadiness(event: TraceEvent): LoopQualityReadiness {
 				mode: requiredStandard.mode,
 				weight: requiredStandard.weight,
 				description: requiredStandard.description,
+				standardType: requiredStandard.standardType,
+				layer: requiredStandard.layer,
+				gate: requiredStandard.gate,
+				score: requiredStandard.score,
+				scoreThreshold: requiredStandard.scoreThreshold,
 				message: `${loop} quality standard ${requiredStandard.id} is missing.`,
 				refs: [event.id],
 			};
 		}
-		return standard;
+		return mergeRequiredQualityMetadata(requiredStandard, standard);
 	});
 	const requiredIds = new Set(required.map((standard) => standard.id));
 	const extras = provided.filter((standard) => !requiredIds.has(standard.id));
@@ -207,26 +238,107 @@ function qualityStandardsFromEvent(
 	);
 }
 
+function mergeRequiredQualityMetadata(
+	required: QualityStandardSummary,
+	provided: QualityStandardSummary,
+): QualityStandardSummary {
+	return {
+		...provided,
+		mode: provided.mode || required.mode,
+		weight: provided.weight ?? required.weight,
+		description: required.description || provided.description,
+		standardType: provided.standardType || required.standardType,
+		layer: provided.layer || required.layer,
+		gate: provided.gate || required.gate,
+		scoreThreshold: provided.scoreThreshold ?? required.scoreThreshold,
+	};
+}
+
 function normalizeStandards(
 	standards: LoopQualityStandardResult[],
+	metadataById?: Map<string, QualityStandardGraphMetadata>,
 ): QualityStandardSummary[] {
-	return standards.map((standard) => qualityStandardSummary(standard));
+	return standards.map((standard) =>
+		qualityStandardSummary(standard, metadataById?.get(standard.id)),
+	);
+}
+
+function qualityGraphMetadataById(
+	nodes: LoopQualityGraphNode<string>[],
+): Map<string, QualityStandardGraphMetadata> {
+	return new Map(
+		nodes.map((node) => [
+			node.id,
+			{
+				layer: node.layer,
+				standardType: node.standardType,
+				gate: node.gate,
+				scoreThreshold: node.scoreThreshold,
+			},
+		]),
+	);
 }
 
 function qualityStandardSummary(
 	standard: Record<string, unknown> | LoopQualityStandardResult,
+	metadata?: QualityStandardGraphMetadata,
 ): QualityStandardSummary {
 	const evidenceRefs = stringList(standard.evidenceRefs);
+	const score = finiteNumber(standard.score);
+	const scoreThreshold = finiteNumber(standard.scoreThreshold);
 	return {
 		id: text(standard.id),
 		status: qualityStatus(standard.status),
 		mode: qualityMode(standard.mode),
 		...(number(standard.weight) ? { weight: number(standard.weight) } : {}),
-		description: text(standard.description),
-		...(text(standard.message) ? { message: text(standard.message) } : {}),
+		description: canonicalQualityStandardDescription(
+			text(standard.description),
+		),
+		...(text(standard.message)
+			? { message: canonicalQualityStandardDescription(text(standard.message)) }
+			: {}),
+		...(text(standard.standardType) || metadata?.standardType
+			? { standardType: text(standard.standardType) || metadata?.standardType }
+			: {}),
+		...(text(standard.layer) || metadata?.layer
+			? { layer: text(standard.layer) || metadata?.layer }
+			: {}),
+		...(text(standard.gate) || metadata?.gate
+			? { gate: text(standard.gate) || metadata?.gate }
+			: {}),
+		...(score !== undefined ? { score } : {}),
+		...(scoreThreshold !== undefined || metadata?.scoreThreshold !== undefined
+			? { scoreThreshold: scoreThreshold ?? metadata?.scoreThreshold }
+			: {}),
 		refs: stringList(standard.refs),
 		...(evidenceRefs.length > 0 ? { evidenceRefs } : {}),
 	};
+}
+
+function canonicalQualityStandardDescription(value: string): string {
+	return value
+		.replace(
+			/Sprint Proposal has at least one approved (?:row|change) and stable (?:row|change) ids\./gi,
+			"Decision loop output has at least one Decision and stable Decision ids.",
+		)
+		.replace(/Approved rows\b/g, "Decisions")
+		.replace(/approved rows\b/g, "Decisions")
+		.replace(/Approved changes\b/g, "Decisions")
+		.replace(/approved changes\b/g, "Decisions")
+		.replace(/approved row\b/g, "Decision")
+		.replace(/approved change\b/g, "Decision")
+		.replace(/High-risk changes\b/g, "High-risk Decisions")
+		.replace(/high-risk changes\b/g, "high-risk Decisions")
+		.replace(/\brow ids\b/g, "Decision ids")
+		.replace(/\bchange ids\b/g, "Decision ids")
+		.replace(/\brows\b/g, "Decisions")
+		.replace(/\bRows\b/g, "Decisions")
+		.replace(/\brow\b/g, "Decision")
+		.replace(/\bRow\b/g, "Decision")
+		.replace(/\btables\b/g, "decision lists")
+		.replace(/\bTables\b/g, "Decision lists")
+		.replace(/\btable\b/g, "decision list")
+		.replace(/\bTable\b/g, "Decision list");
 }
 
 function standardBlockerMessage(
@@ -292,6 +404,12 @@ function number(value: unknown): number {
 	return typeof value === "number" && Number.isFinite(value) && value > 0
 		? value
 		: 0;
+}
+
+function finiteNumber(value: unknown): number | undefined {
+	return typeof value === "number" && Number.isFinite(value)
+		? value
+		: undefined;
 }
 
 function text(value: unknown): string {

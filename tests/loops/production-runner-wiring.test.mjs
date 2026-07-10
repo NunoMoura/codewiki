@@ -5,7 +5,7 @@ import {
 	evaluateDecisionExit,
 	evaluateDecisionExitWithRunner,
 } from "../../src/decision/loop.ts";
-import { createDecisionTable } from "../../src/decision/table.ts";
+import { createSprintProposal } from "../../src/decision/proposal.ts";
 import {
 	evaluateImplementationExit,
 	evaluateImplementationExitWithRunner,
@@ -22,9 +22,9 @@ function withoutRunner(exit) {
 
 describe("production loop runner wiring", () => {
 	it("runs decision quality standards through the loop runner without changing verdict semantics", async () => {
-		const table = createDecisionTable({ id: "DT-runner", rows: [] });
-		const syncExit = evaluateDecisionExit(table);
-		const runnerExit = await evaluateDecisionExitWithRunner(table);
+		const proposal = createSprintProposal({ id: "SP-runner", changes: [] });
+		const syncExit = evaluateDecisionExit(proposal);
+		const runnerExit = await evaluateDecisionExitWithRunner(proposal);
 
 		assert.deepEqual(withoutRunner(runnerExit), syncExit);
 		assert.equal(runnerExit.qualityRunner.graphId, "decision.loop");
@@ -39,7 +39,7 @@ describe("production loop runner wiring", () => {
 
 	it("runs planning quality standards through the loop runner without changing verdict semantics", async () => {
 		const input = {
-			decisionRefs: ["trace:TRACE-demo:decision:iteration:1#row:DTR-1"],
+			decisionRefs: ["trace:TRACE-demo:decision:iteration:1#change:CHG-1"],
 			workItems: [],
 			resolutions: [],
 		};

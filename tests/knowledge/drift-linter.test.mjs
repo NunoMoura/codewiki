@@ -12,7 +12,7 @@ describe("knowledge drift linter", () => {
 			{
 				path: "README.md",
 				content:
-					"Use /wiki-state and trace_close with repo-local CodeWiki dogfooding disabled.",
+					"Use /wiki-dashboard and trace_close with repo-local CodeWiki dogfooding disabled.",
 				scopes: ["product_documentation", "operating_guidance"],
 			},
 		]);
@@ -28,7 +28,7 @@ describe("knowledge drift linter", () => {
 				scopes: ["product_documentation", "operating_guidance"],
 			},
 			{
-				path: ".codewiki/kb/system/api-tools.md",
+				path: ".codewiki/kb/system/components/api-tools.md",
 				content: "Run /wiki state for project state.",
 				scopes: ["product_documentation"],
 			},
@@ -47,7 +47,7 @@ describe("knowledge drift linter", () => {
 				["README.md", "transitional_cli_product_ux", "codewiki state"],
 				["README.md", "trace_close_event_name", "trace.close"],
 				[
-					".codewiki/kb/system/api-tools.md",
+					".codewiki/kb/system/components/api-tools.md",
 					"grouped_wiki_namespace",
 					"/wiki state",
 				],
@@ -64,7 +64,7 @@ describe("knowledge drift linter", () => {
 		const issues = lintKnowledgeDrift(
 			[
 				{
-					path: ".codewiki/kb/system/api.md",
+					path: ".codewiki/kb/system/components/api.md",
 					content: "Use /wiki-status.",
 					scopes: ["product_documentation"],
 				},
@@ -73,15 +73,15 @@ describe("knowledge drift linter", () => {
 		);
 
 		assert.deepEqual(formatKnowledgeDriftIssues(issues), [
-			'.codewiki/kb/system/api.md: public_state_command: Public UX must use /wiki-state, not status. (matched "/wiki-status")',
+			'.codewiki/kb/system/components/api.md: public_state_command: Public UX must use /wiki-dashboard, not status or /wiki-state. (matched "/wiki-status")',
 		]);
 	});
 
 	it("blocks stored semantic event examples that duplicate loop names", () => {
 		const issues = lintKnowledgeDrift([
 			{
-				path: ".codewiki/kb/system/traces.md",
-				content: '{ "loop": "decision", "event": "decision.rows_approved" }',
+				path: ".codewiki/kb/system/components/traces.md",
+				content: '{ "loop": "decision", "event": "decision.changes_approved" }',
 				scopes: ["product_documentation"],
 			},
 		]);
@@ -90,7 +90,7 @@ describe("knowledge drift linter", () => {
 			issues.map((issue) => [issue.path, issue.ruleId, issue.match]),
 			[
 				[
-					".codewiki/kb/system/traces.md",
+					".codewiki/kb/system/components/traces.md",
 					"prefixed_semantic_event_field",
 					'"event": "decision.',
 				],

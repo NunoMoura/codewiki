@@ -4,8 +4,8 @@ title: CodeWiki Data Model
 kind: data_model
 purpose: Show target data ownership for KB docs, JSONL traces, generated views, runtime tmp, source/tests, and Git proof.
 source_docs:
-  - .codewiki/kb/system/source-map.md
-  - .codewiki/kb/system/traces.md
+  - .codewiki/kb/system/components/source-map.md
+  - .codewiki/kb/system/components/traces.md
 renderer:
   preferred: entity_relationship
   fallback: mermaid_flowchart

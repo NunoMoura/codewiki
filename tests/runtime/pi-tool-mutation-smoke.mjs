@@ -15,7 +15,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/decision-row.mjs";
+import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -43,20 +43,14 @@ function toolByName(pi, name) {
 	return tool;
 }
 
-function commandByName(pi, name) {
-	const command = pi.commands.find((candidate) => candidate.name === name);
-	assert.ok(command, `missing command ${name}`);
-	return command.command;
-}
-
-function decisionTableInput() {
+function sprintProposalInput() {
 	return {
-		id: "DT-pi-mutation-smoke",
+		id: "SP-pi-mutation-smoke",
 		createdAt: "2026-06-17T00:00:01.000Z",
 		updatedAt: "2026-06-17T00:00:01.000Z",
-		rows: [
+		changes: [
 			{
-				id: "DTR-pi-mutation-smoke",
+				id: "CHG-pi-mutation-smoke",
 				currentState:
 					"Pi tools are mutation-capable but need guarded append smoke coverage.",
 				desiredState:
@@ -65,7 +59,7 @@ function decisionTableInput() {
 					"Dogfooding must prove safe trace writes before broader mutation use.",
 				...decisionQualityFields(),
 				approval: "approved",
-				sourceRefs: [".codewiki/kb/system/api-tools.md"],
+				sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
 			},
 		],
 	};
@@ -73,10 +67,10 @@ function decisionTableInput() {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const row = iteration?.data?.output?.approvedRows?.[0];
+	const change = iteration?.data?.output?.approvedChanges?.[0];
 	assert.ok(iteration);
-	assert.ok(row);
-	return `trace:${iteration.id}#row:${row.id}`;
+	assert.ok(change);
+	return `trace:${iteration.id}#change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-pi-mutation-smoke") {
@@ -113,7 +107,7 @@ function changeInput(planningRef) {
 		id: "CHG-pi-mutation-smoke",
 		planningRefs: [planningRef],
 		codePaths: ["src/pi/tool.ts"],
-		docPaths: [".codewiki/kb/system/extension.md"],
+		docPaths: [".codewiki/kb/system/components/extension.md"],
 		testPaths: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
 		checks: ["npm run test:pi-mutation"],
 		checkResults: [
@@ -158,9 +152,31 @@ async function writeFixtureFiles(root) {
 		join(root, "tests", "runtime", "pi-tool-mutation-smoke.mjs"),
 		"export const piToolMutationSmokeTest = true;\n",
 	);
+	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
+		recursive: true,
+	});
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "extension.md"),
-		"# Extension\n\nMutation smoke fixture.\n",
+		join(root, ".codewiki", "kb", "system", "components", "extension.md"),
+		[
+			"---",
+			"type: Concept",
+			"title: Extension",
+			"description: Mutation smoke fixture.",
+			"codewiki_component: pi",
+			"codewiki_source_patterns:",
+			"  - src/pi/**",
+			"codewiki_test_patterns:",
+			"  - tests/runtime/pi-*.mjs",
+			"codewiki_trace_events:",
+			"  - decision.changes_approved",
+			"  - planning.work_units_created",
+			"  - implementation.evidence_accepted",
+			"---",
+			"# Extension",
+			"",
+			"Mutation smoke fixture.",
+			"",
+		].join("\n"),
 	);
 }
 
@@ -180,29 +196,6 @@ try {
 	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
 	await mkdir(join(root, ".codewiki", "kb", "system"), { recursive: true });
 	await writeFixtureFiles(root);
-	await writeFile(
-		join(root, ".codewiki", "kb", "system", "source-map.yaml"),
-		[
-			"id: mutation-smoke-source-map",
-			"source_docs:",
-			"  - .codewiki/kb/system/source-map.md",
-			"defaults:",
-			"  inheritance: true",
-			"  excluded: []",
-			"components:",
-			"  pi:",
-			"    doc: .codewiki/kb/system/extension.md",
-			"    source_patterns:",
-			"      - src/pi/**",
-			"    test_patterns:",
-			"      - tests/runtime/pi-*.mjs",
-			"    trace_events:",
-			"      - decision.rows_approved",
-			"      - planning.work_units_created",
-			"      - implementation.evidence_accepted",
-			"",
-		].join("\n"),
-	);
 	const tracePath = join(root, traceFilePath(traceId));
 	const headText = formatTraceText([
 		createTraceHead({
@@ -219,7 +212,7 @@ try {
 	const planTool = toolByName(pi, "wiki_plan");
 	const implementTool = toolByName(pi, "wiki_implement");
 	const archiveTool = toolByName(pi, "wiki_archive");
-	const stateCommand = commandByName(pi, "wiki-state");
+	const stateTool = toolByName(pi, "wiki_state");
 	const ctx = { cwd: root, ui: { notify() {} } };
 
 	const preview = assertToolResult(
@@ -231,7 +224,7 @@ try {
 					mode: "preview",
 					nextSequence: 1,
 					createdAt: "2026-06-17T00:00:01.000Z",
-					tableInput: decisionTableInput(),
+					proposalInput: sprintProposalInput(),
 				},
 			},
 			undefined,
@@ -252,7 +245,7 @@ try {
 						traceId,
 						mode: "append",
 						nextSequence: 1,
-						tableInput: decisionTableInput(),
+						proposalInput: sprintProposalInput(),
 					},
 				},
 				undefined,
@@ -272,10 +265,10 @@ try {
 					expectedBytes: await expectedBytes(tracePath),
 					nextSequence: 1,
 					createdAt: "2026-06-17T00:00:01.000Z",
-					tableInput: decisionTableInput(),
-					decisionTableApproval: {
+					proposalInput: sprintProposalInput(),
+					sprintProposalApproval: {
 						approved: true,
-						renderedTableDigest: preview.renderedDecisionTable.digest,
+						renderedProposalDigest: preview.renderedSprintProposal.digest,
 						approvedBy: "pi-tool-mutation-smoke",
 						approvedAt: "2026-06-17T00:00:01.000Z",
 					},
@@ -376,9 +369,15 @@ try {
 	assert.equal(claimEvent.event, "runtime.work_unit.claimed");
 	assert.equal(claimEvent.sequence, 3);
 	assert.equal(runtime.batch.nextSequenceByTrace[traceId], 4);
-	const claimedState = await stateCommand.handler(
-		`--board --trace ${traceId} --json`,
-		ctx,
+	const claimedState = assertToolResult(
+		await stateTool.execute(
+			"tool-call-mutation-state-claimed",
+			{ view: "board", traceId },
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_state:/,
 	);
 	assert.equal(claimedState.data.workQueue.summary.claimed, 1);
 
@@ -410,9 +409,15 @@ try {
 		implemented.aggregateContentProof?.workingTreeDigest?.startsWith("sha256:"),
 		true,
 	);
-	const implementedState = await stateCommand.handler(
-		`--board --trace ${traceId} --json`,
-		ctx,
+	const implementedState = assertToolResult(
+		await stateTool.execute(
+			"tool-call-mutation-state-implemented",
+			{ view: "board", traceId },
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_state:/,
 	);
 	assert.equal(implementedState.data.workQueue.summary.done, 1);
 
@@ -460,9 +465,15 @@ try {
 	);
 	assert.equal(readBack.records.at(-1)?.type, "trace_close");
 
-	const state = await stateCommand.handler(
-		`--all --trace ${traceId} --json`,
-		ctx,
+	const state = assertToolResult(
+		await stateTool.execute(
+			"tool-call-mutation-state-final",
+			{ view: "all", traceId },
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_state:/,
 	);
 	assert.equal(state.data.status.traceId, traceId);
 	assert.equal(state.data.status.summary.decisionEvents, 1);

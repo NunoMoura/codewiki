@@ -7,7 +7,7 @@ export interface PipelineFact {
 }
 
 export interface PipelineDecisionArtifact {
-	rowId: string;
+	changeId: string;
 	refs: string[];
 	facts: string[];
 }
