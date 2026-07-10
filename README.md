@@ -154,7 +154,7 @@ CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` stat
 and is intended to be compatible with external sandbox, worktree, container, or
 agent-harness isolation.
 
-Repo-local Pi settings intentionally load pi-lens without CodeWiki while the self-dogfood baseline is being rebuilt. Candidate CodeWiki packages must be packed and installed into disposable external projects for lifecycle testing. Future self-dogfood must load an immutable package built from a reviewed baseline commit; it must not load the mutable source checkout through `..` while that checkout is changing. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
+Repo-local Pi settings intentionally load pi-lens without CodeWiki. The reviewed baseline and shadow gates now pass, but tracked settings remain disabled until that controller has a reproducible project-local deployment for fresh clones. Future self-dogfood must load the immutable reviewed package; it must not load the mutable source checkout through `..`. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
 
 Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. `/wiki-dashboard` opens the local read-only Sprints Queue in a browser. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
 
@@ -344,10 +344,13 @@ Fully using CodeWiki `wiki_*` tools inside this repository is a separate,
 supervised self-dogfood step from public production automation. It is not enabled
 merely because the package can be built.
 
-Self-dogfood status: disabled while the current refactor establishes a clean,
-reviewed, immutable baseline. The earlier
+Self-dogfood status: pinned-baseline and shadow gates passed for reviewed commit
+`794bba6dfe7b1a902d75cae85b5697dfcf479a67` and package SHA-256
+`1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
+Repo-local Pi autoload remains disabled while the controller deployment is made
+reproducible without loading mutable source. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
-is historical evidence, not approval for the current working tree.
+remains historical evidence, not approval for another controller.
 
 The self-dogfood re-enable gate is:
 
@@ -370,6 +373,7 @@ The self-dogfood re-enable gate is:
    expected byte/sequence guards, no unattended worker start, no auto-merge, and
    no auto-publish.
 
-Current repo operating guidance requires normal Pi file tools, tests, and Git.
-Do not use CodeWiki `wiki_*` tools in this checkout until the pinned-baseline gate
-is satisfied and the repo-local package setting is explicitly re-enabled.
+Current repo operating guidance still requires normal Pi file tools, tests, and
+Git. Do not use CodeWiki `wiki_*` tools in this checkout until the reviewed
+controller is installed through a reproducible project-local source and the
+repo-local package setting is explicitly re-enabled.

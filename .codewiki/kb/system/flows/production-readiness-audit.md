@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Production readiness audit
-description: "Status: package readiness green; repo-local self-dogfood disabled pending a pinned baseline."
+description: "Status: package and pinned-baseline shadow gates green; repo-local Pi autoload remains disabled pending reproducible controller deployment."
 tags:
   - codewiki
   - system
@@ -12,7 +12,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Production readiness audit
 
-Status: package readiness green; repo-local self-dogfood disabled pending a clean, reviewed, immutable baseline.
+Status: package readiness and reviewed pinned-baseline shadow gates are green. Repo-local Pi autoload remains disabled pending reproducible controller deployment.
 
 ## Ready now
 
@@ -29,11 +29,14 @@ Status: package readiness green; repo-local self-dogfood disabled pending a clea
   identity in semantic events and tail checkpoints.
 - Repo-local self-dogfood is disabled: `.pi/settings.json` loads pi-lens only,
   `.codewiki/config.json` disables the Pi host, and no extension shim is present.
-- Baseline tooling now refuses dirty source, pins reviewed commit/tree/package
+- Baseline tooling refuses dirty source, pins reviewed commit/tree/package
   integrity in host-owned ignored evidence under `.pi/npm/codewiki-baselines/**`,
-  verifies that pin independently, and
-  runs state/config reads plus a decision preview in a disposable project while
-  checking that source config and trace digests remain unchanged.
+  and verifies that pin independently.
+- Reviewed commit `794bba6dfe7b1a902d75cae85b5697dfcf479a67`, tree
+  `aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
+  `1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`
+  passed the full candidate gate and disposable shadow state/config reads plus a
+  decision preview. Source config and trace digests remained unchanged.
 - `npm run lab:forge` can reduce hot trace JSONL into sanitized draft case
   material while requiring human labels.
 - Loop exits expose compact `qualityDiagnostics` repair feedback in trace output
@@ -46,8 +49,9 @@ Status: package readiness green; repo-local self-dogfood disabled pending a clea
 ## Fixed during this audit
 
 - An earlier audit enabled controlled repo-local dogfood through `..`; the
-  current refactor supersedes that operating state and disables repo-local
-  loading until a pinned baseline passes external and shadow gates.
+  current refactor superseded that operating state and kept repo-local loading
+  disabled through pinned-baseline and shadow validation. Those gates now pass;
+  reproducible controller deployment remains separate.
 - Updated readiness/docs/drift checks to treat package readiness and repo-local
   self-dogfood activation as separate decisions.
 - Made `lab/**` and `.codewiki/config.json` canonical trace refs so audit and
@@ -74,9 +78,10 @@ Status: package readiness green; repo-local self-dogfood disabled pending a clea
 
 ## Remaining blockers before production release
 
-- No baseline manifest exists yet because the large rebuild working tree has not
-  been reviewed and committed. Baseline creation and shadow evidence must wait
-  for that clean immutable commit and explicit reviewer identity.
+- Repo-local Pi autoload remains disabled. The ignored host baseline is valid on
+  this machine, but project settings must not point at an absent ignored path in
+  fresh clones. Controller deployment needs a reproducible pinned source before
+  tracked `.pi/settings.json` can enable it safely.
 - Public npm publish is still blocked: package is private and the registry name
   is unresolved.
 - Objective evidence is visible-only: sealed holdout has zero cases and the
@@ -127,6 +132,7 @@ npm run test:external-lifecycle
 npm run test:external-failures
 npm run lab:gate
 npm run lab:pipeline -- --gate
+CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-ready
 npm run lab:graph
 npm run lab:objective
 npm run lab:promotion

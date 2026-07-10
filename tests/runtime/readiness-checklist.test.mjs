@@ -333,16 +333,17 @@ describe("install readiness checklist", () => {
 			assert.match(content, /sequence/i);
 		}
 		for (const content of [readme, extensionDoc]) {
-			assert.match(content, /Self-dogfood status: disabled/i);
+			assert.match(content, /Self-dogfood status: pinned-baseline/i);
+			assert.match(content, /autoload remains disabled/i);
 			assert.match(content, /TRACE-self-dogfood-reenabled-v1/);
 			assert.match(content, /historical evidence/i);
-			assert.match(content, /immutable baseline/i);
+			assert.match(content, /immutable reviewed package|pinned-baseline/i);
 			assert.match(content, /shadow mode/i);
 		}
 		assert.match(extensionDoc, /wiki_state/);
 		assert.match(extensionDoc, /preview-mode/);
 		assert.match(loopContracts, /fast edit feedback is never enough/);
-		assert.match(loopContracts, /Pi-tool dogfood is currently disabled/);
+		assert.match(loopContracts, /Pi-tool autoload is disabled/);
 	});
 
 	it("documents loop/runtime/host boundaries and trace queue ownership", () => {
@@ -393,7 +394,7 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("keeps repo-local CodeWiki dogfooding disabled pending a pinned baseline", () => {
+	it("keeps repo-local CodeWiki autoload disabled pending reproducible controller deployment", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
 		assert.equal(packages.includes("npm:pi-lens"), true);

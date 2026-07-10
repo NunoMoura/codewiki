@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi Extension
-description: The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. Repo-local self-dogfood is disabled until a clean immutable baseline passes external and shadow gates; `.pi/settings.json` loads pi-lens only.
+description: The package exposes the Pi extension for external installs. Reviewed pinned-baseline and shadow gates pass, while repo-local Pi autoload remains disabled pending reproducible controller deployment.
 tags:
   - codewiki
   - system
@@ -47,7 +47,7 @@ codewiki_source_map:
 ---
 # Pi Extension
 
-The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. Repo-local self-dogfood is disabled while the current refactor establishes a clean immutable baseline. `.pi/settings.json` loads pi-lens only; candidate packages run through packed disposable-project smokes. No `.pi/extensions/codewiki.ts` shim is allowed.
+The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. The reviewed pinned-baseline and shadow gates have passed, but repo-local Pi autoload remains disabled until controller deployment is reproducible without loading mutable source. `.pi/settings.json` loads pi-lens only. No `.pi/extensions/codewiki.ts` shim is allowed.
 
 Target Pi integration lives under `src/pi/**` and exposes terminal-first commands, tools, prompt assets, and TUI views through thin adapter registrations over the core facades. Pi is the primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
@@ -125,10 +125,14 @@ source checkout itself. This is stricter than using the package in a temporary o
 external project because bad tool behavior could mutate CodeWiki's own workflow
 truth. Self-dogfood is not re-enabled by build success alone.
 
-Self-dogfood status: disabled while the current refactor establishes a clean,
-reviewed, immutable baseline. The earlier
+Self-dogfood status: pinned-baseline and shadow gates passed for reviewed commit
+`794bba6dfe7b1a902d75cae85b5697dfcf479a67`, Git tree
+`aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
+`1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
+Repo-local Pi autoload remains disabled pending reproducible controller
+installation. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
-is historical evidence, not approval for the current working tree.
+remains historical evidence, not approval for another controller.
 
 The re-enable gate is:
 
