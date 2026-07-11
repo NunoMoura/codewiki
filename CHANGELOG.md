@@ -117,8 +117,9 @@ All notable changes to this project will be documented in this file.
   Explicit project setup commands remain host-approved shell commands.
 - Upgraded quality graph schema to v3 with validated node dependencies, cycle
   rejection, and dependency-aware runner scheduling.
-- Disabled repo-local CodeWiki loading until a clean immutable baseline passes
-  packed external, shadow, and explicit approval gates.
+- Disabled mutable-source CodeWiki loading; after packed external, shadow,
+  reproducible installer, and explicit approval gates passed, supervised
+  repo-local autoload now targets only the reviewed controller under `.pi/npm`.
 
 ### Fixed
 

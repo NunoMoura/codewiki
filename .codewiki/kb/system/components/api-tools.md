@@ -37,7 +37,7 @@ CodeWiki core package
   -> MCP adapter (future optional adapter)
 ```
 
-Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. In this checkout, Pi-tool self-dogfood is disabled until a clean immutable baseline passes external, shadow, and explicit approval gates; unattended runtime automation remains disabled.
+Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. In this checkout, supervised Pi-tool self-dogfood loads only the reviewed controller installed under `.pi/npm`; mutable candidate source cannot grade itself. Unattended runtime automation remains disabled.
 
 ## Tool parameter style
 

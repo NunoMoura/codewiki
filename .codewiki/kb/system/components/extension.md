@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi Extension
-description: The package exposes the Pi extension for external installs. Reviewed pinned-baseline and shadow gates pass, while repo-local Pi autoload remains disabled pending reproducible controller deployment.
+description: The package exposes the Pi extension for external installs and supervised repo-local use through a reviewed, reproducibly installed pinned controller; mutable source is never autoloaded.
 tags:
   - codewiki
   - system
@@ -47,7 +47,7 @@ codewiki_source_map:
 ---
 # Pi Extension
 
-The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. The reviewed pinned-baseline and shadow gates have passed, but repo-local Pi autoload remains disabled until controller deployment is reproducible without loading mutable source. `.pi/settings.json` loads pi-lens only. No `.pi/extensions/codewiki.ts` shim is allowed.
+The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. Repo-local Pi autoload now uses only the reviewed controller installed at `.pi/npm/node_modules/codewiki`; mutable source is never loaded through `..`. `.pi/settings.json` loads that controller beside pi-lens. No `.pi/extensions/codewiki.ts` shim is allowed.
 
 Target Pi integration lives under `src/pi/**` and exposes terminal-first commands, tools, prompt assets, and TUI views through thin adapter registrations over the core facades. Pi is the primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
@@ -84,8 +84,8 @@ failure paths through installed package artifacts.
 
 `npm run test:readiness` is the repo-local readiness checklist. It verifies
 package metadata is present, Pi is not bundled as a runtime dependency,
-`.codewiki` top-level state has the target shape, repo-local Pi settings omit
-CodeWiki while self-dogfood is disabled, CLI is absent from product host config,
+`.codewiki` top-level state has the target shape, repo-local Pi settings load
+only the pinned project-local controller, CLI is absent from product host config,
 and docs do not contain stale public command, CLI, legacy trace-close, or
 state/status command wording.
 `npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
@@ -106,13 +106,14 @@ commit, Git tree content proof, package byte count and SHA-256, reviewer, and
 gate results. With `CODEWIKI_BASELINE_MANIFEST` pointing at that manifest,
 `npm run test:self-dogfood-ready` verifies the Git and package pin, requires a
 clean candidate checkout, reruns candidate gates, and executes the disposable
-shadow smoke. Passing still does not enable repo-local tools without explicit
-approval.
+shadow smoke. Explicit approval then permits only the pinned controller installer
+and supervised activation path.
 
 ## Production readiness gates
 
 Supported now: project-local packed/local package installs, supervised `/wiki-*` and model-facing
-`wiki_*` flows in external or controlled test projects, guarded expected-byte/sequence mutation, and external sandbox
+`wiki_*` flows in external, controlled test, and this pinned-controller project,
+guarded expected-byte/sequence mutation, and external sandbox
 compatibility. Runtime backend APIs support host coordination but are not exposed
 as a normal agent tool. Gated before production automation: public npm publish,
 unattended runtime worker start, auto-merge, auto-publish, global/user installs
@@ -131,13 +132,12 @@ source checkout itself. This is stricter than using the package in a temporary o
 external project because bad tool behavior could mutate CodeWiki's own workflow
 truth. Self-dogfood is not re-enabled by build success alone.
 
-Self-dogfood status: pinned-baseline and shadow gates passed for reviewed commit
-`794bba6dfe7b1a902d75cae85b5697dfcf479a67`, Git tree
+Self-dogfood status: supervised pinned-controller autoload is enabled for
+reviewed commit `794bba6dfe7b1a902d75cae85b5697dfcf479a67`, Git tree
 `aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
 `1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
-The tracked controller pin and installer now provide reproducible installation,
-but repo-local Pi autoload remains disabled until the installer passes under
-stable-baseline governance. The earlier
+The tracked pin reproduced the exact package under stable-baseline governance;
+`.pi/settings.json` loads only that installed controller. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
 remains historical evidence, not approval for another controller.
 
@@ -152,27 +152,29 @@ The re-enable gate is:
    `npm run test:self-dogfood-ready` verifies the immutable controller, requires
    a clean candidate checkout, reruns candidate gates, and executes shadow
    reads/previews; mutable candidate source cannot grade itself.
-3. Disposable external dogfood covers successful lifecycle runs, append
+3. `npm run self-dogfood:controller:install` rebuilds the pinned commit in a
+   detached worktree, verifies exact bytes and SHA-256, and installs only that
+   package under `.pi/npm`.
+4. Disposable external dogfood covers successful lifecycle runs, append
    conflicts, malformed worker output, worktree failures, and cleanup.
-4. The pinned baseline produces acceptable read-only and preview results in
+5. The pinned baseline produces acceptable read-only and preview results in
    shadow mode before any real-repo trace append.
-5. `.codewiki/traces/TRACE-*.jsonl` files validate, and no central trace index or
+6. `.codewiki/traces/TRACE-*.jsonl` files validate, and no central trace index or
    legacy generated root becomes active truth.
-6. Explicit approval enables only supervised use with preview-before-append,
+7. Explicit approval enables only supervised use with preview-before-append,
    expected-byte/sequence guards, no unattended worker start, no auto-merge, and
    no auto-publish.
 
-Current repo operating guidance requires normal Pi file tools, tests, and Git.
-Repo-local Pi settings do not load CodeWiki. Candidate packages run only in
-packed disposable projects until the pinned-baseline gate passes. The first
-real-repo use after re-enable must be a read-only `wiki_state` shadow check,
-followed by preview-mode loop calls before any guarded append. Changes to the
-quality evaluator must still be governed by the stable baseline while the
-candidate evaluator runs as non-authoritative evidence.
+Current repo operating guidance permits supervised CodeWiki use through the
+pinned controller while retaining normal Git and test verification. The first
+real-repo use after re-enable must be a read-only `wiki_state` check, followed by
+preview-mode loop calls before any guarded append. Changes to the quality
+evaluator remain governed by the stable baseline while the candidate evaluator
+runs as non-authoritative evidence.
 
 ## Rebuild rules
 
-- Repo-local CodeWiki dogfooding is disabled; `.pi/settings.json` loads pi-lens only until an immutable project-local baseline is explicitly approved. Do not add a `.pi/extensions/codewiki.ts` shim or load mutable source through `..`.
+- Repo-local CodeWiki dogfooding is supervised and pinned; `.pi/settings.json` loads `.pi/npm/node_modules/codewiki` beside pi-lens. Do not add a `.pi/extensions/codewiki.ts` shim or load mutable source through `..`.
 - Do not run CodeWiki-owned compaction, resume injection, or auto-pickup.
 - Use Pi native compaction only.
 - Do not rely on `_OLD_VERSION/**`; the archive has been removed after migration audit.

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Production readiness audit
-description: "Status: package and pinned-baseline shadow gates green; repo-local Pi autoload remains disabled pending reproducible controller deployment."
+description: "Status: package, pinned-baseline, shadow, and reproducible controller-install gates are green; supervised repo-local Pi autoload uses only the reviewed controller."
 tags:
   - codewiki
   - system
@@ -12,7 +12,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Production readiness audit
 
-Status: package readiness and reviewed pinned-baseline shadow gates are green. Repo-local Pi autoload remains disabled pending reproducible controller deployment.
+Status: package readiness, reviewed pinned-baseline shadow, and reproducible controller-install gates are green. Supervised repo-local Pi autoload uses only the reviewed controller.
 
 ## Ready now
 
@@ -27,8 +27,9 @@ Status: package readiness and reviewed pinned-baseline shadow gates are green. R
 - Trace append paths use expected byte/sequence checks in mutation smokes.
 - Production loop quality graphs live in `src/<loop>/loop.ts` and persist graph
   identity in semantic events and tail checkpoints.
-- Repo-local self-dogfood is disabled: `.pi/settings.json` loads pi-lens only,
-  `.codewiki/config.json` disables the Pi host, and no extension shim is present.
+- Supervised repo-local self-dogfood is enabled: `.pi/settings.json` loads the
+  verified `.pi/npm/node_modules/codewiki` controller beside pi-lens,
+  `.codewiki/config.json` enables the Pi host, and no extension shim is present.
 - Baseline tooling refuses dirty source, pins reviewed commit/tree/package
   integrity in host-owned ignored evidence under `.pi/npm/codewiki-baselines/**`,
   and verifies that pin independently. The tracked
@@ -81,9 +82,9 @@ Status: package readiness and reviewed pinned-baseline shadow gates are green. R
 
 ## Remaining blockers before production release
 
-- Repo-local Pi autoload remains disabled until the tracked controller installer
-  itself passes candidate and stable-baseline gates, installs the exact pinned
-  package, and receives a separate activation commit.
+- Repo-local use remains supervised: every append requires preview and expected
+  byte/sequence guards; unattended workers, auto-merge, and auto-publish remain
+  disabled.
 - Public npm publish is still blocked: package is private and the registry name
   is unresolved.
 - Objective evidence is visible-only: sealed holdout has zero cases and the

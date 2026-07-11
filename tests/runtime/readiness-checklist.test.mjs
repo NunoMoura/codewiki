@@ -83,7 +83,7 @@ function knowledgeDriftFiles() {
 }
 
 describe("install readiness checklist", () => {
-	it("exposes packaged Pi extension metadata while repo-local dogfood is disabled", () => {
+	it("exposes packaged Pi extension metadata for supervised pinned-controller dogfood", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
@@ -279,7 +279,7 @@ describe("install readiness checklist", () => {
 
 	it("keeps only Pi and MCP product host config keys", () => {
 		assert.deepEqual(Object.keys(codewikiConfig.hosts).sort(), ["mcp", "pi"]);
-		assert.equal(codewikiConfig.hosts.pi.enabled, false);
+		assert.equal(codewikiConfig.hosts.pi.enabled, true);
 		assert.equal(codewikiConfig.hosts.mcp.enabled, false);
 	});
 
@@ -332,23 +332,29 @@ describe("install readiness checklist", () => {
 			assert.match(audit, new RegExp(escapeRegExp(command)));
 		}
 		for (const content of [readme, extensionDoc, loopContracts]) {
-			assert.match(content, /self-dogfood re-enable gate/i);
+			assert.match(
+				content,
+				/self-dogfood re-enable gate|pinned-baseline.*installer gates/i,
+			);
 			assert.match(content, /content proof/i);
 			assert.match(content, /expected-byte|expected byte/i);
 			assert.match(content, /sequence/i);
 		}
 		for (const content of [readme, extensionDoc]) {
-			assert.match(content, /Self-dogfood status: pinned-baseline/i);
-			assert.match(content, /autoload remains disabled/i);
+			assert.match(content, /Self-dogfood status: supervised pinned-controller/i);
+			assert.match(content, /autoload is enabled/i);
 			assert.match(content, /TRACE-self-dogfood-reenabled-v1/);
 			assert.match(content, /historical evidence/i);
-			assert.match(content, /immutable reviewed package|pinned-baseline/i);
+			assert.match(
+				content,
+				/immutable reviewed package|pinned-baseline|reviewed controller|reviewed commit/i,
+			);
 			assert.match(content, /shadow mode/i);
 		}
 		assert.match(extensionDoc, /wiki_state/);
 		assert.match(extensionDoc, /preview-mode/);
 		assert.match(loopContracts, /fast edit feedback is never enough/);
-		assert.match(loopContracts, /Pi-tool autoload is disabled/);
+		assert.match(loopContracts, /Pi-tool autoload uses only/);
 	});
 
 	it("documents loop/runtime/host boundaries and trace queue ownership", () => {
@@ -399,18 +405,19 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("keeps repo-local CodeWiki autoload disabled pending reproducible controller deployment", () => {
+	it("loads only the reproducibly installed repo-local CodeWiki controller", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
 		assert.equal(packages.includes("npm:pi-lens"), true);
+		assert.equal(packages.includes("./npm/node_modules/codewiki"), true);
 		assert.equal(packages.includes(".."), false);
 		assert.equal(packages.includes("."), false);
 		assert.notEqual(resolve(".pi", "."), process.cwd());
 		assert.deepEqual(
 			packages.filter((entry) => JSON.stringify(entry).includes("codewiki")),
-			[],
+			["./npm/node_modules/codewiki"],
 		);
-		assert.equal(codewikiConfig.hosts.pi.enabled, false);
+		assert.equal(codewikiConfig.hosts.pi.enabled, true);
 		assert.equal(existsSync(".pi/extensions/codewiki.ts"), false);
 		assert.equal(existsSync(".pi/extensions"), false);
 		assert.equal(
