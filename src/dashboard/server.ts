@@ -114,7 +114,9 @@ export async function restoreCodewikiDashboardServer(
 	return await startCodewikiDashboardServer({
 		repoRoot,
 		open: false,
-		persistent: true,
+		keepAlive: true,
+		inProcess: true,
+		persistent: false,
 	});
 }
 

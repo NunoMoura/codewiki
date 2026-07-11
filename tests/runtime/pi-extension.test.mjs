@@ -321,31 +321,39 @@ describe("Pi extension adapter", () => {
 	});
 
 	it("sets a CodeWiki footer status when Pi event hooks exist", async () => {
-		const pi = mockPi();
-		codewikiExtension(pi.api);
-		const hook = pi.events.find((event) => event.eventName === "session_start");
-		assert.ok(hook);
-		const statuses = [];
+		const root = await fixture();
+		try {
+			const pi = mockPi();
+			codewikiExtension(pi.api);
+			const hook = pi.events.find(
+				(event) => event.eventName === "session_start",
+			);
+			assert.ok(hook);
+			const statuses = [];
 
-		await hook.handler(
-			{ reason: "startup" },
-			{
-				cwd: process.cwd(),
-				ui: {
-					notify() {},
-					setStatus(key, value) {
-						statuses.push({ key, value });
+			await hook.handler(
+				{ reason: "startup" },
+				{
+					cwd: root,
+					ui: {
+						notify() {},
+						setStatus(key, value) {
+							statuses.push({ key, value });
+						},
 					},
 				},
-			},
-		);
+			);
 
-		assert.equal(statuses.length, 1);
-		assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
-		assert.match(
-			statuses[0].value,
-			/^CodeWiki \S+ local · dashboard: \/wiki-dashboard$/,
-		);
+			assert.equal(statuses.length, 1);
+			assert.equal(statuses[0].key, CODEWIKI_FOOTER_STATUS_KEY);
+			assert.match(
+				statuses[0].value,
+				/^CodeWiki \S+ \S+ · dashboard: \/wiki-dashboard$/,
+			);
+		} finally {
+			await closeCodewikiDashboardServer(root);
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("does not install persistent Pi widgets for CodeWiki state", async () => {
@@ -740,7 +748,7 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("/wiki-dashboard recreates a missing daemon log directory", async () => {
+	it("/wiki-dashboard recreates private endpoint metadata without a daemon", async () => {
 		const root = await fixture();
 		const tempRoot = await mkdtemp(join(tmpdir(), "codewiki-dashboard-test-"));
 		const dashboardTmp = join(tempRoot, "missing-tmp");
@@ -768,7 +776,7 @@ describe("Pi extension adapter", () => {
 				const endpointDirectory = join(dashboardTmp, "codewiki-dashboard");
 				assert.equal((await stat(endpointDirectory)).mode & 0o777, 0o700);
 				const endpointFiles = await readdir(endpointDirectory);
-				assert.ok(endpointFiles.length >= 2);
+				assert.ok(endpointFiles.length >= 1);
 				for (const path of endpointFiles) {
 					assert.equal(
 						(await stat(join(endpointDirectory, path))).mode & 0o777,
@@ -1026,13 +1034,17 @@ describe("Pi extension adapter", () => {
 			)) {
 				await hook.handler({ reason: "reload" }, ctx);
 			}
-			assert.equal((await fetch(opened.url)).status, 200);
+			await assert.rejects(() => fetch(opened.url));
 			for (const hook of pi.events.filter(
 				(event) => event.eventName === "session_start",
 			)) {
 				await hook.handler({ reason: "reload" }, ctx);
 			}
-			assert.equal((await fetch(opened.url)).status, 200);
+			const recoveredResponse = await fetch(url);
+			assert.equal(recoveredResponse.status, 200);
+			const recoveredState = await recoveredResponse.json();
+			assert.equal(recoveredState.sprintsQueue[0].traceId, "TRACE-pi");
+			assert.equal(typeof recoveredState.summary.active, "number");
 			const reopened = await dashboardCommand.handler("--no-open", ctx);
 			assert.equal(reopened.url, opened.url);
 

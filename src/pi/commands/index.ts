@@ -108,7 +108,9 @@ async function startDashboard(
 	const dashboard = await startCodewikiDashboardServer({
 		repoRoot: root,
 		open,
-		persistent: true,
+		keepAlive: true,
+		inProcess: true,
+		persistent: false,
 	});
 	return {
 		command: "dashboard",
