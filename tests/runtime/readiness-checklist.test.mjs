@@ -341,7 +341,10 @@ describe("install readiness checklist", () => {
 			assert.match(content, /sequence/i);
 		}
 		for (const content of [readme, extensionDoc]) {
-			assert.match(content, /Self-dogfood status: supervised pinned-controller/i);
+			assert.match(
+				content,
+				/Self-dogfood status: supervised pinned-controller/i,
+			);
 			assert.match(content, /autoload is enabled/i);
 			assert.match(content, /TRACE-self-dogfood-reenabled-v1/);
 			assert.match(content, /historical evidence/i);

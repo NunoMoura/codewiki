@@ -136,10 +136,12 @@ function assertExactKeys(
 ): void {
 	const expected = new Set(keys);
 	for (const key of Object.keys(value)) {
-		if (!expected.has(key)) throw new Error(`Unknown controller key: ${path}.${key}`);
+		if (!expected.has(key))
+			throw new Error(`Unknown controller key: ${path}.${key}`);
 	}
 	for (const key of keys) {
-		if (!(key in value)) throw new Error(`Missing controller key: ${path}.${key}`);
+		if (!(key in value))
+			throw new Error(`Missing controller key: ${path}.${key}`);
 	}
 }
 

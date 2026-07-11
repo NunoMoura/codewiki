@@ -51,9 +51,15 @@ run("git", ["cat-file", "-e", `${pin.source.commit}^{commit}`]);
 const tree = run("git", ["rev-parse", `${pin.source.commit}^{tree}`]);
 assert.equal(tree, pin.source.tree, "Pinned controller Git tree mismatch.");
 const taggedCommit = run("git", ["rev-list", "-n", "1", pin.tag]);
-assert.equal(taggedCommit, pin.source.commit, "Pinned controller tag mismatch.");
+assert.equal(
+	taggedCommit,
+	pin.source.commit,
+	"Pinned controller tag mismatch.",
+);
 
-const temporaryRoot = mkdtempSync(join(tmpdir(), "codewiki-controller-install-"));
+const temporaryRoot = mkdtempSync(
+	join(tmpdir(), "codewiki-controller-install-"),
+);
 const worktreeRoot = join(temporaryRoot, "worktree");
 const packRoot = join(temporaryRoot, "pack");
 let worktreeCreated = false;
@@ -66,7 +72,9 @@ try {
 		cwd: worktreeRoot,
 		inherit: true,
 	});
-	const artifacts = readdirSync(packRoot).filter((name) => name.endsWith(".tgz"));
+	const artifacts = readdirSync(packRoot).filter((name) =>
+		name.endsWith(".tgz"),
+	);
 	assert.deepEqual(artifacts, [pin.package.file]);
 	const rebuiltPackagePath = join(packRoot, pin.package.file);
 	const packageBytes = readFileSync(rebuiltPackagePath);

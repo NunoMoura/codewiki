@@ -43,7 +43,8 @@ describe("self-dogfood controller pin", () => {
 
 	it("rejects unknown fields and malformed pins", () => {
 		assert.throws(
-			() => parseSelfDogfoodControllerPin({ ...controllerPin(), mutable: true }),
+			() =>
+				parseSelfDogfoodControllerPin({ ...controllerPin(), mutable: true }),
 			/Unknown controller key: controller\.mutable/,
 		);
 		const pin = controllerPin();
