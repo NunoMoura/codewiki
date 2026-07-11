@@ -196,7 +196,8 @@ export function buildCodewikiDashboardState(
 		generatedAt: snapshot.generatedAt,
 		summary: {
 			traces: sprintsQueue.length,
-			active: sprintsQueue.filter((trace) => isActiveTrace(trace)).length,
+			active: sprintsQueue.filter((trace) => isActiveDashboardTrace(trace))
+				.length,
 			blocked: sprintsQueue.filter((trace) => trace.blockerCount > 0).length,
 			archived: sprintsQueue.filter((trace) => trace.closed).length,
 		},
@@ -1241,8 +1242,10 @@ function workUnitRefs(card: TraceQueueCard, items: WorkQueueItem[]): string[] {
 	]);
 }
 
-function isActiveTrace(trace: CodewikiSprintTrace): boolean {
-	return !trace.closed && trace.loop !== "waiting" && trace.blockerCount === 0;
+export function isActiveDashboardTrace(
+	trace: Pick<CodewikiSprintTrace, "closed" | "loop">,
+): boolean {
+	return !trace.closed && trace.loop !== "waiting";
 }
 
 function projectNameFromRoot(projectRoot: string): string {

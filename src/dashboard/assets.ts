@@ -588,7 +588,7 @@ function filtered() {
 		return traceSortRank(left) - traceSortRank(right) || String(left.title || '').localeCompare(String(right.title || ''));
 	});
 }
-function isActiveTrace(trace) { return !trace.closed && trace.blockerCount === 0 && trace.loop !== 'waiting'; }
+function isActiveTrace(trace) { return !trace.closed && trace.loop !== 'waiting'; }
 function traceSortRank(trace) {
 	if (isActiveTrace(trace)) return 0;
 	if (trace.blockerCount > 0 || trace.loop === 'blocked') return 1;

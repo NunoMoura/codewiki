@@ -19,6 +19,7 @@ import {
 	codewikiPromptHooksAvailable,
 } from "../../src/pi/prompt/index.ts";
 import { closeCodewikiDashboardServer } from "../../src/dashboard/index.ts";
+import { isActiveDashboardTrace } from "../../src/dashboard/state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
 import {
@@ -220,6 +221,25 @@ async function fileExists(path) {
 }
 
 describe("Pi extension adapter", () => {
+	it("treats active and blocked dashboard traces as orthogonal facets", () => {
+		assert.equal(
+			isActiveDashboardTrace({ closed: false, loop: "blocked" }),
+			true,
+		);
+		assert.equal(
+			isActiveDashboardTrace({ closed: false, loop: "implementation" }),
+			true,
+		);
+		assert.equal(
+			isActiveDashboardTrace({ closed: false, loop: "waiting" }),
+			false,
+		);
+		assert.equal(
+			isActiveDashboardTrace({ closed: true, loop: "implementation" }),
+			false,
+		);
+	});
+
 	it("registers the intended Pi-native tools and command without package install", async () => {
 		const pi = mockPi();
 
@@ -825,6 +845,14 @@ describe("Pi extension adapter", () => {
 			assert.match(html, /aria-expanded/);
 			assert.match(html, /isInteractiveDashboardTarget/);
 			assert.match(html, /focusSelectedTrace/);
+			assert.match(
+				html,
+				/function isActiveTrace\(trace\) \{ return !trace\.closed && trace\.loop !== 'waiting'; \}/,
+			);
+			assert.doesNotMatch(
+				html,
+				/function isActiveTrace\(trace\).*blockerCount === 0/,
+			);
 			assert.doesNotMatch(html, /<label for="search">/);
 			assert.doesNotMatch(html, /mission-title/);
 			assert.doesNotMatch(html, /CodeWiki \/ local observability/);
