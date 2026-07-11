@@ -31,7 +31,10 @@ Status: package readiness and reviewed pinned-baseline shadow gates are green. R
   `.codewiki/config.json` disables the Pi host, and no extension shim is present.
 - Baseline tooling refuses dirty source, pins reviewed commit/tree/package
   integrity in host-owned ignored evidence under `.pi/npm/codewiki-baselines/**`,
-  and verifies that pin independently.
+  and verifies that pin independently. The tracked
+  `.pi/codewiki-controller.json` pin plus
+  `npm run self-dogfood:controller:install` can reconstruct the exact reviewed
+  tarball from Git history for fresh clones before local installation.
 - Reviewed commit `794bba6dfe7b1a902d75cae85b5697dfcf479a67`, tree
   `aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
   `1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`
@@ -78,10 +81,9 @@ Status: package readiness and reviewed pinned-baseline shadow gates are green. R
 
 ## Remaining blockers before production release
 
-- Repo-local Pi autoload remains disabled. The ignored host baseline is valid on
-  this machine, but project settings must not point at an absent ignored path in
-  fresh clones. Controller deployment needs a reproducible pinned source before
-  tracked `.pi/settings.json` can enable it safely.
+- Repo-local Pi autoload remains disabled until the tracked controller installer
+  itself passes candidate and stable-baseline gates, installs the exact pinned
+  package, and receives a separate activation commit.
 - Public npm publish is still blocked: package is private and the registry name
   is unresolved.
 - Objective evidence is visible-only: sealed holdout has zero cases and the

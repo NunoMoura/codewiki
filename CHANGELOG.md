@@ -86,6 +86,9 @@ All notable changes to this project will be documented in this file.
   enforcement, Git tree content proof, package SHA-256 pinning, reviewer refs,
   and disposable state/config/decision-preview shadow execution that verifies
   source config and trace bytes remain unchanged.
+- Added a tracked controller pin and fresh-clone installer that rebuilds the
+  reviewed baseline commit in a detached worktree, requires an exact tarball
+  byte count and SHA-256 match, and installs only that artifact under `.pi/npm`.
 
 ### Changed
 

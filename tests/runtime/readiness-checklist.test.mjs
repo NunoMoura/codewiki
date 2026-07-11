@@ -119,6 +119,11 @@ describe("install readiness checklist", () => {
 			packageJson.scripts["test:self-dogfood-shadow"],
 			/run-self-dogfood-shadow\.mjs/,
 		);
+		assert.match(
+			packageJson.scripts["self-dogfood:controller:install"],
+			/install-self-dogfood-controller\.mjs/,
+		);
+		assert.equal(existsSync(".pi/codewiki-controller.json"), true);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
 			"node tests/runtime/pi-install-smoke.mjs",

@@ -36,6 +36,7 @@
 		"test:self-dogfood-candidate": "npm run audit:codewiki && npm run lab:gate && npm run lab:pipeline -- --gate",
 		"self-dogfood:baseline:create": "node --experimental-strip-types scripts/create-self-dogfood-baseline.mjs",
 		"self-dogfood:baseline:verify": "node --experimental-strip-types scripts/verify-self-dogfood-baseline.mjs",
+		"self-dogfood:controller:install": "node --experimental-strip-types scripts/install-self-dogfood-controller.mjs",
 		"test:self-dogfood-shadow": "node --experimental-strip-types scripts/run-self-dogfood-shadow.mjs",
 		"test:self-dogfood-ready": "npm run self-dogfood:baseline:verify -- --require-clean && npm run test:self-dogfood-candidate && npm run test:self-dogfood-shadow",
 		"lab": "node --experimental-strip-types lab/runner/score.ts",

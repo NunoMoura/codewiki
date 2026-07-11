@@ -1,0 +1,20 @@
+{
+	"schemaVersion": "codewiki.self-dogfood-controller.v1",
+	"tag": "codewiki-self-dogfood-baseline-v0.3.0",
+	"source": {
+		"commit": "794bba6dfe7b1a902d75cae85b5697dfcf479a67",
+		"tree": "aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4"
+	},
+	"package": {
+		"name": "codewiki",
+		"version": "0.3.0",
+		"file": "codewiki-0.3.0.tgz",
+		"bytes": 673696,
+		"sha256": "1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628"
+	},
+	"approval": {
+		"reviewRef": "chat:2026-07-10-self-dogfood-baseline-approval",
+		"approvedBy": "Nuno Moura Santos",
+		"approvedAt": "2026-07-10T23:49:00.239Z"
+	}
+}

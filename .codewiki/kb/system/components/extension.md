@@ -90,6 +90,12 @@ and docs do not contain stale public command, CLI, legacy trace-close, or
 state/status command wording.
 `npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
 audit sequence serially.
+`.pi/codewiki-controller.json` is the tracked controller pin. It records the
+reviewed tag, commit, tree, package byte count and SHA-256, and approval identity.
+`npm run self-dogfood:controller:install` rebuilds that commit in a detached
+temporary worktree, requires an exact package match, and installs only the
+verified artifact under `.pi/npm/node_modules/codewiki`.
+
 `npm run test:self-dogfood-candidate` runs the full CodeWiki audit and loop lab
 gates without granting the candidate authority over itself.
 `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
@@ -129,8 +135,9 @@ Self-dogfood status: pinned-baseline and shadow gates passed for reviewed commit
 `794bba6dfe7b1a902d75cae85b5697dfcf479a67`, Git tree
 `aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
 `1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
-Repo-local Pi autoload remains disabled pending reproducible controller
-installation. The earlier
+The tracked controller pin and installer now provide reproducible installation,
+but repo-local Pi autoload remains disabled until the installer passes under
+stable-baseline governance. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
 remains historical evidence, not approval for another controller.
 

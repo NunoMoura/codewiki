@@ -79,6 +79,7 @@ npm run test:readiness
 npm run test:self-dogfood-candidate
 npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by <name>
 CODEWIKI_BASELINE_MANIFEST=<path> npm run self-dogfood:baseline:verify
+npm run self-dogfood:controller:install
 CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-shadow
 CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-ready
 npm run lab
@@ -119,6 +120,10 @@ Smoke command roles:
 - `npm run self-dogfood:baseline:verify`: requires
   `CODEWIKI_BASELINE_MANIFEST`, verifies the manifest, tarball bytes, Git commit,
   and tree, and can enforce a clean candidate checkout.
+- `npm run self-dogfood:controller:install`: checks the tracked controller pin,
+  rebuilds the reviewed commit in a detached temporary worktree, requires an
+  exact package byte count and SHA-256 match, and installs that artifact under
+  `.pi/npm/node_modules/codewiki` without loading mutable source.
 - `npm run test:self-dogfood-shadow`: installs the verified package under a
   disposable project's `.pi/npm`, runs baseline `wiki_state`, read-only
   `wiki_config`, and `wiki_decide` preview calls, and proves the source config and
@@ -154,7 +159,7 @@ CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` stat
 and is intended to be compatible with external sandbox, worktree, container, or
 agent-harness isolation.
 
-Repo-local Pi settings intentionally load pi-lens without CodeWiki. The reviewed baseline and shadow gates now pass, but tracked settings remain disabled until that controller has a reproducible project-local deployment for fresh clones. Future self-dogfood must load the immutable reviewed package; it must not load the mutable source checkout through `..`. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
+Repo-local Pi settings intentionally load pi-lens without CodeWiki. The reviewed baseline and shadow gates pass, and `.pi/codewiki-controller.json` now lets fresh clones rebuild and verify the exact reviewed tarball with `npm run self-dogfood:controller:install`. Tracked autoload remains disabled until that installer passes under stable-baseline governance. Future self-dogfood must load the immutable reviewed package; it must not load mutable source through `..`. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
 
 Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. `/wiki-dashboard` opens the local read-only Sprints Queue in a browser. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
 
