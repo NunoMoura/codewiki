@@ -135,6 +135,9 @@ All notable changes to this project will be documented in this file.
 - Moved the dashboard launch token from the request URL into a fragment-backed
   session capability, added restrictive browser headers, and removed duplicate
   trace-file reads from dashboard refreshes.
+- Kept open blocked traces visible in the dashboard Active facet while preserving
+  their simultaneous visibility in Blocked, then advanced the reviewed pinned
+  controller baseline to serve the fix.
 
 ### Notes
 

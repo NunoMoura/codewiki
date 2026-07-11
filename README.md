@@ -350,8 +350,8 @@ supervised self-dogfood step from public production automation. It is not enable
 merely because the package can be built.
 
 Self-dogfood status: supervised pinned-controller autoload is enabled for
-reviewed commit `794bba6dfe7b1a902d75cae85b5697dfcf479a67` and package SHA-256
-`1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
+reviewed commit `c1cc0c67d0fa42073eb3ea0ff9a0918f027ed3ee` and package SHA-256
+`ce71e5d1174d11be156f6367d75a4b71fb2d9929bb2ca22878b32f16043bcb14`.
 The controller was rebuilt byte-for-byte from Git history and installed under
 `.pi/npm`; mutable candidate source cannot grade itself. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`

@@ -133,9 +133,9 @@ external project because bad tool behavior could mutate CodeWiki's own workflow
 truth. Self-dogfood is not re-enabled by build success alone.
 
 Self-dogfood status: supervised pinned-controller autoload is enabled for
-reviewed commit `794bba6dfe7b1a902d75cae85b5697dfcf479a67`, Git tree
-`aa89c8ad7ab27ec47f49f9100e0aaf8bb6ac2cd4`, and package SHA-256
-`1d5f46c72f1a3d5710d2c3e1fd1dfedf46aaa4aded0ad36538b36ee403804628`.
+reviewed commit `c1cc0c67d0fa42073eb3ea0ff9a0918f027ed3ee`, Git tree
+`67c61e3d2a9af85af14ca6849a64d1703341b2ab`, and package SHA-256
+`ce71e5d1174d11be156f6367d75a4b71fb2d9929bb2ca22878b32f16043bcb14`.
 The tracked pin reproduced the exact package under stable-baseline governance;
 `.pi/settings.json` loads only that installed controller. The earlier
 `trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
