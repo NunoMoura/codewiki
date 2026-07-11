@@ -1,9 +1,56 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { runLoopGraph } from "../../src/loops/runner.ts";
+import { parseLoopQualityPack } from "../../src/loops/quality-pack.ts";
+import {
+	composeLoopQualityPacks,
+	runLoopGraph,
+} from "../../src/loops/runner.ts";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function qualityPack({
+	id,
+	rollout,
+	standardId,
+	dependsOn = [],
+	evidenceAdapterIds = ["trace_refs"],
+}) {
+	return parseLoopQualityPack({
+		schemaVersion: 1,
+		id,
+		version: "1.0.0",
+		authority: rollout === "observe" ? "lab" : "official",
+		rollout,
+		graph: {
+			id: "decision.loop",
+			version: "pack-v1",
+			layers: ["hard_gate"],
+		},
+		standards: [
+			{
+				id: standardId,
+				description: standardId,
+				layer: "hard_gate",
+				standardType: "loop_contract",
+				method: "deterministic",
+				repairTarget: "decision",
+				weight: 1,
+				cost: 1,
+				gate: "hard",
+				timeoutMs: 100,
+				dependsOn,
+				evaluatorId: "issue_codes",
+				evidenceAdapterIds,
+				issuePredicate: {
+					kind: "issue_codes",
+					match: "any",
+					codes: [`${standardId}_issue`],
+				},
+			},
+		],
+	});
+}
 
 function node(id, run, options = {}) {
 	return {
@@ -16,6 +63,65 @@ function node(id, run, options = {}) {
 		...options,
 	};
 }
+
+test("composes validated quality packs through CodeWiki-owned registries", () => {
+	const base = qualityPack({
+		id: "codewiki.base",
+		rollout: "enforce",
+		standardId: "base",
+	});
+	const observed = qualityPack({
+		id: "codewiki.observed",
+		rollout: "observe",
+		standardId: "observed",
+	});
+	const composition = composeLoopQualityPacks({ packs: [observed, base] });
+
+	assert.equal(composition.graph.graphId, "decision.loop");
+	assert.equal(composition.graph.schemaVersion, 3);
+	assert.deepEqual(
+		composition.graph.nodes.map((item) => [
+			item.id,
+			item.packId,
+			item.rollout,
+		]),
+		[
+			["base", "codewiki.base", "enforce"],
+			["observed", "codewiki.observed", "observe"],
+		],
+	);
+	assert.deepEqual(composition.graph.nodes[1].dependsOn, []);
+});
+
+test("rejects unregistered pack evaluators and evidence adapters before execution", () => {
+	const pack = qualityPack({
+		id: "codewiki.base",
+		rollout: "enforce",
+		standardId: "base",
+	});
+	assert.throws(
+		() =>
+			composeLoopQualityPacks({
+				packs: [pack],
+				registry: {
+					evaluatorIds: [],
+					evidenceAdapterIds: ["trace_refs"],
+				},
+			}),
+		/pack codewiki\.base standard base evaluator issue_codes is not registered/,
+	);
+	assert.throws(
+		() =>
+			composeLoopQualityPacks({
+				packs: [pack],
+				registry: {
+					evaluatorIds: ["issue_codes"],
+					evidenceAdapterIds: [],
+				},
+			}),
+		/pack codewiki\.base standard base evidence adapter trace_refs is not registered/,
+	);
+});
 
 test("runs independent loop standards in parallel", async () => {
 	const events = [];

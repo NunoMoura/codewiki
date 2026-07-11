@@ -3,7 +3,17 @@ import type {
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
 } from "../traces/types.ts";
+import {
+	assertValidLoopQualityGraph,
+	type LoopQualityGraph,
+	type LoopQualityGraphNode,
+} from "./graph.ts";
 import type { LoopQualityJudgeSummary } from "./judge.ts";
+import {
+	LOOP_QUALITY_PACK_EVALUATOR_IDS,
+	LOOP_QUALITY_PACK_EVIDENCE_ADAPTER_IDS,
+	type LoopQualityPack,
+} from "./quality-pack.ts";
 
 export type LoopGraphNodeStatus = "pass" | "fail" | "block" | "skip";
 export type LoopGraphDiagnosticSeverity = "blocking" | "warning" | "info";
@@ -65,6 +75,84 @@ export interface LoopGraphRunnerReport {
 	latencyMs: number;
 	nodes: LoopGraphRunnerNodeReport[];
 	diagnostics: LoopGraphDiagnostic[];
+}
+
+export interface LoopQualityPackRuntimeRegistry {
+	evaluatorIds: readonly string[];
+	evidenceAdapterIds: readonly string[];
+}
+
+export interface ComposeLoopQualityPacksOptions {
+	packs: readonly LoopQualityPack[];
+	registry?: LoopQualityPackRuntimeRegistry;
+}
+
+export interface LoopQualityPackComposition {
+	graph: LoopQualityGraph<string>;
+	packIds: string[];
+}
+
+export const CODEWIKI_QUALITY_PACK_RUNTIME_REGISTRY: LoopQualityPackRuntimeRegistry =
+	{
+		evaluatorIds: LOOP_QUALITY_PACK_EVALUATOR_IDS,
+		evidenceAdapterIds: LOOP_QUALITY_PACK_EVIDENCE_ADAPTER_IDS,
+	};
+
+export function composeLoopQualityPacks({
+	packs,
+	registry = CODEWIKI_QUALITY_PACK_RUNTIME_REGISTRY,
+}: ComposeLoopQualityPacksOptions): LoopQualityPackComposition {
+	if (packs.length === 0) {
+		throw new Error("Quality-pack composition requires at least one pack.");
+	}
+	const ordered = [...packs].sort((left, right) =>
+		left.id.localeCompare(right.id),
+	);
+	assertUniquePackIds(ordered);
+	const graphIds = new Set(ordered.map((pack) => pack.graph.graphId));
+	if (graphIds.size !== 1) {
+		throw new Error(
+			`Quality packs target different graphs: ${[...graphIds].join(", ")}.`,
+		);
+	}
+	const evaluatorIds = new Set(registry.evaluatorIds);
+	const evidenceAdapterIds = new Set(registry.evidenceAdapterIds);
+	const nodes: LoopQualityGraphNode<string>[] = ordered.flatMap((pack) =>
+		pack.standards.map((standard) => {
+			if (!evaluatorIds.has(standard.evaluatorId)) {
+				throw new Error(
+					`Quality pack ${pack.id} standard ${standard.id} evaluator ${standard.evaluatorId} is not registered.`,
+				);
+			}
+			for (const adapterId of standard.evidenceAdapterIds) {
+				if (!evidenceAdapterIds.has(adapterId)) {
+					throw new Error(
+						`Quality pack ${pack.id} standard ${standard.id} evidence adapter ${adapterId} is not registered.`,
+					);
+				}
+			}
+			const { issuePredicate: _issuePredicate, ...node } = standard;
+			return {
+				...node,
+				packId: pack.id,
+				rollout: pack.rollout,
+			};
+		}),
+	);
+	const graph: LoopQualityGraph<string> = {
+		graphId: ordered[0].graph.graphId,
+		graphVersion: ordered
+			.map(
+				(pack) =>
+					`${pack.id}@${pack.version}:${pack.graph.graphVersion}`,
+			)
+			.join("+"),
+		schemaVersion: ordered[0].graph.schemaVersion,
+		layers: [...new Set(ordered.flatMap((pack) => pack.graph.layers))],
+		nodes,
+	};
+	assertValidLoopQualityGraph(graph);
+	return { graph, packIds: ordered.map((pack) => pack.id) };
 }
 
 export async function runLoopGraph<TContext>({
@@ -232,6 +320,16 @@ async function withTimeout<T>(
 		]);
 	} finally {
 		if (timeout) clearTimeout(timeout);
+	}
+}
+
+function assertUniquePackIds(packs: readonly LoopQualityPack[]): void {
+	const seen = new Set<string>();
+	for (const pack of packs) {
+		if (seen.has(pack.id)) {
+			throw new Error(`Quality-pack composition has duplicate pack id ${pack.id}.`);
+		}
+		seen.add(pack.id);
 	}
 }
 

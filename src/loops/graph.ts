@@ -29,6 +29,7 @@ export type LoopQualityStandardMethod =
 	| "external_evidence";
 
 export type LoopQualityGate = "hard" | "soft" | "score_only";
+export type LoopQualityRollout = "observe" | "warn" | "enforce";
 
 export type LoopQualityStandardType =
 	| "loop_contract"
@@ -80,6 +81,10 @@ export interface LoopQualityGraphNode<TCode extends string> {
 	hardGate?: boolean;
 	scoreThreshold?: number;
 	judge?: LoopQualityJudgeNodeSpec;
+	packId?: string;
+	rollout?: LoopQualityRollout;
+	evaluatorId?: string;
+	evidenceAdapterIds?: string[];
 }
 
 export interface LoopQualityGraph<TCode extends string> {

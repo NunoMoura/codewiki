@@ -5,6 +5,7 @@ import type {
 } from "../traces/types.ts";
 import {
 	runLoopGraph,
+	type LoopGraphDiagnostic,
 	type LoopGraphRunnerReport,
 	type LoopGraphRunnerNode,
 } from "./runner.ts";
@@ -27,6 +28,7 @@ import {
 	loopQualityScoreThresholdForNode,
 	type LoopQualityGraph,
 	type LoopQualityGraphNode,
+	type LoopQualityRollout,
 } from "./graph.ts";
 import {
 	inactiveLoopQualityStandard,
@@ -45,6 +47,7 @@ export interface EvaluateLoopQualityGraphOptions<TIssue, TCode extends string> {
 	nodes?: LoopQualityGraphNode<TCode>[];
 	evidenceRefs?: (node: LoopQualityGraphNode<TCode>) => string[] | undefined;
 	profile?: LoopQualityProfile;
+	applyRollout?: boolean;
 }
 
 export interface LoopQualityJudgeExecutionOptions {
@@ -113,10 +116,15 @@ export function evaluateLoopQualityGraph<TIssue, TCode extends string>(
 		const matched = options.issues.filter((issue) =>
 			node.codes.includes(options.issueCode(issue)),
 		);
-		const status = qualityStatus({
+		const rawStatus = qualityStatus({
 			matched,
 			isBlockingIssue: options.isBlockingIssue,
 		});
+		const status = resolvedStandardStatus(
+			rawStatus,
+			node.rollout,
+			options.applyRollout,
+		);
 		const evidenceRefs = options.evidenceRefs?.(node) || node.evidenceRefs;
 		const gate =
 			node.gate ||
@@ -127,7 +135,7 @@ export function evaluateLoopQualityGraph<TIssue, TCode extends string>(
 			matchedCodeCount: uniqueStrings(
 				matched.map((issue) => options.issueCode(issue)),
 			).length,
-			status,
+			status: rawStatus,
 			totalCodeCount: node.codes.length,
 		});
 		const scoreThreshold = loopQualityScoreThresholdForNode(node);
@@ -178,7 +186,19 @@ export async function runLoopQualityGraphEvaluation<
 		nodes,
 		...(judgeResolutions ? { judgeResolutions } : {}),
 	};
-	const activeNodeIds = new Set(nodes.map((node) => node.id));
+	const activeNodeIds = new Set(
+		nodes
+			.filter((node) => {
+				const activation = loopQualityProfileActivationForNode(
+					options.profile,
+					node,
+				);
+				return !(
+					activation && loopQualityProfileNodeIsInactive(activation)
+				);
+			})
+			.map((node) => node.id),
+	);
 	const runner = await runLoopGraph({
 		graphId: options.graph.graphId,
 		graphVersion: options.graph.graphVersion,
@@ -222,21 +242,21 @@ function runnerNodeForStandard<TIssue, TCode extends string>(
 		run: (context) => {
 			const localStandard = evaluateLoopQualityGraph({
 				...context,
+				applyRollout: false,
 				nodes: [node],
 			})[0];
 			const judgeResolution = context.judgeResolutions?.get(node.id);
-			const standard = judgeResolution
+			const evaluatedStandard = judgeResolution
 				? applyJudgeVerdict(localStandard, judgeResolution.verdict)
 				: localStandard;
+			const standard = applyStandardRollout(evaluatedStandard, node.rollout);
 			return {
 				status: standardStatusForRunner(standard),
 				standard,
 				score: standard.score,
 				evidenceRefs: standard.evidenceRefs,
 				...(judgeResolution ? { judge: judgeResolution.summary } : {}),
-				diagnostics: standardStatusBlocks(standard.status)
-					? [diagnosticFromStandard(standard, gate)]
-					: [],
+				diagnostics: rolloutDiagnostics(evaluatedStandard, node.rollout, gate),
 			};
 		},
 	};
@@ -440,6 +460,44 @@ function deterministicQualityScore({
 		totalCodeCount === 0 ? 100 : (matchedCodeCount / totalCodeCount) * 100;
 	const repeatPenalty = Math.max(0, matchedIssueCount - matchedCodeCount) * 10;
 	return clampQualityScore(100 - Math.min(100, codePenalty + repeatPenalty));
+}
+
+function resolvedStandardStatus(
+	status: LoopQualityStandardResult["status"],
+	rollout: LoopQualityRollout | undefined,
+	applyRollout: boolean | undefined,
+): LoopQualityStandardResult["status"] {
+	return applyRollout === false ? status : statusForRollout(status, rollout);
+}
+
+function statusForRollout(
+	status: LoopQualityStandardResult["status"],
+	rollout: LoopQualityRollout | undefined,
+): LoopQualityStandardResult["status"] {
+	if (rollout === "observe" || rollout === "warn") {
+		return standardStatusBlocks(status) ? "met" : status;
+	}
+	return status;
+}
+
+function applyStandardRollout(
+	standard: LoopQualityStandardResult,
+	rollout: LoopQualityRollout | undefined,
+): LoopQualityStandardResult {
+	const status = statusForRollout(standard.status, rollout);
+	return status === standard.status ? standard : { ...standard, status };
+}
+
+function rolloutDiagnostics(
+	standard: LoopQualityStandardResult,
+	rollout: LoopQualityRollout | undefined,
+	gate: string,
+): LoopGraphDiagnostic[] {
+	if (!standardStatusBlocks(standard.status) || rollout === "observe") return [];
+	const diagnostic = diagnosticFromStandard(standard, gate);
+	return rollout === "warn"
+		? [{ ...diagnostic, severity: "warning" }]
+		: [diagnostic];
 }
 
 function standardStatusBlocks(
