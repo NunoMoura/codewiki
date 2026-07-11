@@ -108,7 +108,7 @@ async function startDashboard(
 	const dashboard = await startCodewikiDashboardServer({
 		repoRoot: root,
 		open,
-		keepAlive: true,
+		keepAlive: ctx.mode === "tui",
 		inProcess: true,
 		persistent: false,
 	});
