@@ -560,6 +560,7 @@ if (fragmentToken) sessionStorage.setItem('codewiki.dashboard.token', fragmentTo
 const token = fragmentToken || sessionStorage.getItem('codewiki.dashboard.token') || '';
 if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 let state = null;
+let loading = false;
 let selected = 0;
 let expandedTraceId = null;
 let query = '';
@@ -1098,12 +1099,15 @@ function renderFileSection(label, groups, open) {
 	node.append(summary, body); return node;
 }
 async function load() {
+	if (loading) return;
+	loading = true;
 	try {
 		const res = await fetch('/api/state?token=' + encodeURIComponent(token));
 		if (!res.ok) throw new Error('HTTP ' + res.status);
 		state = await res.json();
 		render();
 	} catch (error) { text(els.status, 'error'); console.error(error); }
+	finally { loading = false; }
 }
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
 document.addEventListener('keydown', function(event) {
@@ -1124,8 +1128,9 @@ document.addEventListener('keydown', function(event) {
 try {
 	const events = new EventSource('/api/events?token=' + encodeURIComponent(token));
 	events.onmessage = function(event) { state = JSON.parse(event.data); render(); };
-	events.onerror = function() { text(els.status, 'reconnecting'); };
-} catch { setInterval(load, 5000); }
+	events.onerror = function() { text(els.status, 'reconnecting'); load(); };
+} catch { load(); }
+setInterval(load, 1000);
 load();
 </script>
 </body>

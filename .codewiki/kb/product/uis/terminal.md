@@ -49,6 +49,7 @@ The product progress surface is `/wiki-dashboard`, a local retro console-inspire
 ## Dashboard principles
 
 - Trace-first: trace JSONL is workflow truth, and Sprint Traces are projections over it.
+- Live: trace appends stream into the open dashboard immediately; bounded read-only polling recovers automatically from missed or disconnected event streams without requiring reload.
 - Read-only: dashboard navigation, search, filtering, and copy helpers do not append trace records.
 - Local-private: the server binds to loopback, endpoint metadata is user-only, the launch capability travels in a URL fragment rather than the request URL, and responses deny framing, referrers, and external resource connections.
 - High signal: each bar shows phase, progress, worker count, blocker count, and current action.
@@ -75,6 +76,7 @@ Backend status and continuation remain available to agents through internal `wik
 - System diagrams can be rendered in Pi TUI as readable ASCII/Unicode.
 - Diagram rendering stays source-backed and compact.
 - The Sprints Queue shows Sprint Trace bars with coarse progress, current loop state, workers, blockers, and Trace Detail.
+- Open dashboards reflect durable trace progress automatically and recover from transient stream failures.
 - No renderer output becomes source of truth.
 
 ## Non-goals

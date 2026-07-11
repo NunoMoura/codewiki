@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
 	access,
+	appendFile,
 	mkdir,
 	mkdtemp,
 	readFile,
@@ -853,6 +854,11 @@ describe("Pi extension adapter", () => {
 				html,
 				/function isActiveTrace\(trace\).*blockerCount === 0/,
 			);
+			assert.match(html, /setInterval\(load, 1000\)/);
+			assert.match(
+				html,
+				/events\.onerror = function\(\) \{ text\(els\.status, 'reconnecting'\); load\(\); \};/,
+			);
 			assert.doesNotMatch(html, /<label for="search">/);
 			assert.doesNotMatch(html, /mission-title/);
 			assert.doesNotMatch(html, /CodeWiki \/ local observability/);
@@ -949,6 +955,65 @@ describe("Pi extension adapter", () => {
 			assert.ok(Object.hasOwn(state.sprintsQueue[0].touchedFiles, "tests"));
 			assert.equal(typeof state.sprintsQueue[0].qualityCaption, "string");
 			assert.match(state.sprintsQueue[0].currentAction, /proposed changes/i);
+
+			const eventsUrl = new URL(opened.url);
+			eventsUrl.hash = "";
+			eventsUrl.pathname = "/api/events";
+			eventsUrl.searchParams.set("token", dashboardToken);
+			const eventsResponse = await fetch(eventsUrl);
+			assert.equal(eventsResponse.status, 200);
+			const reader = eventsResponse.body.getReader();
+			const decoder = new TextDecoder();
+			let streamBuffer = "";
+			async function nextEventState() {
+				while (!streamBuffer.includes("\n\n")) {
+					const chunk = await reader.read();
+					assert.equal(chunk.done, false);
+					streamBuffer += decoder.decode(chunk.value, { stream: true });
+				}
+				const boundary = streamBuffer.indexOf("\n\n");
+				const message = streamBuffer.slice(0, boundary);
+				streamBuffer = streamBuffer.slice(boundary + 2);
+				return JSON.parse(message.replace(/^data: /, ""));
+			}
+			const initialEventState = await nextEventState();
+			await appendFile(
+				join(root, ".codewiki", "traces", "TRACE-pi.jsonl"),
+				formatTraceText([
+					{
+						type: "trace_event",
+						id: "TRACE-pi:decision:iteration:1",
+						parentId: null,
+						traceId: "TRACE-pi",
+						sequence: 1,
+						loop: "decision",
+						event: "changes_approved",
+						refs: ["src/api/index.ts"],
+						createdAt: "2026-06-17T00:00:01.000Z",
+						data: {
+							output: {
+								approvedChanges: [{ id: "CHG-live-dashboard" }],
+							},
+							exit: { status: "exit" },
+						},
+					},
+				]),
+			);
+			const updatedEventState = await Promise.race([
+				nextEventState(),
+				new Promise((_, reject) =>
+					setTimeout(
+						() => reject(new Error("Dashboard SSE update timed out.")),
+						3_000,
+					),
+				),
+			]);
+			assert.ok(
+				updatedEventState.sprintsQueue[0].activities.length >
+					initialEventState.sprintsQueue[0].activities.length,
+			);
+			await reader.cancel();
+
 			const blockedUrl = new URL(opened.url);
 			blockedUrl.hash = "";
 			blockedUrl.pathname = "/api/state";
