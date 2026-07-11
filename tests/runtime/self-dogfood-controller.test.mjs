@@ -34,23 +34,23 @@ describe("self-dogfood controller pin", () => {
 		const pin = parseSelfDogfoodControllerPin(
 			JSON.parse(readFileSync(".pi/codewiki-controller.json", "utf8")),
 		);
-		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.1");
+		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.2");
 		assert.equal(
 			pin.source.commit,
-			"c1cc0c67d0fa42073eb3ea0ff9a0918f027ed3ee",
+			"ce7d031616a1031329e62a331780b04b34d07fb7",
 		);
 		assert.equal(
 			pin.source.tree,
-			"67c61e3d2a9af85af14ca6849a64d1703341b2ab",
+			"1a1a8d5eec58a14766dae53b916a10971889abb6",
 		);
-		assert.equal(pin.package.bytes, 674844);
+		assert.equal(pin.package.bytes, 680395);
 		assert.equal(
 			pin.package.sha256,
-			"ce71e5d1174d11be156f6367d75a4b71fb2d9929bb2ca22878b32f16043bcb14",
+			"d0a739ab3d76aa0a841ccf010bb2b7638ed729d168b39f59ead92130ff02ff03",
 		);
 		assert.equal(
 			pin.approval.reviewRef,
-			"chat:2026-07-10-dashboard-mixed-state-fix",
+			"chat:2026-07-12-live-dashboard-requirement",
 		);
 	});
 

@@ -136,8 +136,10 @@ All notable changes to this project will be documented in this file.
   session capability, added restrictive browser headers, and removed duplicate
   trace-file reads from dashboard refreshes.
 - Kept open blocked traces visible in the dashboard Active facet while preserving
-  their simultaneous visibility in Blocked, then advanced the reviewed pinned
-  controller baseline to serve the fix.
+  their simultaneous visibility in Blocked.
+- Made open dashboards stream trace appends immediately and recover through
+  bounded one-second polling when event delivery is missed or disconnected, then
+  advanced the reviewed pinned controller baseline to serve both fixes.
 
 ### Notes
 
