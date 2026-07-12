@@ -31,6 +31,7 @@ import {
 	buildProjectWikiState,
 	readProjectTraceFiles,
 } from "../project/state-file.ts";
+import { readDevLog } from "../runtime/dev-log.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
 	assertDashboardRuntimeCurrent,
@@ -86,7 +87,9 @@ interface DashboardMeta {
 }
 
 const dashboards = new Map<string, DashboardRuntime>();
-const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(import.meta.url);
+const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(
+	import.meta.url,
+);
 const DASHBOARD_DAEMON_ENV = "CODEWIKI_DASHBOARD_DAEMON";
 const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
 const DASHBOARD_SECURITY_HEADERS = {
@@ -697,7 +700,19 @@ async function readDashboardState(
 ): Promise<CodewikiDashboardState> {
 	const traceFiles = await readProjectTraceFiles(repoRoot);
 	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
-	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records);
+	const devLogByTrace = new Map(
+		await Promise.all(
+			snapshot.traceBoard.traces
+				.filter((trace) => !trace.closed)
+				.map(async (trace) => [
+					trace.traceId,
+					await readDevLog(repoRoot, trace.traceId),
+				] as const),
+		),
+	);
+	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
+		devLogByTrace,
+	});
 }
 
 async function attachEventStream(

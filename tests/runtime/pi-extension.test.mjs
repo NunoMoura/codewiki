@@ -23,6 +23,7 @@ import { closeCodewikiDashboardServer } from "../../src/dashboard/index.ts";
 import { isActiveDashboardTrace } from "../../src/dashboard/state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
+import { appendDevLogEntry } from "../../src/runtime/dev-log.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
@@ -816,6 +817,17 @@ describe("Pi extension adapter", () => {
 					setWidget: (key, value) => widgets.push({ key, value }),
 				},
 			};
+			await appendDevLogEntry(root, {
+				id: "dev-dashboard-1",
+				timestamp: "2026-06-17T00:00:00.500Z",
+				traceId: "TRACE-pi",
+				workUnitId: "WU-pi",
+				workerId: "worker-001",
+				attemptId: "claim-001",
+				category: "worker",
+				action: "worker.started",
+				status: "success",
+			});
 
 			const opened = await dashboardCommand.handler("--no-open", ctx);
 			assert.equal(opened.command, "dashboard");
@@ -934,6 +946,12 @@ describe("Pi extension adapter", () => {
 			assert.equal(state.summary.archived, 0);
 			assert.equal(Object.hasOwn(state.summary, "closed"), false);
 			assert.equal(state.sprintsQueue[0].traceId, "TRACE-pi");
+			assert.equal(state.sprintsQueue[0].devLog.available, true);
+			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
+			assert.equal(
+				state.sprintsQueue[0].devLog.items[0].action,
+				"worker.started",
+			);
 			assert.ok(state.sprintsQueue[0].qualityChecks.length > 0);
 			assert.equal(
 				typeof state.sprintsQueue[0].qualityChecks[0].standardType,
