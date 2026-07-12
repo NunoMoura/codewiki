@@ -34,6 +34,7 @@ import {
 } from "../pi/worker-results.ts";
 import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 import type { TraceEvent } from "../traces/types.ts";
+import { appendDevLogEntry } from "./dev-log.ts";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeFailedWorkerStartReleaseEvents,
@@ -361,6 +362,7 @@ export async function runRuntimeHostOnce(
 		throw new Error("runRuntimeHostOnce requires runtime append mode.");
 	}
 	const workerStartContext = await prepareHostWorkerStart(input);
+	await recordClaimObservations(input, workerStartContext.claimEvents);
 	if (workerStartContext.worktreePrepareError) {
 		return worktreeFailureHostResult(
 			input,
@@ -369,6 +371,7 @@ export async function runRuntimeHostOnce(
 		);
 	}
 	const workers = await startHostWorkers(input, workerStartContext);
+	await recordWorkerStarts(input, workers);
 	const failedStartResult = await failedStartHostResult(
 		input,
 		workerStartContext,
@@ -377,7 +380,9 @@ export async function runRuntimeHostOnce(
 	const result =
 		failedStartResult ||
 		(await completeRuntimeHostOnce(input, workerStartContext, workers));
-	return await withWorktreeCleanup(input, workerStartContext, result);
+	const completed = await withWorktreeCleanup(input, workerStartContext, result);
+	await recordWorkerOutcomes(input, completed.workerStatuses);
+	return completed;
 }
 
 interface RuntimeHostWorkerStartContext {
@@ -1429,6 +1434,89 @@ function disposableWorkerStatusesFromResult(
 				: {}),
 		};
 	});
+}
+
+async function recordClaimObservations(
+	input: RunRuntimeHostOnceInput,
+	claimEvents: TraceEvent[],
+): Promise<void> {
+	await Promise.all(
+		claimEvents.map((event, index) =>
+			recordHostDevLog(input, {
+				id: `${event.traceId}:claim:${index}`,
+				timestamp: event.createdAt,
+				traceId: event.traceId,
+				workUnitId: text(event.data?.workUnitId),
+				workerId: text(event.data?.workerId),
+				attemptId: text(event.data?.claimId),
+				category: "worker",
+				action: "worker.claimed",
+				status: "success",
+				refs: event.refs,
+			}),
+		),
+	);
+}
+
+async function recordWorkerStarts(
+	input: RunRuntimeHostOnceInput,
+	workers: PiWorkerStartResult[],
+): Promise<void> {
+	await Promise.all(
+		workers.map((worker, index) =>
+			recordHostDevLog(input, {
+				id: `${worker.traceId}:start:${index}`,
+				timestamp: new Date().toISOString(),
+				traceId: worker.traceId,
+				workUnitId: worker.workUnitId,
+				workerId: worker.workerId,
+				attemptId: worker.claimId,
+				category: "worker",
+				action: worker.status === "started" ? "worker.started" : "worker.failed",
+				status: worker.status === "started" ? "success" : "failure",
+				refs: worker.planningRefs,
+			}),
+		),
+	);
+}
+
+async function recordWorkerOutcomes(
+	input: RunRuntimeHostOnceInput,
+	workers: RuntimeDisposableWorkerStatus[],
+): Promise<void> {
+	await Promise.all(
+		workers.map((worker, index) =>
+			recordHostDevLog(input, {
+				id: `${worker.traceId}:outcome:${index}`,
+				timestamp: new Date().toISOString(),
+				traceId: worker.traceId,
+				workUnitId: worker.workUnitId,
+				workerId: worker.workerId,
+				attemptId: worker.claimId,
+				category: "result",
+				action: `worker.${worker.state}`,
+				status:
+					worker.state === "completed"
+						? "success"
+						: worker.state === "running"
+							? "running"
+							: "failure",
+			}),
+		),
+	);
+}
+
+async function recordHostDevLog(
+	input: RunRuntimeHostOnceInput,
+	entry: Parameters<typeof appendDevLogEntry>[1],
+): Promise<void> {
+	const repoRoot = input.runtime.repoRoot;
+	if (!repoRoot) return;
+	await appendDevLogEntry(repoRoot, entry).catch(() => undefined);
+}
+
+function text(value: unknown): string | undefined {
+	return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
 function requiredRepoRoot(value: string | undefined, action: string): string {

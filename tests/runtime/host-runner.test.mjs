@@ -8,6 +8,7 @@ import { createSprintProposal } from "../../src/decision/proposal.ts";
 import { runPlanningIteration } from "../../src/planning/iteration.ts";
 import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
 import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
+import { readDevLog } from "../../src/runtime/dev-log.ts";
 import {
 	previewRuntimeHostHandoff,
 	reviveRuntimeHostWorkerSessions,
@@ -689,6 +690,19 @@ describe("runtime host one-shot execution", () => {
 				"worker_completed",
 			);
 			assert.equal(result.implementationPreviews[0].append, undefined);
+			const devLog = await readDevLog(fixture.root, fixture.traceId);
+			assert.deepEqual(
+				devLog.map((entry) => entry.action),
+				["worker.claimed", "worker.started", "worker.completed"],
+			);
+			assert.ok(
+				devLog.every(
+					(entry) =>
+						entry.workUnitId === "WU-host-once" &&
+						entry.workerId === "host-worker-001" &&
+						entry.attemptId === "claim-WU-host-once-001",
+				),
+			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
 		}

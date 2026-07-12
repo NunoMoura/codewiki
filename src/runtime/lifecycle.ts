@@ -9,6 +9,7 @@ import {
 	CodewikiTraceError,
 	TraceAppendConflictError,
 } from "../error-handling/trace-errors.ts";
+import { applyDevLogRetention } from "./dev-log.ts";
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
@@ -301,6 +302,16 @@ export async function appendRuntimeHostLifecycleEvents(
 			),
 		);
 	}
+	await Promise.all(
+		batch.events
+			.filter(
+				(event) =>
+					event.data?.role === "trace" && event.data?.state === "closed",
+			)
+			.map((event) =>
+				applyDevLogRetention(options.repoRoot, event.traceId, "completed"),
+			),
+	);
 	return {
 		events: [...batch.events],
 		results,
