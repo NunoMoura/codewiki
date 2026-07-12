@@ -4,11 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
-import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 function proposalInput(id = "SP-wiki-decide") {
@@ -141,12 +139,6 @@ describe("wiki_decide core facade", () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-decide-"));
 		try {
 			const traceId = "TRACE-wiki-decide-append";
-			const head = createTraceHead({
-				traceId,
-				title: "Append wiki_decide result",
-				createdAt: "2026-06-11T00:00:00.000Z",
-			});
-			const first = await appendTraceRecord(root, head, 0);
 			const preview = await runWikiDecide({
 				mode: "preview",
 				traceId,
@@ -159,7 +151,7 @@ describe("wiki_decide core facade", () => {
 					runWikiDecide({
 						repoRoot: root,
 						mode: "append",
-						expectedBytes: first.nextBytes,
+						expectedBytes: 0,
 						traceId,
 						nextSequence: 1,
 						createdAt: "2026-06-11T00:00:01.000Z",
@@ -172,7 +164,7 @@ describe("wiki_decide core facade", () => {
 					runWikiDecide({
 						repoRoot: root,
 						mode: "append",
-						expectedBytes: first.nextBytes,
+						expectedBytes: 0,
 						traceId,
 						nextSequence: 1,
 						createdAt: "2026-06-11T00:00:01.000Z",
@@ -195,7 +187,7 @@ describe("wiki_decide core facade", () => {
 			const result = await runWikiDecide({
 				repoRoot: root,
 				mode: "append",
-				expectedBytes: first.nextBytes,
+				expectedBytes: 0,
 				traceId,
 				nextSequence: 1,
 				createdAt: "2026-06-11T00:00:01.000Z",
@@ -209,7 +201,9 @@ describe("wiki_decide core facade", () => {
 			const state = replayTrace(readBack.records);
 
 			assert.equal(result.mode, "append");
-			assert.equal(result.append?.records.length, 2);
+			assert.equal(result.append?.records.length, 3);
+			assert.equal(readBack.records[0]?.type, "trace_head");
+			assert.equal(readBack.records[0]?.traceId, traceId);
 			assert.equal(state.events.at(-1)?.event, "changes_approved");
 			assertQualityGraphIdentity(state.events.at(-1), "decision.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);

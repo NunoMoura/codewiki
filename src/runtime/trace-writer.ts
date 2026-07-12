@@ -30,6 +30,7 @@ export interface AppendSemanticLoopReportInput<
 	expectedBytes: number;
 	nextSequence: number;
 	expectedTraceId?: string;
+	prefixRecords?: TraceRecord[];
 	run: (input: { startSequence: number }) => TResult | Promise<TResult>;
 }
 
@@ -80,7 +81,7 @@ export async function appendSemanticLoopReport<
 	});
 	const append = await appendRuntimeTraceRecords(
 		input.repoRoot,
-		loopResult.traceRecords,
+		[...(input.prefixRecords ?? []), ...loopResult.traceRecords],
 		input.expectedBytes,
 	);
 	return {

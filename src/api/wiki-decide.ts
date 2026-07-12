@@ -26,7 +26,8 @@ import {
 	assertSemanticLoopReportBatch,
 	type AppendSemanticLoopReportResult,
 } from "../runtime/trace-writer.ts";
-import type { TraceEvent } from "../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { createTraceHead } from "../traces/writer.ts";
 
 export type WikiDecideMode = "preview" | "append";
 
@@ -115,12 +116,19 @@ export async function runWikiDecide(
 			input.sprintProposalApproval,
 			renderedSprintProposal,
 		);
+		const expectedBytes = requiredExpectedBytes(input.expectedBytes);
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			loop: "decision",
-			expectedBytes: requiredExpectedBytes(input.expectedBytes),
+			expectedBytes,
 			nextSequence,
 			expectedTraceId: input.expectedTraceId ?? input.traceId,
+			prefixRecords: initialTraceRecords(
+				expectedBytes,
+				traceId,
+				loopInput.proposal!,
+				input.createdAt,
+			),
 			run: ({ startSequence }) =>
 				runDecisionIterationWithRunner({ ...loopInput, startSequence }),
 		});
@@ -146,6 +154,27 @@ export async function runWikiDecide(
 		iterationEvent,
 		renderedSprintProposal,
 	};
+}
+
+function initialTraceRecords(
+	expectedBytes: number,
+	traceId: string,
+	proposal: SprintProposal,
+	createdAt: string | undefined,
+): TraceRecord[] {
+	if (expectedBytes !== 0) return [];
+	return [
+		createTraceHead({
+			traceId,
+			title: proposal.summary || `CodeWiki Sprint ${traceId}`,
+			createdAt,
+			origin: {
+				kind: "user_intent",
+				sourceRef: proposal.sourceRefs[0],
+				refs: proposal.sourceRefs,
+			},
+		}),
+	];
 }
 
 function decisionIterationInput(
