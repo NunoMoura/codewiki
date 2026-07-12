@@ -373,54 +373,90 @@ export function buildCodewikiWorkerAttempts(
 	const itemById = new Map(items.map((item) => [item.id, item]));
 	const attempts = new Map<string, CodewikiWorkerAttempt>();
 	for (const record of records) {
-		if (record.type !== "trace_event") continue;
-		const data = objectRecord(record.data);
-		if (record.event === "runtime.work_unit.claimed") {
-			const attemptId = stringValue(data.claimId) || record.id;
-			const workUnitId = stringValue(data.workUnitId);
-			const workerId = stringValue(data.workerId);
-			if (!workUnitId || !workerId) continue;
-			const item = itemById.get(workUnitId);
-			attempts.set(attemptId, {
-				attemptId,
-				workUnitId,
-				workerId,
-				title: item?.title || workUnitId,
-				status: "running",
-				pathScopes: stringValues(data.pathScopes),
-				planningRefs: stringValues(data.planningRefs),
-			});
-			continue;
-		}
-		if (record.event !== "runtime.work_unit.claim.released") continue;
-		const attemptId = stringValue(data.claimId);
-		if (!attemptId) continue;
-		const attempt = attempts.get(attemptId);
-		if (!attempt) continue;
-		const status = stringValue(data.status);
-		attempt.status =
-			status === "completed" || status === "blocked" || status === "failed"
-				? status
-				: "released";
+		applyWorkerAttemptRecord(record, itemById, attempts);
 	}
 	for (const observation of observations) {
-		const attempt = attempts.get(observation.attemptId);
-		if (!attempt) continue;
-		if (
-			attempt.observedAt &&
-			Date.parse(attempt.observedAt) >= Date.parse(observation.observedAt)
-		)
-			continue;
-		const freshness = workerObservationFreshness(observation);
-		attempt.phase = observation.phase;
-		attempt.freshness = freshness;
-		attempt.observedAt = observation.observedAt;
-		attempt.leaseExpiresAt = observation.leaseExpiresAt;
-		attempt.progress = observation.progress;
-		if (attempt.status === "running" && freshness !== "live")
-			attempt.status = "stale";
+		applyWorkerObservation(observation, attempts);
 	}
 	return [...attempts.values()];
+}
+
+function applyWorkerAttemptRecord(
+	record: TraceRecord,
+	itemById: Map<string, WorkQueueItem>,
+	attempts: Map<string, CodewikiWorkerAttempt>,
+): void {
+	if (record.type !== "trace_event") return;
+	const data = objectRecord(record.data);
+	if (record.event === "runtime.work_unit.claimed") {
+		const attemptId = stringValue(data.claimId) || record.id;
+		const workUnitId = stringValue(data.workUnitId);
+		const workerId = stringValue(data.workerId);
+		if (!workUnitId || !workerId) return;
+		attempts.set(attemptId, workerAttemptFromClaim(
+			attemptId,
+			workUnitId,
+			workerId,
+			data,
+			itemById.get(workUnitId),
+		));
+		return;
+	}
+	if (record.event !== "runtime.work_unit.claim.released") return;
+	const attempt = attempts.get(stringValue(data.claimId));
+	if (!attempt) return;
+	attempt.status = releasedAttemptStatus(stringValue(data.status));
+}
+
+function workerAttemptFromClaim(
+	attemptId: string,
+	workUnitId: string,
+	workerId: string,
+	data: Record<string, unknown>,
+	item: WorkQueueItem | undefined,
+): CodewikiWorkerAttempt {
+	return {
+		attemptId,
+		workUnitId,
+		workerId,
+		title: item?.title || workUnitId,
+		status: "running",
+		pathScopes: stringValues(data.pathScopes),
+		planningRefs: stringValues(data.planningRefs),
+	};
+}
+
+function releasedAttemptStatus(
+	status: string | undefined,
+): CodewikiWorkerAttempt["status"] {
+	return status === "completed" || status === "blocked" || status === "failed"
+		? status
+		: "released";
+}
+
+function applyWorkerObservation(
+	observation: WorkerObservation,
+	attempts: Map<string, CodewikiWorkerAttempt>,
+): void {
+	const attempt = attempts.get(observation.attemptId);
+	if (!attempt || observationIsOlder(attempt, observation)) return;
+	const freshness = workerObservationFreshness(observation);
+	attempt.phase = observation.phase;
+	attempt.freshness = freshness;
+	attempt.observedAt = observation.observedAt;
+	attempt.leaseExpiresAt = observation.leaseExpiresAt;
+	attempt.progress = observation.progress;
+	if (attempt.status === "running" && freshness !== "live") attempt.status = "stale";
+}
+
+function observationIsOlder(
+	attempt: CodewikiWorkerAttempt,
+	observation: WorkerObservation,
+): boolean {
+	return Boolean(
+		attempt.observedAt &&
+		Date.parse(attempt.observedAt) >= Date.parse(observation.observedAt),
+	);
 }
 
 export function buildCodewikiImplementationReview(
