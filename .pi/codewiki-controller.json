@@ -1,20 +1,20 @@
 {
 	"schemaVersion": "codewiki.self-dogfood-controller.v1",
-	"tag": "codewiki-self-dogfood-baseline-v0.3.4",
+	"tag": "codewiki-self-dogfood-baseline-v0.3.5",
 	"source": {
-		"commit": "6c7d77ebd5c2fdcc83bb26dcf5ca616969dbe65f",
-		"tree": "de82d060cd0a6bade47d77c00b3fe2f68e3f6f57"
+		"commit": "c413263aba35ccdd638d9b305514e5a413f1b3b3",
+		"tree": "6629be0efd3605546c90430a8b87a88ed5e0babc"
 	},
 	"package": {
 		"name": "codewiki",
 		"version": "0.3.0",
 		"file": "codewiki-0.3.0.tgz",
-		"bytes": 692298,
-		"sha256": "0114a16df6426ccea97858b6d284698ceb4f0ba7102e3d235965948ef9153336"
+		"bytes": 694336,
+		"sha256": "816eb1841b4203f8cb8e92f299cfbfeb2fb478be21560df211a598f2ec0ddc60"
 	},
 	"approval": {
-		"reviewRef": "chat:2026-07-12-dashboard-observability-approved",
+		"reviewRef": "chat:2026-07-12-quality-pack-controller-approved",
 		"approvedBy": "Nuno Moura Santos",
-		"approvedAt": "2026-07-12T03:34:28.104Z"
+		"approvedAt": "2026-07-12T07:25:10.413Z"
 	}
 }
