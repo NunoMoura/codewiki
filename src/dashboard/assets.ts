@@ -329,6 +329,22 @@ button { color: inherit; }
 }
 .trace-now { margin-top: 7px; color: var(--muted); }
 .worker-strip { margin-top: 8px; color: var(--muted); font-size: 12px; }
+.observability-stack { display: grid; gap: 10px; }
+.worker-lanes { display: grid; gap: 8px; }
+.worker-attempt { border: 1px solid var(--line); border-radius: 6px; padding: 9px 10px; background: color-mix(in srgb, var(--panel) 88%, transparent); }
+.worker-attempt-head, .review-row, .narrative-head, .dev-log-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.worker-attempt-title, .narrative-head { color: var(--bright); font-weight: 650; }
+.worker-attempt-meta, .review-label, .dev-log-meta { color: var(--muted); font-size: 12px; }
+.worker-attempt-status, .narrative-status { text-transform: uppercase; font-size: 11px; letter-spacing: .06em; color: var(--cyan); }
+.worker-attempt-detail, .narrative-detail, .narrative-next, .dev-log-summary { margin-top: 5px; color: var(--text); }
+.narrative-impact { margin-top: 4px; color: var(--muted); }
+.narrative-next { color: var(--yellow); }
+.implementation-review { display: grid; gap: 6px; }
+.review-value { color: var(--bright); }
+.dev-log-list { display: grid; gap: 5px; font-family: var(--mono); font-size: 12px; }
+.dev-log-item { border-left: 2px solid var(--line-strong); padding: 4px 8px; }
+.load-state { padding: 24px; color: var(--muted); text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
+.load-state.failed { color: var(--red); border-color: color-mix(in srgb, var(--red) 55%, var(--line)); }
 .detail {
 	margin-top: 10px;
 	border: 1px solid var(--line-strong);
@@ -549,7 +565,7 @@ button { color: inherit; }
 			</div>
 		</header>
 		<main class="queue-shell">
-			<div class="trace-list" id="queue"></div>
+			<div class="trace-list" id="queue"><div class="load-state">Loading CodeWiki pipeline state…</div></div>
 			<div class="footer-help">j/k move · enter expand · / search · r refresh · generated <span id="clock">loading…</span> · <span id="status">connecting</span></div>
 		</main>
 	</div>
@@ -757,7 +773,11 @@ function detailTabEntries(trace, sections) {
 		return {
 			id: section.loop,
 			label: section.loop,
-			render: function() { return renderLoopPanel(section); },
+			render: function() {
+				return section.loop === 'implementation'
+					? renderImplementationPanel(trace, section)
+					: renderLoopPanel(section);
+			},
 		};
 	}).concat([
 		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true); } },
@@ -772,6 +792,83 @@ function preferredOpenLoop(sections) {
 	if (active) return active.loop;
 	const latestWithFeed = sections.slice().reverse().find(function(section) { return (section.feed || []).length > 0; });
 	return latestWithFeed ? latestWithFeed.loop : undefined;
+}
+function renderImplementationPanel(trace, section) {
+	const node = document.createElement('section');
+	node.className = 'loop-panel loop-section ' + section.state;
+	const stack = document.createElement('div'); stack.className = 'section-body observability-stack';
+	stack.append(
+		renderTerminalBlock('activity feed', renderNarrativeFeed(trace.activityFeed || []), (trace.activityFeed || []).length + ' meaningful update(s)'),
+		renderTerminalBlock('worker attempts', renderWorkerAttempts(trace.workerAttempts || []), (trace.workerAttempts || []).length + ' attempt(s)'),
+		renderTerminalBlock('integration and exit review', renderImplementationReview(trace.implementationReview || {}), readableStatus((trace.implementationReview || {}).status || 'waiting')),
+		renderTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
+		renderTerminalBlock('dev log', renderDevLog(trace.devLog || { available: false, entryCount: 0, items: [] }), (trace.devLog || {}).entryCount ? trace.devLog.entryCount + ' action(s)' : 'diagnostics'),
+	);
+	node.append(stack);
+	return node;
+}
+function renderNarrativeFeed(feed) {
+	const box = document.createElement('div'); box.className = 'feed';
+	if (!feed.length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No meaningful activity recorded yet.'); box.append(empty); return box; }
+	feed.forEach(function(item) {
+		const row = document.createElement('article'); row.className = 'feed-item narrative ' + item.status;
+		const head = document.createElement('div'); head.className = 'narrative-head';
+		const title = document.createElement('span'); text(title, item.headline);
+		const status = document.createElement('span'); status.className = 'narrative-status'; text(status, item.status + (item.createdAt ? ' · ' + shortTime(item.createdAt) : ''));
+		head.append(title, status);
+		const detail = document.createElement('div'); detail.className = 'narrative-detail'; text(detail, item.detail);
+		const impact = document.createElement('div'); impact.className = 'narrative-impact'; text(impact, 'Why it matters: ' + item.impact);
+		const next = document.createElement('div'); next.className = 'narrative-next'; text(next, 'Next: ' + item.nextAction);
+		row.append(head, detail, impact, next); box.append(row);
+	});
+	return box;
+}
+function renderWorkerAttempts(attempts) {
+	const box = document.createElement('div'); box.className = 'worker-lanes';
+	if (!attempts.length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No delegated worker attempts. Direct Implementation work remains visible in aggregate review.'); box.append(empty); return box; }
+	attempts.forEach(function(attempt) {
+		const row = document.createElement('article'); row.className = 'worker-attempt ' + attempt.status;
+		const head = document.createElement('div'); head.className = 'worker-attempt-head';
+		const title = document.createElement('div'); title.className = 'worker-attempt-title'; text(title, attempt.title);
+		const status = document.createElement('div'); status.className = 'worker-attempt-status'; text(status, readableStatus(attempt.status));
+		head.append(title, status);
+		const meta = document.createElement('div'); meta.className = 'worker-attempt-meta'; text(meta, attempt.workerId + ' · attempt ' + attempt.attemptId + (attempt.freshness ? ' · ' + attempt.freshness : ''));
+		const detail = document.createElement('div'); detail.className = 'worker-attempt-detail';
+		const progress = attempt.progress ? ' · ' + attempt.progress.current + '/' + attempt.progress.total : '';
+		text(detail, (attempt.phase ? readableStatus(attempt.phase) : 'Waiting for activity') + progress + (attempt.observedAt ? ' · observed ' + shortTime(attempt.observedAt) : ''));
+		row.append(head, meta, detail); box.append(row);
+	});
+	return box;
+}
+function renderImplementationReview(review) {
+	const box = document.createElement('div'); box.className = 'implementation-review';
+	[
+		['results collected', (review.resultsCollected || 0) + '/' + (review.totalTasks || 0)],
+		['acceptance evidence', readableStatus(review.acceptanceStatus || 'waiting')],
+		['worker conflicts', String(review.conflictCount || 0)],
+		['overall status', readableStatus(review.status || 'waiting')],
+	].forEach(function(entry) {
+		const row = document.createElement('div'); row.className = 'review-row';
+		const label = document.createElement('span'); label.className = 'review-label'; text(label, entry[0]);
+		const value = document.createElement('span'); value.className = 'review-value'; text(value, entry[1]);
+		row.append(label, value); box.append(row);
+	});
+	return box;
+}
+function renderDevLog(devLog) {
+	const box = document.createElement('div'); box.className = 'dev-log-list';
+	if (!devLog.available) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'Dev Log is unavailable for this trace. Semantic trace evidence remains authoritative.'); box.append(empty); return box; }
+	if (!(devLog.items || []).length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No observable agent actions recorded.'); box.append(empty); return box; }
+	(devLog.items || []).forEach(function(item) {
+		const row = document.createElement('div'); row.className = 'dev-log-item ' + item.status;
+		const head = document.createElement('div'); head.className = 'dev-log-head';
+		const action = document.createElement('span'); text(action, item.action);
+		const meta = document.createElement('span'); meta.className = 'dev-log-meta'; text(meta, shortTime(item.timestamp) + ' · ' + item.status + (item.durationMs == null ? '' : ' · ' + item.durationMs + 'ms'));
+		head.append(action, meta); row.append(head);
+		if (item.summary) { const summary = document.createElement('div'); summary.className = 'dev-log-summary'; text(summary, item.summary); row.append(summary); }
+		box.append(row);
+	});
+	return box;
 }
 function renderLoopPanel(section) {
 	const node = document.createElement('section');
@@ -1106,7 +1203,16 @@ async function load() {
 		if (!res.ok) throw new Error('HTTP ' + res.status);
 		state = await res.json();
 		render();
-	} catch (error) { text(els.status, 'error'); console.error(error); }
+	} catch (error) {
+		text(els.status, state ? 'stale · reconnecting' : 'failed · retrying');
+		if (!state) {
+			els.queue.innerHTML = '';
+			const failure = document.createElement('div'); failure.className = 'load-state failed';
+			text(failure, 'CodeWiki pipeline state is unavailable. Retrying automatically; if this persists, fully restart Pi and run /wiki-dashboard again.');
+			els.queue.append(failure);
+		}
+		console.error(error);
+	}
 	finally { loading = false; }
 }
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
