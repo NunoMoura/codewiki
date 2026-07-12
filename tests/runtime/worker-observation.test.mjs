@@ -1,0 +1,78 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import {
+	createWorkerObservation,
+	workerObservationFreshness,
+} from "../../src/runtime/worker-observation.ts";
+
+function observation(overrides = {}) {
+	return {
+		traceId: "TRACE-worker",
+		workUnitId: "WU-worker",
+		workerId: "worker-001",
+		attemptId: "claim-001",
+		phase: "running_checks",
+		observedAt: "2026-07-12T12:00:00.000Z",
+		leaseExpiresAt: "2026-07-12T12:10:00.000Z",
+		progress: { current: 2, total: 3 },
+		...overrides,
+	};
+}
+
+describe("worker observation contract", () => {
+	it("normalizes bounded correlated activity and freshness", () => {
+		const value = createWorkerObservation(observation());
+		assert.equal(value.schemaVersion, "codewiki.worker-observation.v1");
+		assert.equal(value.phase, "running_checks");
+		assert.equal(
+			workerObservationFreshness(value, new Date("2026-07-12T12:00:20.000Z")),
+			"live",
+		);
+		assert.equal(
+			workerObservationFreshness(value, new Date("2026-07-12T12:01:00.000Z")),
+			"stale",
+		);
+		assert.equal(
+			workerObservationFreshness(value, new Date("2026-07-12T12:11:00.000Z")),
+			"expired",
+		);
+	});
+
+	it("rejects private, raw, unknown, and unbounded payload fields", () => {
+		for (const field of [
+			"prompt",
+			"chainOfThought",
+			"rawLog",
+			"sourceContent",
+			"authorization",
+			"environment",
+		]) {
+			assert.throws(
+				() => createWorkerObservation(observation({ [field]: "secret" })),
+				new RegExp(`field ${field} is not allowed`),
+			);
+		}
+		assert.throws(
+			() => createWorkerObservation(observation({ phase: "thinking" })),
+			/phase is not allowed/,
+		);
+		assert.throws(
+			() =>
+				createWorkerObservation(
+					observation({ progress: { current: 4, total: 3 } }),
+				),
+			/0 <= current <= total/,
+		);
+		assert.throws(
+			() => createWorkerObservation(observation({ workerId: "x".repeat(129) })),
+			/workerId is invalid/,
+		);
+		assert.throws(
+			() =>
+				createWorkerObservation(
+					observation({ leaseExpiresAt: "2026-07-12T11:59:59.000Z" }),
+				),
+			/lease must expire after observedAt/,
+		);
+	});
+});
