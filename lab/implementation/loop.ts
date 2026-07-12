@@ -9,6 +9,7 @@ import type {
 	ImplementationExitIssueCode,
 	ImplementationExitResult,
 } from "../../src/implementation/types.ts";
+import { labQualityPackForCandidate } from "../runner/quality-pack.ts";
 import type { LabCandidateStandards, LabStandard } from "../runner/types.ts";
 
 export interface ImplementationLabInput {
@@ -232,7 +233,7 @@ export const implementationLoopStandards: LabStandard<ImplementationLabInput>[] 
 		}),
 	];
 
-export const implementationLoopCandidate = {
+const implementationLoopCandidateDeclaration = {
 	loop: "implementation",
 	metric: "IEC",
 	graphId: "implementation.loop.lab",
@@ -252,6 +253,13 @@ export const implementationLoopCandidate = {
 		"exit_loss",
 	],
 	standards: implementationLoopStandards,
+} satisfies Omit<LabCandidateStandards<ImplementationLabInput>, "qualityPack">;
+
+export const implementationLoopCandidate = {
+	...implementationLoopCandidateDeclaration,
+	qualityPack: labQualityPackForCandidate(
+		implementationLoopCandidateDeclaration,
+	),
 } satisfies LabCandidateStandards<ImplementationLabInput>;
 
 function implementationIssueCodeStandard({

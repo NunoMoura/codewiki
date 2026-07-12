@@ -1,3 +1,5 @@
+import type { LoopQualityPack } from "../../src/loops/quality-pack.ts";
+
 export type LabLoop = "decision" | "planning" | "implementation";
 export type LabLoopMetric = "DEC" | "PEC" | "IEC";
 export type LabMetric = LabLoopMetric | "PCE" | "HCE";
@@ -94,6 +96,7 @@ export interface LabCandidateStandards<TInput> {
 	schemaVersion: number;
 	layers: LabQualityLayer[];
 	standards: LabStandard<TInput>[];
+	qualityPack: LoopQualityPack;
 }
 
 export interface LabExitResult {

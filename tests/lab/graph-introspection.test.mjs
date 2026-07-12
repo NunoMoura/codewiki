@@ -30,6 +30,12 @@ describe("lab graph introspection", () => {
 			assert.equal(loopReport.candidate.nodeCount > 0, true);
 			assert.equal(loopReport.production.layers.length > 0, true);
 			assert.equal(loopReport.candidate.layers.length > 0, true);
+			assert.deepEqual(loopReport.candidate.qualityPack, {
+				id: `codewiki.lab.${loopReport.loop}`,
+				version: loopReport.candidate.graphVersion,
+				authority: "lab",
+				rollout: "observe",
+			});
 			assert.equal(Array.isArray(loopReport.diff.layerDeltas), true);
 		}
 	});

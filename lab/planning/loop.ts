@@ -8,6 +8,7 @@ import type {
 	PlanningExitIssueCode,
 	PlanningExitResult,
 } from "../../src/planning/loop.ts";
+import { labQualityPackForCandidate } from "../runner/quality-pack.ts";
 import type { LabCandidateStandards, LabStandard } from "../runner/types.ts";
 
 export interface PlanningLabInput {
@@ -258,7 +259,7 @@ export const planningLoopStandards: LabStandard<PlanningLabInput>[] = [
 	},
 ];
 
-export const planningLoopCandidate = {
+const planningLoopCandidateDeclaration = {
 	loop: "planning",
 	metric: "PEC",
 	graphId: "planning.loop.lab",
@@ -277,6 +278,11 @@ export const planningLoopCandidate = {
 		"exit_loss",
 	],
 	standards: planningLoopStandards,
+} satisfies Omit<LabCandidateStandards<PlanningLabInput>, "qualityPack">;
+
+export const planningLoopCandidate = {
+	...planningLoopCandidateDeclaration,
+	qualityPack: labQualityPackForCandidate(planningLoopCandidateDeclaration),
 } satisfies LabCandidateStandards<PlanningLabInput>;
 
 function planningIssueCodeStandard({

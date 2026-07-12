@@ -9,6 +9,7 @@ import type {
 	DecisionExitResult,
 } from "../../src/decision/loop.ts";
 import type { SprintProposal } from "../../src/decision/types.ts";
+import { labQualityPackForCandidate } from "../runner/quality-pack.ts";
 import type { LabCandidateStandards, LabStandard } from "../runner/types.ts";
 
 export interface DecisionLabInput {
@@ -203,7 +204,7 @@ export const decisionLoopStandards: LabStandard<DecisionLabInput>[] = [
 	}),
 ];
 
-export const decisionLoopCandidate = {
+const decisionLoopCandidateDeclaration = {
 	loop: "decision",
 	metric: "DEC",
 	graphId: "decision.loop.lab",
@@ -220,6 +221,11 @@ export const decisionLoopCandidate = {
 		"exit_loss",
 	],
 	standards: decisionLoopStandards,
+} satisfies Omit<LabCandidateStandards<DecisionLabInput>, "qualityPack">;
+
+export const decisionLoopCandidate = {
+	...decisionLoopCandidateDeclaration,
+	qualityPack: labQualityPackForCandidate(decisionLoopCandidateDeclaration),
 } satisfies LabCandidateStandards<DecisionLabInput>;
 
 function decisionIssueCodeStandard({

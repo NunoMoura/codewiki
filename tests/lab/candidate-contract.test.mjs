@@ -61,6 +61,7 @@ describe("lab candidate contract", () => {
 				"lab/runner/holdout-score.ts",
 				"lab/runner/holdout.ts",
 				"lab/runner/objective.ts",
+				"lab/runner/quality-pack.ts",
 				"lab/runner/score.ts",
 				"lab/runner/sealed-check.ts",
 				"lab/runner/sealed-template.ts",
@@ -86,6 +87,14 @@ describe("lab candidate contract", () => {
 			assert.equal(Array.isArray(candidate.layers), true);
 			assert.equal(Array.isArray(candidate.standards), true);
 			assert.equal(candidate.standards.length > 0, true);
+			assert.equal(candidate.qualityPack.id, `codewiki.lab.${loop}`);
+			assert.equal(candidate.qualityPack.authority, "lab");
+			assert.equal(candidate.qualityPack.rollout, "observe");
+			assert.equal(candidate.qualityPack.graph.graphId, `${loop}.loop`);
+			assert.deepEqual(
+				candidate.qualityPack.standards.map((standard) => standard.id),
+				candidate.standards.map((standard) => standard.id),
+			);
 			assertUnique(candidate.standards.map((standard) => standard.id));
 			assertLayerCoverage(loop, candidate.standards);
 
@@ -113,12 +122,18 @@ describe("lab candidate contract", () => {
 			decision: [
 				"../../src/decision/loop.ts",
 				"../../src/decision/types.ts",
+				"../runner/quality-pack.ts",
 				"../runner/types.ts",
 			],
-			planning: ["../../src/planning/loop.ts", "../runner/types.ts"],
+			planning: [
+				"../../src/planning/loop.ts",
+				"../runner/quality-pack.ts",
+				"../runner/types.ts",
+			],
 			implementation: [
 				"../../src/implementation/loop.ts",
 				"../../src/implementation/types.ts",
+				"../runner/quality-pack.ts",
 				"../runner/types.ts",
 			],
 		});

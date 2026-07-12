@@ -28,6 +28,7 @@ export const LAB_LOCKED_EVALUATOR_FILES = [
 	"lab/runner/holdout.ts",
 	"lab/runner/holdout-score.ts",
 	"lab/runner/objective.ts",
+	"lab/runner/quality-pack.ts",
 	"lab/runner/score.ts",
 	"lab/runner/sealed-check.ts",
 	"lab/runner/sealed-template.ts",
@@ -40,12 +41,18 @@ export const LAB_ALLOWED_CANDIDATE_IMPORTS: Record<LabLoop, readonly string[]> =
 		decision: [
 			"../../src/decision/loop.ts",
 			"../../src/decision/types.ts",
+			"../runner/quality-pack.ts",
 			"../runner/types.ts",
 		],
-		planning: ["../../src/planning/loop.ts", "../runner/types.ts"],
+		planning: [
+			"../../src/planning/loop.ts",
+			"../runner/quality-pack.ts",
+			"../runner/types.ts",
+		],
 		implementation: [
 			"../../src/implementation/loop.ts",
 			"../../src/implementation/types.ts",
+			"../runner/quality-pack.ts",
 			"../runner/types.ts",
 		],
 	};

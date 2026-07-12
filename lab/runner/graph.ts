@@ -31,6 +31,13 @@ export interface LabGraphLayerSummary {
 	totalCost: number;
 }
 
+export interface LabQualityPackSummary {
+	id: string;
+	version: string;
+	authority: string;
+	rollout: string;
+}
+
 export interface LabGraphSummary {
 	graphId: string;
 	graphVersion: string;
@@ -39,6 +46,7 @@ export interface LabGraphSummary {
 	nodeCount: number;
 	layers: LabGraphLayerSummary[];
 	nodes: LabGraphNodeSummary[];
+	qualityPack?: LabQualityPackSummary;
 }
 
 export interface LabGraphDiff {
@@ -71,6 +79,7 @@ interface GraphLike {
 	layers: string[];
 	nodes?: GraphNodeLike[];
 	standards?: GraphNodeLike[];
+	qualityPack?: LabQualityPackSummary;
 }
 
 interface GraphNodeLike {
@@ -130,6 +139,7 @@ function candidateGraph(candidate: {
 	schemaVersion: number;
 	layers: string[];
 	standards: GraphNodeLike[];
+	qualityPack: LabQualityPackSummary;
 }): GraphLike {
 	return {
 		graphId: candidate.graphId,
@@ -137,6 +147,12 @@ function candidateGraph(candidate: {
 		schemaVersion: candidate.schemaVersion,
 		layers: candidate.layers,
 		nodes: candidate.standards,
+		qualityPack: {
+			id: candidate.qualityPack.id,
+			version: candidate.qualityPack.version,
+			authority: candidate.qualityPack.authority,
+			rollout: candidate.qualityPack.rollout,
+		},
 	};
 }
 
@@ -153,6 +169,7 @@ function summarizeGraph(
 		nodeCount: nodes.length,
 		layers: layerSummaries(graph.layers, nodes),
 		nodes,
+		...(graph.qualityPack ? { qualityPack: graph.qualityPack } : {}),
 	};
 }
 
