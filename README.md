@@ -14,6 +14,7 @@ The old implementation archive has been removed after the migration audit. The r
 - `.codewiki/views/**` is generated/disposable projection output, not truth.
 - Other `.codewiki` roots from earlier harness runs are archived migration state, not active execution truth during the rebuild.
 - Pi native compaction should handle conversation compression. CodeWiki-owned refresh/compaction windows are disabled with the old extension.
+- Decision, Planning, and Implementation production standards are strict immutable `kernel` quality packs in `enforce` mode. Lab candidates use the same closed schema with `authority: lab` and `rollout: observe`; lab results cannot replace kernel standards or advance the pinned controller.
 
 ## New source layout
 
@@ -141,7 +142,7 @@ Smoke command roles:
 - `npm run lab:pipeline -- --gate`: fails while pipeline carryover loses
   decision facts, planning refs, or implementation acceptance coverage.
 - `npm run lab:graph`: inspects production and candidate quality graphs by
-  loop, layer, node, version, and hash.
+  loop, layer, node, version, hash, and shared pack identity/authority/rollout.
 - `npm run lab:objective`: reports the scalar visible/sealed lab objective for
   the quality-graph candidate surface.
 - `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence

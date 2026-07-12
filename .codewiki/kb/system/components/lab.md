@@ -101,8 +101,10 @@ Candidate loop files use this shared layer vocabulary:
 - `pipeline_carryover`: cross-loop carryover signals;
 - `exit_loss`: aggregate loss/threshold behavior.
 
+Each candidate also exposes a strict shared quality-pack projection. The pack id is `codewiki.lab.<loop>`, authority is `lab`, and rollout is `observe`. `lab/runner/quality-pack.ts` is locked evaluator infrastructure: it maps candidate metadata to CodeWiki-owned evaluator and evidence-adapter identifiers without copying executable candidate callbacks into the pack. `npm run lab:graph` reports pack id, version, authority, and rollout alongside candidate graph identity.
+
 The candidate file must not own the evaluator. Fixed cases, hidden holdout
-loading, scoring, experiment runner logic, worktree setup, and promotion logic
+loading, scoring, experiment runner logic, worktree setup, pack adaptation, and promotion logic
 live outside the candidate file and are not editable during normal experiments.
 The editable file allowlist, locked evaluator files, import allowlists, and
 forbidden candidate imports are declared in `lab/runner/contract.ts` and guarded
@@ -270,8 +272,9 @@ DEC, PEC, IEC, and PCE currently score 100 against their visible seed cases, so
 `npm run lab:gate` and `npm run lab:pipeline -- --gate` pass. This is
 visible-regression evidence only. Meaningful experiment evidence additionally
 requires a private `lab:holdout -- --gate` run from a sealed evaluator bundle
-outside the repository. Production loop promotion still requires review and
-normal validation.
+outside the repository. Production loop promotion still requires sealed evidence, human review, and
+normal validation. Shared schema identity does not grant production authority,
+controller advancement, automatic merge, or automatic publication.
 
 ## Promotion
 

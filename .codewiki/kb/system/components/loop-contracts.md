@@ -146,6 +146,7 @@ Decision-type loop quality profiles are activation masks over these frozen quali
 
 Quality-standard implementation is split from graph identity:
 
+- `src/loops/quality-pack.ts` owns the closed declarative pack schema, authority and rollout validation, evaluator identifiers, evidence-adapter identifiers, and protected kernel-standard checks.
 - `src/loops/graph.ts` owns graph schema, refs, hashes, and node metadata.
 - `src/loops/evaluator.ts` maps standard issues/results into graph-aware
   quality-standard output.
@@ -161,6 +162,16 @@ quality-standard evaluation through the loop runner and include compact
 `qualityRunner` latency/node summaries in loop output, exit data, and tail
 checkpoints. Synchronous loop evaluators remain available for focused tests and
 pure in-process callers.
+
+### Declarative quality-pack contract
+
+Production and lab standards use one strict `qualityPack.schemaVersion = 1` declaration. A pack declares a stable pack id and version, authority (`kernel`, `official`, `project`, or `lab`), rollout (`observe`, `warn`, or `enforce`), one known semantic-loop graph, and standards with closed evaluator and evidence-adapter identifiers. Unknown fields, arbitrary evaluators, arbitrary evidence adapters, graph mismatches, duplicate ids, missing dependencies, dependency cycles, and attempts to replace protected kernel standards fail before execution.
+
+CodeWiki owns all kernel standards. The Decision, Planning, and Implementation built-ins are immutable `kernel` packs in `enforce` mode. Their compatibility projections preserve the pre-migration graph ids, versions, node semantics, diagnostics, routes, and hashes, so existing `wiki_decide`, `wiki_plan`, and `wiki_implement` output contracts remain unchanged. The generic runner composes packs deterministically before the compatibility projection.
+
+Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing verdicts; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only for CodeWiki-authorized packs. Project policy composition and a Quality Designer remain deferred; this migration does not permit project-owned kernel overrides, custom semantic loops, JavaScript evaluators, shell evaluators, automatic merge, or automatic publication.
+
+Rollback remains source-level and deterministic: revert the production or lab migration commits while retaining the strict schema/composition foundation, then rerun public facade, lab, package, Pi, readiness, and pinned-controller gates. A controller pin advances only after separate review of an exact clean commit/tree/tarball identity; migration success alone grants no activation authority.
 
 The runner can optionally use specialized quality judge nodes for
 `agent_self_assessment` and `model_judge` standards. Conceptually there is one

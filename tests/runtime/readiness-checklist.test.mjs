@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, it } from "node:test";
+import { DECISION_LOOP_QUALITY_PACK } from "../../src/decision/loop.ts";
+import { IMPLEMENTATION_LOOP_QUALITY_PACK } from "../../src/implementation/loop.ts";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
+import { PLANNING_LOOP_QUALITY_PACK } from "../../src/planning/loop.ts";
 import { assertValidTraceRecord } from "../../src/traces/schema.ts";
 import {
 	formatKnowledgeDriftIssues,
@@ -188,6 +191,33 @@ describe("install readiness checklist", () => {
 			readFileSync("src/pi/tools/index.ts", "utf8"),
 			/sourceOwners|sourcePaths/,
 		);
+	});
+
+	it("keeps production quality packs immutable and documents lab authority", () => {
+		for (const pack of [
+			DECISION_LOOP_QUALITY_PACK,
+			PLANNING_LOOP_QUALITY_PACK,
+			IMPLEMENTATION_LOOP_QUALITY_PACK,
+		]) {
+			assert.equal(pack.authority, "kernel");
+			assert.equal(pack.rollout, "enforce");
+			assert.equal(pack.id.startsWith("codewiki."), true);
+			assert.equal(pack.standards.length > 0, true);
+		}
+		const loopContracts = readFileSync(
+			".codewiki/kb/system/components/loop-contracts.md",
+			"utf8",
+		);
+		const labDocumentation = readFileSync(
+			".codewiki/kb/system/components/lab.md",
+			"utf8",
+		);
+		assert.match(loopContracts, /immutable `kernel` packs in `enforce` mode/);
+		assert.match(loopContracts, /Project policy composition and a Quality Designer remain deferred/);
+		assert.match(loopContracts, /JavaScript evaluators, shell evaluators/);
+		assert.match(labDocumentation, /authority is `lab`/);
+		assert.match(labDocumentation, /rollout is `observe`/);
+		assert.match(labDocumentation, /does not grant production authority/);
 	});
 
 	it("keeps lab code out of the packaged Pi extension", () => {

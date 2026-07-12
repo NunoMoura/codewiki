@@ -25,8 +25,8 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 - `lab/**` is outside package files and Pi extension registration.
 - Package metadata keeps `private: true`; public npm publish remains gated.
 - Trace append paths use expected byte/sequence checks in mutation smokes.
-- Production loop quality graphs live in `src/<loop>/loop.ts` and persist graph
-  identity in semantic events and tail checkpoints.
+- Production loop quality graphs live in `src/<loop>/loop.ts` as immutable enforcing kernel quality packs and persist graph identity in semantic events and tail checkpoints. Compatibility projections preserve the pre-migration graph ids, versions, nodes, routes, diagnostics, and hashes.
+- Lab candidates use the same strict pack schema with `authority: lab` and `rollout: observe`; graph reports expose pack identity while locked tests prevent candidate-owned evaluator authority.
 - Supervised repo-local self-dogfood is enabled: `.pi/settings.json` loads the
   verified `.pi/npm/node_modules/codewiki` controller beside pi-lens,
   `.codewiki/config.json` enables the Pi host, and no extension shim is present.
@@ -100,6 +100,7 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 - Promotion from `lab/<loop>/loop.ts` to `src/<loop>/loop.ts` is now guarded by
   an explicit report, but actual promotion remains blocked until sealed holdout
   evidence and human review are available.
+- Project-composed semantic policies and the Quality Designer remain deferred. Current packs cannot add arbitrary JavaScript/shell evaluators, custom semantic loops, automatic merge, automatic publication, or controller advancement.
 
 ## Risks / follow-up work
 
@@ -143,6 +144,12 @@ npm run lab:forge -- --json
 npm audit --omit=dev
 git diff --check
 ```
+
+Quality-pack equivalence evidence:
+
+- Production Decision, Planning, and Implementation graph hashes remain byte-for-byte equivalent to their pre-migration identities.
+- Public facade suites, strict kernel-override tests, all lab tests, package/Pi/readiness gates, and typecheck pass before any later controller advancement review.
+- Rollback remains a normal Git revert of the production/lab migration commits followed by the same gates; no source migration may rewrite an already reviewed controller artifact.
 
 Current lab evidence:
 

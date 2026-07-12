@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added one strict declarative quality-pack schema for production and lab standards, with closed graph/evaluator/evidence identifiers, protected kernel standards, deterministic composition, and `observe`/`warn`/`enforce` rollout modes.
 - Added Implementation Trace Detail worker-attempt observability, separate aggregate Integration and Exit Review, a deterministic human Activity Feed, and a bounded redacted Dev Log with failure retention and successful-close cleanup.
 - Added dashboard runtime identity and endpoint health checks so stale loaded controllers and state-serving failures produce actionable restart/retry guidance instead of an unexplained blank shell.
 - Added the CodeWiki lab for Decision, Planning, and Implementation exit
@@ -94,6 +95,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Migrated all production semantic-loop standards to immutable enforcing kernel packs while preserving prior graph ids, versions, node behavior, routes, diagnostics, and hashes through compatibility projections.
+- Migrated all lab candidates to observe-only lab packs and exposed pack identity in graph reports without granting candidates production or controller authority.
 - Hardened the Decision lab candidate with a deterministic specificity standard,
   raising DEC to 100 against the locked seed cases.
 - Hardened the Planning lab candidate with deterministic work-unit specificity
