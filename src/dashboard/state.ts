@@ -1,10 +1,20 @@
 import { basename } from "node:path";
 import type { WikiStateSnapshot } from "../api/state.ts";
+import type { DevLogEntry } from "../runtime/dev-log.ts";
+import {
+	type WorkerObservation,
+	workerObservationFreshness,
+} from "../runtime/worker-observation.ts";
 import { decisionQualityStandards } from "../decision/quality-standards.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
 import { planningQualityStandards } from "../planning/quality-standards.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../traces/types.ts";
 import { qualityIterationsFromTrace } from "../views/quality.ts";
+import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
+import {
+	projectDevLog,
+	type DashboardDevLogProjection,
+} from "./dev-log-projection.ts";
 import type {
 	QualityIterationSummary,
 	QualityStandardSummary,
@@ -68,6 +78,29 @@ export interface CodewikiSprintTraceWorker {
 	title: string;
 	pathScopes: string[];
 	reason?: string;
+}
+
+export interface CodewikiWorkerAttempt {
+	attemptId: string;
+	workUnitId: string;
+	workerId: string;
+	title: string;
+	status: "running" | "stale" | "blocked" | "failed" | "completed" | "released";
+	phase?: WorkerObservation["phase"];
+	freshness?: "live" | "stale" | "expired";
+	observedAt?: string;
+	leaseExpiresAt?: string;
+	progress?: WorkerObservation["progress"];
+	pathScopes: string[];
+	planningRefs: string[];
+}
+
+export interface CodewikiImplementationReview {
+	status: "waiting" | "collecting" | "blocked" | "validating" | "passed";
+	resultsCollected: number;
+	totalTasks: number;
+	conflictCount: number;
+	acceptanceStatus: "waiting" | "partial" | "ready";
 }
 
 export interface CodewikiSprintTraceItem {
@@ -154,8 +187,12 @@ export interface CodewikiSprintTrace {
 	pathScopes: string[];
 	blockers: string[];
 	workers: CodewikiSprintTraceWorker[];
+	workerAttempts: CodewikiWorkerAttempt[];
+	implementationReview: CodewikiImplementationReview;
 	items: CodewikiSprintTraceItem[];
 	activities: CodewikiSprintTraceActivity[];
+	activityFeed: ActivityFeedItem[];
+	devLog: DashboardDevLogProjection;
 	touchedFiles: CodewikiSprintTraceTouchedFiles;
 }
 
@@ -173,10 +210,16 @@ export interface CodewikiDashboardState {
 	sprintsQueue: CodewikiSprintTrace[];
 }
 
+export interface CodewikiDashboardProjectionContext {
+	workerObservations?: WorkerObservation[];
+	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
+}
+
 export function buildCodewikiDashboardState(
 	snapshot: WikiStateSnapshot,
 	projectRoot: string,
 	records: TraceRecord[] = [],
+	context: CodewikiDashboardProjectionContext = {},
 ): CodewikiDashboardState {
 	const cardsByTrace = new Map(
 		snapshot.traceQueue.cards.map((trace) => [trace.traceId, trace]),
@@ -188,6 +231,7 @@ export function buildCodewikiDashboardState(
 			snapshot,
 			card,
 			recordsByTrace.get(card.traceId) || [],
+			context,
 		);
 	});
 	return {
@@ -210,6 +254,7 @@ function buildSprintTrace(
 	snapshot: WikiStateSnapshot,
 	card: TraceQueueCard,
 	records: TraceRecord[],
+	context: CodewikiDashboardProjectionContext,
 ): CodewikiSprintTrace {
 	const items = snapshot.workQueue.items.filter(
 		(item) => item.traceId === card.traceId,
@@ -223,6 +268,13 @@ function buildSprintTrace(
 	]);
 	const workers = sprintTraceWorkers(snapshot, card.traceId);
 	const loop = sprintTraceLoop(card, items, blockers);
+	const workerAttempts = buildCodewikiWorkerAttempts(
+		records,
+		items,
+		context.workerObservations?.filter(
+			(observation) => observation.traceId === card.traceId,
+		) ?? [],
+	);
 	const loopSections = sprintTraceLoopSections(card, records, loop, blockers);
 	const qualityChecks = sprintTraceQualityChecks(card, records, loop, blockers);
 	const qualitySummary = sprintTraceQualitySummary(qualityChecks);
@@ -265,8 +317,20 @@ function buildSprintTrace(
 		]),
 		blockers,
 		workers,
+		workerAttempts,
+		implementationReview: buildCodewikiImplementationReview(
+			workerAttempts,
+			items,
+			blockers,
+			card.closed,
+		),
 		items: items.map(sprintTraceItem),
 		activities: sprintTraceActivities(records),
+		activityFeed: buildActivityFeed(
+			records,
+			new Map(items.map((item) => [item.id, item.title])),
+		),
+		devLog: projectDevLog(context.devLogByTrace?.get(card.traceId)),
 		touchedFiles: sprintTraceTouchedFiles(records, items, workers, card),
 	};
 }
@@ -299,6 +363,114 @@ function sprintTraceWorkers(
 			reason: claim.reason,
 		})),
 	].filter((worker) => worker.traceId === traceId);
+}
+
+export function buildCodewikiWorkerAttempts(
+	records: TraceRecord[],
+	items: WorkQueueItem[],
+	observations: WorkerObservation[],
+): CodewikiWorkerAttempt[] {
+	const itemById = new Map(items.map((item) => [item.id, item]));
+	const attempts = new Map<string, CodewikiWorkerAttempt>();
+	for (const record of records) {
+		if (record.type !== "trace_event") continue;
+		const data = objectRecord(record.data);
+		if (record.event === "runtime.work_unit.claimed") {
+			const attemptId = stringValue(data.claimId) || record.id;
+			const workUnitId = stringValue(data.workUnitId);
+			const workerId = stringValue(data.workerId);
+			if (!workUnitId || !workerId) continue;
+			const item = itemById.get(workUnitId);
+			attempts.set(attemptId, {
+				attemptId,
+				workUnitId,
+				workerId,
+				title: item?.title || workUnitId,
+				status: "running",
+				pathScopes: stringValues(data.pathScopes),
+				planningRefs: stringValues(data.planningRefs),
+			});
+			continue;
+		}
+		if (record.event !== "runtime.work_unit.claim.released") continue;
+		const attemptId = stringValue(data.claimId);
+		if (!attemptId) continue;
+		const attempt = attempts.get(attemptId);
+		if (!attempt) continue;
+		const status = stringValue(data.status);
+		attempt.status =
+			status === "completed" || status === "blocked" || status === "failed"
+				? status
+				: "released";
+	}
+	for (const observation of observations) {
+		const attempt = attempts.get(observation.attemptId);
+		if (!attempt) continue;
+		if (
+			attempt.observedAt &&
+			Date.parse(attempt.observedAt) >= Date.parse(observation.observedAt)
+		)
+			continue;
+		const freshness = workerObservationFreshness(observation);
+		attempt.phase = observation.phase;
+		attempt.freshness = freshness;
+		attempt.observedAt = observation.observedAt;
+		attempt.leaseExpiresAt = observation.leaseExpiresAt;
+		attempt.progress = observation.progress;
+		if (attempt.status === "running" && freshness !== "live")
+			attempt.status = "stale";
+	}
+	return [...attempts.values()];
+}
+
+export function buildCodewikiImplementationReview(
+	attempts: CodewikiWorkerAttempt[],
+	items: WorkQueueItem[],
+	blockers: string[],
+	closed: boolean,
+): CodewikiImplementationReview {
+	const completedAttempts = new Set(
+		attempts
+			.filter((attempt) => attempt.status === "completed")
+			.map((attempt) => attempt.workUnitId),
+	);
+	const resultsCollected = Math.min(
+		items.length,
+		new Set([
+			...items.filter((item) => item.status === "done").map((item) => item.id),
+			...completedAttempts,
+		]).size,
+	);
+	const conflictCount = blockers.filter((blocker) =>
+		/\b(?:conflict|overlap)\b/i.test(blocker),
+	).length;
+	const status: CodewikiImplementationReview["status"] = closed
+		? "passed"
+		: blockers.length
+			? "blocked"
+			: items.length === 0
+				? "waiting"
+				: resultsCollected < items.length
+					? "collecting"
+					: "validating";
+	return {
+		status,
+		resultsCollected,
+		totalTasks: items.length,
+		conflictCount,
+		acceptanceStatus:
+			resultsCollected === 0
+				? "waiting"
+				: resultsCollected < items.length
+					? "partial"
+					: "ready",
+	};
+}
+
+function stringValues(value: unknown): string[] {
+	return Array.isArray(value)
+		? value.filter((item): item is string => typeof item === "string")
+		: [];
 }
 
 function sprintTraceItem(item: WorkQueueItem): CodewikiSprintTraceItem {
