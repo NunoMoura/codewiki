@@ -13,10 +13,17 @@ import {
 	loopQualityGraphRef,
 	loopQualityJudgeSpecForNode,
 	loopQualityMethodForMode,
-	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	type LoopQualityGraph,
 	type LoopQualityGraphNode,
 } from "../loops/graph.ts";
+import {
+	parseLoopQualityPack,
+	type LoopQualityPack,
+	type LoopQualityPackEvaluatorId,
+	type LoopQualityPackEvidenceAdapterId,
+	type LoopQualityPackStandard,
+} from "../loops/quality-pack.ts";
+import { composeLoopQualityPacks } from "../loops/runner.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
 import {
 	decisionTypeDefinitionById,
@@ -156,23 +163,29 @@ export interface DecisionExitIssueCollection {
 	approvedChanges: ProposedChange[];
 }
 
-export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
-	graphId: "decision.loop",
-	graphVersion: "0.3.0.loop.6",
-	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
-	layers: loopGraphLayers([
-		"hard_gate",
-		"input_contract",
-		"trace_fidelity",
-		"specificity",
-		"risk_authority",
-		"project_fit",
-		"repairability",
-		"pipeline_carryover",
-		"exit_loss",
-	]),
-	nodes: [
-		decisionNode({
+export const DECISION_LOOP_QUALITY_PACK = parseLoopQualityPack({
+	schemaVersion: 1,
+	id: "codewiki.decision.kernel",
+	version: "0.3.0",
+	authority: "kernel",
+	rollout: "enforce",
+	graph: {
+		id: "decision.loop",
+		version: "0.3.0.loop.6",
+		layers: loopGraphLayers([
+			"hard_gate",
+			"input_contract",
+			"trace_fidelity",
+			"specificity",
+			"risk_authority",
+			"project_fit",
+			"repairability",
+			"pipeline_carryover",
+			"exit_loss",
+		]),
+	},
+	standards: [
+		decisionPackStandard({
 			id: "sprint_proposal_ready",
 			layer: "input_contract",
 			standardType: "loop_contract",
@@ -187,7 +200,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"duplicate_change_id",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "intention_understood",
 			layer: "specificity",
 			standardType: "user_value",
@@ -202,7 +215,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_rationale",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "user_value_clear",
 			layer: "specificity",
 			standardType: "user_value",
@@ -212,7 +225,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Decisions explain how the intention benefits users or improves user outcomes.",
 			codes: ["missing_user_impact"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "cost_understood",
 			layer: "project_fit",
 			standardType: "maintainability",
@@ -222,7 +235,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Decisions expose maintainer impact and a bounded effort estimate for later semantic cost review.",
 			codes: ["missing_maintainer_impact", "missing_effort", "invalid_effort"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "work_routing_classified",
 			layer: "pipeline_carryover",
 			standardType: "scope_control",
@@ -240,7 +253,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"invalid_micro_plan_risk",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "loop_route_safe",
 			layer: "pipeline_carryover",
 			standardType: "pipeline_carryover",
@@ -260,7 +273,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_direct_implementation_validation",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "recommendation_justified",
 			layer: "project_fit",
 			standardType: "project_fit",
@@ -275,7 +288,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_recommendation_rationale",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "intention_validated",
 			layer: "project_fit",
 			standardType: "project_fit",
@@ -286,7 +299,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"The agent records its judgment that the user's intention is aligned with real user value and project interests.",
 			codes: ["missing_agent_assessment", "agent_assessment_not_aligned"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "decision_semantically_sufficient",
 			layer: "specificity",
 			standardType: "user_value",
@@ -297,7 +310,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Independent judge verifies the decision intent is specific, coherent, and sufficient for planning rather than fluent but vague.",
 			codes: ["semantic_decision_insufficient"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "cost_tradeoff_plausible",
 			layer: "project_fit",
 			standardType: "maintainability",
@@ -308,7 +321,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Independent judge verifies effort, maintainer impact, work scale, and desired outcome form a plausible cost tradeoff.",
 			codes: ["semantic_cost_tradeoff_implausible"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "risk_tier_plausible",
 			layer: "risk_authority",
 			standardType: "risk_authority",
@@ -319,7 +332,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Independent judge verifies declared risk tier and route are plausible for the affected scope and authority needs.",
 			codes: ["semantic_risk_tier_implausible"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "approval_safety",
 			layer: "hard_gate",
 			standardType: "risk_authority",
@@ -331,7 +344,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"High-risk Decisions have explicit user approval authority and a canonical approval ref.",
 			codes: ["missing_high_risk_approval", "invalid_approval_ref"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "current_state_grounded",
 			layer: "trace_fidelity",
 			standardType: "trace_fidelity",
@@ -342,7 +355,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Current state is grounded in canonical source, KB, trace, Git, digest, or test refs.",
 			codes: ["missing_current_state_packet", "invalid_current_state_ref"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "evidence_sufficient",
 			layer: "trace_fidelity",
 			standardType: "evidence_quality",
@@ -357,7 +370,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"invalid_traceability_ref",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "risks_and_alternatives_considered",
 			layer: "risk_authority",
 			standardType: "risk_authority",
@@ -373,7 +386,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_high_risk_alternative",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "active_trace_conflicts_resolved",
 			layer: "hard_gate",
 			standardType: "scope_control",
@@ -384,7 +397,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"Decisions do not conflict with active trace goals unless the conflict is resolved.",
 			codes: ["active_trace_conflict"],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "knowledge_impact_accounted",
 			layer: "trace_fidelity",
 			standardType: "trace_fidelity",
@@ -398,7 +411,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"incomplete_knowledge_digest",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "decision_kind_classified",
 			layer: "input_contract",
 			standardType: "loop_contract",
@@ -420,7 +433,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"pipeline_profile_direct_risk_disallowed",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "debug_decision_focused",
 			layer: "specificity",
 			standardType: "loop_contract",
@@ -437,7 +450,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_debug_stop_condition",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "fix_decision_reproducible",
 			layer: "specificity",
 			standardType: "loop_contract",
@@ -451,7 +464,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_fix_regression_plan",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "harden_decision_boundary",
 			layer: "risk_authority",
 			standardType: "risk_authority",
@@ -466,7 +479,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_harden_compatibility_impact",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "improve_decision_outcome",
 			layer: "specificity",
 			standardType: "user_value",
@@ -481,7 +494,7 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 				"missing_improve_non_goals",
 			],
 		}),
-		decisionNode({
+		decisionPackStandard({
 			id: "migrate_decision_equivalent",
 			layer: "repairability",
 			standardType: "reversibility",
@@ -498,9 +511,18 @@ export const DECISION_LOOP_GRAPH: LoopQualityGraph<DecisionExitIssueCode> = {
 			],
 		}),
 	],
-};
+});
 
-function decisionNode(
+export const DECISION_LOOP_GRAPH = compatibleDecisionGraph(
+	DECISION_LOOP_QUALITY_PACK,
+);
+
+type DecisionPackStandardDeclaration = Omit<
+	LoopQualityPackStandard,
+	"codes"
+>;
+
+function decisionPackStandard(
 	node: Omit<
 		LoopQualityGraphNode<DecisionExitIssueCode>,
 		"method" | "repairTarget"
@@ -508,7 +530,7 @@ function decisionNode(
 		method?: LoopQualityGraphNode<DecisionExitIssueCode>["method"];
 		repairTarget?: LoopQualityGraphNode<DecisionExitIssueCode>["repairTarget"];
 	},
-): LoopQualityGraphNode<DecisionExitIssueCode> {
+): DecisionPackStandardDeclaration {
 	const resolved: LoopQualityGraphNode<DecisionExitIssueCode> = {
 		method: node.method || loopQualityMethodForMode(node.mode),
 		gate: node.hardGate || node.layer === "hard_gate" ? "hard" : "soft",
@@ -516,10 +538,76 @@ function decisionNode(
 		repairTarget: "decision",
 		...node,
 	};
+	const judge = resolved.judge || loopQualityJudgeSpecForNode(resolved);
 	return {
-		...resolved,
-		judge: resolved.judge || loopQualityJudgeSpecForNode(resolved),
+		id: resolved.id,
+		description: resolved.description,
+		layer: resolved.layer,
+		standardType: resolved.standardType,
+		method: resolved.method,
+		repairTarget: resolved.repairTarget,
+		weight: resolved.weight,
+		cost: resolved.cost,
+		gate: resolved.gate,
+		timeoutMs: resolved.timeoutMs || 50,
+		dependsOn: resolved.dependsOn || [],
+		evaluatorId: packEvaluatorId(resolved.method),
+		evidenceAdapterIds: packEvidenceAdapterIds(resolved.method),
+		issuePredicate: {
+			kind: "issue_codes",
+			match: "any",
+			codes: resolved.codes || [],
+		},
+		...(resolved.scoreThreshold === undefined
+			? {}
+			: { scoreThreshold: resolved.scoreThreshold }),
+		...(judge ? { judge } : {}),
 	};
+}
+
+function compatibleDecisionGraph(
+	pack: LoopQualityPack,
+): LoopQualityGraph<DecisionExitIssueCode> {
+	const graph = composeLoopQualityPacks({ packs: [pack] }).graph;
+	return {
+		...graph,
+		graphVersion: pack.graph.graphVersion,
+		nodes: graph.nodes.map((node) => {
+			const compatible = {
+				...node,
+			} as LoopQualityGraphNode<DecisionExitIssueCode>;
+			delete compatible.packId;
+			delete compatible.rollout;
+			delete compatible.evaluatorId;
+			delete compatible.evidenceAdapterIds;
+			if (compatible.dependsOn?.length === 0) delete compatible.dependsOn;
+			if (compatible.gate === "hard") compatible.hardGate = true;
+			if (compatible.method === "agent_self_assessment") compatible.mode = "agent";
+			if (compatible.method === "human_authority") compatible.mode = "user";
+			if (!("judge" in compatible)) compatible.judge = undefined;
+			return compatible;
+		}),
+	};
+}
+
+function packEvaluatorId(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvaluatorId {
+	if (method === "deterministic") return "issue_codes";
+	if (method === "agent_self_assessment") return "agent_assessment";
+	if (method === "model_judge") return "model_judge";
+	if (method === "human_authority") return "human_approval";
+	return "external_evidence";
+}
+
+function packEvidenceAdapterIds(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvidenceAdapterId[] {
+	if (method === "human_authority") return ["approval_refs"];
+	if (method === "external_evidence") {
+		return ["check_results", "content_proof", "review_evidence"];
+	}
+	return ["trace_refs"];
 }
 
 export function collectDecisionExitIssues(

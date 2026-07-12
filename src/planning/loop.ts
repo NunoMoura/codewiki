@@ -16,10 +16,17 @@ import {
 	loopQualityGraphRef,
 	loopQualityJudgeSpecForNode,
 	loopQualityMethodForMode,
-	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	type LoopQualityGraph,
 	type LoopQualityGraphNode,
 } from "../loops/graph.ts";
+import {
+	parseLoopQualityPack,
+	type LoopQualityPack,
+	type LoopQualityPackEvaluatorId,
+	type LoopQualityPackEvidenceAdapterId,
+	type LoopQualityPackStandard,
+} from "../loops/quality-pack.ts";
+import { composeLoopQualityPacks } from "../loops/runner.ts";
 import { qualityDiagnosticsFromStandards } from "../loops/feedback.ts";
 import {
 	criteriaFromQualityStandards,
@@ -128,25 +135,31 @@ export interface PlanningExitResult extends ExitDetails {
 	workUnitIds: string[];
 }
 
-export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
-	graphId: "planning.loop",
-	graphVersion: "0.3.0.loop.6",
-	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
-	layers: loopGraphLayers([
-		"hard_gate",
-		"input_contract",
-		"trace_fidelity",
-		"coverage",
-		"scope_control",
-		"specificity",
-		"evidence_quality",
-		"project_fit",
-		"repairability",
-		"pipeline_carryover",
-		"exit_loss",
-	]),
-	nodes: [
-		planningNode({
+export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
+	schemaVersion: 1,
+	id: "codewiki.planning.kernel",
+	version: "0.3.0",
+	authority: "kernel",
+	rollout: "enforce",
+	graph: {
+		id: "planning.loop",
+		version: "0.3.0.loop.6",
+		layers: loopGraphLayers([
+			"hard_gate",
+			"input_contract",
+			"trace_fidelity",
+			"coverage",
+			"scope_control",
+			"specificity",
+			"evidence_quality",
+			"project_fit",
+			"repairability",
+			"pipeline_carryover",
+			"exit_loss",
+		]),
+	},
+	standards: [
+		planningPackStandard({
 			id: "decision_coverage_complete",
 			layer: "coverage",
 			standardType: "trace_fidelity",
@@ -157,7 +170,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Every Decision ref is covered by a Task or explicit resolution.",
 			codes: ["missing_decision_coverage", "unknown_decision_ref"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "worker_units_self_contained",
 			layer: "input_contract",
 			standardType: "loop_contract",
@@ -168,7 +181,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Each Task has enough bounded context to be assigned to one implementation worker.",
 			codes: ["invalid_work_item", "duplicate_work_item_id"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "technical_requirements_complete",
 			layer: "specificity",
 			standardType: "user_value",
@@ -178,7 +191,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Each Task breaks Decision intent into concrete technical requirements.",
 			codes: ["missing_technical_requirements"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "acceptance_and_verification_testable",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -193,7 +206,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"missing_verification",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "planning_depth_accounted",
 			layer: "pipeline_carryover",
 			standardType: "scope_control",
@@ -208,7 +221,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"invalid_micro_plan_decision_count",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "worker_assignment_ready",
 			layer: "project_fit",
 			standardType: "project_fit",
@@ -223,7 +236,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"planning_assessment_not_worker_ready",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "work_unit_atomic_judged",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -234,7 +247,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Independent judge verifies each Task is atomic enough for one implementation worker and is not a disguised Sprint.",
 			codes: ["semantic_work_unit_not_atomic"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "acceptance_criteria_testable_judged",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -245,7 +258,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Independent judge verifies acceptance criteria and verification commands are concrete enough to prove implementation completion.",
 			codes: ["semantic_acceptance_not_testable"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "scope_minimal_judged",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -256,7 +269,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Independent judge verifies path scopes and dependencies are no broader than needed for the Decisions.",
 			codes: ["semantic_scope_too_broad"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "uncertainty_resolved",
 			layer: "repairability",
 			standardType: "repairability",
@@ -270,7 +283,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"unresolved_planning_uncertainty",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "work_unit_right_sized",
 			layer: "project_fit",
 			standardType: "project_fit",
@@ -281,7 +294,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Each Task is neither Sprint-sized nor tiny busywork; the Sprint remains the Decision bundle.",
 			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "source_ownership_aligned",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -298,7 +311,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"verification_outside_component_tests",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "dependency_order_clear",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -309,7 +322,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"Dependencies are known, acyclic, and order overlapping work before implementation.",
 			codes: ["unknown_dependency", "dependency_cycle", "path_conflict"],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "triggers_valid",
 			layer: "repairability",
 			standardType: "repairability",
@@ -325,7 +338,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"invalid_trigger_concurrency",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "resolutions_accounted",
 			layer: "repairability",
 			standardType: "repairability",
@@ -340,7 +353,7 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 				"route_back_resolution",
 			],
 		}),
-		planningNode({
+		planningPackStandard({
 			id: "traceability_refs_canonical",
 			layer: "trace_fidelity",
 			standardType: "trace_fidelity",
@@ -352,9 +365,18 @@ export const PLANNING_LOOP_GRAPH: LoopQualityGraph<PlanningExitIssueCode> = {
 			codes: ["invalid_traceability_ref"],
 		}),
 	],
-};
+});
 
-function planningNode(
+export const PLANNING_LOOP_GRAPH = compatiblePlanningGraph(
+	PLANNING_LOOP_QUALITY_PACK,
+);
+
+type PlanningPackStandardDeclaration = Omit<
+	LoopQualityPackStandard,
+	"codes"
+>;
+
+function planningPackStandard(
 	node: Omit<
 		LoopQualityGraphNode<PlanningExitIssueCode>,
 		"method" | "repairTarget"
@@ -362,7 +384,7 @@ function planningNode(
 		method?: LoopQualityGraphNode<PlanningExitIssueCode>["method"];
 		repairTarget?: LoopQualityGraphNode<PlanningExitIssueCode>["repairTarget"];
 	},
-): LoopQualityGraphNode<PlanningExitIssueCode> {
+): PlanningPackStandardDeclaration {
 	const resolved: LoopQualityGraphNode<PlanningExitIssueCode> = {
 		method: node.method || loopQualityMethodForMode(node.mode),
 		gate: node.hardGate || node.layer === "hard_gate" ? "hard" : "soft",
@@ -370,10 +392,76 @@ function planningNode(
 		repairTarget: "planning",
 		...node,
 	};
+	const judge = resolved.judge || loopQualityJudgeSpecForNode(resolved);
 	return {
-		...resolved,
-		judge: resolved.judge || loopQualityJudgeSpecForNode(resolved),
+		id: resolved.id,
+		description: resolved.description,
+		layer: resolved.layer,
+		standardType: resolved.standardType,
+		method: resolved.method,
+		repairTarget: resolved.repairTarget,
+		weight: resolved.weight,
+		cost: resolved.cost,
+		gate: resolved.gate,
+		timeoutMs: resolved.timeoutMs || 50,
+		dependsOn: resolved.dependsOn || [],
+		evaluatorId: packEvaluatorId(resolved.method),
+		evidenceAdapterIds: packEvidenceAdapterIds(resolved.method),
+		issuePredicate: {
+			kind: "issue_codes",
+			match: "any",
+			codes: resolved.codes || [],
+		},
+		...(resolved.scoreThreshold === undefined
+			? {}
+			: { scoreThreshold: resolved.scoreThreshold }),
+		...(judge ? { judge } : {}),
 	};
+}
+
+function compatiblePlanningGraph(
+	pack: LoopQualityPack,
+): LoopQualityGraph<PlanningExitIssueCode> {
+	const graph = composeLoopQualityPacks({ packs: [pack] }).graph;
+	return {
+		...graph,
+		graphVersion: pack.graph.graphVersion,
+		nodes: graph.nodes.map((node) => {
+			const compatible = {
+				...node,
+			} as LoopQualityGraphNode<PlanningExitIssueCode>;
+			delete compatible.packId;
+			delete compatible.rollout;
+			delete compatible.evaluatorId;
+			delete compatible.evidenceAdapterIds;
+			if (compatible.dependsOn?.length === 0) delete compatible.dependsOn;
+			if (compatible.gate === "hard") compatible.hardGate = true;
+			if (compatible.method === "agent_self_assessment") compatible.mode = "agent";
+			if (compatible.method === "human_authority") compatible.mode = "user";
+			if (!("judge" in compatible)) compatible.judge = undefined;
+			return compatible;
+		}),
+	};
+}
+
+function packEvaluatorId(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvaluatorId {
+	if (method === "deterministic") return "issue_codes";
+	if (method === "agent_self_assessment") return "agent_assessment";
+	if (method === "model_judge") return "model_judge";
+	if (method === "human_authority") return "human_approval";
+	return "external_evidence";
+}
+
+function packEvidenceAdapterIds(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvidenceAdapterId[] {
+	if (method === "human_authority") return ["approval_refs"];
+	if (method === "external_evidence") {
+		return ["check_results", "content_proof", "review_evidence"];
+	}
+	return ["trace_refs"];
 }
 
 export function evaluatePlanningExit(

@@ -14,10 +14,17 @@ import {
 	loopQualityGraphRef,
 	loopQualityJudgeSpecForNode,
 	loopQualityMethodForMode,
-	LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
 	type LoopQualityGraph,
 	type LoopQualityGraphNode,
 } from "../loops/graph.ts";
+import {
+	parseLoopQualityPack,
+	type LoopQualityPack,
+	type LoopQualityPackEvaluatorId,
+	type LoopQualityPackEvidenceAdapterId,
+	type LoopQualityPackStandard,
+} from "../loops/quality-pack.ts";
+import { composeLoopQualityPacks } from "../loops/runner.ts";
 import { qualityDiagnosticsFromStandards } from "../loops/feedback.ts";
 import {
 	criteriaFromQualityStandards,
@@ -56,27 +63,31 @@ import type {
 	ImplementationExitResult,
 } from "./types.ts";
 
-export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
-	ImplementationExitIssue["code"]
-> = {
-	graphId: "implementation.loop",
-	graphVersion: "0.3.0.loop.9",
-	schemaVersion: LOOP_QUALITY_GRAPH_SCHEMA_VERSION,
-	layers: loopGraphLayers([
-		"hard_gate",
-		"input_contract",
-		"trace_fidelity",
-		"coverage",
-		"scope_control",
-		"evidence_quality",
-		"risk_authority",
-		"project_fit",
-		"repairability",
-		"pipeline_carryover",
-		"exit_loss",
-	]),
-	nodes: [
-		implementationNode({
+export const IMPLEMENTATION_LOOP_QUALITY_PACK = parseLoopQualityPack({
+	schemaVersion: 1,
+	id: "codewiki.implementation.kernel",
+	version: "0.3.0",
+	authority: "kernel",
+	rollout: "enforce",
+	graph: {
+		id: "implementation.loop",
+		version: "0.3.0.loop.9",
+		layers: loopGraphLayers([
+			"hard_gate",
+			"input_contract",
+			"trace_fidelity",
+			"coverage",
+			"scope_control",
+			"evidence_quality",
+			"risk_authority",
+			"project_fit",
+			"repairability",
+			"pipeline_carryover",
+			"exit_loss",
+		]),
+	},
+	standards: [
+		implementationPackStandard({
 			id: "planning_coverage_complete",
 			layer: "coverage",
 			standardType: "trace_fidelity",
@@ -87,7 +98,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Every planned work ref is covered by implementation evidence and no unknown planning refs are introduced.",
 			codes: ["missing_planning_coverage", "unknown_planning_ref"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "scope_controlled",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -103,7 +114,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"missing_changed_path",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "acceptance_evidence_complete",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -119,7 +130,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"unknown_acceptance_criterion",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "verification_passed",
 			layer: "hard_gate",
 			standardType: "robustness",
@@ -137,7 +148,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"missing_package_pack_check",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "tdd_evidence_valid",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -154,7 +165,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"unknown_tdd_criterion",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "content_proof_recorded",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -171,7 +182,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"worker_proof_conflict",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "worker_claims_correlated",
 			layer: "trace_fidelity",
 			standardType: "trace_fidelity",
@@ -189,7 +200,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"worker_claim_mismatch",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "source_ownership_aligned",
 			layer: "scope_control",
 			standardType: "scope_control",
@@ -206,7 +217,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"missing_evidence_path",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "production_quality_reviewed",
 			layer: "project_fit",
 			standardType: "maintainability",
@@ -220,7 +231,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"implementation_not_production_ready",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "archive_disposition_ready",
 			layer: "pipeline_carryover",
 			standardType: "trace_fidelity",
@@ -231,7 +242,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Completed implementation output has a post-commit archive disposition when retention policy requires cleanup.",
 			codes: ["missing_archive_disposition", "invalid_archive_disposition"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "implementation_review_evidence_clean",
 			layer: "hard_gate",
 			standardType: "robustness",
@@ -246,7 +257,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"review_missing_acceptance_evidence_link",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "evidence_matches_claims_judged",
 			layer: "evidence_quality",
 			standardType: "evidence_quality",
@@ -257,7 +268,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Independent judge verifies implementation evidence actually supports the claimed changes and acceptance criteria.",
 			codes: ["semantic_evidence_mismatch"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "checks_relevant_judged",
 			layer: "evidence_quality",
 			standardType: "robustness",
@@ -268,7 +279,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Independent judge verifies passing checks are relevant to changed behavior rather than generic or unrelated proof.",
 			codes: ["semantic_checks_irrelevant"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "implementation_readiness_judged",
 			layer: "project_fit",
 			standardType: "maintainability",
@@ -279,7 +290,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Independent judge verifies the production-readiness assessment is specific and not hand-wavy.",
 			codes: ["semantic_implementation_not_ready"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "uncertainty_resolved",
 			layer: "repairability",
 			standardType: "repairability",
@@ -293,7 +304,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"unresolved_implementation_uncertainty",
 			],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "security_privacy_reviewed",
 			layer: "risk_authority",
 			standardType: "security",
@@ -304,7 +315,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Security/privacy-sensitive changes include explicit review evidence.",
 			codes: ["missing_security_privacy_assessment"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "accessibility_ui_reviewed",
 			layer: "risk_authority",
 			standardType: "user_value",
@@ -314,7 +325,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 			description: "UI/page changes include accessibility review evidence.",
 			codes: ["missing_accessibility_assessment"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "dependency_risk_controlled",
 			layer: "risk_authority",
 			standardType: "robustness",
@@ -324,7 +335,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 			description: "Dependency-surface changes include risk review evidence.",
 			codes: ["missing_dependency_risk_assessment"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "release_safety_approved",
 			layer: "hard_gate",
 			standardType: "risk_authority",
@@ -337,7 +348,7 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 				"Release, publication, destructive, or externally visible implementation refs require explicit user approval.",
 			codes: ["missing_release_approval", "invalid_release_approval_ref"],
 		}),
-		implementationNode({
+		implementationPackStandard({
 			id: "traceability_refs_canonical",
 			layer: "trace_fidelity",
 			standardType: "trace_fidelity",
@@ -349,9 +360,18 @@ export const IMPLEMENTATION_LOOP_GRAPH: LoopQualityGraph<
 			codes: ["invalid_traceability_ref"],
 		}),
 	],
-};
+});
 
-function implementationNode(
+export const IMPLEMENTATION_LOOP_GRAPH = compatibleImplementationGraph(
+	IMPLEMENTATION_LOOP_QUALITY_PACK,
+);
+
+type ImplementationPackStandardDeclaration = Omit<
+	LoopQualityPackStandard,
+	"codes"
+>;
+
+function implementationPackStandard(
 	node: Omit<
 		LoopQualityGraphNode<ImplementationExitIssue["code"]>,
 		"method" | "repairTarget"
@@ -361,7 +381,7 @@ function implementationNode(
 			ImplementationExitIssue["code"]
 		>["repairTarget"];
 	},
-): LoopQualityGraphNode<ImplementationExitIssue["code"]> {
+): ImplementationPackStandardDeclaration {
 	const resolved: LoopQualityGraphNode<ImplementationExitIssue["code"]> = {
 		method: node.method || loopQualityMethodForMode(node.mode),
 		gate: node.hardGate || node.layer === "hard_gate" ? "hard" : "soft",
@@ -369,10 +389,76 @@ function implementationNode(
 		repairTarget: "implementation",
 		...node,
 	};
+	const judge = resolved.judge || loopQualityJudgeSpecForNode(resolved);
 	return {
-		...resolved,
-		judge: resolved.judge || loopQualityJudgeSpecForNode(resolved),
+		id: resolved.id,
+		description: resolved.description,
+		layer: resolved.layer,
+		standardType: resolved.standardType,
+		method: resolved.method,
+		repairTarget: resolved.repairTarget,
+		weight: resolved.weight,
+		cost: resolved.cost,
+		gate: resolved.gate,
+		timeoutMs: resolved.timeoutMs || 50,
+		dependsOn: resolved.dependsOn || [],
+		evaluatorId: packEvaluatorId(resolved.method),
+		evidenceAdapterIds: packEvidenceAdapterIds(resolved.method),
+		issuePredicate: {
+			kind: "issue_codes",
+			match: "any",
+			codes: resolved.codes || [],
+		},
+		...(resolved.scoreThreshold === undefined
+			? {}
+			: { scoreThreshold: resolved.scoreThreshold }),
+		...(judge ? { judge } : {}),
 	};
+}
+
+function compatibleImplementationGraph(
+	pack: LoopQualityPack,
+): LoopQualityGraph<ImplementationExitIssue["code"]> {
+	const graph = composeLoopQualityPacks({ packs: [pack] }).graph;
+	return {
+		...graph,
+		graphVersion: pack.graph.graphVersion,
+		nodes: graph.nodes.map((node) => {
+			const compatible = {
+				...node,
+			} as LoopQualityGraphNode<ImplementationExitIssue["code"]>;
+			delete compatible.packId;
+			delete compatible.rollout;
+			delete compatible.evaluatorId;
+			delete compatible.evidenceAdapterIds;
+			if (compatible.dependsOn?.length === 0) delete compatible.dependsOn;
+			if (compatible.gate === "hard") compatible.hardGate = true;
+			if (compatible.method === "agent_self_assessment") compatible.mode = "agent";
+			if (compatible.method === "human_authority") compatible.mode = "user";
+			if (!("judge" in compatible)) compatible.judge = undefined;
+			return compatible;
+		}),
+	};
+}
+
+function packEvaluatorId(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvaluatorId {
+	if (method === "deterministic") return "issue_codes";
+	if (method === "agent_self_assessment") return "agent_assessment";
+	if (method === "model_judge") return "model_judge";
+	if (method === "human_authority") return "human_approval";
+	return "external_evidence";
+}
+
+function packEvidenceAdapterIds(
+	method: LoopQualityGraphNode<string>["method"],
+): LoopQualityPackEvidenceAdapterId[] {
+	if (method === "human_authority") return ["approval_refs"];
+	if (method === "external_evidence") {
+		return ["check_results", "content_proof", "review_evidence"];
+	}
+	return ["trace_refs"];
 }
 
 export function evaluateImplementationExit(
