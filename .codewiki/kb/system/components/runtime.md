@@ -230,6 +230,10 @@ Temporary working data belongs under:
 
 Runtime temp may hold `output.json`, `exit.json`, worker scratch, logs, and remediation notes while a trace is running. It is never source truth. Anything needed after loop exit must be promoted to trace events/checkpoints, KB docs, source/tests, or Git refs before cleanup.
 
+Hybrid worker observability uses two signal classes. Durable trace records retain claims, releases, meaningful milestones, blockers, failures, completion, and accepted evidence. Ephemeral worker observations use a closed schema containing only trace/Task/worker/attempt identity, an allowlisted activity phase, timestamps, lease freshness, and bounded numeric progress. Ephemeral observations may disappear after restart, expire to stale, and never satisfy semantic quality.
+
+The Dev Log stores permitted operational diagnostics under `.codewiki/runtime/tmp/<trace-id>/dev-log/`. Entries are private (`0700` directory and `0600` files on POSIX), ordered, size-capped, rotated, and redacted before write. They exclude prompts, reasoning, environment secrets, credentials, arbitrary source contents, and raw unbounded output. Blocked or failed traces retain the log for diagnosis; durable trace-host closure removes it after the closure event appends successfully.
+
 Cleanup policy:
 
 - `exit` deletes loop temp after durable trace, KB, source, test, or Git refs exist.

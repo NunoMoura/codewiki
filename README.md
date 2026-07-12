@@ -163,6 +163,8 @@ Repo-local Pi settings load the verified controller beside pi-lens. The reviewed
 
 Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. `/wiki-dashboard` opens the local read-only Sprints Queue in a browser. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
 
+Implementation Trace Detail presents one trace-level Implementation Loop with Task Assignment worker attempts beneath it, followed by aggregate Integration and Exit Review. The Activity Feed explains meaningful progress, impact, and next action in plain language. The Dev Log provides bounded, redacted operational diagnostics for active, blocked, or failed work without becoming semantic evidence. Dashboard startup verifies that pipeline state is served; after installing a different pinned runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
+
 ## Trace archive cleanup
 
 Completed traces should not stay hot forever. After implementation evidence exits and the source changes are committed, the post-commit archive step can run `wiki_archive` with a Git restore ref for that commit. The archive step closes and compacts the hot `TRACE-*.jsonl` file into a minimal replayable stub (`trace_head`, retention checkpoint, and `trace_close`) while the full trace body remains recoverable from Git.

@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added Implementation Trace Detail worker-attempt observability, separate aggregate Integration and Exit Review, a deterministic human Activity Feed, and a bounded redacted Dev Log with failure retention and successful-close cleanup.
+- Added dashboard runtime identity and endpoint health checks so stale loaded controllers and state-serving failures produce actionable restart/retry guidance instead of an unexplained blank shell.
 - Added the CodeWiki lab for Decision, Planning, and Implementation exit
   condition scores (DEC, PEC, IEC), weighted quality standards, and candidate
   loop-exit experiments.

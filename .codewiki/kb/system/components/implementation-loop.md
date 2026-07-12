@@ -165,6 +165,10 @@ work-queue -> runtime claim -> worker session -> worker result -> implementation
 
 Worker-local proof is provenance normalized by the implementation loop: changed paths are deduplicated, validation refs and checks are summarized, proof digests are stable, and overlap/base conflicts block aggregate closure. The implementation loop still needs final aggregate content proof after merging worker outputs.
 
+There is one semantic Implementation Loop per Sprint Trace, not one loop per worker. A worker runs a Task Assignment attempt with local edits, TDD/checks, and evidence. Worker completion contributes candidate evidence. The trace-level Implementation Loop alone decides whether all Planning Tasks are covered, worker claims correlate, overlapping changes are resolved, aggregate acceptance and quality pass, and merged content proof exists.
+
+The dashboard reflects this authority model with two distinct Implementation areas. Worker Attempts show Task-first execution, current bounded activity, freshness, progress, local status, and retries. Integration and Exit Review shows result collection, conflicts, acceptance readiness, quality standards, and the aggregate loop status. Direct implementation remains valid and does not create a fake worker row.
+
 ## Repository snapshot and content proof
 
 Implementation callers should provide two repo-derived facts when evaluating exit conditions:

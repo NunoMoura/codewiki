@@ -61,6 +61,8 @@ Mocked extension tests cover the intended package surface: the small `wiki_*` to
 
 `npm run test:pi-rpc` is the external command smoke. It uses a temp project and temp Pi settings, installs the packed package, starts Pi RPC mode, runs `/wiki-bootstrap` and `/wiki-dashboard --no-open`, and verifies dashboard command rendering without starting a model turn.
 
+The dashboard is owned by the active Pi session. Its command health-checks `/api/state` before returning a URL, removes stale endpoint metadata after failed serving, and distinguishes the pinned runtime captured when package modules loaded from the currently installed pin. Advancing the installed controller while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules. A mismatch returns actionable restart guidance instead of a known-dead or stale URL.
+
 `npm run test:pi-mutation` is the isolated tool mutation smoke. It uses a temp
 project, exercises a Pi-registered `wiki_decide` tool with preview first, rejects
 unguarded append, appends only with expected byte and sequence checks, and

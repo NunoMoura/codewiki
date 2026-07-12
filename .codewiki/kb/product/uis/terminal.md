@@ -70,6 +70,16 @@ The following are not active product surfaces in this wave:
 
 Backend status and continuation remain available to agents through internal `wiki_state`, generated views derived from traces, loop outputs, and Ready Checks. Users see active work through `/wiki-dashboard` and continue work through `/wiki-resume` or normal conversation in Pi.
 
+## Implementation observability
+
+Trace Detail keeps one authoritative Implementation Loop per Sprint Trace. Parallel workers appear beneath that loop as Task Assignment attempts; they do not become additional semantic loops. The Implementation view separates worker execution from Integration and Exit Review so users can distinguish local worker progress from aggregate acceptance, conflict, quality, and content-proof validation.
+
+The default Activity Feed is a deterministic narrative projection over durable trace events and bounded live observations. Each meaningful item explains what happened, why it matters, and what happens next. Repeated low-value updates are coalesced, unknown raw payloads are omitted, and missing context is described honestly rather than inferred.
+
+The Dev Log is a developer diagnostic layer for permitted externally observable actions. It is bounded, redacted before write, correlated to trace, Task, worker, and attempt, and stored under runtime temp. It never exposes prompts, chain-of-thought, secrets, raw source contents, or unbounded output; it cannot satisfy quality standards or override trace truth. Blocked and failed work retains diagnostics, while successful trace-host closure removes them.
+
+Dashboard chrome must always communicate loading, live, stale/reconnecting, or failed/retrying state. `/wiki-dashboard` returns a URL only after its endpoint serves pipeline state. If the installed pinned runtime differs from the code already loaded in Pi, the command requires a full Pi process restart because `/reload` cannot replace cached package modules reliably.
+
 ## Success signals
 
 - Backend architecture work does not depend on product UI surfaces.
