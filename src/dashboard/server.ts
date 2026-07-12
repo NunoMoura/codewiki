@@ -33,6 +33,10 @@ import {
 } from "../project/state-file.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
+	assertDashboardRuntimeCurrent,
+	captureDashboardRuntimeIdentity,
+} from "./health.ts";
+import {
 	buildCodewikiDashboardState,
 	type CodewikiDashboardState,
 } from "./state.ts";
@@ -82,6 +86,7 @@ interface DashboardMeta {
 }
 
 const dashboards = new Map<string, DashboardRuntime>();
+const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(import.meta.url);
 const DASHBOARD_DAEMON_ENV = "CODEWIKI_DASHBOARD_DAEMON";
 const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
 const DASHBOARD_SECURITY_HEADERS = {
@@ -96,6 +101,10 @@ const DASHBOARD_SECURITY_HEADERS = {
 export async function startCodewikiDashboardServer(
 	options: CodewikiDashboardServerOptions,
 ): Promise<CodewikiDashboardServerHandle> {
+	assertDashboardRuntimeCurrent(
+		loadedDashboardRuntimeIdentity,
+		options.repoRoot,
+	);
 	if (
 		options.persistent &&
 		!options.inProcess &&
@@ -359,17 +368,24 @@ async function startInProcessDashboardServer(
 	options: CodewikiDashboardServerOptions,
 ): Promise<CodewikiDashboardServerHandle> {
 	const existing = dashboards.get(options.repoRoot);
-	if (existing) {
+	if (existing?.server.listening) {
 		if (options.keepAlive) existing.server.ref();
+		if (!(await dashboardEndpointServesState(existing))) {
+			await existing.close();
+			await removeDashboardEndpoint(options.repoRoot);
+			throw dashboardUnavailableError(existing.origin);
+		}
 		if (options.open && !existing.opened)
 			existing.opened = openBrowser(existing.url);
 		return dashboardHandle(existing);
 	}
+	if (existing) dashboards.delete(options.repoRoot);
 	const endpoint = await readDashboardEndpoint(options.repoRoot);
 	const expectedDigest = await currentDashboardAssetDigest();
 	if (
 		endpoint &&
-		(await dashboardEndpointIsCurrent(endpoint, expectedDigest))
+		(await dashboardEndpointIsCurrent(endpoint, expectedDigest)) &&
+		(await dashboardEndpointServesState(endpoint))
 	) {
 		return dashboardEndpointHandle(
 			endpoint,
@@ -382,6 +398,11 @@ async function startInProcessDashboardServer(
 		options.keepAlive ?? false,
 	);
 	dashboards.set(options.repoRoot, runtime);
+	if (!(await dashboardEndpointServesState(runtime))) {
+		await runtime.close();
+		await removeDashboardEndpoint(options.repoRoot);
+		throw dashboardUnavailableError(runtime.origin);
+	}
 	if (options.open) runtime.opened = openBrowser(runtime.url);
 	return dashboardHandle(runtime);
 }
@@ -500,6 +521,22 @@ async function dashboardEndpointResponds(
 	endpoint: DashboardEndpoint,
 ): Promise<boolean> {
 	return (await readDashboardEndpointMeta(endpoint)) !== undefined;
+}
+
+async function dashboardEndpointServesState(
+	endpoint: Pick<DashboardEndpoint, "origin" | "token">,
+): Promise<boolean> {
+	const result = await requestDashboardJson(
+		`${endpoint.origin}/api/state?token=${encodeURIComponent(endpoint.token)}`,
+		5_000,
+	);
+	return Boolean(result && result.status === 200 && result.data);
+}
+
+function dashboardUnavailableError(origin: string): Error {
+	return new Error(
+		`CodeWiki dashboard at ${origin} did not serve pipeline state. Retry /wiki-dashboard; if the failure persists, fully restart Pi.`,
+	);
 }
 
 async function listenDashboardServer(
