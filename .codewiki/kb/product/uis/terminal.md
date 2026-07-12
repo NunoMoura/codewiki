@@ -14,6 +14,7 @@ codewiki_components:
 codewiki_source_patterns:
   - src/dashboard/**
 codewiki_test_patterns:
+  - tests/dashboard/**
   - tests/runtime/pi-extension.test.mjs
   - tests/runtime/pi-rpc-smoke.mjs
 codewiki_role: browser_observability
@@ -22,6 +23,7 @@ codewiki_source_map:
     source_patterns:
       - src/dashboard/**
     test_patterns:
+      - tests/dashboard/**
       - tests/runtime/pi-extension.test.mjs
       - tests/runtime/pi-rpc-smoke.mjs
     role: browser_observability
