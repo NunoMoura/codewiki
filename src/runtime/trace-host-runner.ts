@@ -50,6 +50,7 @@ export interface TraceHostSessionInput {
 	refs: string[];
 	prompt: string;
 	supervisorId: string;
+	resumeSessionId?: string;
 }
 
 export interface TraceHostSessionController {
@@ -140,6 +141,21 @@ export async function dispatchTraceHosts(
 		}
 	}
 	return { started, held };
+}
+
+export function traceHostResumePrompt(
+	traceId: string,
+	target: TraceHostTarget,
+	refs: string[],
+): string {
+	return [
+		traceHostPrompt(traceId, target, refs),
+		"",
+		"Resume context:",
+		"This process resumes an earlier Pi session after an external user action.",
+		"The resume signal is not semantic approval and does not prove a blocker is resolved.",
+		"Re-read trace truth, verify every required approval or external condition through guarded state, and stop again if authority or evidence is still missing.",
+	].join("\n");
 }
 
 export function traceHostPrompt(

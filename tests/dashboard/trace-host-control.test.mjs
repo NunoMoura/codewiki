@@ -165,7 +165,59 @@ describe("dashboard trace host control", () => {
 		assert.deepEqual(completed.session.result, traceResult);
 		assert.equal(completed.canCancel, false);
 		assert.equal(completed.canStart, false);
+		assert.equal(completed.canResume, true);
 		assert.match(completed.blockers[0], /Exact user approval is required/);
+
+		const resumed = await control.execute({
+			action: "resume",
+			commandId: "command-resume-001",
+			traceId: completed.traceId,
+			expectedStateDigest: completed.stateDigest,
+			expectedSessionRef: completed.session.sessionRef,
+			resumeAcknowledgement: "approval_completed_externally",
+		});
+		assert.equal(resumed.state.traces[0].canCancel, true);
+		assert.equal(controlled.starts.length, 2);
+		assert.equal(
+			controlled.starts[1].resumeSessionId,
+			"pi-session-control",
+		);
+		assert.match(
+			controlled.starts[1].prompt,
+			/resume signal is not semantic approval/i,
+		);
+	});
+
+	it("rejects resume acknowledgement that does not match the outcome", async () => {
+		const traceResult = {
+			version: 1,
+			outcome: "blocked",
+			summary: "Waiting for external evidence.",
+			refs: [],
+			sessionId: "pi-session-blocked",
+		};
+		const { control, controlled } = harness(undefined, traceResult);
+		const initial = (await control.status()).traces[0];
+		await control.execute({
+			action: "start",
+			commandId: "command-blocked-start",
+			traceId: initial.traceId,
+			expectedStateDigest: initial.stateDigest,
+		});
+		controlled.controls.get(initial.traceId).finish();
+		const blocked = (await control.status()).traces[0];
+
+		await assert.rejects(
+			control.execute({
+				action: "resume",
+				commandId: "command-blocked-resume",
+				traceId: blocked.traceId,
+				expectedStateDigest: blocked.stateDigest,
+				expectedSessionRef: blocked.session.sessionRef,
+				resumeAcknowledgement: "approval_completed_externally",
+			}),
+			/requires blocker_resolved_externally/,
+		);
 	});
 
 	it("replays identical command ids without starting twice", async () => {
@@ -312,6 +364,16 @@ describe("dashboard trace host control", () => {
 	});
 
 	it("strictly parses bounded command input", () => {
+		assert.throws(
+			() =>
+				parseDashboardTraceHostCommand({
+					action: "resume",
+					commandId: "command-resume-missing",
+					traceId: "TRACE-control",
+					expectedStateDigest: `sha256:${"a".repeat(64)}`,
+				}),
+			/Resume requires expectedSessionRef and resumeAcknowledgement/,
+		);
 		assert.throws(
 			() =>
 				parseDashboardTraceHostCommand({

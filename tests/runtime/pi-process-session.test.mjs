@@ -80,6 +80,66 @@ describe("Pi process session factory", () => {
 		}
 	});
 
+	it("resumes an exact persisted Pi session", async () => {
+		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-resume-"));
+		try {
+			const calls = [];
+			const factory = createPiTraceHostSessionFactory({
+				command: "pi-test",
+				runner(input) {
+					calls.push(input);
+					return {
+						pid: 2469,
+						outputFile: input.outputFile,
+						controller: {
+							isRunning: () => true,
+							stop: () => undefined,
+						},
+					};
+				},
+			});
+			const started = await factory({
+				repoRoot: root,
+				traceId: "TRACE-resume",
+				target: "implementation",
+				refs: [],
+				prompt: "Resume guarded trace work.",
+				supervisorId: "dashboard:1",
+				resumeSessionId: "session-resume-1",
+			});
+
+			assert.deepEqual(calls[0].args.slice(-3), [
+				"--session",
+				"session-resume-1",
+				"Resume guarded trace work.",
+			]);
+			assert.equal(started.sessionRef, "session-resume-1");
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("rejects resume when session persistence is disabled", async () => {
+		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-resume-disabled-"));
+		try {
+			const factory = createPiTraceHostSessionFactory({ noSession: true });
+			await assert.rejects(
+				factory({
+					repoRoot: root,
+					traceId: "TRACE-resume-disabled",
+					target: "planning",
+					refs: [],
+					prompt: "Resume guarded trace work.",
+					supervisorId: "dashboard:1",
+					resumeSessionId: "session-resume-1",
+				}),
+				/resume cannot disable session persistence/,
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("terminates an independently running trace host through its controller", async () => {
 		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-stop-"));
 		let started;

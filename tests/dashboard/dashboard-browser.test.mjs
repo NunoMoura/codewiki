@@ -25,6 +25,8 @@ describe("dashboard browser observability", () => {
 			/Semantic trace evidence remains authoritative/,
 		);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Start trace execution/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Resume execution/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /does not grant semantic approval/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic approvals remain separate/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Approval required:/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /resume session/);

@@ -840,10 +840,14 @@ function renderExecutionControl(trace) {
 	start.disabled = !card.canStart;
 	start.title = card.blockers.join(' ');
 	start.onclick = function() { void executeTraceHostCommand('start', card); };
+	const resume = document.createElement('button'); resume.type = 'button'; resume.className = 'execution-button'; text(resume, 'Resume execution');
+	resume.disabled = !card.canResume;
+	resume.title = (card.resumeBlockers || []).join(' ');
+	resume.onclick = function() { void executeTraceHostCommand('resume', card); };
 	const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'execution-button stop'; text(cancel, 'Stop execution');
 	cancel.disabled = !card.canCancel;
 	cancel.onclick = function() { void executeTraceHostCommand('cancel', card); };
-	actions.append(start, cancel);
+	actions.append(start, resume, cancel);
 	const note = document.createElement('div'); note.className = 'execution-note';
 	const messages = [];
 	if (result && result.summary) messages.push(result.summary);
@@ -856,15 +860,21 @@ function renderExecutionControl(trace) {
 	box.append(grid, actions, note); return box;
 }
 async function executeTraceHostCommand(action, card) {
-	const verb = action === 'start' ? 'start execution for' : 'stop execution for';
-	if (!window.confirm('Confirm: ' + verb + ' ' + card.traceId + '?')) return;
+	const verb = action === 'start' ? 'start execution for' : action === 'resume' ? 'resume execution for' : 'stop execution for';
+	const warning = action === 'resume' ? ' This confirms only that the external action was attempted; it does not grant semantic approval.' : '';
+	if (!window.confirm('Confirm: ' + verb + ' ' + card.traceId + '?' + warning)) return;
 	const command = {
 		action: action,
 		commandId: 'dashboard-' + Date.now() + '-' + Math.random().toString(16).slice(2),
 		traceId: card.traceId,
 		expectedStateDigest: card.stateDigest,
 	};
-	if (action === 'cancel') command.expectedSessionRef = card.session && card.session.sessionRef;
+	if (action === 'cancel' || action === 'resume') command.expectedSessionRef = card.session && card.session.sessionRef;
+	if (action === 'resume') {
+		command.resumeAcknowledgement = card.session && card.session.result && card.session.result.outcome === 'needs_approval'
+			? 'approval_completed_externally'
+			: 'blocker_resolved_externally';
+	}
 	text(els.status, 'command pending');
 	try {
 		const response = await fetch('/api/trace-hosts/commands?token=' + encodeURIComponent(token), {

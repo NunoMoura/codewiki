@@ -5,6 +5,7 @@ import type {
 	TraceHostSessionController,
 	TraceHostSessionFactory,
 	TraceHostSessionInput,
+	TraceHostSessionStart,
 } from "../runtime/trace-host-runner.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
 import { runDetachedTraceHostCommand } from "./trace-host-process.ts";
@@ -83,12 +84,43 @@ async function startPiTraceHostSession(
 ) {
 	try {
 		const outputFile = resolveTraceHostOutputFile(input, options);
+		const commandInput = traceHostProcessCommand(input, options, outputFile);
 		await mkdir(dirname(outputFile), { recursive: true });
-		const result = await (options.runner || runPiProcessCommand)({
+		const result = await (options.runner || runPiProcessCommand)(
+			commandInput.process,
+		);
+		return traceHostSessionStart(
+			input,
+			result,
+			outputFile,
+			commandInput.resumeSessionId,
+		);
+	} catch (error) {
+		throw new Error(
+			`Failed to start trace host ${input.traceId}: ${errorMessage(error)}`,
+			{
+				cause: error,
+			},
+		);
+	}
+}
+
+function traceHostProcessCommand(
+	input: TraceHostSessionInput,
+	options: PiTraceHostSessionFactoryOptions,
+	outputFile: string,
+): { process: PiProcessCommandRunnerInput; resumeSessionId?: string } {
+	const resumeSessionId = validatedResumeSessionId(input.resumeSessionId);
+	if (resumeSessionId && options.noSession) {
+		throw new Error("Trace host resume cannot disable session persistence.");
+	}
+	return {
+		process: {
 			command: options.command || "pi",
 			args: [
 				...(options.args || ["--mode", "json", "-p"]),
 				...(options.noSession ? ["--no-session"] : []),
+				...(resumeSessionId ? ["--session", resumeSessionId] : []),
 				input.prompt,
 			],
 			cwd: input.repoRoot,
@@ -99,30 +131,45 @@ async function startPiTraceHostSession(
 			workUnitId: `trace:${input.target}`,
 			traceId: input.traceId,
 			outputMode: "trace-host",
-		});
-		if (isFailedProcessResult(result)) {
-			throw new Error(processFailureMessage(result));
-		}
-		if (!result.controller) {
-			throw new Error("Trace host process runner returned no session controller.");
-		}
-		return {
-			traceId: input.traceId,
-			target: input.target,
-			sessionRef:
-				result.sessionId ||
-				(result.pid ? `pi-process:${result.pid}` : `pi-output:${outputFile}`),
-			controller: result.controller,
-			...(result.pid ? { pid: result.pid } : {}),
-		};
-	} catch (error) {
-		throw new Error(
-			`Failed to start trace host ${input.traceId}: ${errorMessage(error)}`,
-			{
-				cause: error,
-			},
-		);
+		},
+		...(resumeSessionId ? { resumeSessionId } : {}),
+	};
+}
+
+function traceHostSessionStart(
+	input: TraceHostSessionInput,
+	result: PiProcessCommandResult,
+	outputFile: string,
+	resumeSessionId?: string,
+): TraceHostSessionStart {
+	if (isFailedProcessResult(result)) {
+		throw new Error(processFailureMessage(result));
 	}
+	if (!result.controller) {
+		throw new Error("Trace host process runner returned no session controller.");
+	}
+	return {
+		traceId: input.traceId,
+		target: input.target,
+		sessionRef:
+			resumeSessionId ||
+			result.sessionId ||
+			(result.pid ? `pi-process:${result.pid}` : `pi-output:${outputFile}`),
+		controller: result.controller,
+		...(result.pid ? { pid: result.pid } : {}),
+	};
+}
+
+function validatedResumeSessionId(value: string | undefined): string | undefined {
+	if (value === undefined) return undefined;
+	if (
+		value.length < 1 ||
+		value.length > 160 ||
+		!/^[A-Za-z0-9][A-Za-z0-9._:/-]*$/.test(value)
+	) {
+		throw new Error("Trace host resume session id is invalid.");
+	}
+	return value;
 }
 
 function resolveTraceHostOutputFile(

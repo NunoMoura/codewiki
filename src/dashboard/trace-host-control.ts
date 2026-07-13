@@ -4,7 +4,10 @@ import {
 	planMainHostLifecycle,
 	type RuntimeHostLifecyclePlan,
 } from "../runtime/lifecycle.ts";
-import type { TraceHostSessionFactory } from "../runtime/trace-host-runner.ts";
+import {
+	traceHostResumePrompt,
+	type TraceHostSessionFactory,
+} from "../runtime/trace-host-runner.ts";
 import {
 	runSupervisedTraceHostDispatch,
 	type TraceHostSessionSnapshot,
@@ -12,7 +15,10 @@ import {
 } from "../runtime/trace-host-supervisor.ts";
 import type { TraceBoardView, TraceGoalView } from "../views/types.ts";
 
-export type DashboardTraceHostAction = "start" | "cancel";
+export type DashboardTraceHostAction = "start" | "resume" | "cancel";
+export type DashboardTraceHostResumeAcknowledgement =
+	| "approval_completed_externally"
+	| "blocker_resolved_externally";
 
 export interface DashboardTraceHostCommand {
 	action: DashboardTraceHostAction;
@@ -20,6 +26,7 @@ export interface DashboardTraceHostCommand {
 	traceId: string;
 	expectedStateDigest: string;
 	expectedSessionRef?: string;
+	resumeAcknowledgement?: DashboardTraceHostResumeAcknowledgement;
 }
 
 export interface DashboardTraceHostCard {
@@ -27,8 +34,10 @@ export interface DashboardTraceHostCard {
 	traceStatus: TraceGoalView["status"];
 	stateDigest: string;
 	canStart: boolean;
+	canResume: boolean;
 	canCancel: boolean;
 	blockers: string[];
+	resumeBlockers: string[];
 	session?: TraceHostSessionSnapshot;
 }
 
@@ -156,6 +165,8 @@ async function executeCommand(
 	}
 	if (command.action === "start") {
 		await startTraceHost(options, command.traceId, card);
+	} else if (command.action === "resume") {
+		await resumeTraceHost(options, command, card);
 	} else {
 		await cancelTraceHost(options, command, card);
 	}
@@ -199,6 +210,55 @@ async function startTraceHost(
 	if (result.dispatch.started.length !== 1) {
 		throw conflict(
 			result.dispatch.held[0]?.message || "Trace host did not start.",
+		);
+	}
+}
+
+async function resumeTraceHost(
+	options: DashboardTraceHostControlOptions,
+	command: DashboardTraceHostCommand,
+	card: DashboardTraceHostCard,
+): Promise<void> {
+	if (!card.canResume || !card.session?.result?.sessionId) {
+		throw conflict(`Trace host cannot resume: ${card.resumeBlockers.join(" ")}`);
+	}
+	if (!command.expectedSessionRef) {
+		throw badRequest("Resume requires expectedSessionRef.");
+	}
+	if (command.expectedSessionRef !== card.session.sessionRef) {
+		throw conflict("Trace host session changed; refresh state.");
+	}
+	const expectedAcknowledgement =
+		card.session.result.outcome === "needs_approval"
+			? "approval_completed_externally"
+			: "blocker_resolved_externally";
+	if (command.resumeAcknowledgement !== expectedAcknowledgement) {
+		throw badRequest(
+			`Resume requires ${expectedAcknowledgement}; this acknowledgement does not grant semantic approval.`,
+		);
+	}
+	const resumeSessionId = card.session.result.sessionId;
+	const board = await options.loadTraceBoard();
+	const plan = tracePlan(
+		board,
+		command.traceId,
+		options.supervisor.activeTraceIds(),
+	);
+	const result = await runSupervisedTraceHostDispatch({
+		repoRoot: options.repoRoot,
+		plan,
+		supervision: { attached: true, supervisorId: options.supervisorId },
+		supervisor: options.supervisor,
+		startSession: (input) =>
+			options.startSession({
+				...input,
+				resumeSessionId,
+				prompt: traceHostResumePrompt(input.traceId, input.target, input.refs),
+			}),
+	});
+	if (result.dispatch.started.length !== 1) {
+		throw conflict(
+			result.dispatch.held[0]?.message || "Trace host did not resume.",
 		);
 	}
 }
@@ -254,13 +314,21 @@ async function controlState(
 		traces: board.traces.map((trace) => {
 			const session = sessions.get(trace.traceId);
 			const blockers = startBlockers(board, trace, config, session);
+			const resumeBlockers = traceResumeBlockers(
+				board,
+				trace,
+				config,
+				session,
+			);
 			return {
 				traceId: trace.traceId,
 				traceStatus: trace.status,
 				stateDigest: traceStateDigest(trace, session, policy),
 				canStart: blockers.length === 0,
+				canResume: resumeBlockers.length === 0,
 				canCancel: sessionActive(session),
 				blockers,
+				resumeBlockers,
 				...(session ? { session } : {}),
 			};
 		}),
@@ -299,6 +367,42 @@ function startBlockers(
 			...(plan.blockers.length
 				? plan.blockers
 				: ["Trace is not ready for a host."]),
+		);
+	}
+	return unique(blockers);
+}
+
+function traceResumeBlockers(
+	board: TraceBoardView,
+	trace: TraceGoalView,
+	config: WikiConfig,
+	session: TraceHostSessionSnapshot | undefined,
+): string[] {
+	const blockers: string[] = [];
+	if (sessionActive(session)) blockers.push("Trace host is already active.");
+	if (
+		session?.result?.outcome !== "needs_approval" &&
+		session?.result?.outcome !== "blocked"
+	) {
+		blockers.push("Trace host has no resumable approval or blocker outcome.");
+	}
+	if (!session?.result?.sessionId) {
+		blockers.push("Trace host did not report a resumable Pi session id.");
+	}
+	if (!config.hosts.pi.enabled) blockers.push("hosts.pi.enabled is false.");
+	if (config.runtime.agency === "observe") {
+		blockers.push("runtime.agency is observe.");
+	}
+	const plan = tracePlan(
+		board,
+		trace.traceId,
+		sessionActive(session) ? [trace.traceId] : [],
+	);
+	if (!plan.actions.some((action) => action.kind === "start_trace_host")) {
+		blockers.push(
+			...(plan.blockers.length
+				? plan.blockers
+				: ["Trace is not ready to resume."]),
 		);
 	}
 	return unique(blockers);
@@ -370,13 +474,18 @@ export function parseDashboardTraceHostCommand(
 		"traceId",
 		"expectedStateDigest",
 		"expectedSessionRef",
+		"resumeAcknowledgement",
 	]);
 	for (const key of Object.keys(value)) {
 		if (!allowed.has(key))
 			throw badRequest(`Unsupported command field ${key}.`);
 	}
-	if (value.action !== "start" && value.action !== "cancel") {
-		throw badRequest("Trace host action must be start or cancel.");
+	if (
+		value.action !== "start" &&
+		value.action !== "resume" &&
+		value.action !== "cancel"
+	) {
+		throw badRequest("Trace host action must be start, resume, or cancel.");
 	}
 	const command: DashboardTraceHostCommand = {
 		action: value.action,
@@ -392,9 +501,32 @@ export function parseDashboardTraceHostCommand(
 						240,
 					),
 				}),
+		...(value.resumeAcknowledgement === undefined
+			? {}
+			: {
+					resumeAcknowledgement: resumeAcknowledgement(
+						value.resumeAcknowledgement,
+					),
+				}),
 	};
-	if (command.action === "start" && command.expectedSessionRef) {
-		throw badRequest("Start does not accept expectedSessionRef.");
+	if (
+		command.action === "start" &&
+		(command.expectedSessionRef || command.resumeAcknowledgement)
+	) {
+		throw badRequest(
+			"Start does not accept expectedSessionRef or resumeAcknowledgement.",
+		);
+	}
+	if (command.action === "cancel" && command.resumeAcknowledgement) {
+		throw badRequest("Cancel does not accept resumeAcknowledgement.");
+	}
+	if (
+		command.action === "resume" &&
+		(!command.expectedSessionRef || !command.resumeAcknowledgement)
+	) {
+		throw badRequest(
+			"Resume requires expectedSessionRef and resumeAcknowledgement.",
+		);
 	}
 	return command;
 }
@@ -437,6 +569,18 @@ function trimEntries(
 		if (typeof first !== "string") return;
 		entries.delete(first);
 	}
+}
+
+function resumeAcknowledgement(
+	value: unknown,
+): DashboardTraceHostResumeAcknowledgement {
+	if (
+		value !== "approval_completed_externally" &&
+		value !== "blocker_resolved_externally"
+	) {
+		throw badRequest("resumeAcknowledgement is invalid.");
+	}
+	return value;
 }
 
 function identifier(value: unknown, label: string, max: number): string {

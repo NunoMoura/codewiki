@@ -101,6 +101,8 @@ The runtime lifecycle starts trace hosts only for traces that already need Plann
 
 Trace-host stdout is consumed as Pi JSON events instead of being retained as a raw process transcript. The collector accepts only one bounded `CODEWIKI_TRACE_HOST_RESULT` envelope from the final assistant message, classifies it as `completed`, `needs_approval`, `blocked`, or `failed`, captures bounded model/usage and resumable Pi session identity, rejects secret-shaped or malformed content, and writes only the sanitized completion record under runtime temp. Cancellation is added by the supervisor. These outcomes support observability and handoff but have zero semantic authority: an approval digest still requires exact user approval through the owning guarded loop facade.
 
+A stopped `needs_approval` or `blocked` session may be resumed through its exact captured Pi session id. Resume requires current trace-state and process-session guards plus an explicit acknowledgement that approval or blocker handling occurred outside the runtime control. The acknowledgement is not proof and never grants semantic authority. The resumed host re-reads trace truth and must stop again if the guarded facade does not confirm the required approval, evidence, or state transition.
+
 Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime sprint proposal
