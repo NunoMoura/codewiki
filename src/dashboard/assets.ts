@@ -820,15 +820,25 @@ function renderExecutionControl(trace) {
 		box.append(note); return box;
 	}
 	const result = card.session && card.session.result;
+	const executionPolicy = card.executionPolicy;
+	const selectedRoute = executionPolicy && executionPolicy.selected;
+	const reportedModel = result && result.model ? (result.provider ? result.provider + '/' : '') + result.model : '';
+	const executionModel = selectedRoute || card.session && card.session.executionModel;
+	const routedModel = executionModel ? executionModel.provider + '/' + executionModel.model + ' · thinking ' + executionModel.thinking : '';
+	const budget = executionPolicy && executionPolicy.budget;
+	const observedUsage = result && result.usage ? result.usage : card.session && card.session.usage;
+	const usage = observedUsage
+		? observedUsage.totalTokens + (budget && budget.maxTokens ? '/' + budget.maxTokens : '') + ' tokens · $' + observedUsage.cost + (budget && budget.maxCostUsd ? '/$' + budget.maxCostUsd : '')
+		: budget ? '0' + (budget.maxTokens ? '/' + budget.maxTokens : '') + ' tokens · $0' + (budget.maxCostUsd ? '/$' + budget.maxCostUsd : '') : 'not reported';
 	const grid = document.createElement('div'); grid.className = 'execution-control-grid';
 	[
 		['trace state', card.traceStatus],
 		['execution session', card.session ? card.session.state : 'not running'],
 		['outcome', result ? result.outcome : 'pending'],
-		['model', result && result.model ? (result.provider ? result.provider + '/' : '') + result.model : 'not reported'],
-		['usage', result && result.usage ? result.usage.totalTokens + ' tokens · $' + result.usage.cost : 'not reported'],
+		['model', reportedModel ? reportedModel + (executionModel ? ' · thinking ' + executionModel.thinking : '') : routedModel || 'no eligible route'],
+		['usage / budget', usage],
 		['resume session', result && result.sessionId ? result.sessionId : 'not available'],
-		['policy', traceHostState.policy.agency + ' · ' + traceHostState.policy.automation],
+		['policy', traceHostState.policy.agency + ' · ' + traceHostState.policy.automation + ' · ' + (executionPolicy ? executionPolicy.qualityFloor : traceHostState.policy.qualityFloor)],
 	].forEach(function(entry) {
 		const item = document.createElement('div'); item.className = 'execution-control-item';
 		const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
@@ -854,6 +864,7 @@ function renderExecutionControl(trace) {
 	if (result && result.approval) {
 		messages.push('Approval required: ' + result.approval.kind + ' · ' + result.approval.proposalDigest + (result.approval.proposalRef ? ' · ' + result.approval.proposalRef : ''));
 	}
+	if (executionPolicy && executionPolicy.rationale) messages.push(executionPolicy.rationale);
 	if (card.blockers.length) messages.push(card.blockers.join(' '));
 	if (!messages.length) messages.push('Commands use exact state guards and return auditable receipts. Semantic approvals remain separate.');
 	text(note, messages.join(' '));

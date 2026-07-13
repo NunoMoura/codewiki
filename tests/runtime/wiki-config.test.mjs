@@ -342,6 +342,66 @@ describe("wiki_config core facade", () => {
 			/quality\.review\.requiredPacks/,
 		);
 	});
+
+	it("validates closed model-routing and economic-budget schemas", () => {
+		const modelRoute = {
+			id: "high-quality",
+			provider: "openai",
+			model: "gpt-5.4",
+			thinking: "high",
+			quality: "high",
+			latency: "balanced",
+			timeoutMs: 60_000,
+			pricing: {
+				inputUsdPerMillion: 2.5,
+				outputUsdPerMillion: 10,
+				cacheReadUsdPerMillion: 0.25,
+				cacheWriteUsdPerMillion: 2.5,
+			},
+			allowedTools: ["wiki_state", "wiki_implement"],
+		};
+		const resolved = resolveWikiConfig({
+			runtime: {
+				budgets: {
+					maxTokens: 200_000,
+					maxCostUsd: 3.5,
+					maxLatencyMs: 90_000,
+				},
+				modelRouting: {
+					qualityFloor: "high",
+					maxEscalations: 1,
+					routes: [modelRoute],
+				},
+			},
+		});
+		assert.equal(resolved.runtime.budgets.maxCostUsd, 3.5);
+		assert.equal(resolved.runtime.modelRouting.routes[0].model, "gpt-5.4");
+		assert.notEqual(resolved.runtime.modelRouting.routes[0], modelRoute);
+
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					runtime: {
+						modelRouting: { routes: [{ ...modelRoute, fallback: true }] },
+					},
+				}),
+			/modelRouting\.routes\[0\]\.fallback.*unknown/i,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					runtime: { modelRouting: { routes: [modelRoute, modelRoute] } },
+				}),
+			/duplicate route id/i,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					runtime: { budgets: { maxCostUsd: 0 } },
+				}),
+			/maxCostUsd/,
+		);
+	});
 });
 
 function escapeRegExp(value) {

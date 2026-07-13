@@ -4,9 +4,12 @@ import {
 	planMainHostLifecycle,
 	type RuntimeHostLifecyclePlan,
 } from "../runtime/lifecycle.ts";
+import { resolveTraceExecutionPolicy } from "../runtime/trace-execution-policy.ts";
+import type { ResolvedExecutionPolicy } from "../runtime/execution-policy.ts";
 import {
 	traceHostResumePrompt,
 	type TraceHostSessionFactory,
+	type TraceHostTarget,
 } from "../runtime/trace-host-runner.ts";
 import {
 	runSupervisedTraceHostDispatch,
@@ -38,6 +41,7 @@ export interface DashboardTraceHostCard {
 	canCancel: boolean;
 	blockers: string[];
 	resumeBlockers: string[];
+	executionPolicy?: ResolvedExecutionPolicy;
 	session?: TraceHostSessionSnapshot;
 }
 
@@ -49,6 +53,14 @@ export interface DashboardTraceHostControlState {
 		automation: WikiConfig["runtime"]["automation"];
 		agency: WikiConfig["runtime"]["agency"];
 		maxSeconds?: number;
+		maxTokens?: number;
+		maxCostUsd?: number;
+		maxLatencyMs?: number;
+		qualityFloor: WikiConfig["runtime"]["modelRouting"]["qualityFloor"];
+		maxEscalations: number;
+		estimatedInputTokens: number;
+		estimatedOutputTokens: number;
+		modelRoutingDigest: string;
 	};
 	traces: DashboardTraceHostCard[];
 }
@@ -220,7 +232,9 @@ async function resumeTraceHost(
 	card: DashboardTraceHostCard,
 ): Promise<void> {
 	if (!card.canResume || !card.session?.result?.sessionId) {
-		throw conflict(`Trace host cannot resume: ${card.resumeBlockers.join(" ")}`);
+		throw conflict(
+			`Trace host cannot resume: ${card.resumeBlockers.join(" ")}`,
+		);
 	}
 	if (!command.expectedSessionRef) {
 		throw badRequest("Resume requires expectedSessionRef.");
@@ -306,6 +320,20 @@ async function controlState(
 		...(config.runtime.budgets.maxSeconds
 			? { maxSeconds: config.runtime.budgets.maxSeconds }
 			: {}),
+		...(config.runtime.budgets.maxTokens
+			? { maxTokens: config.runtime.budgets.maxTokens }
+			: {}),
+		...(config.runtime.budgets.maxCostUsd
+			? { maxCostUsd: config.runtime.budgets.maxCostUsd }
+			: {}),
+		...(config.runtime.budgets.maxLatencyMs
+			? { maxLatencyMs: config.runtime.budgets.maxLatencyMs }
+			: {}),
+		qualityFloor: config.runtime.modelRouting.qualityFloor,
+		maxEscalations: config.runtime.modelRouting.maxEscalations,
+		estimatedInputTokens: config.runtime.modelRouting.estimatedInputTokens,
+		estimatedOutputTokens: config.runtime.modelRouting.estimatedOutputTokens,
+		modelRoutingDigest: digest(config.runtime.modelRouting),
 	};
 	return {
 		generatedAt: now().toISOString(),
@@ -313,12 +341,25 @@ async function controlState(
 		policy,
 		traces: board.traces.map((trace) => {
 			const session = sessions.get(trace.traceId);
-			const blockers = startBlockers(board, trace, config, session);
+			const executionPolicy = executionPolicyForTrace(
+				board,
+				trace,
+				config,
+				session,
+			);
+			const blockers = startBlockers(
+				board,
+				trace,
+				config,
+				session,
+				executionPolicy,
+			);
 			const resumeBlockers = traceResumeBlockers(
 				board,
 				trace,
 				config,
 				session,
+				executionPolicy,
 			);
 			return {
 				traceId: trace.traceId,
@@ -329,10 +370,53 @@ async function controlState(
 				canCancel: sessionActive(session),
 				blockers,
 				resumeBlockers,
+				...(executionPolicy ? { executionPolicy } : {}),
 				...(session ? { session } : {}),
 			};
 		}),
 	};
+}
+
+function executionPolicyForTrace(
+	board: TraceBoardView,
+	trace: TraceGoalView,
+	config: WikiConfig,
+	session: TraceHostSessionSnapshot | undefined,
+): ResolvedExecutionPolicy | undefined {
+	const target =
+		session?.target || traceTarget(tracePlan(board, trace.traceId, []));
+	if (!target) return undefined;
+	const usage = session?.result?.usage || session?.usage;
+	return resolveTraceExecutionPolicy(config, {
+		target,
+		pathScopes: trace.pathScopes,
+		continuation: Boolean(session?.result),
+		...(usage
+			? {
+					priorUsage: {
+						totalTokens: usage.totalTokens,
+						costUsd: usage.cost,
+						latencyMs: 0,
+					},
+				}
+			: {}),
+	});
+}
+
+function traceTarget(
+	plan: RuntimeHostLifecyclePlan,
+): TraceHostTarget | undefined {
+	const action = plan.actions.find(
+		(candidate) => candidate.kind === "start_trace_host",
+	);
+	if (!action) return undefined;
+	if (
+		action.targetLoop === "planning" ||
+		action.targetLoop === "implementation"
+	) {
+		return action.targetLoop;
+	}
+	return action.targetLoop ? undefined : "close";
 }
 
 function startBlockers(
@@ -340,6 +424,7 @@ function startBlockers(
 	trace: TraceGoalView,
 	config: WikiConfig,
 	session: TraceHostSessionSnapshot | undefined,
+	executionPolicy: ResolvedExecutionPolicy | undefined,
 ): string[] {
 	const blockers: string[] = [];
 	if (sessionActive(session)) blockers.push("Trace host is already active.");
@@ -356,6 +441,9 @@ function startBlockers(
 	if (!config.hosts.pi.enabled) blockers.push("hosts.pi.enabled is false.");
 	if (config.runtime.agency === "observe") {
 		blockers.push("runtime.agency is observe.");
+	}
+	if (config.hosts.pi.enabled && executionPolicy?.status === "blocked") {
+		blockers.push(executionPolicy.rationale);
 	}
 	const plan = tracePlan(
 		board,
@@ -377,6 +465,7 @@ function traceResumeBlockers(
 	trace: TraceGoalView,
 	config: WikiConfig,
 	session: TraceHostSessionSnapshot | undefined,
+	executionPolicy: ResolvedExecutionPolicy | undefined,
 ): string[] {
 	const blockers: string[] = [];
 	if (sessionActive(session)) blockers.push("Trace host is already active.");
@@ -389,9 +478,17 @@ function traceResumeBlockers(
 	if (!session?.result?.sessionId) {
 		blockers.push("Trace host did not report a resumable Pi session id.");
 	}
+	if (executionModelChanged(session, executionPolicy)) {
+		blockers.push(
+			"Resolved model policy changed; the persisted Pi session cannot resume under a different provider, model, or thinking level.",
+		);
+	}
 	if (!config.hosts.pi.enabled) blockers.push("hosts.pi.enabled is false.");
 	if (config.runtime.agency === "observe") {
 		blockers.push("runtime.agency is observe.");
+	}
+	if (config.hosts.pi.enabled && executionPolicy?.status === "blocked") {
+		blockers.push(executionPolicy.rationale);
 	}
 	const plan = tracePlan(
 		board,
@@ -406,6 +503,18 @@ function traceResumeBlockers(
 		);
 	}
 	return unique(blockers);
+}
+
+function executionModelChanged(
+	session: TraceHostSessionSnapshot | undefined,
+	policy: ResolvedExecutionPolicy | undefined,
+): boolean {
+	if (!session?.executionModel || !policy?.selected) return false;
+	return (
+		session.executionModel.provider !== policy.selected.provider ||
+		session.executionModel.model !== policy.selected.model ||
+		session.executionModel.thinking !== policy.selected.thinking
+	);
 }
 
 function tracePlan(
@@ -456,6 +565,8 @@ function traceStateDigest(
 					state: session.state,
 					target: session.target,
 					stopReason: session.stopReason,
+					usage: session.usage,
+					executionModel: session.executionModel,
 					result: session.result,
 				}
 			: undefined,

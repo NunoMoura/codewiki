@@ -28,6 +28,9 @@ function controlledFactory(options = {}) {
 				if (options.monitorError) throw new Error("inspection unavailable");
 				return running;
 			},
+			...(options.currentUsage
+				? { currentUsage: () => options.currentUsage() }
+				: {}),
 			...(options.result
 				? {
 						completion: async () => ({
@@ -173,6 +176,55 @@ describe("trace host supervisor", () => {
 		assert.equal(snapshot.stopReason, "budget_exhausted");
 	});
 
+	it("enforces millisecond latency budgets", async () => {
+		let now = Date.parse("2026-07-12T12:00:00.000Z");
+		const supervisor = new TraceHostSupervisor({
+			maxLatencyMs: 500,
+			now: () => now,
+		});
+		const controlled = controlledFactory();
+		await supervisor.start(sessionInput(), controlled.factory);
+		now += 500;
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.equal(snapshot.state, "stopped");
+		assert.equal(snapshot.stopReason, "budget_exhausted");
+	});
+
+	it("stops a running host when live usage reaches an economic limit", async () => {
+		let usage = {
+			input: 400,
+			output: 100,
+			cacheRead: 0,
+			cacheWrite: 0,
+			totalTokens: 500,
+			cost: 0.1,
+		};
+		const supervisor = new TraceHostSupervisor({
+			maxTokens: 1_000,
+			maxCostUsd: 0.2,
+		});
+		const controlled = controlledFactory({ currentUsage: () => usage });
+		await supervisor.start(sessionInput(), controlled.factory);
+		assert.equal(
+			(await supervisor.reconcile({ supervisionAttached: true }))[0].state,
+			"running",
+		);
+		usage = { ...usage, totalTokens: 1_000, cost: 0.2 };
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.equal(snapshot.state, "stopped");
+		assert.equal(snapshot.stopReason, "budget_exhausted");
+		assert.equal(snapshot.usage.totalTokens, 1_000);
+		assert.deepEqual(controlled.controls.get("TRACE-supervised").stopReasons, [
+			"budget_exhausted",
+		]);
+	});
+
 	it("observes natural completion without sending a stop", async () => {
 		const supervisor = new TraceHostSupervisor();
 		const controlled = controlledFactory();
@@ -212,6 +264,57 @@ describe("trace host supervisor", () => {
 		)[0];
 		assert.deepEqual(snapshot.result, result);
 		assert.equal(snapshot.state, "stopped");
+	});
+
+	it("blocks natural completion when token or monetary spend cannot be accepted", async () => {
+		const overBudgetResult = {
+			version: 1,
+			outcome: "completed",
+			summary: "Claimed completion.",
+			refs: ["trace:TRACE-supervised:implementation:iteration:1"],
+			usage: {
+				input: 800,
+				output: 300,
+				cacheRead: 0,
+				cacheWrite: 0,
+				totalTokens: 1_100,
+				cost: 0.21,
+			},
+		};
+		const supervisor = new TraceHostSupervisor({
+			maxTokens: 1_000,
+			maxCostUsd: 0.2,
+		});
+		const controlled = controlledFactory({ result: overBudgetResult });
+		await supervisor.start(sessionInput(), controlled.factory);
+		controlled.controls.get("TRACE-supervised").finish();
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.equal(snapshot.result.outcome, "blocked");
+		assert.match(snapshot.result.summary, /token spend 1100 exceeded 1000/);
+		assert.match(snapshot.result.summary, /cost \$0\.21 exceeded \$0\.2/);
+		assert.deepEqual(snapshot.result.usage, overBudgetResult.usage);
+	});
+
+	it("fails closed when configured economic budgets lack usage telemetry", async () => {
+		const result = {
+			version: 1,
+			outcome: "completed",
+			summary: "Claimed completion without telemetry.",
+			refs: [],
+		};
+		const supervisor = new TraceHostSupervisor({ maxCostUsd: 1 });
+		const controlled = controlledFactory({ result });
+		await supervisor.start(sessionInput(), controlled.factory);
+		controlled.controls.get("TRACE-supervised").finish();
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.equal(snapshot.result.outcome, "blocked");
+		assert.match(snapshot.result.summary, /usage telemetry was missing/);
 	});
 
 	it("fails closed when process monitoring breaks", async () => {

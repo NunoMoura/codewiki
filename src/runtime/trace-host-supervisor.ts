@@ -24,6 +24,9 @@ export type TraceHostStopReason =
 export interface TraceHostSupervisorOptions {
 	maxTraceHosts?: number;
 	maxSeconds?: number;
+	maxLatencyMs?: number;
+	maxTokens?: number;
+	maxCostUsd?: number;
 	now?: () => number;
 }
 
@@ -57,6 +60,8 @@ export interface TraceHostSessionSnapshot {
 	pid?: number;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	usage?: TraceHostResult["usage"];
+	executionModel?: TraceHostSessionStart["executionModel"];
 	result?: TraceHostResult;
 }
 
@@ -67,6 +72,7 @@ interface ManagedTraceHostSession {
 	state: TraceHostSessionState;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	usage?: TraceHostResult["usage"];
 	result?: TraceHostResult;
 }
 
@@ -89,12 +95,18 @@ export async function runSupervisedTraceHostDispatch(
 export class TraceHostSupervisor {
 	readonly #maxTraceHosts: number;
 	readonly #maxSeconds?: number;
+	readonly #maxLatencyMs?: number;
+	readonly #maxTokens?: number;
+	readonly #maxCostUsd?: number;
 	readonly #now: () => number;
 	readonly #sessions = new Map<string, ManagedTraceHostSession>();
 
 	constructor(options: TraceHostSupervisorOptions = {}) {
 		this.#maxTraceHosts = positiveInteger(options.maxTraceHosts, 1);
 		this.#maxSeconds = optionalPositiveInteger(options.maxSeconds);
+		this.#maxLatencyMs = optionalPositiveInteger(options.maxLatencyMs);
+		this.#maxTokens = optionalPositiveInteger(options.maxTokens);
+		this.#maxCostUsd = optionalPositiveNumber(options.maxCostUsd);
 		this.#now = options.now || Date.now;
 	}
 
@@ -135,7 +147,11 @@ export class TraceHostSupervisor {
 			if (!activeState(session.state)) continue;
 			const running = await inspectSession(session);
 			if (running === false) {
-				session.result = await collectSessionResult(session);
+				session.result = enforceCompletionBudgets(
+					await collectSessionResult(session),
+					this.#maxTokens,
+					this.#maxCostUsd,
+				);
 				session.state = "stopped";
 				continue;
 			}
@@ -149,6 +165,10 @@ export class TraceHostSupervisor {
 			}
 			if (!input.supervisionAttached) {
 				await stopSession(session, "supervision_lost");
+				continue;
+			}
+			if (!(await updateSessionUsage(session))) {
+				await stopSession(session, "monitoring_failed");
 				continue;
 			}
 			if (this.#budgetExhausted(session)) {
@@ -174,7 +194,9 @@ export class TraceHostSupervisor {
 		}
 		await stopSession(session, "cancelled");
 		if (session.state === "failed") {
-			throw new Error(session.message || `Trace host ${traceId} failed to stop.`);
+			throw new Error(
+				session.message || `Trace host ${traceId} failed to stop.`,
+			);
 		}
 		return sessionSnapshot(session);
 	}
@@ -195,9 +217,19 @@ export class TraceHostSupervisor {
 	}
 
 	#budgetExhausted(session: ManagedTraceHostSession): boolean {
+		const elapsedMs = this.#now() - session.startedAtMs;
 		return (
-			this.#maxSeconds !== undefined &&
-			this.#now() - session.startedAtMs >= this.#maxSeconds * 1_000
+			(this.#maxSeconds !== undefined &&
+				elapsedMs >= this.#maxSeconds * 1_000) ||
+			(this.#maxLatencyMs !== undefined && elapsedMs >= this.#maxLatencyMs) ||
+			(session.start.timeoutMs !== undefined &&
+				elapsedMs >= session.start.timeoutMs) ||
+			(this.#maxTokens !== undefined &&
+				session.usage !== undefined &&
+				session.usage.totalTokens >= this.#maxTokens) ||
+			(this.#maxCostUsd !== undefined &&
+				session.usage !== undefined &&
+				session.usage.cost >= this.#maxCostUsd)
 		);
 	}
 }
@@ -210,6 +242,20 @@ async function inspectSession(
 	} catch (error) {
 		session.message = `Trace host monitoring failed: ${errorMessage(error)}`;
 		return undefined;
+	}
+}
+
+async function updateSessionUsage(
+	session: ManagedTraceHostSession,
+): Promise<boolean> {
+	if (!session.start.controller.currentUsage) return true;
+	try {
+		const usage = await session.start.controller.currentUsage();
+		if (usage) session.usage = { ...usage };
+		return true;
+	} catch (error) {
+		session.message = `Trace host usage monitoring failed: ${errorMessage(error)}`;
+		return false;
 	}
 }
 
@@ -245,6 +291,10 @@ function sessionSnapshot(
 		...(session.start.pid ? { pid: session.start.pid } : {}),
 		...(session.stopReason ? { stopReason: session.stopReason } : {}),
 		...(session.message ? { message: session.message } : {}),
+		...(session.usage ? { usage: { ...session.usage } } : {}),
+		...(session.start.executionModel
+			? { executionModel: { ...session.start.executionModel } }
+			: {}),
 		...(session.result ? { result: session.result } : {}),
 	};
 }
@@ -266,6 +316,34 @@ async function collectSessionResult(
 			refs: [],
 		};
 	}
+}
+
+function enforceCompletionBudgets(
+	result: TraceHostResult | undefined,
+	maxTokens: number | undefined,
+	maxCostUsd: number | undefined,
+): TraceHostResult | undefined {
+	if (maxTokens === undefined && maxCostUsd === undefined) return result;
+	if (!result) return result;
+	const reasons: string[] = [];
+	if (!result.usage) {
+		reasons.push("usage telemetry was missing");
+	} else {
+		if (maxTokens !== undefined && result.usage.totalTokens > maxTokens) {
+			reasons.push(
+				`token spend ${result.usage.totalTokens} exceeded ${maxTokens}`,
+			);
+		}
+		if (maxCostUsd !== undefined && result.usage.cost > maxCostUsd) {
+			reasons.push(`cost $${result.usage.cost} exceeded $${maxCostUsd}`);
+		}
+	}
+	if (reasons.length === 0) return result;
+	return {
+		...result,
+		outcome: "blocked",
+		summary: `Execution budget could not be accepted: ${reasons.join("; ")}.`,
+	};
 }
 
 function stoppedSessionResult(
@@ -334,10 +412,22 @@ function positiveInteger(value: number | undefined, fallback: number): number {
 	return value;
 }
 
-function optionalPositiveInteger(value: number | undefined): number | undefined {
+function optionalPositiveInteger(
+	value: number | undefined,
+): number | undefined {
 	if (value === undefined) return undefined;
 	if (!Number.isInteger(value) || value < 1) {
 		throw new Error("Trace host maxSeconds must be a positive integer.");
+	}
+	return value;
+}
+
+function optionalPositiveNumber(value: number | undefined): number | undefined {
+	if (value === undefined) return undefined;
+	if (!Number.isFinite(value) || value <= 0) {
+		throw new Error(
+			"Trace host numeric budget must be a finite positive number.",
+		);
 	}
 	return value;
 }

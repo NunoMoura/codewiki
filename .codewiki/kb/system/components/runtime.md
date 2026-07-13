@@ -103,6 +103,16 @@ Trace-host stdout is consumed as Pi JSON events instead of being retained as a r
 
 A stopped `needs_approval` or `blocked` session may be resumed through its exact captured Pi session id. Resume requires current trace-state and process-session guards plus an explicit acknowledgement that approval or blocker handling occurred outside the runtime control. The acknowledgement is not proof and never grants semantic authority. The resumed host re-reads trace truth and must stop again if the guarded facade does not confirm the required approval, evidence, or state transition.
 
+## Execution policy and model routing
+
+Every Trace Host and worker invocation must receive an explicit provider, model, and thinking level from one resolved execution policy. The policy context includes the target loop, Change type when available, worker profile, risk, path scopes, required tools, expected token use, prior attempts, and prior usage. Resolution first removes candidates that fail the effective quality floor, tool requirements, timeout, or remaining token, monetary, and latency budgets. Only then may it rank eligible candidates by estimated cost and latency. Cost or speed must never select a model below the required quality floor.
+
+The declarative `runtime.modelRouting` configuration owns candidate identities, quality and latency classes, thinking levels, timeout limits, tool capabilities, pricing snapshots, expected input/output tokens, and the maximum number of escalations. Pricing is copied into resolved policy evidence so later review does not depend on mutable provider catalogs. Escalation is bounded, follows a failed attempt only, never repeats a route, and moves strictly to a higher quality class. Missing routes, tools, usage telemetry, or budget headroom block execution rather than falling back to an implicit Pi default.
+
+`runtime.budgets` may cap elapsed time, latency, tokens, and monetary cost. The supervisor stops elapsed-time overruns and rejects natural completion as `blocked` when reported token or monetary spend exceeds policy or when configured economic budgets cannot be verified because usage telemetry is absent. Dashboard cards show the resolved route, thinking level, quality floor, rationale, observed spend, and limits. These operational results remain non-authoritative.
+
+Agency presets compile into granular capabilities, but immutable ceilings always deny Change acceptance, destructive actions, public actions, source promotion, package publication, controller advancement, and execution without supervision. Dashboard commands can start, resume, or stop only a currently eligible session; they cannot relax these ceilings.
+
 Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime sprint proposal

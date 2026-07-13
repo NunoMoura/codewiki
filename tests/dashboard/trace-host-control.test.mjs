@@ -43,6 +43,39 @@ function board(trace = goal(), conflicts = []) {
 	};
 }
 
+function enabledConfig(thinking = "medium") {
+	return resolveWikiConfig({
+		hosts: { pi: { enabled: true } },
+		runtime: {
+			modelRouting: {
+				routes: [
+					{
+						id: "trace-host-test",
+						provider: "test-provider",
+						model: "test-model",
+						thinking,
+						quality: "standard",
+						latency: "fast",
+						timeoutMs: 60_000,
+						pricing: {
+							inputUsdPerMillion: 1,
+							outputUsdPerMillion: 2,
+							cacheReadUsdPerMillion: 0,
+							cacheWriteUsdPerMillion: 0,
+						},
+						allowedTools: [
+							"wiki_state",
+							"wiki_plan",
+							"wiki_implement",
+							"wiki_archive",
+						],
+					},
+				],
+			},
+		},
+	});
+}
+
 function controlledFactory(result) {
 	const controls = new Map();
 	const starts = [];
@@ -80,16 +113,18 @@ function controlledFactory(result) {
 				target: input.target,
 				sessionRef: `pi:${input.traceId}`,
 				pid: 123,
+				executionModel: {
+					provider: "test-provider",
+					model: "test-model",
+					thinking: "medium",
+				},
 				controller,
 			};
 		},
 	};
 }
 
-function harness(
-	config = resolveWikiConfig({ hosts: { pi: { enabled: true } } }),
-	result,
-) {
+function harness(config = enabledConfig(), result) {
 	const controlled = controlledFactory(result);
 	const supervisor = new TraceHostSupervisor();
 	let currentBoard = board();
@@ -119,6 +154,10 @@ describe("dashboard trace host control", () => {
 		const status = await control.status();
 		const card = status.traces[0];
 		assert.equal(card.canStart, true);
+		assert.equal(card.executionPolicy.status, "selected");
+		assert.equal(card.executionPolicy.selected.routeId, "trace-host-test");
+		assert.equal(status.policy.qualityFloor, "standard");
+		assert.match(status.policy.modelRoutingDigest, /^sha256:[a-f0-9]{64}$/);
 
 		const result = await control.execute({
 			action: "start",
@@ -178,14 +217,38 @@ describe("dashboard trace host control", () => {
 		});
 		assert.equal(resumed.state.traces[0].canCancel, true);
 		assert.equal(controlled.starts.length, 2);
-		assert.equal(
-			controlled.starts[1].resumeSessionId,
-			"pi-session-control",
-		);
+		assert.equal(controlled.starts[1].resumeSessionId, "pi-session-control");
 		assert.match(
 			controlled.starts[1].prompt,
 			/resume signal is not semantic approval/i,
 		);
+	});
+
+	it("blocks resume when resolved model or thinking changed", async () => {
+		const traceResult = {
+			version: 1,
+			outcome: "needs_approval",
+			summary: "Planning proposal is ready for review.",
+			refs: [],
+			sessionId: "pi-session-model-change",
+			approval: {
+				kind: "planning",
+				proposalDigest: `sha256:${"c".repeat(64)}`,
+			},
+		};
+		const { control, controlled } = harness(enabledConfig("high"), traceResult);
+		const initial = (await control.status()).traces[0];
+		await control.execute({
+			action: "start",
+			commandId: "command-model-change-start",
+			traceId: initial.traceId,
+			expectedStateDigest: initial.stateDigest,
+		});
+		controlled.controls.get(initial.traceId).finish();
+
+		const completed = (await control.status()).traces[0];
+		assert.equal(completed.canResume, false);
+		assert.match(completed.resumeBlockers.join(" "), /model policy changed/i);
 	});
 
 	it("rejects resume acknowledgement that does not match the outcome", async () => {
@@ -346,6 +409,14 @@ describe("dashboard trace host control", () => {
 		const disabledCard = (await disabled.control.status()).traces[0];
 		assert.equal(disabledCard.canStart, false);
 		assert.deepEqual(disabledCard.blockers, ["hosts.pi.enabled is false."]);
+
+		const unrouted = harness(
+			resolveWikiConfig({ hosts: { pi: { enabled: true } } }),
+		);
+		const unroutedCard = (await unrouted.control.status()).traces[0];
+		assert.equal(unroutedCard.canStart, false);
+		assert.equal(unroutedCard.executionPolicy.status, "blocked");
+		assert.match(unroutedCard.blockers[0], /no untried route/i);
 
 		const conflicted = harness();
 		conflicted.setBoard(

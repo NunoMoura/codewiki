@@ -5,6 +5,11 @@ import type {
 } from "./lifecycle.ts";
 
 export type TraceHostTarget = Exclude<TraceLoop, "decision"> | "close";
+export interface TraceHostExecutionModel {
+	provider: string;
+	model: string;
+	thinking: "off" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max";
+}
 export type TraceHostOutcome =
 	| "completed"
 	| "needs_approval"
@@ -55,6 +60,10 @@ export interface TraceHostSessionInput {
 
 export interface TraceHostSessionController {
 	isRunning(): Promise<boolean> | boolean;
+	currentUsage?():
+		| Promise<TraceHostResult["usage"] | undefined>
+		| TraceHostResult["usage"]
+		| undefined;
 	completion?(): Promise<TraceHostProcessCompletion | undefined>;
 	stop(reason: string): Promise<void> | void;
 }
@@ -65,6 +74,8 @@ export interface TraceHostSessionStart {
 	sessionRef: string;
 	controller: TraceHostSessionController;
 	pid?: number;
+	timeoutMs?: number;
+	executionModel?: TraceHostExecutionModel;
 }
 
 export type TraceHostSessionFactory = (

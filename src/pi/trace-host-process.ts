@@ -66,7 +66,11 @@ export async function runDetachedTraceHostCommand(
 				resolve({
 					pid: child.pid,
 					outputFile: input.outputFile,
-					controller: traceHostController(child, completion),
+					controller: traceHostController(
+						child,
+						completion,
+						collector.currentUsage,
+					),
 				});
 			});
 		});
@@ -113,9 +117,13 @@ function traceHostController(
 	completion: Promise<
 		Awaited<ReturnType<NonNullable<TraceHostSessionController["completion"]>>>
 	>,
+	currentUsage: () => ReturnType<
+		NonNullable<TraceHostSessionController["currentUsage"]>
+	>,
 ): TraceHostSessionController {
 	return {
 		isRunning: () => processIsRunning(child),
+		currentUsage,
 		completion() {
 			if (processIsRunning(child)) return Promise.resolve(undefined);
 			return completion;

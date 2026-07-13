@@ -1,4 +1,21 @@
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
+import {
+	DEFAULT_MODEL_ROUTING_CONFIG,
+	type PartialWikiModelRoutingConfig,
+	resolveWikiModelRoutingConfig,
+	type WikiModelRoutingConfig,
+	validatePartialWikiModelRoutingKeys,
+	validateWikiModelRoutingConfig,
+} from "./model-routing.ts";
+
+export type {
+	WikiModelLatency,
+	WikiModelPricingConfig,
+	WikiModelQuality,
+	WikiModelRouteConfig,
+	WikiModelRoutingConfig,
+	WikiModelThinking,
+} from "./model-routing.ts";
 
 export type WikiConfigWorktreeIsolation = "none" | "worktree" | "auto";
 export type WikiConfigAutomationMode = "manual" | "assist" | "auto";
@@ -15,6 +32,9 @@ export interface WikiRuntimeBudgetConfig {
 	maxIterations?: number;
 	maxChangedFiles?: number;
 	maxTraceBytes?: number;
+	maxTokens?: number;
+	maxCostUsd?: number;
+	maxLatencyMs?: number;
 }
 
 export interface WikiApprovalPolicyConfig {
@@ -31,6 +51,7 @@ export interface WikiRuntimeConfig {
 	automation: WikiConfigAutomationMode;
 	agency: WikiConfigAgencyLevel;
 	budgets: WikiRuntimeBudgetConfig;
+	modelRouting: WikiModelRoutingConfig;
 	approval: WikiApprovalPolicyConfig;
 	stopConditions: string[];
 }
@@ -100,9 +121,10 @@ export type PartialWikiConfig = {
 };
 
 export type PartialRuntimeConfig = Partial<
-	Omit<WikiRuntimeConfig, "budgets" | "approval">
+	Omit<WikiRuntimeConfig, "budgets" | "modelRouting" | "approval">
 > & {
 	budgets?: Partial<WikiRuntimeBudgetConfig>;
+	modelRouting?: PartialWikiModelRoutingConfig;
 	approval?: Partial<WikiApprovalPolicyConfig>;
 };
 
@@ -129,7 +151,11 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 			maxIterations: 1,
 			maxChangedFiles: undefined,
 			maxTraceBytes: undefined,
+			maxTokens: undefined,
+			maxCostUsd: undefined,
+			maxLatencyMs: undefined,
 		},
+		modelRouting: DEFAULT_MODEL_ROUTING_CONFIG,
 		approval: {
 			cadence: "per_iteration",
 			destructiveAction: "ask",
@@ -212,6 +238,7 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 				...DEFAULT_WIKI_CONFIG.runtime.budgets,
 				...(input.runtime?.budgets || {}),
 			},
+			modelRouting: resolveWikiModelRoutingConfig(input.runtime?.modelRouting),
 			approval: {
 				...DEFAULT_WIKI_CONFIG.runtime.approval,
 				...(input.runtime?.approval || {}),
@@ -288,6 +315,9 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 		});
 	}
 	validateBudgets(config.runtime.budgets);
+	const modelRouting = validateWikiModelRoutingConfig(
+		config.runtime.modelRouting,
+	);
 	validateApproval(config.runtime.approval);
 	config.runtime.worktreeSetupCommands = uniqueStringList(
 		config.runtime.worktreeSetupCommands,
@@ -321,6 +351,7 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 		runtime: {
 			...config.runtime,
 			budgets: cleanBudgets(config.runtime.budgets),
+			modelRouting,
 			approval: { ...config.runtime.approval },
 			stopConditions,
 		},
@@ -361,6 +392,10 @@ function mergeWikiConfigPatch(
 				...current.runtime.budgets,
 				...(patch.runtime?.budgets || {}),
 			},
+			modelRouting: mergeModelRoutingConfig(
+				current.runtime.modelRouting,
+				patch.runtime?.modelRouting,
+			),
 			approval: {
 				...current.runtime.approval,
 				...(patch.runtime?.approval || {}),
@@ -537,6 +572,26 @@ function validateBudgets(budgets: WikiRuntimeBudgetConfig): void {
 		budgets.maxTraceBytes,
 		"runtime.budgets.maxTraceBytes",
 	);
+	assertOptionalPositiveInteger(budgets.maxTokens, "runtime.budgets.maxTokens");
+	assertOptionalPositiveNumber(
+		budgets.maxCostUsd,
+		"runtime.budgets.maxCostUsd",
+	);
+	assertOptionalPositiveInteger(
+		budgets.maxLatencyMs,
+		"runtime.budgets.maxLatencyMs",
+	);
+}
+
+function assertOptionalPositiveNumber(value: unknown, path: string): void {
+	if (value === undefined) return;
+	if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+		throw createCodewikiConfigError({
+			path,
+			message: `wiki_config ${path} must be > 0 when set.`,
+			value,
+		});
+	}
 }
 
 function validateApproval(approval: WikiApprovalPolicyConfig): void {
@@ -574,6 +629,17 @@ function validateHosts(hosts: WikiHostConfig): void {
 			});
 		}
 	}
+}
+
+function mergeModelRoutingConfig(
+	current: WikiModelRoutingConfig,
+	patch: PartialRuntimeConfig["modelRouting"],
+): WikiModelRoutingConfig {
+	return {
+		...current,
+		...(patch || {}),
+		routes: patch?.routes ? [...patch.routes] : [...current.routes],
+	};
 }
 
 function cleanBudgets(
@@ -623,6 +689,7 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 			"automation",
 			"agency",
 			"budgets",
+			"modelRouting",
 			"approval",
 			"stopConditions",
 		]);
@@ -636,8 +703,15 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 				"maxIterations",
 				"maxChangedFiles",
 				"maxTraceBytes",
+				"maxTokens",
+				"maxCostUsd",
+				"maxLatencyMs",
 			]);
 		}
+		validatePartialWikiModelRoutingKeys(
+			runtime.modelRouting,
+			`${path}.runtime.modelRouting`,
+		);
 		const approval = optionalConfigObject(
 			runtime.approval,
 			`${path}.runtime.approval`,

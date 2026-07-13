@@ -2,6 +2,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import type {
+	TraceHostExecutionModel,
 	TraceHostSessionController,
 	TraceHostSessionFactory,
 	TraceHostSessionInput,
@@ -17,11 +18,17 @@ import type {
 	PiWorkerSessionResumeResult,
 } from "./worker-start.ts";
 
+export type PiModelInvocation = TraceHostExecutionModel;
+
 export interface PiTraceHostSessionFactoryOptions {
 	command?: string;
 	args?: string[];
 	env?: NodeJS.ProcessEnv;
 	noSession?: boolean;
+	model?:
+		| PiModelInvocation
+		| ((input: TraceHostSessionInput) => PiModelInvocation);
+	timeoutMs?: number;
 	outputFile?: string | ((input: TraceHostSessionInput) => string);
 	runner?: PiProcessCommandRunner;
 }
@@ -33,6 +40,7 @@ export interface PiProcessSessionFactoryOptions {
 	env?: NodeJS.ProcessEnv;
 	detached?: boolean;
 	noSession?: boolean;
+	model?: PiModelInvocation;
 	outputDir?: string;
 	outputFile?: string | ((input: PiWorkerSessionInput) => string);
 	runner?: PiProcessCommandRunner;
@@ -94,6 +102,8 @@ async function startPiTraceHostSession(
 			result,
 			outputFile,
 			commandInput.resumeSessionId,
+			options.timeoutMs,
+			commandInput.model,
 		);
 	} catch (error) {
 		throw new Error(
@@ -109,8 +119,14 @@ function traceHostProcessCommand(
 	input: TraceHostSessionInput,
 	options: PiTraceHostSessionFactoryOptions,
 	outputFile: string,
-): { process: PiProcessCommandRunnerInput; resumeSessionId?: string } {
+): {
+	process: PiProcessCommandRunnerInput;
+	resumeSessionId?: string;
+	model?: PiModelInvocation;
+} {
 	const resumeSessionId = validatedResumeSessionId(input.resumeSessionId);
+	const model =
+		typeof options.model === "function" ? options.model(input) : options.model;
 	if (resumeSessionId && options.noSession) {
 		throw new Error("Trace host resume cannot disable session persistence.");
 	}
@@ -120,6 +136,7 @@ function traceHostProcessCommand(
 			args: [
 				...(options.args || ["--mode", "json", "-p"]),
 				...(options.noSession ? ["--no-session"] : []),
+				...piModelArgs(model),
 				...(resumeSessionId ? ["--session", resumeSessionId] : []),
 				input.prompt,
 			],
@@ -133,6 +150,7 @@ function traceHostProcessCommand(
 			outputMode: "trace-host",
 		},
 		...(resumeSessionId ? { resumeSessionId } : {}),
+		...(model ? { model } : {}),
 	};
 }
 
@@ -141,12 +159,16 @@ function traceHostSessionStart(
 	result: PiProcessCommandResult,
 	outputFile: string,
 	resumeSessionId?: string,
+	timeoutMs?: number,
+	executionModel?: PiModelInvocation,
 ): TraceHostSessionStart {
 	if (isFailedProcessResult(result)) {
 		throw new Error(processFailureMessage(result));
 	}
 	if (!result.controller) {
-		throw new Error("Trace host process runner returned no session controller.");
+		throw new Error(
+			"Trace host process runner returned no session controller.",
+		);
 	}
 	return {
 		traceId: input.traceId,
@@ -157,10 +179,14 @@ function traceHostSessionStart(
 			(result.pid ? `pi-process:${result.pid}` : `pi-output:${outputFile}`),
 		controller: result.controller,
 		...(result.pid ? { pid: result.pid } : {}),
+		...(timeoutMs ? { timeoutMs } : {}),
+		...(executionModel ? { executionModel: { ...executionModel } } : {}),
 	};
 }
 
-function validatedResumeSessionId(value: string | undefined): string | undefined {
+function validatedResumeSessionId(
+	value: string | undefined,
+): string | undefined {
 	if (value === undefined) return undefined;
 	if (
 		value.length < 1 ||
@@ -248,6 +274,7 @@ function processCommandInput(
 		args: [
 			...(options.args || ["--mode", "json", "-p"]),
 			...(options.noSession ? ["--no-session"] : []),
+			...piModelArgs(options.model),
 			prompt,
 		],
 		...(options.cwd ? { cwd: options.cwd } : {}),
@@ -258,6 +285,18 @@ function processCommandInput(
 		workUnitId: input.workUnitId,
 		traceId: input.traceId,
 	};
+}
+
+function piModelArgs(model: PiModelInvocation | undefined): string[] {
+	if (!model) return [];
+	return [
+		"--provider",
+		model.provider,
+		"--model",
+		model.model,
+		"--thinking",
+		model.thinking,
+	];
 }
 
 function outputFileForSession(

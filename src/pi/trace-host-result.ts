@@ -14,6 +14,7 @@ const sensitiveTextPattern =
 
 interface TraceHostResultCollector {
 	acceptLine(line: string): void;
+	currentUsage(): TraceHostResult["usage"] | undefined;
 	complete(
 		exitCode: number | null,
 		signal: NodeJS.Signals | string | null,
@@ -43,8 +44,16 @@ export function createTraceHostResultCollector(): TraceHostResultCollector {
 			if (event.type !== "message_end") return;
 			const message = object(event.message);
 			if (!message || message.role !== "assistant") return;
-			assistant = assistantMetadata(message);
+			const next = assistantMetadata(message);
+			assistant = {
+				...assistant,
+				...next,
+				...(next.usage ? { usage: addUsage(assistant.usage, next.usage) } : {}),
+			};
 			result = resultFromAssistantText(assistantText(message.content));
+		},
+		currentUsage() {
+			return assistant.usage ? { ...assistant.usage } : undefined;
 		},
 		complete(exitCode, signal) {
 			return {
@@ -59,6 +68,20 @@ export function createTraceHostResultCollector(): TraceHostResultCollector {
 				}),
 			};
 		},
+	};
+}
+
+function addUsage(
+	current: TraceHostResult["usage"] | undefined,
+	next: NonNullable<TraceHostResult["usage"]>,
+): NonNullable<TraceHostResult["usage"]> {
+	return {
+		input: (current?.input || 0) + next.input,
+		output: (current?.output || 0) + next.output,
+		cacheRead: (current?.cacheRead || 0) + next.cacheRead,
+		cacheWrite: (current?.cacheWrite || 0) + next.cacheWrite,
+		totalTokens: (current?.totalTokens || 0) + next.totalTokens,
+		cost: (current?.cost || 0) + next.cost,
 	};
 }
 
@@ -180,7 +203,7 @@ function approvalRequest(
 function assistantMetadata(
 	message: Record<string, unknown>,
 ): AssistantMetadata {
-	const usage = object(message.usage);
+	const usage = usageMetadata(message.usage);
 	return {
 		...(optionalIdentifier(message.model, 160)
 			? { model: optionalIdentifier(message.model, 160) }
@@ -191,18 +214,7 @@ function assistantMetadata(
 		...(typeof message.stopReason === "string"
 			? { stopReason: message.stopReason }
 			: {}),
-		...(usage
-			? {
-					usage: {
-						input: boundedNumber(usage.input),
-						output: boundedNumber(usage.output),
-						cacheRead: boundedNumber(usage.cacheRead),
-						cacheWrite: boundedNumber(usage.cacheWrite),
-						totalTokens: boundedNumber(usage.totalTokens),
-						cost: boundedNumber(object(usage.cost)?.total),
-					},
-				}
-			: {}),
+		...(usage ? { usage } : {}),
 	};
 }
 
@@ -252,10 +264,39 @@ function optionalIdentifier(value: unknown, max: number): string | undefined {
 	return /^[A-Za-z0-9][A-Za-z0-9._:/-]*$/.test(value) ? value : undefined;
 }
 
-function boundedNumber(value: unknown): number {
-	return typeof value === "number" && Number.isFinite(value) && value >= 0
-		? Math.min(value, 1_000_000_000_000)
-		: 0;
+function usageMetadata(value: unknown): TraceHostResult["usage"] | undefined {
+	const usage = object(value);
+	const cost = object(usage?.cost)?.total;
+	if (!usage) return undefined;
+	const cacheRead = usage.cacheRead ?? 0;
+	const cacheWrite = usage.cacheWrite ?? 0;
+	const values = [
+		usage.input,
+		usage.output,
+		cacheRead,
+		cacheWrite,
+		usage.totalTokens,
+		cost,
+	];
+	if (
+		values.some(
+			(entry) =>
+				typeof entry !== "number" ||
+				!Number.isFinite(entry) ||
+				entry < 0 ||
+				entry > 1_000_000_000_000,
+		)
+	) {
+		return undefined;
+	}
+	return {
+		input: Number(usage.input),
+		output: Number(usage.output),
+		cacheRead: Number(cacheRead),
+		cacheWrite: Number(cacheWrite),
+		totalTokens: Number(usage.totalTokens),
+		cost: Number(cost),
+	};
 }
 
 function isAgentOutcome(

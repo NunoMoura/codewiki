@@ -42,6 +42,12 @@ describe("Pi process session factory", () => {
 			const calls = [];
 			const factory = createPiTraceHostSessionFactory({
 				command: "pi-test",
+				model: {
+					provider: "openai",
+					model: "gpt-5.4",
+					thinking: "high",
+				},
+				timeoutMs: 45_000,
 				runner(input) {
 					calls.push(input);
 					return {
@@ -67,13 +73,27 @@ describe("Pi process session factory", () => {
 			assert.equal(calls[0].cwd, root);
 			assert.equal(calls[0].detached, true);
 			assert.equal(calls[0].outputMode, "trace-host");
-			assert.equal(calls[0].args.at(-1), "Run planning for TRACE-independent.");
+			assert.deepEqual(calls[0].args.slice(-7), [
+				"--provider",
+				"openai",
+				"--model",
+				"gpt-5.4",
+				"--thinking",
+				"high",
+				"Run planning for TRACE-independent.",
+			]);
 			assert.match(
 				calls[0].outputFile,
 				/TRACE-independent\/trace-host\/session\.log$/,
 			);
 			assert.equal(started.sessionRef, "pi-process:2468");
 			assert.equal(started.pid, 2468);
+			assert.equal(started.timeoutMs, 45_000);
+			assert.deepEqual(started.executionModel, {
+				provider: "openai",
+				model: "gpt-5.4",
+				thinking: "high",
+			});
 			assert.equal(await started.controller.isRunning(), true);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -120,7 +140,9 @@ describe("Pi process session factory", () => {
 	});
 
 	it("rejects resume when session persistence is disabled", async () => {
-		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-resume-disabled-"));
+		const root = await mkdtemp(
+			join("/tmp", "codewiki-pi-trace-resume-disabled-"),
+		);
 		try {
 			const factory = createPiTraceHostSessionFactory({ noSession: true });
 			await assert.rejects(
@@ -245,6 +267,11 @@ describe("Pi process session factory", () => {
 			args: ["--mode", "json", "-p"],
 			cwd: "/repo/codewiki",
 			env: { CODEWIKI_TEST: "1" },
+			model: {
+				provider: "anthropic",
+				model: "claude-opus-4-6",
+				thinking: "xhigh",
+			},
 			outputFile: (input) =>
 				`/repo/codewiki/.codewiki/runtime/tmp/${input.traceId}/runtime/pi-workers/${input.workerId}.jsonl`,
 			runner(input) {
@@ -268,6 +295,12 @@ describe("Pi process session factory", () => {
 			"--mode",
 			"json",
 			"-p",
+			"--provider",
+			"anthropic",
+			"--model",
+			"claude-opus-4-6",
+			"--thinking",
+			"xhigh",
 			"Implement WU-process.",
 		]);
 		assert.equal(calls[0].cwd, "/repo/codewiki");

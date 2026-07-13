@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added deterministic quality-first execution policy with explicit provider/model/thinking propagation, pricing snapshots, tool and quality floors, bounded higher-quality escalation, token/cost/latency budgets, immutable autonomy ceilings, dashboard policy visibility, and fail-closed completion spend checks.
 - Added guarded dashboard trace execution controls plus a supervised Trace Host result bridge that consumes Pi JSON events, retains only bounded sanitized outcomes, exposes approval digests without granting approval authority, captures resumable session identity and model/usage telemetry, resumes exact Pi sessions only through state/session guards and external-action acknowledgement, and fails closed on malformed, secret-shaped, or missing result envelopes.
 - Added one strict declarative quality-pack schema for production and lab standards, with closed graph/evaluator/evidence identifiers, protected kernel standards, deterministic composition, and `observe`/`warn`/`enforce` rollout modes.
 - Added Implementation Trace Detail worker-attempt observability, separate aggregate Integration and Exit Review, a deterministic human Activity Feed, and a bounded redacted Dev Log with failure retention and successful-close cleanup.

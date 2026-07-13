@@ -85,6 +85,14 @@ describe("trace host result collector", () => {
 			),
 		);
 		missing.acceptLine(assistantEvent("Ordinary final response."));
+		assert.deepEqual(missing.currentUsage(), {
+			input: 240,
+			output: 160,
+			cacheRead: 80,
+			cacheWrite: 20,
+			totalTokens: 500,
+			cost: 0.84,
+		});
 		assert.deepEqual(missing.complete(0, null).result, {
 			version: 1,
 			outcome: "failed",
@@ -93,12 +101,12 @@ describe("trace host result collector", () => {
 			model: "gpt-5.4",
 			provider: "openai-codex",
 			usage: {
-				input: 120,
-				output: 80,
-				cacheRead: 40,
-				cacheWrite: 10,
-				totalTokens: 250,
-				cost: 0.42,
+				input: 240,
+				output: 160,
+				cacheRead: 80,
+				cacheWrite: 20,
+				totalTokens: 500,
+				cost: 0.84,
 			},
 		});
 
@@ -114,6 +122,32 @@ describe("trace host result collector", () => {
 			),
 		);
 		assert.equal(invalid.complete(0, null).result.outcome, "failed");
+	});
+
+	it("omits malformed usage so configured budget enforcement can fail closed", () => {
+		const collector = createTraceHostResultCollector();
+		collector.acceptLine(
+			assistantEvent(
+				`CODEWIKI_TRACE_HOST_RESULT ${JSON.stringify({
+					version: 1,
+					outcome: "completed",
+					summary: "Completed with malformed telemetry.",
+					refs: [],
+				})}`,
+				{
+					usage: {
+						input: 10,
+						output: 5,
+						cacheRead: 0,
+						cacheWrite: 0,
+						totalTokens: 15,
+						cost: { total: -1 },
+					},
+				},
+			),
+		);
+		assert.equal(collector.currentUsage(), undefined);
+		assert.equal(collector.complete(0, null).result.usage, undefined);
 	});
 
 	it("rejects secret-shaped summaries and unbounded event lines", () => {
