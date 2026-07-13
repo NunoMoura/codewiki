@@ -400,12 +400,9 @@ function mainHostShouldStartTrace(
 ): boolean {
 	return (
 		!activeTraceHosts.has(trace.traceId) &&
-		[
-			"needs_decision",
-			"needs_planning",
-			"needs_implementation",
-			"finished",
-		].includes(trace.status)
+		["needs_planning", "needs_implementation", "finished"].includes(
+			trace.status,
+		)
 	);
 }
 

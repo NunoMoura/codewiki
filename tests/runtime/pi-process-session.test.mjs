@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
+import {
+	createPiProcessSessionFactory,
+	createPiTraceHostSessionFactory,
+} from "../../src/pi/process-session.ts";
 
 function sessionInput(overrides = {}) {
 	return {
@@ -33,6 +36,38 @@ async function waitForOutputFile(outputFile, expected) {
 }
 
 describe("Pi process session factory", () => {
+	it("starts supervised trace hosts as independent Pi processes", async () => {
+		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-host-"));
+		try {
+			const calls = [];
+			const factory = createPiTraceHostSessionFactory({
+				command: "pi-test",
+				runner(input) {
+					calls.push(input);
+					return { pid: 2468, outputFile: input.outputFile };
+				},
+			});
+			const started = await factory({
+				repoRoot: root,
+				traceId: "TRACE-independent",
+				target: "planning",
+				refs: ["trace:TRACE-independent:decision:iteration:1"],
+				prompt: "Run planning for TRACE-independent.",
+				supervisorId: "dashboard:1",
+			});
+
+			assert.equal(calls[0].command, "pi-test");
+			assert.equal(calls[0].cwd, root);
+			assert.equal(calls[0].detached, true);
+			assert.equal(calls[0].args.at(-1), "Run planning for TRACE-independent.");
+			assert.match(calls[0].outputFile, /TRACE-independent\/trace-host\/session\.log$/);
+			assert.equal(started.sessionRef, "pi-process:2468");
+			assert.equal(started.pid, 2468);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("builds deterministic Pi CLI process inputs through a runner seam", async () => {
 		const calls = [];
 		const factory = createPiProcessSessionFactory({

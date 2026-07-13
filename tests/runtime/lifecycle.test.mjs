@@ -151,6 +151,20 @@ describe("runtime host lifecycle", () => {
 		assert.match(plan.actions[1].message, /capacity is full/);
 	});
 
+	it("keeps Decision authority in the main session", () => {
+		const plan = planMainHostLifecycle({
+			traceBoard: board({
+				traces: [goal({ traceId: "TRACE-decide", status: "needs_decision" })],
+			}),
+		});
+
+		assert.equal(plan.actions[0].kind, "sleep");
+		assert.equal(
+			plan.actions.some((action) => action.kind === "start_trace_host"),
+			false,
+		);
+	});
+
 	it("blocks main host on active trace path conflicts", () => {
 		const plan = planMainHostLifecycle({
 			traceBoard: board({

@@ -1,6 +1,10 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import type {
+	TraceHostSessionFactory,
+	TraceHostSessionInput,
+} from "../runtime/trace-host-runner.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
 import type {
 	PiWorkerSession,
@@ -9,6 +13,15 @@ import type {
 	PiWorkerSessionResumeInput,
 	PiWorkerSessionResumeResult,
 } from "./worker-start.ts";
+
+export interface PiTraceHostSessionFactoryOptions {
+	command?: string;
+	args?: string[];
+	env?: NodeJS.ProcessEnv;
+	noSession?: boolean;
+	outputFile?: string | ((input: TraceHostSessionInput) => string);
+	runner?: PiProcessCommandRunner;
+}
 
 export interface PiProcessSessionFactoryOptions {
 	command?: string;
@@ -53,6 +66,65 @@ export type PiProcessCommandRunner = (
 export type PiProcessSessionResumeRunner = (
 	input: PiWorkerSessionResumeInput,
 ) => Promise<PiWorkerSessionResumeResult> | PiWorkerSessionResumeResult;
+
+export function createPiTraceHostSessionFactory(
+	options: PiTraceHostSessionFactoryOptions = {},
+): TraceHostSessionFactory {
+	return (input) => startPiTraceHostSession(input, options);
+}
+
+async function startPiTraceHostSession(
+	input: TraceHostSessionInput,
+	options: PiTraceHostSessionFactoryOptions,
+) {
+	try {
+		const outputFile = resolveTraceHostOutputFile(input, options);
+		await mkdir(dirname(outputFile), { recursive: true });
+		const result = await (options.runner || runPiProcessCommand)({
+			command: options.command || "pi",
+			args: [
+				...(options.args || ["--mode", "json", "-p"]),
+				...(options.noSession ? ["--no-session"] : []),
+				input.prompt,
+			],
+			cwd: input.repoRoot,
+			env: options.env || process.env,
+			detached: true,
+			outputFile,
+			workerId: `trace-host:${input.traceId}`,
+			workUnitId: `trace:${input.target}`,
+			traceId: input.traceId,
+		});
+		if (isFailedProcessResult(result)) {
+			throw new Error(processFailureMessage(result));
+		}
+		return {
+			traceId: input.traceId,
+			target: input.target,
+			sessionRef:
+				result.sessionId ||
+				(result.pid ? `pi-process:${result.pid}` : `pi-output:${outputFile}`),
+			...(result.pid ? { pid: result.pid } : {}),
+		};
+	} catch (error) {
+		throw new Error(`Failed to start trace host ${input.traceId}: ${errorMessage(error)}`, {
+			cause: error,
+		});
+	}
+}
+
+function resolveTraceHostOutputFile(
+	input: TraceHostSessionInput,
+	options: PiTraceHostSessionFactoryOptions,
+): string {
+	if (typeof options.outputFile === "function") return options.outputFile(input);
+	if (typeof options.outputFile === "string") return options.outputFile;
+	return resolve(
+		input.repoRoot,
+		traceTmpPath(input.traceId, "trace-host"),
+		"session.log",
+	);
+}
 
 export function createPiProcessSessionFactory(
 	options: PiProcessSessionFactoryOptions = {},
@@ -240,6 +312,10 @@ function processFailureMessage(result: PiProcessCommandResult): string {
 	]
 		.filter(Boolean)
 		.join(": ");
+}
+
+function errorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
 }
 
 function safeSegment(value: string): string {

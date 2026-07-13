@@ -97,6 +97,8 @@ Trace independence is a runtime isolation contract: each trace owns its lease, p
 
 A single process may act in different roles over time, but normal background execution uses a trace-scoped host distinct from the main conversation. Under the current supervised policy, a trace host must pause safely when approved supervision disappears; surviving main-session closure as unattended automation requires a separate explicit policy decision.
 
+The runtime lifecycle starts trace hosts only for traces that already need Planning, Implementation, or closure. A `needs_decision` trace remains in the main session because Decision authority cannot be delegated to a background host. `dispatchTraceHosts()` requires an attached supervisor and converts bounded lifecycle actions into one trace-scoped session start each. `createPiTraceHostSessionFactory()` can launch that session as an independent Pi process with a bounded trace-only prompt and project-local runtime log. The supervising host remains responsible for process monitoring, cancellation, and safe pause; process detachment alone never grants unattended authority.
+
 Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime sprint proposal
