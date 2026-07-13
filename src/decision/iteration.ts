@@ -1,3 +1,4 @@
+import type { AcceptedChangeBundle } from "../changes/accepted-bundle.ts";
 import {
 	createLoopIterationEvent,
 	createLoopTailCheckpoint,
@@ -34,6 +35,7 @@ import type {
 
 export interface DecisionIterationInput {
 	traceId: string;
+	acceptedChangeBundle?: AcceptedChangeBundle;
 	proposal?: SprintProposal;
 	proposalInput?: SprintProposalInput;
 	knowledgeDelta?: KnowledgeDelta;
@@ -174,6 +176,9 @@ function decisionOutput(input: {
 	return {
 		id: `${input.input.traceId}:decision:output:${input.baseSequence}`,
 		traceId: input.input.traceId,
+		...(input.input.acceptedChangeBundle
+			? { acceptedChangeBundle: input.input.acceptedChangeBundle }
+			: {}),
 		proposalId: input.proposal.id,
 		summary: input.proposal.summary || decisionSummary(input.approvedChanges),
 		approvedChangeIds: input.approvedChanges.map((change) => change.id),
@@ -282,6 +287,9 @@ function decisionTraceEvents(input: {
 			output: {
 				id: output.id,
 				summary: output.summary,
+				...(output.acceptedChangeBundle
+					? { acceptedChangeBundle: output.acceptedChangeBundle }
+					: {}),
 				approvedChanges: approvedChanges.map(proposedChangeData),
 				approvedChangeIds: output.approvedChangeIds,
 				decisionTypeProfiles: output.decisionTypeProfiles || [],

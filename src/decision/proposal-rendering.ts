@@ -4,6 +4,7 @@ import type { ProposedChange, SprintProposal } from "./types.ts";
 export interface RenderSprintProposalMarkdownOptions {
 	includeSourceRefs?: boolean;
 	hardeningQuestions?: string[];
+	acceptedChangeBundleDigest?: string;
 }
 
 export interface SprintProposalHardeningIssue {
@@ -23,6 +24,11 @@ export function renderSprintProposalMarkdown(
 		`Created: ${escapeMarkdownText(proposal.createdAt)}`,
 		`Updated: ${escapeMarkdownText(proposal.updatedAt)}`,
 	];
+	if (options.acceptedChangeBundleDigest) {
+		lines.push(
+			`Accepted Change bundle: \`${escapeMarkdownText(options.acceptedChangeBundleDigest)}\``,
+		);
+	}
 	if (options.includeSourceRefs !== false && proposal.sourceRefs.length) {
 		lines.push("", "Source refs:");
 		for (const ref of proposal.sourceRefs) {

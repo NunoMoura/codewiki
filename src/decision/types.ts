@@ -1,3 +1,4 @@
+import type { AcceptedChangeBundle } from "../changes/accepted-bundle.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type {
 	AcceptanceCriterion,
@@ -302,6 +303,7 @@ export interface ActiveTraceGoal {
 export interface DecisionOutput {
 	id: string;
 	traceId: string;
+	acceptedChangeBundle?: AcceptedChangeBundle;
 	proposalId: string;
 	summary: string;
 	approvedChangeIds: string[];
