@@ -27,7 +27,7 @@ export function changeContent(change: Change): Record<string, unknown> {
 	};
 }
 
-function stableJson(value: unknown): string {
+export function stableJson(value: unknown): string {
 	return JSON.stringify(sortValue(value));
 }
 

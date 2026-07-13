@@ -244,6 +244,7 @@ describe("Git-ref Change Store", () => {
 		});
 		assert.equal(deferred.change.status, "deferred");
 		assert.equal(deferred.change.lastStatusTransition.to, "deferred");
-		assert.equal(deferred.change.revision, 2);
+		assert.equal(deferred.change.revision, 1);
+		assert.equal(deferred.recordRevision, 2);
 	});
 });

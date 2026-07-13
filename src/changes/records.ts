@@ -44,6 +44,14 @@ interface ChangeStatusChange {
 	ref?: string;
 }
 
+interface ChangeAcceptance {
+	changedBy: string;
+	changedAt: string;
+	reason?: string;
+	authority: string;
+	ref: string;
+}
+
 export function createChangeRecord(change: Change): ChangeRecord {
 	return {
 		schemaVersion: CHANGE_RECORD_SCHEMA_VERSION,
@@ -126,30 +134,46 @@ export function transitionChangeStatus(
 	record: ChangeRecord,
 	input: ChangeStatusChange,
 ): ChangeRecord {
+	return changeStatusRecord(record, input);
+}
+
+export function acceptChangeRecord(
+	record: ChangeRecord,
+	input: ChangeAcceptance,
+): ChangeRecord {
+	return changeStatusRecord(record, { ...input, status: "accepted" });
+}
+
+function changeStatusRecord(
+	record: ChangeRecord,
+	input: ChangeStatusChange | (ChangeAcceptance & { status: "accepted" }),
+): ChangeRecord {
 	const current = parseChangeRecord(record);
 	if (current.change.status === input.status) {
 		throw invalidRecord(`Change is already ${input.status}`);
 	}
-	const change = nextEditableChange(
-		current.change,
-		input.changedBy,
-		input.changedAt,
-	);
-	const from = current.change.status;
-	change.status = input.status;
-	change.lastStatusTransition = {
-		changeId: change.id,
-		revision: change.revision,
-		contentDigest: changeContentDigest(change),
-		from,
-		to: input.status,
-		changedBy: input.changedBy,
-		changedAt: input.changedAt,
-		...(input.reason ? { reason: input.reason } : {}),
-		...(input.authority ? { authority: input.authority } : {}),
-		...(input.ref ? { ref: input.ref } : {}),
-	};
-	return reviseChangeRecord(current, parseChange(change));
+	const contentDigest = changeContentDigest(current.change);
+	const change = parseChange({
+		...current.change,
+		status: input.status,
+		lastStatusTransition: {
+			changeId: current.change.id,
+			revision: current.change.revision,
+			contentDigest,
+			from: current.change.status,
+			to: input.status,
+			changedBy: input.changedBy,
+			changedAt: input.changedAt,
+			...(input.reason ? { reason: input.reason } : {}),
+			...(input.authority ? { authority: input.authority } : {}),
+			...(input.ref ? { ref: input.ref } : {}),
+		},
+	});
+	return parseChangeRecord({
+		...current,
+		recordRevision: current.recordRevision + 1,
+		change,
+	});
 }
 
 export function linkChangeRecord(

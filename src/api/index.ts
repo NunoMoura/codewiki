@@ -61,6 +61,11 @@ export type {
 	ChangeStatusTransition,
 	ChangeValidation,
 } from "../changes/types.ts";
+export type {
+	AcceptedChangeBundle,
+	AcceptedChangeSelection,
+	AcceptedChangeSnapshot,
+} from "../changes/accepted-bundle.ts";
 export type { ChangeRecord } from "../changes/records.ts";
 export type {
 	ChangeQuery,
