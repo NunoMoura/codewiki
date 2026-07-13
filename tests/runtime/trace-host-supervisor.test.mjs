@@ -28,6 +28,15 @@ function controlledFactory(options = {}) {
 				if (options.monitorError) throw new Error("inspection unavailable");
 				return running;
 			},
+			...(options.result
+				? {
+						completion: async () => ({
+							exitCode: 0,
+							signal: null,
+							result: options.result,
+						}),
+					}
+				: {}),
 			stop(reason) {
 				stopReasons.push(reason);
 				running = false;
@@ -181,6 +190,30 @@ describe("trace host supervisor", () => {
 		);
 	});
 
+	it("projects bounded natural completion results", async () => {
+		const result = {
+			version: 1,
+			outcome: "needs_approval",
+			summary: "Planning proposal requires user approval.",
+			refs: ["trace:TRACE-supervised:decision:iteration:1"],
+			sessionId: "pi-session-1",
+			approval: {
+				kind: "planning",
+				proposalDigest: `sha256:${"a".repeat(64)}`,
+			},
+		};
+		const supervisor = new TraceHostSupervisor();
+		const controlled = controlledFactory({ result });
+		await supervisor.start(sessionInput(), controlled.factory);
+		controlled.controls.get("TRACE-supervised").finish();
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.deepEqual(snapshot.result, result);
+		assert.equal(snapshot.state, "stopped");
+	});
+
 	it("fails closed when process monitoring breaks", async () => {
 		const supervisor = new TraceHostSupervisor();
 		const controlled = controlledFactory({ monitorError: true });
@@ -233,5 +266,6 @@ describe("trace host supervisor", () => {
 		const snapshot = (await supervisor.stopAll())[0];
 		assert.equal(snapshot.state, "stopped");
 		assert.equal(snapshot.stopReason, "shutdown");
+		assert.equal(snapshot.result.outcome, "blocked");
 	});
 });

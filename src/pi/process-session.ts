@@ -7,6 +7,7 @@ import type {
 	TraceHostSessionInput,
 } from "../runtime/trace-host-runner.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
+import { runDetachedTraceHostCommand } from "./trace-host-process.ts";
 import type {
 	PiWorkerSession,
 	PiWorkerSessionFactory,
@@ -47,6 +48,7 @@ export interface PiProcessCommandRunnerInput {
 	workerId: string;
 	workUnitId: string;
 	traceId: string;
+	outputMode?: "raw" | "trace-host";
 }
 
 export interface PiProcessCommandResult {
@@ -96,6 +98,7 @@ async function startPiTraceHostSession(
 			workerId: `trace-host:${input.traceId}`,
 			workUnitId: `trace:${input.target}`,
 			traceId: input.traceId,
+			outputMode: "trace-host",
 		});
 		if (isFailedProcessResult(result)) {
 			throw new Error(processFailureMessage(result));
@@ -238,6 +241,9 @@ async function runPiProcessCommand(
 	input: PiProcessCommandRunnerInput,
 ): Promise<PiProcessCommandResult> {
 	await mkdir(dirname(input.outputFile), { recursive: true });
+	if (input.detached && input.outputMode === "trace-host") {
+		return runDetachedTraceHostCommand(input);
+	}
 	if (input.detached) return await runDetachedPiProcessCommand(input);
 	return await runForegroundPiProcessCommand(input);
 }

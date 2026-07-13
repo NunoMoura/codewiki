@@ -819,10 +819,15 @@ function renderExecutionControl(trace) {
 		text(note, traceHostState ? 'No execution control is available for this trace.' : 'Loading guarded execution status…');
 		box.append(note); return box;
 	}
+	const result = card.session && card.session.result;
 	const grid = document.createElement('div'); grid.className = 'execution-control-grid';
 	[
 		['trace state', card.traceStatus],
 		['execution session', card.session ? card.session.state : 'not running'],
+		['outcome', result ? result.outcome : 'pending'],
+		['model', result && result.model ? (result.provider ? result.provider + '/' : '') + result.model : 'not reported'],
+		['usage', result && result.usage ? result.usage.totalTokens + ' tokens · $' + result.usage.cost : 'not reported'],
+		['resume session', result && result.sessionId ? result.sessionId : 'not available'],
 		['policy', traceHostState.policy.agency + ' · ' + traceHostState.policy.automation],
 	].forEach(function(entry) {
 		const item = document.createElement('div'); item.className = 'execution-control-item';
@@ -831,7 +836,7 @@ function renderExecutionControl(trace) {
 		item.append(label, value); grid.append(item);
 	});
 	const actions = document.createElement('div'); actions.className = 'execution-actions';
-	const start = document.createElement('button'); start.type = 'button'; start.className = 'execution-button'; text(start, 'Start trace execution');
+	const start = document.createElement('button'); start.type = 'button'; start.className = 'execution-button'; text(start, result ? 'Restart trace execution' : 'Start trace execution');
 	start.disabled = !card.canStart;
 	start.title = card.blockers.join(' ');
 	start.onclick = function() { void executeTraceHostCommand('start', card); };
@@ -840,7 +845,14 @@ function renderExecutionControl(trace) {
 	cancel.onclick = function() { void executeTraceHostCommand('cancel', card); };
 	actions.append(start, cancel);
 	const note = document.createElement('div'); note.className = 'execution-note';
-	text(note, card.blockers.length ? card.blockers.join(' ') : 'Commands use exact state guards and return auditable receipts. Semantic approvals remain separate.');
+	const messages = [];
+	if (result && result.summary) messages.push(result.summary);
+	if (result && result.approval) {
+		messages.push('Approval required: ' + result.approval.kind + ' · ' + result.approval.proposalDigest + (result.approval.proposalRef ? ' · ' + result.approval.proposalRef : ''));
+	}
+	if (card.blockers.length) messages.push(card.blockers.join(' '));
+	if (!messages.length) messages.push('Commands use exact state guards and return auditable receipts. Semantic approvals remain separate.');
+	text(note, messages.join(' '));
 	box.append(grid, actions, note); return box;
 }
 async function executeTraceHostCommand(action, card) {

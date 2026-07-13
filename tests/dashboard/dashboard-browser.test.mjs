@@ -20,9 +20,14 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /function renderExecutionControl/);
 		assert.match(script, /function executeTraceHostCommand/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /integration and exit review/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic trace evidence remains authoritative/);
+		assert.match(
+			CODEWIKI_DASHBOARD_HTML,
+			/Semantic trace evidence remains authoritative/,
+		);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Start trace execution/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic approvals remain separate/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Approval required:/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /resume session/);
 	});
 
 	it("provides explicit loading and terminal recovery content instead of a blank shell", () => {

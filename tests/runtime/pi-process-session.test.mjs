@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
@@ -66,6 +66,7 @@ describe("Pi process session factory", () => {
 			assert.equal(calls[0].command, "pi-test");
 			assert.equal(calls[0].cwd, root);
 			assert.equal(calls[0].detached, true);
+			assert.equal(calls[0].outputMode, "trace-host");
 			assert.equal(calls[0].args.at(-1), "Run planning for TRACE-independent.");
 			assert.match(
 				calls[0].outputFile,
@@ -103,6 +104,76 @@ describe("Pi process session factory", () => {
 			if (started && (await started.controller.isRunning())) {
 				await started.controller.stop("shutdown");
 			}
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("captures only bounded structured trace host output", async () => {
+		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-result-"));
+		const structured = {
+			version: 1,
+			outcome: "blocked",
+			summary: "Waiting for external review evidence.",
+			refs: ["trace:TRACE-result:planning:iteration:1"],
+		};
+		const message = {
+			type: "message_end",
+			message: {
+				role: "assistant",
+				content: [
+					{
+						type: "text",
+						text: `RAW_PRIVATE_SHOULD_NOT_PERSIST\nCODEWIKI_TRACE_HOST_RESULT ${JSON.stringify(structured)}`,
+					},
+				],
+				provider: "test-provider",
+				model: "test-model",
+				stopReason: "stop",
+				usage: { input: 1, output: 2, totalTokens: 3, cost: { total: 0.01 } },
+			},
+		};
+		const script = [
+			`console.log(${JSON.stringify(JSON.stringify({ type: "session", version: 3, id: "session-result-1" }))})`,
+			`console.log(${JSON.stringify(JSON.stringify(message))})`,
+		].join(";");
+		try {
+			const factory = createPiTraceHostSessionFactory({
+				command: process.execPath,
+				args: ["-e", script],
+			});
+			const started = await factory({
+				repoRoot: root,
+				traceId: "TRACE-result",
+				target: "planning",
+				refs: [],
+				prompt: "trace-host-test",
+				supervisorId: "test:1",
+			});
+			for (let attempt = 0; attempt < 40; attempt++) {
+				if (!(await started.controller.isRunning())) break;
+				await new Promise((resolve) => setTimeout(resolve, 25));
+			}
+			const completion = await started.controller.completion();
+			assert.equal(completion.result.outcome, "blocked");
+			assert.equal(completion.result.sessionId, "session-result-1");
+			assert.equal(completion.result.usage.cost, 0.01);
+
+			const outputPath = join(
+				root,
+				".codewiki",
+				"runtime",
+				"tmp",
+				"TRACE-result",
+				"trace-host",
+				"session.log",
+			);
+			const output = await readFile(outputPath, "utf8");
+			assert.match(output, /"type":"trace_host_result"/);
+			assert.equal(output.includes("RAW_PRIVATE_SHOULD_NOT_PERSIST"), false);
+			if (process.platform !== "win32") {
+				assert.equal((await stat(outputPath)).mode & 0o777, 0o600);
+			}
+		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
 	});

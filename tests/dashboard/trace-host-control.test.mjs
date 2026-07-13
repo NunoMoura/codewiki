@@ -43,7 +43,7 @@ function board(trace = goal(), conflicts = []) {
 	};
 }
 
-function controlledFactory() {
+function controlledFactory(result) {
 	const controls = new Map();
 	const starts = [];
 	return {
@@ -55,12 +55,26 @@ function controlledFactory() {
 			const stopReasons = [];
 			const controller = {
 				isRunning: () => running,
+				...(result
+					? {
+							completion: async () => ({
+								exitCode: 0,
+								signal: null,
+								result,
+							}),
+						}
+					: {}),
 				stop(reason) {
 					stopReasons.push(reason);
 					running = false;
 				},
 			};
-			controls.set(input.traceId, { stopReasons });
+			controls.set(input.traceId, {
+				stopReasons,
+				finish: () => {
+					running = false;
+				},
+			});
 			return {
 				traceId: input.traceId,
 				target: input.target,
@@ -72,8 +86,11 @@ function controlledFactory() {
 	};
 }
 
-function harness(config = resolveWikiConfig({ hosts: { pi: { enabled: true } } })) {
-	const controlled = controlledFactory();
+function harness(
+	config = resolveWikiConfig({ hosts: { pi: { enabled: true } } }),
+	result,
+) {
+	const controlled = controlledFactory(result);
 	const supervisor = new TraceHostSupervisor();
 	let currentBoard = board();
 	let tick = 0;
@@ -120,6 +137,35 @@ describe("dashboard trace host control", () => {
 		assert.equal(result.state.traces[0].canCancel, true);
 		assert.equal(controlled.starts.length, 1);
 		assert.match(controlled.starts[0].prompt, /Work only on this trace/);
+	});
+
+	it("projects approval outcomes without granting approval authority", async () => {
+		const traceResult = {
+			version: 1,
+			outcome: "needs_approval",
+			summary: "Planning proposal is ready for review.",
+			refs: ["trace:TRACE-control:decision:iteration:1"],
+			sessionId: "pi-session-control",
+			approval: {
+				kind: "planning",
+				proposalDigest: `sha256:${"b".repeat(64)}`,
+			},
+		};
+		const { control, controlled } = harness(undefined, traceResult);
+		const initial = (await control.status()).traces[0];
+		await control.execute({
+			action: "start",
+			commandId: "command-outcome-001",
+			traceId: initial.traceId,
+			expectedStateDigest: initial.stateDigest,
+		});
+		controlled.controls.get(initial.traceId).finish();
+
+		const completed = (await control.status()).traces[0];
+		assert.deepEqual(completed.session.result, traceResult);
+		assert.equal(completed.canCancel, false);
+		assert.equal(completed.canStart, false);
+		assert.match(completed.blockers[0], /Exact user approval is required/);
 	});
 
 	it("replays identical command ids without starting twice", async () => {

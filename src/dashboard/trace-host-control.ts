@@ -236,7 +236,7 @@ async function controlState(
 	const sessions = new Map(
 		options.supervisor
 			.snapshot()
-			.filter((session) => session.state !== "stopped")
+			.filter((session) => session.state !== "stopped" || session.result)
 			.map((session) => [session.traceId, session]),
 	);
 	const policy = {
@@ -259,7 +259,7 @@ async function controlState(
 				traceStatus: trace.status,
 				stateDigest: traceStateDigest(trace, session, policy),
 				canStart: blockers.length === 0,
-				canCancel: session !== undefined,
+				canCancel: sessionActive(session),
 				blockers,
 				...(session ? { session } : {}),
 			};
@@ -274,14 +274,32 @@ function startBlockers(
 	session: TraceHostSessionSnapshot | undefined,
 ): string[] {
 	const blockers: string[] = [];
-	if (session) blockers.push("Trace host is already active.");
+	if (sessionActive(session)) blockers.push("Trace host is already active.");
+	if (session?.result?.outcome === "needs_approval") {
+		blockers.push(
+			"Exact user approval is required before this session can resume.",
+		);
+	}
+	if (session?.result?.outcome === "blocked") {
+		blockers.push(
+			"Resolve the reported blocker before this session can resume.",
+		);
+	}
 	if (!config.hosts.pi.enabled) blockers.push("hosts.pi.enabled is false.");
 	if (config.runtime.agency === "observe") {
 		blockers.push("runtime.agency is observe.");
 	}
-	const plan = tracePlan(board, trace.traceId, session ? [trace.traceId] : []);
+	const plan = tracePlan(
+		board,
+		trace.traceId,
+		sessionActive(session) ? [trace.traceId] : [],
+	);
 	if (!plan.actions.some((action) => action.kind === "start_trace_host")) {
-		blockers.push(...(plan.blockers.length ? plan.blockers : ["Trace is not ready for a host."]));
+		blockers.push(
+			...(plan.blockers.length
+				? plan.blockers
+				: ["Trace is not ready for a host."]),
+		);
 	}
 	return unique(blockers);
 }
@@ -333,6 +351,8 @@ function traceStateDigest(
 					sessionRef: session.sessionRef,
 					state: session.state,
 					target: session.target,
+					stopReason: session.stopReason,
+					result: session.result,
 				}
 			: undefined,
 		policy,
@@ -342,7 +362,8 @@ function traceStateDigest(
 export function parseDashboardTraceHostCommand(
 	value: unknown,
 ): DashboardTraceHostCommand {
-	if (!isRecord(value)) throw badRequest("Trace host command must be an object.");
+	if (!isRecord(value))
+		throw badRequest("Trace host command must be an object.");
 	const allowed = new Set([
 		"action",
 		"commandId",
@@ -351,7 +372,8 @@ export function parseDashboardTraceHostCommand(
 		"expectedSessionRef",
 	]);
 	for (const key of Object.keys(value)) {
-		if (!allowed.has(key)) throw badRequest(`Unsupported command field ${key}.`);
+		if (!allowed.has(key))
+			throw badRequest(`Unsupported command field ${key}.`);
 	}
 	if (value.action !== "start" && value.action !== "cancel") {
 		throw badRequest("Trace host action must be start or cancel.");
@@ -375,6 +397,10 @@ export function parseDashboardTraceHostCommand(
 		throw badRequest("Start does not accept expectedSessionRef.");
 	}
 	return command;
+}
+
+function sessionActive(session: TraceHostSessionSnapshot | undefined): boolean {
+	return Boolean(session && session.state !== "stopped");
 }
 
 function requiredCard(
@@ -402,7 +428,10 @@ function stableJson(value: unknown): string {
 	return JSON.stringify(value);
 }
 
-function trimEntries(entries: Map<string, IdempotencyEntry>, max: number): void {
+function trimEntries(
+	entries: Map<string, IdempotencyEntry>,
+	max: number,
+): void {
 	while (entries.size > max) {
 		const first = entries.keys().next().value;
 		if (typeof first !== "string") return;
@@ -428,7 +457,9 @@ function sha256Digest(value: unknown): string {
 
 function boundedText(value: unknown, label: string, max: number): string {
 	if (typeof value !== "string" || value.length < 1 || value.length > max) {
-		throw badRequest(`${label} must be a non-empty string of at most ${max} characters.`);
+		throw badRequest(
+			`${label} must be a non-empty string of at most ${max} characters.`,
+		);
 	}
 	return value;
 }
@@ -450,7 +481,10 @@ function conflict(message: string): DashboardTraceHostControlError {
 }
 
 function notFound(traceId: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(`Trace ${traceId} was not found.`, 409);
+	return new DashboardTraceHostControlError(
+		`Trace ${traceId} was not found.`,
+		409,
+	);
 }
 
 function errorMessage(error: unknown): string {

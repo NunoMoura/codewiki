@@ -5,6 +5,43 @@ import type {
 } from "./lifecycle.ts";
 
 export type TraceHostTarget = Exclude<TraceLoop, "decision"> | "close";
+export type TraceHostOutcome =
+	| "completed"
+	| "needs_approval"
+	| "blocked"
+	| "failed"
+	| "cancelled";
+
+export interface TraceHostApprovalRequest {
+	kind: "planning" | "implementation" | "archive";
+	proposalDigest: string;
+	proposalRef?: string;
+}
+
+export interface TraceHostResult {
+	version: 1;
+	outcome: TraceHostOutcome;
+	summary: string;
+	refs: string[];
+	sessionId?: string;
+	approval?: TraceHostApprovalRequest;
+	model?: string;
+	provider?: string;
+	usage?: {
+		input: number;
+		output: number;
+		cacheRead: number;
+		cacheWrite: number;
+		totalTokens: number;
+		cost: number;
+	};
+}
+
+export interface TraceHostProcessCompletion {
+	exitCode: number | null;
+	signal: NodeJS.Signals | string | null;
+	result: TraceHostResult;
+}
 
 export interface TraceHostSessionInput {
 	repoRoot: string;
@@ -17,6 +54,7 @@ export interface TraceHostSessionInput {
 
 export interface TraceHostSessionController {
 	isRunning(): Promise<boolean> | boolean;
+	completion?(): Promise<TraceHostProcessCompletion | undefined>;
 	stop(reason: string): Promise<void> | void;
 }
 
@@ -121,6 +159,9 @@ export function traceHostPrompt(
 		"Read trace-backed state before acting and preserve expected-byte and sequence guards.",
 		"Do not create or accept Changes, broaden scope, publish, promote source, advance controllers, or relax kernel standards.",
 		"Stop and report a blocker when user authority, unsafe ambiguity, missing evidence, or lost supervision prevents progress.",
+		"End your final response with exactly one CODEWIKI_TRACE_HOST_RESULT line containing a compact JSON object.",
+		'Format: CODEWIKI_TRACE_HOST_RESULT {"version":1,"outcome":"completed|needs_approval|blocked|failed","summary":"bounded non-sensitive summary","refs":["bounded refs"],"approval":{"kind":"planning|implementation|archive","proposalDigest":"sha256:...","proposalRef":"optional bounded ref"}}',
+		"Include approval only for needs_approval. Never include prompts, chain-of-thought, credentials, raw source, or private data.",
 		"Relevant refs:",
 		...(referenceLines.length ? referenceLines : ["- none"]),
 	].join("\n");

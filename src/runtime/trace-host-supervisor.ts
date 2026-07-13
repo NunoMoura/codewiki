@@ -4,6 +4,7 @@ import {
 	type DispatchTraceHostsResult,
 	type TraceHostSessionFactory,
 	type TraceHostSessionInput,
+	type TraceHostResult,
 	type TraceHostSessionStart,
 	type TraceHostTarget,
 } from "./trace-host-runner.ts";
@@ -56,6 +57,7 @@ export interface TraceHostSessionSnapshot {
 	pid?: number;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	result?: TraceHostResult;
 }
 
 interface ManagedTraceHostSession {
@@ -65,6 +67,7 @@ interface ManagedTraceHostSession {
 	state: TraceHostSessionState;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	result?: TraceHostResult;
 }
 
 export async function runSupervisedTraceHostDispatch(
@@ -132,6 +135,7 @@ export class TraceHostSupervisor {
 			if (!activeState(session.state)) continue;
 			const running = await inspectSession(session);
 			if (running === false) {
+				session.result = await collectSessionResult(session);
 				session.state = "stopped";
 				continue;
 			}
@@ -218,6 +222,8 @@ async function stopSession(
 	session.stopReason = reason;
 	try {
 		await session.start.controller.stop(reason);
+		const observed = await collectSessionResult(session);
+		session.result = stoppedSessionResult(reason, observed);
 		session.state = "stopped";
 		if (retryingFailedStop) session.message = undefined;
 	} catch (error) {
@@ -239,7 +245,69 @@ function sessionSnapshot(
 		...(session.start.pid ? { pid: session.start.pid } : {}),
 		...(session.stopReason ? { stopReason: session.stopReason } : {}),
 		...(session.message ? { message: session.message } : {}),
+		...(session.result ? { result: session.result } : {}),
 	};
+}
+
+async function collectSessionResult(
+	session: ManagedTraceHostSession,
+): Promise<TraceHostResult | undefined> {
+	if (!session.start.controller.completion) return session.result;
+	try {
+		return (
+			(await session.start.controller.completion())?.result || session.result
+		);
+	} catch (error) {
+		session.message = `Trace host result collection failed: ${errorMessage(error)}`;
+		return {
+			version: 1,
+			outcome: "failed",
+			summary: "Trace host result collection failed.",
+			refs: [],
+		};
+	}
+}
+
+function stoppedSessionResult(
+	reason: TraceHostStopReason,
+	observed: TraceHostResult | undefined,
+): TraceHostResult {
+	const { approval: _approval, ...metadata } = observed || {
+		version: 1 as const,
+		refs: [],
+		summary: "",
+		outcome: "failed" as const,
+	};
+	return {
+		...metadata,
+		version: 1,
+		outcome: stoppedOutcome(reason),
+		summary: stopReasonSummary(reason),
+		refs: observed?.refs || [],
+	};
+}
+
+function stoppedOutcome(
+	reason: TraceHostStopReason,
+): "cancelled" | "failed" | "blocked" {
+	if (reason === "cancelled") return "cancelled";
+	if (reason === "monitoring_failed") return "failed";
+	return "blocked";
+}
+
+function stopReasonSummary(reason: TraceHostStopReason): string {
+	switch (reason) {
+		case "cancelled":
+			return "Trace execution was cancelled by the user.";
+		case "supervision_lost":
+			return "Trace execution stopped because approved supervision was lost.";
+		case "budget_exhausted":
+			return "Trace execution stopped after reaching its elapsed-time budget.";
+		case "shutdown":
+			return "Trace execution stopped because its supervisor shut down.";
+		case "monitoring_failed":
+			return "Trace execution stopped because process monitoring failed.";
+	}
 }
 
 function assertSessionIdentity(

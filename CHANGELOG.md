@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added guarded dashboard trace execution controls plus a supervised Trace Host result bridge that consumes Pi JSON events, retains only bounded sanitized outcomes, exposes approval digests without granting approval authority, captures resumable session identity and model/usage telemetry, and fails closed on malformed, secret-shaped, or missing result envelopes.
 - Added one strict declarative quality-pack schema for production and lab standards, with closed graph/evaluator/evidence identifiers, protected kernel standards, deterministic composition, and `observe`/`warn`/`enforce` rollout modes.
 - Added Implementation Trace Detail worker-attempt observability, separate aggregate Integration and Exit Review, a deterministic human Activity Feed, and a bounded redacted Dev Log with failure retention and successful-close cleanup.
 - Added dashboard runtime identity and endpoint health checks so stale loaded controllers and state-serving failures produce actionable restart/retry guidance instead of an unexplained blank shell.
