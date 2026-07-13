@@ -5,9 +5,126 @@
 		"worktreeIsolation": "none",
 		"worktreeSetupCommands": [],
 		"automation": "manual",
-		"agency": "assist",
+		"agency": "delegate",
 		"budgets": {
-			"maxIterations": 1
+			"maxSeconds": 1200,
+			"maxIterations": 1,
+			"maxTokens": 200000,
+			"maxCostUsd": 3,
+			"maxLatencyMs": 1200000
+		},
+		"modelRouting": {
+			"qualityFloor": "high",
+			"maxEscalations": 1,
+			"estimatedInputTokens": 75000,
+			"estimatedOutputTokens": 25000,
+			"routes": [
+				{
+					"id": "openai-codex-gpt-5.4-mini",
+					"provider": "openai-codex",
+					"model": "gpt-5.4-mini",
+					"thinking": "medium",
+					"quality": "standard",
+					"latency": "fast",
+					"timeoutMs": 600000,
+					"pricing": {
+						"inputUsdPerMillion": 0.75,
+						"outputUsdPerMillion": 4.5,
+						"cacheReadUsdPerMillion": 0.075,
+						"cacheWriteUsdPerMillion": 0
+					},
+					"allowedTools": [
+						"ast_grep_search",
+						"bash",
+						"edit",
+						"find",
+						"grep",
+						"lens_diagnostics",
+						"ls",
+						"lsp_diagnostics",
+						"lsp_navigation",
+						"module_report",
+						"read",
+						"read_enclosing",
+						"read_symbol",
+						"wiki_archive",
+						"wiki_implement",
+						"wiki_plan",
+						"wiki_state",
+						"write"
+					]
+				},
+				{
+					"id": "openai-codex-gpt-5.4",
+					"provider": "openai-codex",
+					"model": "gpt-5.4",
+					"thinking": "high",
+					"quality": "high",
+					"latency": "balanced",
+					"timeoutMs": 900000,
+					"pricing": {
+						"inputUsdPerMillion": 2.5,
+						"outputUsdPerMillion": 15,
+						"cacheReadUsdPerMillion": 0.25,
+						"cacheWriteUsdPerMillion": 0
+					},
+					"allowedTools": [
+						"ast_grep_search",
+						"bash",
+						"edit",
+						"find",
+						"grep",
+						"lens_diagnostics",
+						"ls",
+						"lsp_diagnostics",
+						"lsp_navigation",
+						"module_report",
+						"read",
+						"read_enclosing",
+						"read_symbol",
+						"wiki_archive",
+						"wiki_implement",
+						"wiki_plan",
+						"wiki_state",
+						"write"
+					]
+				},
+				{
+					"id": "openai-codex-gpt-5.5",
+					"provider": "openai-codex",
+					"model": "gpt-5.5",
+					"thinking": "xhigh",
+					"quality": "critical",
+					"latency": "slow",
+					"timeoutMs": 1200000,
+					"pricing": {
+						"inputUsdPerMillion": 5,
+						"outputUsdPerMillion": 30,
+						"cacheReadUsdPerMillion": 0.5,
+						"cacheWriteUsdPerMillion": 0
+					},
+					"allowedTools": [
+						"ast_grep_search",
+						"bash",
+						"edit",
+						"find",
+						"grep",
+						"lens_diagnostics",
+						"ls",
+						"lsp_diagnostics",
+						"lsp_navigation",
+						"module_report",
+						"read",
+						"read_enclosing",
+						"read_symbol",
+						"wiki_archive",
+						"wiki_implement",
+						"wiki_plan",
+						"wiki_state",
+						"write"
+					]
+				}
+			]
 		},
 		"approval": {
 			"cadence": "per_iteration",
