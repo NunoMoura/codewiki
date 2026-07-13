@@ -4,13 +4,16 @@ import {
 	runWikiConfig,
 	runWikiDecide,
 	runWikiImplement,
+	runWikiChange,
 	runWikiPlan,
 	type RunWikiArchiveInput,
 	type RunWikiConfigInput,
 	type RunWikiDecideInput,
 	type RunWikiImplementInput,
+	type RunWikiChangeInput,
 	type RunWikiPlanInput,
 } from "../../api/index.ts";
+import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
 	resolveWikiConfigFile,
@@ -35,6 +38,7 @@ const WIKI_STATE_TOOL_NAME = "wiki_state";
 export const CODEWIKI_TOOL_NAMES = [
 	WIKI_STATE_TOOL_NAME,
 	"wiki_config",
+	"wiki_change",
 	"wiki_decide",
 	"wiki_plan",
 	"wiki_implement",
@@ -91,6 +95,7 @@ function codewikiTools(): CodewikiToolDefinition[] {
 	return [
 		wikiStateTool(),
 		wikiConfigTool(),
+		wikiChangeTool(),
 		facadeTool<RunWikiDecideInput>(
 			"wiki_decide",
 			"CodeWiki Decide",
@@ -270,6 +275,69 @@ function wikiConfigTool(): CodewikiToolDefinition {
 				"wiki_config: resolved CodeWiki configuration.",
 				result,
 				warning,
+			);
+		},
+	};
+}
+
+function wikiChangeTool(): CodewikiToolDefinition {
+	return {
+		name: "wiki_change",
+		label: "CodeWiki Change",
+		description:
+			"Query or manage mutable pre-Decision Changes in the current project's Ideas Workspace.",
+		promptSnippet:
+			"Use the Ideas Workspace to capture and refine out-of-scope Changes without widening the active Task.",
+		promptGuidelines: [
+			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
+			"wiki_change cannot accept Changes, create Sprint Traces or Tasks, launch workers, edit source, publish, or advance controllers.",
+			"Mutations require exact Ideas head and record revision guards; list, get, and validate are read-only.",
+		],
+		executionMode: "sequential",
+		parameters: Type.Object(
+			{
+				allowNonProjectInstall: Type.Optional(
+					Type.Boolean({
+						description:
+							"Controlled-test override for mutation when CodeWiki is not loaded from this project's .pi install.",
+					}),
+				),
+				input: Type.Object(
+					{},
+					{
+						additionalProperties: true,
+						description: "Structured RunWikiChangeInput operation.",
+					},
+				),
+			},
+			{ additionalProperties: false },
+		),
+		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+			const args = paramsObject("wiki_change", params, [
+				"allowNonProjectInstall",
+				"input",
+			]);
+			assertOptionalBoolean("wiki_change", args, "allowNonProjectInstall");
+			const input = requiredInput<RunWikiChangeInput>("wiki_change", args.input);
+			const root = await requireCodewikiRoot(ctx);
+			const prepared = withRepoRoot(input, root) as unknown as RunWikiChangeInput;
+			const mutates = wikiChangeOperationMutates(String(prepared.operation || ""));
+			if (mutates) {
+				assertProjectLocalMutationAllowed({
+					toolName: "wiki_change",
+					ctx,
+					projectRoot: root,
+					moduleUrl: import.meta.url,
+					input: {
+						allowNonProjectInstall: args.allowNonProjectInstall,
+					},
+				});
+			}
+			const result = await runWikiChange(prepared);
+			return toolResult(
+				`wiki_change: completed ${result.operation} operation.`,
+				result,
+				mutates ? undefined : notifyInstallWarning(ctx, root),
 			);
 		},
 	};

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import {
 	access,
 	appendFile,
@@ -285,6 +286,41 @@ describe("Pi extension adapter", () => {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+	});
+
+	it("exposes guarded Ideas reads through the registered Pi tool", async () => {
+		const root = await fixture();
+		try {
+			execFileSync("git", ["init", "-q"], { cwd: root });
+			const pi = mockPi();
+			codewikiExtension(pi.api);
+			const tool = toolByName(pi, "wiki_change");
+			const result = assertToolResult(
+				await tool.execute(
+					"tool-call-ideas-list",
+					{ input: { operation: "list" } },
+					undefined,
+					undefined,
+					{ cwd: root },
+				),
+				/wiki_change: completed list operation\./,
+			);
+			assert.equal(result.operation, "list");
+			assert.equal(result.head, null);
+			assert.deepEqual(result.records, []);
+			await assert.rejects(
+				tool.execute(
+					"tool-call-ideas-accept",
+					{ input: { operation: "accept" } },
+					undefined,
+					undefined,
+					{ cwd: root },
+				),
+				/Unsupported wiki_change operation accept/,
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
 	});
 
 	it("renders rich read commands as plain custom messages in TUI mode", async () => {

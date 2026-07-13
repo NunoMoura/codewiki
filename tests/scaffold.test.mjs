@@ -92,6 +92,7 @@ describe("fresh scaffold", () => {
 			"buildWikiState",
 			"resolveWikiConfig",
 			"runWikiArchive",
+			"runWikiChange",
 			"runWikiConfig",
 			"runWikiDecide",
 			"runWikiImplement",

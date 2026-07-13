@@ -3,6 +3,13 @@ export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";
 export * from "./wiki-decide.ts";
 export * from "./wiki-implement.ts";
+export { runWikiChange } from "./wiki-change.ts";
+export type {
+	RunWikiChangeInput,
+	RunWikiChangeResult,
+	WikiChangeSummary,
+	WikiChangeOperation,
+} from "./wiki-change.ts";
 export * from "./wiki-okf.ts";
 export * from "./wiki-plan.ts";
 export * from "./wiki-runtime.ts";
@@ -43,6 +50,23 @@ export type {
 	SourceMapValidationIssueCode,
 } from "../knowledge/source-map.ts";
 export type { ContentProof } from "../git/content-proof.ts";
+export type {
+	Change,
+	ChangeAssessment,
+	ChangeClassification,
+	ChangeEvidence,
+	ChangeIntent,
+	ChangeRecommendation,
+	ChangeStatus,
+	ChangeStatusTransition,
+	ChangeValidation,
+} from "../changes/types.ts";
+export type { IdeasRecord } from "../ideas/records.ts";
+export type {
+	IdeasQuery,
+	IdeasStore,
+	IdeasStoreSnapshot,
+} from "../ideas/store.ts";
 export type {
 	GitStatusSnapshot,
 	GitStatusSnapshotInput,
