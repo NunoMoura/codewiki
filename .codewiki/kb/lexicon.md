@@ -127,9 +127,11 @@ user-facing terminal rendering.
 
 | Term | Meaning | Technical backing |
 | --- | --- | --- |
-| Sprint Proposal | Draft package of Proposed Changes being shaped and validated with the user before accountable work exists. | Sprint proposal while stored or rendered inside the Decision loop. |
-| Decision | User-approved intent, requirement, risk choice, or product/system direction inside a Sprint Proposal. | Proposed change and change id inside trace data. |
-| Sprint | Approved accountable change journey created after user-approved Decisions pass Decision ready checks. | One trace-backed workflow lifecycle. |
+| Change | Mutable pre-Decision statement of intent, classification, evidence, safety, and validation state shaped by the user and agent in the main session. | Canonical `Change` record stored in the Changes Backlog. |
+| Changes Backlog | Durable collection of mutable Changes that have not yet become immutable Decision input. It is storage and a projection, not a workspace or semantic loop. | Git-backed Change Store under `refs/codewiki/changes`. |
+| Decision | Binding interpretation of an exact validated Change revision accepted by the user. | Decision loop output containing the frozen Change snapshot and digest. |
+| Sprint Proposal | Exact rendered Decision proposal derived from one or more validated Change revisions for final user approval before append. It does not own mutable Change authoring. | Decision-loop preview over accepted Change input. |
+| Sprint | Approved accountable change journey created when validated Changes pass Decision Ready Checks. | One independently executable trace-backed workflow lifecycle. |
 | Sprint Record | Durable append-only record for a Sprint. | `.codewiki/traces/TRACE-*.jsonl` trace file. |
 | Sprints Queue | User-facing ordered list of active and completed Sprints. | Generated view/projection over traces and work queues. |
 | Sprint Trace | User-facing horizontal lifecycle/progress bar for one Sprint in the Sprints Queue. | Derived trace projection; never a separate truth file. |

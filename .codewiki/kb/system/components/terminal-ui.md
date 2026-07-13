@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi Terminal and Dashboard UX
-description: CodeWiki keeps the Pi session focused on user-agent communication while a local browser dashboard provides read-only Sprints Queue observability over trace-backed work.
+description: CodeWiki uses the main Pi session for Change brainstorming and validation while independent trace runners execute accepted work and the local dashboard projects Changes, Traces, and Configuration.
 tags:
   - codewiki
   - system
@@ -11,9 +11,9 @@ timestamp: 2026-07-01T00:00:00Z
 ---
 # Pi Terminal and Dashboard UX
 
-CodeWiki keeps the Pi terminal session focused on the decision-host conversation. The user should be able to keep talking to the agent, add decisions, and approve loop output without a persistent terminal widget competing for screen space. Read-only work observability moves to a local browser dashboard opened by `/wiki-dashboard`.
+CodeWiki keeps the main Pi session focused on user-agent communication. The conversation itself is the interaction workspace: the user and agent brainstorm possible Changes, persist useful candidates through `wiki_change`, validate exact revisions, and invoke `wiki_decide` without a persistent terminal widget competing for screen space. There is no separate Ideas Workspace.
 
-The dashboard is trace-first. It renders each active unit of work as a Sprint Trace inside the Sprints Queue. The trace JSONL files remain workflow truth; the dashboard is only a live projection over `.codewiki/traces/TRACE-*.jsonl` and derived in-memory views.
+The local dashboard opened by `/wiki-dashboard` has three product areas: Changes, Traces, and Configuration. Changes projects the durable Changes Backlog. Traces renders each accepted independent unit of work as a Sprint Trace and expands it into Trace Detail. Configuration exposes effective model, budget, autonomy, isolation, and runtime policy. The dashboard is a projection and guarded command surface over core APIs; it never owns workflow truth or writes source directly.
 
 ## Command-triggered surfaces
 
@@ -21,17 +21,19 @@ Active command direction is intentionally small. Each command has one direct sla
 
 | Command | Purpose |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json]` | Start or reuse the local read-only browser dashboard for the Sprints Queue. |
+| `/wiki-dashboard [--no-open] [--json]` | Start or reuse the local Changes, Traces, and Configuration dashboard. |
 | `/wiki-resume` | Continue from the trace-derived resume view, latest loop outputs, unmet Ready Checks, and source refs. |
 | `/wiki-explain [target]` | Explain the whole project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Start CodeWiki in a greenfield or brownfield repository through explicit backend setup/bootstrap calls, then render a human ready summary. |
 | `/wiki-config` | Inspect CodeWiki preferences/configuration; writes require explicit confirmation. |
 
-There is no separate public status command or state alias. `wiki_state` remains an internal agent read tool. The user-facing state surface is the read-only dashboard. `/wiki-resume` remains the high-frequency user continuation command.
+There is no separate public status command or state alias. `wiki_state` remains an internal agent read tool. The user-facing state surface is the dashboard; allowed mutations still pass through guarded core capabilities rather than browser-owned state. `/wiki-resume` remains the high-frequency user continuation command.
 
-## Sprints Queue lifecycle
+## Change-to-trace lifecycle
 
-A Sprint Proposal contains Decisions that the user validates. When the Decisions are approved and Decision Ready Checks pass, CodeWiki appends trace records. The resulting Sprint Trace appears in the Sprints Queue. Planning turns approved Decisions into parallel-safe Tasks, and implementation progress updates the same Sprint Trace from appended evidence.
+The main session creates or refines mutable Changes in the Changes Backlog. Validation binds an exact Change revision and digest without creating a trace. When the user approves the exact Decision proposal and Decision Ready Checks pass, `wiki_decide` freezes the Change snapshot, creates the trace, and appends `decision.changes_approved` through the guarded runtime boundary.
+
+The resulting Sprint Trace appears in the Traces queue and becomes independent from the main conversation. A trace-scoped runner performs Planning, coordinates parallel-safe Tasks and workers, integrates results, and runs authoritative Implementation validation. The user can continue brainstorming other Changes while one or more traces execute within configured concurrency, budget, isolation, and supervision limits.
 
 A Sprint Trace is a horizontal completion bar backed by trace state. It foregrounds the questions users ask most often:
 
@@ -47,15 +49,17 @@ Expanding a Sprint Trace opens Trace Detail. Trace Detail shows title, current a
 
 ## Local dashboard host
 
-`/wiki-dashboard` starts a local HTTP server bound to `127.0.0.1` with a random URL token. The server exposes static browser assets, `GET /api/state`, and `GET /api/events` for live refresh. It watches `.codewiki/traces` and rebuilds dashboard state from project trace files.
+`/wiki-dashboard` starts a local HTTP server bound to `127.0.0.1` with a random URL token. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change/configuration actions. It watches `.codewiki/traces` and the Changes Backlog ref, then rebuilds dashboard projections from core APIs.
 
 Security boundaries:
 
 - bind only to loopback;
 - include a random token in API URLs;
-- keep dashboard APIs read-only by default;
+- keep reads public only within the tokenized same-origin session;
+- route any Change validation or configuration command through guarded core APIs with capability checks, optimistic revision/digest guards, idempotency, audit receipts, stale-state lockout, and secret redaction;
 - do not enable CORS;
-- keep trace writes and approvals in the Pi decision-host session.
+- never grant dashboard shell, direct source-write, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority;
+- keep final Decision approval explicit and bound to the exact rendered proposal.
 
 The visual style should be retro console inspired rather than pure ASCII: monospace layout, strong color semantics, high-contrast panels, and low-noise horizontal bars. The browser gives scroll, click, keyboard navigation, search, and split-screen observability without fighting terminal width or mouse limitations.
 
@@ -63,10 +67,12 @@ The visual style should be retro console inspired rather than pure ASCII: monosp
 
 Bootstrap keeps rich command rendering because it runs before a project has useful trace state. Explicit read commands such as `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render their requested view. After bootstrap, `wiki_*` tools should return compact agent handles; they should not own rich user observability or render preview output as product UX.
 
-The durable user-facing observability path is append-driven:
+The durable user-facing path is state-boundary driven:
 
 ```text
-approve Sprint Proposal -> append trace records -> update derived view -> render Sprints Queue / Sprint Trace surface
+main conversation -> wiki_change -> Changes Backlog
+validated Change -> wiki_decide -> independent trace
+trace append -> derived view -> Traces / Trace Detail surface
 ```
 
 Preview results are agent-private validation drafts. Only appended trace records should update post-bootstrap user observability.

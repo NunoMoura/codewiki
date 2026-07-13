@@ -71,7 +71,8 @@ The normal internal agent surface is small and phase-aligned.
 | Tool | Responsibility | Mutates truth? |
 | --- | --- | --- |
 | `wiki_state` | Read active trace-derived state summaries, Sprints Queue packets, quality, and blockers. Views are output shape, not truth input. | No |
-| `wiki_decide` | Run decision-loop iterations from intent, current-state refs, KB propagation evidence, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
+| `wiki_change` | Query and manage mutable pre-Decision Change records in the Changes Backlog with exact head/revision guards. It cannot accept Changes, create traces or Tasks, launch workers, edit source, publish, or advance controllers. | Yes |
+| `wiki_decide` | Consume exact validated Change revisions and digests, render the binding Decision proposal, and create the trace-backed Decision through the guarded runtime append boundary. It does not author mutable Changes. | Yes |
 | `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, triggers, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. | Yes |
@@ -83,14 +84,15 @@ There is no standalone current tool for split output generation or split exit ev
 
 | Consumer | Surface | Backend support | Non-goal |
 | --- | --- | --- | --- |
-| Internal agent | `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, `wiki_config` | Trace-derived read model; checked semantic loop preview/append; guarded archive/config mutation. | Runtime mega-tool, split loop output/evaluation tools, or source-map explain inside `wiki_state`. |
+| Internal agent | `wiki_state`, `wiki_change`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, `wiki_config` | Change Backlog reads/mutations; trace-derived read model; checked semantic loop preview/append; guarded archive/config mutation. | Runtime mega-tool, split loop output/evaluation tools, or source-map explain inside `wiki_state`. |
 | Host/runtime | Package APIs such as `runWikiRuntime()`, host lifecycle helpers, worker-start helpers, handoff manifest helpers. | Work-unit claim selection, heartbeat-cycle Run starts, lease expiry, worker session transport, release events, append-safe coordination writes. | Semantic approval, Planning-owned work invention, or treating worker output as proof before implementation validation. |
 | User/Pi commands | `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Read-only Sprints Queue dashboard, resume handoff, source/path explanation, effective config, setup readiness. | Grouped namespace commands, state-dump commands, terminal widget stacks, former state aliases, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
 
 The core reduced-tool facade shape now exists for the current tool set:
 
+- `runWikiChange()` queries or mutates canonical Change records through the Git-backed Change Store under `refs/codewiki/changes`, with bounded inputs, deduplication, secret rejection, and exact head/revision guards.
 - `buildWikiState()` derives view-shaped state projections from active trace records only.
-- `runWikiDecide()` runs decision output and exit conditions, records route metadata, then previews or appends the checked decision iteration batch through the runtime-owned trace append boundary.
+- `runWikiDecide()` consumes exact validated Change snapshots, runs Decision output and exit conditions, records route metadata, then creates or appends the checked Decision iteration through the runtime-owned trace boundary.
 - `runWikiPlan()` runs planning output and exit conditions, routes clarification/user-validation needs back to Decision, then previews or appends the checked planning iteration batch through the runtime-owned trace append boundary.
 - `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, accepts exited planning output or direct implementation decision events, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch through the runtime-owned trace append boundary.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
@@ -102,7 +104,7 @@ The runtime backend remains available to host code, not as a normal agent tool:
 - Runtime lifecycle helpers plan main-host and trace-host coordination from derived views and can create trace-owned host observed/block/stop events. They are helpers, not a fourth semantic loop.
 - `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
 
-Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The Pi adapter registers the model-facing `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive` tools over the root facade surface. Host runners call runtime backend APIs for coordination writes. The CLI adapter is only a transitional development harness and should not be the normal agent path.
+Host tools should call these facades instead of exposing separate proof, output, evaluation, and append steps. The Pi adapter registers the model-facing `wiki_state`, `wiki_config`, `wiki_change`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive` tools over the root facade surface. After Decision exit, a trace-scoped runner consumes the trace and drives Planning and Implementation independently from the main user conversation. Host runners call runtime backend APIs for coordination writes. The CLI adapter is only a transitional development harness and should not be the normal agent path.
 
 ## `wiki_state` views
 
@@ -139,7 +141,7 @@ Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` command
 
 | Command | Backend action |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json]` | Start or reuse the local read-only browser dashboard for the Sprints Queue. |
+| `/wiki-dashboard [--no-open] [--json]` | Start or reuse the local Changes, Traces, and Configuration dashboard. |
 | `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
 | `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
@@ -151,7 +153,7 @@ Users may ask for decisions, planning, implementation, automation, or archive wo
 
 Pi command rendering and future trace/view rendering are product UX surfaces. Wiki tools execute loops and return compact agent handles; they should not register rich TUI renderers for calls or results.
 
-Post-bootstrap user-facing observability is append-driven. Sprint Proposal validation is the pre-append exception: candidate Decisions are shown to the user for approval/edit/reject before becoming decision-loop input.
+Post-bootstrap trace observability is append-driven. Changes Backlog updates are the pre-trace exception: mutable Change records can be created, revised, merged, split, deferred, rejected, withdrawn, and validated before any trace exists. Final Decision approval remains bound to the exact rendered proposal and exact validated Change revision.
 
 ```text
 wiki_* append -> trace record -> derived view -> renderer

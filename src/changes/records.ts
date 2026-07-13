@@ -1,9 +1,9 @@
-import { changeContentDigest } from "../changes/digest.ts";
-import { parseChange } from "../changes/schema.ts";
-import type { Change, ChangeStatus } from "../changes/types.ts";
+import { changeContentDigest } from "./digest.ts";
+import { parseChange } from "./schema.ts";
+import type { Change, ChangeStatus } from "./types.ts";
 
-export const IDEAS_RECORD_SCHEMA_VERSION = 1;
-export const IDEAS_LINK_RELATION_VALUES = [
+export const CHANGE_RECORD_SCHEMA_VERSION = 1;
+export const CHANGE_LINK_RELATION_VALUES = [
 	"related",
 	"duplicate_of",
 	"merged_into",
@@ -12,30 +12,30 @@ export const IDEAS_LINK_RELATION_VALUES = [
 	"split_from",
 ] as const;
 
-export type IdeasLinkRelation = (typeof IDEAS_LINK_RELATION_VALUES)[number];
+export type ChangeLinkRelation = (typeof CHANGE_LINK_RELATION_VALUES)[number];
 
-export interface IdeasLink {
-	relation: IdeasLinkRelation;
+export interface ChangeLink {
+	relation: ChangeLinkRelation;
 	targetChangeId: string;
 	createdBy: string;
 	createdAt: string;
 }
 
-export interface IdeasRecord {
-	schemaVersion: typeof IDEAS_RECORD_SCHEMA_VERSION;
+export interface ChangeRecord {
+	schemaVersion: typeof CHANGE_RECORD_SCHEMA_VERSION;
 	recordRevision: number;
 	change: Change;
-	links: IdeasLink[];
+	links: ChangeLink[];
 }
 
-export interface IdeasEvidenceAddition {
+interface ChangeEvidenceAddition {
 	sourceRefs?: string[];
 	proofRefs?: string[];
 	updatedBy: string;
 	updatedAt: string;
 }
 
-export interface IdeasStatusChange {
+interface ChangeStatusChange {
 	status: Exclude<ChangeStatus, "accepted">;
 	changedBy: string;
 	changedAt: string;
@@ -44,20 +44,22 @@ export interface IdeasStatusChange {
 	ref?: string;
 }
 
-export function createIdeasRecord(change: Change): IdeasRecord {
+export function createChangeRecord(change: Change): ChangeRecord {
 	return {
-		schemaVersion: IDEAS_RECORD_SCHEMA_VERSION,
+		schemaVersion: CHANGE_RECORD_SCHEMA_VERSION,
 		recordRevision: 1,
 		change: parseChange(change),
 		links: [],
 	};
 }
 
-export function parseIdeasRecord(value: unknown): IdeasRecord {
+export function parseChangeRecord(value: unknown): ChangeRecord {
 	if (!isRecord(value)) throw invalidRecord("record must be an object");
 	assertKeys(value, ["schemaVersion", "recordRevision", "change", "links"]);
-	if (value.schemaVersion !== IDEAS_RECORD_SCHEMA_VERSION) {
-		throw invalidRecord(`schemaVersion must be ${IDEAS_RECORD_SCHEMA_VERSION}`);
+	if (value.schemaVersion !== CHANGE_RECORD_SCHEMA_VERSION) {
+		throw invalidRecord(
+			`schemaVersion must be ${CHANGE_RECORD_SCHEMA_VERSION}`,
+		);
 	}
 	if (
 		!Number.isInteger(value.recordRevision) ||
@@ -68,23 +70,23 @@ export function parseIdeasRecord(value: unknown): IdeasRecord {
 	if (!Array.isArray(value.links))
 		throw invalidRecord("links must be an array");
 	const change = parseChange(value.change);
-	const links = value.links.map((link, index) => parseIdeasLink(link, index));
+	const links = value.links.map((link, index) => parseChangeLink(link, index));
 	if (links.some((link) => link.targetChangeId === change.id)) {
 		throw invalidRecord("record cannot link to itself");
 	}
 	return {
-		schemaVersion: IDEAS_RECORD_SCHEMA_VERSION,
+		schemaVersion: CHANGE_RECORD_SCHEMA_VERSION,
 		recordRevision: Number(value.recordRevision),
 		change,
 		links: uniqueLinks(links),
 	};
 }
 
-export function replaceIdeasChange(
-	record: IdeasRecord,
+export function reviseChangeRecord(
+	record: ChangeRecord,
 	change: Change,
-): IdeasRecord {
-	const current = parseIdeasRecord(record);
+): ChangeRecord {
+	const current = parseChangeRecord(record);
 	const replacement = parseChange(change);
 	if (replacement.id !== current.change.id) {
 		throw invalidRecord("replacement Change id must remain stable");
@@ -99,11 +101,11 @@ export function replaceIdeasChange(
 	};
 }
 
-export function addIdeasEvidence(
-	record: IdeasRecord,
-	addition: IdeasEvidenceAddition,
-): IdeasRecord {
-	const current = parseIdeasRecord(record);
+export function addChangeEvidence(
+	record: ChangeRecord,
+	addition: ChangeEvidenceAddition,
+): ChangeRecord {
+	const current = parseChangeRecord(record);
 	const change = nextEditableChange(
 		current.change,
 		addition.updatedBy,
@@ -117,14 +119,14 @@ export function addIdeasEvidence(
 		...change.evidence.proofRefs,
 		...(addition.proofRefs || []),
 	]);
-	return replaceIdeasChange(current, parseChange(change));
+	return reviseChangeRecord(current, parseChange(change));
 }
 
-export function transitionIdeasStatus(
-	record: IdeasRecord,
-	input: IdeasStatusChange,
-): IdeasRecord {
-	const current = parseIdeasRecord(record);
+export function transitionChangeStatus(
+	record: ChangeRecord,
+	input: ChangeStatusChange,
+): ChangeRecord {
+	const current = parseChangeRecord(record);
 	if (current.change.status === input.status) {
 		throw invalidRecord(`Change is already ${input.status}`);
 	}
@@ -147,15 +149,15 @@ export function transitionIdeasStatus(
 		...(input.authority ? { authority: input.authority } : {}),
 		...(input.ref ? { ref: input.ref } : {}),
 	};
-	return replaceIdeasChange(current, parseChange(change));
+	return reviseChangeRecord(current, parseChange(change));
 }
 
-export function linkIdeasRecord(
-	record: IdeasRecord,
-	link: IdeasLink,
-): IdeasRecord {
-	const current = parseIdeasRecord(record);
-	const parsedLink = parseIdeasLink(link, current.links.length);
+export function linkChangeRecord(
+	record: ChangeRecord,
+	link: ChangeLink,
+): ChangeRecord {
+	const current = parseChangeRecord(record);
+	const parsedLink = parseChangeLink(link, current.links.length);
 	if (parsedLink.targetChangeId === current.change.id) {
 		throw invalidRecord("record cannot link to itself");
 	}
@@ -166,16 +168,16 @@ export function linkIdeasRecord(
 	};
 }
 
-export function mergeIdeasRecords(input: {
-	target: IdeasRecord;
-	sources: IdeasRecord[];
+export function mergeChangeRecords(input: {
+	target: ChangeRecord;
+	sources: ChangeRecord[];
 	changedBy: string;
 	changedAt: string;
-}): IdeasRecord[] {
-	let target = parseIdeasRecord(input.target);
+}): ChangeRecord[] {
+	let target = parseChangeRecord(input.target);
 	const sourceIds = new Set<string>();
 	const sources = input.sources.map((source) => {
-		const current = parseIdeasRecord(source);
+		const current = parseChangeRecord(source);
 		if (
 			current.change.id === target.change.id ||
 			sourceIds.has(current.change.id)
@@ -185,14 +187,14 @@ export function mergeIdeasRecords(input: {
 			);
 		}
 		sourceIds.add(current.change.id);
-		target = linkIdeasRecord(target, {
+		target = linkChangeRecord(target, {
 			relation: "merged_from",
 			targetChangeId: current.change.id,
 			createdBy: input.changedBy,
 			createdAt: input.changedAt,
 		});
-		return transitionIdeasStatus(
-			linkIdeasRecord(current, {
+		return transitionChangeStatus(
+			linkChangeRecord(current, {
 				relation: "merged_into",
 				targetChangeId: target.change.id,
 				createdBy: input.changedBy,
@@ -209,29 +211,29 @@ export function mergeIdeasRecords(input: {
 	return [target, ...sources];
 }
 
-export function splitIdeasRecord(input: {
-	parent: IdeasRecord;
+export function splitChangeRecord(input: {
+	parent: ChangeRecord;
 	children: Change[];
 	changedBy: string;
 	changedAt: string;
-}): IdeasRecord[] {
-	let parent = parseIdeasRecord(input.parent);
+}): ChangeRecord[] {
+	let parent = parseChangeRecord(input.parent);
 	const childIds = new Set<string>();
 	const children = input.children.map((change) => {
-		const child = createIdeasRecord(change);
+		const child = createChangeRecord(change);
 		if (child.change.id === parent.change.id || childIds.has(child.change.id)) {
 			throw invalidRecord(
 				"split child ids must be unique and differ from parent",
 			);
 		}
 		childIds.add(child.change.id);
-		parent = linkIdeasRecord(parent, {
+		parent = linkChangeRecord(parent, {
 			relation: "split_into",
 			targetChangeId: child.change.id,
 			createdBy: input.changedBy,
 			createdAt: input.changedAt,
 		});
-		return parseIdeasRecord({
+		return parseChangeRecord({
 			...child,
 			links: [
 				{
@@ -297,12 +299,12 @@ function invalidateValidation(change: Change): Change["validation"] {
 	};
 }
 
-function parseIdeasLink(value: unknown, index: number): IdeasLink {
+function parseChangeLink(value: unknown, index: number): ChangeLink {
 	if (!isRecord(value))
 		throw invalidRecord(`links[${index}] must be an object`);
 	assertKeys(value, ["relation", "targetChangeId", "createdBy", "createdAt"]);
 	const relation = requiredText(value.relation, `links[${index}].relation`);
-	if (!IDEAS_LINK_RELATION_VALUES.includes(relation as IdeasLinkRelation)) {
+	if (!CHANGE_LINK_RELATION_VALUES.includes(relation as ChangeLinkRelation)) {
 		throw invalidRecord(`links[${index}].relation is unsupported`);
 	}
 	const targetChangeId = requiredText(
@@ -313,14 +315,14 @@ function parseIdeasLink(value: unknown, index: number): IdeasLink {
 		throw invalidRecord(`links[${index}].targetChangeId must use CHG- prefix`);
 	}
 	return {
-		relation: relation as IdeasLinkRelation,
+		relation: relation as ChangeLinkRelation,
 		targetChangeId,
 		createdBy: requiredText(value.createdBy, `links[${index}].createdBy`),
 		createdAt: requiredText(value.createdAt, `links[${index}].createdAt`),
 	};
 }
 
-function uniqueLinks(links: IdeasLink[]): IdeasLink[] {
+function uniqueLinks(links: ChangeLink[]): ChangeLink[] {
 	const seen = new Set<string>();
 	return links.filter((link) => {
 		const key = `${link.relation}:${link.targetChangeId}`;
@@ -353,5 +355,5 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function invalidRecord(message: string): Error {
-	return new Error(`Invalid Ideas record: ${message}`);
+	return new Error(`Invalid Change record: ${message}`);
 }

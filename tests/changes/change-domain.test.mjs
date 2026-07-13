@@ -19,8 +19,8 @@ function draftChange() {
 			currentState: "Change intent is mixed with Decision fields.",
 			desiredState: "Change intent has its own lifecycle schema.",
 			rationale: "Loop boundaries become explicit.",
-			currentPain: "Mutable ideas are difficult to manage.",
-			desiredOutcome: "Ideas remain mutable until acceptance.",
+			currentPain: "Mutable Changes are difficult to manage.",
+			desiredOutcome: "Changes remain mutable until acceptance.",
 			nonGoals: ["Do not add a fourth semantic loop."],
 		},
 		classification: {

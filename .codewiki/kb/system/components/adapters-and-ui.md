@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Adapters and UI Component
-description: Pi adapters and the local read-only dashboard translate host commands, tools, and trace-backed views into CodeWiki API calls without owning canonical semantics.
+description: Pi adapters and the local dashboard translate main-session Change work, guarded commands, and trace-backed views into CodeWiki API calls without owning canonical semantics.
 tags:
   - codewiki
   - system
@@ -20,14 +20,15 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 ## Owned paths
 
 - `src/pi/**` owns Pi host integration plus tool, command, prompt, and TUI registration.
-- `src/dashboard/**` owns the local read-only Sprints Queue browser projection and transport.
+- `src/dashboard/**` owns the local Changes, Traces, and Configuration browser projections, transport, and fail-closed command adapter.
 - `src/cli/**` remains a temporary development harness, not a product adapter.
 
 ## Contracts
 
 - Host-specific capabilities must fail closed when unsupported.
-- The browser dashboard is read-only and must derive state from trace-backed API projections.
-- Mutation remains in guarded CodeWiki tools and APIs; UI state cannot edit source truth directly.
+- The browser dashboard derives Changes from the Change Store and execution state from trace-backed API projections.
+- Allowed Change/configuration mutations must call guarded CodeWiki APIs with same-origin capabilities, optimistic guards, idempotency, audit receipts, stale-state lockout, and secret redaction.
+- The dashboard cannot gain shell, direct source-write, trace-append, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority.
 - Repo-local CodeWiki extension loading stays disabled until the pinned-baseline self-dogfood gate passes.
 
 ## Flow links

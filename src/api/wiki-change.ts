@@ -2,23 +2,23 @@ import { changeContentDigest } from "../changes/digest.ts";
 import { parseChange } from "../changes/schema.ts";
 import type { Change } from "../changes/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import { GitRefIdeasStore } from "../ideas/git-ref-store.ts";
+import { GitRefChangeStore } from "../changes/git-ref-store.ts";
 import {
-	addIdeasEvidence,
-	createIdeasRecord,
-	linkIdeasRecord,
-	mergeIdeasRecords,
-	replaceIdeasChange,
-	splitIdeasRecord,
-	transitionIdeasStatus,
-	type IdeasLinkRelation,
-	type IdeasRecord,
-} from "../ideas/records.ts";
+	addChangeEvidence,
+	createChangeRecord,
+	linkChangeRecord,
+	mergeChangeRecords,
+	reviseChangeRecord,
+	splitChangeRecord,
+	transitionChangeStatus,
+	type ChangeLinkRelation,
+	type ChangeRecord,
+} from "../changes/records.ts";
 import {
-	IdeasStoreConflictError,
-	type IdeasQuery,
-	type IdeasStoreSnapshot,
-} from "../ideas/store.ts";
+	ChangeStoreConflictError,
+	type ChangeQuery,
+	type ChangeStoreSnapshot,
+} from "../changes/store.ts";
 import { resolveCodewikiProjectRoot } from "../project/root.ts";
 import {
 	assertKnownInputKeys,
@@ -49,13 +49,13 @@ export interface RunWikiChangeInput {
 	changeId?: string;
 	change?: unknown;
 	children?: unknown[];
-	query?: IdeasQuery;
+	query?: ChangeQuery;
 	expectedHead?: string | null;
 	expectedRecordRevision?: number;
 	sourceRefs?: string[];
 	proofRefs?: string[];
 	targetChangeId?: string;
-	relation?: IdeasLinkRelation | string;
+	relation?: ChangeLinkRelation | string;
 	sourceChangeIds?: string[];
 	actor?: string;
 	createdAt?: string;
@@ -83,7 +83,7 @@ export interface RunWikiChangeResult {
 	head: string | null;
 	changed: boolean;
 	duplicate?: boolean;
-	record?: IdeasRecord;
+	record?: ChangeRecord;
 	records?: WikiChangeSummary[];
 	validation?: {
 		ready: boolean;
@@ -136,10 +136,10 @@ export async function runWikiChange(
 	assertInput(input);
 	const operation = input.operation as WikiChangeOperation;
 	const repoRoot = await resolveCodewikiProjectRoot(input.repoRoot);
-	const store = new GitRefIdeasStore({ repoRoot });
-	if (operation === "list") return listIdeas(store, input);
-	if (operation === "get") return getIdea(store, input);
-	if (operation === "validate") return validateIdea(store, input);
+	const store = new GitRefChangeStore({ repoRoot });
+	if (operation === "list") return listChanges(store, input);
+	if (operation === "get") return getChange(store, input);
+	if (operation === "validate") return validateChange(store, input);
 	const snapshot = await store.read();
 	assertExpectedHead(input, snapshot);
 	const actor = requiredStringField("wiki_change", "actor", input.actor).trim();
@@ -149,37 +149,40 @@ export async function runWikiChange(
 		input.createdAt,
 	).trim();
 	assertIsoTimestamp(createdAt, "createdAt");
-	return mutateIdeas({ operation, store, snapshot, input, actor, createdAt });
+	return mutateChanges({ operation, store, snapshot, input, actor, createdAt });
 }
 
-async function listIdeas(
-	store: GitRefIdeasStore,
+async function listChanges(
+	store: GitRefChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const limit = normalizedLimit(input.limit);
 	const snapshot = await store.read();
-	const records = input.query ? await store.query(validateQuery(input.query)) : snapshot.records;
+	const records = input.query
+		? await store.query(validateQuery(input.query))
+		: snapshot.records;
 	return {
 		operation: "list",
 		head: snapshot.head,
 		changed: false,
-		records: records.slice(0, limit).map(ideaSummary),
+		records: records.slice(0, limit).map(changeSummary),
 	};
 }
 
-async function getIdea(
-	store: GitRefIdeasStore,
+async function getChange(
+	store: GitRefChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const changeId = requiredChangeId(input.changeId);
 	const snapshot = await store.read();
 	const record = snapshot.records.find((item) => item.change.id === changeId);
-	if (!record) throw ideasError("not_found", "changeId", `Change not found: ${changeId}`);
+	if (!record)
+		throw changeError("not_found", "changeId", `Change not found: ${changeId}`);
 	return { operation: "get", head: snapshot.head, changed: false, record };
 }
 
-async function validateIdea(
-	store: GitRefIdeasStore,
+async function validateChange(
+	store: GitRefChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const changeId = requiredChangeId(input.changeId);
@@ -195,16 +198,22 @@ async function validateIdea(
 	};
 }
 
-async function mutateIdeas(args: {
+async function mutateChanges(args: {
 	operation: WikiChangeOperation;
-	store: GitRefIdeasStore;
-	snapshot: IdeasStoreSnapshot;
+	store: GitRefChangeStore;
+	snapshot: ChangeStoreSnapshot;
 	input: RunWikiChangeInput;
 	actor: string;
 	createdAt: string;
 }): Promise<RunWikiChangeResult> {
 	const { operation, store, snapshot, input, actor, createdAt } = args;
-	const mutation = mutationRecords(operation, snapshot, input, actor, createdAt);
+	const mutation = mutationRecords(
+		operation,
+		snapshot,
+		input,
+		actor,
+		createdAt,
+	);
 	if (mutation.duplicate) {
 		return {
 			operation,
@@ -232,8 +241,8 @@ async function mutateIdeas(args: {
 			writtenChangeIds: written.writtenChangeIds,
 		};
 	} catch (error) {
-		if (error instanceof IdeasStoreConflictError) {
-			throw ideasError("conflict", "expectedHead", error.message);
+		if (error instanceof ChangeStoreConflictError) {
+			throw changeError("conflict", "expectedHead", error.message);
 		}
 		throw error;
 	}
@@ -241,16 +250,16 @@ async function mutateIdeas(args: {
 
 function mutationRecords(
 	operation: WikiChangeOperation,
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
 	actor: string,
 	createdAt: string,
-): { records: IdeasRecord[]; primary: IdeasRecord; duplicate?: boolean } {
+): { records: ChangeRecord[]; primary: ChangeRecord; duplicate?: boolean } {
 	if (operation === "create") return createMutation(snapshot, input);
 	if (operation === "revise") return reviseMutation(snapshot, input);
 	if (operation === "add_evidence") {
 		const current = checkedRecord(snapshot, input);
-		const record = addIdeasEvidence(current, {
+		const record = addChangeEvidence(current, {
 			sourceRefs: stringArray(input.sourceRefs, "sourceRefs"),
 			proofRefs: stringArray(input.proofRefs, "proofRefs"),
 			updatedBy: actor,
@@ -260,20 +269,26 @@ function mutationRecords(
 	}
 	if (operation === "link") {
 		const current = checkedRecord(snapshot, input);
-		const relation = requiredStringField("wiki_change", "relation", input.relation);
-		const record = linkIdeasRecord(current, {
-			relation: relation as IdeasLinkRelation,
+		const relation = requiredStringField(
+			"wiki_change",
+			"relation",
+			input.relation,
+		);
+		const record = linkChangeRecord(current, {
+			relation: relation as ChangeLinkRelation,
 			targetChangeId: requiredChangeId(input.targetChangeId),
 			createdBy: actor,
 			createdAt,
 		});
 		return one(record);
 	}
-	if (operation === "merge") return mergeMutation(snapshot, input, actor, createdAt);
-	if (operation === "split") return splitMutation(snapshot, input, actor, createdAt);
+	if (operation === "merge")
+		return mergeMutation(snapshot, input, actor, createdAt);
+	if (operation === "split")
+		return splitMutation(snapshot, input, actor, createdAt);
 	if (["defer", "reject", "withdraw"].includes(operation)) {
 		const current = checkedRecord(snapshot, input);
-		const record = transitionIdeasStatus(current, {
+		const record = transitionChangeStatus(current, {
 			status: statusForOperation(operation),
 			changedBy: actor,
 			changedAt: createdAt,
@@ -281,7 +296,11 @@ function mutationRecords(
 		});
 		return one(record);
 	}
-	throw ideasError("invalid_input", "operation", `Unsupported mutation ${operation}`);
+	throw changeError(
+		"invalid_input",
+		"operation",
+		`Unsupported mutation ${operation}`,
+	);
 }
 
 function statusForOperation(
@@ -293,67 +312,106 @@ function statusForOperation(
 }
 
 function createMutation(
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
-): { records: IdeasRecord[]; primary: IdeasRecord; duplicate?: boolean } {
+): { records: ChangeRecord[]; primary: ChangeRecord; duplicate?: boolean } {
 	const change = parsedInputChange(input.change);
 	if (change.status === "accepted") {
-		throw ideasError("forbidden", "change.status", "wiki_change cannot create accepted Changes.");
+		throw changeError(
+			"forbidden",
+			"change.status",
+			"wiki_change cannot create accepted Changes.",
+		);
 	}
 	const duplicate = findDuplicate(snapshot.records, change);
-	if (duplicate) return { records: [duplicate], primary: duplicate, duplicate: true };
-	return one(createIdeasRecord(change));
+	if (duplicate)
+		return { records: [duplicate], primary: duplicate, duplicate: true };
+	return one(createChangeRecord(change));
 }
 
 function reviseMutation(
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
-): { records: IdeasRecord[]; primary: IdeasRecord } {
+): { records: ChangeRecord[]; primary: ChangeRecord } {
 	const current = checkedRecord(snapshot, input);
 	const change = parsedInputChange(input.change);
 	if (change.status === "accepted") {
-		throw ideasError("forbidden", "change.status", "wiki_change cannot accept Changes.");
+		throw changeError(
+			"forbidden",
+			"change.status",
+			"wiki_change cannot accept Changes.",
+		);
 	}
-	return one(replaceIdeasChange(current, change));
+	return one(reviseChangeRecord(current, change));
 }
 
 function mergeMutation(
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
 	actor: string,
 	createdAt: string,
-): { records: IdeasRecord[]; primary: IdeasRecord } {
+): { records: ChangeRecord[]; primary: ChangeRecord } {
 	const target = checkedRecord(snapshot, input);
 	const sourceIds = stringArray(input.sourceChangeIds, "sourceChangeIds");
-	if (!sourceIds.length) throw ideasError("missing_required", "sourceChangeIds", "wiki_change merge requires sourceChangeIds.");
-	const sources = sourceIds.map((id) => requiredRecord(snapshot, requiredChangeId(id)));
-	const records = mergeIdeasRecords({ target, sources, changedBy: actor, changedAt: createdAt });
+	if (!sourceIds.length)
+		throw changeError(
+			"missing_required",
+			"sourceChangeIds",
+			"wiki_change merge requires sourceChangeIds.",
+		);
+	const sources = sourceIds.map((id) =>
+		requiredRecord(snapshot, requiredChangeId(id)),
+	);
+	const records = mergeChangeRecords({
+		target,
+		sources,
+		changedBy: actor,
+		changedAt: createdAt,
+	});
 	return { records, primary: records[0] };
 }
 
 function splitMutation(
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
 	actor: string,
 	createdAt: string,
-): { records: IdeasRecord[]; primary: IdeasRecord } {
+): { records: ChangeRecord[]; primary: ChangeRecord } {
 	const parent = checkedRecord(snapshot, input);
-	const children = requiredArrayField("wiki_change", "children", input.children).map(parsedInputChange);
-	if (!children.length) throw ideasError("missing_required", "children", "wiki_change split requires children.");
-	const records = splitIdeasRecord({ parent, children, changedBy: actor, changedAt: createdAt });
+	const children = requiredArrayField(
+		"wiki_change",
+		"children",
+		input.children,
+	).map(parsedInputChange);
+	if (!children.length)
+		throw changeError(
+			"missing_required",
+			"children",
+			"wiki_change split requires children.",
+		);
+	const records = splitChangeRecord({
+		parent,
+		children,
+		changedBy: actor,
+		changedAt: createdAt,
+	});
 	return { records, primary: records[0] };
 }
 
 function checkedRecord(
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 	input: RunWikiChangeInput,
-): IdeasRecord {
+): ChangeRecord {
 	const record = requiredRecord(snapshot, requiredChangeId(input.changeId));
 	if (!Number.isInteger(input.expectedRecordRevision)) {
-		throw ideasError("missing_required", "expectedRecordRevision", "wiki_change mutation requires expectedRecordRevision.");
+		throw changeError(
+			"missing_required",
+			"expectedRecordRevision",
+			"wiki_change mutation requires expectedRecordRevision.",
+		);
 	}
 	if (record.recordRevision !== input.expectedRecordRevision) {
-		throw ideasError(
+		throw changeError(
 			"conflict",
 			"expectedRecordRevision",
 			`Expected record revision ${input.expectedRecordRevision}, found ${record.recordRevision}.`,
@@ -362,25 +420,37 @@ function checkedRecord(
 	return record;
 }
 
-function requiredRecord(snapshot: IdeasStoreSnapshot, changeId: string): IdeasRecord {
+function requiredRecord(
+	snapshot: ChangeStoreSnapshot,
+	changeId: string,
+): ChangeRecord {
 	const record = snapshot.records.find((item) => item.change.id === changeId);
-	if (!record) throw ideasError("not_found", "changeId", `Change not found: ${changeId}`);
+	if (!record)
+		throw changeError("not_found", "changeId", `Change not found: ${changeId}`);
 	return record;
 }
 
 function parsedInputChange(value: unknown): Change {
 	const serialized = JSON.stringify(value);
 	if (!serialized) {
-		throw ideasError("missing_required", "change", "wiki_change requires change.");
+		throw changeError(
+			"missing_required",
+			"change",
+			"wiki_change requires change.",
+		);
 	}
 	if (serialized.length > MAX_CHANGE_BYTES) {
-		throw ideasError("invalid_input", "change", "wiki_change Change exceeds 64 KiB.");
+		throw changeError(
+			"invalid_input",
+			"change",
+			"wiki_change Change exceeds 64 KiB.",
+		);
 	}
 	assertNoSecrets(value);
 	try {
 		return parseChange(value);
 	} catch (error) {
-		throw ideasError(
+		throw changeError(
 			"invalid_input",
 			"change",
 			error instanceof Error ? error.message : "Invalid Change.",
@@ -388,7 +458,10 @@ function parsedInputChange(value: unknown): Change {
 	}
 }
 
-function findDuplicate(records: IdeasRecord[], change: Change): IdeasRecord | undefined {
+function findDuplicate(
+	records: ChangeRecord[],
+	change: Change,
+): ChangeRecord | undefined {
 	const digest = changeContentDigest(change);
 	const question = change.intent.question.trim().toLowerCase();
 	return records.find(
@@ -396,22 +469,31 @@ function findDuplicate(records: IdeasRecord[], change: Change): IdeasRecord | un
 			changeContentDigest(record.change) === digest ||
 			(record.change.status === "pending" &&
 				record.change.intent.question.trim().toLowerCase() === question &&
-				overlaps(record.change.classification.targetRefs, change.classification.targetRefs)),
+				overlaps(
+					record.change.classification.targetRefs,
+					change.classification.targetRefs,
+				)),
 	);
 }
 
 function readinessIssues(change: Change): string[] {
 	return [
-		...(change.classification.targetRefs.length ? [] : ["Change needs target refs."]),
+		...(change.classification.targetRefs.length
+			? []
+			: ["Change needs target refs."]),
 		...(change.evidence.sourceRefs.length || change.evidence.proofRefs.length
 			? []
 			: ["Change needs source or proof refs."]),
-		...(change.safety.failureModes.length ? [] : ["Change needs failure modes."]),
-		...(change.validation.state === "valid" ? [] : ["Change validation is not valid."]),
+		...(change.safety.failureModes.length
+			? []
+			: ["Change needs failure modes."]),
+		...(change.validation.state === "valid"
+			? []
+			: ["Change validation is not valid."]),
 	];
 }
 
-function ideaSummary(record: IdeasRecord): WikiChangeSummary {
+function changeSummary(record: ChangeRecord): WikiChangeSummary {
 	return {
 		id: record.change.id,
 		revision: record.change.revision,
@@ -430,7 +512,11 @@ function ideaSummary(record: IdeasRecord): WikiChangeSummary {
 
 function assertInput(input: RunWikiChangeInput): void {
 	if (!input || typeof input !== "object" || Array.isArray(input)) {
-		throw ideasError("invalid_input", "input", "wiki_change input must be an object.");
+		throw changeError(
+			"invalid_input",
+			"input",
+			"wiki_change input must be an object.",
+		);
 	}
 	assertKnownInputKeys(
 		"wiki_change",
@@ -438,33 +524,54 @@ function assertInput(input: RunWikiChangeInput): void {
 		INPUT_KEYS,
 	);
 	if (JSON.stringify(input).length > MAX_INPUT_BYTES) {
-		throw ideasError("invalid_input", "input", "wiki_change input exceeds 256 KiB.");
+		throw changeError(
+			"invalid_input",
+			"input",
+			"wiki_change input exceeds 256 KiB.",
+		);
 	}
 	assertNoSecrets(input);
-	if (!WIKI_CHANGE_OPERATIONS.includes(input.operation as WikiChangeOperation)) {
-		throw ideasError("invalid_input", "operation", `Unsupported wiki_change operation ${input.operation}.`);
+	if (
+		!WIKI_CHANGE_OPERATIONS.includes(input.operation as WikiChangeOperation)
+	) {
+		throw changeError(
+			"invalid_input",
+			"operation",
+			`Unsupported wiki_change operation ${input.operation}.`,
+		);
 	}
-	if (MUTATING_OPERATIONS.has(input.operation as WikiChangeOperation) && !("expectedHead" in input)) {
-		throw ideasError("missing_required", "expectedHead", "wiki_change mutations require expectedHead, including null for an empty store.");
+	if (
+		MUTATING_OPERATIONS.has(input.operation as WikiChangeOperation) &&
+		!("expectedHead" in input)
+	) {
+		throw changeError(
+			"missing_required",
+			"expectedHead",
+			"wiki_change mutations require expectedHead, including null for an empty store.",
+		);
 	}
 }
 
 function assertExpectedHead(
 	input: RunWikiChangeInput,
-	snapshot: IdeasStoreSnapshot,
+	snapshot: ChangeStoreSnapshot,
 ): void {
 	if (input.expectedHead !== snapshot.head) {
-		throw ideasError(
+		throw changeError(
 			"conflict",
 			"expectedHead",
-			`Expected Ideas head ${input.expectedHead || "empty"}, found ${snapshot.head || "empty"}.`,
+			`Expected Changes Backlog head ${input.expectedHead || "empty"}, found ${snapshot.head || "empty"}.`,
 		);
 	}
 }
 
-function validateQuery(query: IdeasQuery): IdeasQuery {
+function validateQuery(query: ChangeQuery): ChangeQuery {
 	if (!query || typeof query !== "object" || Array.isArray(query)) {
-		throw ideasError("invalid_input", "query", "wiki_change query must be an object.");
+		throw changeError(
+			"invalid_input",
+			"query",
+			"wiki_change query must be an object.",
+		);
 	}
 	assertKnownInputKeys("wiki_change.query", query as Record<string, unknown>, [
 		"status",
@@ -478,7 +585,11 @@ function validateQuery(query: IdeasQuery): IdeasQuery {
 function normalizedLimit(value: number | undefined): number {
 	if (value === undefined) return 50;
 	if (!Number.isInteger(value) || value < 1 || value > MAX_LIST_LIMIT) {
-		throw ideasError("invalid_input", "limit", `wiki_change limit must be 1-${MAX_LIST_LIMIT}.`);
+		throw changeError(
+			"invalid_input",
+			"limit",
+			`wiki_change limit must be 1-${MAX_LIST_LIMIT}.`,
+		);
 	}
 	return value;
 }
@@ -486,7 +597,11 @@ function normalizedLimit(value: number | undefined): number {
 function requiredChangeId(value: unknown): string {
 	const id = requiredStringField("wiki_change", "changeId", value).trim();
 	if (!/^CHG-[A-Za-z0-9._-]+$/.test(id)) {
-		throw ideasError("invalid_input", "changeId", "wiki_change changeId must use CHG- prefix.");
+		throw changeError(
+			"invalid_input",
+			"changeId",
+			"wiki_change changeId must use CHG- prefix.",
+		);
 	}
 	return id;
 }
@@ -505,17 +620,28 @@ function assertNoSecrets(value: unknown): void {
 			serialized,
 		)
 	) {
-		throw ideasError("forbidden", "change", "wiki_change rejects secret-shaped Change content.");
+		throw changeError(
+			"forbidden",
+			"change",
+			"wiki_change rejects secret-shaped Change content.",
+		);
 	}
 }
 
 function assertIsoTimestamp(value: string, field: string): void {
 	if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
-		throw ideasError("invalid_input", field, `wiki_change ${field} must be an ISO UTC timestamp.`);
+		throw changeError(
+			"invalid_input",
+			field,
+			`wiki_change ${field} must be an ISO UTC timestamp.`,
+		);
 	}
 }
 
-function one(record: IdeasRecord): { records: IdeasRecord[]; primary: IdeasRecord } {
+function one(record: ChangeRecord): {
+	records: ChangeRecord[];
+	primary: ChangeRecord;
+} {
 	return { records: [record], primary: record };
 }
 
@@ -524,8 +650,13 @@ function overlaps(left: string[], right: string[]): boolean {
 	return left.some((value) => rightSet.has(value));
 }
 
-function ideasError(
-	code: "invalid_input" | "missing_required" | "not_found" | "conflict" | "forbidden",
+function changeError(
+	code:
+		| "invalid_input"
+		| "missing_required"
+		| "not_found"
+		| "conflict"
+		| "forbidden",
 	field: string,
 	message: string,
 ): Error {

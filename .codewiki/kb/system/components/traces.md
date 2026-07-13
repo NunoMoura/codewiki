@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Traces
-description: CodeWiki traces are the durable workflow and state record for software work. In product language, one trace is the Sprint Record for one accountable change journey.
+description: CodeWiki traces are durable workflow truth and independent execution units for accepted software changes.
 tags:
   - codewiki
   - system
@@ -73,7 +73,9 @@ codewiki_source_map:
 
 ## Responsibility
 
-CodeWiki traces are the durable workflow and state record for software work. In product language, one trace is the Sprint Record for one accountable change journey from user intent through decision, planning, implementation, runtime coordination, content evidence, and retention.
+CodeWiki traces are the durable workflow and state record for software work. In product language, one trace is the Sprint Record for one accountable change journey from a frozen Decision through planning, implementation, runtime coordination, content evidence, and retention.
+
+A trace is also the independent execution unit. `wiki_decide` creates it from exact validated Change input; a trace-scoped runner can then execute Planning and Implementation without occupying the main user conversation. Each trace has isolated lifecycle, policy, budget, lease, worktree, worker, retry, cancellation, and validation state. Cross-trace scheduling may be concurrent, but one trace cannot satisfy or overwrite another trace's semantic exits.
 
 A trace is append-only. Old lines are never rewritten. Runtime is the sole trace writer: semantic loops report appendable loop output and exit results to runtime, and runtime validates sequence/byte safety before appending trace records. Current Sprints Queue and Sprint Trace status is exposed through generated views that derive their calculations from traces, compact checkpoints, KB/source refs, and Git refs.
 

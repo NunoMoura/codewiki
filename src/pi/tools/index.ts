@@ -285,13 +285,13 @@ function wikiChangeTool(): CodewikiToolDefinition {
 		name: "wiki_change",
 		label: "CodeWiki Change",
 		description:
-			"Query or manage mutable pre-Decision Changes in the current project's Ideas Workspace.",
+			"Query or manage mutable pre-Decision Changes in the current project's Changes Backlog.",
 		promptSnippet:
-			"Use the Ideas Workspace to capture and refine out-of-scope Changes without widening the active Task.",
+			"Use the Changes Backlog to capture and refine out-of-scope Changes without widening the active Task.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
 			"wiki_change cannot accept Changes, create Sprint Traces or Tasks, launch workers, edit source, publish, or advance controllers.",
-			"Mutations require exact Ideas head and record revision guards; list, get, and validate are read-only.",
+			"Mutations require exact Changes Backlog head and record revision guards; list, get, and validate are read-only.",
 		],
 		executionMode: "sequential",
 		parameters: Type.Object(
@@ -318,10 +318,18 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				"input",
 			]);
 			assertOptionalBoolean("wiki_change", args, "allowNonProjectInstall");
-			const input = requiredInput<RunWikiChangeInput>("wiki_change", args.input);
+			const input = requiredInput<RunWikiChangeInput>(
+				"wiki_change",
+				args.input,
+			);
 			const root = await requireCodewikiRoot(ctx);
-			const prepared = withRepoRoot(input, root) as unknown as RunWikiChangeInput;
-			const mutates = wikiChangeOperationMutates(String(prepared.operation || ""));
+			const prepared = withRepoRoot(
+				input,
+				root,
+			) as unknown as RunWikiChangeInput;
+			const mutates = wikiChangeOperationMutates(
+				String(prepared.operation || ""),
+			);
 			if (mutates) {
 				assertProjectLocalMutationAllowed({
 					toolName: "wiki_change",

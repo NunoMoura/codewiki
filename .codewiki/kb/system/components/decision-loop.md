@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Decision Loop
-description: The decision loop owns product and system intent and KB meaning updates. It turns user goals, current project state, alternatives, risks, and knowledge impact into user-validated proposed changes that can become an accepted decision output Planning can trust.
+description: The decision loop consumes exact validated Change revisions from the Changes Backlog and turns them into binding, trace-backed Decisions that Planning can trust.
 tags:
   - codewiki
   - system
@@ -13,8 +13,10 @@ codewiki_components:
   - decision
 codewiki_source_patterns:
   - src/decision/**
+  - src/changes/**
 codewiki_test_patterns:
   - tests/decision/**
+  - tests/changes/**
   - tests/helpers/proposed-change.mjs
 codewiki_trace_events:
   - decision.changes_approved
@@ -23,8 +25,10 @@ codewiki_source_map:
   - id: decision
     source_patterns:
       - src/decision/**
+      - src/changes/**
     test_patterns:
       - tests/decision/**
+      - tests/changes/**
       - tests/helpers/proposed-change.mjs
     trace_events:
       - decision.changes_approved
@@ -32,14 +36,14 @@ codewiki_source_map:
 ---
 # Decision Loop
 
-The decision loop owns product and system intent and KB meaning updates. It turns user goals, current project state, alternatives, risks, and knowledge impact into user-validated proposed changes that can become an accepted decision output Planning can trust.
+The main CodeWiki session owns the user-agent conversation that shapes mutable Changes. The decision loop does not author a separate proposal domain. It consumes exact validated Change revisions from the Changes Backlog and turns them into binding, trace-backed Decisions that Planning can trust.
 
 ## Loop authority
 
 The decision loop owns:
 
-- user intent and approvals;
-- decision kind and resolved decision type classification (`debug`, `fix`, `harden`, `improve`, `migrate`, `docs`, `release`, or a guarded direct-implementation type);
+- binding interpretation of user intent and exact approval evidence;
+- canonical Change kind, type, and scope classification;
 - work scale classification (`tiny`, `small`, `normal`, or `large`), planning depth (`micro` or `standard`), and route target;
 - requirements and non-goals;
 - product/system tradeoffs;
@@ -56,16 +60,16 @@ The decision loop does not own implementation details, task scheduling, worker s
 One decision cycle does this work:
 
 ```text
-observe user request + KB/source/trace/Git refs
-identify decisions, requirements, risks, alternatives, and unknowns
-prepare or verify KB/diagram propagation
-update decision output
-check decision exit conditions
-append decision.changes_approved
+load exact validated Change revisions from the Changes Backlog
+verify revision, digest, validation state, evidence, safety, and user approval
+interpret requirements, risks, alternatives, and knowledge impact
+render the exact Decision proposal for final approval
+check Decision exit conditions
+create the trace and append decision.changes_approved through the guarded runtime boundary
 continue, exit, route back, or block
 ```
 
-Candidate proposed changes should be visible to the user as Sprint Proposal cards before append. The user can approve, edit, reject, or defer each proposed change. That validated proposal is the Decision loop input; it is not final workflow truth until Decision quality standards pass and runtime appends `decision.changes_approved`.
+The main session may create, revise, merge, split, defer, reject, or withdraw mutable Changes through `wiki_change`. `wiki_decide` accepts only an exact validated Change snapshot and digest; it must not silently read a mutable latest revision. The rendered Decision proposal remains preview state until the user approves that exact rendering and runtime creates the trace-backed Decision. After this boundary, the frozen Change snapshot embedded in the trace is self-contained and immutable.
 
 The agent should ask the user when required authority is missing, risk is high, or ambiguity would otherwise leak into planning.
 
@@ -73,7 +77,7 @@ The agent should ask the user when required authority is missing, risk is high, 
 
 Decision loop output is the high-signal packet planning needs:
 
-- Decisions accepted from user-validated Proposed Changes;
+- Decisions bound to exact user-validated Change revisions and digests;
 - requirement ids;
 - current-state baseline refs;
 - affected product/system areas;
@@ -88,19 +92,9 @@ Decision loop output is the high-signal packet planning needs:
 
 Decision output should not include task breakdowns, implementation plans, or worker instructions. It may include a direct implementation scope only for tiny/small low-risk changes that explicitly skip Planning; that scope is a bounded acceptance/verification packet, not a task plan.
 
-Proposed changes carry shared intent fields plus a `decisionKind` and resolved `decisionType`. `decisionKind` captures semantic intent; `decisionType` selects package-owned pipeline, quality-profile, evidence-policy, escalation, and forbidden-skip defaults. Kind-specific fields shape the proposed change without creating another loop:
+The accepted Change snapshot carries canonical `ChangeKind`, `ChangeType`, and `ChangeScope` classification. Kind captures semantic intent (`fix`, `improve`, `harden`, `migrate`, `introduce`, or `remove`). Type captures the governed pipeline category, such as behavior, architecture, workflow, incident, security, documentation, dependency, or release change. Scope captures the primary product, system, source, documentation, configuration, or runtime boundary. Classification selects package-owned quality, evidence, escalation, and forbidden-skip policy; it never creates another semantic loop.
 
-| decisionKind | Additional required signal |
-| --- | --- |
-| debug | Target refs, hypothesis, invariant/failure boundary, probe or repro plan, expected safe behavior, and stop condition. |
-| fix | Known reproduction, expected behavior, and regression coverage plan. |
-| harden | Safety boundary, failure/abuse modes, negative test plan, and compatibility impact. |
-| improve | Current pain, desired outcome, success signal, and non-goals. |
-| migrate | Source behavior, target behavior, preserved invariants, equivalence proof, and rollback or containment plan. |
-
-`docs` and `release` changes currently use the shared decision standards only unless a narrower kind better describes the decision.
-
-`decisionKind` describes semantic intent, not size. Size and routing are separate fields:
+Change classification describes intent and affected boundary, not size. Size and routing remain separate Decision fields:
 
 | Field | Values | Meaning |
 | --- | --- | --- |

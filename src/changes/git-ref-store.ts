@@ -2,47 +2,47 @@ import { spawn } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { parseIdeasRecord, type IdeasRecord } from "./records.ts";
+import { parseChangeRecord, type ChangeRecord } from "./records.ts";
 import {
-	DEFAULT_IDEAS_REF,
-	IdeasStoreConflictError,
-	type IdeasQuery,
-	type IdeasStore,
-	type IdeasStoreSnapshot,
-	type IdeasWriteInput,
-	type IdeasWriteResult,
+	DEFAULT_CHANGE_REF,
+	ChangeStoreConflictError,
+	type ChangeQuery,
+	type ChangeStore,
+	type ChangeStoreSnapshot,
+	type ChangeWriteInput,
+	type ChangeWriteResult,
 } from "./store.ts";
 
 const ZERO_OID = "0".repeat(40);
 const RECORD_DIRECTORY = "changes";
 
-export interface GitRefIdeasStoreOptions {
+interface GitRefChangeStoreOptions {
 	repoRoot: string;
 	ref?: string;
 }
 
-export class GitRefIdeasStore implements IdeasStore {
+export class GitRefChangeStore implements ChangeStore {
 	readonly repoRoot: string;
 	readonly ref: string;
 
-	constructor(options: GitRefIdeasStoreOptions) {
+	constructor(options: GitRefChangeStoreOptions) {
 		this.repoRoot = resolve(options.repoRoot);
-		this.ref = options.ref || DEFAULT_IDEAS_REF;
+		this.ref = options.ref || DEFAULT_CHANGE_REF;
 		if (!/^refs\/codewiki\/[A-Za-z0-9._/-]+$/.test(this.ref)) {
 			throw new Error(
-				`Ideas Store ref must stay under refs/codewiki/: ${this.ref}`,
+				`Change Store ref must stay under refs/codewiki/: ${this.ref}`,
 			);
 		}
 	}
 
-	async read(): Promise<IdeasStoreSnapshot> {
+	async read(): Promise<ChangeStoreSnapshot> {
 		await this.assertRepository();
 		const head = await this.head();
 		if (!head) return { head: null, records: [] };
 		const paths = await this.recordPaths(head);
 		const records = await Promise.all(
 			paths.map(async (path) =>
-				parseIdeasRecord(JSON.parse(await this.gitShow(head, path))),
+				parseChangeRecord(JSON.parse(await this.gitShow(head, path))),
 			),
 		);
 		return {
@@ -53,7 +53,7 @@ export class GitRefIdeasStore implements IdeasStore {
 		};
 	}
 
-	async get(changeId: string): Promise<IdeasRecord | undefined> {
+	async get(changeId: string): Promise<ChangeRecord | undefined> {
 		assertChangeId(changeId);
 		const head = await this.head();
 		if (!head) return undefined;
@@ -63,12 +63,13 @@ export class GitRefIdeasStore implements IdeasStore {
 			{ allowFailure: true },
 		);
 		if (result.code !== 0) return undefined;
-		return parseIdeasRecord(JSON.parse(result.stdout));
+		return parseChangeRecord(JSON.parse(result.stdout));
 	}
 
-	async query(query: IdeasQuery = {}): Promise<IdeasRecord[]> {
+	async query(query: ChangeQuery = {}): Promise<ChangeRecord[]> {
 		const normalizedText = query.text?.trim().toLowerCase();
-		return (await this.read()).records.filter((record) => {
+		const snapshot = await this.read();
+		return snapshot.records.filter((record) => {
 			if (query.status && record.change.status !== query.status) return false;
 			if (query.type && record.change.classification.type !== query.type)
 				return false;
@@ -79,28 +80,29 @@ export class GitRefIdeasStore implements IdeasStore {
 		});
 	}
 
-	async write(input: IdeasWriteInput): Promise<IdeasWriteResult> {
+	async write(input: ChangeWriteInput): Promise<ChangeWriteResult> {
 		await this.assertRepository();
 		const actualHead = await this.head();
 		if (actualHead !== input.expectedHead) {
-			throw new IdeasStoreConflictError(input.expectedHead, actualHead);
+			throw new ChangeStoreConflictError(input.expectedHead, actualHead);
 		}
 		if (!input.records.length)
-			throw new Error("Ideas Store write needs records.");
-		const records = input.records.map(parseIdeasRecord);
+			throw new Error("Change Store write needs records.");
+		const records = input.records.map(parseChangeRecord);
 		assertUniqueRecordIds(records);
 		await this.assertRecordRevisions(records, actualHead);
 		const temporaryDirectory = await mkdtemp(
-			join(tmpdir(), "codewiki-ideas-index-"),
+			join(tmpdir(), "codewiki-changes-index-"),
 		);
 		const indexPath = join(temporaryDirectory, "index");
 		try {
 			const env = { ...process.env, GIT_INDEX_FILE: indexPath };
 			await this.prepareIndex(actualHead, env);
 			for (const record of records) await this.stageRecord(record, env);
-			const tree = (
-				await successfulGit(["write-tree"], this.repoRoot, { env })
-			).trim();
+			const treeOutput = await successfulGit(["write-tree"], this.repoRoot, {
+				env,
+			});
+			const tree = treeOutput.trim();
 			const commit = await this.commitTree(tree, actualHead, input);
 			const update = await runGit(
 				["update-ref", this.ref, commit, actualHead || ZERO_OID],
@@ -108,7 +110,7 @@ export class GitRefIdeasStore implements IdeasStore {
 				{ allowFailure: true },
 			);
 			if (update.code !== 0) {
-				throw new IdeasStoreConflictError(
+				throw new ChangeStoreConflictError(
 					input.expectedHead,
 					await this.head(),
 				);
@@ -116,7 +118,9 @@ export class GitRefIdeasStore implements IdeasStore {
 			return {
 				previousHead: actualHead,
 				head: commit,
-				writtenChangeIds: records.map((record) => record.change.id).sort(),
+				writtenChangeIds: records
+					.map((record) => record.change.id)
+					.sort((left, right) => left.localeCompare(right)),
 			};
 		} finally {
 			await rm(temporaryDirectory, { recursive: true, force: true });
@@ -124,12 +128,14 @@ export class GitRefIdeasStore implements IdeasStore {
 	}
 
 	private async assertRepository(): Promise<void> {
-		const root = (
-			await successfulGit(["rev-parse", "--show-toplevel"], this.repoRoot)
-		).trim();
+		const rootOutput = await successfulGit(
+			["rev-parse", "--show-toplevel"],
+			this.repoRoot,
+		);
+		const root = rootOutput.trim();
 		if (resolve(root) !== this.repoRoot) {
 			throw new Error(
-				`Ideas Store root mismatch: expected ${this.repoRoot}, found ${root}`,
+				`Change Store root mismatch: expected ${this.repoRoot}, found ${root}`,
 			);
 		}
 	}
@@ -159,7 +165,7 @@ export class GitRefIdeasStore implements IdeasStore {
 	}
 
 	private async assertRecordRevisions(
-		records: IdeasRecord[],
+		records: ChangeRecord[],
 		head: string | null,
 	): Promise<void> {
 		for (const record of records) {
@@ -168,12 +174,12 @@ export class GitRefIdeasStore implements IdeasStore {
 				: undefined;
 			if (!current && record.recordRevision !== 1) {
 				throw new Error(
-					`New Ideas record ${record.change.id} must start at record revision 1.`,
+					`New Change record ${record.change.id} must start at record revision 1.`,
 				);
 			}
 			if (current && record.recordRevision <= current.recordRevision) {
 				throw new Error(
-					`Ideas record ${record.change.id} must advance beyond record revision ${current.recordRevision}.`,
+					`Change record ${record.change.id} must advance beyond record revision ${current.recordRevision}.`,
 				);
 			}
 		}
@@ -182,14 +188,14 @@ export class GitRefIdeasStore implements IdeasStore {
 	private async recordAt(
 		head: string,
 		changeId: string,
-	): Promise<IdeasRecord | undefined> {
+	): Promise<ChangeRecord | undefined> {
 		const result = await runGit(
 			["show", `${head}:${recordPath(changeId)}`],
 			this.repoRoot,
 			{ allowFailure: true },
 		);
 		return result.code === 0
-			? parseIdeasRecord(JSON.parse(result.stdout))
+			? parseChangeRecord(JSON.parse(result.stdout))
 			: undefined;
 	}
 
@@ -207,16 +213,19 @@ export class GitRefIdeasStore implements IdeasStore {
 	}
 
 	private async stageRecord(
-		record: IdeasRecord,
+		record: ChangeRecord,
 		env: NodeJS.ProcessEnv,
 	): Promise<void> {
 		const body = `${JSON.stringify(record, null, 2)}\n`;
-		const blob = (
-			await successfulGit(["hash-object", "-w", "--stdin"], this.repoRoot, {
+		const blobOutput = await successfulGit(
+			["hash-object", "-w", "--stdin"],
+			this.repoRoot,
+			{
 				env,
 				input: body,
-			})
-		).trim();
+			},
+		);
+		const blob = blobOutput.trim();
 		await successfulGit(
 			[
 				"update-index",
@@ -234,31 +243,30 @@ export class GitRefIdeasStore implements IdeasStore {
 	private async commitTree(
 		tree: string,
 		parent: string | null,
-		input: IdeasWriteInput,
+		input: ChangeWriteInput,
 	): Promise<string> {
 		const actor = safeActor(input.actor);
 		const env = {
 			...process.env,
 			GIT_AUTHOR_NAME: actor,
-			GIT_AUTHOR_EMAIL: "codewiki-ideas@localhost",
+			GIT_AUTHOR_EMAIL: "codewiki-changes@localhost",
 			GIT_AUTHOR_DATE: input.createdAt,
 			GIT_COMMITTER_NAME: actor,
-			GIT_COMMITTER_EMAIL: "codewiki-ideas@localhost",
+			GIT_COMMITTER_EMAIL: "codewiki-changes@localhost",
 			GIT_COMMITTER_DATE: input.createdAt,
 		};
-		return (
-			await successfulGit(
-				[
-					"commit-tree",
-					tree,
-					...(parent ? ["-p", parent] : []),
-					"-m",
-					input.message.trim() || "Update Ideas Store",
-				],
-				this.repoRoot,
-				{ env },
-			)
-		).trim();
+		const commit = await successfulGit(
+			[
+				"commit-tree",
+				tree,
+				...(parent ? ["-p", parent] : []),
+				"-m",
+				input.message.trim() || "Update Change Store",
+			],
+			this.repoRoot,
+			{ env },
+		);
+		return commit.trim();
 	}
 }
 
@@ -292,15 +300,24 @@ function runGit(
 	options: GitRunOptions = {},
 ): Promise<GitRunResult> {
 	return new Promise((resolveResult, reject) => {
+		const hasInput = options.input !== undefined;
 		const child = spawn("git", args, {
 			cwd,
 			env: options.env || process.env,
-			stdio: ["pipe", "pipe", "pipe"],
+			stdio: [hasInput ? "pipe" : "ignore", "pipe", "pipe"],
 		});
 		const stdout: Buffer[] = [];
 		const stderr: Buffer[] = [];
+		if (!child.stdout || !child.stderr) {
+			child.kill();
+			reject(new Error("Git process did not expose piped output streams."));
+			return;
+		}
 		child.stdout.on("data", (chunk: Buffer) => stdout.push(chunk));
 		child.stderr.on("data", (chunk: Buffer) => stderr.push(chunk));
+		child.stdin?.on("error", (error: NodeJS.ErrnoException) => {
+			if (error.code !== "EPIPE") reject(error);
+		});
 		child.on("error", reject);
 		child.on("close", (code) => {
 			const result = {
@@ -314,7 +331,7 @@ function runGit(
 			}
 			resolveResult(result);
 		});
-		child.stdin.end(options.input || "");
+		if (hasInput) child.stdin?.end(options.input);
 	});
 }
 
@@ -325,18 +342,18 @@ function recordPath(changeId: string): string {
 
 function assertChangeId(changeId: string): void {
 	if (!/^CHG-[A-Za-z0-9._-]+$/.test(changeId)) {
-		throw new Error(`Invalid Ideas Change id: ${changeId}`);
+		throw new Error(`Invalid Change id: ${changeId}`);
 	}
 }
 
-function assertUniqueRecordIds(records: IdeasRecord[]): void {
+function assertUniqueRecordIds(records: ChangeRecord[]): void {
 	const ids = records.map((record) => record.change.id);
 	if (new Set(ids).size !== ids.length) {
-		throw new Error("Ideas Store write contains duplicate Change ids.");
+		throw new Error("Change Store write contains duplicate Change ids.");
 	}
 }
 
-function searchableText(record: IdeasRecord): string {
+function searchableText(record: ChangeRecord): string {
 	return [
 		record.change.id,
 		record.change.intent.question,
@@ -355,6 +372,6 @@ function safeActor(value: string): string {
 		value
 			.replace(/[<>\n\r]/g, " ")
 			.trim()
-			.slice(0, 120) || "CodeWiki Ideas"
+			.slice(0, 120) || "CodeWiki Changes"
 	);
 }

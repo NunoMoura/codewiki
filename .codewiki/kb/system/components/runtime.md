@@ -87,21 +87,25 @@ CodeWiki has one runtime kernel/coordinator. It may be driven by different host 
 
 | Host role | Responsibility |
 | --- | --- |
-| Main host | Any active Pi session in the repository that acts as decision-loop ingress. It creates or updates trace goals by driving runtime appends to the shared repo-local `.codewiki/traces/**` store. |
-| Trace host | Session focused on one trace; runs planning and implementation for that trace, coordinates that trace's workers, asks runtime to append semantic iterations, and closes the trace. |
-| Worker host | Narrow execution worker for one planned work unit, usually in an isolated worktree; returns evidence to the trace host instead of appending semantic truth directly. |
+| Main host | Active user-facing CodeWiki session. It supports brainstorming, persists mutable Changes through `wiki_change`, validates exact Change revisions with the user, and invokes `wiki_decide`. It does not need to remain focused on a trace after Decision exit. |
+| Trace host | Independent process or session focused on one trace. It consumes the exited Decision, runs Planning and Implementation, coordinates that trace's workers, asks runtime to append guarded semantic iterations, and closes the trace. |
+| Worker host | Narrow execution worker for one planned Task, usually in an isolated worktree; returns evidence to the trace host instead of appending semantic truth directly. |
 
-A single process may act in different roles over time. The role describes what authority the host has for the current action. The main host is not a singleton daemon: parallel Pi sessions in the same repository are parallel main-host instances that coordinate through trace reads, active-trace conflict checks, and expected-byte append safety.
+The main session is the interaction workspace; there is no separate Ideas Workspace. The Changes Backlog is durable storage for mutable pre-Decision records, not another host role or semantic loop. `wiki_decide` freezes an exact validated Change snapshot and creates the trace-backed Decision. The trace then becomes an independently scheduled unit of work, allowing the main session to continue discussing or validating other Changes.
 
-Host/session roles are internal runtime topology. User-facing UX should show Sprints Queue, Sprint Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing decision host, trace host, or worker session concepts unless a maintainer is reading runtime architecture detail.
+Trace independence is a runtime isolation contract: each trace owns its lease, policy snapshot, budgets, workers, worktrees, retries, cancellation state, append guards, and final validation. One trace's failure must not corrupt or stop another trace. Runtime may schedule several trace hosts concurrently within project policy, but each trace still has exactly one authoritative Decision, Planning, and Implementation history.
+
+A single process may act in different roles over time, but normal background execution uses a trace-scoped host distinct from the main conversation. Under the current supervised policy, a trace host must pause safely when approved supervision disappears; surviving main-session closure as unattended automation requires a separate explicit policy decision.
+
+Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime sprint proposal
 
 | ID | Decision | Status | Consequence |
 | --- | --- | --- | --- |
-| CHG-main-host-session-ingress | Any active Pi session in the repository is a main-host instance and enters decision-loop ingress by default. | Accepted | Main host is not a daemon or singleton. Shared repo truth lives in `.codewiki/traces/**`; parallel sessions coordinate through trace views and checked appends. |
-| CHG-decision-handoff-obligation | Any user-approved sprint proposal that changes product/system behavior must be captured as `decision.changes_approved` and exit to planning unless every proposed change is explicitly non-executable or knowledge-only. | Accepted | Chat-only accepted decisions are not workflow truth once CodeWiki is available; planning must cover, defer, supersede, block, or schedule every accepted proposed change. |
-| CHG-trace-host-scope | Trace hosts own one trace and may run planning plus implementation for that trace. | Accepted | Planning and implementation can share a trace-local host while preserving the three semantic loops. |
+| CHG-main-host-session-ingress | Any active Pi session in the repository may act as the main user session for Change capture, validation, and Decision ingress. | Accepted | Main host is not a daemon or singleton. Mutable pre-Decision truth lives in the Changes Backlog; accepted execution truth lives in `.codewiki/traces/**`. |
+| CHG-decision-handoff-obligation | Any exact validated Change approved for execution must be captured as a trace-backed `decision.changes_approved` output unless it is explicitly non-executable or knowledge-only. | Accepted | Chat-only acceptance is not workflow truth. `wiki_decide` freezes the approved Change revision and hands the independent trace to runtime. |
+| CHG-trace-host-scope | A trace host owns one independently executable trace and runs Planning plus Implementation for that trace. | Accepted | Main conversation may continue while trace execution proceeds; workers remain subordinate Task attempts inside one authoritative Implementation Loop. |
 | CHG-planning-triggers | Planning owns recurring schedules, event triggers, hooks, and manual triggers. | Accepted | Decision states the goal; planning creates work units and triggers; implementation enables or consumes those triggers. |
 | CHG-worker-liveness | Worker liveness belongs to implementation/runtime worker coordination. | Accepted | Use claims, leases, terminal release events, and meaningful progress events. Do not append noisy heartbeats as trace truth. |
 | CHG-openclaw-heartbeat-mechanics | Borrow OpenClaw-style heartbeat coalescing, priority, retry, and busy deferral mechanics, not the generic assistant heartbeat prompt. | Accepted | CodeWiki heartbeat handling is deterministic and trace-derived; no `HEARTBEAT_OK` prompt semantics. |

@@ -15,8 +15,9 @@ CodeWiki exists to keep repository intent fresh, explicit, actionable, and recov
 For the current architecture wave, CodeWiki is backend-first. The active product focus is:
 
 - hot knowledge in `.codewiki/kb/**`;
+- a durable Changes Backlog for mutable pre-Decision Changes;
 - append-only JSONL traces as workflow/state truth;
-- runtime outer loop coordination;
+- independent trace execution coordinated by the runtime outer loop;
 - decision, planning, and implementation semantic loops;
 - loop outputs and exit conditions;
 - generated status/resume/work views;
@@ -29,9 +30,11 @@ Product docs own user definitions, user stories, value, workflows, and non-goals
 
 Previous status panels, status docks, Board, Map, Product/System navigation panels, write-capable browser Control Room concepts, and persistent terminal card widgets are deprecated for now.
 
-The retained UI direction is a focused Pi conversation plus a local read-only retro dashboard opened by `/wiki-dashboard`. The dashboard renders the Sprints Queue as horizontal Sprint Trace bars and expands each trace into Trace Detail. Pi TUI support remains for focused command output and source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Renderer output is never canonical truth.
+The retained UI direction is a focused Pi conversation plus a local retro dashboard opened by `/wiki-dashboard`. The Pi conversation is the main user session: the user and agent brainstorm, create and refine Changes, validate exact revisions, and supervise active work there. There is no separate Ideas Workspace product or domain. Mutable Change records are durable in the Changes Backlog so conversation compaction or restart does not lose proposed work.
 
-Backend state and continuation remain available through internal tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-dashboard` is the only public state/dashboard command; the former state alias is removed. No separate status command is planned.
+Once `wiki_decide` consumes a validated Change and creates its Decision-backed trace, that trace becomes an independent unit of work. A trace-scoped runner can plan, coordinate workers, integrate results, and validate implementation while the main session continues discussing other Changes. The dashboard projects Changes, Traces, and Configuration from guarded core APIs; it never owns truth or writes source directly. Trace JSONL, Change records, KB, and Git evidence remain authoritative.
+
+Pi TUI support remains for focused command output and source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Backend state and continuation remain available through internal tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-dashboard` is the only public state/dashboard command; the former state alias is removed. No separate status command is planned. Renderer output is never canonical truth.
 
 ## Product boundaries
 

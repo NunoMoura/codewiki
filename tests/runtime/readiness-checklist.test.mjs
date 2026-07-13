@@ -32,6 +32,7 @@ const operatingGuidanceFiles = [
 const expectedToolNames = [
 	"wiki_state",
 	"wiki_config",
+	"wiki_change",
 	"wiki_decide",
 	"wiki_plan",
 	"wiki_implement",

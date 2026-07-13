@@ -61,12 +61,12 @@ export type {
 	ChangeStatusTransition,
 	ChangeValidation,
 } from "../changes/types.ts";
-export type { IdeasRecord } from "../ideas/records.ts";
+export type { ChangeRecord } from "../changes/records.ts";
 export type {
-	IdeasQuery,
-	IdeasStore,
-	IdeasStoreSnapshot,
-} from "../ideas/store.ts";
+	ChangeQuery,
+	ChangeStore,
+	ChangeStoreSnapshot,
+} from "../changes/store.ts";
 export type {
 	GitStatusSnapshot,
 	GitStatusSnapshotInput,

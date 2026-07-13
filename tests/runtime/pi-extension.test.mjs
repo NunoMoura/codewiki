@@ -288,7 +288,7 @@ describe("Pi extension adapter", () => {
 		assert.equal(packageJson.pi.skills, undefined);
 	});
 
-	it("exposes guarded Ideas reads through the registered Pi tool", async () => {
+	it("exposes guarded Change reads through the registered Pi tool", async () => {
 		const root = await fixture();
 		try {
 			execFileSync("git", ["init", "-q"], { cwd: root });
@@ -297,7 +297,7 @@ describe("Pi extension adapter", () => {
 			const tool = toolByName(pi, "wiki_change");
 			const result = assertToolResult(
 				await tool.execute(
-					"tool-call-ideas-list",
+					"tool-call-changes-list",
 					{ input: { operation: "list" } },
 					undefined,
 					undefined,
@@ -310,7 +310,7 @@ describe("Pi extension adapter", () => {
 			assert.deepEqual(result.records, []);
 			await assert.rejects(
 				tool.execute(
-					"tool-call-ideas-accept",
+					"tool-call-changes-accept",
 					{ input: { operation: "accept" } },
 					undefined,
 					undefined,

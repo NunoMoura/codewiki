@@ -46,13 +46,13 @@ Allowed terminal outputs:
 - state lifecycle transitions;
 - data-model entity cards and relationships.
 
-The product progress surface is `/wiki-dashboard`, a local retro console-inspired browser view. It renders the Sprints Queue as ordered horizontal Sprint Trace bars and expands each Sprint Trace into Trace Detail.
+The product control and progress surface is `/wiki-dashboard`, a local retro console-inspired browser view with Changes, Traces, and Configuration areas. Changes projects the durable Changes Backlog; Traces renders ordered horizontal Sprint Trace bars and expands each trace into Trace Detail; Configuration shows effective model, budget, autonomy, isolation, and runtime policy.
 
 ## Dashboard principles
 
-- Trace-first: trace JSONL is workflow truth, and Sprint Traces are projections over it.
-- Live: trace appends stream into the open dashboard immediately; bounded read-only polling recovers automatically from missed or disconnected event streams without requiring reload.
-- Read-only: dashboard navigation, search, filtering, and copy helpers do not append trace records.
+- Truth-backed: Change records are mutable pre-Decision truth, trace JSONL is accepted execution truth, and every dashboard view is a projection.
+- Live: Change revisions and trace appends stream into the open dashboard immediately; bounded polling recovers automatically from missed or disconnected event streams without requiring reload.
+- Guarded: navigation and observability are read-only; allowed Change/configuration commands call guarded core APIs with capabilities, optimistic guards, idempotency, audit receipts, stale-state lockout, and secret redaction.
 - Local-private: the server binds to loopback, endpoint metadata is user-only, the launch capability travels in a URL fragment rather than the request URL, and responses deny framing, referrers, and external resource connections.
 - High signal: each bar shows phase, progress, worker count, blocker count, and current action.
 - Retro, not pure ASCII: use monospace typography, strong colors, pane borders, and low-noise horizontal bars.
@@ -67,7 +67,7 @@ The following are not active product surfaces in this wave:
 - standalone Board command or broad generated-view visualizer;
 - Map or graph navigation UI;
 - Product/System navigation panels;
-- write-capable browser Control Room;
+- broad browser shell, direct source editor, or unrestricted Control Room;
 - archived status UI commands.
 
 Backend status and continuation remain available to agents through internal `wiki_state`, generated views derived from traces, loop outputs, and Ready Checks. Users see active work through `/wiki-dashboard` and continue work through `/wiki-resume` or normal conversation in Pi.
@@ -87,7 +87,8 @@ Dashboard chrome must always communicate loading, live, stale/reconnecting, or f
 - Backend architecture work does not depend on product UI surfaces.
 - System diagrams can be rendered in Pi TUI as readable ASCII/Unicode.
 - Diagram rendering stays source-backed and compact.
-- The Sprints Queue shows Sprint Trace bars with coarse progress, current loop state, workers, blockers, and Trace Detail.
+- The dashboard clearly separates mutable Changes from independently executing Traces.
+- The Traces queue shows Sprint Trace bars with coarse progress, current loop state, workers, blockers, and Trace Detail.
 - Open dashboards reflect durable trace progress automatically and recover from transient stream failures.
 - No renderer output becomes source of truth.
 

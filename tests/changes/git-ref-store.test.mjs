@@ -6,17 +6,17 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, it } from "node:test";
 
-import { GitRefIdeasStore } from "../../src/ideas/git-ref-store.ts";
+import { GitRefChangeStore } from "../../src/changes/git-ref-store.ts";
 import {
-	addIdeasEvidence,
-	createIdeasRecord,
-	linkIdeasRecord,
-	mergeIdeasRecords,
-	parseIdeasRecord,
-	splitIdeasRecord,
-	transitionIdeasStatus,
-} from "../../src/ideas/records.ts";
-import { IdeasStoreConflictError } from "../../src/ideas/store.ts";
+	addChangeEvidence,
+	createChangeRecord,
+	linkChangeRecord,
+	mergeChangeRecords,
+	parseChangeRecord,
+	splitChangeRecord,
+	transitionChangeStatus,
+} from "../../src/changes/records.ts";
+import { ChangeStoreConflictError } from "../../src/changes/store.ts";
 import { CHANGE_SCHEMA_VERSION } from "../../src/changes/types.ts";
 
 const run = promisify(execFile);
@@ -24,7 +24,9 @@ const NOW = "2026-07-13T03:00:00.000Z";
 const roots = [];
 
 afterEach(async () => {
-	await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
+	await Promise.all(
+		roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
+	);
 });
 
 function change(id, overrides = {}) {
@@ -44,12 +46,12 @@ function change(id, overrides = {}) {
 			kind: "introduce",
 			type: "workflow_change",
 			scope: "system",
-			affectedLayers: ["ideas"],
-			targetRefs: ["src/ideas/store.ts"],
+			affectedLayers: ["changes"],
+			targetRefs: ["src/changes/store.ts"],
 		},
 		impact: {
-			user: "Ideas remain available.",
-			maintainer: "Ideas have deterministic revisions.",
+			user: "Changes remain available.",
+			maintainer: "Changes have deterministic revisions.",
 		},
 		evidence: { sourceRefs: [], proofRefs: [] },
 		safety: { risk: "low", failureModes: ["An update is lost."] },
@@ -71,11 +73,13 @@ function change(id, overrides = {}) {
 }
 
 async function repository() {
-	const root = await mkdtemp(join(tmpdir(), "codewiki-ideas-store-test-"));
+	const root = await mkdtemp(join(tmpdir(), "codewiki-changes-store-test-"));
 	roots.push(root);
 	await run("git", ["init", "-q"], { cwd: root });
-	await run("git", ["config", "user.name", "Ideas Test"], { cwd: root });
-	await run("git", ["config", "user.email", "ideas@example.test"], { cwd: root });
+	await run("git", ["config", "user.name", "Changes Test"], { cwd: root });
+	await run("git", ["config", "user.email", "changes@example.test"], {
+		cwd: root,
+	});
 	await writeFile(join(root, "README.md"), "# Fixture\n");
 	await run("git", ["add", "README.md"], { cwd: root });
 	await run("git", ["commit", "-q", "-m", "fixture"], { cwd: root });
@@ -86,14 +90,14 @@ async function status(root) {
 	return (await run("git", ["status", "--porcelain=v1"], { cwd: root })).stdout;
 }
 
-describe("Git-ref Ideas Store", () => {
+describe("Git-ref Change Store", () => {
 	it("writes revisioned records without touching the active checkout", async () => {
 		const root = await repository();
-		const store = new GitRefIdeasStore({ repoRoot: root });
+		const store = new GitRefChangeStore({ repoRoot: root });
 		assert.deepEqual(await store.read(), { head: null, records: [] });
 		assert.equal(await status(root), "");
 
-		const firstRecord = createIdeasRecord(change("CHG-first"));
+		const firstRecord = createChangeRecord(change("CHG-first"));
 		const first = await store.write({
 			expectedHead: null,
 			records: [firstRecord],
@@ -105,9 +109,9 @@ describe("Git-ref Ideas Store", () => {
 		assert.equal(await status(root), "");
 		assert.equal((await store.get("CHG-first")).recordRevision, 1);
 
-		const revised = addIdeasEvidence(firstRecord, {
-			sourceRefs: ["src/ideas/store.ts"],
-			proofRefs: ["tests/ideas/git-ref-store.test.mjs"],
+		const revised = addChangeEvidence(firstRecord, {
+			sourceRefs: ["src/changes/store.ts"],
+			proofRefs: ["tests/changes/git-ref-store.test.mjs"],
 			updatedBy: "test-agent",
 			updatedAt: "2026-07-13T03:01:00.000Z",
 		});
@@ -123,16 +127,14 @@ describe("Git-ref Ideas Store", () => {
 		assert.equal(await status(root), "");
 
 		const oldBody = (
-			await run(
-				"git",
-				["show", `${first.head}:changes/CHG-first.json`],
-				{ cwd: root },
-			)
+			await run("git", ["show", `${first.head}:changes/CHG-first.json`], {
+				cwd: root,
+			})
 		).stdout;
 		assert.equal(JSON.parse(oldBody).change.revision, 1);
 		assert.equal(
 			(
-				await run("git", ["rev-list", "--count", "refs/codewiki/ideas"], {
+				await run("git", ["rev-list", "--count", "refs/codewiki/changes"], {
 					cwd: root,
 				})
 			).stdout.trim(),
@@ -142,12 +144,12 @@ describe("Git-ref Ideas Store", () => {
 
 	it("queries records and rejects stale compare-and-swap writes", async () => {
 		const root = await repository();
-		const store = new GitRefIdeasStore({ repoRoot: root });
+		const store = new GitRefChangeStore({ repoRoot: root });
 		const initial = await store.write({
 			expectedHead: null,
 			records: [
-				createIdeasRecord(change("CHG-routing")),
-				createIdeasRecord(
+				createChangeRecord(change("CHG-routing")),
+				createChangeRecord(
 					change("CHG-security", {
 						classification: {
 							...change("CHG-security").classification,
@@ -156,7 +158,7 @@ describe("Git-ref Ideas Store", () => {
 					}),
 				),
 			],
-			message: "Create ideas",
+			message: "Create changes",
 			actor: "test-agent",
 			createdAt: NOW,
 		});
@@ -167,12 +169,14 @@ describe("Git-ref Ideas Store", () => {
 			["CHG-security"],
 		);
 		assert.deepEqual(
-			(await store.query({ text: "routing" })).map((record) => record.change.id),
+			(await store.query({ text: "routing" })).map(
+				(record) => record.change.id,
+			),
 			["CHG-routing"],
 		);
 
 		const routing = await store.get("CHG-routing");
-		const updated = addIdeasEvidence(routing, {
+		const updated = addChangeEvidence(routing, {
 			sourceRefs: ["src/runtime/handoff.ts"],
 			updatedBy: "test-agent",
 			updatedAt: "2026-07-13T03:02:00.000Z",
@@ -192,27 +196,27 @@ describe("Git-ref Ideas Store", () => {
 				actor: "stale-agent",
 				createdAt: "2026-07-13T03:03:00.000Z",
 			}),
-			IdeasStoreConflictError,
+			ChangeStoreConflictError,
 		);
 
-		const reopened = new GitRefIdeasStore({ repoRoot: root });
+		const reopened = new GitRefChangeStore({ repoRoot: root });
 		assert.equal((await reopened.get("CHG-routing")).change.revision, 2);
 		assert.equal(await status(root), "");
 	});
 
 	it("supports links, merge, split, and status transitions as record revisions", () => {
-		const first = createIdeasRecord(change("CHG-first"));
-		const second = createIdeasRecord(change("CHG-second"));
-		const linked = linkIdeasRecord(first, {
+		const first = createChangeRecord(change("CHG-first"));
+		const second = createChangeRecord(change("CHG-second"));
+		const linked = linkChangeRecord(first, {
 			relation: "related",
 			targetChangeId: second.change.id,
 			createdBy: "test-agent",
 			createdAt: NOW,
 		});
 		assert.equal(linked.recordRevision, 2);
-		assert.equal(parseIdeasRecord(linked).links[0].relation, "related");
+		assert.equal(parseChangeRecord(linked).links[0].relation, "related");
 
-		const [mergedTarget, mergedSource] = mergeIdeasRecords({
+		const [mergedTarget, mergedSource] = mergeChangeRecords({
 			target: linked,
 			sources: [second],
 			changedBy: "test-agent",
@@ -222,7 +226,7 @@ describe("Git-ref Ideas Store", () => {
 		assert.equal(mergedSource.change.status, "withdrawn");
 		assert.equal(mergedSource.links[0].relation, "merged_into");
 
-		const [splitParent, childA, childB] = splitIdeasRecord({
+		const [splitParent, childA, childB] = splitChangeRecord({
 			parent: first,
 			children: [change("CHG-child-a"), change("CHG-child-b")],
 			changedBy: "test-agent",
@@ -232,7 +236,7 @@ describe("Git-ref Ideas Store", () => {
 		assert.equal(childA.recordRevision, 1);
 		assert.equal(childB.links[0].targetChangeId, first.change.id);
 
-		const deferred = transitionIdeasStatus(first, {
+		const deferred = transitionChangeStatus(first, {
 			status: "deferred",
 			changedBy: "test-agent",
 			changedAt: NOW,

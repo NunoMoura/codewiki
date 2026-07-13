@@ -14,7 +14,9 @@ const NOW = "2026-07-13T04:00:00.000Z";
 const roots = [];
 
 afterEach(async () => {
-	await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
+	await Promise.all(
+		roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
+	);
 });
 
 function change(id = "CHG-api-test") {
@@ -24,9 +26,9 @@ function change(id = "CHG-api-test") {
 		revision: 1,
 		status: "pending",
 		intent: {
-			question: "Should Ideas have a guarded API?",
-			currentState: "Ideas are not available through Pi.",
-			desiredState: "Ideas have one guarded API.",
+			question: "Should Changes have a guarded API?",
+			currentState: "Changes are not available through Pi.",
+			desiredState: "Changes have one guarded API.",
 			rationale: "Adapters need one semantic contract.",
 			nonGoals: ["Do not accept Changes."],
 		},
@@ -34,7 +36,7 @@ function change(id = "CHG-api-test") {
 			kind: "introduce",
 			type: "workflow_change",
 			scope: "system",
-			affectedLayers: ["api", "ideas"],
+			affectedLayers: ["api", "changes"],
 			targetRefs: ["src/api/wiki-change.ts"],
 		},
 		impact: {
@@ -69,8 +71,10 @@ async function repository() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-change-test-"));
 	roots.push(root);
 	await run("git", ["init", "-q"], { cwd: root });
-	await run("git", ["config", "user.name", "Ideas Test"], { cwd: root });
-	await run("git", ["config", "user.email", "ideas@example.test"], { cwd: root });
+	await run("git", ["config", "user.name", "Changes Test"], { cwd: root });
+	await run("git", ["config", "user.email", "changes@example.test"], {
+		cwd: root,
+	});
 	await writeFile(join(root, "README.md"), "# Fixture\n");
 	await run("git", ["add", "README.md"], { cwd: root });
 	await run("git", ["commit", "-q", "-m", "fixture"], { cwd: root });
@@ -115,7 +119,9 @@ describe("wiki_change core facade", () => {
 			changeId: "CHG-api-test",
 		});
 		assert.equal(validation.validation.ready, false);
-		assert.deepEqual(validation.validation.issues, ["Change validation is not valid."]);
+		assert.deepEqual(validation.validation.issues, [
+			"Change validation is not valid.",
+		]);
 
 		const revised = await runWikiChange({
 			repoRoot,
@@ -123,18 +129,18 @@ describe("wiki_change core facade", () => {
 			expectedHead: read.head,
 			expectedRecordRevision: read.record.recordRevision,
 			changeId: "CHG-api-test",
-			proofRefs: ["tests/ideas/wiki-change.test.mjs"],
+			proofRefs: ["tests/changes/wiki-change.test.mjs"],
 			actor: "test-agent",
 			createdAt: "2026-07-13T04:01:00.000Z",
 		});
 		assert.equal(revised.record.change.revision, 2);
 		assert.equal(revised.record.recordRevision, 2);
 		assert.deepEqual(revised.record.change.evidence.proofRefs, [
-			"tests/ideas/wiki-change.test.mjs",
+			"tests/changes/wiki-change.test.mjs",
 		]);
 	});
 
-	it("deduplicates matching proposals without advancing the Ideas ref", async () => {
+	it("deduplicates matching proposals without advancing the Changes ref", async () => {
 		const repoRoot = await repository();
 		const first = await runWikiChange({
 			repoRoot,
@@ -174,7 +180,8 @@ describe("wiki_change core facade", () => {
 		);
 
 		const secret = change("CHG-secret");
-		secret.intent.rationale = "Token sk_testsecretvalue123456789 must never be stored.";
+		secret.intent.rationale =
+			"Token sk_testsecretvalue123456789 must never be stored.";
 		await assert.rejects(
 			runWikiChange({
 				repoRoot,
