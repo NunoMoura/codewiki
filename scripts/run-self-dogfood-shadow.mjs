@@ -96,65 +96,120 @@ function toolResult(result, name) {
 	return result.details.result;
 }
 
-function shadowProposal(createdAt) {
+function shadowChange(createdAt) {
 	return {
-		id: "SP-self-dogfood-shadow",
-		summary:
-			"Preview pinned baseline behavior against a disposable repository copy.",
+		schemaVersion: 1,
+		id: "CHG-self-dogfood-shadow",
+		revision: 1,
+		status: "pending",
+		intent: {
+			question: "Can the pinned baseline preview an accepted Change safely?",
+			currentState:
+				"Package gates alone do not prove accepted-only Decision preview behavior against repository state.",
+			desiredState:
+				"A disposable copy receives deterministic read-only and accepted-Change preview results from the pinned package.",
+			rationale:
+				"Shadow evidence must precede any supervised repo-local mutation.",
+			nonGoals: [
+				"Do not append repository traces.",
+				"Do not grant Decision approval through the shadow runner.",
+			],
+		},
+		classification: {
+			kind: "harden",
+			type: "workflow_change",
+			scope: "system",
+			affectedLayers: ["changes", "decision", "runtime"],
+			targetRefs: ["scripts/run-self-dogfood-shadow.mjs"],
+		},
+		impact: {
+			user: "Reduces risk before supervised self-dogfood activation.",
+			maintainer:
+				"Adds reproducible evidence tied to one reviewed package digest.",
+		},
+		evidence: {
+			sourceRefs: ["kb:system/components/runtime.md"],
+			proofRefs: ["scripts/run-self-dogfood-shadow.mjs"],
+		},
+		safety: {
+			risk: "low",
+			safetyBoundary:
+				"All CodeWiki execution targets a temporary copy; source trace bytes are checked before and after.",
+			failureModes: [
+				"Baseline package integrity differs from the reviewed manifest.",
+				"Read or preview unexpectedly mutates source truth.",
+			],
+			negativeTestPlan:
+				"Reject altered package bytes and compare source truth digests around shadow execution.",
+			rollbackPlan: "Delete the disposable shadow repository.",
+		},
+		validation: {
+			state: "draft",
+			issues: [],
+			assessments: [],
+			recommendations: [],
+			successSignal:
+				"State and preview calls complete while source config and traces retain the same digest.",
+			regressionPlan: "Run the pinned-controller shadow gate.",
+		},
+		estimates: {
+			effort: "low",
+			workScale: "small",
+		},
+		provenance: {
+			origin: "agent",
+			createdBy: "self-dogfood-shadow",
+			createdAt,
+			updatedAt: createdAt,
+		},
+	};
+}
+
+async function seedAcceptedChange(packageRoot, shadowRoot, createdAt) {
+	const [{ changeContentDigest }, { GitRefChangeStore }, { createChangeRecord }] =
+		await Promise.all([
+			import(
+				pathToFileURL(join(packageRoot, "dist", "changes", "digest.js")).href
+			),
+			import(
+				pathToFileURL(
+					join(packageRoot, "dist", "changes", "git-ref-store.js"),
+				).href
+			),
+			import(
+				pathToFileURL(join(packageRoot, "dist", "changes", "records.js")).href
+			),
+		]);
+	run("git", ["init", "-q"], { cwd: shadowRoot });
+	const change = shadowChange(createdAt);
+	change.validation = {
+		...change.validation,
+		state: "valid",
+		validatedRevision: change.revision,
+		validatedDigest: changeContentDigest(change),
+		validatorVersion: "self-dogfood-shadow.v1",
+	};
+	const record = createChangeRecord(change);
+	const store = new GitRefChangeStore({ repoRoot: shadowRoot });
+	const seeded = await store.write({
+		expectedHead: null,
+		records: [record],
+		message: `Seed ${change.id}`,
+		actor: "self-dogfood-shadow",
 		createdAt,
-		updatedAt: createdAt,
-		sourceRefs: ["README.md"],
-		changes: [
+	});
+	return {
+		expectedHead: seeded.head,
+		selections: [
 			{
-				id: "CHG-self-dogfood-shadow",
-				decisionKind: "harden",
-				currentState: "Repo-local CodeWiki remains disabled.",
-				desiredState:
-					"Pinned baseline can read state and preview a decision without appending source trace truth.",
-				rationale:
-					"Shadow evidence must precede any supervised repo-local mutation.",
-				currentPain:
-					"Package gates alone do not prove safe read and preview behavior against repository state.",
-				desiredOutcome:
-					"A disposable copy receives deterministic read-only and preview results from the pinned package.",
-				successSignal:
-					"State and preview calls complete while source config and traces retain the same digest.",
-				nonGoals: [
-					"Do not append repository traces.",
-					"Do not enable repo-local CodeWiki settings.",
-				],
-				userImpact: "Reduces risk before supervised self-dogfood activation.",
-				maintainerImpact:
-					"Adds reproducible evidence tied to one reviewed package digest.",
-				effort: "low",
-				workScale: "small",
-				planningDepth: "micro",
-				risk: "low",
-				recommendation: "approve",
-				recommendationRationale:
-					"Disposable shadow execution is lower risk than loading mutable source.",
-				agentAssessment: {
-					stance: "aligned",
-					userAlignment: "Matches the approved staged self-dogfood direction.",
-					projectBenefit:
-						"Proves baseline behavior without granting write authority.",
-					rationale:
-						"No repository trace or host setting is changed by the preview.",
-				},
-				safetyBoundary:
-					"All CodeWiki execution targets a temporary copy; source trace bytes are checked before and after.",
-				failureModes: [
-					"Baseline package integrity differs from the reviewed manifest.",
-					"Read or preview unexpectedly mutates source truth.",
-				],
-				negativeTestPlan:
-					"Reject altered package bytes and compare source truth digests around shadow execution.",
-				compatibilityImpact:
-					"No public API or source workflow activation occurs.",
-				approval: "approved",
-				sourceRefs: ["README.md"],
+				changeId: change.id,
+				revision: change.revision,
+				recordRevision: record.recordRevision,
+				contentDigest: changeContentDigest(change),
 			},
 		],
+		acceptedBy: "self-dogfood-shadow",
+		acceptedAt: createdAt,
 	};
 }
 
@@ -234,6 +289,11 @@ try {
 
 	const traceId = "TRACE-self-dogfood-shadow";
 	const createdAt = new Date().toISOString();
+	const changeAcceptance = await seedAcceptedChange(
+		packageRoot,
+		shadowRoot,
+		createdAt,
+	);
 	const tracePath = join(shadowRoot, ".codewiki", "traces", `${traceId}.jsonl`);
 	mkdirSync(join(shadowRoot, ".codewiki", "traces"), { recursive: true });
 	const traceHead = `${JSON.stringify({
@@ -250,8 +310,7 @@ try {
 				input: {
 					traceId,
 					mode: "preview",
-					createdAt,
-					proposalInput: shadowProposal(createdAt),
+					changeAcceptance,
 				},
 			},
 			undefined,

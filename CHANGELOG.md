@@ -130,6 +130,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Migrated the pinned-controller shadow gate to seed and preview an exact validated Change acceptance instead of calling the removed authored-proposal Decision input.
 - Cleared loop-standard timeout handles after node settlement and attributed
   skipped standards to their actual failed dependency.
 - Restricted dashboard endpoint metadata, bearer tokens, and daemon logs to the
