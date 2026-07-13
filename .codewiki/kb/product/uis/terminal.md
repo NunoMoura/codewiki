@@ -52,7 +52,7 @@ The product control and progress surface is `/wiki-dashboard`, a local retro con
 
 - Truth-backed: Change records are mutable pre-Decision truth, trace JSONL is accepted execution truth, and every dashboard view is a projection.
 - Live: Change revisions and trace appends stream into the open dashboard immediately; bounded polling recovers automatically from missed or disconnected event streams without requiring reload.
-- Guarded: navigation and observability are read-only; allowed Change/configuration commands call guarded core APIs with capabilities, optimistic guards, idempotency, audit receipts, stale-state lockout, and secret redaction.
+- Guarded: navigation and observability are read-only; allowed Change, configuration, and supervised runtime-session commands call guarded core APIs with exact same-origin capabilities, optimistic state or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction. Runtime controls never approve semantic output directly.
 - Local-private: the server binds to loopback, endpoint metadata is user-only, the launch capability travels in a URL fragment rather than the request URL, and responses deny framing, referrers, and external resource connections.
 - High signal: each bar shows phase, progress, worker count, blocker count, and current action.
 - Retro, not pure ASCII: use monospace typography, strong colors, pane borders, and low-noise horizontal bars.

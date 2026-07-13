@@ -27,7 +27,8 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 
 - Host-specific capabilities must fail closed when unsupported.
 - The browser dashboard derives Changes from the Change Store and execution state from trace-backed API projections.
-- Allowed Change/configuration mutations must call guarded CodeWiki APIs with same-origin capabilities, optimistic guards, idempotency, audit receipts, stale-state lockout, and secret redaction.
+- Allowed Change, configuration, and supervised runtime-session mutations must call guarded CodeWiki APIs with exact same-origin capabilities, optimistic state or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction.
+- Runtime-session controls may start or stop a policy-eligible trace host, but they cannot approve semantic output or append trace truth directly.
 - The dashboard cannot gain shell, direct source-write, trace-append, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority.
 - Repo-local CodeWiki extension loading stays disabled until the pinned-baseline self-dogfood gate passes.
 

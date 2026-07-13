@@ -17,8 +17,12 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /function renderImplementationReview/);
 		assert.match(script, /function renderNarrativeFeed/);
 		assert.match(script, /function renderDevLog/);
+		assert.match(script, /function renderExecutionControl/);
+		assert.match(script, /function executeTraceHostCommand/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /integration and exit review/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic trace evidence remains authoritative/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Start trace execution/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic approvals remain separate/);
 	});
 
 	it("provides explicit loading and terminal recovery content instead of a blank shell", () => {

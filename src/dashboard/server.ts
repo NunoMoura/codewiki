@@ -20,6 +20,7 @@ import {
 import {
 	createServer,
 	request as httpRequest,
+	type IncomingMessage,
 	type Server,
 	type ServerResponse,
 } from "node:http";
@@ -33,6 +34,11 @@ import {
 } from "../project/state-file.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
+import {
+	type DashboardTraceHostControl,
+	DashboardTraceHostControlError,
+} from "./trace-host-control.ts";
+import { createDefaultDashboardTraceHostControl } from "./trace-host-runtime.ts";
 import {
 	assertDashboardRuntimeCurrent,
 	captureDashboardRuntimeIdentity,
@@ -48,6 +54,7 @@ export interface CodewikiDashboardServerOptions {
 	keepAlive?: boolean;
 	persistent?: boolean;
 	inProcess?: boolean;
+	traceHostControl?: DashboardTraceHostControl;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -68,6 +75,9 @@ interface DashboardRuntime {
 	clients: Set<ServerResponse>;
 	watcher?: FSWatcher;
 	broadcastTimer?: NodeJS.Timeout;
+	traceHostTimer?: NodeJS.Timeout;
+	traceHostControl: DashboardTraceHostControl;
+	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
 }
@@ -92,6 +102,7 @@ const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(
 );
 const DASHBOARD_DAEMON_ENV = "CODEWIKI_DASHBOARD_DAEMON";
 const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
+const DASHBOARD_SUPERVISION_GRACE_MS = 5_000;
 const DASHBOARD_SECURITY_HEADERS = {
 	"Content-Security-Policy":
 		"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
@@ -189,19 +200,17 @@ async function waitForDashboardDaemon(
 	repoRoot: string,
 	expectedDigest: string,
 ): Promise<DashboardEndpoint> {
-	const deadline = Date.now() + 4_000;
 	let lastEndpoint: DashboardEndpoint | undefined;
-	while (Date.now() < deadline) {
-		const endpoint = await readDashboardEndpoint(repoRoot);
-		if (endpoint) {
-			lastEndpoint = endpoint;
-			const meta = await readDashboardEndpointMeta(endpoint);
-			if (meta?.mode === "daemon" && meta.assetDigest === expectedDigest) {
-				return endpoint;
-			}
-		}
-		await delay(60);
-	}
+	const endpoint = await pollUntil(Date.now() + 4_000, async () => {
+		const candidate = await readDashboardEndpoint(repoRoot);
+		if (!candidate) return undefined;
+		lastEndpoint = candidate;
+		const meta = await readDashboardEndpointMeta(candidate);
+		return meta?.mode === "daemon" && meta.assetDigest === expectedDigest
+			? candidate
+			: undefined;
+	});
+	if (endpoint) return endpoint;
 	throw new Error(
 		`CodeWiki dashboard daemon did not start${lastEndpoint ? ` at ${lastEndpoint.origin}` : ""}.`,
 	);
@@ -321,11 +330,9 @@ async function shutdownDashboardEndpoint(
 		`${endpoint.origin}/api/shutdown?token=${encodeURIComponent(endpoint.token)}`,
 		500,
 	).catch(() => undefined);
-	const deadline = Date.now() + 1_500;
-	while (Date.now() < deadline) {
-		if (!(await dashboardEndpointResponds(endpoint))) return;
-		await delay(60);
-	}
+	await pollUntil(Date.now() + 1_500, async () =>
+		(await dashboardEndpointResponds(endpoint)) ? undefined : true,
+	);
 }
 
 async function requestDashboardJson(
@@ -367,6 +374,16 @@ function delay(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function pollUntil<T>(
+	deadline: number,
+	attempt: () => Promise<T | undefined>,
+): Promise<T | undefined> {
+	const result = await attempt();
+	if (result !== undefined || Date.now() >= deadline) return result;
+	await delay(60);
+	return pollUntil(deadline, attempt);
+}
+
 async function startInProcessDashboardServer(
 	options: CodewikiDashboardServerOptions,
 ): Promise<CodewikiDashboardServerHandle> {
@@ -399,6 +416,7 @@ async function startInProcessDashboardServer(
 		options.repoRoot,
 		endpoint,
 		options.keepAlive ?? false,
+		options.traceHostControl,
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -585,6 +603,7 @@ async function createDashboardRuntime(
 	repoRoot: string,
 	preferredEndpoint?: DashboardEndpoint,
 	keepAlive = false,
+	providedTraceHostControl?: DashboardTraceHostControl,
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -592,12 +611,7 @@ async function createDashboardRuntime(
 	let runtime: DashboardRuntime;
 	const server = createServer(async (request, response) => {
 		try {
-			await routeRequest(
-				runtime,
-				request.method || "GET",
-				request.url || "/",
-				response,
-			);
+			await routeRequest(runtime, request, response);
 		} catch (error) {
 			writeServerError(response, error);
 		}
@@ -610,6 +624,12 @@ async function createDashboardRuntime(
 	}
 	const origin = `http://127.0.0.1:${address.port}`;
 	const endpoint = dashboardEndpoint(repoRoot, origin, token, address.port);
+	const traceHostControl =
+		providedTraceHostControl ||
+		(await createDefaultDashboardTraceHostControl(
+			repoRoot,
+			`dashboard:${process.pid}:${address.port}`,
+		));
 	runtime = {
 		repoRoot,
 		server,
@@ -617,11 +637,20 @@ async function createDashboardRuntime(
 		origin,
 		token,
 		clients,
+		traceHostControl,
+		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
 	};
 	await writeDashboardEndpoint(endpoint);
 	runtime.watcher = watchTraceDirectory(runtime);
+	runtime.traceHostTimer = setInterval(() => {
+		if (runtime.clients.size > 0) runtime.lastSupervisedAt = Date.now();
+		const attached =
+			Date.now() - runtime.lastSupervisedAt <= DASHBOARD_SUPERVISION_GRACE_MS;
+		void runtime.traceHostControl.heartbeat(attached).catch(() => undefined);
+	}, 1_000);
+	runtime.traceHostTimer.unref();
 	return runtime;
 }
 
@@ -640,15 +669,33 @@ function watchTraceDirectory(runtime: DashboardRuntime): FSWatcher | undefined {
 
 async function routeRequest(
 	runtime: DashboardRuntime,
-	method: string,
-	requestUrl: string,
+	request: IncomingMessage,
 	response: ServerResponse,
 ): Promise<void> {
-	const url = new URL(requestUrl, runtime.origin);
+	const method = request.method || "GET";
+	const url = new URL(request.url || "/", runtime.origin);
+	if (method === "GET" && (await routePublicGet(response, url))) return;
+	if (!validToken(runtime, url)) {
+		writeJson(response, 403, { error: "Forbidden" });
+		return;
+	}
+	if (method === "GET" && (await routeAuthorizedGet(runtime, response, url))) {
+		return;
+	}
+	if (method === "POST" && (await routeAuthorizedPost(runtime, request, response, url))) {
+		return;
+	}
 	if (method !== "GET") {
 		writeJson(response, 405, { error: "Method not allowed" });
 		return;
 	}
+	writeJson(response, 404, { error: "Not found" });
+}
+
+async function routePublicGet(
+	response: ServerResponse,
+	url: URL,
+): Promise<boolean> {
 	if (url.pathname === "/" || url.pathname === "/index.html") {
 		writeHtml(
 			response,
@@ -657,19 +704,28 @@ async function routeRequest(
 				await currentDashboardAssetDigest(),
 			),
 		);
-		return;
+		return true;
 	}
 	if (url.pathname === "/assets/codewiki-logo.png") {
 		writePng(response, await currentDashboardLogoPng());
-		return;
+		return true;
 	}
-	if (!validToken(runtime, url)) {
-		writeJson(response, 403, { error: "Forbidden" });
-		return;
-	}
+	return false;
+}
+
+async function routeAuthorizedGet(
+	runtime: DashboardRuntime,
+	response: ServerResponse,
+	url: URL,
+): Promise<boolean> {
 	if (url.pathname === "/api/state") {
 		writeJson(response, 200, await readDashboardState(runtime.repoRoot));
-		return;
+		return true;
+	}
+	if (url.pathname === "/api/trace-hosts") {
+		runtime.lastSupervisedAt = Date.now();
+		writeJson(response, 200, await runtime.traceHostControl.status());
+		return true;
 	}
 	if (url.pathname === "/api/meta") {
 		writeJson(response, 200, {
@@ -677,22 +733,98 @@ async function routeRequest(
 			pid: process.pid,
 			assetDigest: await currentDashboardAssetDigest(),
 		});
-		return;
+		return true;
 	}
 	if (url.pathname === "/api/shutdown") {
 		writeJson(response, 200, { ok: true });
-		setTimeout(() => {
-			void runtime.close().then(() => {
-				if (process.env[DASHBOARD_DAEMON_ENV] === "1") process.exit(0);
-			});
-		}, 10);
-		return;
+		scheduleRuntimeClose(runtime);
+		return true;
 	}
 	if (url.pathname === "/api/events") {
 		await attachEventStream(runtime, response);
-		return;
+		return true;
 	}
-	writeJson(response, 404, { error: "Not found" });
+	return false;
+}
+
+async function routeAuthorizedPost(
+	runtime: DashboardRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+	url: URL,
+): Promise<boolean> {
+	if (url.pathname !== "/api/trace-hosts/commands") return false;
+	assertSameOriginMutation(runtime, request);
+	runtime.lastSupervisedAt = Date.now();
+	const command = await readJsonRequest(request);
+	writeJson(response, 200, await runtime.traceHostControl.execute(command));
+	return true;
+}
+
+function scheduleRuntimeClose(runtime: DashboardRuntime): void {
+	setTimeout(() => {
+		void runtime.close().then(() => {
+			if (process.env[DASHBOARD_DAEMON_ENV] === "1") process.exit(0);
+		});
+	}, 10);
+}
+
+function assertSameOriginMutation(
+	runtime: DashboardRuntime,
+	request: IncomingMessage,
+): void {
+	if (request.headers.origin !== runtime.origin) {
+		throw new DashboardTraceHostControlError(
+			"Dashboard mutation requires exact same-origin authority.",
+			403,
+		);
+	}
+	const fetchSite = request.headers["sec-fetch-site"];
+	if (fetchSite && fetchSite !== "same-origin") {
+		throw new DashboardTraceHostControlError(
+			"Dashboard mutation rejected cross-site request metadata.",
+			403,
+		);
+	}
+	const contentType = request.headers["content-type"] || "";
+	if (!contentType.toLowerCase().startsWith("application/json")) {
+		throw new DashboardTraceHostControlError(
+			"Dashboard mutation requires application/json.",
+			400,
+		);
+	}
+}
+
+async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
+	const maxBytes = 16_384;
+	const declared = Number(request.headers["content-length"] || 0);
+	if (Number.isFinite(declared) && declared > maxBytes) {
+		throw new DashboardTraceHostControlError(
+			"Dashboard command body exceeds 16384 bytes.",
+			400,
+		);
+	}
+	const chunks: Buffer[] = [];
+	let bytes = 0;
+	for await (const chunk of request) {
+		const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+		bytes += buffer.length;
+		if (bytes > maxBytes) {
+			throw new DashboardTraceHostControlError(
+				"Dashboard command body exceeds 16384 bytes.",
+				400,
+			);
+		}
+		chunks.push(buffer);
+	}
+	try {
+		return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+	} catch {
+		throw new DashboardTraceHostControlError(
+			"Dashboard command body must be valid JSON.",
+			400,
+		);
+	}
 }
 
 async function readDashboardState(
@@ -719,6 +851,7 @@ async function attachEventStream(
 	runtime: DashboardRuntime,
 	response: ServerResponse,
 ): Promise<void> {
+	runtime.lastSupervisedAt = Date.now();
 	const state = await readDashboardState(runtime.repoRoot);
 	response.writeHead(200, {
 		...DASHBOARD_SECURITY_HEADERS,
@@ -795,14 +928,18 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 		response.destroy(error instanceof Error ? error : undefined);
 		return;
 	}
-	writeJson(response, 500, {
-		error: error instanceof Error ? error.message : String(error),
-	});
+	writeJson(
+		response,
+		error instanceof DashboardTraceHostControlError ? error.status : 500,
+		{ error: error instanceof Error ? error.message : String(error) },
+	);
 }
 
 async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
 	dashboards.delete(runtime.repoRoot);
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
+	if (runtime.traceHostTimer) clearInterval(runtime.traceHostTimer);
+	await runtime.traceHostControl.shutdown();
 	runtime.watcher?.close();
 	for (const client of runtime.clients) client.end();
 	runtime.clients.clear();

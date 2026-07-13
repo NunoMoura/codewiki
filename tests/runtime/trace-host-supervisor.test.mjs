@@ -194,6 +194,37 @@ describe("trace host supervisor", () => {
 		assert.match(snapshot.message, /inspection unavailable/);
 	});
 
+	it("retains failed stops as active until a later reconciliation succeeds", async () => {
+		const supervisor = new TraceHostSupervisor();
+		let running = true;
+		let rejectStop = true;
+		await supervisor.start(sessionInput(), async (input) => ({
+			traceId: input.traceId,
+			target: input.target,
+			sessionRef: "pi:failed-stop",
+			controller: {
+				isRunning: () => running,
+				stop() {
+					if (rejectStop) throw new Error("stop unavailable");
+					running = false;
+				},
+			},
+		}));
+
+		await assert.rejects(
+			supervisor.cancel("TRACE-supervised", "pi:failed-stop"),
+			/stop unavailable/,
+		);
+		assert.deepEqual(supervisor.activeTraceIds(), ["TRACE-supervised"]);
+		assert.equal(supervisor.snapshot()[0].state, "failed");
+		rejectStop = false;
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.equal(snapshot.state, "stopped");
+		assert.equal(snapshot.stopReason, "cancelled");
+	});
+
 	it("stops all sessions during supervisor shutdown", async () => {
 		const supervisor = new TraceHostSupervisor();
 		const controlled = controlledFactory();

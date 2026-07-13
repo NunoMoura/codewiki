@@ -388,6 +388,32 @@ button { color: inherit; }
 }
 .detail-tab.active::before { color: var(--logo-cyan); }
 .detail-panel { min-width: 0; }
+.execution-control {
+	display: grid;
+	gap: 12px;
+	border: 1px solid var(--line);
+	border-radius: var(--radius-sm);
+	background: #080808;
+	padding: 12px;
+}
+.execution-control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+.execution-control-item { border: 1px dotted rgba(255,255,255,.18); padding: 8px; min-width: 0; }
+.execution-control-label { color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.execution-control-value { margin-top: 4px; color: var(--text); overflow-wrap: anywhere; }
+.execution-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.execution-button {
+	border: 1px solid var(--logo-cyan);
+	border-radius: 5px;
+	background: #0b1717;
+	color: var(--text);
+	padding: 7px 11px;
+	font: inherit;
+	font-weight: 800;
+	cursor: pointer;
+}
+.execution-button.stop { border-color: var(--danger); background: #1b0d0d; }
+.execution-button:disabled { border-color: var(--line); color: var(--dim); background: #080808; cursor: not-allowed; }
+.execution-note { color: var(--muted); font-size: 12px; line-height: 1.5; }
 .detail-section {
 	border: 1px solid var(--line);
 	border-radius: 0;
@@ -576,6 +602,7 @@ if (fragmentToken) sessionStorage.setItem('codewiki.dashboard.token', fragmentTo
 const token = fragmentToken || sessionStorage.getItem('codewiki.dashboard.token') || '';
 if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 let state = null;
+let traceHostState = null;
 let loading = false;
 let selected = 0;
 let expandedTraceId = null;
@@ -769,7 +796,7 @@ function renderDetail(trace) {
 	return detail;
 }
 function detailTabEntries(trace, sections) {
-	return sections.map(function(section) {
+	return [{ id: 'execution', label: 'execution', render: function() { return renderExecutionControl(trace); } }].concat(sections.map(function(section) {
 		return {
 			id: section.loop,
 			label: section.loop,
@@ -779,10 +806,70 @@ function detailTabEntries(trace, sections) {
 					: renderLoopPanel(section);
 			},
 		};
-	}).concat([
+	})).concat([
 		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true); } },
 		{ id: 'files', label: 'Files', render: function() { return renderTouchedFilesSection(trace.touchedFiles || {}, true); } },
 	]);
+}
+function renderExecutionControl(trace) {
+	const box = document.createElement('section'); box.className = 'execution-control';
+	const card = traceHostState && (traceHostState.traces || []).find(function(candidate) { return candidate.traceId === trace.traceId; });
+	if (!card) {
+		const note = document.createElement('div'); note.className = 'execution-note';
+		text(note, traceHostState ? 'No execution control is available for this trace.' : 'Loading guarded execution status…');
+		box.append(note); return box;
+	}
+	const grid = document.createElement('div'); grid.className = 'execution-control-grid';
+	[
+		['trace state', card.traceStatus],
+		['execution session', card.session ? card.session.state : 'not running'],
+		['policy', traceHostState.policy.agency + ' · ' + traceHostState.policy.automation],
+	].forEach(function(entry) {
+		const item = document.createElement('div'); item.className = 'execution-control-item';
+		const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
+		const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, readableStatus(entry[1]));
+		item.append(label, value); grid.append(item);
+	});
+	const actions = document.createElement('div'); actions.className = 'execution-actions';
+	const start = document.createElement('button'); start.type = 'button'; start.className = 'execution-button'; text(start, 'Start trace execution');
+	start.disabled = !card.canStart;
+	start.title = card.blockers.join(' ');
+	start.onclick = function() { void executeTraceHostCommand('start', card); };
+	const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'execution-button stop'; text(cancel, 'Stop execution');
+	cancel.disabled = !card.canCancel;
+	cancel.onclick = function() { void executeTraceHostCommand('cancel', card); };
+	actions.append(start, cancel);
+	const note = document.createElement('div'); note.className = 'execution-note';
+	text(note, card.blockers.length ? card.blockers.join(' ') : 'Commands use exact state guards and return auditable receipts. Semantic approvals remain separate.');
+	box.append(grid, actions, note); return box;
+}
+async function executeTraceHostCommand(action, card) {
+	const verb = action === 'start' ? 'start execution for' : 'stop execution for';
+	if (!window.confirm('Confirm: ' + verb + ' ' + card.traceId + '?')) return;
+	const command = {
+		action: action,
+		commandId: 'dashboard-' + Date.now() + '-' + Math.random().toString(16).slice(2),
+		traceId: card.traceId,
+		expectedStateDigest: card.stateDigest,
+	};
+	if (action === 'cancel') command.expectedSessionRef = card.session && card.session.sessionRef;
+	text(els.status, 'command pending');
+	try {
+		const response = await fetch('/api/trace-hosts/commands?token=' + encodeURIComponent(token), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(command),
+		});
+		const result = await response.json();
+		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
+		traceHostState = result.state;
+		text(els.status, 'accepted · ' + result.receipt.receiptId);
+		render();
+	} catch (error) {
+		text(els.status, 'command rejected');
+		console.error(error);
+		await load();
+	}
 }
 function preferredDetailTab(trace, sections) {
 	return preferredOpenLoop(sections) || (sections[0] && sections[0].loop) || 'kb';
@@ -1199,9 +1286,14 @@ async function load() {
 	if (loading) return;
 	loading = true;
 	try {
-		const res = await fetch('/api/state?token=' + encodeURIComponent(token));
-		if (!res.ok) throw new Error('HTTP ' + res.status);
-		state = await res.json();
+		const responses = await Promise.all([
+			fetch('/api/state?token=' + encodeURIComponent(token)),
+			fetch('/api/trace-hosts?token=' + encodeURIComponent(token)),
+		]);
+		if (!responses[0].ok || !responses[1].ok) throw new Error('HTTP ' + responses[0].status + '/' + responses[1].status);
+		const payloads = await Promise.all([responses[0].json(), responses[1].json()]);
+		state = payloads[0];
+		traceHostState = payloads[1];
 		render();
 	} catch (error) {
 		text(els.status, state ? 'stale · reconnecting' : 'failed · retrying');

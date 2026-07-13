@@ -45,18 +45,18 @@ A Sprint Trace is a horizontal completion bar backed by trace state. It foregrou
 
 The bar is segmented by lifecycle phase: Decision, Planning, Implementation, and Archive. Filled segments have exited, the pulsing segment is current, and blocked phases show a blocker marker. Progress is deterministic and coarse; it is derived from trace status, planned work, worker claims, completed work items, blockers, and closure state. It must not pretend to be precise timing.
 
-Expanding a Sprint Trace opens Trace Detail. Trace Detail shows title, current action, workers, work items, blockers, paths, decision refs, planning refs, and work-unit refs. The dashboard may support navigation, search, filtering, and copying refs or `/wiki-resume --trace <id>` commands. It must not append traces or make workflow decisions directly.
+Expanding a Sprint Trace opens Trace Detail. Trace Detail shows title, current action, workers, work items, blockers, paths, decision refs, planning refs, and work-unit refs. The dashboard may support navigation, search, filtering, copying refs or `/wiki-resume --trace <id>` commands, and starting or stopping a supervised trace execution session. Runtime controls operate through exact state and session guards; they do not append traces or make workflow decisions directly. Semantic approvals remain separate and bound to exact rendered proposals.
 
 ## Local dashboard host
 
-`/wiki-dashboard` starts a local HTTP server bound to `127.0.0.1` with a random URL token. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change/configuration actions. It watches `.codewiki/traces` and the Changes Backlog ref, then rebuilds dashboard projections from core APIs.
+`/wiki-dashboard` starts a local HTTP server bound to `127.0.0.1` with a random URL token. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change, configuration, and supervised runtime-session actions. It watches `.codewiki/traces` and the Changes Backlog ref, then rebuilds dashboard projections from core APIs.
 
 Security boundaries:
 
 - bind only to loopback;
 - include a random token in API URLs;
 - keep reads public only within the tokenized same-origin session;
-- route any Change validation or configuration command through guarded core APIs with capability checks, optimistic revision/digest guards, idempotency, audit receipts, stale-state lockout, and secret redaction;
+- route any Change validation, configuration, or runtime-session command through guarded core APIs with exact same-origin capability checks, optimistic revision/digest or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction;
 - do not enable CORS;
 - never grant dashboard shell, direct source-write, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority;
 - keep final Decision approval explicit and bound to the exact rendered proposal.

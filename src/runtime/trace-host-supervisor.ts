@@ -139,6 +139,10 @@ export class TraceHostSupervisor {
 				await stopSession(session, "monitoring_failed");
 				continue;
 			}
+			if (session.state === "failed") {
+				await stopSession(session, session.stopReason || "monitoring_failed");
+				continue;
+			}
 			if (!input.supervisionAttached) {
 				await stopSession(session, "supervision_lost");
 				continue;
@@ -148,6 +152,27 @@ export class TraceHostSupervisor {
 			}
 		}
 		return this.snapshot();
+	}
+
+	async cancel(
+		traceId: string,
+		expectedSessionRef?: string,
+	): Promise<TraceHostSessionSnapshot> {
+		const session = this.#sessions.get(traceId);
+		if (!session || !activeState(session.state)) {
+			throw new Error(`Trace host ${traceId} is not active.`);
+		}
+		if (
+			expectedSessionRef !== undefined &&
+			session.start.sessionRef !== expectedSessionRef
+		) {
+			throw new Error(`Trace host ${traceId} session changed; refresh state.`);
+		}
+		await stopSession(session, "cancelled");
+		if (session.state === "failed") {
+			throw new Error(session.message || `Trace host ${traceId} failed to stop.`);
+		}
+		return sessionSnapshot(session);
 	}
 
 	async stopAll(
@@ -188,11 +213,13 @@ async function stopSession(
 	session: ManagedTraceHostSession,
 	reason: TraceHostStopReason,
 ): Promise<void> {
+	const retryingFailedStop = session.state === "failed";
 	session.state = "stopping";
 	session.stopReason = reason;
 	try {
 		await session.start.controller.stop(reason);
 		session.state = "stopped";
+		if (retryingFailedStop) session.message = undefined;
 	} catch (error) {
 		session.state = "failed";
 		session.message = `Trace host stop failed: ${errorMessage(error)}`;
@@ -228,7 +255,7 @@ function assertSessionIdentity(
 }
 
 function activeState(state: TraceHostSessionState): boolean {
-	return state === "running" || state === "stopping";
+	return state === "running" || state === "stopping" || state === "failed";
 }
 
 function positiveInteger(value: number | undefined, fallback: number): number {
