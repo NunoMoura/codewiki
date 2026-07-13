@@ -1,4 +1,4 @@
-import type { ProposedChange, SprintProposal } from "./types.ts";
+import type { DecisionChange, SprintProposal } from "./types.ts";
 
 export interface DecisionStateDelta {
 	id: string;
@@ -38,7 +38,7 @@ export function decisionPropagationRefs(proposal: SprintProposal): string[] {
 	);
 }
 
-function decisionChangeStateDelta(change: ProposedChange): DecisionStateDelta {
+function decisionChangeStateDelta(change: DecisionChange): DecisionStateDelta {
 	const missingFields = [
 		change.currentState ? "" : "missing_current_state",
 		change.desiredState ? "" : "missing_desired_state",

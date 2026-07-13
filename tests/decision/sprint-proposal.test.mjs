@@ -7,7 +7,7 @@ import {
 	decisionStateDeltaGaps,
 } from "../../src/decision/propagation.ts";
 import {
-	applyProposedChangeActions,
+	applyDecisionChangeActions,
 	createSprintProposal,
 } from "../../src/decision/proposal.ts";
 import { formatTraceLine } from "../../src/traces/writer.ts";
@@ -63,14 +63,14 @@ describe("sprint proposals", () => {
 			],
 		});
 
-		const failed = applyProposedChangeActions(proposal, [
+		const failed = applyDecisionChangeActions(proposal, [
 			{ changeId: "CHG-001", action: "accept" },
 			{ changeId: "missing", action: "reject" },
 		]);
 		assert.equal(failed.changed, false);
 		assert.equal(failed.proposal.changes[0].approval, "pending");
 
-		const passed = applyProposedChangeActions(proposal, [
+		const passed = applyDecisionChangeActions(proposal, [
 			{ changeId: "CHG-001", action: "accept" },
 		]);
 		assert.equal(passed.changed, true);

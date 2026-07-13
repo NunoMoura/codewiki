@@ -1,6 +1,6 @@
 import { createSprintProposal } from "../../src/decision/proposal.ts";
 import type {
-	ProposedChangeInput,
+	DecisionChangeInput,
 	SprintProposal,
 } from "../../src/decision/types.ts";
 import type { LabCase } from "../runner/types.ts";
@@ -15,7 +15,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt:
 				"Improve loop exit standards with deterministic adversarial coverage.",
-			sprintProposal: sprintProposal(proposedChange()),
+			sprintProposal: sprintProposal(decisionChange()),
 		},
 		expected: "pass",
 		weight: 10,
@@ -28,7 +28,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt: "Improve docs.",
 			sprintProposal: sprintProposal(
-				proposedChange({
+				decisionChange({
 					id: "D-vague",
 					decisionKind: "docs",
 					currentState: "ok",
@@ -72,7 +72,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt: "Approve high-risk runtime and API change.",
 			sprintProposal: sprintProposal(
-				proposedChange({
+				decisionChange({
 					id: "D-risk",
 					risk: "high",
 					affectedLayers: ["api", "runtime"],
@@ -107,7 +107,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt: "Approve supervised high-risk package boundary hardening.",
 			sprintProposal: sprintProposal(
-				proposedChange({
+				decisionChange({
 					id: "D-risk-approved",
 					decisionKind: "harden",
 					risk: "high",
@@ -143,7 +143,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 		input: {
 			prompt: "Migrate trace state layout without rollback guidance.",
 			sprintProposal: sprintProposal(
-				proposedChange({
+				decisionChange({
 					id: "D-migrate",
 					decisionKind: "migrate",
 					sourceBehavior:
@@ -174,7 +174,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 	},
 ];
 
-function sprintProposal(change: ProposedChangeInput): SprintProposal {
+function sprintProposal(change: DecisionChangeInput): SprintProposal {
 	return createSprintProposal({
 		id: "SP-lab",
 		sourceRefs: ["kb:system/decision-loop.md"],
@@ -182,7 +182,7 @@ function sprintProposal(change: ProposedChangeInput): SprintProposal {
 	});
 }
 
-function proposedChange(overrides: ProposedChangeInput = {}): ProposedChangeInput {
+function decisionChange(overrides: DecisionChangeInput = {}): DecisionChangeInput {
 	return {
 		id: "D-good",
 		question: "Should loop exit standards become measurable?",

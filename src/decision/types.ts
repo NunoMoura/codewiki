@@ -123,7 +123,7 @@ export interface DecisionDirectImplementationScope {
 	verification: string[];
 }
 
-export interface ProposedChangeInput {
+export interface DecisionChangeInput {
 	id?: string;
 	question?: string;
 	decisionKind?: DecisionKind | string;
@@ -193,7 +193,7 @@ export interface ProposedChangeInput {
 	rollbackPlan?: string;
 }
 
-export interface ProposedChange {
+export interface DecisionChange {
 	id: string;
 	question: string;
 	decisionKind: DecisionKind | string;
@@ -253,7 +253,7 @@ export interface SprintProposalInput {
 	id?: string;
 	summary?: string;
 	sourceRefs?: string[];
-	changes?: ProposedChangeInput[];
+	changes?: DecisionChangeInput[];
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -262,7 +262,7 @@ export interface SprintProposal {
 	id: string;
 	summary: string;
 	sourceRefs: string[];
-	changes: ProposedChange[];
+	changes: DecisionChange[];
 	createdAt: string;
 	updatedAt: string;
 }
@@ -315,21 +315,21 @@ export interface DecisionOutput {
 	createdAt: string;
 }
 
-export type ProposedChangeAction =
+export type DecisionChangeAction =
 	| "accept"
 	| "reject"
 	| "defer"
 	| "alternative"
 	| "edit";
 
-export interface ProposedChangeActionInput {
+export interface DecisionChangeActionInput {
 	changeId: string;
-	action: ProposedChangeAction;
-	change?: ProposedChangeInput;
+	action: DecisionChangeAction;
+	change?: DecisionChangeInput;
 	alternative?: string;
 }
 
-export interface ProposedChangeActionFailure {
+export interface DecisionChangeActionFailure {
 	changeId: string;
 	action: string;
 	error: string;

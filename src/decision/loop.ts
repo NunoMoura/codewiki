@@ -51,7 +51,7 @@ import {
 	DECISION_WORK_SCALE_VALUES,
 	type ActiveTraceGoal,
 	type CurrentStatePacket,
-	type ProposedChange,
+	type DecisionChange,
 	type SprintProposal,
 	type KnowledgeDelta,
 } from "./types.ts";
@@ -160,7 +160,7 @@ export interface DecisionExitResult extends ExitDetails {
 
 export interface DecisionExitIssueCollection {
 	issues: DecisionExitIssue[];
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 }
 
 export const DECISION_LOOP_QUALITY_PACK = parseLoopQualityPack({
@@ -707,7 +707,7 @@ export async function evaluateDecisionExitWithRunner(
 function decisionJudgeInput(
 	proposal: SprintProposal,
 	options: DecisionExitOptions,
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): Record<string, unknown> {
 	return {
 		loop: "decision",
@@ -771,7 +771,7 @@ function decisionJudgeInput(
 
 function decisionExitResultFromQuality(input: {
 	issues: DecisionExitIssue[];
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	qualityStandards: DecisionExitResult["qualityStandards"];
 	qualityRunner?: RunLoopQualityGraphResult;
 }): DecisionExitResult {
@@ -824,7 +824,7 @@ function decisionVerdictFromQuality(
 
 export function decisionExitRoute(
 	verdict: "pass" | "fail" | "block",
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): "decision" | "planning" | "implementation" | "user" {
 	if (verdict === "block") return "user";
 	if (verdict !== "pass") return "decision";
@@ -836,7 +836,7 @@ export function decisionExitRoute(
 
 function decisionRoutePlan(
 	verdict: "pass" | "fail" | "block",
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 	issues: DecisionExitIssue[],
 ): LoopRoutePlan {
 	if (verdict === "block") {
@@ -883,7 +883,7 @@ function decisionRoutePlan(
 
 function decisionRouteRefs(
 	issues: DecisionExitIssue[],
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): string[] {
 	return issues.length
 		? issues.flatMap(decisionIssueRefs)
@@ -891,7 +891,7 @@ function decisionRouteRefs(
 }
 
 function implementationModeForRows(
-	changes: ProposedChange[],
+	changes: DecisionChange[],
 ): string | undefined {
 	const modes = new Set(
 		changes.map((change) => change.implementationMode).filter(Boolean),
@@ -902,7 +902,7 @@ function implementationModeForRows(
 
 export function evaluateDecisionExitGraph(
 	issues: DecisionExitIssue[],
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ) {
 	return evaluateDecisionQualityStandards({
 		graph: DECISION_LOOP_GRAPH,
@@ -911,7 +911,7 @@ export function evaluateDecisionExitGraph(
 	});
 }
 
-function approvedRowIssues(change: ProposedChange): DecisionExitIssue[] {
+function approvedRowIssues(change: DecisionChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	if (!change.currentState) {
 		issues.push({
@@ -971,7 +971,7 @@ function approvedRowIssues(change: ProposedChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function workRoutingIssues(change: ProposedChange): DecisionExitIssue[] {
+function workRoutingIssues(change: DecisionChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	if (!change.workScale) {
 		issues.push({
@@ -1020,7 +1020,7 @@ function workRoutingIssues(change: ProposedChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function directRouteIssues(change: ProposedChange): DecisionExitIssue[] {
+function directRouteIssues(change: DecisionChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	if (!isAllowed(change.routeTarget, [...DECISION_ROUTE_TARGET_VALUES])) {
 		issues.push({
@@ -1085,7 +1085,7 @@ function directRouteIssues(change: ProposedChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function decisionTypePolicyIssues(change: ProposedChange): DecisionExitIssue[] {
+function decisionTypePolicyIssues(change: DecisionChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	const decisionType = normalizeDecisionTypeId(
 		change.decisionType || change.decisionKind,
@@ -1166,7 +1166,7 @@ function decisionTypePolicyIssues(change: ProposedChange): DecisionExitIssue[] {
 }
 
 function decisionKindQualityIssues(
-	change: ProposedChange,
+	change: DecisionChange,
 ): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	if (!change.decisionKind) {
@@ -1385,7 +1385,7 @@ function decisionKindQualityIssues(
 }
 
 function kindIssue(
-	change: ProposedChange,
+	change: DecisionChange,
 	code: DecisionExitIssueCode,
 	requirement: string,
 ): DecisionExitIssue {
@@ -1409,7 +1409,7 @@ function issueFinding(issue: DecisionExitIssue): ExitFinding {
 }
 
 function currentStatePacketIssues(input: {
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	packet: CurrentStatePacket;
 	validateRefs: boolean;
 }): DecisionExitIssue[] {
@@ -1437,7 +1437,7 @@ function currentStatePacketIssues(input: {
 
 function currentStatePacketFromRows(
 	proposal: SprintProposal,
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): CurrentStatePacket {
 	return {
 		summary: approvedChanges.map((change) => change.currentState).join(" "),
@@ -1451,7 +1451,7 @@ function currentStatePacketFromRows(
 	};
 }
 
-function duplicateRowIssues(changes: ProposedChange[]): DecisionExitIssue[] {
+function duplicateRowIssues(changes: DecisionChange[]): DecisionExitIssue[] {
 	const counts = new Map<string, number>();
 	for (const change of changes)
 		counts.set(change.id, (counts.get(change.id) || 0) + 1);
@@ -1474,7 +1474,7 @@ function proposalTraceabilityRefIssues(
 	}));
 }
 
-function traceabilityRefIssues(change: ProposedChange): DecisionExitIssue[] {
+function traceabilityRefIssues(change: DecisionChange): DecisionExitIssue[] {
 	return invalidTraceRefs([...change.sourceRefs, ...change.proofRefs]).map(
 		(ref) => ({
 			code: "invalid_traceability_ref" as const,
@@ -1486,7 +1486,7 @@ function traceabilityRefIssues(change: ProposedChange): DecisionExitIssue[] {
 }
 
 function recommendationQualityIssues(
-	change: ProposedChange,
+	change: DecisionChange,
 ): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
 	if (!change.recommendation) {
@@ -1526,7 +1526,7 @@ function recommendationQualityIssues(
 }
 
 function agentAssessmentQualityIssues(
-	change: ProposedChange,
+	change: DecisionChange,
 ): DecisionExitIssue[] {
 	const assessment = change.agentAssessment;
 	const missingStance = !assessment.stance;
@@ -1559,7 +1559,7 @@ function agentAssessmentQualityIssues(
 	return [];
 }
 
-function riskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
+function riskQualityIssues(change: DecisionChange): DecisionExitIssue[] {
 	if (!change.risk) {
 		return [
 			{
@@ -1581,7 +1581,7 @@ function riskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
 	return [];
 }
 
-function highRiskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
+function highRiskQualityIssues(change: DecisionChange): DecisionExitIssue[] {
 	if (!isHighRisk(change)) return [];
 	const issues: DecisionExitIssue[] = [];
 	if (change.affectedLayers.length === 0) {
@@ -1625,7 +1625,7 @@ function highRiskQualityIssues(change: ProposedChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function isHighRisk(change: ProposedChange): boolean {
+function isHighRisk(change: DecisionChange): boolean {
 	return (
 		String(change.risk || "")
 			.trim()
@@ -1634,7 +1634,7 @@ function isHighRisk(change: ProposedChange): boolean {
 }
 
 function activeTraceConflictIssues(
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 	activeTraceGoals: ActiveTraceGoal[],
 ): DecisionExitIssue[] {
 	if (activeTraceGoals.length === 0) return [];
@@ -1657,7 +1657,7 @@ function activeTraceConflictIssues(
 }
 
 function knowledgeDeltaIssues(
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 	knowledgeDelta?: KnowledgeDelta,
 ): DecisionExitIssue[] {
 	if (approvedChanges.length === 0) return [];

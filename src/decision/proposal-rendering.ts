@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { ProposedChange, SprintProposal } from "./types.ts";
+import type { DecisionChange, SprintProposal } from "./types.ts";
 
 export interface RenderSprintProposalMarkdownOptions {
 	includeSourceRefs?: boolean;
@@ -40,7 +40,7 @@ export function renderSprintProposalMarkdown(
 		lines.push("No proposed changes.", "");
 	} else {
 		for (const change of proposal.changes) {
-			lines.push(...renderProposedChangeCard(change), "");
+			lines.push(...renderDecisionChangeCard(change), "");
 		}
 	}
 	const questions = options.hardeningQuestions || [];
@@ -67,7 +67,7 @@ export function hardeningQuestionsFromIssues(
 	return [...new Set(questions)].filter(Boolean);
 }
 
-function renderProposedChangeCard(change: ProposedChange): string[] {
+function renderDecisionChangeCard(change: DecisionChange): string[] {
 	return [
 		`### Proposed Change: ${escapeMarkdownText(change.id)}`,
 		"",
@@ -85,7 +85,7 @@ function renderProposedChangeCard(change: ProposedChange): string[] {
 	];
 }
 
-function agentOpinion(change: ProposedChange): string {
+function agentOpinion(change: DecisionChange): string {
 	const assessment = change.agentAssessment;
 	return [
 		assessment.stance ? `Stance: ${assessment.stance}.` : "",

@@ -12,7 +12,7 @@ import {
 } from "../loops/quality-standards.ts";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
 import type { DecisionExitIssue, DecisionExitIssueCode } from "./loop.ts";
-import type { ProposedChange } from "./types.ts";
+import type { DecisionChange } from "./types.ts";
 
 export { criteriaFromQualityStandards };
 
@@ -233,7 +233,7 @@ export const DECISION_KIND_QUALITY_STANDARDS: Record<
 
 export function decisionQualityStandards(
 	issues: DecisionExitIssue[],
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): LoopQualityStandardResult[] {
 	const evidenceRefs = approvedChanges.flatMap((change) => [
 		...change.sourceRefs,
@@ -258,7 +258,7 @@ export function decisionQualityStandards(
 export interface EvaluateDecisionQualityStandardsInput {
 	graph: LoopQualityGraph<DecisionExitIssueCode>;
 	issues: DecisionExitIssue[];
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 }
 
 export function evaluateDecisionQualityStandards(
@@ -308,7 +308,7 @@ function decisionQualityGraphOptions({
 export function activeDecisionQualityStandardNodes(
 	graph: LoopQualityGraph<DecisionExitIssueCode>,
 	issues: DecisionExitIssue[],
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): LoopQualityGraphNode<DecisionExitIssueCode>[] {
 	return graph.nodes.filter((node) => {
 		if (node.id === "decision_kind_classified") {
@@ -352,7 +352,7 @@ export function activeDecisionQualityStandardNodes(
 
 function decisionKindQualityStandards(
 	issues: DecisionExitIssue[],
-	approvedChanges: ProposedChange[],
+	approvedChanges: DecisionChange[],
 ): LoopQualityStandardResult[] {
 	const standards: LoopQualityStandardResult[] = [];
 	if (
@@ -465,7 +465,7 @@ function hasAnyIssue(
 	return issues.some((issue) => codes.includes(issue.code));
 }
 
-function hasKind(changes: ProposedChange[], kind: string): boolean {
+function hasKind(changes: DecisionChange[], kind: string): boolean {
 	return changes.some((change) => change.decisionKind === kind);
 }
 

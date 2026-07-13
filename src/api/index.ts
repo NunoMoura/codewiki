@@ -18,7 +18,7 @@ export type { SourceLayout } from "../index.ts";
 export type {
 	CurrentStatePacket,
 	ApprovedChangeTypeProfile,
-	ProposedChange,
+	DecisionChange,
 	SprintProposal,
 	SprintProposalInput,
 	KnowledgeDelta,

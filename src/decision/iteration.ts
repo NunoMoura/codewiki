@@ -27,7 +27,7 @@ import type {
 	CurrentStatePacket,
 	DecisionOutput,
 	ApprovedChangeTypeProfile,
-	ProposedChange,
+	DecisionChange,
 	SprintProposal,
 	SprintProposalInput,
 	KnowledgeDelta,
@@ -52,7 +52,7 @@ export interface DecisionIterationResult {
 	proposal: SprintProposal;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	draftTraceEvents: TraceEvent[];
 	traceEvents: TraceEvent[];
 	checkpoint: TailCheckpoint;
@@ -128,7 +128,7 @@ function decisionIterationResult(input: {
 	proposal: SprintProposal;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	createdAt: string;
 	baseSequence: number;
 }): DecisionIterationResult {
@@ -160,7 +160,7 @@ function decisionIterationResult(input: {
 function decisionOutput(input: {
 	input: DecisionIterationInput;
 	proposal: SprintProposal;
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	createdAt: string;
 	baseSequence: number;
 }): DecisionOutput {
@@ -198,7 +198,7 @@ function decisionOutput(input: {
 
 function inferredCurrentStatePacket(input: {
 	proposal: SprintProposal;
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	createdAt: string;
 }): CurrentStatePacket {
 	return {
@@ -214,14 +214,14 @@ function inferredCurrentStatePacket(input: {
 	};
 }
 
-function currentStateSummary(changes: ProposedChange[]): string {
+function currentStateSummary(changes: DecisionChange[]): string {
 	if (changes.length === 0) return "No Decisions observed.";
 	return changes
 		.map((change) => `${change.id}: ${change.currentState}`)
 		.join(" ");
 }
 
-function inferredKnowledgeDelta(changes: ProposedChange[]): KnowledgeDelta {
+function inferredKnowledgeDelta(changes: DecisionChange[]): KnowledgeDelta {
 	return {
 		updatedRefs: normalizeTraceRefs(
 			changes.flatMap((change) => change.sourceRefs),
@@ -238,7 +238,7 @@ function inferredKnowledgeDelta(changes: ProposedChange[]): KnowledgeDelta {
 }
 
 function decisionTypeProfiles(
-	changes: ProposedChange[],
+	changes: DecisionChange[],
 ): ApprovedChangeTypeProfile[] {
 	return changes.flatMap((change) => {
 		const definition = decisionTypeDefinitionById(
@@ -257,7 +257,7 @@ function decisionTypeProfiles(
 	});
 }
 
-function decisionSummary(changes: ProposedChange[]): string {
+function decisionSummary(changes: DecisionChange[]): string {
 	if (changes.length === 0) return "Sprint has no Decisions.";
 	return changes
 		.map((change) => `${change.id}: ${change.desiredState}`)
@@ -268,7 +268,7 @@ function decisionTraceEvents(input: {
 	input: DecisionIterationInput;
 	output: DecisionOutput;
 	exit: DecisionExitResult;
-	approvedChanges: ProposedChange[];
+	approvedChanges: DecisionChange[];
 	createdAt: string;
 	baseSequence: number;
 }): TraceEvent[] {
@@ -290,7 +290,7 @@ function decisionTraceEvents(input: {
 				...(output.acceptedChangeBundle
 					? { acceptedChangeBundle: output.acceptedChangeBundle }
 					: {}),
-				approvedChanges: approvedChanges.map(proposedChangeData),
+				approvedChanges: approvedChanges.map(decisionChangeData),
 				approvedChangeIds: output.approvedChangeIds,
 				decisionTypeProfiles: output.decisionTypeProfiles || [],
 				currentStatePacket: output.currentStatePacket,
@@ -307,7 +307,7 @@ function decisionTraceEvents(input: {
 	];
 }
 
-function proposedChangeData(change: ProposedChange): Record<string, unknown> {
+function decisionChangeData(change: DecisionChange): Record<string, unknown> {
 	return {
 		id: change.id,
 		question: change.question,

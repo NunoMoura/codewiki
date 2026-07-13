@@ -5,26 +5,26 @@ import {
 } from "./approval.ts";
 import { normalizeDecisionTypeId } from "./type-definitions.ts";
 import type {
-	ProposedChange,
-	ProposedChangeActionFailure,
-	ProposedChangeActionInput,
-	ProposedChangeInput,
+	DecisionChange,
+	DecisionChangeActionFailure,
+	DecisionChangeActionInput,
+	DecisionChangeInput,
 	SprintProposal,
 	SprintProposalInput,
 } from "./types.ts";
 
-export interface ProposedChangeActionResult {
+export interface DecisionChangeActionResult {
 	changed: boolean;
 	proposal: SprintProposal;
 	changedChangeIds: string[];
-	failures: ProposedChangeActionFailure[];
+	failures: DecisionChangeActionFailure[];
 }
 
 export function createSprintProposal(
 	input: SprintProposalInput,
 ): SprintProposal {
 	const createdAt = input.createdAt || new Date().toISOString();
-	const changes = normalizeProposedChanges(input.changes || []);
+	const changes = normalizeDecisionChanges(input.changes || []);
 	return {
 		id: text(input.id) || `SP-${createdAt.slice(0, 10)}`,
 		summary: text(input.summary) || "Sprint proposal",
@@ -35,11 +35,11 @@ export function createSprintProposal(
 	};
 }
 
-export function normalizeProposedChanges(
-	changes: ProposedChangeInput[] = [],
-): ProposedChange[] {
+export function normalizeDecisionChanges(
+	changes: DecisionChangeInput[] = [],
+): DecisionChange[] {
 	return changes
-		.map((change, index) => normalizeProposedChange(change, index))
+		.map((change, index) => normalizeDecisionChange(change, index))
 		.filter(
 			(change) =>
 				change.question ||
@@ -49,14 +49,14 @@ export function normalizeProposedChanges(
 		);
 }
 
-export function applyProposedChangeActions(
+export function applyDecisionChangeActions(
 	proposal: SprintProposal,
-	actions: ProposedChangeActionInput[],
+	actions: DecisionChangeActionInput[],
 	updatedAt = new Date().toISOString(),
-): ProposedChangeActionResult {
+): DecisionChangeActionResult {
 	const failures = actions
 		.map((action) => validateChangeAction(proposal, action))
-		.filter((failure): failure is ProposedChangeActionFailure =>
+		.filter((failure): failure is DecisionChangeActionFailure =>
 			Boolean(failure),
 		);
 	if (failures.length) {
@@ -65,7 +65,7 @@ export function applyProposedChangeActions(
 	const next: SprintProposal = {
 		...proposal,
 		sourceRefs: [...proposal.sourceRefs],
-		changes: proposal.changes.map((change) => cloneProposedChange(change)),
+		changes: proposal.changes.map((change) => cloneDecisionChange(change)),
 		updatedAt,
 	};
 	for (const action of actions) applyChangeAction(next, action);
@@ -79,14 +79,14 @@ export function applyProposedChangeActions(
 
 export function approvedProposalChanges(
 	proposal: SprintProposal,
-): ProposedChange[] {
+): DecisionChange[] {
 	return proposal.changes.filter((change) => change.approval === "approved");
 }
 
-function normalizeProposedChange(
-	change: ProposedChangeInput,
+function normalizeDecisionChange(
+	change: DecisionChangeInput,
 	index: number,
-): ProposedChange {
+): DecisionChange {
 	const id = text(change.id) || generatedChangeId(index);
 	return {
 		id,
@@ -151,8 +151,8 @@ function normalizeProposedChange(
 
 function validateChangeAction(
 	proposal: SprintProposal,
-	action: ProposedChangeActionInput,
-): ProposedChangeActionFailure | null {
+	action: DecisionChangeActionInput,
+): DecisionChangeActionFailure | null {
 	const changeId = text(action.changeId);
 	if (!changeId)
 		return {
@@ -175,7 +175,7 @@ function validateChangeAction(
 		};
 	}
 	if (action.action === "edit") {
-		const [edited] = normalizeProposedChanges([
+		const [edited] = normalizeDecisionChanges([
 			{ ...change, ...(action.change || {}), id: change.id },
 		]);
 		if (!edited)
@@ -190,7 +190,7 @@ function validateChangeAction(
 
 function applyChangeAction(
 	proposal: SprintProposal,
-	action: ProposedChangeActionInput,
+	action: DecisionChangeActionInput,
 ): void {
 	const change = proposal.changes.find((item) => item.id === action.changeId);
 	if (!change) return;
@@ -205,14 +205,14 @@ function applyChangeAction(
 		change.approval = "edited";
 	}
 	if (action.action === "edit") {
-		const [edited] = normalizeProposedChanges([
+		const [edited] = normalizeDecisionChanges([
 			{ ...change, ...(action.change || {}), id: change.id },
 		]);
 		if (edited) Object.assign(change, edited);
 	}
 }
 
-function cloneProposedChange(change: ProposedChange): ProposedChange {
+function cloneDecisionChange(change: DecisionChange): DecisionChange {
 	return {
 		...change,
 		affectedLayers: [...change.affectedLayers],
@@ -234,8 +234,8 @@ function cloneProposedChange(change: ProposedChange): ProposedChange {
 }
 
 function normalizeAgentAssessment(
-	value: ProposedChangeInput["agentAssessment"],
-): ProposedChange["agentAssessment"] {
+	value: DecisionChangeInput["agentAssessment"],
+): DecisionChange["agentAssessment"] {
 	return {
 		stance: text(value?.stance),
 		userAlignment: text(value?.userAlignment),
@@ -283,9 +283,9 @@ function normalizePlanningDepth(value: unknown): string {
 }
 
 function normalizeRouteFields(
-	change: ProposedChangeInput,
+	change: DecisionChangeInput,
 ): Pick<
-	ProposedChange,
+	DecisionChange,
 	| "routeTarget"
 	| "routeKind"
 	| "routeRationale"
@@ -359,8 +359,8 @@ function normalizeRouteKind(value: unknown, routeTarget: string): string {
 }
 
 function normalizeDirectImplementationScope(
-	value: ProposedChangeInput["directImplementationScope"],
-): ProposedChange["directImplementationScope"] {
+	value: DecisionChangeInput["directImplementationScope"],
+): DecisionChange["directImplementationScope"] {
 	return {
 		acceptance: unique(stringList(value?.acceptance)),
 		acceptanceCriteria: normalizeAcceptanceCriteria([
@@ -381,7 +381,7 @@ function normalizeDirectImplementationScope(
 
 function normalizeAcceptanceCriteria(
 	criteria: unknown[],
-): ProposedChange["directImplementationScope"]["acceptanceCriteria"] {
+): DecisionChange["directImplementationScope"]["acceptanceCriteria"] {
 	return objectList<{ id?: string; text?: string }>(criteria).map(
 		(criterion, index) => ({
 			id: text(criterion.id) || `AC-${String(index + 1).padStart(3, "0")}`,
@@ -391,8 +391,8 @@ function normalizeAcceptanceCriteria(
 }
 
 function cloneDirectImplementationScope(
-	scope: ProposedChange["directImplementationScope"],
-): ProposedChange["directImplementationScope"] {
+	scope: DecisionChange["directImplementationScope"],
+): DecisionChange["directImplementationScope"] {
 	return {
 		acceptance: [...scope.acceptance],
 		acceptanceCriteria: scope.acceptanceCriteria.map((criterion) => ({

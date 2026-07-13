@@ -4,7 +4,7 @@ import { createSprintProposal } from "./proposal.ts";
 import type {
 	DecisionKind,
 	DecisionWorkScale,
-	ProposedChangeInput,
+	DecisionChangeInput,
 	SprintProposal,
 } from "./types.ts";
 
@@ -33,7 +33,7 @@ export function sprintProposalFromAcceptedChanges(
 function decisionInput(
 	change: Change,
 	bundle: AcceptedChangeBundle,
-): ProposedChangeInput {
+): DecisionChangeInput {
 	return {
 		id: change.id,
 		question: change.intent.question,
