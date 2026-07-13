@@ -15,10 +15,16 @@ export interface TraceHostSessionInput {
 	supervisorId: string;
 }
 
+export interface TraceHostSessionController {
+	isRunning(): Promise<boolean> | boolean;
+	stop(reason: string): Promise<void> | void;
+}
+
 export interface TraceHostSessionStart {
 	traceId: string;
 	target: TraceHostTarget;
 	sessionRef: string;
+	controller: TraceHostSessionController;
 	pid?: number;
 }
 
@@ -120,8 +126,13 @@ export function traceHostPrompt(
 	].join("\n");
 }
 
-function traceHostTarget(action: RuntimeHostAction): TraceHostTarget | undefined {
-	if (action.targetLoop === "planning" || action.targetLoop === "implementation") {
+function traceHostTarget(
+	action: RuntimeHostAction,
+): TraceHostTarget | undefined {
+	if (
+		action.targetLoop === "planning" ||
+		action.targetLoop === "implementation"
+	) {
 		return action.targetLoop;
 	}
 	if (!action.targetLoop) return "close";

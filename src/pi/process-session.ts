@@ -1,7 +1,8 @@
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import type {
+	TraceHostSessionController,
 	TraceHostSessionFactory,
 	TraceHostSessionInput,
 } from "../runtime/trace-host-runner.ts";
@@ -57,6 +58,7 @@ export interface PiProcessCommandResult {
 	signal?: NodeJS.Signals | string | null;
 	stdout?: string;
 	stderr?: string;
+	controller?: TraceHostSessionController;
 }
 
 export type PiProcessCommandRunner = (
@@ -98,18 +100,25 @@ async function startPiTraceHostSession(
 		if (isFailedProcessResult(result)) {
 			throw new Error(processFailureMessage(result));
 		}
+		if (!result.controller) {
+			throw new Error("Trace host process runner returned no session controller.");
+		}
 		return {
 			traceId: input.traceId,
 			target: input.target,
 			sessionRef:
 				result.sessionId ||
 				(result.pid ? `pi-process:${result.pid}` : `pi-output:${outputFile}`),
+			controller: result.controller,
 			...(result.pid ? { pid: result.pid } : {}),
 		};
 	} catch (error) {
-		throw new Error(`Failed to start trace host ${input.traceId}: ${errorMessage(error)}`, {
-			cause: error,
-		});
+		throw new Error(
+			`Failed to start trace host ${input.traceId}: ${errorMessage(error)}`,
+			{
+				cause: error,
+			},
+		);
 	}
 }
 
@@ -117,7 +126,8 @@ function resolveTraceHostOutputFile(
 	input: TraceHostSessionInput,
 	options: PiTraceHostSessionFactoryOptions,
 ): string {
-	if (typeof options.outputFile === "function") return options.outputFile(input);
+	if (typeof options.outputFile === "function")
+		return options.outputFile(input);
 	if (typeof options.outputFile === "string") return options.outputFile;
 	return resolve(
 		input.repoRoot,
@@ -251,12 +261,51 @@ async function runDetachedPiProcessCommand(
 				resolve({
 					pid: child.pid,
 					outputFile: input.outputFile,
+					controller: traceHostProcessController(child),
 				});
 			});
 		});
 	} finally {
 		await output.close();
 	}
+}
+
+function traceHostProcessController(
+	child: ChildProcess,
+): TraceHostSessionController {
+	return {
+		isRunning: () => processIsRunning(child),
+		async stop() {
+			if (!processIsRunning(child)) return;
+			child.kill("SIGTERM");
+			if (await waitForProcessExit(child, 2_000)) return;
+			child.kill("SIGKILL");
+			if (!(await waitForProcessExit(child, 2_000))) {
+				throw new Error("Trace host process did not exit after SIGKILL.");
+			}
+		},
+	};
+}
+
+function processIsRunning(child: ChildProcess): boolean {
+	return child.exitCode === null && child.signalCode === null;
+}
+
+function waitForProcessExit(
+	child: ChildProcess,
+	timeoutMs: number,
+): Promise<boolean> {
+	if (!processIsRunning(child)) return Promise.resolve(true);
+	return new Promise((resolve) => {
+		const done = (exited: boolean) => {
+			clearTimeout(timer);
+			child.off("exit", onExit);
+			resolve(exited);
+		};
+		const onExit = () => done(true);
+		const timer = setTimeout(() => done(!processIsRunning(child)), timeoutMs);
+		child.once("exit", onExit);
+	});
 }
 
 async function runForegroundPiProcessCommand(

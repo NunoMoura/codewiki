@@ -44,7 +44,14 @@ describe("Pi process session factory", () => {
 				command: "pi-test",
 				runner(input) {
 					calls.push(input);
-					return { pid: 2468, outputFile: input.outputFile };
+					return {
+						pid: 2468,
+						outputFile: input.outputFile,
+						controller: {
+							isRunning: () => true,
+							stop: () => undefined,
+						},
+					};
 				},
 			});
 			const started = await factory({
@@ -60,10 +67,42 @@ describe("Pi process session factory", () => {
 			assert.equal(calls[0].cwd, root);
 			assert.equal(calls[0].detached, true);
 			assert.equal(calls[0].args.at(-1), "Run planning for TRACE-independent.");
-			assert.match(calls[0].outputFile, /TRACE-independent\/trace-host\/session\.log$/);
+			assert.match(
+				calls[0].outputFile,
+				/TRACE-independent\/trace-host\/session\.log$/,
+			);
 			assert.equal(started.sessionRef, "pi-process:2468");
 			assert.equal(started.pid, 2468);
+			assert.equal(await started.controller.isRunning(), true);
 		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("terminates an independently running trace host through its controller", async () => {
+		const root = await mkdtemp(join("/tmp", "codewiki-pi-trace-stop-"));
+		let started;
+		try {
+			const factory = createPiTraceHostSessionFactory({
+				command: process.execPath,
+				args: ["-e", "setInterval(() => {}, 1000)"],
+			});
+			started = await factory({
+				repoRoot: root,
+				traceId: "TRACE-stoppable",
+				target: "implementation",
+				refs: [],
+				prompt: "trace-host-test",
+				supervisorId: "test:1",
+			});
+			assert.equal(await started.controller.isRunning(), true);
+
+			await started.controller.stop("cancelled");
+			assert.equal(await started.controller.isRunning(), false);
+		} finally {
+			if (started && (await started.controller.isRunning())) {
+				await started.controller.stop("shutdown");
+			}
 			await rm(root, { recursive: true, force: true });
 		}
 	});

@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { dispatchTraceHosts, traceHostPrompt } from "../../src/runtime/trace-host-runner.ts";
+import {
+	dispatchTraceHosts,
+	traceHostPrompt,
+} from "../../src/runtime/trace-host-runner.ts";
 
 function plan(actions) {
 	return {
@@ -38,6 +41,10 @@ describe("trace host dispatcher", () => {
 					traceId: input.traceId,
 					target: input.target,
 					sessionRef: `pi:${input.traceId}`,
+					controller: {
+						isRunning: () => true,
+						stop: () => undefined,
+					},
 				};
 			},
 		});
