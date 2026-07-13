@@ -31,7 +31,7 @@ import {
 	renderBootstrapCommand,
 } from "../../src/pi/tui/index.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
+import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -124,25 +124,6 @@ async function writeImplementationFixtureFiles(root) {
 		join(root, "tests", "feature.test.mjs"),
 		"assert.ok(true);\n",
 	);
-}
-
-function sprintProposalInput(traceId) {
-	return {
-		id: `${traceId}-DT`,
-		createdAt: "2026-06-17T00:00:01.000Z",
-		updatedAt: "2026-06-17T00:00:01.000Z",
-		changes: [
-			{
-				id: "CHG-pi-preview",
-				currentState: "Pi extension adapter lacks preview coverage.",
-				desiredState: "Pi extension adapter previews CodeWiki loop facades.",
-				rationale: "Mocked Pi tests prevent unsafe CLI fallback.",
-				...decisionQualityFields(),
-				approval: "approved",
-				sourceRefs: ["kb:system/components/api-tools.md"],
-			},
-		],
-	};
 }
 
 function nextSequence(events) {
@@ -583,6 +564,10 @@ describe("Pi extension adapter", () => {
 			const ctx = { cwd: join(root, "src") };
 
 			const decideTool = toolByName(pi, "wiki_decide");
+			const { changeAcceptance } = await seedChangeAcceptance(root, {
+				id: "CHG-pi-preview",
+				acceptedAt: "2026-06-17T00:00:01.000Z",
+			});
 			const decidedResult = await decideTool.execute(
 				"tool-call-decide-preview",
 				{
@@ -590,8 +575,7 @@ describe("Pi extension adapter", () => {
 						traceId: "TRACE-pi-preview",
 						mode: "preview",
 						nextSequence: 1,
-						createdAt: "2026-06-17T00:00:01.000Z",
-						proposalInput: sprintProposalInput("TRACE-pi-preview"),
+						changeAcceptance,
 					},
 				},
 				undefined,

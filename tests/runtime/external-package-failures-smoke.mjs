@@ -11,6 +11,7 @@ import { mkdir, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
@@ -80,32 +81,6 @@ async function expectedBytes(tracePath) {
 	return (await stat(tracePath)).size;
 }
 
-function decisionQuality(overrides = {}) {
-	return {
-		userImpact:
-			"External package users get safer worker-failure behavior before unattended automation is enabled.",
-		maintainerImpact:
-			"Maintainers can verify installed package failure handling without touching repo-local state.",
-		effort: "medium",
-		workScale: "medium",
-		planningDepth: "standard",
-		risk: "medium",
-		recommendation: "approve",
-		recommendationRationale:
-			"Failure-path package smoke is the next safe readiness gate after happy-path lifecycle.",
-		agentAssessment: {
-			stance: "aligned",
-			userAlignment:
-				"Matches the requested next step to harden automation before broader trust.",
-			projectBenefit:
-				"Proves terminal worker states stay controlled after package installation.",
-			rationale:
-				"The smoke validates safety behavior without granting unattended authority.",
-		},
-		...overrides,
-	};
-}
-
 function planningQuality(overrides = {}) {
 	return {
 		technicalRequirements: [
@@ -160,46 +135,6 @@ function implementationQuality(overrides = {}) {
 			rationale: "The change is validation-only and project-local.",
 		},
 		...overrides,
-	};
-}
-
-function sprintProposalInput(traceId, createdAt) {
-	return {
-		id: `SP-${traceId}`,
-		summary: "Prepare external package failure-path runtime lifecycle.",
-		createdAt,
-		updatedAt: createdAt,
-		sourceRefs: ["README.md", "src/external-feature.js"],
-		changes: [
-			{
-				id: `CHG-${traceId}`,
-				kind: "harden",
-				currentState:
-					"Happy-path package lifecycle exists, but installed-package terminal failure behavior also needs proof.",
-				desiredState:
-					"Installed package runtime failures produce deterministic release and remediation behavior in fresh projects.",
-				rationale:
-					"Unattended automation stays gated until terminal worker and worktree outcomes are proven safe.",
-				...decisionQuality({
-					safetyBoundary:
-						"Failed, blocked, malformed, and worktree-failed workers must not become implementation success evidence.",
-					failureModes: [
-						"Worker session returns no output file reference.",
-						"Worker output file has no codewiki-worker-report block.",
-						"Worker report is blocked instead of completed.",
-						"One worker completes while another fails.",
-						"Worktree prepare or cleanup fails.",
-					],
-					negativeTestPlan:
-						"Exercise each terminal scenario through a package-installed runtime host runner.",
-					compatibilityImpact:
-						"Validation is added without broadening public API or unattended runtime authority.",
-				}),
-				approval: "approved",
-				sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
-				proofRefs: ["tests/external-feature.test.mjs"],
-			},
-		],
 	};
 }
 
@@ -410,11 +345,13 @@ async function newProject(root, installed, name) {
 	};
 	const tools = {
 		state: toolByName(pi, "wiki_state"),
+		change: toolByName(pi, "wiki_change"),
 		decide: toolByName(pi, "wiki_decide"),
 		plan: toolByName(pi, "wiki_plan"),
 	};
 	const ctx = { cwd: projectRoot, ui: { notify() {} } };
 	await commands.bootstrap.handler("--allow-non-project-install --json", ctx);
+	run("git", ["init", "-q"], { cwd: projectRoot });
 	return { projectRoot, ctx, commands, tools };
 }
 
@@ -450,6 +387,64 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 			"2026-06-18T11:00:00.000Z",
 		),
 	);
+	const snapshot = assertToolResult(
+		await project.tools.change.execute(
+			`${traceId}-change-list`,
+			{ input: { operation: "list" } },
+			undefined,
+			undefined,
+			project.ctx,
+		),
+		/wiki_change: completed list operation\./,
+	);
+	const change = acceptedChangeFixture({
+		id: `CHG-${traceId}`,
+		kind: "harden",
+		currentState: "Installed-package failure behavior needs proof.",
+		desiredState: "Runtime failures produce deterministic remediation.",
+		rationale: "Unattended automation stays gated until failures are safe.",
+		safetyBoundary:
+			"Failed, blocked, malformed, and worktree-failed workers cannot become success evidence.",
+		failureModes: [
+			"Worker output is missing or malformed.",
+			"Worktree prepare or cleanup fails.",
+		],
+		negativeTestPlan: "Exercise every terminal scenario through the installed runtime.",
+		sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
+		proofRefs: ["tests/external-feature.test.mjs"],
+	});
+	const created = assertToolResult(
+		await project.tools.change.execute(
+			`${traceId}-change-create`,
+			{
+				allowNonProjectInstall: true,
+				input: {
+					operation: "create",
+					expectedHead: snapshot.head,
+					actor: "external-package-failures-smoke",
+					createdAt: "2026-06-18T11:00:00.000Z",
+					change,
+				},
+			},
+			undefined,
+			undefined,
+			project.ctx,
+		),
+		/wiki_change: completed create operation\./,
+	);
+	const changeAcceptance = {
+		expectedHead: created.head,
+		selections: [
+			{
+				changeId: change.id,
+				revision: change.revision,
+				recordRevision: created.record.recordRevision,
+				contentDigest: change.validation.validatedDigest,
+			},
+		],
+		acceptedBy: "external-package-failures-smoke",
+		acceptedAt: "2026-06-18T11:00:01.000Z",
+	};
 	const preview = assertToolResult(
 		await executeTool(
 			project.tools.decide,
@@ -457,8 +452,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 				traceId,
 				mode: "preview",
 				allowNonProjectInstall: true,
-				createdAt: "2026-06-18T11:00:01.000Z",
-				proposalInput: sprintProposalInput(traceId, "2026-06-18T11:00:01.000Z"),
+				changeAcceptance,
 			},
 			project.ctx,
 			`${traceId}-decide-preview`,
@@ -474,8 +468,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
-				createdAt: "2026-06-18T11:00:01.000Z",
-				proposalInput: sprintProposalInput(traceId, "2026-06-18T11:00:01.000Z"),
+				changeAcceptance,
 				sprintProposalApproval: {
 					approved: true,
 					renderedProposalDigest: preview.renderedSprintProposal.digest,

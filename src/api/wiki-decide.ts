@@ -17,11 +17,9 @@ import {
 	sprintProposalMarkdownDigest,
 	renderSprintProposalMarkdown,
 } from "../decision/proposal-rendering.ts";
-import { createSprintProposal } from "../decision/proposal.ts";
 import type {
 	CurrentStatePacket,
 	SprintProposal,
-	SprintProposalInput,
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
@@ -62,14 +60,11 @@ export interface ChangeAcceptanceInput {
 
 export interface RunWikiDecideInput {
 	traceId: string;
-	proposal?: SprintProposal;
-	proposalInput?: SprintProposalInput;
-	changeAcceptance?: ChangeAcceptanceInput;
+	changeAcceptance: ChangeAcceptanceInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
 	requirementIds?: string[];
 	parentId?: string | null;
-	createdAt?: string;
 	mode?: WikiDecideMode;
 	repoRoot?: string;
 	expectedBytes?: number;
@@ -85,7 +80,7 @@ export interface RunWikiDecideResult {
 	iterationEvent: TraceEvent;
 	renderedSprintProposal: RenderedSprintProposal;
 	append?: AppendSemanticLoopReportResult<DecisionIterationResult>["append"];
-	changeAcceptance?: {
+	changeAcceptance: {
 		bundle: AcceptedChangeBundle;
 		storeHead: string;
 		recoveredAcceptance: boolean;
@@ -94,14 +89,11 @@ export interface RunWikiDecideResult {
 
 const WIKI_DECIDE_INPUT_KEYS = [
 	"traceId",
-	"proposal",
-	"proposalInput",
 	"changeAcceptance",
 	"knowledgeDelta",
 	"currentStatePacket",
 	"requirementIds",
 	"parentId",
-	"createdAt",
 	"mode",
 	"repoRoot",
 	"expectedBytes",
@@ -126,17 +118,21 @@ export async function runWikiDecide(
 	);
 	const traceId = requiredStringField("wiki_decide", "traceId", input.traceId);
 	const mode = input.mode || "preview";
+	if (mode === "append") assertAppendPreflightInput(input);
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
+	requiredChangeAcceptance(input.changeAcceptance);
 	const acceptedContext = await acceptedDecisionContext(input, traceId);
+	const acceptedChangeBundle = acceptedContext.prepared.bundle;
+	const proposal = sprintProposalFromAcceptedChanges(acceptedChangeBundle);
 	const qualityJudge = await resolveLoopQualityJudgeExecutionOptions({
 		repoRoot: input.repoRoot,
 	});
 	const loopInput = decisionIterationInput(
 		input,
 		qualityJudge,
-		acceptedContext?.prepared.bundle,
+		acceptedChangeBundle,
+		proposal,
 	);
-	const proposal = requiredProposal(loopInput.proposal);
 	const previewLoopResult = await runDecisionIterationWithRunner({
 		...loopInput,
 		startSequence: nextSequence,
@@ -146,7 +142,6 @@ export async function runWikiDecide(
 		previewLoopResult,
 	);
 	if (mode === "append") {
-		assertAppendPreflightInput(input);
 		assertSprintProposalApproval(
 			input.sprintProposalApproval,
 			renderedSprintProposal,
@@ -159,9 +154,7 @@ export async function runWikiDecide(
 			nextSequence,
 			expectedTraceId: input.expectedTraceId ?? traceId,
 		});
-		const persistedAcceptance = acceptedContext
-			? await persistAcceptedChanges(acceptedContext)
-			: undefined;
+		const persistedAcceptance = await persistAcceptedChanges(acceptedContext);
 		const result = await appendSemanticLoopReport({
 			repoRoot: requiredRepoRoot(input.repoRoot),
 			loop: "decision",
@@ -184,9 +177,7 @@ export async function runWikiDecide(
 			iterationEvent: result.iterationEvent,
 			renderedSprintProposal,
 			append: result.append,
-			...(persistedAcceptance
-				? { changeAcceptance: persistedAcceptance }
-				: {}),
+			changeAcceptance: persistedAcceptance,
 		};
 	}
 	const iterationEvent = assertSemanticLoopReportBatch({
@@ -201,33 +192,18 @@ export async function runWikiDecide(
 		loopResult: previewLoopResult,
 		iterationEvent,
 		renderedSprintProposal,
-		...(acceptedContext
-			? {
-					changeAcceptance: {
-						bundle: acceptedContext.prepared.bundle,
-						storeHead: requiredStoreHead(acceptedContext.snapshot),
-						recoveredAcceptance:
-							acceptedContext.prepared.recoveredAcceptance,
-					},
-				}
-			: {}),
+		changeAcceptance: {
+			bundle: acceptedContext.prepared.bundle,
+			storeHead: requiredStoreHead(acceptedContext.snapshot),
+			recoveredAcceptance: acceptedContext.prepared.recoveredAcceptance,
+		},
 	};
 }
 
 async function acceptedDecisionContext(
 	input: RunWikiDecideInput,
 	traceId: string,
-): Promise<AcceptedDecisionContext | undefined> {
-	if (!input.changeAcceptance) return undefined;
-	if (input.proposal || input.proposalInput) {
-		throw createCodewikiApiError({
-			operation: "wiki_decide",
-			code: "invalid_input",
-			field: "changeAcceptance",
-			message:
-				"wiki_decide cannot combine accepted Change input with authored proposal input.",
-		});
-	}
+): Promise<AcceptedDecisionContext> {
 	const store = new GitRefChangeStore({
 		repoRoot: requiredRepoRoot(input.repoRoot),
 	});
@@ -267,13 +243,9 @@ async function persistAcceptedChanges(
 	};
 }
 
-function requiredProposal(proposal: SprintProposal | undefined): SprintProposal {
-	if (!proposal) throw new Error("wiki_decide did not resolve a Sprint Proposal.");
-	return proposal;
-}
-
 function requiredStoreHead(snapshot: ChangeStoreSnapshot): string {
-	if (!snapshot.head) throw new Error("wiki_decide Change Store head is empty.");
+	if (!snapshot.head)
+		throw new Error("wiki_decide Change Store head is empty.");
 	return snapshot.head;
 }
 
@@ -301,21 +273,33 @@ function initialTraceRecords(
 function decisionIterationInput(
 	input: RunWikiDecideInput,
 	qualityJudge: DecisionIterationInput["qualityJudge"],
-	acceptedChangeBundle?: AcceptedChangeBundle,
+	acceptedChangeBundle: AcceptedChangeBundle,
+	proposal: SprintProposal,
 ): DecisionIterationInput {
 	return {
 		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
-		...(acceptedChangeBundle ? { acceptedChangeBundle } : {}),
-		proposal: acceptedChangeBundle
-			? sprintProposalFromAcceptedChanges(acceptedChangeBundle)
-			: input.proposal ?? createSprintProposal(input.proposalInput ?? {}),
+		acceptedChangeBundle,
+		proposal,
 		knowledgeDelta: input.knowledgeDelta,
 		currentStatePacket: input.currentStatePacket,
 		qualityJudge,
 		requirementIds: input.requirementIds,
 		parentId: input.parentId,
-		createdAt: input.createdAt ?? acceptedChangeBundle?.acceptedAt,
+		createdAt: acceptedChangeBundle.acceptedAt,
 	};
+}
+
+function requiredChangeAcceptance(
+	value: ChangeAcceptanceInput | undefined,
+): asserts value is ChangeAcceptanceInput {
+	if (!value) {
+		throw createCodewikiApiError({
+			operation: "wiki_decide",
+			code: "missing_required",
+			field: "changeAcceptance",
+			message: "wiki_decide requires exact validated Change acceptance input.",
+		});
+	}
 }
 
 function assertAppendPreflightInput(input: RunWikiDecideInput): void {

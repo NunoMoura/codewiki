@@ -3,9 +3,9 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runWikiDecide } from "../../src/api/wiki-decide.ts";
 import { runWikiPlan } from "../../src/api/wiki-plan.ts";
-import { appendTraceRecord } from "../../src/traces/append.ts";
+import { runDecisionIterationWithRunner } from "../../src/decision/iteration.ts";
+import { appendTraceRecord, appendTraceRecords } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
@@ -26,12 +26,9 @@ function approvedDecisionRef(events) {
 }
 
 async function decision(traceId, options = {}) {
-	const input = {
-		mode: options.mode || "preview",
-		repoRoot: options.repoRoot,
-		expectedBytes: options.expectedBytes,
+	const loopResult = await runDecisionIterationWithRunner({
 		traceId,
-		nextSequence: options.nextSequence || 1,
+		startSequence: options.nextSequence || 1,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		proposalInput: {
 			id: `${traceId}-DT`,
@@ -49,15 +46,14 @@ async function decision(traceId, options = {}) {
 				},
 			],
 		},
-	};
-	if (input.mode === "append") {
-		const preview = await runWikiDecide({ ...input, mode: "preview" });
-		input.sprintProposalApproval = {
-			approved: true,
-			renderedProposalDigest: preview.renderedSprintProposal.digest,
-		};
-	}
-	return runWikiDecide(input);
+	});
+	if (options.mode !== "append") return { loopResult };
+	const append = await appendTraceRecords(
+		options.repoRoot,
+		loopResult.traceRecords,
+		options.expectedBytes,
+	);
+	return { loopResult, append };
 }
 
 function workItemInput(decisionEventId) {

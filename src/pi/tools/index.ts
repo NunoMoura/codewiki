@@ -99,8 +99,8 @@ function codewikiTools(): CodewikiToolDefinition[] {
 		facadeTool<RunWikiDecideInput>(
 			"wiki_decide",
 			"CodeWiki Decide",
-			"Preview or append a CodeWiki decision iteration using the core facade.",
-			"Run the CodeWiki decision loop facade for accepted intent and risks.",
+			"Preview or append a Decision from exact validated Change selections in the Changes Backlog.",
+			"Use wiki_decide only after the user validates exact Change revisions; never author proposal input inside the Decision tool.",
 			runWikiDecide,
 		),
 		facadeTool<RunWikiPlanInput>(

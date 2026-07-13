@@ -13,6 +13,7 @@ import { mkdir, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
@@ -89,32 +90,6 @@ async function expectedBytes(tracePath) {
 	return (await stat(tracePath)).size;
 }
 
-function decisionQuality(overrides = {}) {
-	return {
-		userImpact:
-			"External package users can trust CodeWiki lifecycle behavior outside the CodeWiki repository.",
-		maintainerImpact:
-			"Maintainers get a package-installed lifecycle smoke before enabling broader package use.",
-		effort: "medium",
-		workScale: "medium",
-		planningDepth: "standard",
-		risk: "medium",
-		recommendation: "approve",
-		recommendationRationale:
-			"A fresh-project package smoke is the lowest-risk proof before broader self-hosting.",
-		agentAssessment: {
-			stance: "aligned",
-			userAlignment:
-				"Matches the request to exercise CodeWiki while keeping self-hosting supervised.",
-			projectBenefit:
-				"Exposes package/install lifecycle drift that repo-local tests can hide.",
-			rationale:
-				"The change validates behavior without granting unattended write authority.",
-		},
-		...overrides,
-	};
-}
-
 function planningQuality(overrides = {}) {
 	return {
 		technicalRequirements: [
@@ -170,45 +145,6 @@ function implementationQuality(overrides = {}) {
 			rationale: "The change is validation-only and project-local.",
 		},
 		...overrides,
-	};
-}
-
-function sprintProposalInput(createdAt) {
-	return {
-		id: "SP-external-package-lifecycle",
-		summary: "Add an external package lifecycle lifecycle smoke.",
-		createdAt,
-		updatedAt: createdAt,
-		sourceRefs: ["README.md", "src/external-feature.js"],
-		changes: [
-			{
-				id: "CHG-external-package-lifecycle",
-				kind: "harden",
-				currentState:
-					"Repo-local self-testing can hide install, bootstrap, and package-extension lifecycle drift.",
-				desiredState:
-					"A packed CodeWiki install proves the guarded lifecycle in a fresh external project before broader package use.",
-				rationale:
-					"External package lifecycle is the next safe gate before trusting unattended self-hosting.",
-				...decisionQuality({
-					safetyBoundary:
-						"The installed package may append only through guarded expected-byte and sequence checks in an isolated external project.",
-					failureModes: [
-						"Package install metadata works only inside the CodeWiki repository.",
-						"Bootstrap creates incomplete project-local CodeWiki state.",
-						"Runtime worker output files are not collected from an installed package.",
-						"Implementation evidence or release events fail after package installation.",
-					],
-					negativeTestPlan:
-						"Reject read-only state before bootstrap and require guarded append arguments for every mutation.",
-					compatibilityImpact:
-						"The smoke adds validation only; package API and extension behavior stay unchanged.",
-				}),
-				approval: "approved",
-				sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
-				proofRefs: ["tests/runtime/external-package-lifecycle-smoke.mjs"],
-			},
-		],
 	};
 }
 
@@ -359,6 +295,7 @@ try {
 	const bootstrapCommand = commandByName(pi, "wiki-bootstrap");
 	const dashboardCommand = commandByName(pi, "wiki-dashboard");
 	const stateTool = toolByName(pi, "wiki_state");
+	const changeTool = toolByName(pi, "wiki_change");
 	const decideTool = toolByName(pi, "wiki_decide");
 	const planTool = toolByName(pi, "wiki_plan");
 	const archiveTool = toolByName(pi, "wiki_archive");
@@ -411,6 +348,61 @@ try {
 		),
 	);
 
+	run("git", ["init", "-q"], { cwd: projectRoot });
+	const change = acceptedChangeFixture({
+		id: "CHG-external-package-lifecycle",
+		kind: "harden",
+		currentState:
+			"Repo-local self-testing can hide package lifecycle drift.",
+		desiredState:
+			"A packed install proves guarded lifecycle behavior in a fresh project.",
+		rationale:
+			"External lifecycle proof is required before broader package use.",
+		safetyBoundary:
+			"Installed packages mutate only through guarded expected-byte and sequence checks.",
+		failureModes: [
+			"Install metadata works only inside the source repository.",
+			"Bootstrap creates incomplete project-local state.",
+		],
+		negativeTestPlan:
+			"Reject state before bootstrap and require guarded append arguments.",
+		sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
+		proofRefs: ["tests/runtime/external-package-lifecycle-smoke.mjs"],
+		acceptedBy: "external-package-lifecycle-smoke",
+	});
+	const created = assertToolResult(
+		await changeTool.execute(
+			"external-lifecycle-change-create",
+			{
+				allowNonProjectInstall: true,
+				input: {
+					operation: "create",
+					expectedHead: null,
+					actor: "external-package-lifecycle-smoke",
+					createdAt: "2026-06-18T09:00:00.000Z",
+					change,
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
+		),
+		/wiki_change: completed create operation\./,
+	);
+	const changeAcceptance = {
+		expectedHead: created.head,
+		selections: [
+			{
+				changeId: change.id,
+				revision: change.revision,
+				recordRevision: created.record.recordRevision,
+				contentDigest: change.validation.validatedDigest,
+			},
+		],
+		acceptedBy: "external-package-lifecycle-smoke",
+		acceptedAt: "2026-06-18T09:00:01.000Z",
+	};
+
 	const preview = assertToolResult(
 		await executeTool(
 			decideTool,
@@ -418,8 +410,7 @@ try {
 				traceId,
 				mode: "preview",
 				allowNonProjectInstall: true,
-				createdAt: "2026-06-18T09:00:01.000Z",
-				proposalInput: sprintProposalInput("2026-06-18T09:00:01.000Z"),
+				changeAcceptance,
 			},
 			ctx,
 			"decide-preview",
@@ -435,8 +426,7 @@ try {
 				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
-				createdAt: "2026-06-18T09:00:01.000Z",
-				proposalInput: sprintProposalInput("2026-06-18T09:00:01.000Z"),
+				changeAcceptance,
 				sprintProposalApproval: {
 					approved: true,
 					renderedProposalDigest: preview.renderedSprintProposal.digest,

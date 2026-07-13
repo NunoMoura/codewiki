@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
 import { createServer } from "node:http";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
@@ -8,7 +11,7 @@ import {
 	buildLoopQualityJudgePrompt,
 } from "../../src/loops/judge-prompts.ts";
 import { resolveLoopQualityJudgeProviderConfig } from "../../src/loops/judge-provider.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
+import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 
 const ENV_KEYS = [
 	"CODEWIKI_LOOP_QUALITY_JUDGE_URL",
@@ -27,27 +30,6 @@ afterEach(() => {
 		else process.env[key] = originalEnv[key];
 	}
 });
-
-function proposalInput() {
-	return {
-		id: "DT-judge-provider",
-		createdAt: "2026-06-25T00:00:01.000Z",
-		updatedAt: "2026-06-25T00:00:01.000Z",
-		changes: [
-			{
-				id: "CHG-judge-provider",
-				currentState: "Decision loop judge provider is not configured.",
-				desiredState:
-					"Decision loop judge provider can independently review agent assessment.",
-				rationale:
-					"Independent review reduces false-pass risk without requiring a model by default.",
-				...decisionQualityFields(),
-				approval: "approved",
-				sourceRefs: ["kb:system/components/loop-contracts.md"],
-			},
-		],
-	};
-}
 
 async function withJudgeServer(handler, run) {
 	const calls = [];
@@ -149,16 +131,29 @@ describe("loop quality judge provider", () => {
 				process.env.CODEWIKI_LOOP_QUALITY_JUDGE_URL = endpoint;
 				process.env.CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION =
 					"judge.test.v1";
-
+				const root = await mkdtemp(join(tmpdir(), "codewiki-judge-provider-"));
+				const { changeAcceptance } = await seedChangeAcceptance(root, {
+					id: "CHG-judge-provider",
+					currentState: "Decision loop judge provider is not configured.",
+					desiredState:
+						"Decision loop judge provider can independently review agent assessment.",
+					rationale:
+						"Independent review reduces false-pass risk without requiring a model by default.",
+					sourceRefs: ["kb:system/components/loop-contracts.md"],
+				});
 				const result = await runWikiDecide({
+					repoRoot: root,
 					mode: "preview",
 					traceId: "TRACE-judge-provider",
 					nextSequence: 1,
-					createdAt: "2026-06-25T00:00:01.000Z",
-					proposalInput: proposalInput(),
+					changeAcceptance,
 				});
 
-				assert.equal(calls.length, 1);
+				assert.equal(
+					calls.length,
+					1,
+					JSON.stringify(result.loopResult.exit.issues),
+				);
 				assert.match(calls[0].prompt.user, /CHG-judge-provider/);
 				assert.deepEqual(
 					calls[0].requests.map((request) => request.standardId),
@@ -177,6 +172,7 @@ describe("loop quality judge provider", () => {
 				assert.equal(node.judge.status, "fail");
 				assert.equal(node.judge.promptVersion, "judge.test.v1");
 				assert.equal(node.judge.score, 41);
+				await rm(root, { recursive: true, force: true });
 			},
 		);
 	});

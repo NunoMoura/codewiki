@@ -19,7 +19,7 @@ export function sprintProposalFromAcceptedChanges(
 		createdAt: bundle.acceptedAt,
 		updatedAt: bundle.acceptedAt,
 		sourceRefs: unique([
-			bundle.sourceRef,
+			`git:${bundle.sourceRef}@${bundle.sourceHead}`,
 			...bundle.changes.flatMap(
 				(snapshot) => snapshot.change.evidence.sourceRefs,
 			),
@@ -80,6 +80,7 @@ function decisionInput(
 		safetyBoundary: change.safety.safetyBoundary,
 		failureModes: change.safety.failureModes,
 		negativeTestPlan: change.safety.negativeTestPlan,
+		compatibilityImpact: change.impact.maintainer,
 		rollbackPlan: change.safety.rollbackPlan,
 	};
 }

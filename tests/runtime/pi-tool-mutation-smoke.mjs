@@ -15,7 +15,7 @@ import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
+import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
@@ -41,28 +41,6 @@ function toolByName(pi, name) {
 	const tool = pi.tools.find((candidate) => candidate.name === name);
 	assert.ok(tool, `missing tool ${name}`);
 	return tool;
-}
-
-function sprintProposalInput() {
-	return {
-		id: "SP-pi-mutation-smoke",
-		createdAt: "2026-06-17T00:00:01.000Z",
-		updatedAt: "2026-06-17T00:00:01.000Z",
-		changes: [
-			{
-				id: "CHG-pi-mutation-smoke",
-				currentState:
-					"Pi tools are mutation-capable but need guarded append smoke coverage.",
-				desiredState:
-					"Pi tool append proves expected-byte and sequence guarded mutation across loops.",
-				rationale:
-					"Dogfooding must prove safe trace writes before broader mutation use.",
-				...decisionQualityFields(),
-				approval: "approved",
-				sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
-			},
-		],
-	};
 }
 
 function approvedDecisionRef(events) {
@@ -214,6 +192,18 @@ try {
 	const archiveTool = toolByName(pi, "wiki_archive");
 	const stateTool = toolByName(pi, "wiki_state");
 	const ctx = { cwd: root, ui: { notify() {} } };
+	const { changeAcceptance } = await seedChangeAcceptance(root, {
+		id: "CHG-pi-mutation-smoke",
+		currentState:
+			"Pi tools are mutation-capable but need guarded append smoke coverage.",
+		desiredState:
+			"Pi tool append proves guarded mutation across semantic loops.",
+		rationale:
+			"Dogfooding must prove safe trace writes before broader mutation use.",
+		sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
+		acceptedBy: "pi-tool-mutation-smoke",
+		acceptedAt: "2026-06-17T00:00:01.000Z",
+	});
 
 	const preview = assertToolResult(
 		await decideTool.execute(
@@ -223,8 +213,7 @@ try {
 					traceId,
 					mode: "preview",
 					nextSequence: 1,
-					createdAt: "2026-06-17T00:00:01.000Z",
-					proposalInput: sprintProposalInput(),
+					changeAcceptance,
 				},
 			},
 			undefined,
@@ -245,7 +234,7 @@ try {
 						traceId,
 						mode: "append",
 						nextSequence: 1,
-						proposalInput: sprintProposalInput(),
+						changeAcceptance,
 					},
 				},
 				undefined,
@@ -264,8 +253,7 @@ try {
 					mode: "append",
 					expectedBytes: await expectedBytes(tracePath),
 					nextSequence: 1,
-					createdAt: "2026-06-17T00:00:01.000Z",
-					proposalInput: sprintProposalInput(),
+					changeAcceptance,
 					sprintProposalApproval: {
 						approved: true,
 						renderedProposalDigest: preview.renderedSprintProposal.digest,

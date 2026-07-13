@@ -17,6 +17,7 @@ codewiki_source_patterns:
 codewiki_test_patterns:
   - tests/decision/**
   - tests/changes/**
+  - tests/helpers/accepted-change.mjs
   - tests/helpers/proposed-change.mjs
 codewiki_trace_events:
   - decision.changes_approved
@@ -29,6 +30,7 @@ codewiki_source_map:
     test_patterns:
       - tests/decision/**
       - tests/changes/**
+      - tests/helpers/accepted-change.mjs
       - tests/helpers/proposed-change.mjs
     trace_events:
       - decision.changes_approved

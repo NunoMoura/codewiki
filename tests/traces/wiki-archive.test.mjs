@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiArchive } from "../../src/api/wiki-archive.ts";
-import { runWikiDecide } from "../../src/api/wiki-decide.ts";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
+import { runDecisionIterationWithRunner } from "../../src/decision/iteration.ts";
 import { runWikiPlan } from "../../src/api/wiki-plan.ts";
 import { appendTraceRecords } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
@@ -16,13 +16,24 @@ import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 
+async function runDecisionFixture(input) {
+	return {
+		loopResult: await runDecisionIterationWithRunner({
+			traceId: input.traceId,
+			proposalInput: input.proposalInput,
+			createdAt: input.createdAt,
+			startSequence: input.nextSequence,
+		}),
+	};
+}
+
 async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const head = createTraceHead({
 		traceId,
 		title: "Archive trace",
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
-	const decision = await runWikiDecide({
+	const decision = await runDecisionFixture({
 		traceId,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		proposalInput: {
@@ -141,7 +152,7 @@ describe("wiki_archive core facade", () => {
 			title: "Incomplete archive trace",
 			createdAt: "2026-06-11T00:00:00.000Z",
 		});
-		const decision = await runWikiDecide({
+		const decision = await runDecisionFixture({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
 			proposalInput: {
@@ -328,7 +339,7 @@ describe("wiki_archive core facade", () => {
 			title: "Incomplete compact archive trace",
 			createdAt: "2026-06-11T00:00:00.000Z",
 		});
-		const decision = await runWikiDecide({
+		const decision = await runDecisionFixture({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
 			proposalInput: {

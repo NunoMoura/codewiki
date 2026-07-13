@@ -211,10 +211,6 @@ describe("CLI adapter", () => {
 				createdAt: "2026-06-12T00:00:00.000Z",
 			});
 			const commandInputs = {
-				decide: {
-					traceId: "TRACE-cli-command",
-					proposalInput: { changes: [] },
-				},
 				plan: {
 					traceId: "TRACE-cli-command",
 					decisionEvents: [],

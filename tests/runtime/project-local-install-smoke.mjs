@@ -7,11 +7,11 @@ import {
 	rmSync,
 	writeFileSync,
 } from "node:fs";
-import { mkdir, stat, writeFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
+import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
@@ -64,50 +64,6 @@ function assertToolResult(result, pattern) {
 	return result.details.result;
 }
 
-async function expectedBytes(tracePath) {
-	return (await stat(tracePath)).size;
-}
-
-function traceHead(traceId, title, createdAt) {
-	return `${JSON.stringify({ type: "trace_head", traceId, title, createdAt })}\n`;
-}
-
-function sprintProposalInput(createdAt) {
-	return {
-		id: "SP-project-local-install-smoke",
-		summary: "Prove project-local package install mutation.",
-		createdAt,
-		updatedAt: createdAt,
-		sourceRefs: ["README.md"],
-		changes: [
-			{
-				id: "CHG-project-local-install-smoke",
-				kind: "harden",
-				currentState: "Mutation guards require project-local package installs.",
-				desiredState:
-					"A package under the project's .pi/npm tree can bootstrap and append without override.",
-				rationale:
-					"This proves normal local installation works without controlled-test bypasses.",
-				...decisionQualityFields({
-					kind: "harden",
-					safetyBoundary:
-						"Only project-local package installs may mutate without an explicit controlled-test override.",
-					failureModes: [
-						"Project-local package install is falsely rejected.",
-						"Mutation requires allowNonProjectInstall in normal local installs.",
-					],
-					negativeTestPlan:
-						"Install the package under .pi/npm and append a decision without allowNonProjectInstall.",
-					compatibilityImpact:
-						"Normal project-local installation remains the recommended path.",
-				}),
-				approval: "approved",
-				sourceRefs: ["README.md"],
-			},
-		],
-	};
-}
-
 const root = mkdtempSync(join(tmpdir(), "codewiki-project-local-install-"));
 try {
 	const packRoot = join(root, "pack");
@@ -143,6 +99,7 @@ try {
 	const bootstrapCommand = commandByName(pi, "wiki-bootstrap");
 	const dashboardCommand = commandByName(pi, "wiki-dashboard");
 	const stateTool = toolByName(pi, "wiki_state");
+	const changeTool = toolByName(pi, "wiki_change");
 	const decideTool = toolByName(pi, "wiki_decide");
 	const configTool = toolByName(pi, "wiki_config");
 	const notifications = [];
@@ -192,15 +149,57 @@ try {
 		"traces",
 		`${traceId}.jsonl`,
 	);
-	await mkdir(join(projectRoot, ".codewiki", "traces"), { recursive: true });
-	await writeFile(
-		tracePath,
-		traceHead(
-			traceId,
-			"Project local install smoke",
-			"2026-06-18T14:00:00.000Z",
+	run("git", ["init", "-q"], { cwd: projectRoot });
+	const change = acceptedChangeFixture({
+		id: "CHG-project-local-install-smoke",
+		kind: "harden",
+		currentState: "Mutation guards require project-local package installs.",
+		desiredState:
+			"A package under the project's .pi/npm tree can bootstrap and append without override.",
+		rationale:
+			"This proves normal local installation works without controlled-test bypasses.",
+		safetyBoundary:
+			"Only project-local package installs may mutate without an explicit controlled-test override.",
+		failureModes: [
+			"Project-local package install is falsely rejected.",
+			"Mutation requires allowNonProjectInstall in normal local installs.",
+		],
+		negativeTestPlan:
+			"Install under .pi/npm and append without allowNonProjectInstall.",
+		sourceRefs: ["README.md"],
+		createdAt: "2026-06-18T14:00:00.000Z",
+	});
+	const created = assertToolResult(
+		await changeTool.execute(
+			"change-create",
+			{
+				input: {
+					operation: "create",
+					expectedHead: null,
+					actor: "project-local-install-smoke",
+					createdAt: "2026-06-18T14:00:00.000Z",
+					change,
+				},
+			},
+			undefined,
+			undefined,
+			ctx,
 		),
+		/wiki_change: completed create operation\./,
 	);
+	const changeAcceptance = {
+		expectedHead: created.head,
+		selections: [
+			{
+				changeId: change.id,
+				revision: change.revision,
+				recordRevision: created.record.recordRevision,
+				contentDigest: change.validation.validatedDigest,
+			},
+		],
+		acceptedBy: "project-local-install-smoke",
+		acceptedAt: "2026-06-18T14:00:01.000Z",
+	};
 	const preview = assertToolResult(
 		await decideTool.execute(
 			"decide-preview",
@@ -208,8 +207,7 @@ try {
 				input: {
 					traceId,
 					mode: "preview",
-					createdAt: "2026-06-18T14:00:01.000Z",
-					proposalInput: sprintProposalInput("2026-06-18T14:00:01.000Z"),
+					changeAcceptance,
 				},
 			},
 			undefined,
@@ -225,10 +223,9 @@ try {
 				input: {
 					traceId,
 					mode: "append",
-					expectedBytes: await expectedBytes(tracePath),
+					expectedBytes: 0,
 					nextSequence: 1,
-					createdAt: "2026-06-18T14:00:01.000Z",
-					proposalInput: sprintProposalInput("2026-06-18T14:00:01.000Z"),
+					changeAcceptance,
 					sprintProposalApproval: {
 						approved: true,
 						renderedProposalDigest: preview.renderedSprintProposal.digest,
