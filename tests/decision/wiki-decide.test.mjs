@@ -245,7 +245,10 @@ describe("wiki_decide core facade", () => {
 				preview.renderedSprintProposal.markdown,
 				new RegExp(preview.changeAcceptance.bundle.digest),
 			);
-			assert.equal((await store.get(record.change.id)).change.status, "pending");
+			assert.equal(
+				(await store.get(record.change.id)).change.status,
+				"pending",
+			);
 
 			const appendInput = {
 				repoRoot: root,
@@ -280,7 +283,10 @@ describe("wiki_decide core facade", () => {
 					}),
 				/expected trace .* got/,
 			);
-			assert.equal((await store.get(record.change.id)).change.status, "pending");
+			assert.equal(
+				(await store.get(record.change.id)).change.status,
+				"pending",
+			);
 			const interrupted = prepareAcceptedChangeBundle({
 				traceId,
 				expectedHead: seeded.head,
@@ -408,7 +414,7 @@ function assertQualityGraphIdentity(record, graphId) {
 	const checkpointGraph = record?.data?.qualityGraph;
 	const graph = outputGraph || exitGraph || checkpointGraph;
 	assert.equal(graph?.id, graphId);
-	assert.equal(graph?.version, "0.3.0.loop.6");
+	assert.equal(graph?.version, "0.3.0.loop.7");
 	assert.equal(graph?.schemaVersion, 3);
 	assert.match(graph?.hash, /^sha256:/);
 	if (outputGraph) assert.deepEqual(outputGraph, exitGraph);

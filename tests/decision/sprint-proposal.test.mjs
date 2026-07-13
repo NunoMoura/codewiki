@@ -13,10 +13,10 @@ import {
 import { formatTraceLine } from "../../src/traces/writer.ts";
 import { parseTraceLine } from "../../src/traces/reader.ts";
 import {
-	builtInDecisionTypeDefinitions,
-	decisionTypeDefinitionById,
-	validateDecisionTypeDefinitions,
-} from "../../src/decision/type-definitions.ts";
+	builtInDecisionPolicyProfiles,
+	decisionPolicyProfileById,
+	validateDecisionPolicyProfiles,
+} from "../../src/decision/policy-profiles.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 describe("sprint proposals", () => {
@@ -34,16 +34,16 @@ describe("sprint proposals", () => {
 					approval: "accept",
 					affectedLayers: ["system", "source"],
 					sourceRefs: ["kb:system/components/traces.md"],
-					changeType: "maintenance",
+					scope: "source",
 				},
 			],
 		});
 
 		assert.equal(proposal.changes.length, 1);
 		assert.equal(proposal.changes[0].approval, "approved");
-		assert.equal(proposal.changes[0].changeType, "code");
-		assert.equal(proposal.changes[0].decisionKind, "improve");
-		assert.equal(proposal.changes[0].decisionType, "improve");
+		assert.equal(proposal.changes[0].scope, "source");
+		assert.equal(proposal.changes[0].kind, "improve");
+		assert.equal(proposal.changes[0].policyProfileId, "improve");
 		assert.equal(proposal.changes[0].workScale, "small");
 		assert.equal(proposal.changes[0].planningDepth, "micro");
 		assert.deepEqual(proposal.changes[0].affectedLayers, ["system", "source"]);
@@ -79,10 +79,10 @@ describe("sprint proposals", () => {
 	});
 });
 
-describe("decision type registry", () => {
+describe("policy profile registry", () => {
 	it("exposes safe built-in definitions and fail-closed lookup", () => {
-		const definitions = builtInDecisionTypeDefinitions();
-		assert.deepEqual(validateDecisionTypeDefinitions(definitions), []);
+		const definitions = builtInDecisionPolicyProfiles();
+		assert.deepEqual(validateDecisionPolicyProfiles(definitions), []);
 		assert.deepEqual(
 			definitions.map((definition) => definition.id),
 			[
@@ -96,7 +96,7 @@ describe("decision type registry", () => {
 				"direct_implementation",
 			],
 		);
-		assert.equal(decisionTypeDefinitionById("missing", definitions), undefined);
+		assert.equal(decisionPolicyProfileById("missing", definitions), undefined);
 		assert.equal(
 			definitions.every(
 				(definition) =>
@@ -109,16 +109,16 @@ describe("decision type registry", () => {
 		);
 	});
 
-	it("blocks unknown decision types and unsafe direct profile routes", () => {
+	it("blocks unknown policy profiles and unsafe direct profile routes", () => {
 		const unknown = createSprintProposal({
 			changes: [
 				{
 					id: "CHG-unknown-type",
 					currentState: "A change can name an arbitrary type.",
-					desiredState: "Unknown decision types fail closed.",
+					desiredState: "Unknown policy profiles fail closed.",
 					rationale: "Profiles must be package-owned or guarded.",
 					...decisionQualityFields(),
-					decisionType: "surprise",
+					policyProfileId: "surprise",
 					approval: "approved",
 					sourceRefs: ["kb:system/components/decision-loop.md"],
 				},
@@ -132,7 +132,7 @@ describe("decision type registry", () => {
 					desiredState: "Release changes must route through Planning.",
 					rationale: "Publication safety requires stronger process.",
 					...decisionQualityFields({
-						decisionKind: "release",
+						kind: "release",
 						routeTarget: "implementation",
 						implementationMode: "targeted_checks",
 						directImplementationScope: {
@@ -151,7 +151,7 @@ describe("decision type registry", () => {
 
 		assert.equal(
 			evaluateDecisionExit(unknown).issues.some(
-				(issue) => issue.code === "unknown_decision_type",
+				(issue) => issue.code === "unknown_policy_profile",
 			),
 			true,
 		);
@@ -474,12 +474,12 @@ describe("decision exit and iteration runner", () => {
 			changes: [
 				{
 					id: "CHG-debug",
-					decisionKind: "debug",
+					kind: "debug",
 					currentState: "Runtime completion behavior is uncertain.",
 					desiredState: "Runtime completion behavior is verified.",
 					rationale: "Availability requires known safety boundaries.",
 					...decisionQualityFields({
-						decisionKind: "debug",
+						kind: "debug",
 						currentPain: undefined,
 						desiredOutcome: undefined,
 						successSignal: undefined,
@@ -516,7 +516,7 @@ describe("decision exit and iteration runner", () => {
 				"missing_debug_target",
 			],
 		);
-		assert.equal(standards.decision_kind_classified.status, "met");
+		assert.equal(standards.change_kind_classified.status, "met");
 		assert.equal(standards.debug_decision_focused.status, "unmet");
 	});
 
@@ -529,7 +529,7 @@ describe("decision exit and iteration runner", () => {
 					desiredState: "Proposed changes carry kind-specific intent.",
 					rationale: "Planning can trust better structured intent.",
 					...decisionQualityFields({
-						decisionKind: "refactor",
+						kind: "refactor",
 						currentPain: undefined,
 						desiredOutcome: undefined,
 						successSignal: undefined,
@@ -540,7 +540,7 @@ describe("decision exit and iteration runner", () => {
 						"Changes include shared fields plus kind-specific fields.",
 					preservedInvariants: ["Decision remains the only intent loop."],
 					equivalenceProof: "Existing shared standards still pass.",
-					rollbackPlan: "Treat decisionKind as optional metadata if needed.",
+					rollbackPlan: "Treat kind as optional metadata if needed.",
 					approval: "approved",
 					sourceRefs: ["kb:system/components/decision-loop.md"],
 				},
@@ -557,7 +557,7 @@ describe("decision exit and iteration runner", () => {
 			exit.qualityStandards.map((standard) => [standard.id, standard]),
 		);
 
-		assert.equal(proposal.changes[0].decisionKind, "migrate");
+		assert.equal(proposal.changes[0].kind, "migrate");
 		assert.equal(exit.passed, true);
 		assert.equal(standards.migrate_decision_equivalent.status, "met");
 	});
@@ -699,7 +699,7 @@ describe("decision exit and iteration runner", () => {
 				"risks_and_alternatives_considered",
 				"active_trace_conflicts_resolved",
 				"knowledge_impact_accounted",
-				"decision_kind_classified",
+				"change_kind_classified",
 				"improve_decision_outcome",
 			],
 		);

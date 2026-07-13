@@ -1,9 +1,9 @@
+import { normalizeDecisionPolicyProfileId } from "./policy-profiles.ts";
 import {
-	normalizeChangeType,
 	normalizeDecisionApprovalStatus,
+	normalizeDecisionScope,
 	normalizeTraceabilityExemption,
 } from "./approval.ts";
-import { normalizeDecisionTypeId } from "./type-definitions.ts";
 import type {
 	DecisionChange,
 	DecisionChangeActionFailure,
@@ -91,11 +91,9 @@ function normalizeDecisionChange(
 	return {
 		id,
 		question: firstText(change.question, change.id, id),
-		decisionKind: normalizeDecisionKind(change.decisionKind),
-		decisionType: normalizeDecisionTypeId(
-			change.decisionType ??
-				change.decision_type ??
-				normalizeDecisionKind(change.decisionKind),
+		kind: normalizeDecisionIntentKind(change.kind),
+		policyProfileId: normalizeDecisionPolicyProfileId(
+			change.policyProfileId ?? normalizeDecisionIntentKind(change.kind),
 		),
 		currentState: text(change.currentState),
 		desiredState: text(change.desiredState),
@@ -103,10 +101,8 @@ function normalizeDecisionChange(
 		userImpact: text(change.userImpact),
 		maintainerImpact: text(change.maintainerImpact),
 		effort: text(change.effort),
-		workScale: normalizeWorkScale(change.workScale ?? change.work_scale),
-		planningDepth: normalizePlanningDepth(
-			change.planningDepth ?? change.planning_depth,
-		),
+		workScale: normalizeWorkScale(change.workScale),
+		planningDepth: normalizePlanningDepth(change.planningDepth),
 		...normalizeRouteFields(change),
 		affectedLayers: unique(stringList(change.affectedLayers)),
 		risk: text(change.risk),
@@ -119,7 +115,7 @@ function normalizeDecisionChange(
 		alternatives: stringList(change.alternatives),
 		sourceRefs: unique(stringList(change.sourceRefs)),
 		proofRefs: unique(stringList(change.proofRefs)),
-		changeType: normalizeChangeType(change.changeType),
+		scope: normalizeDecisionScope(change.scope),
 		traceabilityExemption: normalizeTraceabilityExemption(
 			change.traceabilityExemption,
 		),
@@ -249,7 +245,7 @@ function generatedChangeId(index: number): string {
 	return `CHG-${String(index + 1).padStart(3, "0")}`;
 }
 
-function normalizeDecisionKind(value: unknown): string {
+function normalizeDecisionIntentKind(value: unknown): string {
 	const normalized = text(value).toLowerCase();
 	if (normalized === "debugging") return "debug";
 	if (["bug", "bugfix", "defect"].includes(normalized)) return "fix";
@@ -292,30 +288,17 @@ function normalizeRouteFields(
 	| "implementationMode"
 	| "directImplementationScope"
 > {
-	const routeTarget = normalizeRouteTarget(
-		change.routeTarget ??
-			change.route_target ??
-			change.nextLoop ??
-			change.next_loop ??
-			change.nextRoute ??
-			change.next_route,
-	);
+	const routeTarget = normalizeRouteTarget(change.routeTarget);
 	const implementationMode = normalizeImplementationMode(
-		change.implementationMode ??
-			change.implementation_mode ??
-			change.testPolicy ??
-			change.test_policy,
+		change.implementationMode,
 	);
 	return {
 		routeTarget,
-		routeKind: normalizeRouteKind(
-			change.routeKind ?? change.route_kind,
-			routeTarget,
-		),
-		routeRationale: text(change.routeRationale ?? change.route_rationale),
+		routeKind: normalizeRouteKind(change.routeKind, routeTarget),
+		routeRationale: text(change.routeRationale),
 		...(implementationMode ? { implementationMode } : {}),
 		directImplementationScope: normalizeDirectImplementationScope(
-			change.directImplementationScope ?? change.direct_implementation_scope,
+			change.directImplementationScope,
 		),
 	};
 }
@@ -363,18 +346,11 @@ function normalizeDirectImplementationScope(
 ): DecisionChange["directImplementationScope"] {
 	return {
 		acceptance: unique(stringList(value?.acceptance)),
-		acceptanceCriteria: normalizeAcceptanceCriteria([
-			...objectList(value?.acceptanceCriteria),
-			...objectList(value?.acceptance_criteria),
-		]),
-		componentRefs: unique([
-			...stringList(value?.componentRefs),
-			...stringList(value?.component_refs),
-		]),
-		pathScopes: unique([
-			...stringList(value?.pathScopes),
-			...stringList(value?.path_scopes),
-		]),
+		acceptanceCriteria: normalizeAcceptanceCriteria(
+			objectList(value?.acceptanceCriteria),
+		),
+		componentRefs: unique(stringList(value?.componentRefs)),
+		pathScopes: unique(stringList(value?.pathScopes)),
 		verification: unique(stringList(value?.verification)),
 	};
 }

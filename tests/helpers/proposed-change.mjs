@@ -1,6 +1,6 @@
 export function decisionQualityFields(overrides = {}) {
 	return {
-		decisionKind: "improve",
+		kind: "improve",
 		currentPain:
 			"The current behavior leaves project intent less structured than it could be.",
 		desiredOutcome:

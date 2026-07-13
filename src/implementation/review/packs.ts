@@ -1,4 +1,4 @@
-import type { DecisionEvidencePolicy } from "../../decision/type-definitions.ts";
+import type { DecisionEvidencePolicy } from "../../decision/policy-profiles.ts";
 import type {
 	LanguageReviewPack,
 	LanguageReviewPackSkipSummary,

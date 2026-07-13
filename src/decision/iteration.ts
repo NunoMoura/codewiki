@@ -19,14 +19,14 @@ import {
 } from "./loop.ts";
 import { approvedProposalChanges, createSprintProposal } from "./proposal.ts";
 import {
-	decisionTypeDefinitionById,
-	normalizeDecisionTypeId,
-} from "./type-definitions.ts";
+	decisionPolicyProfileById,
+	normalizeDecisionPolicyProfileId,
+} from "./policy-profiles.ts";
 import type {
 	ActiveTraceGoal,
 	CurrentStatePacket,
 	DecisionOutput,
-	ApprovedChangeTypeProfile,
+	ApprovedChangePolicyProfile,
 	DecisionChange,
 	SprintProposal,
 	SprintProposalInput,
@@ -183,7 +183,7 @@ function decisionOutput(input: {
 		summary: input.proposal.summary || decisionSummary(input.approvedChanges),
 		approvedChangeIds: input.approvedChanges.map((change) => change.id),
 		requirementIds: input.input.requirementIds || [],
-		decisionTypeProfiles: decisionTypeProfiles(input.approvedChanges),
+		policyProfiles: policyProfiles(input.approvedChanges),
 		knowledgeDelta,
 		currentStatePacket,
 		refs: normalizeTraceRefs([
@@ -237,18 +237,18 @@ function inferredKnowledgeDelta(changes: DecisionChange[]): KnowledgeDelta {
 	};
 }
 
-function decisionTypeProfiles(
+function policyProfiles(
 	changes: DecisionChange[],
-): ApprovedChangeTypeProfile[] {
+): ApprovedChangePolicyProfile[] {
 	return changes.flatMap((change) => {
-		const definition = decisionTypeDefinitionById(
-			normalizeDecisionTypeId(change.decisionType || change.decisionKind),
+		const definition = decisionPolicyProfileById(
+			normalizeDecisionPolicyProfileId(change.policyProfileId || change.kind),
 		);
 		if (!definition) return [];
 		return [
 			{
 				changeId: change.id,
-				decisionType: definition.id,
+				policyProfileId: definition.id,
 				pipelineProfileId: definition.pipelineProfile.id,
 				loopQualityProfileId: definition.loopQualityProfile.id,
 				evidencePolicy: definition.evidencePolicy,
@@ -292,7 +292,7 @@ function decisionTraceEvents(input: {
 					: {}),
 				approvedChanges: approvedChanges.map(decisionChangeData),
 				approvedChangeIds: output.approvedChangeIds,
-				decisionTypeProfiles: output.decisionTypeProfiles || [],
+				policyProfiles: output.policyProfiles || [],
 				currentStatePacket: output.currentStatePacket,
 				knowledgeDelta: output.knowledgeDelta,
 				qualityGraph: exit.qualityGraph,
@@ -311,8 +311,8 @@ function decisionChangeData(change: DecisionChange): Record<string, unknown> {
 	return {
 		id: change.id,
 		question: change.question,
-		decisionKind: change.decisionKind,
-		decisionType: change.decisionType,
+		kind: change.kind,
+		policyProfileId: change.policyProfileId,
 		currentState: change.currentState,
 		currentStateRefs: [...change.sourceRefs, ...change.proofRefs],
 		desiredState: change.desiredState,
@@ -334,7 +334,7 @@ function decisionChangeData(change: DecisionChange): Record<string, unknown> {
 		recommendation: change.recommendation,
 		recommendationRationale: change.recommendationRationale,
 		agentAssessment: change.agentAssessment,
-		changeType: change.changeType,
+		scope: change.scope,
 		noKbImpactReason: change.noKbImpactReason,
 		targetRefs: change.targetRefs,
 		hypothesis: change.hypothesis,

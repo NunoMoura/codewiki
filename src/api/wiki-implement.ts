@@ -1,5 +1,5 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import type { DecisionEvidencePolicy } from "../decision/type-definitions.ts";
+import type { DecisionEvidencePolicy } from "../decision/policy-profiles.ts";
 import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import { uniqueStrings } from "../loops/quality-standards.ts";
 import {

@@ -26,10 +26,10 @@ import {
 import { composeLoopQualityPacks } from "../loops/runner.ts";
 import { invalidTraceRefs } from "../traces/refs.ts";
 import {
-	decisionTypeDefinitionById,
-	normalizeDecisionTypeId,
+	decisionPolicyProfileById,
+	normalizeDecisionPolicyProfileId,
 	riskExceeds,
-} from "./type-definitions.ts";
+} from "./policy-profiles.ts";
 import type {
 	ExitDetails,
 	ExitFinding,
@@ -45,7 +45,7 @@ import {
 import { approvedProposalChanges } from "./proposal.ts";
 import {
 	DECISION_IMPLEMENTATION_MODE_VALUES,
-	DECISION_KIND_VALUES,
+	DECISION_INTENT_KIND_VALUES,
 	DECISION_PLANNING_DEPTH_VALUES,
 	DECISION_ROUTE_TARGET_VALUES,
 	DECISION_WORK_SCALE_VALUES,
@@ -62,11 +62,11 @@ export type DecisionExitIssueCode =
 	| "missing_current_state"
 	| "missing_desired_state"
 	| "missing_rationale"
-	| "missing_decision_kind"
-	| "invalid_decision_kind"
-	| "missing_decision_type"
-	| "unknown_decision_type"
-	| "decision_type_kind_mismatch"
+	| "missing_change_kind"
+	| "invalid_change_kind"
+	| "missing_policy_profile"
+	| "unknown_policy_profile"
+	| "policy_profile_kind_mismatch"
 	| "pipeline_profile_route_conflict"
 	| "pipeline_profile_planning_depth_conflict"
 	| "pipeline_profile_direct_route_disallowed"
@@ -171,7 +171,7 @@ export const DECISION_LOOP_QUALITY_PACK = parseLoopQualityPack({
 	rollout: "enforce",
 	graph: {
 		id: "decision.loop",
-		version: "0.3.0.loop.6",
+		version: "0.3.0.loop.7",
 		layers: loopGraphLayers([
 			"hard_gate",
 			"input_contract",
@@ -412,20 +412,20 @@ export const DECISION_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			],
 		}),
 		decisionPackStandard({
-			id: "decision_kind_classified",
+			id: "change_kind_classified",
 			layer: "input_contract",
 			standardType: "loop_contract",
 			weight: 8,
 			cost: 8,
 			hardGate: true,
 			description:
-				"Decisions classify the decision kind so kind-specific quality can apply inside the decision loop.",
+				"Decisions classify the Change kind so kind-specific quality can apply inside the decision loop.",
 			codes: [
-				"missing_decision_kind",
-				"invalid_decision_kind",
-				"missing_decision_type",
-				"unknown_decision_type",
-				"decision_type_kind_mismatch",
+				"missing_change_kind",
+				"invalid_change_kind",
+				"missing_policy_profile",
+				"unknown_policy_profile",
+				"policy_profile_kind_mismatch",
 				"pipeline_profile_route_conflict",
 				"pipeline_profile_planning_depth_conflict",
 				"pipeline_profile_direct_route_disallowed",
@@ -517,10 +517,7 @@ export const DECISION_LOOP_GRAPH = compatibleDecisionGraph(
 	DECISION_LOOP_QUALITY_PACK,
 );
 
-type DecisionPackStandardDeclaration = Omit<
-	LoopQualityPackStandard,
-	"codes"
->;
+type DecisionPackStandardDeclaration = Omit<LoopQualityPackStandard, "codes">;
 
 function decisionPackStandard(
 	node: Omit<
@@ -582,7 +579,8 @@ function compatibleDecisionGraph(
 			delete compatible.evidenceAdapterIds;
 			if (compatible.dependsOn?.length === 0) delete compatible.dependsOn;
 			if (compatible.gate === "hard") compatible.hardGate = true;
-			if (compatible.method === "agent_self_assessment") compatible.mode = "agent";
+			if (compatible.method === "agent_self_assessment")
+				compatible.mode = "agent";
 			if (compatible.method === "human_authority") compatible.mode = "user";
 			if (!("judge" in compatible)) compatible.judge = undefined;
 			return compatible;
@@ -644,8 +642,8 @@ export function collectDecisionExitIssues(
 			...approvedRowIssues(change),
 			...workRoutingIssues(change),
 			...directRouteIssues(change),
-			...decisionTypePolicyIssues(change),
-			...decisionKindQualityIssues(change),
+			...policyProfileIdPolicyIssues(change),
+			...kindQualityIssues(change),
 			...recommendationQualityIssues(change),
 			...agentAssessmentQualityIssues(change),
 			...riskQualityIssues(change),
@@ -718,8 +716,8 @@ function decisionJudgeInput(
 		},
 		approvedChanges: approvedChanges.map((change) => ({
 			id: change.id,
-			decisionKind: change.decisionKind,
-			decisionType: change.decisionType,
+			kind: change.kind,
+			policyProfileId: change.policyProfileId,
 			currentState: change.currentState,
 			desiredState: change.desiredState,
 			rationale: change.rationale,
@@ -1085,38 +1083,40 @@ function directRouteIssues(change: DecisionChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function decisionTypePolicyIssues(change: DecisionChange): DecisionExitIssue[] {
+function policyProfileIdPolicyIssues(
+	change: DecisionChange,
+): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	const decisionType = normalizeDecisionTypeId(
-		change.decisionType || change.decisionKind,
+	const policyProfileId = normalizeDecisionPolicyProfileId(
+		change.policyProfileId || change.kind,
 	);
-	if (!decisionType) {
+	if (!policyProfileId) {
 		return [
 			{
-				code: "missing_decision_type",
+				code: "missing_policy_profile",
 				changeId: change.id,
-				message: `Proposed change ${change.id} must resolve to a decision type.`,
+				message: `Proposed change ${change.id} must resolve to a policy profile.`,
 			},
 		];
 	}
-	const definition = decisionTypeDefinitionById(decisionType);
+	const definition = decisionPolicyProfileById(policyProfileId);
 	if (!definition) {
 		return [
 			{
-				code: "unknown_decision_type",
+				code: "unknown_policy_profile",
 				changeId: change.id,
-				message: `Proposed change ${change.id} uses unknown decision type ${decisionType}.`,
+				message: `Proposed change ${change.id} uses unknown policy profile ${policyProfileId}.`,
 			},
 		];
 	}
 	if (
-		definition.decisionKind !== "direct_implementation" &&
-		definition.decisionKind !== change.decisionKind
+		definition.kind !== "direct_implementation" &&
+		definition.kind !== change.kind
 	) {
 		issues.push({
-			code: "decision_type_kind_mismatch",
+			code: "policy_profile_kind_mismatch",
 			changeId: change.id,
-			message: `Proposed change ${change.id} type ${definition.id} expects decisionKind ${definition.decisionKind}.`,
+			message: `Proposed change ${change.id} type ${definition.id} expects kind ${definition.kind}.`,
 		});
 	}
 	const profile = definition.pipelineProfile;
@@ -1165,27 +1165,25 @@ function decisionTypePolicyIssues(change: DecisionChange): DecisionExitIssue[] {
 	return issues;
 }
 
-function decisionKindQualityIssues(
-	change: DecisionChange,
-): DecisionExitIssue[] {
+function kindQualityIssues(change: DecisionChange): DecisionExitIssue[] {
 	const issues: DecisionExitIssue[] = [];
-	if (!change.decisionKind) {
+	if (!change.kind) {
 		issues.push({
-			code: "missing_decision_kind",
+			code: "missing_change_kind",
 			changeId: change.id,
-			message: `Proposed change ${change.id} must declare decisionKind.`,
+			message: `Proposed change ${change.id} must declare kind.`,
 		});
 		return issues;
 	}
-	if (!isAllowed(change.decisionKind, [...DECISION_KIND_VALUES])) {
+	if (!isAllowed(change.kind, [...DECISION_INTENT_KIND_VALUES])) {
 		issues.push({
-			code: "invalid_decision_kind",
+			code: "invalid_change_kind",
 			changeId: change.id,
-			message: `Proposed change ${change.id} has invalid decisionKind ${change.decisionKind}.`,
+			message: `Proposed change ${change.id} has invalid kind ${change.kind}.`,
 		});
 		return issues;
 	}
-	if (change.decisionKind === "debug") {
+	if (change.kind === "debug") {
 		if (change.targetRefs.length === 0) {
 			issues.push(
 				kindIssue(change, "missing_debug_target", "name target refs"),
@@ -1233,7 +1231,7 @@ function decisionKindQualityIssues(
 			);
 		}
 	}
-	if (change.decisionKind === "fix") {
+	if (change.kind === "fix") {
 		if (!change.reproduction) {
 			issues.push(
 				kindIssue(
@@ -1262,7 +1260,7 @@ function decisionKindQualityIssues(
 			);
 		}
 	}
-	if (change.decisionKind === "harden") {
+	if (change.kind === "harden") {
 		if (!change.safetyBoundary) {
 			issues.push(
 				kindIssue(
@@ -1300,7 +1298,7 @@ function decisionKindQualityIssues(
 			);
 		}
 	}
-	if (change.decisionKind === "improve") {
+	if (change.kind === "improve") {
 		if (!change.currentPain) {
 			issues.push(
 				kindIssue(
@@ -1334,7 +1332,7 @@ function decisionKindQualityIssues(
 			);
 		}
 	}
-	if (change.decisionKind === "migrate") {
+	if (change.kind === "migrate") {
 		if (!change.sourceBehavior) {
 			issues.push(
 				kindIssue(
@@ -1392,7 +1390,7 @@ function kindIssue(
 	return {
 		code,
 		changeId: change.id,
-		message: `${change.decisionKind} proposed change ${change.id} must ${requirement}.`,
+		message: `${change.kind} proposed change ${change.id} must ${requirement}.`,
 	};
 }
 
@@ -1725,26 +1723,26 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 		"State the desired target state for the proposed change.",
 	missing_rationale:
 		"Add rationale explaining why this decision should be accepted.",
-	missing_decision_kind:
+	missing_change_kind:
 		"Classify the proposed change as debug, fix, harden, improve, migrate, docs, or release.",
-	invalid_decision_kind:
-		"Use decisionKind debug, fix, harden, improve, migrate, docs, or release.",
-	missing_decision_type:
-		"Use a known decision type or let decisionKind resolve to a built-in decision type.",
-	unknown_decision_type:
-		"Use a built-in decision type or register a guarded project decision type before planning.",
-	decision_type_kind_mismatch:
-		"Align decisionType with decisionKind or split the change into the correct type.",
+	invalid_change_kind:
+		"Use kind debug, fix, harden, improve, migrate, docs, or release.",
+	missing_policy_profile:
+		"Use a known policy profile or let kind resolve to a built-in policy profile.",
+	unknown_policy_profile:
+		"Use a built-in policy profile or register a guarded project policy profile before planning.",
+	policy_profile_kind_mismatch:
+		"Align policyProfileId with kind or split the change into the correct type.",
 	pipeline_profile_route_conflict:
-		"Choose a routeTarget allowed by the selected decision type pipeline profile.",
+		"Choose a routeTarget allowed by the selected policy profile pipeline profile.",
 	pipeline_profile_planning_depth_conflict:
-		"Choose a planningDepth allowed by the selected decision type pipeline profile.",
+		"Choose a planningDepth allowed by the selected policy profile pipeline profile.",
 	pipeline_profile_direct_route_disallowed:
-		"Route this decision type through Planning instead of direct Implementation.",
+		"Route this policy profile through Planning instead of direct Implementation.",
 	pipeline_profile_direct_scale_disallowed:
-		"Use direct Implementation only for the scales allowed by the decision type pipeline profile.",
+		"Use direct Implementation only for the scales allowed by the policy profile pipeline profile.",
 	pipeline_profile_direct_risk_disallowed:
-		"Use Planning or stronger approval when risk exceeds the decision type direct-implementation lane.",
+		"Use Planning or stronger approval when risk exceeds the policy profile direct-implementation lane.",
 	missing_debug_target:
 		"For debug decisions, name the component or path being investigated.",
 	missing_debug_hypothesis:

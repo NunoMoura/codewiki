@@ -183,7 +183,7 @@ function sprintProposalInput(createdAt) {
 		changes: [
 			{
 				id: "CHG-external-package-lifecycle",
-				decisionKind: "harden",
+				kind: "harden",
 				currentState:
 					"Repo-local self-testing can hide install, bootstrap, and package-extension lifecycle drift.",
 				desiredState:

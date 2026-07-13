@@ -16,7 +16,7 @@ const EXPECTED_HARD_GATES = {
 		"evidence_sufficient",
 		"risks_and_alternatives_considered",
 		"active_trace_conflicts_resolved",
-		"decision_kind_classified",
+		"change_kind_classified",
 	],
 	planning: [
 		"decision_coverage_complete",

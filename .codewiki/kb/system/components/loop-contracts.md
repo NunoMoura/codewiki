@@ -294,7 +294,7 @@ judgment.
 
 Decision hard gates cover proposal readiness, understood intent, route safety,
 planning depth, approval authority, current-state grounding, trace evidence,
-risk classification, active trace conflicts, and decision-kind classification.
+risk classification, active trace conflicts, and Change-kind classification.
 
 Planning hard gates cover decision coverage, self-contained worker units,
 acceptance/verification, planning depth, source ownership, dependency ordering,

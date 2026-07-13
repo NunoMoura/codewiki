@@ -1,8 +1,8 @@
 import type { AcceptedChangeBundle } from "../changes/accepted-bundle.ts";
-import type { Change, ChangeKind, ChangeScope } from "../changes/types.ts";
+import type { Change, ChangeKind } from "../changes/types.ts";
 import { createSprintProposal } from "./proposal.ts";
 import type {
-	DecisionKind,
+	DecisionIntentKind,
 	DecisionWorkScale,
 	DecisionChangeInput,
 	SprintProposal,
@@ -20,8 +20,8 @@ export function sprintProposalFromAcceptedChanges(
 		updatedAt: bundle.acceptedAt,
 		sourceRefs: unique([
 			bundle.sourceRef,
-			...bundle.changes.flatMap((snapshot) =>
-				snapshot.change.evidence.sourceRefs,
+			...bundle.changes.flatMap(
+				(snapshot) => snapshot.change.evidence.sourceRefs,
 			),
 		]),
 		changes: bundle.changes.map((snapshot) =>
@@ -37,7 +37,7 @@ function decisionInput(
 	return {
 		id: change.id,
 		question: change.intent.question,
-		decisionKind: decisionKind(change.classification.kind),
+		kind: decisionIntentKind(change.classification.kind),
 		currentState: change.intent.currentState,
 		desiredState: change.intent.desiredState,
 		rationale: change.intent.rationale,
@@ -47,7 +47,8 @@ function decisionInput(
 		workScale: workScale(change.estimates.workScale),
 		planningDepth: "standard",
 		routeTarget: "planning",
-		routeRationale: "Accepted Change enters its independent trace through Planning.",
+		routeRationale:
+			"Accepted Change enters its independent trace through Planning.",
 		affectedLayers: change.classification.affectedLayers,
 		risk: change.safety.risk,
 		approval: "approved",
@@ -68,7 +69,7 @@ function decisionInput(
 			...change.classification.targetRefs,
 		]),
 		proofRefs: change.evidence.proofRefs,
-		changeType: legacyChangeType(change.classification.scope),
+		scope: change.classification.scope,
 		targetRefs: change.classification.targetRefs,
 		currentPain: change.intent.currentState,
 		desiredOutcome: change.intent.desiredState,
@@ -83,19 +84,18 @@ function decisionInput(
 	};
 }
 
-function decisionKind(kind: ChangeKind): DecisionKind {
+function decisionIntentKind(kind: ChangeKind): DecisionIntentKind {
 	if (kind === "fix" || kind === "harden" || kind === "migrate") return kind;
 	return "improve";
 }
 
-function legacyChangeType(scope: ChangeScope): "product" | "system" | "code" {
-	if (scope === "product") return "product";
-	if (scope === "source") return "code";
-	return "system";
-}
-
 function workScale(value: string | undefined): DecisionWorkScale {
-	if (value === "tiny" || value === "small" || value === "normal" || value === "large") {
+	if (
+		value === "tiny" ||
+		value === "small" ||
+		value === "normal" ||
+		value === "large"
+	) {
 		return value;
 	}
 	return "normal";

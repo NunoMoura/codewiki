@@ -105,6 +105,7 @@ extension.default({
 assert.deepEqual(tools, [
 	"wiki_state",
 	"wiki_config",
+	"wiki_change",
 	"wiki_decide",
 	"wiki_plan",
 	"wiki_implement",

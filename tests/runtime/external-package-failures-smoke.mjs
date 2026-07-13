@@ -173,7 +173,7 @@ function sprintProposalInput(traceId, createdAt) {
 		changes: [
 			{
 				id: `CHG-${traceId}`,
-				decisionKind: "harden",
+				kind: "harden",
 				currentState:
 					"Happy-path package lifecycle exists, but installed-package terminal failure behavior also needs proof.",
 				desiredState:

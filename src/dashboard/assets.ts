@@ -939,7 +939,7 @@ const QUALITY_STANDARD_FALLBACKS = {
 	risks_and_alternatives_considered: 'risk_authority|risk_authority|hard',
 	active_trace_conflicts_resolved: 'hard_gate|scope_control|hard',
 	knowledge_impact_accounted: 'trace_fidelity|trace_fidelity|soft',
-	decision_kind_classified: 'input_contract|loop_contract|hard',
+	change_kind_classified: 'input_contract|loop_contract|hard',
 	debug_decision_focused: 'specificity|loop_contract|soft',
 	fix_decision_reproducible: 'specificity|loop_contract|soft',
 	harden_decision_boundary: 'risk_authority|risk_authority|soft',

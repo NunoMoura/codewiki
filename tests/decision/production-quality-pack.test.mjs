@@ -19,7 +19,7 @@ const productionLoops = [
 	{
 		pack: DECISION_LOOP_QUALITY_PACK,
 		graph: DECISION_LOOP_GRAPH,
-		hash: "sha256:74aefdcc60434ec38363df3983bae25d1063564b1e04b0842282004567c61978",
+		hash: "sha256:46fa7ae705661d4170e9fd24a2ac9e242de555081be910d1631d01abc605c10a",
 	},
 	{
 		pack: PLANNING_LOOP_QUALITY_PACK,
@@ -47,7 +47,7 @@ describe("production quality-pack migration", () => {
 		}
 	});
 
-	it("preserves public graph identity and effective standard behavior", () => {
+	it("pins reviewed graph identity and effective standard behavior", () => {
 		for (const { pack, graph, hash } of productionLoops) {
 			assert.equal(loopQualityGraphHash(graph), hash);
 			for (const [index, node] of graph.nodes.entries()) {

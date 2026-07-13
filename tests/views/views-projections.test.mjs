@@ -824,12 +824,12 @@ describe("trace-backed views", () => {
 			resolutionInputs: [
 				{
 					decisionRef: decisionRef,
-					kind: "route-back",
 					evidenceRefs: ["kb:system/components/traces.md"],
 					owner: "architecture",
 					trigger: "Need user decision.",
 					rationale: "Conflicting path ownership needs route-back.",
 					...decisionQualityFields(),
+					kind: "route-back",
 				},
 			],
 		});

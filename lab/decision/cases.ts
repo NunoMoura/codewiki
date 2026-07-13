@@ -30,7 +30,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			sprintProposal: sprintProposal(
 				decisionChange({
 					id: "D-vague",
-					decisionKind: "docs",
+					kind: "docs",
 					currentState: "ok",
 					desiredState: "better",
 					rationale: "needed",
@@ -109,7 +109,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			sprintProposal: sprintProposal(
 				decisionChange({
 					id: "D-risk-approved",
-					decisionKind: "harden",
+					kind: "harden",
 					risk: "high",
 					workScale: "normal",
 					planningDepth: "standard",
@@ -145,7 +145,7 @@ export const decisionCases: LabCase<DecisionLabInput>[] = [
 			sprintProposal: sprintProposal(
 				decisionChange({
 					id: "D-migrate",
-					decisionKind: "migrate",
+					kind: "migrate",
 					sourceBehavior:
 						"Trace state is stored as append-only JSONL records under .codewiki/traces.",
 					targetBehavior:
@@ -182,11 +182,13 @@ function sprintProposal(change: DecisionChangeInput): SprintProposal {
 	});
 }
 
-function decisionChange(overrides: DecisionChangeInput = {}): DecisionChangeInput {
+function decisionChange(
+	overrides: DecisionChangeInput = {},
+): DecisionChangeInput {
 	return {
 		id: "D-good",
 		question: "Should loop exit standards become measurable?",
-		decisionKind: "improve",
+		kind: "improve",
 		currentState:
 			"Loop exit standards exist but need adversarial debug coverage before autonomous optimization.",
 		desiredState:
@@ -228,7 +230,7 @@ function decisionChange(overrides: DecisionChangeInput = {}): DecisionChangeInpu
 		},
 		sourceRefs: ["kb:system/decision-loop.md"],
 		proofRefs: [],
-		changeType: "code",
+		scope: "source",
 		noKbImpactReason: "Fixture decision does not change KB source truth.",
 		...overrides,
 	};

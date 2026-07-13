@@ -881,7 +881,7 @@ function decisionChangeSummary(change: Record<string, unknown>): string {
 		stringValue(change.question) ||
 		stringValue(change.desiredState) ||
 		stringValue(change.id);
-	const type = stringValue(change.decisionType || change.decisionKind);
+	const type = stringValue(change.policyProfileId || change.kind);
 	const route = stringValue(change.routeTarget || change.nextLoop);
 	return [title, type ? `type: ${type}` : "", route ? `route: ${route}` : ""]
 		.filter(Boolean)

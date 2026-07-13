@@ -124,7 +124,7 @@ The decision loop can exit only when loop-owned quality standards are met. Resea
 | knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
 | work_routing_classified | Decisions classify work scale and planning depth; micro planning is limited to tiny or small low-risk work. |
 | loop_route_safe | Decisions choose a safe next loop; direct implementation is limited to scoped, low-risk Decisions with validation. |
-| decision_kind_classified | Decisions classify the decision kind so kind-specific quality can apply inside the decision loop. |
+| change_kind_classified | Decisions classify the Change kind so kind-specific quality can apply inside the decision loop. |
 | debug_decision_focused | Debug Decisions include target, hypothesis, invariant, probe, expected safe behavior, and stop condition. |
 | fix_decision_reproducible | Fix Decisions include reproduction, expected behavior, and regression coverage. |
 | harden_decision_boundary | Hardening Decisions include safety boundary, failure modes, negative tests, and compatibility impact. |

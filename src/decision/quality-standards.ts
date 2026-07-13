@@ -145,21 +145,21 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 		},
 	];
 
-export const DECISION_KIND_QUALITY_STANDARDS: Record<
+export const CHANGE_KIND_QUALITY_STANDARDS: Record<
 	string,
 	LoopQualityStandardDefinition<DecisionExitIssueCode>
 > = {
-	decision_kind_classified: {
-		id: "decision_kind_classified",
+	change_kind_classified: {
+		id: "change_kind_classified",
 		weight: 8,
 		description:
-			"Decisions classify the decision kind so kind-specific quality can apply inside the decision loop.",
+			"Decisions classify the Change kind so kind-specific quality can apply inside the decision loop.",
 		codes: [
-			"missing_decision_kind",
-			"invalid_decision_kind",
-			"missing_decision_type",
-			"unknown_decision_type",
-			"decision_type_kind_mismatch",
+			"missing_change_kind",
+			"invalid_change_kind",
+			"missing_policy_profile",
+			"unknown_policy_profile",
+			"policy_profile_kind_mismatch",
 			"pipeline_profile_route_conflict",
 			"pipeline_profile_planning_depth_conflict",
 			"pipeline_profile_direct_route_disallowed",
@@ -251,7 +251,7 @@ export function decisionQualityStandards(
 				issues,
 			),
 		),
-		...decisionKindQualityStandards(issues, approvedChanges),
+		...kindQualityStandards(issues, approvedChanges),
 	];
 }
 
@@ -311,10 +311,10 @@ export function activeDecisionQualityStandardNodes(
 	approvedChanges: DecisionChange[],
 ): LoopQualityGraphNode<DecisionExitIssueCode>[] {
 	return graph.nodes.filter((node) => {
-		if (node.id === "decision_kind_classified") {
+		if (node.id === "change_kind_classified") {
 			return (
 				approvedChanges.length > 0 ||
-				hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
+				hasAnyIssue(issues, ["missing_change_kind", "invalid_change_kind"])
 			);
 		}
 		if (node.id === "debug_decision_focused") {
@@ -350,18 +350,18 @@ export function activeDecisionQualityStandardNodes(
 	});
 }
 
-function decisionKindQualityStandards(
+function kindQualityStandards(
 	issues: DecisionExitIssue[],
 	approvedChanges: DecisionChange[],
 ): LoopQualityStandardResult[] {
 	const standards: LoopQualityStandardResult[] = [];
 	if (
 		approvedChanges.length > 0 ||
-		hasAnyIssue(issues, ["missing_decision_kind", "invalid_decision_kind"])
+		hasAnyIssue(issues, ["missing_change_kind", "invalid_change_kind"])
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.decision_kind_classified,
+				CHANGE_KIND_QUALITY_STANDARDS.change_kind_classified,
 				issues,
 			),
 		);
@@ -372,7 +372,7 @@ function decisionKindQualityStandards(
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.debug_decision_focused,
+				CHANGE_KIND_QUALITY_STANDARDS.debug_decision_focused,
 				issues,
 			),
 		);
@@ -383,7 +383,7 @@ function decisionKindQualityStandards(
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.fix_decision_reproducible,
+				CHANGE_KIND_QUALITY_STANDARDS.fix_decision_reproducible,
 				issues,
 			),
 		);
@@ -394,7 +394,7 @@ function decisionKindQualityStandards(
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.harden_decision_boundary,
+				CHANGE_KIND_QUALITY_STANDARDS.harden_decision_boundary,
 				issues,
 			),
 		);
@@ -405,7 +405,7 @@ function decisionKindQualityStandards(
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.improve_decision_outcome,
+				CHANGE_KIND_QUALITY_STANDARDS.improve_decision_outcome,
 				issues,
 			),
 		);
@@ -416,7 +416,7 @@ function decisionKindQualityStandards(
 	) {
 		standards.push(
 			buildDecisionStandard(
-				DECISION_KIND_QUALITY_STANDARDS.migrate_decision_equivalent,
+				CHANGE_KIND_QUALITY_STANDARDS.migrate_decision_equivalent,
 				issues,
 			),
 		);
@@ -466,7 +466,7 @@ function hasAnyIssue(
 }
 
 function hasKind(changes: DecisionChange[], kind: string): boolean {
-	return changes.some((change) => change.decisionKind === kind);
+	return changes.some((change) => change.kind === kind);
 }
 
 function hasCodePrefix(issues: DecisionExitIssue[], prefix: string): boolean {

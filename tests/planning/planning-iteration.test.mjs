@@ -592,11 +592,11 @@ describe("planning iteration runner", () => {
 			resolutionInputs: [
 				{
 					decisionRef: decisionRef,
-					kind: "deferred",
 					owner: "runtime migration",
 					trigger: "after traces module lands",
 					rationale: "Runtime needs trace append primitives first.",
 					...decisionQualityFields(),
+					kind: "deferred",
 					evidenceRefs: ["kb:system/components/traces.md"],
 				},
 			],

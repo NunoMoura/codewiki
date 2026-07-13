@@ -1,12 +1,12 @@
 import type {
-	DecisionKind,
+	DecisionIntentKind,
 	DecisionPlanningDepth,
 	DecisionRouteTarget,
 	DecisionRisk,
 	DecisionWorkScale,
 } from "./types.ts";
 
-export const DECISION_TYPE_IDS = [
+export const DECISION_POLICY_PROFILE_IDS = [
 	"debug",
 	"fix",
 	"harden",
@@ -17,7 +17,9 @@ export const DECISION_TYPE_IDS = [
 	"direct_implementation",
 ] as const;
 
-export type DecisionTypeId = (typeof DECISION_TYPE_IDS)[number] | string;
+export type DecisionPolicyProfileId =
+	| (typeof DECISION_POLICY_PROFILE_IDS)[number]
+	| string;
 export type EvidencePolicyClass =
 	| "acceptance_links"
 	| "content_proof"
@@ -87,10 +89,10 @@ export interface DecisionEscalationRule {
 	rationale: string;
 }
 
-export interface DecisionTypeDefinition {
-	id: DecisionTypeId;
+export interface DecisionPolicyProfile {
+	id: DecisionPolicyProfileId;
 	description: string;
-	decisionKind: DecisionKind | "direct_implementation";
+	kind: DecisionIntentKind | "direct_implementation";
 	routing: DecisionPipelineProfile;
 	pipelineProfile: DecisionPipelineProfile;
 	loopQualityProfile: DecisionLoopQualityProfile;
@@ -99,8 +101,8 @@ export interface DecisionTypeDefinition {
 	forbiddenSkips: ForbiddenSkip[];
 }
 
-export interface DecisionTypeRegistryValidationIssue {
-	code: "duplicate_decision_type" | "missing_profile";
+export interface DecisionPolicyRegistryValidationIssue {
+	code: "duplicate_policy_profile" | "missing_profile";
 	id: string;
 	message: string;
 }
@@ -164,19 +166,19 @@ function evidencePolicy(input: {
 }
 
 function definition(input: {
-	id: DecisionTypeId;
+	id: DecisionPolicyProfileId;
 	description: string;
-	decisionKind: DecisionTypeDefinition["decisionKind"];
+	kind: DecisionPolicyProfile["kind"];
 	routing: DecisionPipelineProfile;
 	evidencePolicy: DecisionEvidencePolicy;
 	escalationRules?: DecisionEscalationRule[];
 	forbiddenSkips?: ForbiddenSkip[];
 	loopQualityProfile?: DecisionLoopQualityProfile;
-}): DecisionTypeDefinition {
+}): DecisionPolicyProfile {
 	return {
 		id: input.id,
 		description: input.description,
-		decisionKind: input.decisionKind,
+		kind: input.kind,
 		routing: input.routing,
 		pipelineProfile: input.routing,
 		loopQualityProfile: input.loopQualityProfile || normalQualityProfile,
@@ -186,12 +188,12 @@ function definition(input: {
 	};
 }
 
-export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
+export const BUILT_IN_DECISION_POLICY_PROFILES: DecisionPolicyProfile[] = [
 	definition({
 		id: "debug",
 		description:
 			"Investigate a scoped failure or uncertainty with probes and a stop condition.",
-		decisionKind: "debug",
+		kind: "debug",
 		routing: pipelineProfile({
 			id: "pipeline.debug",
 			allowedRouteTargets: ["planning", "implementation"],
@@ -205,7 +207,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 	definition({
 		id: "fix",
 		description: "Repair a reproducible defect with regression coverage.",
-		decisionKind: "fix",
+		kind: "fix",
 		routing: pipelineProfile({
 			id: "pipeline.fix",
 			allowedRouteTargets: ["planning", "implementation"],
@@ -225,7 +227,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "harden",
 		description:
 			"Strengthen safety boundaries, failure modes, and negative coverage.",
-		decisionKind: "harden",
+		kind: "harden",
 		routing: pipelineProfile({ id: "pipeline.harden" }),
 		evidencePolicy: evidencePolicy({
 			id: "evidence.harden",
@@ -250,7 +252,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "improve",
 		description:
 			"Improve product or system behavior with clear user value and non-goals.",
-		decisionKind: "improve",
+		kind: "improve",
 		routing: pipelineProfile({
 			id: "pipeline.improve",
 			allowedRouteTargets: ["planning", "implementation"],
@@ -262,7 +264,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "migrate",
 		description:
 			"Move behavior or data while preserving invariants and rollback safety.",
-		decisionKind: "migrate",
+		kind: "migrate",
 		routing: pipelineProfile({ id: "pipeline.migrate" }),
 		evidencePolicy: evidencePolicy({
 			id: "evidence.migrate",
@@ -278,7 +280,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "docs",
 		description:
 			"Change documentation or knowledge without broad behavior changes.",
-		decisionKind: "docs",
+		kind: "docs",
 		routing: pipelineProfile({
 			id: "pipeline.docs",
 			allowedRouteTargets: ["planning", "implementation"],
@@ -293,7 +295,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "release",
 		description:
 			"Publish or externally expose a package, artifact, or irreversible change.",
-		decisionKind: "release",
+		kind: "release",
 		routing: pipelineProfile({
 			id: "pipeline.release",
 			maxDirectImplementationRisk: "high",
@@ -320,7 +322,7 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 		id: "direct_implementation",
 		description:
 			"A low-risk scoped change that may skip Planning only when explicit validation and path scope are present.",
-		decisionKind: "direct_implementation",
+		kind: "direct_implementation",
 		routing: pipelineProfile({
 			id: "pipeline.direct_implementation",
 			defaultRouteTarget: "implementation",
@@ -338,8 +340,8 @@ export const BUILT_IN_DECISION_TYPE_DEFINITIONS: DecisionTypeDefinition[] = [
 	}),
 ];
 
-export function builtInDecisionTypeDefinitions(): DecisionTypeDefinition[] {
-	return BUILT_IN_DECISION_TYPE_DEFINITIONS.map((definition) => ({
+export function builtInDecisionPolicyProfiles(): DecisionPolicyProfile[] {
+	return BUILT_IN_DECISION_POLICY_PROFILES.map((definition) => ({
 		...definition,
 		routing: { ...definition.routing },
 		pipelineProfile: { ...definition.pipelineProfile },
@@ -357,26 +359,26 @@ export function builtInDecisionTypeDefinitions(): DecisionTypeDefinition[] {
 	}));
 }
 
-export function decisionTypeDefinitionById(
+export function decisionPolicyProfileById(
 	id: string,
-	definitions: DecisionTypeDefinition[] = BUILT_IN_DECISION_TYPE_DEFINITIONS,
-): DecisionTypeDefinition | undefined {
-	const normalized = normalizeDecisionTypeId(id);
+	definitions: DecisionPolicyProfile[] = BUILT_IN_DECISION_POLICY_PROFILES,
+): DecisionPolicyProfile | undefined {
+	const normalized = normalizeDecisionPolicyProfileId(id);
 	return definitions.find((definition) => definition.id === normalized);
 }
 
-export function validateDecisionTypeDefinitions(
-	definitions: DecisionTypeDefinition[] = BUILT_IN_DECISION_TYPE_DEFINITIONS,
-): DecisionTypeRegistryValidationIssue[] {
-	const issues: DecisionTypeRegistryValidationIssue[] = [];
+export function validateDecisionPolicyProfiles(
+	definitions: DecisionPolicyProfile[] = BUILT_IN_DECISION_POLICY_PROFILES,
+): DecisionPolicyRegistryValidationIssue[] {
+	const issues: DecisionPolicyRegistryValidationIssue[] = [];
 	const seen = new Set<string>();
 	for (const definition of definitions) {
-		const id = normalizeDecisionTypeId(definition.id);
+		const id = normalizeDecisionPolicyProfileId(definition.id);
 		if (seen.has(id)) {
 			issues.push({
-				code: "duplicate_decision_type",
+				code: "duplicate_policy_profile",
 				id,
-				message: `Decision type ${id} is registered more than once.`,
+				message: `Policy profile ${id} is registered more than once.`,
 			});
 		}
 		seen.add(id);
@@ -384,14 +386,14 @@ export function validateDecisionTypeDefinitions(
 			issues.push({
 				code: "missing_profile",
 				id,
-				message: `Decision type ${id} must define pipeline and evidence profiles.`,
+				message: `Policy profile ${id} must define pipeline and evidence profiles.`,
 			});
 		}
 	}
 	return issues;
 }
 
-export function normalizeDecisionTypeId(value: unknown): string {
+export function normalizeDecisionPolicyProfileId(value: unknown): string {
 	return String(value || "")
 		.trim()
 		.replace(/-/g, "_");

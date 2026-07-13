@@ -16,8 +16,8 @@ export * from "./wiki-runtime.ts";
 export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
 export type { SourceLayout } from "../index.ts";
 export type {
+	ApprovedChangePolicyProfile,
 	CurrentStatePacket,
-	ApprovedChangeTypeProfile,
 	DecisionChange,
 	SprintProposal,
 	SprintProposalInput,

@@ -82,14 +82,14 @@ function sprintProposalInput(createdAt) {
 		changes: [
 			{
 				id: "CHG-project-local-install-smoke",
-				decisionKind: "harden",
+				kind: "harden",
 				currentState: "Mutation guards require project-local package installs.",
 				desiredState:
 					"A package under the project's .pi/npm tree can bootstrap and append without override.",
 				rationale:
 					"This proves normal local installation works without controlled-test bypasses.",
 				...decisionQualityFields({
-					decisionKind: "harden",
+					kind: "harden",
 					safetyBoundary:
 						"Only project-local package installs may mutate without an explicit controlled-test override.",
 					failureModes: [

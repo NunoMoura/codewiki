@@ -1,18 +1,13 @@
 import type { AcceptedChangeBundle } from "../changes/accepted-bundle.ts";
+import type { ChangeScope } from "../changes/types.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type {
 	AcceptanceCriterion,
 	AcceptanceCriterionInput,
 } from "../planning/types.ts";
 import type { ImplementationMode, LoopRouteKind } from "../traces/types.ts";
-import type { DecisionEvidencePolicy } from "./type-definitions.ts";
+import type { DecisionEvidencePolicy } from "./policy-profiles.ts";
 
-export const CHANGE_TYPE_VALUES = [
-	"product",
-	"system",
-	"task",
-	"code",
-] as const;
 export const TRACEABILITY_EXEMPTION_VALUES = [
 	"generated",
 	"runtime",
@@ -25,7 +20,7 @@ export const DECISION_APPROVAL_STATUS_VALUES = [
 	"deferred",
 	"edited",
 ] as const;
-export const DECISION_KIND_VALUES = [
+export const DECISION_INTENT_KIND_VALUES = [
 	"debug",
 	"fix",
 	"harden",
@@ -68,12 +63,11 @@ export const DECISION_AGENT_STANCE_VALUES = [
 	"needs_clarification",
 ] as const;
 
-export type ChangeType = (typeof CHANGE_TYPE_VALUES)[number];
 export type TraceabilityExemption =
 	(typeof TRACEABILITY_EXEMPTION_VALUES)[number];
 export type DecisionApprovalStatus =
 	(typeof DECISION_APPROVAL_STATUS_VALUES)[number];
-export type DecisionKind = (typeof DECISION_KIND_VALUES)[number];
+export type DecisionIntentKind = (typeof DECISION_INTENT_KIND_VALUES)[number];
 export type DecisionRecommendation =
 	(typeof DECISION_RECOMMENDATION_VALUES)[number];
 export type DecisionEffort = (typeof DECISION_EFFORT_VALUES)[number];
@@ -107,11 +101,8 @@ export interface DecisionAgentAssessment {
 export interface DecisionDirectImplementationScopeInput {
 	acceptance?: string[];
 	acceptanceCriteria?: AcceptanceCriterionInput[];
-	acceptance_criteria?: AcceptanceCriterionInput[];
 	componentRefs?: string[];
-	component_refs?: string[];
 	pathScopes?: string[];
-	path_scopes?: string[];
 	verification?: string[];
 }
 
@@ -126,9 +117,8 @@ export interface DecisionDirectImplementationScope {
 export interface DecisionChangeInput {
 	id?: string;
 	question?: string;
-	decisionKind?: DecisionKind | string;
-	decisionType?: string;
-	decision_type?: string;
+	kind?: DecisionIntentKind | string;
+	policyProfileId?: string;
 	currentState?: string;
 	desiredState?: string;
 	rationale?: string;
@@ -136,25 +126,12 @@ export interface DecisionChangeInput {
 	maintainerImpact?: string;
 	effort?: DecisionEffort | string;
 	workScale?: DecisionWorkScale | string;
-	work_scale?: DecisionWorkScale | string;
 	planningDepth?: DecisionPlanningDepth | string;
-	planning_depth?: DecisionPlanningDepth | string;
 	routeTarget?: DecisionRouteTarget | string;
-	route_target?: DecisionRouteTarget | string;
-	nextLoop?: DecisionRouteTarget | string;
-	next_loop?: DecisionRouteTarget | string;
-	nextRoute?: DecisionRouteTarget | string;
-	next_route?: DecisionRouteTarget | string;
 	routeKind?: LoopRouteKind | string;
-	route_kind?: LoopRouteKind | string;
 	routeRationale?: string;
-	route_rationale?: string;
 	implementationMode?: ImplementationMode | string;
-	implementation_mode?: ImplementationMode | string;
-	testPolicy?: ImplementationMode | string;
-	test_policy?: ImplementationMode | string;
 	directImplementationScope?: DecisionDirectImplementationScopeInput;
-	direct_implementation_scope?: DecisionDirectImplementationScopeInput;
 	affectedLayers?: string[];
 	risk?: DecisionRisk;
 	approval?: DecisionApprovalStatus | string;
@@ -166,7 +143,7 @@ export interface DecisionChangeInput {
 	alternatives?: string[];
 	sourceRefs?: string[];
 	proofRefs?: string[];
-	changeType?: ChangeType | string;
+	scope?: ChangeScope;
 	traceabilityExemption?: TraceabilityExemption | string;
 	noKbImpactReason?: string;
 	targetRefs?: string[];
@@ -196,8 +173,8 @@ export interface DecisionChangeInput {
 export interface DecisionChange {
 	id: string;
 	question: string;
-	decisionKind: DecisionKind | string;
-	decisionType: string;
+	kind: DecisionIntentKind | string;
+	policyProfileId: string;
 	currentState: string;
 	desiredState: string;
 	rationale: string;
@@ -222,7 +199,7 @@ export interface DecisionChange {
 	alternatives: string[];
 	sourceRefs: string[];
 	proofRefs: string[];
-	changeType: ChangeType | string;
+	scope: ChangeScope;
 	traceabilityExemption?: TraceabilityExemption | string;
 	noKbImpactReason?: string;
 	targetRefs: string[];
@@ -283,9 +260,9 @@ export interface CurrentStatePacket {
 	contentProof?: ContentProof;
 }
 
-export interface ApprovedChangeTypeProfile {
+export interface ApprovedChangePolicyProfile {
 	changeId: string;
-	decisionType: string;
+	policyProfileId: string;
 	pipelineProfileId: string;
 	loopQualityProfileId: string;
 	evidencePolicy: DecisionEvidencePolicy;
@@ -308,7 +285,7 @@ export interface DecisionOutput {
 	summary: string;
 	approvedChangeIds: string[];
 	requirementIds: string[];
-	decisionTypeProfiles?: ApprovedChangeTypeProfile[];
+	policyProfiles?: ApprovedChangePolicyProfile[];
 	knowledgeDelta: KnowledgeDelta;
 	currentStatePacket: CurrentStatePacket;
 	refs: string[];
