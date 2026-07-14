@@ -317,6 +317,24 @@ describe("trace host supervisor", () => {
 		assert.match(snapshot.result.summary, /usage telemetry was missing/);
 	});
 
+	it("preserves process failure when usage telemetry is unavailable", async () => {
+		const result = {
+			version: 1,
+			outcome: "failed",
+			summary: "Trace host process ended unsuccessfully.",
+			refs: [],
+		};
+		const supervisor = new TraceHostSupervisor({ maxCostUsd: 1 });
+		const controlled = controlledFactory({ result });
+		await supervisor.start(sessionInput(), controlled.factory);
+		controlled.controls.get("TRACE-supervised").finish();
+
+		const snapshot = (
+			await supervisor.reconcile({ supervisionAttached: true })
+		)[0];
+		assert.deepEqual(snapshot.result, result);
+	});
+
 	it("fails closed when process monitoring breaks", async () => {
 		const supervisor = new TraceHostSupervisor();
 		const controlled = controlledFactory({ monitorError: true });

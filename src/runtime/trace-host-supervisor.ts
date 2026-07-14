@@ -325,6 +325,9 @@ function enforceCompletionBudgets(
 ): TraceHostResult | undefined {
 	if (maxTokens === undefined && maxCostUsd === undefined) return result;
 	if (!result) return result;
+	if (result.outcome !== "completed" && result.outcome !== "needs_approval") {
+		return result;
+	}
 	const reasons: string[] = [];
 	if (!result.usage) {
 		reasons.push("usage telemetry was missing");
