@@ -133,6 +133,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Added bounded model-visible focused `wiki_state` data and a direct closure sequence so Trace Hosts receive closability and append guards without reconstructing state through repository searches.
 - Added guarded `traceId`-based archive close resolution and closure-host guidance so agents no longer consume entire raw trace files before calling `wiki_archive`.
 - Reported the exact elapsed-time, latency, route-timeout, token, or monetary limit that stopped a supervised Trace Host instead of labeling every budget stop as elapsed-time exhaustion.
 - Allowed the documented ignored `.codewiki/runtime/tmp/**` operational root in readiness checks without treating it as active workflow truth or permitting other runtime roots.

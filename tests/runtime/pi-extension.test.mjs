@@ -39,6 +39,14 @@ function toolByName(pi, name) {
 	return pi.tools.find((candidate) => candidate.name === name);
 }
 
+async function readJsonFile(path) {
+	try {
+		return JSON.parse(await readFile(path, "utf8"));
+	} catch (error) {
+		throw new Error(`Could not parse JSON file ${path}.`, { cause: error });
+	}
+}
+
 function mockPi(options = {}) {
 	const tools = [];
 	const commands = [];
@@ -262,7 +270,7 @@ describe("Pi extension adapter", () => {
 			assert.equal(toolByName(pi, name).renderCall, undefined);
 			assert.equal(toolByName(pi, name).renderResult, undefined);
 		}
-		const packageJson = JSON.parse(await readFile("package.json", "utf8"));
+		const packageJson = await readJsonFile("package.json");
 		assert.deepEqual(packageJson.pi, {
 			extensions: ["dist/pi/extension.js"],
 		});
@@ -730,7 +738,7 @@ describe("Pi extension adapter", () => {
 			);
 			assert.equal(written.written, true);
 			assert.equal(written.config.project, "pi-config");
-			const stored = JSON.parse(await readFile(configPath, "utf8"));
+			const stored = await readJsonFile(configPath);
 			assert.equal(stored.project, "pi-config");
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -1175,6 +1183,21 @@ describe("Pi extension adapter", () => {
 			assert.match(result.content[0].text, /active work item/);
 			assert.deepEqual(result.details.result.traceIds, ["TRACE-pi"]);
 			assert.equal(result.details.result.sourceOwners, undefined);
+
+			const focused = await tool.execute(
+				"tool-call-focused",
+				{ view: "summary", traceId: "TRACE-pi" },
+				undefined,
+				undefined,
+				{ cwd: root },
+			);
+			const focusedPayload = JSON.parse(
+				focused.content[0].text.split("\n").at(-1),
+			);
+			assert.equal(focusedPayload.traceId, "TRACE-pi");
+			assert.equal(focusedPayload.trace.traceId, "TRACE-pi");
+			assert.equal(typeof focusedPayload.append.expectedBytes, "number");
+			assert.ok(focused.content[0].text.length < 32_000);
 
 			const board = await tool.execute(
 				"tool-call-board",

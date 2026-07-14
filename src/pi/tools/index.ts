@@ -196,6 +196,7 @@ function wikiStateTool(): CodewikiToolDefinition {
 				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${activeWorkItems} active work item(s), ${reviewBlockers} review blocker(s).`,
 				stateToolPayload(snapshot, view),
 				warning,
+				stateToolModelPayload(snapshot, view),
 			);
 		},
 	};
@@ -544,6 +545,41 @@ function optionalStateView(value: unknown): WikiStateToolView | undefined {
 		: undefined;
 }
 
+function stateToolModelPayload(
+	snapshot: WikiStateSnapshot,
+	view: WikiStateToolView | undefined,
+): unknown {
+	const traceId = snapshot.selectedTraceId;
+	if (traceId) {
+		const trace = snapshot.traceBoard.traces.find(
+			(candidate) => candidate.traceId === traceId,
+		);
+		return {
+			view: view || "all",
+			traceId,
+			trace,
+			append: snapshot.append?.byTrace[traceId],
+			status: snapshot.status
+				? {
+						currentLoop: snapshot.status.currentLoop,
+						readyForClosure: snapshot.status.readyForClosure,
+						blockers: snapshot.status.blockers,
+						qualityBlockers: snapshot.status.qualityBlockers,
+					}
+				: undefined,
+			next: snapshot.next,
+		};
+	}
+	return {
+		view: view || "all",
+		traceCount: snapshot.traceIds.length,
+		traceSummary: snapshot.traceBoard.summary,
+		workQueueSummary: snapshot.workQueue.summary,
+		reviewBlockerCount: snapshot.reviewEvidence?.blockers.length || 0,
+		next: snapshot.next,
+	};
+}
+
 function stateToolPayload(
 	snapshot: WikiStateSnapshot,
 	view: WikiStateToolView | undefined,
@@ -606,9 +642,19 @@ function toolResult(
 	message: string,
 	result: unknown,
 	warning?: string,
+	modelPayload?: unknown,
 ): CodewikiToolResult {
+	const payloadText =
+		modelPayload === undefined ? undefined : JSON.stringify(modelPayload);
+	let modelText = message;
+	if (payloadText !== undefined) {
+		modelText =
+			payloadText.length <= 32_000
+				? `${message}\n${payloadText}`
+				: `${message}\n${JSON.stringify({ truncated: true })}`;
+	}
 	return {
-		content: [{ type: "text", text: message }],
+		content: [{ type: "text", text: modelText }],
 		details: { result, ...(warning ? { warnings: [warning] } : {}) },
 	};
 }

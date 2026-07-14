@@ -97,8 +97,9 @@ describe("trace host dispatcher", () => {
 			"close",
 			Array.from({ length: 30 }, (_, index) => `trace:ref:${index}`),
 		);
-		assert.match(prompt, /wiki_archive close with traceId/);
-		assert.match(prompt, /do not read raw trace JSONL/);
+		assert.match(prompt, /Closure sequence/);
+		assert.match(prompt, /action close, mode append, traceId/);
+		assert.match(prompt, /Do not inspect source, docs, or raw trace JSONL/);
 		assert.match(prompt, /Stop and report a blocker/);
 		assert.equal(prompt.includes("trace:ref:20"), false);
 	});

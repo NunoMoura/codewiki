@@ -176,7 +176,7 @@ export function traceHostPrompt(
 ): string {
 	const action =
 		target === "close"
-			? "Review closure evidence through wiki_state, then call wiki_archive close with traceId and append guards only when complete. The facade resolves trace records internally; do not read raw trace JSONL."
+			? "Closure sequence: call wiki_state once with this traceId and view summary; if trace.closable is true, use its append expectedBytes, obtain the current Git commit as gitRestoreRef, and call wiki_archive once with action close, mode append, traceId, expectedBytes, and gitRestoreRef. Do not inspect source, docs, or raw trace JSONL."
 			: `Run the ${target} loop for this trace through its guarded CodeWiki facade.`;
 	const referenceLines = boundedRefs(refs).map((ref) => `- ${ref}`);
 	return [

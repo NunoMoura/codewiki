@@ -91,7 +91,7 @@ There is no standalone current tool for split output generation or split exit ev
 The core reduced-tool facade shape now exists for the current tool set:
 
 - `runWikiChange()` queries or mutates canonical Change records through the Git-backed Change Store under `refs/codewiki/changes`, with bounded inputs, deduplication, secret rejection, and exact head/revision guards.
-- `buildWikiState()` derives view-shaped state projections from active trace records only.
+- `buildWikiState()` derives view-shaped state projections from active trace records only. The Pi `wiki_state` adapter exposes a bounded model-visible projection for the selected trace, append guard, closure status, blockers, and next action while retaining larger UI details outside model content.
 - `runWikiDecide()` consumes exact validated Change snapshots, runs Decision output and exit conditions, records route metadata, then creates or appends the checked Decision iteration through the runtime-owned trace boundary.
 - `runWikiPlan()` runs planning output and exit conditions, routes clarification/user-validation needs back to Decision, then previews or appends the checked planning iteration batch through the runtime-owned trace append boundary.
 - `runWikiImplement()` prepares repository snapshot data and merged working-tree/content proof, accepts exited planning output or direct implementation decision events, runs implementation output and exit conditions, then previews or appends the checked implementation iteration batch through the runtime-owned trace append boundary.
