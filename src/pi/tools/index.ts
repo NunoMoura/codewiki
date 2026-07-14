@@ -16,6 +16,10 @@ import {
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
+import {
+	intakeChangeFeedback,
+	type IntakeChangeFeedbackResult,
+} from "../../changes/intake.ts";
 import { buildChangeValidationCard } from "../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
@@ -294,6 +298,7 @@ function wikiChangeTool(): CodewikiToolDefinition {
 			"Use the Changes Backlog to capture and refine out-of-scope Changes without widening the active Task.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
+			"Use operation intake only for bounded user, runtime, or lab feedback; it creates or reinforces pending unvalidated Changes.",
 			"wiki_change cannot accept Changes, create Sprint Traces or Tasks, launch workers, edit source, publish, or advance controllers.",
 			"Mutations require exact Changes Backlog head and record revision guards; list, get, and validate are read-only.",
 		],
@@ -322,18 +327,13 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				"input",
 			]);
 			assertOptionalBoolean("wiki_change", args, "allowNonProjectInstall");
-			const input = requiredInput<RunWikiChangeInput>(
-				"wiki_change",
-				args.input,
-			);
+			const input = requiredInput<RunWikiChangeInput & {
+				feedback?: unknown;
+			}>("wiki_change", args.input);
 			const root = await requireCodewikiRoot(ctx);
-			const prepared = withRepoRoot(
-				input,
-				root,
-			) as unknown as RunWikiChangeInput;
-			const mutates = wikiChangeOperationMutates(
-				String(prepared.operation || ""),
-			);
+			const operation = String(input.operation || "");
+			const mutates =
+				operation === "intake" || wikiChangeOperationMutates(operation);
 			if (mutates) {
 				assertProjectLocalMutationAllowed({
 					toolName: "wiki_change",
@@ -345,6 +345,23 @@ function wikiChangeTool(): CodewikiToolDefinition {
 					},
 				});
 			}
+			if (operation === "intake") {
+				const result = await intakeChangeFeedback({
+					repoRoot: root,
+					expectedHead: input.expectedHead as string | null,
+					feedback: input.feedback,
+				});
+				return toolResult(
+					`wiki_change: completed ${result.action} feedback intake.`,
+					result,
+					undefined,
+					wikiChangeIntakeModelPayload(result),
+				);
+			}
+			const prepared = withRepoRoot(
+				input,
+				root,
+			) as unknown as RunWikiChangeInput;
 			const result = await runWikiChange(prepared);
 			return toolResult(
 				`wiki_change: completed ${result.operation} operation.`,
@@ -353,6 +370,19 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				wikiChangeModelPayload(result),
 			);
 		},
+	};
+}
+
+function wikiChangeIntakeModelPayload(
+	result: IntakeChangeFeedbackResult,
+): unknown {
+	const changeCard = buildChangeValidationCard(result.record);
+	return {
+		action: result.action,
+		head: result.head,
+		match: result.match,
+		receipt: result.receipt,
+		lines: renderPiChangeValidationCard(changeCard),
 	};
 }
 
