@@ -1,4 +1,5 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
@@ -41,8 +42,21 @@ export async function writeWikiConfigFile(
 ): Promise<void> {
 	const resolved = resolveWikiConfig(config);
 	const path = configPath(repoRoot);
+	const temporaryPath = `${path}.tmp-${process.pid}-${randomUUID()}`;
 	await mkdir(dirname(path), { recursive: true });
-	await writeFile(path, `${JSON.stringify(resolved, null, "\t")}\n`, "utf8");
+	try {
+		await writeFile(
+			temporaryPath,
+			`${JSON.stringify(resolved, null, "\t")}\n`,
+			{
+				encoding: "utf8",
+				mode: 0o600,
+			},
+		);
+		await rename(temporaryPath, path);
+	} finally {
+		await rm(temporaryPath, { force: true });
+	}
 }
 
 export async function updateWikiConfigFile(

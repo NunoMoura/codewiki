@@ -27,7 +27,11 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /function executeTraceHostCommand/);
 		assert.match(script, /function renderChanges/);
 		assert.match(script, /function executeChangeCommand/);
+		assert.match(script, /function renderConfiguration/);
+		assert.match(script, /function executeConfigCommand/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Changes Backlog/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Execution configuration/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Apply bounded patch/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Current state/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Proposed change/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Agent opinion/);

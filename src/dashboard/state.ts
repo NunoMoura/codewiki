@@ -12,6 +12,7 @@ import type { TraceEvent, TraceLoop, TraceRecord } from "../traces/types.ts";
 import { qualityIterationsFromTrace } from "../views/quality.ts";
 import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
 import type { DashboardChangesState } from "./changes-state.ts";
+import type { DashboardConfigState } from "./config-state.ts";
 import {
 	projectDevLog,
 	type DashboardDevLogProjection,
@@ -210,12 +211,14 @@ export interface CodewikiDashboardState {
 	next: WikiStateSnapshot["next"];
 	sprintsQueue: CodewikiSprintTrace[];
 	changes?: DashboardChangesState;
+	configuration?: DashboardConfigState;
 }
 
 export interface CodewikiDashboardProjectionContext {
 	workerObservations?: WorkerObservation[];
 	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
 	changes?: DashboardChangesState;
+	configuration?: DashboardConfigState;
 }
 
 export function buildCodewikiDashboardState(
@@ -251,6 +254,7 @@ export function buildCodewikiDashboardState(
 		next: snapshot.next,
 		sprintsQueue,
 		...(context.changes ? { changes: context.changes } : {}),
+		...(context.configuration ? { configuration: context.configuration } : {}),
 	};
 }
 

@@ -39,6 +39,10 @@ import {
 	type DashboardChangeControl,
 } from "./change-control.ts";
 import {
+	createDefaultDashboardConfigControl,
+	type DashboardConfigControl,
+} from "./config-control.ts";
+import {
 	type DashboardTraceHostControl,
 	DashboardTraceHostControlError,
 } from "./trace-host-control.ts";
@@ -60,6 +64,7 @@ export interface CodewikiDashboardServerOptions {
 	inProcess?: boolean;
 	traceHostControl?: DashboardTraceHostControl;
 	changeControl?: DashboardChangeControl;
+	configControl?: DashboardConfigControl;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -83,6 +88,7 @@ interface DashboardRuntime {
 	traceHostTimer?: NodeJS.Timeout;
 	traceHostControl: DashboardTraceHostControl;
 	changeControl: DashboardChangeControl;
+	configControl: DashboardConfigControl;
 	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
@@ -424,6 +430,7 @@ async function startInProcessDashboardServer(
 		options.keepAlive ?? false,
 		options.traceHostControl,
 		options.changeControl,
+		options.configControl,
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -612,6 +619,7 @@ async function createDashboardRuntime(
 	keepAlive = false,
 	providedTraceHostControl?: DashboardTraceHostControl,
 	providedChangeControl?: DashboardChangeControl,
+	providedConfigControl?: DashboardConfigControl,
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -639,6 +647,9 @@ async function createDashboardRuntime(
 	const changeControl =
 		providedChangeControl ||
 		createDashboardChangeControl({ repoRoot, actor: dashboardActor });
+	const configControl =
+		providedConfigControl ||
+		(await createDefaultDashboardConfigControl(repoRoot));
 	runtime = {
 		repoRoot,
 		server,
@@ -648,6 +659,7 @@ async function createDashboardRuntime(
 		clients,
 		traceHostControl,
 		changeControl,
+		configControl,
 		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -736,6 +748,10 @@ async function routeAuthorizedGet(
 		writeJson(response, 200, await runtime.changeControl.status());
 		return true;
 	}
+	if (url.pathname === "/api/configuration") {
+		writeJson(response, 200, await runtime.configControl.status());
+		return true;
+	}
 	if (url.pathname === "/api/trace-hosts") {
 		runtime.lastSupervisedAt = Date.now();
 		writeJson(response, 200, await runtime.traceHostControl.status());
@@ -769,7 +785,8 @@ async function routeAuthorizedPost(
 ): Promise<boolean> {
 	if (
 		url.pathname !== "/api/trace-hosts/commands" &&
-		url.pathname !== "/api/changes/commands"
+		url.pathname !== "/api/changes/commands" &&
+		url.pathname !== "/api/configuration/commands"
 	) {
 		return false;
 	}
@@ -777,6 +794,11 @@ async function routeAuthorizedPost(
 	const command = await readJsonRequest(request);
 	if (url.pathname === "/api/changes/commands") {
 		writeJson(response, 200, await runtime.changeControl.execute(command));
+		scheduleBroadcast(runtime);
+		return true;
+	}
+	if (url.pathname === "/api/configuration/commands") {
+		writeJson(response, 200, await runtime.configControl.execute(command));
 		scheduleBroadcast(runtime);
 		return true;
 	}
@@ -870,6 +892,7 @@ async function readDashboardState(
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
 		changes: await runtime.changeControl.status(),
+		configuration: await runtime.configControl.status(),
 	});
 }
 

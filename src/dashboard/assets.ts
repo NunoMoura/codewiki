@@ -202,6 +202,9 @@ button { color: inherit; }
 .change-identity, .change-authority { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .change-actions, .changes-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .changes-toolbar { justify-content: space-between; }
+.configuration-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 12px; display: grid; gap: 10px; }
+.configuration-panel pre { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #050505; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px; }
+.configuration-status { color: var(--muted); white-space: pre-wrap; }
 [hidden] { display: none !important; }
 .trace-list {
 	max-width: 100%;
@@ -606,7 +609,7 @@ button { color: inherit; }
 				<div class="brand-copy"><img class="codewiki-logo" src="${CODEWIKI_LOGO_DATA_URI}" alt="CodeWiki" width="517" height="338" /><div class="repo-label">Repo: <span id="project" class="project">codewiki</span></div></div>
 			</div>
 			<div class="header-dashboard">
-				<div class="view-switch" aria-label="Dashboard section"><button id="view-traces" type="button" class="active">Sprints Queue</button><button id="view-changes" type="button">Changes Backlog</button></div>
+				<div class="view-switch" aria-label="Dashboard section"><button id="view-traces" type="button" class="active">Sprints Queue</button><button id="view-changes" type="button">Changes Backlog</button><button id="view-configuration" type="button">Configuration</button></div>
 				<div class="header-controls" id="summary"></div>
 				<div class="search-wrap"><input id="search" aria-label="Filter traces" placeholder="filter traces…" /></div>
 			</div>
@@ -614,6 +617,7 @@ button { color: inherit; }
 		<main class="queue-shell">
 			<div class="trace-list" id="queue"><div class="load-state">Loading CodeWiki pipeline state…</div></div>
 			<div class="change-list" id="changes" hidden><div class="load-state">Loading Changes Backlog…</div></div>
+			<div class="configuration-panel" id="configuration" hidden><div class="load-state">Loading execution configuration…</div></div>
 			<div class="footer-help">j/k move · enter expand · / search · r refresh · generated <span id="clock">loading…</span> · <span id="status">connecting</span></div>
 		</main>
 	</div>
@@ -640,9 +644,11 @@ const els = {
 	summary: document.getElementById('summary'),
 	queue: document.getElementById('queue'),
 	changes: document.getElementById('changes'),
+	configuration: document.getElementById('configuration'),
 	search: document.getElementById('search'),
 	viewTraces: document.getElementById('view-traces'),
 	viewChanges: document.getElementById('view-changes'),
+	viewConfiguration: document.getElementById('view-configuration'),
 };
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
 function filtered() {
@@ -686,18 +692,28 @@ function render() {
 	text(els.status, 'live');
 	els.queue.hidden = dashboardView !== 'traces';
 	els.changes.hidden = dashboardView !== 'changes';
+	els.configuration.hidden = dashboardView !== 'configuration';
 	els.viewTraces.className = dashboardView === 'traces' ? 'active' : '';
 	els.viewChanges.className = dashboardView === 'changes' ? 'active' : '';
+	els.viewConfiguration.className = dashboardView === 'configuration' ? 'active' : '';
+	els.search.hidden = dashboardView === 'configuration';
 	els.search.placeholder = dashboardView === 'traces' ? 'filter traces…' : 'filter changes…';
 	els.search.setAttribute('aria-label', dashboardView === 'traces' ? 'Filter traces' : 'Filter changes');
 	renderSummary();
 	if (dashboardView === 'traces') renderQueue(traces);
-	else renderChanges(filteredChanges());
+	else if (dashboardView === 'changes') renderChanges(filteredChanges());
+	else renderConfiguration();
 }
 function renderSummary() {
 	els.summary.innerHTML = '';
 	const changesSummary = state.changes && state.changes.summary;
-	const stats = dashboardView === 'changes' && changesSummary ? [
+	const configuration = state.configuration;
+	const stats = dashboardView === 'configuration' && configuration ? [
+		['restart', configuration.restartRequired ? 1 : 0],
+		['workers', configuration.editable.runtime.maxWorkers],
+		['automation', configuration.editable.runtime.automation],
+		['agency', configuration.editable.runtime.agency],
+	] : dashboardView === 'changes' && changesSummary ? [
 		['pending', changesSummary.pending],
 		['valid', changesSummary.valid],
 		['accepted', changesSummary.accepted],
@@ -837,6 +853,46 @@ async function executeChangeCommand(action, card) {
 		const result = await response.json();
 		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
 		state.changes = result.state;
+		text(els.status, 'completed · ' + result.receipt.receiptId);
+		render();
+	} catch (error) {
+		text(els.status, 'rejected · ' + (error && error.message ? error.message : String(error)));
+		await load();
+	}
+}
+function renderConfiguration() {
+	els.configuration.innerHTML = '';
+	const configuration = state && state.configuration;
+	if (!configuration) { const empty = document.createElement('div'); empty.className = 'empty'; text(empty, 'Execution configuration is unavailable.'); els.configuration.append(empty); return; }
+	const heading = document.createElement('h3'); text(heading, 'Execution configuration');
+	const status = document.createElement('div'); status.className = 'configuration-status';
+	text(status, 'Source: ' + configuration.sourcePath + '\nDigest: ' + configuration.configDigest + '\nValidation: ' + configuration.validation + '\n' + configuration.restartGuidance);
+	const content = document.createElement('pre'); text(content, JSON.stringify(configuration.editable, null, 2));
+	const apply = changeActionButton('Apply bounded patch', executeConfigCommand);
+	const note = document.createElement('div'); note.className = 'change-authority'; text(note, 'Editable: worker limit, worktree isolation, automation, agency, budgets, model routing, and Pi host enablement. Approval, stop-condition, credential, publication, controller, and semantic authority settings are forbidden.');
+	els.configuration.append(heading, status, content, apply, note);
+}
+async function executeConfigCommand() {
+	const configuration = state && state.configuration;
+	if (!configuration) return;
+	const raw = window.prompt('Paste a bounded execution configuration patch JSON.');
+	if (!raw) return;
+	let patch;
+	try { patch = JSON.parse(raw); } catch { text(els.status, 'invalid configuration JSON'); return; }
+	const command = {
+		commandId: 'dashboard-config-' + crypto.randomUUID(),
+		expectedStateDigest: configuration.stateDigest,
+		expectedConfigDigest: configuration.configDigest,
+		patch: patch,
+	};
+	text(els.status, 'configuration command pending');
+	try {
+		const response = await fetch('/api/configuration/commands?token=' + encodeURIComponent(token), {
+			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command),
+		});
+		const result = await response.json();
+		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
+		state.configuration = result.state;
 		text(els.status, 'completed · ' + result.receipt.receiptId);
 		render();
 	} catch (error) {
@@ -1474,6 +1530,7 @@ function setDashboardView(nextView) {
 }
 els.viewTraces.addEventListener('click', function() { setDashboardView('traces'); });
 els.viewChanges.addEventListener('click', function() { setDashboardView('changes'); });
+els.viewConfiguration.addEventListener('click', function() { setDashboardView('configuration'); });
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
 document.addEventListener('keydown', function(event) {
 	if (event.target === els.search) {
