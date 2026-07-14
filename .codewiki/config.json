@@ -9,7 +9,7 @@
 		"budgets": {
 			"maxSeconds": 1200,
 			"maxIterations": 1,
-			"maxTokens": 200000,
+			"maxTokens": 500000,
 			"maxCostUsd": 3,
 			"maxLatencyMs": 1200000
 		},
