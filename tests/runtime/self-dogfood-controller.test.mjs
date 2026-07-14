@@ -6,6 +6,16 @@ import {
 	SELF_DOGFOOD_CONTROLLER_SCHEMA,
 } from "../../src/project/self-dogfood-controller.ts";
 
+function readTrackedControllerPin() {
+	try {
+		return JSON.parse(readFileSync(".pi/codewiki-controller.json", "utf8"));
+	} catch (error) {
+		throw new Error("Tracked self-dogfood controller pin is not valid JSON.", {
+			cause: error,
+		});
+	}
+}
+
 function controllerPin() {
 	return {
 		schemaVersion: SELF_DOGFOOD_CONTROLLER_SCHEMA,
@@ -31,20 +41,18 @@ function controllerPin() {
 
 describe("self-dogfood controller pin", () => {
 	it("accepts the tracked reviewed controller pin", () => {
-		const pin = parseSelfDogfoodControllerPin(
-			JSON.parse(readFileSync(".pi/codewiki-controller.json", "utf8")),
-		);
-		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.7");
-		assert.equal(pin.source.commit, "f3955ec3caa09206459e91507fc6622fb1e392cf");
-		assert.equal(pin.source.tree, "120326cceeabbfef3cc542043db083586b741829");
-		assert.equal(pin.package.bytes, 736158);
+		const pin = parseSelfDogfoodControllerPin(readTrackedControllerPin());
+		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.8");
+		assert.equal(pin.source.commit, "0c003d9600a3bae2a1f74dd1200b4186acbbc280");
+		assert.equal(pin.source.tree, "ab95eb9a9c173babbe64d5cea0ec0b3c16e3f877");
+		assert.equal(pin.package.bytes, 736863);
 		assert.equal(
 			pin.package.sha256,
-			"83698ea3fe491bdab6220bbda237809a7897f9ffdff95ccdacaa4cbe09948c2b",
+			"48a07c29b86c759d63745cdab58ed54bac18944e8f588d7ffc5cc2665c342d29",
 		);
 		assert.equal(
 			pin.approval.reviewRef,
-			"chat:2026-07-14-controller-v0.3.7-approved",
+			"chat:2026-07-14-controller-v0.3.8-and-closure-budget-approved",
 		);
 	});
 

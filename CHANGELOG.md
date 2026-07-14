@@ -97,6 +97,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Advanced the reproducible self-dogfood controller to `v0.3.8` at commit `0c003d9`, package SHA-256 `48a07c29b86c759d63745cdab58ed54bac18944e8f588d7ffc5cc2665c342d29`, with guarded trace-id archive closure and exact budget-stop attribution.
 - Advanced the reproducible self-dogfood controller to `v0.3.7` at commit `f3955ec`, package SHA-256 `83698ea3fe491bdab6220bbda237809a7897f9ffdff95ccdacaa4cbe09948c2b`, with corrected startup-failure classification and runtime-temp readiness evidence.
 - Advanced the reproducible self-dogfood controller to `v0.3.6` at commit `f87088c`, package SHA-256 `0b1837165ab04a1433a32e9ae54c4ec06591d88be637169b4abe6440f3eb6b2e`, with reviewed execution-policy routing and accepted-Change shadow evidence.
 - Migrated all production semantic-loop standards to immutable enforcing kernel packs while preserving prior graph ids, versions, node behavior, routes, diagnostics, and hashes through compatibility projections.
