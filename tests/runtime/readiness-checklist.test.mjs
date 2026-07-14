@@ -260,12 +260,14 @@ describe("install readiness checklist", () => {
 	});
 
 	it("keeps the active .codewiki top level in the target shape", () => {
-		assert.deepEqual(readdirSync(".codewiki").sort(), [
-			"config.json",
-			"kb",
-			"traces",
-			"views",
-		]);
+		const entries = readdirSync(".codewiki").sort();
+		assert.deepEqual(
+			entries.filter((entry) => entry !== "runtime"),
+			["config.json", "kb", "traces", "views"],
+		);
+		if (entries.includes("runtime")) {
+			assert.deepEqual(readdirSync(".codewiki/runtime").sort(), ["tmp"]);
+		}
 	});
 
 	it("keeps trace truth in TRACE files without central index files", () => {
