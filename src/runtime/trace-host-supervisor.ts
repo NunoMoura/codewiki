@@ -21,6 +21,12 @@ export type TraceHostStopReason =
 	| "shutdown"
 	| "cancelled";
 
+export interface TraceHostBudgetExhaustion {
+	kind: "elapsed_time" | "latency" | "route_timeout" | "tokens" | "cost";
+	observed: number;
+	limit: number;
+}
+
 export interface TraceHostSupervisorOptions {
 	maxTraceHosts?: number;
 	maxSeconds?: number;
@@ -60,6 +66,7 @@ export interface TraceHostSessionSnapshot {
 	pid?: number;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	budgetExhaustion?: TraceHostBudgetExhaustion;
 	usage?: TraceHostResult["usage"];
 	executionModel?: TraceHostSessionStart["executionModel"];
 	result?: TraceHostResult;
@@ -72,6 +79,7 @@ interface ManagedTraceHostSession {
 	state: TraceHostSessionState;
 	stopReason?: TraceHostStopReason;
 	message?: string;
+	budgetExhaustion?: TraceHostBudgetExhaustion;
 	usage?: TraceHostResult["usage"];
 	result?: TraceHostResult;
 }
@@ -171,7 +179,9 @@ export class TraceHostSupervisor {
 				await stopSession(session, "monitoring_failed");
 				continue;
 			}
-			if (this.#budgetExhausted(session)) {
+			const budgetExhaustion = this.#budgetExhaustion(session);
+			if (budgetExhaustion) {
+				session.budgetExhaustion = budgetExhaustion;
 				await stopSession(session, "budget_exhausted");
 			}
 		}
@@ -216,21 +226,56 @@ export class TraceHostSupervisor {
 			.sort((left, right) => left.traceId.localeCompare(right.traceId));
 	}
 
-	#budgetExhausted(session: ManagedTraceHostSession): boolean {
+	#budgetExhaustion(
+		session: ManagedTraceHostSession,
+	): TraceHostBudgetExhaustion | undefined {
 		const elapsedMs = this.#now() - session.startedAtMs;
-		return (
-			(this.#maxSeconds !== undefined &&
-				elapsedMs >= this.#maxSeconds * 1_000) ||
-			(this.#maxLatencyMs !== undefined && elapsedMs >= this.#maxLatencyMs) ||
-			(session.start.timeoutMs !== undefined &&
-				elapsedMs >= session.start.timeoutMs) ||
-			(this.#maxTokens !== undefined &&
-				session.usage !== undefined &&
-				session.usage.totalTokens >= this.#maxTokens) ||
-			(this.#maxCostUsd !== undefined &&
-				session.usage !== undefined &&
-				session.usage.cost >= this.#maxCostUsd)
-		);
+		if (
+			this.#maxSeconds !== undefined &&
+			elapsedMs >= this.#maxSeconds * 1_000
+		) {
+			return {
+				kind: "elapsed_time",
+				observed: elapsedMs,
+				limit: this.#maxSeconds * 1_000,
+			};
+		}
+		if (this.#maxLatencyMs !== undefined && elapsedMs >= this.#maxLatencyMs) {
+			return { kind: "latency", observed: elapsedMs, limit: this.#maxLatencyMs };
+		}
+		if (
+			session.start.timeoutMs !== undefined &&
+			elapsedMs >= session.start.timeoutMs
+		) {
+			return {
+				kind: "route_timeout",
+				observed: elapsedMs,
+				limit: session.start.timeoutMs,
+			};
+		}
+		if (
+			this.#maxTokens !== undefined &&
+			session.usage !== undefined &&
+			session.usage.totalTokens >= this.#maxTokens
+		) {
+			return {
+				kind: "tokens",
+				observed: session.usage.totalTokens,
+				limit: this.#maxTokens,
+			};
+		}
+		if (
+			this.#maxCostUsd !== undefined &&
+			session.usage !== undefined &&
+			session.usage.cost >= this.#maxCostUsd
+		) {
+			return {
+				kind: "cost",
+				observed: session.usage.cost,
+				limit: this.#maxCostUsd,
+			};
+		}
+		return undefined;
 	}
 }
 
@@ -269,7 +314,11 @@ async function stopSession(
 	try {
 		await session.start.controller.stop(reason);
 		const observed = await collectSessionResult(session);
-		session.result = stoppedSessionResult(reason, observed);
+		session.result = stoppedSessionResult(
+			reason,
+			observed,
+			session.budgetExhaustion,
+		);
 		session.state = "stopped";
 		if (retryingFailedStop) session.message = undefined;
 	} catch (error) {
@@ -291,6 +340,9 @@ function sessionSnapshot(
 		...(session.start.pid ? { pid: session.start.pid } : {}),
 		...(session.stopReason ? { stopReason: session.stopReason } : {}),
 		...(session.message ? { message: session.message } : {}),
+		...(session.budgetExhaustion
+			? { budgetExhaustion: { ...session.budgetExhaustion } }
+			: {}),
 		...(session.usage ? { usage: { ...session.usage } } : {}),
 		...(session.start.executionModel
 			? { executionModel: { ...session.start.executionModel } }
@@ -352,6 +404,7 @@ function enforceCompletionBudgets(
 function stoppedSessionResult(
 	reason: TraceHostStopReason,
 	observed: TraceHostResult | undefined,
+	budgetExhaustion?: TraceHostBudgetExhaustion,
 ): TraceHostResult {
 	const { approval: _approval, ...metadata } = observed || {
 		version: 1 as const,
@@ -363,7 +416,7 @@ function stoppedSessionResult(
 		...metadata,
 		version: 1,
 		outcome: stoppedOutcome(reason),
-		summary: stopReasonSummary(reason),
+		summary: stopReasonSummary(reason, budgetExhaustion),
 		refs: observed?.refs || [],
 	};
 }
@@ -376,18 +429,46 @@ function stoppedOutcome(
 	return "blocked";
 }
 
-function stopReasonSummary(reason: TraceHostStopReason): string {
+function budgetExhaustionSummary(
+	budgetExhaustion: TraceHostBudgetExhaustion | undefined,
+): string {
+	if (!budgetExhaustion) {
+		return "Trace execution stopped after reaching an execution budget.";
+	}
+	const { kind, observed, limit } = budgetExhaustion;
+	switch (kind) {
+		case "elapsed_time":
+			return `Trace execution stopped after reaching its elapsed-time budget (${observed}/${limit} ms).`;
+		case "latency":
+			return `Trace execution stopped after reaching its latency budget (${observed}/${limit} ms).`;
+		case "route_timeout":
+			return `Trace execution stopped after reaching its route timeout (${observed}/${limit} ms).`;
+		case "tokens":
+			return `Trace execution stopped after reaching its token budget (${observed}/${limit} tokens).`;
+		case "cost":
+			return `Trace execution stopped after reaching its monetary budget ($${observed}/$${limit}).`;
+		default:
+			return "Trace execution stopped after reaching an execution budget.";
+	}
+}
+
+function stopReasonSummary(
+	reason: TraceHostStopReason,
+	budgetExhaustion?: TraceHostBudgetExhaustion,
+): string {
 	switch (reason) {
 		case "cancelled":
 			return "Trace execution was cancelled by the user.";
 		case "supervision_lost":
 			return "Trace execution stopped because approved supervision was lost.";
 		case "budget_exhausted":
-			return "Trace execution stopped after reaching its elapsed-time budget.";
+			return budgetExhaustionSummary(budgetExhaustion);
 		case "shutdown":
 			return "Trace execution stopped because its supervisor shut down.";
 		case "monitoring_failed":
 			return "Trace execution stopped because process monitoring failed.";
+		default:
+			return "Trace execution stopped.";
 	}
 }
 

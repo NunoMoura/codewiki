@@ -174,6 +174,12 @@ describe("trace host supervisor", () => {
 		)[0];
 		assert.equal(snapshot.state, "stopped");
 		assert.equal(snapshot.stopReason, "budget_exhausted");
+		assert.deepEqual(snapshot.budgetExhaustion, {
+			kind: "elapsed_time",
+			observed: 10_000,
+			limit: 10_000,
+		});
+		assert.match(snapshot.result.summary, /elapsed-time budget \(10000\/10000 ms\)/);
 	});
 
 	it("enforces millisecond latency budgets", async () => {
@@ -191,6 +197,12 @@ describe("trace host supervisor", () => {
 		)[0];
 		assert.equal(snapshot.state, "stopped");
 		assert.equal(snapshot.stopReason, "budget_exhausted");
+		assert.deepEqual(snapshot.budgetExhaustion, {
+			kind: "latency",
+			observed: 500,
+			limit: 500,
+		});
+		assert.match(snapshot.result.summary, /latency budget \(500\/500 ms\)/);
 	});
 
 	it("stops a running host when live usage reaches an economic limit", async () => {
@@ -220,6 +232,12 @@ describe("trace host supervisor", () => {
 		assert.equal(snapshot.state, "stopped");
 		assert.equal(snapshot.stopReason, "budget_exhausted");
 		assert.equal(snapshot.usage.totalTokens, 1_000);
+		assert.deepEqual(snapshot.budgetExhaustion, {
+			kind: "tokens",
+			observed: 1_000,
+			limit: 1_000,
+		});
+		assert.match(snapshot.result.summary, /token budget \(1000\/1000 tokens\)/);
 		assert.deepEqual(controlled.controls.get("TRACE-supervised").stopReasons, [
 			"budget_exhausted",
 		]);
