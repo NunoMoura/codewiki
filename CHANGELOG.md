@@ -97,6 +97,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Advanced the reproducible self-dogfood controller to `v0.3.6` at commit `f87088c`, package SHA-256 `0b1837165ab04a1433a32e9ae54c4ec06591d88be637169b4abe6440f3eb6b2e`, with reviewed execution-policy routing and accepted-Change shadow evidence.
 - Migrated all production semantic-loop standards to immutable enforcing kernel packs while preserving prior graph ids, versions, node behavior, routes, diagnostics, and hashes through compatibility projections.
 - Migrated all lab candidates to observe-only lab packs and exposed pack identity in graph reports without granting candidates production or controller authority.
 - Hardened the Decision lab candidate with a deterministic specificity standard,
