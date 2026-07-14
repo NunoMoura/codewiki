@@ -11,10 +11,12 @@ import {
 	type RunWikiDecideInput,
 	type RunWikiImplementInput,
 	type RunWikiChangeInput,
+	type RunWikiChangeResult,
 	type RunWikiPlanInput,
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
+import { buildChangeValidationCard } from "../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
@@ -26,6 +28,7 @@ import {
 	projectLocalInstallWarning,
 	stripNonProjectInstallOverride,
 } from "../install-scope.ts";
+import { renderPiChangeValidationCard } from "../rendering/change-validation-card.ts";
 import type {
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
@@ -347,8 +350,28 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				`wiki_change: completed ${result.operation} operation.`,
 				result,
 				mutates ? undefined : notifyInstallWarning(ctx, root),
+				wikiChangeModelPayload(result),
 			);
 		},
+	};
+}
+
+function wikiChangeModelPayload(result: RunWikiChangeResult): unknown {
+	if (!result.record) {
+		return {
+			operation: result.operation,
+			head: result.head,
+			changed: result.changed,
+			recordsCount: result.records?.length,
+			validation: result.validation,
+		};
+	}
+	const changeCard = buildChangeValidationCard(result.record);
+	return {
+		operation: result.operation,
+		head: result.head,
+		changed: result.changed,
+		lines: renderPiChangeValidationCard(changeCard),
 	};
 }
 
