@@ -36,9 +36,9 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
   `.pi/codewiki-controller.json` pin plus
   `npm run self-dogfood:controller:install` can reconstruct the exact reviewed
   tarball from Git history for fresh clones before local installation.
-- Reviewed commit `0c003d9600a3bae2a1f74dd1200b4186acbbc280`, tree
-  `ab95eb9a9c173babbe64d5cea0ec0b3c16e3f877`, and package SHA-256
-  `48a07c29b86c759d63745cdab58ed54bac18944e8f588d7ffc5cc2665c342d29`
+- Reviewed commit `a04aca67919cb6106e95a2a0873fe17960e228a3`, tree
+  `8bace5cfc7af17cc9c10f45006067279bf28e58c`, and package SHA-256
+  `b13f58bb48715af3ef9bb1c60f67da73c3ee0f8c6072a554b505f145c50ae5dd`
   passed the full candidate gate and disposable shadow state/config reads plus
   an accepted-Change Decision preview. Source config and trace digests remained
   unchanged.
