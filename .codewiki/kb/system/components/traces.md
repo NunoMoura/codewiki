@@ -335,7 +335,7 @@ Runtime temp is not truth.
 
 Closed traces can be compacted only after required evidence is committed and no active policy depends on the full hot record. Retention keeps enough hot information to discover the trace and enough Git restore refs to hydrate cold detail on demand.
 
-`wiki_archive` supports retention stubs, trace-close records, hydrate plans, and release-note summaries derived from `trace_close` plus implementation evidence. Close appends a `trace_close` record with expected-byte compare-and-swap. Release notes are derived output, not truth: they summarize close metadata, changed paths, checks, and evidence refs already present in the trace. Hydrate verifies archived records against the retained stub and returns the records and restore refs needed to restore hot detail.
+`wiki_archive` supports retention stubs, trace-close records, hydrate plans, and release-note summaries derived from `trace_close` plus implementation evidence. Close accepts a guarded trace id and resolves its records inside the facade, avoiding raw trace JSONL in agent context or tool arguments. It appends a `trace_close` record with expected-byte compare-and-swap. Release notes are derived output, not truth: they summarize close metadata, changed paths, checks, and evidence refs already present in the trace. Hydrate verifies archived records against the retained stub and returns the records and restore refs needed to restore hot detail.
 
 The retention model avoids separate canonical catalogs. The hot trace file or retained trace stub plus Git history is the catalog. Hydration restores the exact trace records from retained refs when cold detail must become hot again.
 

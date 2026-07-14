@@ -381,7 +381,7 @@ describe("wiki_archive core facade", () => {
 				mode: "append",
 				repoRoot: root,
 				expectedBytes: first.nextBytes,
-				records,
+				traceId: "TRACE-wiki-archive-append",
 				gitRestoreRef: "refs/codewiki/archive/TRACE-wiki-archive-append",
 				createdAt: "2026-06-11T00:00:03.000Z",
 			});

@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import { traceGoalCloseBlockers } from "../views/trace-goals.ts";
 import {
@@ -21,6 +22,8 @@ import {
 	type TraceHydrationPlan,
 	type TraceRetentionStub,
 } from "../traces/retention.ts";
+import { readTraceFile } from "../traces/reader.ts";
+import { traceFilePath } from "../traces/schema.ts";
 import type { TraceClose, TraceRecord } from "../traces/types.ts";
 
 export type WikiArchiveMode = "preview" | "append";
@@ -34,6 +37,7 @@ export interface RunWikiArchiveInput {
 	action?: WikiArchiveAction;
 	mode?: WikiArchiveMode;
 	records?: TraceRecord[];
+	traceId?: string;
 	archivedRecords?: TraceRecord[];
 	stub?: TraceRetentionStub;
 	gitRestoreRef?: string;
@@ -101,7 +105,7 @@ async function closeResult(
 	input: RunWikiArchiveInput,
 	mode: WikiArchiveMode,
 ): Promise<RunWikiArchiveResult> {
-	const records = requiredRecords(input.records);
+	const records = await closeRecords(input);
 	const closeBlockers = traceGoalCloseBlockers(records);
 	if (closeBlockers.length > 0) {
 		throw createCodewikiApiError({
@@ -218,6 +222,20 @@ function assertPreviewOnly(mode: WikiArchiveMode, action: string): void {
 			data: { action, mode },
 		});
 	}
+}
+
+async function closeRecords(input: RunWikiArchiveInput): Promise<TraceRecord[]> {
+	if (input.records) return requiredRecords(input.records);
+	if (!input.traceId) {
+		throw createCodewikiApiError({
+			operation: "wiki_archive",
+			code: "invalid_input",
+			field: "traceId",
+			message: "wiki_archive close requires records or traceId.",
+		});
+	}
+	const repoRoot = requiredRepoRoot(input.repoRoot);
+	return readTraceFile(join(repoRoot, traceFilePath(input.traceId)));
 }
 
 function requiredRecords(records: TraceRecord[] | undefined): TraceRecord[] {

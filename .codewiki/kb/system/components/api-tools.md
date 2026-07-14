@@ -75,7 +75,7 @@ The normal internal agent surface is small and phase-aligned.
 | `wiki_decide` | Consume exact validated Change revisions and digests, render the binding Decision proposal, and create the trace-backed Decision through the guarded runtime append boundary. It does not author mutable Changes. | Yes |
 | `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, triggers, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
-| `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. | Yes |
+| `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. Trace close may take a guarded `traceId` and resolve records internally so agents never need to copy raw trace JSONL into model context or tool arguments. | Yes |
 | `wiki_config` | Read and update CodeWiki configuration for automation, agency, approval, budgets, worktree isolation, retention, skills, and host integration. | Yes |
 
 There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.

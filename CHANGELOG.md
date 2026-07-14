@@ -132,6 +132,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Added guarded `traceId`-based archive close resolution and closure-host guidance so agents no longer consume entire raw trace files before calling `wiki_archive`.
 - Reported the exact elapsed-time, latency, route-timeout, token, or monetary limit that stopped a supervised Trace Host instead of labeling every budget stop as elapsed-time exhaustion.
 - Allowed the documented ignored `.codewiki/runtime/tmp/**` operational root in readiness checks without treating it as active workflow truth or permitting other runtime roots.
 - Preserved authoritative Trace Host process failures when economic budgets are configured instead of masking missing-credential or startup failures as missing-usage budget blockers.
