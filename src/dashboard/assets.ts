@@ -183,6 +183,26 @@ button { color: inherit; }
 	display: grid;
 	gap: 8px;
 }
+.view-switch { display: flex; gap: 6px; justify-content: flex-end; }
+.view-switch button, .change-actions button, .changes-toolbar button {
+	border: 1px solid var(--line);
+	background: var(--panel-2);
+	color: var(--text);
+	border-radius: var(--radius);
+	padding: 6px 9px;
+	cursor: pointer;
+}
+.view-switch button.active { border-color: var(--focus); color: var(--focus); }
+.change-list { display: grid; gap: 8px; }
+.change-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; gap: 10px; background: var(--panel); }
+.change-card header { display: flex; gap: 8px; justify-content: space-between; align-items: start; }
+.change-card h3, .change-card h4 { margin: 0; }
+.change-card section { border-left: 2px solid var(--line-strong); padding-left: 9px; display: grid; gap: 4px; }
+.change-card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.change-identity, .change-authority { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.change-actions, .changes-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.changes-toolbar { justify-content: space-between; }
+[hidden] { display: none !important; }
 .trace-list {
 	max-width: 100%;
 	display: grid;
@@ -586,12 +606,14 @@ button { color: inherit; }
 				<div class="brand-copy"><img class="codewiki-logo" src="${CODEWIKI_LOGO_DATA_URI}" alt="CodeWiki" width="517" height="338" /><div class="repo-label">Repo: <span id="project" class="project">codewiki</span></div></div>
 			</div>
 			<div class="header-dashboard">
+				<div class="view-switch" aria-label="Dashboard section"><button id="view-traces" type="button" class="active">Sprints Queue</button><button id="view-changes" type="button">Changes Backlog</button></div>
 				<div class="header-controls" id="summary"></div>
 				<div class="search-wrap"><input id="search" aria-label="Filter traces" placeholder="filter traces…" /></div>
 			</div>
 		</header>
 		<main class="queue-shell">
 			<div class="trace-list" id="queue"><div class="load-state">Loading CodeWiki pipeline state…</div></div>
+			<div class="change-list" id="changes" hidden><div class="load-state">Loading Changes Backlog…</div></div>
 			<div class="footer-help">j/k move · enter expand · / search · r refresh · generated <span id="clock">loading…</span> · <span id="status">connecting</span></div>
 		</main>
 	</div>
@@ -608,6 +630,7 @@ let selected = 0;
 let expandedTraceId = null;
 let query = '';
 let filter = 'active';
+let dashboardView = 'traces';
 const detailTabs = new Map();
 const LOGO_PALETTE = ['#e85042', '#ef7b36', '#f3d55b', '#8ecb72', '#62c6c2'];
 const els = {
@@ -616,7 +639,10 @@ const els = {
 	status: document.getElementById('status'),
 	summary: document.getElementById('summary'),
 	queue: document.getElementById('queue'),
+	changes: document.getElementById('changes'),
 	search: document.getElementById('search'),
+	viewTraces: document.getElementById('view-traces'),
+	viewChanges: document.getElementById('view-changes'),
 };
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
 function filtered() {
@@ -630,6 +656,17 @@ function filtered() {
 		return [trace.traceId, trace.title, trace.status, trace.loop, trace.currentAction].concat(trace.pathScopes || []).join(' ').toLowerCase().includes(q);
 	}).sort(function(left, right) {
 		return traceSortRank(left) - traceSortRank(right) || String(left.title || '').localeCompare(String(right.title || ''));
+	});
+}
+function filteredChanges() {
+	const records = state?.changes?.records || [];
+	const q = query.trim().toLowerCase();
+	return records.filter(function(card) {
+		if (filter === 'pending' && card.identity.status !== 'pending') return false;
+		if (filter === 'valid' && card.identity.validationState !== 'valid') return false;
+		if (filter === 'accepted' && card.identity.status !== 'accepted') return false;
+		if (!q) return true;
+		return [card.identity.changeId, card.question, card.sections.currentState.text, card.sections.proposedChange.text].join(' ').toLowerCase().includes(q);
 	});
 }
 function isActiveTrace(trace) { return !trace.closed && trace.loop !== 'waiting'; }
@@ -647,12 +684,25 @@ function render() {
 	text(els.project, state.projectName || 'CodeWiki');
 	text(els.clock, state.generatedAt || new Date().toISOString());
 	text(els.status, 'live');
+	els.queue.hidden = dashboardView !== 'traces';
+	els.changes.hidden = dashboardView !== 'changes';
+	els.viewTraces.className = dashboardView === 'traces' ? 'active' : '';
+	els.viewChanges.className = dashboardView === 'changes' ? 'active' : '';
+	els.search.placeholder = dashboardView === 'traces' ? 'filter traces…' : 'filter changes…';
+	els.search.setAttribute('aria-label', dashboardView === 'traces' ? 'Filter traces' : 'Filter changes');
 	renderSummary();
-	renderQueue(traces);
+	if (dashboardView === 'traces') renderQueue(traces);
+	else renderChanges(filteredChanges());
 }
 function renderSummary() {
 	els.summary.innerHTML = '';
-	const stats = [
+	const changesSummary = state.changes && state.changes.summary;
+	const stats = dashboardView === 'changes' && changesSummary ? [
+		['pending', changesSummary.pending],
+		['valid', changesSummary.valid],
+		['accepted', changesSummary.accepted],
+		['all', changesSummary.total],
+	] : [
 		['active', state.summary.active],
 		['blocked', state.summary.blocked],
 		['archived', state.summary.archived],
@@ -719,6 +769,80 @@ function renderQueue(traces) {
 		if (expandedTraceId === trace.traceId) row.append(renderDetail(trace));
 		els.queue.append(row);
 	});
+}
+function renderChanges(cards) {
+	els.changes.innerHTML = '';
+	const toolbar = document.createElement('div'); toolbar.className = 'changes-toolbar';
+	const authority = document.createElement('div'); authority.className = 'change-authority'; text(authority, 'Draft, revise, validate, or withdraw only. Acceptance and Decisions remain in the main session.');
+	const draft = changeActionButton('Draft Change', function() { executeChangeCommand('draft'); });
+	toolbar.append(authority, draft); els.changes.append(toolbar);
+	if (!cards.length) { const empty = document.createElement('div'); empty.className = 'empty'; text(empty, 'No matching Changes found.'); els.changes.append(empty); return; }
+	cards.forEach(function(card) {
+		const node = document.createElement('article'); node.className = 'change-card';
+		const header = document.createElement('header');
+		const heading = document.createElement('h3'); text(heading, card.identity.changeId);
+		const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, 'revision ' + card.identity.revision + ' · record ' + card.identity.recordRevision + ' · ' + card.identity.status + ' · ' + card.identity.validationState);
+		header.append(heading, identity); node.append(header);
+		node.append(changeSection('Current state', [card.sections.currentState.text]));
+		node.append(changeSection('Proposed change', [card.sections.proposedChange.text, 'Rationale: ' + card.sections.proposedChange.rationale]));
+		const opinion = [];
+		(card.sections.agentOpinion.assessments || []).forEach(function(item) { opinion.push(item.actor + ' · ' + item.stance + ': ' + item.rationale); });
+		(card.sections.agentOpinion.recommendations || []).forEach(function(item) { opinion.push(item.actor + ' recommends ' + item.value + ': ' + item.rationale); });
+		(card.sections.agentOpinion.concerns || []).forEach(function(item) { opinion.push('Concern: ' + item); });
+		node.append(changeSection('Agent opinion', opinion.length ? opinion : ['No agent assessment recorded.']));
+		const actions = document.createElement('div'); actions.className = 'change-actions';
+		if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
+		if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
+		if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
+		node.append(actions); els.changes.append(node);
+	});
+}
+function changeSection(titleValue, values) {
+	const sectionNode = document.createElement('section');
+	const heading = document.createElement('h4'); text(heading, titleValue); sectionNode.append(heading);
+	values.forEach(function(value) { const paragraph = document.createElement('p'); text(paragraph, value); sectionNode.append(paragraph); });
+	return sectionNode;
+}
+function changeActionButton(label, handler) {
+	const button = document.createElement('button'); button.type = 'button'; text(button, label); button.onclick = handler; return button;
+}
+async function executeChangeCommand(action, card) {
+	const changes = state && state.changes;
+	if (!changes) return;
+	const command = {
+		action: action,
+		commandId: 'dashboard-change-' + crypto.randomUUID(),
+		expectedStateDigest: changes.stateDigest,
+		expectedHead: changes.head,
+	};
+	if (card) {
+		command.changeId = card.identity.changeId;
+		command.expectedRecordRevision = card.identity.recordRevision;
+	}
+	if (action === 'draft' || action === 'revise') {
+		const raw = window.prompt(action === 'draft' ? 'Paste exact canonical Change JSON for a pending draft.' : 'Paste exact complete revised Change JSON.');
+		if (!raw) return;
+		try { command.change = JSON.parse(raw); } catch { text(els.status, 'invalid Change JSON'); return; }
+	}
+	if (action === 'withdraw') {
+		const reason = window.prompt('Reason for withdrawal:');
+		if (!reason) return;
+		command.reason = reason;
+	}
+	text(els.status, 'change command pending');
+	try {
+		const response = await fetch('/api/changes/commands?token=' + encodeURIComponent(token), {
+			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command),
+		});
+		const result = await response.json();
+		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
+		state.changes = result.state;
+		text(els.status, 'completed · ' + result.receipt.receiptId);
+		render();
+	} catch (error) {
+		text(els.status, 'rejected · ' + (error && error.message ? error.message : String(error)));
+		await load();
+	}
 }
 function shortTime(value) {
 	const date = new Date(value);
@@ -1340,6 +1464,16 @@ async function load() {
 	}
 	finally { loading = false; }
 }
+function setDashboardView(nextView) {
+	dashboardView = nextView;
+	filter = nextView === 'changes' ? 'pending' : 'active';
+	query = '';
+	els.search.value = '';
+	selected = 0;
+	render();
+}
+els.viewTraces.addEventListener('click', function() { setDashboardView('traces'); });
+els.viewChanges.addEventListener('click', function() { setDashboardView('changes'); });
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
 document.addEventListener('keydown', function(event) {
 	if (event.target === els.search) {
@@ -1349,6 +1483,7 @@ document.addEventListener('keydown', function(event) {
 	if (isInteractiveDashboardTarget(event.target)) return;
 	if (event.key === '/') { event.preventDefault(); els.search.focus(); return; }
 	if (event.key === 'r') { event.preventDefault(); load(); return; }
+	if (dashboardView !== 'traces') return;
 	if (event.key === 'j' || event.key === 'ArrowDown') { event.preventDefault(); selected++; render(); focusSelectedTrace(); return; }
 	if (event.key === 'k' || event.key === 'ArrowUp') { event.preventDefault(); selected--; render(); focusSelectedTrace(); return; }
 	if (event.key === 'Enter') {

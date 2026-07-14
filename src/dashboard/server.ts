@@ -35,6 +35,10 @@ import {
 import { readDevLog } from "../runtime/dev-log.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
+	createDashboardChangeControl,
+	type DashboardChangeControl,
+} from "./change-control.ts";
+import {
 	type DashboardTraceHostControl,
 	DashboardTraceHostControlError,
 } from "./trace-host-control.ts";
@@ -55,6 +59,7 @@ export interface CodewikiDashboardServerOptions {
 	persistent?: boolean;
 	inProcess?: boolean;
 	traceHostControl?: DashboardTraceHostControl;
+	changeControl?: DashboardChangeControl;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -77,6 +82,7 @@ interface DashboardRuntime {
 	broadcastTimer?: NodeJS.Timeout;
 	traceHostTimer?: NodeJS.Timeout;
 	traceHostControl: DashboardTraceHostControl;
+	changeControl: DashboardChangeControl;
 	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
@@ -417,6 +423,7 @@ async function startInProcessDashboardServer(
 		endpoint,
 		options.keepAlive ?? false,
 		options.traceHostControl,
+		options.changeControl,
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -604,6 +611,7 @@ async function createDashboardRuntime(
 	preferredEndpoint?: DashboardEndpoint,
 	keepAlive = false,
 	providedTraceHostControl?: DashboardTraceHostControl,
+	providedChangeControl?: DashboardChangeControl,
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -624,12 +632,13 @@ async function createDashboardRuntime(
 	}
 	const origin = `http://127.0.0.1:${address.port}`;
 	const endpoint = dashboardEndpoint(repoRoot, origin, token, address.port);
+	const dashboardActor = `dashboard:${process.pid}:${address.port}`;
 	const traceHostControl =
 		providedTraceHostControl ||
-		(await createDefaultDashboardTraceHostControl(
-			repoRoot,
-			`dashboard:${process.pid}:${address.port}`,
-		));
+		(await createDefaultDashboardTraceHostControl(repoRoot, dashboardActor));
+	const changeControl =
+		providedChangeControl ||
+		createDashboardChangeControl({ repoRoot, actor: dashboardActor });
 	runtime = {
 		repoRoot,
 		server,
@@ -638,6 +647,7 @@ async function createDashboardRuntime(
 		token,
 		clients,
 		traceHostControl,
+		changeControl,
 		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -719,7 +729,11 @@ async function routeAuthorizedGet(
 	url: URL,
 ): Promise<boolean> {
 	if (url.pathname === "/api/state") {
-		writeJson(response, 200, await readDashboardState(runtime.repoRoot));
+		writeJson(response, 200, await readDashboardState(runtime));
+		return true;
+	}
+	if (url.pathname === "/api/changes") {
+		writeJson(response, 200, await runtime.changeControl.status());
 		return true;
 	}
 	if (url.pathname === "/api/trace-hosts") {
@@ -753,10 +767,20 @@ async function routeAuthorizedPost(
 	response: ServerResponse,
 	url: URL,
 ): Promise<boolean> {
-	if (url.pathname !== "/api/trace-hosts/commands") return false;
+	if (
+		url.pathname !== "/api/trace-hosts/commands" &&
+		url.pathname !== "/api/changes/commands"
+	) {
+		return false;
+	}
 	assertSameOriginMutation(runtime, request);
-	runtime.lastSupervisedAt = Date.now();
 	const command = await readJsonRequest(request);
+	if (url.pathname === "/api/changes/commands") {
+		writeJson(response, 200, await runtime.changeControl.execute(command));
+		scheduleBroadcast(runtime);
+		return true;
+	}
+	runtime.lastSupervisedAt = Date.now();
 	writeJson(response, 200, await runtime.traceHostControl.execute(command));
 	return true;
 }
@@ -828,8 +852,9 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 }
 
 async function readDashboardState(
-	repoRoot: string,
+	runtime: DashboardRuntime,
 ): Promise<CodewikiDashboardState> {
+	const repoRoot = runtime.repoRoot;
 	const traceFiles = await readProjectTraceFiles(repoRoot);
 	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
 	const devLogByTrace = new Map(
@@ -844,6 +869,7 @@ async function readDashboardState(
 	);
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
+		changes: await runtime.changeControl.status(),
 	});
 }
 
@@ -852,7 +878,7 @@ async function attachEventStream(
 	response: ServerResponse,
 ): Promise<void> {
 	runtime.lastSupervisedAt = Date.now();
-	const state = await readDashboardState(runtime.repoRoot);
+	const state = await readDashboardState(runtime);
 	response.writeHead(200, {
 		...DASHBOARD_SECURITY_HEADERS,
 		"Content-Type": "text/event-stream",
@@ -874,7 +900,7 @@ function scheduleBroadcast(runtime: DashboardRuntime): void {
 
 async function broadcast(runtime: DashboardRuntime): Promise<void> {
 	if (runtime.clients.size === 0) return;
-	const state = await readDashboardState(runtime.repoRoot);
+	const state = await readDashboardState(runtime);
 	for (const client of runtime.clients) writeEvent(client, state);
 }
 

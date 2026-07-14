@@ -11,6 +11,7 @@ import { planningQualityStandards } from "../planning/quality-standards.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../traces/types.ts";
 import { qualityIterationsFromTrace } from "../views/quality.ts";
 import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
+import type { DashboardChangesState } from "./changes-state.ts";
 import {
 	projectDevLog,
 	type DashboardDevLogProjection,
@@ -208,11 +209,13 @@ export interface CodewikiDashboardState {
 	};
 	next: WikiStateSnapshot["next"];
 	sprintsQueue: CodewikiSprintTrace[];
+	changes?: DashboardChangesState;
 }
 
 export interface CodewikiDashboardProjectionContext {
 	workerObservations?: WorkerObservation[];
 	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
+	changes?: DashboardChangesState;
 }
 
 export function buildCodewikiDashboardState(
@@ -247,6 +250,7 @@ export function buildCodewikiDashboardState(
 		},
 		next: snapshot.next,
 		sprintsQueue,
+		...(context.changes ? { changes: context.changes } : {}),
 	};
 }
 
