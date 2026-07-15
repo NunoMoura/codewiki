@@ -44,6 +44,24 @@ describe("dashboard worker projection", () => {
 			observedAt: observedAt.toISOString(),
 			leaseExpiresAt: new Date(observedAt.getTime() + 60_000).toISOString(),
 			progress: { current: 2, total: 3 },
+			execution: {
+				policyDigest: "sha256:" + "a".repeat(64),
+				routeId: "worker-high",
+				provider: "openai-codex",
+				model: "gpt-5.4",
+				thinking: "high",
+				quality: "high",
+				allowedTools: ["read", "edit"],
+				timeoutMs: 90_000,
+				budget: { maxTokens: 10_000 },
+				usage: {
+					inputTokens: 200,
+					outputTokens: 100,
+					totalTokens: 300,
+					costUsd: 0.02,
+					latencyMs: 2_000,
+				},
+			},
 		});
 		const attempts = buildCodewikiWorkerAttempts([claim()], [item], [observation]);
 		assert.equal(attempts.length, 1);
@@ -52,6 +70,8 @@ describe("dashboard worker projection", () => {
 		assert.equal(attempts[0].phase, "running_checks");
 		assert.equal(attempts[0].freshness, "live");
 		assert.deepEqual(attempts[0].progress, { current: 2, total: 3 });
+		assert.equal(attempts[0].execution.routeId, "worker-high");
+		assert.equal(attempts[0].execution.usage.totalTokens, 300);
 	});
 
 	it("keeps aggregate review separate from worker attempts", () => {

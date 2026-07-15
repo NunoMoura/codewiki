@@ -20,6 +20,38 @@ function sessionInput(overrides = {}) {
 	};
 }
 
+function executionPolicy(overrides = {}) {
+	return {
+		digest: "sha256:" + "a".repeat(64),
+		qualityFloor: "high",
+		route: {
+			routeId: "route-high",
+			provider: "openai-codex",
+			model: "gpt-5.4",
+			thinking: "high",
+			quality: "high",
+			timeoutMs: 90_000,
+			allowedTools: ["read", "edit", "bash"],
+			pricingSnapshot: {
+				inputUsdPerMillion: 2.5,
+				outputUsdPerMillion: 15,
+				cacheReadUsdPerMillion: 0.25,
+				cacheWriteUsdPerMillion: 0,
+			},
+		},
+		budget: {
+			maxTokens: 10_000,
+			maxCostUsd: 1,
+			maxLatencyMs: 90_000,
+			spentTokens: 1_000,
+			spentCostUsd: 0.1,
+			spentLatencyMs: 1_000,
+		},
+		escalation: { attempt: 0, maxEscalations: 1 },
+		...overrides,
+	};
+}
+
 async function waitForOutputFile(outputFile, expected) {
 	let lastError;
 	for (let attempt = 0; attempt < 40; attempt++) {
@@ -320,6 +352,118 @@ describe("Pi process session factory", () => {
 			session.outputFile,
 			"/repo/codewiki/.codewiki/runtime/tmp/TRACE-process/runtime/pi-workers/pi-worker-001.jsonl",
 		);
+	});
+
+	it("applies exact worker policy and attributes bounded usage", async () => {
+		const calls = [];
+		const policy = executionPolicy();
+		const factory = createPiProcessSessionFactory({
+			command: "pi-test",
+			runner(input) {
+				calls.push(input);
+				return {
+					exitCode: 0,
+					outputFile: input.outputFile,
+					usage: {
+						inputTokens: 200,
+						outputTokens: 100,
+						totalTokens: 300,
+						costUsd: 0.02,
+						latencyMs: 2_000,
+					},
+				};
+			},
+		});
+		const session = await factory.create(
+			sessionInput({ executionPolicy: policy }),
+		);
+		await session.prompt("Implement with exact policy.");
+
+		assert.deepEqual(calls[0].args.slice(-9), [
+			"--provider",
+			"openai-codex",
+			"--model",
+			"gpt-5.4",
+			"--thinking",
+			"high",
+			"--tools",
+			"read,edit,bash",
+			"Implement with exact policy.",
+		]);
+		assert.equal(calls[0].timeoutMs, 90_000);
+		assert.deepEqual(session.executionReceipt, {
+			policyDigest: policy.digest,
+			routeId: "route-high",
+			usage: {
+				inputTokens: 200,
+				outputTokens: 100,
+				totalTokens: 300,
+				costUsd: 0.02,
+				latencyMs: 2_000,
+			},
+		});
+	});
+
+	it("fails closed when policy usage is missing, exhausted, or mismatched", async () => {
+		const missing = createPiProcessSessionFactory({
+			runner: (input) => ({ exitCode: 0, outputFile: input.outputFile }),
+		});
+		const missingSession = await missing.create(
+			sessionInput({ executionPolicy: executionPolicy() }),
+		);
+		await assert.rejects(
+			missingSession.prompt("run"),
+			/usage telemetry is missing/,
+		);
+
+		const exhausted = createPiProcessSessionFactory({
+			runner: (input) => ({
+				exitCode: 0,
+				outputFile: input.outputFile,
+				usage: {
+					inputTokens: 9_000,
+					outputTokens: 1_000,
+					totalTokens: 10_000,
+					costUsd: 0.1,
+					latencyMs: 1_000,
+				},
+			}),
+		});
+		const exhaustedSession = await exhausted.create(
+			sessionInput({ executionPolicy: executionPolicy() }),
+		);
+		await assert.rejects(
+			exhaustedSession.prompt("run"),
+			/token budget exceeded/,
+		);
+
+		const mismatched = createPiProcessSessionFactory({
+			model: { provider: "anthropic", model: "wrong", thinking: "low" },
+		});
+		const mismatchSession = await mismatched.create(
+			sessionInput({ executionPolicy: executionPolicy() }),
+		);
+		await assert.rejects(mismatchSession.prompt("run"), /route mismatch/);
+
+		const detached = createPiProcessSessionFactory({ detached: true });
+		const detachedSession = await detached.create(
+			sessionInput({ executionPolicy: executionPolicy() }),
+		);
+		await assert.rejects(
+			detachedSession.prompt("run"),
+			/foreground usage monitoring/,
+		);
+
+		const timeoutPolicy = executionPolicy();
+		timeoutPolicy.route.timeoutMs = 10;
+		const timed = createPiProcessSessionFactory({
+			command: process.execPath,
+			args: ["-e", "setTimeout(() => {}, 1000)", "--"],
+		});
+		const timedSession = await timed.create(
+			sessionInput({ executionPolicy: timeoutPolicy }),
+		);
+		await assert.rejects(timedSession.prompt("run"), /exceeded timeout 10ms/);
 	});
 
 	it("defaults worker output under project runtime tmp", async () => {

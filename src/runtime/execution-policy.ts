@@ -65,6 +65,37 @@ export interface ExecutionRouteRejection {
 	reasons: string[];
 }
 
+export interface WorkerExecutionUsage {
+	inputTokens: number;
+	outputTokens: number;
+	totalTokens: number;
+	costUsd: number;
+	latencyMs: number;
+}
+
+export interface WorkerExecutionPolicySnapshot {
+	digest: string;
+	qualityFloor: WikiModelQuality;
+	route: {
+		routeId: string;
+		provider: string;
+		model: string;
+		thinking: WikiModelRouteConfig["thinking"];
+		quality: WikiModelQuality;
+		timeoutMs: number;
+		allowedTools: string[];
+		pricingSnapshot: WikiModelRouteConfig["pricing"];
+	};
+	budget: ResolvedExecutionPolicy["budget"];
+	escalation: ResolvedExecutionPolicy["escalation"];
+}
+
+export interface WorkerExecutionReceipt {
+	policyDigest: string;
+	routeId: string;
+	usage: WorkerExecutionUsage;
+}
+
 export interface ResolvedExecutionPolicy {
 	status: "selected" | "blocked";
 	digest: string;
@@ -98,6 +129,70 @@ export interface ResolvedExecutionPolicy {
 		previousRouteId?: string;
 	};
 	rationale: string;
+}
+
+export function workerExecutionPolicySnapshot(
+	policy: ResolvedExecutionPolicy,
+): WorkerExecutionPolicySnapshot {
+	if (policy.status !== "selected" || !policy.selected) {
+		throw new Error(`Worker execution policy blocked: ${policy.rationale}`);
+	}
+	return {
+		digest: policy.digest,
+		qualityFloor: policy.qualityFloor,
+		route: {
+			routeId: policy.selected.routeId,
+			provider: policy.selected.provider,
+			model: policy.selected.model,
+			thinking: policy.selected.thinking,
+			quality: policy.selected.quality,
+			timeoutMs: policy.selected.timeoutMs,
+			allowedTools: [...policy.selected.allowedTools],
+			pricingSnapshot: { ...policy.selected.pricingSnapshot },
+		},
+		budget: { ...policy.budget },
+		escalation: { ...policy.escalation },
+	};
+}
+
+export function verifyWorkerExecutionUsage(
+	policy: WorkerExecutionPolicySnapshot,
+	usage: WorkerExecutionUsage | undefined,
+): WorkerExecutionReceipt {
+	if (!usage) throw new Error("Worker usage telemetry is missing.");
+	for (const [field, value] of Object.entries(usage)) {
+		if (!Number.isFinite(value) || value < 0) {
+			throw new Error(`Worker usage ${field} is invalid.`);
+		}
+	}
+	if (usage.totalTokens !== usage.inputTokens + usage.outputTokens) {
+		throw new Error(
+			"Worker usage totalTokens does not match input and output.",
+		);
+	}
+	if (
+		policy.budget.maxTokens !== undefined &&
+		policy.budget.spentTokens + usage.totalTokens > policy.budget.maxTokens
+	) {
+		throw new Error("Worker token budget exceeded.");
+	}
+	if (
+		policy.budget.maxCostUsd !== undefined &&
+		policy.budget.spentCostUsd + usage.costUsd > policy.budget.maxCostUsd
+	) {
+		throw new Error("Worker monetary budget exceeded.");
+	}
+	if (
+		policy.budget.maxLatencyMs !== undefined &&
+		policy.budget.spentLatencyMs + usage.latencyMs > policy.budget.maxLatencyMs
+	) {
+		throw new Error("Worker latency budget exceeded.");
+	}
+	return {
+		policyDigest: policy.digest,
+		routeId: policy.route.routeId,
+		usage: { ...usage },
+	};
 }
 
 interface CandidateEvaluation {

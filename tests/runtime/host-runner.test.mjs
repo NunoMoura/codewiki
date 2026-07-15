@@ -12,7 +12,7 @@ import { readDevLog } from "../../src/runtime/dev-log.ts";
 import {
 	previewRuntimeHostHandoff,
 	reviveRuntimeHostWorkerSessions,
-	runRuntimeHostOnce,
+	runRuntimeHostOnce as runRuntimeHostOnceCore,
 	watchRuntimeHostWorkerSessions,
 } from "../../src/runtime/host-runner.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
@@ -23,6 +23,92 @@ import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
+
+const TEST_WORKER_MODEL_ROUTING = {
+	qualityFloor: "high",
+	maxEscalations: 1,
+	estimatedInputTokens: 1_000,
+	estimatedOutputTokens: 500,
+	routes: [
+		{
+			id: "test-worker-high",
+			provider: "test-provider",
+			model: "test-model-high",
+			thinking: "high",
+			quality: "high",
+			latency: "balanced",
+			timeoutMs: 60_000,
+			pricing: {
+				inputUsdPerMillion: 1,
+				outputUsdPerMillion: 2,
+				cacheReadUsdPerMillion: 0,
+				cacheWriteUsdPerMillion: 0,
+			},
+			allowedTools: ["bash", "edit", "read", "write"],
+		},
+	],
+};
+
+function testWorkerPolicy(digest = "sha256:" + "a".repeat(64)) {
+	return {
+		digest,
+		qualityFloor: "high",
+		route: {
+			routeId: "test-worker-high",
+			provider: "test-provider",
+			model: "test-model-high",
+			thinking: "high",
+			quality: "high",
+			timeoutMs: 60_000,
+			allowedTools: ["bash", "edit", "read", "write"],
+			pricingSnapshot: {
+				inputUsdPerMillion: 1,
+				outputUsdPerMillion: 2,
+				cacheReadUsdPerMillion: 0,
+				cacheWriteUsdPerMillion: 0,
+			},
+		},
+		budget: {
+			maxTokens: 10_000,
+			maxCostUsd: 1,
+			maxLatencyMs: 60_000,
+			spentTokens: 0,
+			spentCostUsd: 0,
+			spentLatencyMs: 0,
+		},
+		escalation: { attempt: 0, maxEscalations: 1 },
+	};
+}
+
+function withWorkerExecutionConfig(config = {}) {
+	return {
+		...config,
+		runtime: {
+			...(config.runtime || {}),
+			modelRouting:
+				config.runtime?.modelRouting || TEST_WORKER_MODEL_ROUTING,
+			budgets: {
+				maxSeconds: 120,
+				maxIterations: 1,
+				maxTokens: 10_000,
+				maxCostUsd: 1,
+				maxLatencyMs: 60_000,
+				...(config.runtime?.budgets || {}),
+			},
+		},
+	};
+}
+
+function runRuntimeHostOnce(input) {
+	return runRuntimeHostOnceCore({
+		...input,
+		supervision: input.supervision || { attached: true, monitoring: true },
+		runtime: {
+			...input.runtime,
+			config: withWorkerExecutionConfig(input.runtime.config),
+		},
+	});
+}
 
 function queue(pathScope = "src/runtime/a.ts") {
 	return {
@@ -294,9 +380,23 @@ function outputFileSessionFactory(root, reportForInput) {
 }
 
 function fencedWorkerReport(report) {
-	return ["```codewiki-worker-report", JSON.stringify(report), "```"].join(
-		"\n",
-	);
+	const usageEvent = JSON.stringify({
+		type: "message_end",
+		message: {
+			usage: {
+				input: 2,
+				output: 1,
+				totalTokens: 3,
+				cost: { total: 0.001 },
+			},
+		},
+	});
+	return [
+		usageEvent,
+		"```codewiki-worker-report",
+		JSON.stringify(report),
+		"```",
+	].join("\n");
 }
 
 function completedWorkerOutput(fixture, worker) {
@@ -432,6 +532,7 @@ describe("runtime host handoff preview", () => {
 
 describe("runtime host worker session revive", () => {
 	it("revives worker session refs or marks them detached with remediation", async () => {
+		const policy = testWorkerPolicy();
 		const statuses = [
 			{
 				workerId: "host-worker-001",
@@ -440,6 +541,7 @@ describe("runtime host worker session revive", () => {
 				state: "running",
 				sessionId: "session-1",
 				outputRef: "/tmp/output-1.jsonl",
+				executionPolicy: policy,
 			},
 			{
 				workerId: "host-worker-002",
@@ -447,11 +549,17 @@ describe("runtime host worker session revive", () => {
 				traceId: "TRACE-host-once",
 				state: "running",
 				sessionId: "session-2",
+				executionPolicy: policy,
 			},
 		];
 
 		const revived = await reviveRuntimeHostWorkerSessions({
 			workerStatuses: statuses,
+			supervision: { attached: true, monitoring: true },
+			currentExecutionPoliciesByWorkUnit: {
+				"WU-host-once": policy,
+				"WU-host-two": policy,
+			},
 			sessionFactory: {
 				async create() {
 					assert.fail("create should not run during revive");
@@ -485,8 +593,50 @@ describe("runtime host worker session revive", () => {
 		);
 	});
 
+	it("fails closed when resume policy or monitoring changed", async () => {
+		const persisted = testWorkerPolicy();
+		const current = testWorkerPolicy("sha256:" + "b".repeat(64));
+		let resumed = false;
+		const input = {
+			workerStatuses: [
+				{
+					workerId: "host-worker-001",
+					workUnitId: "WU-host-once",
+					traceId: "TRACE-host-once",
+					state: "running",
+					executionPolicy: persisted,
+				},
+			],
+			currentExecutionPoliciesByWorkUnit: { "WU-host-once": current },
+			sessionFactory: {
+				async create() {},
+				resume() {
+					resumed = true;
+					return { state: "running" };
+				},
+			},
+		};
+		await assert.rejects(
+			reviveRuntimeHostWorkerSessions(input),
+			/attached supervision and active monitoring/,
+		);
+		const result = await reviveRuntimeHostWorkerSessions({
+			...input,
+			supervision: { attached: true, monitoring: true },
+		});
+		assert.equal(resumed, false);
+		assert.equal(result.workerStatuses[0].state, "detached");
+		assert.match(
+			result.workerStatuses[0].remediation.blockers[0],
+			/execution policy changed/,
+		);
+	});
+
 	it("marks all worker sessions detached when no resume adapter exists", async () => {
+		const policy = testWorkerPolicy();
 		const revived = await reviveRuntimeHostWorkerSessions({
+			supervision: { attached: true, monitoring: true },
+			currentExecutionPoliciesByWorkUnit: { "WU-host-once": policy },
 			workerStatuses: [
 				{
 					workerId: "host-worker-001",
@@ -494,6 +644,7 @@ describe("runtime host worker session revive", () => {
 					traceId: "TRACE-host-once",
 					state: "running",
 					sessionFile: "/tmp/session.jsonl",
+					executionPolicy: policy,
 				},
 			],
 			sessionFactory: {
@@ -511,6 +662,7 @@ describe("runtime host worker session revive", () => {
 	});
 
 	it("watches revived terminal workers and collects output without starting new sessions", async () => {
+		const policy = testWorkerPolicy();
 		const root = await mkdtemp(join(tmpdir(), "codewiki-host-watch-"));
 		try {
 			const outputFile = join(root, "worker-output.txt");
@@ -555,6 +707,8 @@ describe("runtime host worker session revive", () => {
 			);
 
 			const watched = await watchRuntimeHostWorkerSessions({
+				supervision: { attached: true, monitoring: true },
+				currentExecutionPoliciesByWorkUnit: { "WU-host-once": policy },
 				workerStatuses: [
 					{
 						workerId: "host-worker-001",
@@ -566,6 +720,7 @@ describe("runtime host worker session revive", () => {
 						],
 						sessionId: "session-1",
 						outputRef: outputFile,
+						executionPolicy: policy,
 					},
 				],
 				sessionFactory: {
@@ -601,6 +756,113 @@ describe("runtime host worker session revive", () => {
 });
 
 describe("runtime host one-shot execution", () => {
+	it("fails closed before claim append without supervision or stable policy identity", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const base = {
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: withWorkerExecutionConfig(),
+					queue: fixture.queue,
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: sessionFactory([]),
+			};
+			await assert.rejects(
+				runRuntimeHostOnceCore(base),
+				/attached supervision and active monitoring/,
+			);
+			await assert.rejects(
+				runRuntimeHostOnceCore({
+					...base,
+					supervision: { attached: true, monitoring: true },
+					expectedWorkerPolicyDigests: {
+						"WU-host-once": "sha256:" + "f".repeat(64),
+					},
+				}),
+				/execution policy changed/,
+			);
+			assert.equal(
+				(await readTrace(join(fixture.root, traceFilePath(fixture.traceId)))).records
+					.length,
+				1,
+			);
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
+	it("escalates failed attempts to a strictly higher-quality route", async () => {
+		const fixture = await runtimeFixture();
+		try {
+			const created = [];
+			const high = TEST_WORKER_MODEL_ROUTING.routes[0];
+			const critical = {
+				...high,
+				id: "test-worker-critical",
+				model: "test-model-critical",
+				thinking: "xhigh",
+				quality: "critical",
+				latency: "slow",
+				timeoutMs: 50_000,
+			};
+			await runRuntimeHostOnce({
+				runtime: {
+					mode: "append",
+					repoRoot: fixture.root,
+					config: {
+						runtime: {
+							automation: "assist",
+							maxWorkers: 1,
+							modelRouting: {
+								...TEST_WORKER_MODEL_ROUTING,
+								routes: [high, critical],
+							},
+						},
+					},
+					queue: fixture.queue,
+					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					expectedBytesByTrace: {
+						[fixture.traceId]: fixture.headAppend.nextBytes,
+					},
+				},
+				implementationInputs: [],
+				sessionFactory: sessionFactory(created),
+				workerExecutionContexts: {
+					"WU-host-once": {
+						previousAttempts: [
+							{
+								routeId: "test-worker-high",
+								outcome: "failed",
+								inputTokens: 100,
+								outputTokens: 50,
+								costUsd: 0.001,
+								latencyMs: 500,
+							},
+						],
+					},
+				},
+				completionCollector: () => [],
+			});
+			assert.equal(
+				created[0].executionPolicy.route.routeId,
+				"test-worker-critical",
+			);
+			assert.deepEqual(created[0].executionPolicy.escalation, {
+				attempt: 1,
+				maxEscalations: 1,
+				previousRouteId: "test-worker-high",
+			});
+		} finally {
+			await rm(fixture.root, { recursive: true, force: true });
+		}
+	});
+
 	it("appends claims, starts workers, previews implementation, and returns release check", async () => {
 		const fixture = await runtimeFixture();
 		try {
@@ -658,6 +920,14 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.workers[0].workerId, "host-worker-001");
 			assert.equal(result.workers[0].sessionId, "session-host-worker-001");
 			assert.equal(created[0].workerId, "host-worker-001");
+			assert.equal(
+				created[0].executionPolicy.route.routeId,
+				"test-worker-high",
+			);
+			assert.equal(
+				created[0].executionPolicy.digest,
+				result.handoff.workers[0].executionPolicy.digest,
+			);
 			assert.equal(result.completions.length, 1);
 			assert.equal(result.workerResults[0].status, "completed");
 			assert.deepEqual(result.workerStatuses[0], {
@@ -669,6 +939,7 @@ describe("runtime host one-shot execution", () => {
 				claimId: "claim-WU-host-once-001",
 				sessionId: "session-host-worker-001",
 				sessionFile: "/tmp/host-worker-001.jsonl",
+				executionPolicy: result.handoff.workers[0].executionPolicy,
 			});
 			assert.equal(
 				result.implementationPreviews[0].loopResult.readyForClosure,
@@ -746,13 +1017,18 @@ describe("runtime host one-shot execution", () => {
 					args: [
 						"-e",
 						`process.stdout.write(${JSON.stringify(workerReport)});`,
+						"--",
 					],
 				}),
 				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
 				releaseIdPrefix: "release",
 			});
 
-			assert.equal(result.completions.length, 1);
+			assert.equal(
+				result.completions.length,
+				1,
+				JSON.stringify(result.workers),
+			);
 			assert.equal(
 				result.completions[0].output.includes("codewiki-worker-report"),
 				true,
@@ -846,7 +1122,14 @@ describe("runtime host one-shot execution", () => {
 				sessionFactory: createPiProcessSessionFactory({
 					cwd: fixture.root,
 					command: process.execPath,
-					args: ["-e", "process.stdout.write('not a worker report');"],
+					args: [
+						"-e",
+						`process.stdout.write(${JSON.stringify(
+							fencedWorkerReport({}).split("```codewiki-worker-report")[0] +
+								"not a worker report",
+						)});`,
+						"--",
+					],
 				}),
 				appendReleases: true,
 				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
@@ -854,9 +1137,9 @@ describe("runtime host one-shot execution", () => {
 			});
 
 			assert.equal(result.workerResults[0].status, "failed");
-			assert.equal(
+			assert.match(
 				result.workerResults[0].message,
-				"Worker completion output is missing a codewiki-worker-report block. not a worker report",
+				/Worker completion output is missing a codewiki-worker-report block\..*not a worker report/s,
 			);
 			assert.equal(result.releaseCheck.reason, "worker_failed");
 			assert.equal(result.hostErrors[0].kind, "output_malformed");
@@ -899,6 +1182,7 @@ describe("runtime host one-shot execution", () => {
 					args: [
 						"-e",
 						`process.stdout.write(${JSON.stringify(workerReport)});`,
+						"--",
 					],
 				}),
 				appendReleases: true,

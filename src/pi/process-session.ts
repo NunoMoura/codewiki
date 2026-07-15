@@ -10,6 +10,12 @@ import type {
 } from "../runtime/trace-host-runner.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
 import { runDetachedTraceHostCommand } from "./trace-host-process.ts";
+import {
+	verifyWorkerExecutionUsage,
+	type WorkerExecutionPolicySnapshot,
+	type WorkerExecutionReceipt,
+	type WorkerExecutionUsage,
+} from "../runtime/execution-policy.ts";
 import type {
 	PiWorkerSession,
 	PiWorkerSessionFactory,
@@ -57,6 +63,7 @@ export interface PiProcessCommandRunnerInput {
 	workerId: string;
 	workUnitId: string;
 	traceId: string;
+	timeoutMs?: number;
 	outputMode?: "raw" | "trace-host";
 }
 
@@ -70,6 +77,7 @@ export interface PiProcessCommandResult {
 	stdout?: string;
 	stderr?: string;
 	controller?: TraceHostSessionController;
+	usage?: WorkerExecutionUsage;
 }
 
 export type PiProcessCommandRunner = (
@@ -233,16 +241,21 @@ export function createPiProcessSessionFactory(
 	};
 }
 
+type PolicyAwareWorkerSessionInput = PiWorkerSessionInput & {
+	executionPolicy?: WorkerExecutionPolicySnapshot;
+};
+
 class PiProcessSession implements PiWorkerSession {
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;
 	pid?: number;
-	private readonly input: PiWorkerSessionInput;
+	executionReceipt?: WorkerExecutionReceipt;
+	private readonly input: PolicyAwareWorkerSessionInput;
 	private readonly options: PiProcessSessionFactoryOptions;
 
 	constructor(
-		input: PiWorkerSessionInput,
+		input: PolicyAwareWorkerSessionInput,
 		options: PiProcessSessionFactoryOptions,
 	) {
 		this.input = input;
@@ -251,6 +264,7 @@ class PiProcessSession implements PiWorkerSession {
 
 	async prompt(text: string): Promise<void> {
 		const commandInput = processCommandInput(this.input, this.options, text);
+		const startedAt = Date.now();
 		const result = await (this.options.runner || runPiProcessCommand)(
 			commandInput,
 		);
@@ -261,20 +275,44 @@ class PiProcessSession implements PiWorkerSession {
 		if (isFailedProcessResult(result)) {
 			throw new Error(processFailureMessage(result));
 		}
+		if (this.input.executionPolicy) {
+			this.executionReceipt = verifyWorkerExecutionUsage(
+				this.input.executionPolicy,
+				result.usage ||
+					workerUsageFromOutput(result.stdout, Date.now() - startedAt),
+			);
+		}
 	}
 }
 
 function processCommandInput(
-	input: PiWorkerSessionInput,
+	input: PolicyAwareWorkerSessionInput,
 	options: PiProcessSessionFactoryOptions,
 	prompt: string,
 ): PiProcessCommandRunnerInput {
+	const policy = input.executionPolicy;
+	if (policy && options.detached) {
+		throw new Error(
+			"Policy-controlled Pi workers require foreground usage monitoring.",
+		);
+	}
+	if (policy && options.model && !sameModel(options.model, policy)) {
+		throw new Error("Worker execution policy route mismatch.");
+	}
+	const model = policy
+		? {
+				provider: policy.route.provider,
+				model: policy.route.model,
+				thinking: policy.route.thinking,
+			}
+		: options.model;
 	return {
 		command: options.command || "pi",
 		args: [
 			...(options.args || ["--mode", "json", "-p"]),
 			...(options.noSession ? ["--no-session"] : []),
-			...piModelArgs(options.model),
+			...piModelArgs(model),
+			...(policy ? ["--tools", policy.route.allowedTools.join(",")] : []),
 			prompt,
 		],
 		...(options.cwd ? { cwd: options.cwd } : {}),
@@ -284,7 +322,73 @@ function processCommandInput(
 		workerId: input.workerId,
 		workUnitId: input.workUnitId,
 		traceId: input.traceId,
+		...(policy ? { timeoutMs: policy.route.timeoutMs } : {}),
 	};
+}
+
+function sameModel(
+	model: PiModelInvocation,
+	policy: WorkerExecutionPolicySnapshot,
+): boolean {
+	return (
+		model.provider === policy.route.provider &&
+		model.model === policy.route.model &&
+		model.thinking === policy.route.thinking
+	);
+}
+
+function workerUsageFromOutput(
+	output: string | undefined,
+	latencyMs: number,
+): WorkerExecutionUsage | undefined {
+	if (!output) return undefined;
+	let inputTokens = 0;
+	let outputTokens = 0;
+	let totalTokens = 0;
+	let costUsd = 0;
+	let found = false;
+	for (const line of output.split(/\r?\n/)) {
+		try {
+			const event = JSON.parse(line) as Record<string, unknown>;
+			const message = record(event.message);
+			const raw = record(message?.usage);
+			if (!raw) continue;
+			const cost = record(raw.cost);
+			const eventInput = number(raw.input);
+			const eventOutput = number(raw.output);
+			const eventTotal = number(raw.totalTokens);
+			const eventCost = number(cost?.total);
+			if (
+				eventInput === undefined ||
+				eventOutput === undefined ||
+				eventTotal === undefined ||
+				eventCost === undefined
+			)
+				continue;
+			found = true;
+			inputTokens += eventInput;
+			outputTokens += eventOutput;
+			totalTokens += eventTotal;
+			costUsd += eventCost;
+		} catch {
+			// Non-JSON process output carries no authoritative usage.
+		}
+	}
+	return found
+		? { inputTokens, outputTokens, totalTokens, costUsd, latencyMs }
+		: undefined;
+}
+
+function record(value: unknown): Record<string, unknown> | undefined {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: undefined;
+}
+
+function number(value: unknown): number | undefined {
+	return typeof value === "number" && Number.isFinite(value)
+		? value
+		: undefined;
 }
 
 function piModelArgs(model: PiModelInvocation | undefined): string[] {
@@ -420,8 +524,18 @@ async function runForegroundPiProcessCommand(
 		child.stderr?.on("data", (chunk) => {
 			stderr += String(chunk);
 		});
-		child.once("error", reject);
+		const timer = input.timeoutMs
+			? setTimeout(() => {
+					child.kill("SIGTERM");
+					reject(new Error(`Pi worker exceeded timeout ${input.timeoutMs}ms.`));
+				}, input.timeoutMs)
+			: undefined;
+		child.once("error", (error) => {
+			if (timer) clearTimeout(timer);
+			reject(error);
+		});
 		child.once("close", async (exitCode, signal) => {
+			if (timer) clearTimeout(timer);
 			try {
 				await mkdir(dirname(input.outputFile), { recursive: true });
 				const { writeFile } = await import("node:fs/promises");

@@ -12,6 +12,7 @@ import type {
 	RuntimeWorkUnitClaimSelection,
 } from "./work-unit-claim-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
+import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
 export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v2";
 export type RuntimeDisposableWorkerState =
@@ -44,6 +45,7 @@ export interface RuntimeDisposableWorkerStatus {
 	outputRef?: string;
 	lastActivityAt?: string;
 	remediation?: RuntimeWorkerStatusRemediation;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
 }
 export type RuntimeHandoffAction =
 	| "runtime.claims"
@@ -68,6 +70,7 @@ export interface CreateRuntimeHandoffManifestOptions {
 	claimEvents?: TraceEvent[];
 	promptPrefix?: string;
 	promptSuffix?: string;
+	executionPoliciesByWorkUnit?: Record<string, WorkerExecutionPolicySnapshot>;
 }
 
 export interface RuntimeHandoffManifest {
@@ -103,7 +106,10 @@ export interface RuntimeHandoffWorker {
 	pathScopes: string[];
 	worktree?: WorktreeRef;
 	worktreeCommands: RuntimeHandoffWorktreeCommands;
-	sessionInput: PiWorkerSessionInput;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
+	sessionInput: PiWorkerSessionInput & {
+		executionPolicy?: WorkerExecutionPolicySnapshot;
+	};
 	completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerResults";
 	implementationInput: "workerResults";
 }
@@ -176,6 +182,8 @@ function handoffWorker(input: {
 		...(worktree ? { worktree } : {}),
 	};
 	const prompt = createPiWorkerPrompt(promptItem, input.options);
+	const executionPolicy =
+		input.options.executionPoliciesByWorkUnit?.[input.item.workUnitId];
 	return {
 		workUnitId: input.item.workUnitId,
 		workerId,
@@ -186,6 +194,7 @@ function handoffWorker(input: {
 		componentRefs: [...input.item.componentRefs],
 		pathScopes: [...input.item.pathScopes],
 		...(worktree ? { worktree } : {}),
+		...(executionPolicy ? { executionPolicy } : {}),
 		worktreeCommands: {
 			execute: "host_explicit_only",
 			dryRunDefault: true,
@@ -201,6 +210,7 @@ function handoffWorker(input: {
 			pathScopes: [...input.item.pathScopes],
 			componentRefs: [...input.item.componentRefs],
 			...(worktree ? { worktree } : {}),
+			...(executionPolicy ? { executionPolicy } : {}),
 			prompt,
 		},
 		completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerResults",
@@ -218,6 +228,9 @@ function handoffWorkerStatuses(
 		state: "starting",
 		planningRefs: [...worker.planningRefs],
 		...(worker.claimId ? { claimId: worker.claimId } : {}),
+		...(worker.executionPolicy
+			? { executionPolicy: worker.executionPolicy }
+			: {}),
 	}));
 }
 

@@ -1136,7 +1136,16 @@ function renderWorkerAttempts(attempts) {
 		const detail = document.createElement('div'); detail.className = 'worker-attempt-detail';
 		const progress = attempt.progress ? ' · ' + attempt.progress.current + '/' + attempt.progress.total : '';
 		text(detail, (attempt.phase ? readableStatus(attempt.phase) : 'Waiting for activity') + progress + (attempt.observedAt ? ' · observed ' + shortTime(attempt.observedAt) : ''));
-		row.append(head, meta, detail); box.append(row);
+		row.append(head, meta, detail);
+		if (attempt.execution) {
+			const execution = document.createElement('div'); execution.className = 'worker-attempt-detail';
+			const usage = attempt.execution.usage;
+			const tokenState = usage ? usage.totalTokens + (attempt.execution.budget.maxTokens !== undefined ? '/' + attempt.execution.budget.maxTokens + ' tokens' : ' tokens') : 'usage pending';
+			const costState = usage ? '$' + usage.costUsd.toFixed(6) + (attempt.execution.budget.maxCostUsd !== undefined ? '/$' + attempt.execution.budget.maxCostUsd : '') : '';
+			text(execution, attempt.execution.provider + '/' + attempt.execution.model + ' · ' + attempt.execution.thinking + ' · ' + attempt.execution.routeId + ' · ' + tokenState + (costState ? ' · ' + costState : '') + ' · ' + attempt.execution.policyDigest.slice(0, 19));
+			row.append(execution);
+		}
+		box.append(row);
 	});
 	return box;
 }

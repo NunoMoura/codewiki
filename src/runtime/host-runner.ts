@@ -33,7 +33,14 @@ import {
 	type PiWorkerCompletionInput,
 } from "../pi/worker-results.ts";
 import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+import { resolveWikiConfig } from "../project/config.ts";
 import type { TraceEvent } from "../traces/types.ts";
+import {
+	resolveExecutionPolicy,
+	workerExecutionPolicySnapshot,
+	type ExecutionPolicyContext,
+	type WorkerExecutionPolicySnapshot,
+} from "./execution-policy.ts";
 import { appendDevLogEntry } from "./dev-log.ts";
 import {
 	appendRuntimeWorkUnitClaims,
@@ -86,16 +93,19 @@ const WORKTREE_CLEANUP_PHASE: RuntimeHostWorktreePhase = "cleanup";
 interface ResumeRuntimeHostWorkerSessionsInput {
 	sessionFactory: PiWorkerSessionFactory;
 	workerStatuses: RuntimeDisposableWorkerStatus[];
+	supervision?: RuntimeHostSupervision;
+	currentExecutionPoliciesByWorkUnit?: Record<
+		string,
+		WorkerExecutionPolicySnapshot
+	>;
 }
 
 interface ResumeRuntimeHostWorkerSessionsResult {
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 }
 
-export interface WatchRuntimeHostWorkerSessionsInput {
-	workerStatuses: RuntimeDisposableWorkerStatus[];
-	sessionFactory: PiWorkerSessionFactory;
-}
+export interface WatchRuntimeHostWorkerSessionsInput
+	extends ResumeRuntimeHostWorkerSessionsInput {}
 
 export interface WatchRuntimeHostWorkerSessionsResult {
 	workerStatuses: RuntimeDisposableWorkerStatus[];
@@ -105,6 +115,15 @@ export interface WatchRuntimeHostWorkerSessionsResult {
 	releaseCheck: RuntimeHostReleaseCheck;
 	remediation?: RuntimeHostRemediation;
 }
+
+interface RuntimeHostSupervision {
+	attached: boolean;
+	monitoring: boolean;
+}
+
+type WorkerExecutionContextOverrides = Partial<
+	Omit<ExecutionPolicyContext, "target" | "pathScopes">
+>;
 
 interface RunRuntimeHostOnceInput {
 	runtime: RunWikiRuntimeInput;
@@ -125,6 +144,9 @@ interface RunRuntimeHostOnceInput {
 	releaseExpectedBytesByTrace?: Record<string, number>;
 	releaseCreatedAt?: string;
 	releaseIdPrefix?: string;
+	supervision?: RuntimeHostSupervision;
+	workerExecutionContexts?: Record<string, WorkerExecutionContextOverrides>;
+	expectedWorkerPolicyDigests?: Record<string, string>;
 }
 
 interface RuntimeHostReleaseCheck {
@@ -172,6 +194,7 @@ interface RunRuntimeHostOnceResult {
 export async function reviveRuntimeHostWorkerSessions(
 	input: ResumeRuntimeHostWorkerSessionsInput,
 ): Promise<ResumeRuntimeHostWorkerSessionsResult> {
+	assertAttachedSupervision(input.supervision);
 	if (!input.sessionFactory.resume) {
 		return {
 			workerStatuses: input.workerStatuses.map((status) =>
@@ -182,6 +205,7 @@ export async function reviveRuntimeHostWorkerSessions(
 	const workerStatuses = await Promise.all(
 		input.workerStatuses.map(async (status) => {
 			try {
+				const executionPolicy = resumableWorkerExecutionPolicy(input, status);
 				const resumed = await input.sessionFactory.resume?.({
 					workerId: status.workerId,
 					workUnitId: status.workUnitId,
@@ -190,6 +214,7 @@ export async function reviveRuntimeHostWorkerSessions(
 					...(status.sessionFile ? { sessionFile: status.sessionFile } : {}),
 					...(status.outputRef ? { outputFile: status.outputRef } : {}),
 					...(status.pid ? { pid: status.pid } : {}),
+					executionPolicy,
 				});
 				return {
 					...status,
@@ -245,6 +270,26 @@ export async function watchRuntimeHostWorkerSessions(
 			remediationForHostCompletion(releaseCheck, workerResults, [], hostErrors),
 		),
 	};
+}
+
+function resumableWorkerExecutionPolicy(
+	input: ResumeRuntimeHostWorkerSessionsInput,
+	status: RuntimeDisposableWorkerStatus,
+): WorkerExecutionPolicySnapshot {
+	const persisted = status.executionPolicy;
+	const current =
+		input.currentExecutionPoliciesByWorkUnit?.[status.workUnitId];
+	if (!persisted || !current) {
+		throw new Error(
+			`Worker ${status.workUnitId} cannot resume without persisted and current execution policy.`,
+		);
+	}
+	if (persisted.digest !== current.digest) {
+		throw new Error(
+			`Worker ${status.workUnitId} execution policy changed; start a reviewed attempt.`,
+		);
+	}
+	return current;
 }
 
 function isTerminalWorkerStatus(
@@ -358,6 +403,7 @@ export async function previewRuntimeHostHandoff(
 export async function runRuntimeHostOnce(
 	input: RunRuntimeHostOnceInput,
 ): Promise<RunRuntimeHostOnceResult> {
+	assertAttachedSupervision(input.supervision);
 	if (input.runtime.mode !== "append") {
 		throw new Error("runRuntimeHostOnce requires runtime append mode.");
 	}
@@ -380,7 +426,11 @@ export async function runRuntimeHostOnce(
 	const result =
 		failedStartResult ||
 		(await completeRuntimeHostOnce(input, workerStartContext, workers));
-	const completed = await withWorktreeCleanup(input, workerStartContext, result);
+	const completed = await withWorktreeCleanup(
+		input,
+		workerStartContext,
+		result,
+	);
 	await recordWorkerOutcomes(input, completed.workerStatuses);
 	return completed;
 }
@@ -388,6 +438,7 @@ export async function runRuntimeHostOnce(
 interface RuntimeHostWorkerStartContext {
 	gitStatus?: GitStatusSnapshot;
 	runtime: RunWikiRuntimeResult;
+	executionPoliciesByWorkUnit: Record<string, WorkerExecutionPolicySnapshot>;
 	claimEvents: TraceEvent[];
 	handoff: RuntimeHandoffManifest;
 	worktreePrepare?: WorktreeCommandExecutionResult;
@@ -398,17 +449,24 @@ async function prepareHostWorkerStart(
 	input: RunRuntimeHostOnceInput,
 ): Promise<RuntimeHostWorkerStartContext> {
 	const gitStatus = await resolveGitStatus(input.gitStatus);
-	const runtime = await runWikiRuntime({
+	const runtimeInput = {
 		...(gitStatus ? runtimeWorktreeInputsFromGitStatus(gitStatus) : {}),
 		...input.runtime,
-		mode: "append",
-	});
+	};
+	const preview = await runWikiRuntime({ ...runtimeInput, mode: "preview" });
+	const executionPoliciesByWorkUnit = resolveWorkerExecutionPolicies(
+		input,
+		preview,
+	);
+	const runtime = await runWikiRuntime({ ...runtimeInput, mode: "append" });
+	assertStableWorkerSelection(preview, runtime);
 	const claimEvents = runtime.append?.events || [];
 	const handoff = createRuntimeHandoffManifest({
 		runtime,
 		claimEvents,
 		promptPrefix: input.promptPrefix,
 		promptSuffix: input.promptSuffix,
+		executionPoliciesByWorkUnit,
 	});
 	const worktreePrepare = await captureHostWorktreeCommands(
 		input,
@@ -418,6 +476,7 @@ async function prepareHostWorkerStart(
 	return {
 		...(gitStatus ? { gitStatus } : {}),
 		runtime,
+		executionPoliciesByWorkUnit,
 		claimEvents,
 		handoff,
 		...(worktreePrepare.result
@@ -435,12 +494,99 @@ function startHostWorkers(
 ): Promise<PiWorkerStartResult[]> {
 	return startPiWorkers(workerStartContext.runtime.plan, {
 		claimEvents: workerStartContext.claimEvents,
-		sessionFactory: input.sessionFactory,
+		sessionFactory: policyAwareSessionFactory(
+			input.sessionFactory,
+			workerStartContext.executionPoliciesByWorkUnit,
+		),
 		promptPrefix: input.promptPrefix,
 		promptSuffix: input.promptSuffix,
 		disposeSessions: input.disposeSessions,
 		promptOptions: input.promptOptions,
 	});
+}
+
+function assertAttachedSupervision(
+	supervision: RuntimeHostSupervision | undefined,
+): void {
+	if (!supervision?.attached || !supervision.monitoring) {
+		throw new Error(
+			"Worker execution requires attached supervision and active monitoring.",
+		);
+	}
+}
+
+function resolveWorkerExecutionPolicies(
+	input: RunRuntimeHostOnceInput,
+	runtime: RunWikiRuntimeResult,
+): Record<string, WorkerExecutionPolicySnapshot> {
+	const config = resolveWikiConfig(input.runtime.config || {});
+	return Object.fromEntries(
+		runtime.plan.selected.map((item) => {
+			const overrides = input.workerExecutionContexts?.[item.workUnitId] || {};
+			const policy = resolveExecutionPolicy(config, {
+				target: "worker",
+				risk: overrides.risk || "high",
+				pathScopes: [...item.pathScopes],
+				requiredTools: overrides.requiredTools || [
+					"bash",
+					"edit",
+					"read",
+					"write",
+				],
+				estimatedInputTokens:
+					overrides.estimatedInputTokens ||
+					config.runtime.modelRouting.estimatedInputTokens,
+				estimatedOutputTokens:
+					overrides.estimatedOutputTokens ||
+					config.runtime.modelRouting.estimatedOutputTokens,
+				workerProfile: overrides.workerProfile || "implementation_worker",
+				...(overrides.changeType ? { changeType: overrides.changeType } : {}),
+				...(overrides.priorUsage ? { priorUsage: overrides.priorUsage } : {}),
+				...(overrides.previousAttempts
+					? { previousAttempts: overrides.previousAttempts }
+					: {}),
+			});
+			const snapshot = workerExecutionPolicySnapshot(policy);
+			const expected = input.expectedWorkerPolicyDigests?.[item.workUnitId];
+			if (expected && expected !== snapshot.digest) {
+				throw new Error(
+					`Worker execution policy changed for ${item.workUnitId}; refresh before dispatch.`,
+				);
+			}
+			return [item.workUnitId, snapshot];
+		}),
+	);
+}
+
+function assertStableWorkerSelection(
+	preview: RunWikiRuntimeResult,
+	append: RunWikiRuntimeResult,
+): void {
+	const previewIds = preview.plan.selected.map((item) => item.workUnitId);
+	const appendIds = append.plan.selected.map((item) => item.workUnitId);
+	if (JSON.stringify(previewIds) !== JSON.stringify(appendIds)) {
+		throw new Error(
+			"Worker selection changed after execution policy resolution.",
+		);
+	}
+}
+
+function policyAwareSessionFactory(
+	factory: PiWorkerSessionFactory,
+	policies: Record<string, WorkerExecutionPolicySnapshot>,
+): PiWorkerSessionFactory {
+	return {
+		create(sessionInput) {
+			const executionPolicy = policies[sessionInput.workUnitId];
+			if (!executionPolicy) {
+				throw new Error(
+					`Worker ${sessionInput.workUnitId} has no resolved execution policy.`,
+				);
+			}
+			return factory.create({ ...sessionInput, executionPolicy });
+		},
+		...(factory.resume ? { resume: factory.resume.bind(factory) } : {}),
+	};
 }
 
 async function withWorktreeCleanup(
@@ -1413,6 +1559,9 @@ function disposableWorkerStatusesFromResult(
 	);
 	return result.workers.map((worker) => {
 		const workerResult = workerResults.get(worker.workerId);
+		const executionPolicy = result.handoff.workers.find(
+			(candidate) => candidate.workerId === worker.workerId,
+		)?.executionPolicy;
 		const state = workerResult
 			? workerStatus(workerResult)
 			: worker.status === "failed"
@@ -1429,6 +1578,7 @@ function disposableWorkerStatusesFromResult(
 			...(worker.sessionId ? { sessionId: worker.sessionId } : {}),
 			...(worker.sessionFile ? { sessionFile: worker.sessionFile } : {}),
 			...(worker.outputFile ? { outputRef: worker.outputFile } : {}),
+			...(executionPolicy ? { executionPolicy } : {}),
 			...(result.remediation && state !== "running"
 				? { remediation: result.remediation }
 				: {}),
@@ -1472,7 +1622,8 @@ async function recordWorkerStarts(
 				workerId: worker.workerId,
 				attemptId: worker.claimId,
 				category: "worker",
-				action: worker.status === "started" ? "worker.started" : "worker.failed",
+				action:
+					worker.status === "started" ? "worker.started" : "worker.failed",
 				status: worker.status === "started" ? "success" : "failure",
 				refs: worker.planningRefs,
 			}),

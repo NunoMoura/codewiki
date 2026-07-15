@@ -15,6 +15,7 @@ import type {
 	RuntimeWorkUnitClaimSelection,
 } from "../runtime/work-unit-claim-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
+import type { WorkerExecutionPolicySnapshot } from "../runtime/execution-policy.ts";
 
 export interface PiWorkerSession {
 	prompt(text: string, options?: unknown): Promise<void>;
@@ -46,6 +47,7 @@ export interface PiWorkerSessionResumeInput {
 	sessionFile?: string;
 	outputFile?: string;
 	pid?: number;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
 }
 
 export interface PiWorkerSessionResumeResult {
@@ -65,6 +67,7 @@ export interface PiWorkerSessionInput {
 	pathScopes: string[];
 	componentRefs: string[];
 	worktree?: WorktreeRef;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
 	prompt: string;
 }
 

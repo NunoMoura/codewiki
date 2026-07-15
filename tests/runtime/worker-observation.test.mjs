@@ -15,6 +15,24 @@ function observation(overrides = {}) {
 		observedAt: "2026-07-12T12:00:00.000Z",
 		leaseExpiresAt: "2026-07-12T12:10:00.000Z",
 		progress: { current: 2, total: 3 },
+		execution: {
+			policyDigest: "sha256:" + "a".repeat(64),
+			routeId: "route-high",
+			provider: "openai-codex",
+			model: "gpt-5.4",
+			thinking: "high",
+			quality: "high",
+			allowedTools: ["bash", "edit", "read"],
+			timeoutMs: 90_000,
+			budget: { maxTokens: 10_000, maxCostUsd: 1, maxLatencyMs: 90_000 },
+			usage: {
+				inputTokens: 200,
+				outputTokens: 100,
+				totalTokens: 300,
+				costUsd: 0.02,
+				latencyMs: 2_000,
+			},
+		},
 		...overrides,
 	};
 }
@@ -24,6 +42,8 @@ describe("worker observation contract", () => {
 		const value = createWorkerObservation(observation());
 		assert.equal(value.schemaVersion, "codewiki.worker-observation.v1");
 		assert.equal(value.phase, "running_checks");
+		assert.equal(value.execution.routeId, "route-high");
+		assert.equal(value.execution.usage.totalTokens, 300);
 		assert.equal(
 			workerObservationFreshness(value, new Date("2026-07-12T12:00:20.000Z")),
 			"live",
@@ -55,6 +75,30 @@ describe("worker observation contract", () => {
 		assert.throws(
 			() => createWorkerObservation(observation({ phase: "thinking" })),
 			/phase is not allowed/,
+		);
+		assert.throws(
+			() =>
+				createWorkerObservation(
+					observation({
+						execution: {
+							...observation().execution,
+							policyDigest: "stale",
+						},
+					}),
+				),
+			/policyDigest is invalid/,
+		);
+		assert.throws(
+			() =>
+				createWorkerObservation(
+					observation({
+						execution: {
+							...observation().execution,
+							budget: { maxTokens: 1, prompt: "private" },
+						},
+					}),
+				),
+			/budget field prompt is not allowed/,
 		);
 		assert.throws(
 			() =>

@@ -93,6 +93,7 @@ export interface CodewikiWorkerAttempt {
 	observedAt?: string;
 	leaseExpiresAt?: string;
 	progress?: WorkerObservation["progress"];
+	execution?: WorkerObservation["execution"];
 	pathScopes: string[];
 	planningRefs: string[];
 }
@@ -454,6 +455,7 @@ function applyWorkerObservation(
 	attempt.observedAt = observation.observedAt;
 	attempt.leaseExpiresAt = observation.leaseExpiresAt;
 	attempt.progress = observation.progress;
+	attempt.execution = observation.execution;
 	if (attempt.status === "running" && freshness !== "live") attempt.status = "stale";
 }
 
