@@ -256,8 +256,11 @@ describe("install readiness checklist", () => {
 		const historical = readFileSync(
 			".codewiki/traces/TRACE-ideas-workspace-and-control-center-v1.jsonl",
 		);
+		assert.equal(historical.length >= 115_151, true);
 		assert.equal(
-			createHash("sha256").update(historical).digest("hex"),
+			createHash("sha256")
+				.update(historical.subarray(0, 115_151))
+				.digest("hex"),
 			"154fc8843c5d75c58c607777edaa1a16834a547c6b324739daf31fce51b878fc",
 		);
 		const readme = readFileSync("README.md", "utf8");

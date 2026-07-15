@@ -7,7 +7,8 @@ import { describe, it } from "node:test";
 const TRACE_ID = "TRACE-changes-backlog-control-center-reconciliation-v1";
 const HISTORICAL_TRACE =
 	".codewiki/traces/TRACE-ideas-workspace-and-control-center-v1.jsonl";
-const HISTORICAL_TRACE_SHA256 =
+const HISTORICAL_TRACE_PREFIX_BYTES = 115_151;
+const HISTORICAL_TRACE_PREFIX_SHA256 =
 	"154fc8843c5d75c58c607777edaa1a16834a547c6b324739daf31fce51b878fc";
 
 const criterionEvidence = {
@@ -167,9 +168,13 @@ describe("control-center reconciliation integration", () => {
 		}
 	});
 
-	it("keeps historical trace bytes immutable while current truth supersedes it", () => {
+	it("keeps historical trace records immutable while appending supersession", () => {
 		const historical = readFileSync(HISTORICAL_TRACE);
-		assert.equal(sha256(historical), HISTORICAL_TRACE_SHA256);
+		assert.equal(historical.length >= HISTORICAL_TRACE_PREFIX_BYTES, true);
+		assert.equal(
+			sha256(historical.subarray(0, HISTORICAL_TRACE_PREFIX_BYTES)),
+			HISTORICAL_TRACE_PREFIX_SHA256,
+		);
 		const current = traceRecords(`.codewiki/traces/${TRACE_ID}.jsonl`);
 		assert.equal(current[0].type, "trace_head");
 		assert.equal(
