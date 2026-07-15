@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, it } from "node:test";
@@ -60,7 +61,15 @@ const agentSurfaceFiles = [
 ];
 
 function jsonFile(path) {
-	return JSON.parse(readFileSync(path, "utf8"));
+	return parseJson(readFileSync(path, "utf8"), path);
+}
+
+function parseJson(value, label) {
+	try {
+		return JSON.parse(value);
+	} catch (error) {
+		throw new Error(`Invalid JSON in ${label}.`, { cause: error });
+	}
 }
 
 function filesUnder(root) {
@@ -214,11 +223,47 @@ describe("install readiness checklist", () => {
 			"utf8",
 		);
 		assert.match(loopContracts, /immutable `kernel` packs in `enforce` mode/);
-		assert.match(loopContracts, /Project policy composition and a Quality Designer remain deferred/);
+		assert.match(
+			loopContracts,
+			/Project policy composition and a Quality Designer remain deferred/,
+		);
 		assert.match(loopContracts, /JavaScript evaluators, shell evaluators/);
 		assert.match(labDocumentation, /authority is `lab`/);
 		assert.match(labDocumentation, /rollout is `observe`/);
 		assert.match(labDocumentation, /does not grant production authority/);
+	});
+
+	it("keeps reconciled control-center proof in release gates", () => {
+		assert.match(
+			packageJson.scripts["test:smoke"],
+			/tests\/integration\/\*\.test\.mjs/,
+		);
+		assert.match(
+			packageJson.scripts["test:features"],
+			/tests\/integration\/\*\.test\.mjs/,
+		);
+		assert.equal(
+			existsSync("tests/integration/control-center-reconciliation.test.mjs"),
+			true,
+		);
+		for (const path of [
+			"src/ideas",
+			"src/api/wiki-ideas.ts",
+			"src/ideas/git-ref-store.ts",
+		]) {
+			assert.equal(existsSync(path), false, path);
+		}
+		const historical = readFileSync(
+			".codewiki/traces/TRACE-ideas-workspace-and-control-center-v1.jsonl",
+		);
+		assert.equal(
+			createHash("sha256").update(historical).digest("hex"),
+			"154fc8843c5d75c58c607777edaa1a16834a547c6b324739daf31fce51b878fc",
+		);
+		const readme = readFileSync("README.md", "utf8");
+		assert.match(readme, /Changes Backlog and control center/);
+		assert.match(readme, /pending unvalidated Change/);
+		assert.match(readme, /fully exit and restart Pi/i);
 	});
 
 	it("keeps lab code out of the packaged Pi extension", () => {
@@ -305,7 +350,7 @@ describe("install readiness checklist", () => {
 			const records = readFileSync(path, "utf8")
 				.split(/\r?\n/)
 				.filter(Boolean)
-				.map((line) => JSON.parse(line));
+				.map((line, index) => parseJson(line, `${path}:${index + 1}`));
 			for (const record of records) assertValidTraceRecord(record);
 		}
 	});

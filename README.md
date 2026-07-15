@@ -16,6 +16,16 @@ The old implementation archive has been removed after the migration audit. The r
 - Pi native compaction should handle conversation compression. CodeWiki-owned refresh/compaction windows are disabled with the old extension.
 - Decision, Planning, and Implementation production standards are strict immutable `kernel` quality packs in `enforce` mode. Lab candidates use the same closed schema with `authority: lab` and `rollout: observe`; lab results cannot replace kernel standards or advance the pinned controller.
 
+## Changes Backlog and control center
+
+The Changes Backlog is the canonical mutable pre-Decision store. A Change keeps lifecycle status and validation readiness separate, and every validation card shows Current state, Proposed change, Agent opinion, content revision, record revision, digest, lifecycle status, and validation state from one bounded shared projection. Decision ingress consumes an exact validated Change revision and digest; it never treats the mutable latest record as approval.
+
+`wiki_change` can draft, revise, validate, withdraw, and query Changes under exact Git-ref head and record-revision guards. Its bounded feedback intake accepts explicit user, runtime, or lab findings, deterministically reinforces a matching pending record, or creates only a pending unvalidated Change. Feedback intake cannot accept a Change, create a Decision or trace, launch work, edit source, publish, or advance a controller.
+
+The local dashboard provides read-only Changes, Traces, and Configuration projections plus narrowly guarded controls. Changes controls are limited to draft, revise, validate, and withdraw. Configuration control accepts only allowlisted, bounded patches that stay within the active automation, agency, model-quality, tool, concurrency, budget, supervision, semantic, publication, and controller ceilings. Every mutation requires the dashboard capability, same-origin request, exact state/config/head/record guards, idempotency, and a bounded receipt. Persisted configuration changes that affect execution require users to fully exit and restart Pi; `/reload` is not sufficient.
+
+Worker dispatch resolves a deterministic execution policy before claim append and child-process creation. The selected provider, model, thinking level, allowed tools, timeout, immutable pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
+
 ## New source layout
 
 ```text

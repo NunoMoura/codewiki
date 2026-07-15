@@ -15,6 +15,7 @@ codewiki_source_patterns:
   - .agents/skills/**
 codewiki_test_patterns:
   - tests/knowledge/skills.test.mjs
+  - tests/integration/control-center-reconciliation.test.mjs
 codewiki_role: host_guidance
 codewiki_source_map:
   - id: skills
@@ -22,6 +23,7 @@ codewiki_source_map:
       - .agents/skills/**
     test_patterns:
       - tests/knowledge/skills.test.mjs
+      - tests/integration/control-center-reconciliation.test.mjs
     role: host_guidance
 ---
 # API Tool Surface
@@ -77,6 +79,10 @@ The normal internal agent surface is small and phase-aligned.
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. Trace close may take a guarded `traceId` and resolve records internally so agents never need to copy raw trace JSONL into model context or tool arguments. | Yes |
 | `wiki_config` | Read and update CodeWiki configuration for automation, agency, approval, budgets, worktree isolation, retention, skills, and host integration. | Yes |
+
+`wiki_change` also exposes bounded feedback intake for explicit user, runtime, or lab findings. Intake searches pending Changes first, reinforces a deterministic match with evidence, or creates only a pending unvalidated Change. Its closed schema rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized output. It cannot accept, decide, plan, implement, launch, publish, or advance controllers.
+
+Dashboard controls are narrower than the model-facing tools. Changes control permits only draft, revise, validate, and withdraw under capability, same-origin, head/record CAS, idempotency, and receipt checks. Configuration control permits only bounded schema-defined patches below the active authority and quality ceilings, validates the complete resulting config, and persists it atomically. Neither control can grant semantic approval, source-write, publication, controller, or unsupervised authority. Execution-affecting configuration changes require a full Pi exit and restart; `/reload` does not replace cached package modules.
 
 There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
 

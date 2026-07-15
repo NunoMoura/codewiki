@@ -83,7 +83,15 @@ function readTraceRecords(tracePath) {
 	return readFileSync(tracePath, "utf8")
 		.split(/\r?\n/)
 		.filter(Boolean)
-		.map((line) => JSON.parse(line));
+		.map((line, index) => {
+			try {
+				return JSON.parse(line);
+			} catch (error) {
+				throw new Error(`Invalid trace JSON at ${tracePath}:${index + 1}.`, {
+					cause: error,
+				});
+			}
+		});
 }
 
 async function expectedBytes(tracePath) {
@@ -235,10 +243,67 @@ function planningWorkRef(planned) {
 	return `trace:${iteration.id}#work:${work.id}`;
 }
 
+function workerUsageEvent() {
+	return JSON.stringify({
+		type: "message_end",
+		message: {
+			usage: {
+				input: 2,
+				output: 1,
+				totalTokens: 3,
+				cost: { total: 0.001 },
+			},
+		},
+	});
+}
+
 function fencedWorkerReport(report) {
-	return ["```codewiki-worker-report", JSON.stringify(report), "```"].join(
-		"\n",
-	);
+	return [
+		workerUsageEvent(),
+		"```codewiki-worker-report",
+		JSON.stringify(report),
+		"```",
+	].join("\n");
+}
+
+function workerRuntimeConfig() {
+	return {
+		runtime: {
+			automation: "assist",
+			maxWorkers: 1,
+			budgets: {
+				maxSeconds: 120,
+				maxIterations: 1,
+				maxTokens: 10_000,
+				maxCostUsd: 1,
+				maxLatencyMs: 60_000,
+			},
+			modelRouting: {
+				qualityFloor: "high",
+				maxEscalations: 1,
+				estimatedInputTokens: 1_000,
+				estimatedOutputTokens: 500,
+				routes: [
+					{
+						id: "external-worker-high",
+						provider: "test-provider",
+						model: "test-model-high",
+						thinking: "high",
+						quality: "high",
+						latency: "balanced",
+						timeoutMs: 50_000,
+						pricing: {
+							inputUsdPerMillion: 1,
+							outputUsdPerMillion: 2,
+							cacheReadUsdPerMillion: 0,
+							cacheWriteUsdPerMillion: 0,
+						},
+						allowedTools: ["bash", "edit", "read", "write"],
+					},
+				],
+			},
+		},
+	};
 }
 
 const root = mkdtempSync(
@@ -352,8 +417,7 @@ try {
 	const change = acceptedChangeFixture({
 		id: "CHG-external-package-lifecycle",
 		kind: "harden",
-		currentState:
-			"Repo-local self-testing can hide package lifecycle drift.",
+		currentState: "Repo-local self-testing can hide package lifecycle drift.",
 		desiredState:
 			"A packed install proves guarded lifecycle behavior in a fresh project.",
 		rationale:
@@ -498,7 +562,7 @@ try {
 			mode: "append",
 			repoRoot: projectRoot,
 			createdAt: "2026-06-18T09:00:03.000Z",
-			config: { runtime: { automation: "assist", maxWorkers: 1 } },
+			config: workerRuntimeConfig(),
 			queue: board.details.result.data.workQueue,
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: { [traceId]: 3 },
@@ -513,10 +577,15 @@ try {
 				createdAt: "2026-06-18T09:00:04.000Z",
 			},
 		],
+		supervision: { attached: true, monitoring: true },
 		sessionFactory: createPiProcessSessionFactory({
 			cwd: projectRoot,
 			command: process.execPath,
-			args: ["-e", `process.stdout.write(${JSON.stringify(workerReport)});`],
+			args: [
+				"-e",
+				`process.stdout.write(${JSON.stringify(workerReport)});`,
+				"--",
+			],
 		}),
 		appendImplementation: true,
 		appendReleases: true,

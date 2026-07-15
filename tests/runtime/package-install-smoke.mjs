@@ -41,7 +41,7 @@ try {
 	writeFileSync(
 		smokeScript,
 		`import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -49,6 +49,16 @@ import {
 	buildWikiState,
 	runWikiConfig,
 } from "codewiki";
+
+function filesUnder(root) {
+	const files = [];
+	for (const name of readdirSync(root).sort()) {
+		const path = join(root, name);
+		if (statSync(path).isDirectory()) files.push(...filesUnder(path));
+		else files.push(path);
+	}
+	return files;
+}
 
 const packageRoot = join(process.cwd(), "node_modules", "codewiki");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
@@ -70,12 +80,33 @@ assert.equal(packageJson.dependencies["js-yaml"], undefined);
 assert.equal(packageJson.dependencies.yaml.startsWith("^2."), true);
 assert.equal(packageJson.dependencies.typebox, undefined);
 assert.deepEqual(packageJson.peerDependencies, { typebox: "*" });
-assert.equal(existsSync(join(packageRoot, "lab")), false);
-assert.equal(existsSync(join(packageRoot, "tests")), false);
-assert.equal(existsSync(join(packageRoot, ".codewiki")), false);
-assert.equal(existsSync(join(packageRoot, "benchmarks")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "lab")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "tests")), false);
+for (const forbiddenPath of [
+	"lab",
+	"tests",
+	".codewiki",
+	".pi",
+	"_OLD_VERSION",
+	"benchmarks",
+	"private",
+	"sealed",
+	join("dist", "lab"),
+	join("dist", "tests"),
+	join("dist", "ideas"),
+]) {
+	assert.equal(existsSync(join(packageRoot, forbiddenPath)), false, forbiddenPath);
+}
+for (const path of filesUnder(packageRoot)) {
+	if (!/\\.(?:js|d\\.ts|md|json)$/.test(path)) continue;
+	const content = readFileSync(path, "utf8");
+	for (const forbidden of [
+		"wiki_ideas",
+		"refs/codewiki/ideas",
+		"ProposedChange",
+		"src/ideas/",
+	]) {
+		assert.equal(content.includes(forbidden), false, path + ": " + forbidden);
+	}
+}
 assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);

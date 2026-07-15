@@ -218,10 +218,80 @@ function planningWorkRef(planned) {
 	return `trace:${iteration.id}#work:${work.id}`;
 }
 
+function workerUsageEvent() {
+	return JSON.stringify({
+		type: "message_end",
+		message: {
+			usage: {
+				input: 2,
+				output: 1,
+				totalTokens: 3,
+				cost: { total: 0.001 },
+			},
+		},
+	});
+}
+
 function fencedWorkerReport(report) {
-	return ["```codewiki-worker-report", JSON.stringify(report), "```"].join(
-		"\n",
-	);
+	return [
+		workerUsageEvent(),
+		"```codewiki-worker-report",
+		JSON.stringify(report),
+		"```",
+	].join("\n");
+}
+
+function workerRuntimeConfig(config = {}) {
+	const runtime = config.runtime || {};
+	return {
+		...config,
+		runtime: {
+			...runtime,
+			budgets: {
+				maxSeconds: 120,
+				maxIterations: 1,
+				maxTokens: 10_000,
+				maxCostUsd: 1,
+				maxLatencyMs: 60_000,
+				...(runtime.budgets || {}),
+			},
+			modelRouting: {
+				qualityFloor: "high",
+				maxEscalations: 1,
+				estimatedInputTokens: 1_000,
+				estimatedOutputTokens: 500,
+				routes: [
+					{
+						id: "external-worker-high",
+						provider: "test-provider",
+						model: "test-model-high",
+						thinking: "high",
+						quality: "high",
+						latency: "balanced",
+						timeoutMs: 50_000,
+						pricing: {
+							inputUsdPerMillion: 1,
+							outputUsdPerMillion: 2,
+							cacheReadUsdPerMillion: 0,
+							cacheWriteUsdPerMillion: 0,
+						},
+						allowedTools: ["bash", "edit", "read", "write"],
+					},
+				],
+			},
+		},
+	};
+}
+
+function runSupervisedHost(installed, input) {
+	return installed.runRuntimeHostOnce({
+		...input,
+		supervision: { attached: true, monitoring: true },
+		runtime: {
+			...input.runtime,
+			config: workerRuntimeConfig(input.runtime.config),
+		},
+	});
 }
 
 function noOutputSessionFactory(created) {
@@ -555,7 +625,7 @@ async function runMissingOutput(installed, root) {
 		"WU-missing-output",
 	);
 	const created = [];
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
@@ -592,7 +662,7 @@ async function runMalformedOutput(installed, root) {
 		"TRACE-external-malformed-output",
 		"WU-malformed-output",
 	);
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
@@ -608,7 +678,13 @@ async function runMalformedOutput(installed, root) {
 		sessionFactory: installed.createPiProcessSessionFactory({
 			cwd: project.projectRoot,
 			command: process.execPath,
-			args: ["-e", "process.stdout.write('not a worker report');"],
+			args: [
+				"-e",
+				`process.stdout.write(${JSON.stringify(
+					`${workerUsageEvent()}\nnot a worker report`,
+				)});`,
+				"--",
+			],
 		}),
 		appendReleases: true,
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",
@@ -645,7 +721,7 @@ async function runBlockedOutput(installed, root) {
 		message: "Need clarified planning scope.",
 		blockers: [{ message: "Need clarified planning scope." }],
 	});
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
@@ -661,7 +737,11 @@ async function runBlockedOutput(installed, root) {
 		sessionFactory: installed.createPiProcessSessionFactory({
 			cwd: project.projectRoot,
 			command: process.execPath,
-			args: ["-e", `process.stdout.write(${JSON.stringify(report)});`],
+			args: [
+				"-e",
+				`process.stdout.write(${JSON.stringify(report)});`,
+				"--",
+			],
 		}),
 		appendReleases: true,
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",
@@ -697,7 +777,7 @@ async function runMixedOutputs(installed, root) {
 			verification: secondPaths.testPath,
 		},
 	);
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
@@ -779,7 +859,7 @@ async function runWorktreePrepareFailure(installed, root) {
 		"TRACE-external-worktree-prepare",
 		"WU-worktree-prepare",
 	);
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
@@ -818,7 +898,7 @@ async function runWorktreeCleanupFailure(installed, root) {
 		"TRACE-external-worktree-cleanup",
 		"WU-worktree-cleanup",
 	);
-	const result = await installed.runRuntimeHostOnce({
+	const result = await runSupervisedHost(installed, {
 		runtime: {
 			mode: "append",
 			repoRoot: project.projectRoot,
