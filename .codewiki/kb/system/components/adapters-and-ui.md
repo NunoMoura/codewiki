@@ -20,17 +20,20 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 ## Owned paths
 
 - `src/pi/**` owns Pi host integration plus tool, command, prompt, and TUI registration.
-- `src/dashboard/**` owns the local Changes, Traces, and Configuration browser projections, transport, and fail-closed command adapter.
+- `src/dashboard/**` owns the unified Work Pipeline and Configuration browser projections, transport, and fail-closed command adapter.
 - `src/cli/**` remains a temporary development harness, not a product adapter.
 
 ## Contracts
 
 - Host-specific capabilities must fail closed when unsupported.
-- The browser dashboard derives Changes from the Change Store and execution state from trace-backed API projections.
+- The browser dashboard renders Change Store records and trace-backed execution state through one tagged Pipeline Card projection without merging their canonical truth.
 - Allowed Change, configuration, and supervised runtime-session mutations must call guarded CodeWiki APIs with exact same-origin capabilities, optimistic state or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction.
-- Runtime-session controls may start or stop a policy-eligible trace host, but they cannot approve semantic output or append trace truth directly.
+- Resume, Change, and Resolve Blocker may cross an optional in-process Pi bridge only as allowlisted trace-scoped user messages delivered through `pi.sendUserMessage()`. The bridge follows `session_start`/`session_shutdown`, uses steering while busy, and fails closed when stale or absent.
+- Dashboard actions never create SDK/RPC sessions, accept arbitrary prompts, approve semantic output, or append trace truth directly.
+- Change actions create or reinforce mutable intent; only exact validation and accepted Decision authority may create amendment lineage.
+- Configuration UI compiles grouped bounded form values to the existing allowlisted patch and cannot raise automation, agency, model, tool, host, or budget ceilings.
 - The dashboard cannot gain shell, direct source-write, trace-append, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority.
-- Repo-local CodeWiki extension loading stays disabled until the pinned-baseline self-dogfood gate passes.
+- The CodeWiki source repository does not load its own extension during stabilization. Extension behavior is tested through packed installs in disposable external projects and released only after stable gates pass.
 
 ## Flow links
 

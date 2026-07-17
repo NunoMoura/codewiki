@@ -96,7 +96,7 @@ describe("loop quality-standard architecture", () => {
 		for (const description of descriptions) {
 			assert.doesNotMatch(
 				description,
-				/\b(row|rows|table|tables|approved change|approved changes|work item|work items|work unit|work units)\b/i,
+				/\b(row|rows|table|tables|approved change|approved changes|work unit|work units)\b/i,
 			);
 		}
 	});

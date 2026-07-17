@@ -167,7 +167,7 @@ assert.equal(statuses.length, 1);
 assert.equal(statuses[0].key, "codewiki");
 assert.match(
 	statuses[0].value,
-	/^CodeWiki \\S+ non-project · dashboard: \\/wiki-dashboard$/,
+	/^CodeWiki \\S+ non-project · dashboard unavailable · \\/wiki-dashboard retry$/,
 );
 assert.deepEqual(commands, [
 	"wiki-dashboard",
@@ -180,7 +180,10 @@ const injected = await promptHook.handler({ systemPrompt: "base" }, { cwd: proce
 assert.match(injected.systemPrompt, /CodeWiki Pi guidance/);
 assert.equal(injected.systemPrompt.includes("wiki_state"), true);
 assert.equal(injected.systemPrompt.includes("wiki_decide"), true);
-assert.equal(injected.systemPrompt.includes("/wiki-dashboard opens"), true);
+assert.equal(
+	injected.systemPrompt.includes("open the Work Pipeline dashboard automatically"),
+	true,
+);
 assert.equal(injected.systemPrompt.includes("/wiki or"), false);
 assert.deepEqual(await promptHook.handler({ systemPrompt: injected.systemPrompt }, { cwd: process.cwd() }), {});
 `,

@@ -704,7 +704,10 @@ async function routeRequest(
 	if (method === "GET" && (await routeAuthorizedGet(runtime, response, url))) {
 		return;
 	}
-	if (method === "POST" && (await routeAuthorizedPost(runtime, request, response, url))) {
+	if (
+		method === "POST" &&
+		(await routeAuthorizedPost(runtime, request, response, url))
+	) {
 		return;
 	}
 	if (method !== "GET") {
@@ -786,11 +789,17 @@ async function routeAuthorizedPost(
 	if (
 		url.pathname !== "/api/trace-hosts/commands" &&
 		url.pathname !== "/api/changes/commands" &&
-		url.pathname !== "/api/configuration/commands"
+		url.pathname !== "/api/configuration/commands" &&
+		url.pathname !== "/api/shutdown"
 	) {
 		return false;
 	}
 	assertSameOriginMutation(runtime, request);
+	if (url.pathname === "/api/shutdown") {
+		writeJson(response, 200, { ok: true });
+		scheduleRuntimeClose(runtime);
+		return true;
+	}
 	const command = await readJsonRequest(request);
 	if (url.pathname === "/api/changes/commands") {
 		writeJson(response, 200, await runtime.changeControl.execute(command));
@@ -883,10 +892,10 @@ async function readDashboardState(
 		await Promise.all(
 			snapshot.traceBoard.traces
 				.filter((trace) => !trace.closed)
-				.map(async (trace) => [
-					trace.traceId,
-					await readDevLog(repoRoot, trace.traceId),
-				] as const),
+				.map(
+					async (trace) =>
+						[trace.traceId, await readDevLog(repoRoot, trace.traceId)] as const,
+				),
 		),
 	);
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {

@@ -226,11 +226,40 @@ export interface DecisionChange {
 	rollbackPlan?: string;
 }
 
+export interface SprintBoundaryAssessmentInput {
+	stance?: "coherent" | "split_required" | string;
+	rationale?: string;
+}
+
+export interface SprintBoundaryAssessment {
+	stance: "coherent" | "split_required" | string;
+	rationale: string;
+}
+
+export interface SprintBoundaryInput {
+	accountableGoal?: string;
+	knowledgeTopics?: string[];
+	noKnowledgeImpactReason?: string;
+	dependencies?: string[];
+	rollbackBoundary?: string;
+	assessment?: SprintBoundaryAssessmentInput;
+}
+
+export interface SprintBoundary {
+	accountableGoal: string;
+	knowledgeTopics: string[];
+	noKnowledgeImpactReason?: string;
+	dependencies: string[];
+	rollbackBoundary: string;
+	assessment: SprintBoundaryAssessment;
+}
+
 export interface SprintProposalInput {
 	id?: string;
 	summary?: string;
 	sourceRefs?: string[];
 	changes?: DecisionChangeInput[];
+	sprintBoundary?: SprintBoundaryInput;
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -240,6 +269,7 @@ export interface SprintProposal {
 	summary: string;
 	sourceRefs: string[];
 	changes: DecisionChange[];
+	sprintBoundary?: SprintBoundary;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -286,6 +316,7 @@ export interface DecisionOutput {
 	approvedChangeIds: string[];
 	requirementIds: string[];
 	policyProfiles?: ApprovedChangePolicyProfile[];
+	sprintBoundary?: SprintBoundary;
 	knowledgeDelta: KnowledgeDelta;
 	currentStatePacket: CurrentStatePacket;
 	refs: string[];

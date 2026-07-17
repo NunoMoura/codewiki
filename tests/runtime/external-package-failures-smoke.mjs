@@ -479,7 +479,8 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 			"Worker output is missing or malformed.",
 			"Worktree prepare or cleanup fails.",
 		],
-		negativeTestPlan: "Exercise every terminal scenario through the installed runtime.",
+		negativeTestPlan:
+			"Exercise every terminal scenario through the installed runtime.",
 		sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
 		proofRefs: ["tests/external-feature.test.mjs"],
 	});
@@ -515,6 +516,16 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 		acceptedBy: "external-package-failures-smoke",
 		acceptedAt: "2026-06-18T11:00:01.000Z",
 	};
+	const sprintBoundary = {
+		accountableGoal: change.intent.desiredState,
+		knowledgeTopics: [".codewiki/kb/system/components/runtime.md"],
+		dependencies: [],
+		rollbackBoundary: "Revert this failure scenario as one boundary.",
+		assessment: {
+			stance: "coherent",
+			rationale: "One validated Change serves one failure-handling goal.",
+		},
+	};
 	const preview = assertToolResult(
 		await executeTool(
 			project.tools.decide,
@@ -523,6 +534,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 				mode: "preview",
 				allowNonProjectInstall: true,
 				changeAcceptance,
+				sprintBoundary,
 			},
 			project.ctx,
 			`${traceId}-decide-preview`,
@@ -539,6 +551,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				changeAcceptance,
+				sprintBoundary,
 				sprintProposalApproval: {
 					approved: true,
 					renderedProposalDigest: preview.renderedSprintProposal.digest,
@@ -737,11 +750,7 @@ async function runBlockedOutput(installed, root) {
 		sessionFactory: installed.createPiProcessSessionFactory({
 			cwd: project.projectRoot,
 			command: process.execPath,
-			args: [
-				"-e",
-				`process.stdout.write(${JSON.stringify(report)});`,
-				"--",
-			],
+			args: ["-e", `process.stdout.write(${JSON.stringify(report)});`, "--"],
 		}),
 		appendReleases: true,
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",

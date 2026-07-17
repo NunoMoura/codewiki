@@ -49,6 +49,14 @@ while preserving `README.md` as the human package entrypoint.
 The package component owns the npm manifest, lockfile, TypeScript entrypoint,
 README distribution guidance, and install/readiness smoke coverage.
 
+## Development and release posture
+
+CodeWiki is developed with Pi native coding tools, pi-lens, Git, source, tests, and the canonical Knowledge Base. The source repository must not install or load its own mutable extension during stabilization. It keeps no active dogfood Changes Backlog or trace instance state.
+
+Extension behavior is verified by packing the candidate and installing it into disposable external projects with isolated Pi settings. Those tests may exercise tools, prompt injection, commands, dashboards, trace lifecycle, and failure handling without granting the candidate authority over its source checkout.
+
+A stable release may be published or installed as a normal Pi package through `package.json` `pi.extensions`. Repo-local self-hosting, if ever restored, requires a separate explicit decision after external release gates pass; it is not part of ordinary development.
+
 ## Ownership note
 
 OKF concept identity comes from this bundle path. CodeWiki source ownership can

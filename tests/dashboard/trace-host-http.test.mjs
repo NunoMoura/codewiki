@@ -167,6 +167,25 @@ describe("dashboard trace host HTTP control", () => {
 			assert.equal(accepted.status, 200);
 			assert.equal(accepted.body.receipt.commandId, "command-http-001");
 			assert.deepEqual(fake.commands, [command]);
+
+			const shutdownUrl = `${handle.origin}/api/shutdown?token=${encodeURIComponent(handle.token)}`;
+			assert.equal((await fetch(shutdownUrl, { method: "POST" })).status, 403);
+			assert.equal(
+				(
+					await fetch(shutdownUrl, {
+						method: "POST",
+						headers: {
+							Origin: handle.origin,
+							"Content-Type": "application/json",
+						},
+						body: "{}",
+					})
+				).status,
+				200,
+			);
+			await new Promise((resolve) => setTimeout(resolve, 50));
+			assert.equal(fake.shutdowns, 1);
+			handle = undefined;
 		} finally {
 			if (handle) await handle.close();
 			await rm(root, { recursive: true, force: true });

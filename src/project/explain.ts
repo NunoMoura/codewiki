@@ -189,7 +189,7 @@ async function projectExplain(
 			{
 				title: "User experience",
 				items: [
-					"Primary host UX is the read-only /wiki-dashboard Sprints Queue plus focused /wiki-* commands.",
+					"Primary host UX is the automatically opened Work Pipeline dashboard; /wiki-dashboard reopens or stops it, and focused /wiki-* commands remain available.",
 					"Internal wiki_* tools provide agent trace context without becoming user UX.",
 				],
 			},
@@ -399,8 +399,12 @@ function decisionChangeRefsForPath(
 		...objectList(output.rejectedRows),
 		...objectList(output.deferredRows),
 	]
-		.filter((change) => refsTouchPath(stringList(change.sourceRefs), target, owner))
-		.map((change) => `trace:${event.id}#change:${text(change.id) || "unknown"}`);
+		.filter((change) =>
+			refsTouchPath(stringList(change.sourceRefs), target, owner),
+		)
+		.map(
+			(change) => `trace:${event.id}#change:${text(change.id) || "unknown"}`,
+		);
 }
 
 function planningWorkRefsForPath(

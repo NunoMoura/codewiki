@@ -55,7 +55,7 @@ The decision loop owns:
 - questions that planning must answer;
 - route-back answers from planning or implementation.
 
-The decision loop does not own implementation details, task scheduling, worker start, or code evidence.
+The decision loop does not own implementation details, Work Item scheduling, worker start, or code evidence.
 
 ## Loop cycle
 
@@ -79,7 +79,7 @@ The agent should ask the user when required authority is missing, risk is high, 
 
 The Changes Backlog presents each record through one shared validation card projection used by Pi and the dashboard. The projection preserves Current state, Proposed change, and Agent opinion while exposing content revision, record revision, content digest, lifecycle status, and validation state as independent facts. Cards are bounded, escaped, redacted, and explicitly non-authoritative; a valid card does not imply acceptance.
 
-Dashboard Change controls can draft, revise, validate, and withdraw under capability, same-origin, exact head/record CAS, idempotency, and receipt checks. They cannot accept Changes, append Decisions, create traces or Tasks, launch workers, edit source, publish, or advance controllers. Acceptance and the exact rendered Decision approval remain main-session authority.
+Dashboard Change controls can draft, revise, validate, and withdraw under capability, same-origin, exact head/record CAS, idempotency, and receipt checks. They cannot accept Changes, append Decisions, create traces or Work Items, launch workers, edit source, publish, or advance controllers. Acceptance and the exact rendered Decision approval remain main-session authority.
 
 Bounded user, runtime, or lab feedback may reinforce a deterministic pending match or create a pending unvalidated Change. Intake stores only allowlisted canonical fields and rejects prompts, reasoning, credential-like data, raw private fields, unrestricted refs, and oversized output. Intake is pre-Decision capture, not approval or execution.
 
@@ -100,7 +100,7 @@ Decision loop output is the high-signal packet planning needs:
 - route-back answers;
 - canonical refs proving the output.
 
-Decision output should not include task breakdowns, implementation plans, or worker instructions. It may include a direct implementation scope only for tiny/small low-risk changes that explicitly skip Planning; that scope is a bounded acceptance/verification packet, not a task plan.
+Decision output should not include Work Item breakdowns, implementation plans, or worker instructions. It may include a direct implementation scope only for tiny/small low-risk changes that explicitly skip Planning; that scope is a bounded acceptance/verification packet, not a Work Item plan.
 
 The accepted Change snapshot carries canonical `ChangeKind`, `ChangeType`, and `ChangeScope` classification. Kind captures semantic intent (`fix`, `improve`, `harden`, `migrate`, `introduce`, or `remove`). Type captures the governed pipeline category, such as behavior, architecture, workflow, incident, security, documentation, dependency, or release change. Scope captures the primary product, system, source, documentation, configuration, or runtime boundary. Classification selects package-owned quality, evidence, escalation, and forbidden-skip policy; it never creates another semantic loop.
 

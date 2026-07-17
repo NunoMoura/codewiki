@@ -1,7 +1,7 @@
 {
 	"name": "codewiki",
 	"version": "0.3.0",
-	"description": "Pi-native CodeWiki tools, slash commands, and trace-first workflow backend.",
+	"description": "Pi-native CodeWiki tools, Work Pipeline dashboard, and trace-backed workflow backend.",
 	"keywords": [
 		"documentation",
 		"wiki",

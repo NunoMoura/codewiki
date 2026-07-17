@@ -5,11 +5,13 @@ import type {
 	DecisionIntentKind,
 	DecisionWorkScale,
 	DecisionChangeInput,
+	SprintBoundaryInput,
 	SprintProposal,
 } from "./types.ts";
 
 export function sprintProposalFromAcceptedChanges(
 	bundle: AcceptedChangeBundle,
+	sprintBoundary: SprintBoundaryInput,
 ): SprintProposal {
 	return createSprintProposal({
 		id: `SP-${bundle.traceId}`,
@@ -27,6 +29,7 @@ export function sprintProposalFromAcceptedChanges(
 		changes: bundle.changes.map((snapshot) =>
 			decisionInput(snapshot.change, bundle),
 		),
+		sprintBoundary,
 	});
 }
 

@@ -132,6 +132,15 @@ export type DecisionExitIssueCode =
 	| "missing_high_risk_alternative"
 	| "missing_high_risk_evidence"
 	| "duplicate_change_id"
+	| "missing_sprint_boundary"
+	| "missing_sprint_goal"
+	| "missing_sprint_knowledge_scope"
+	| "invalid_sprint_knowledge_topic"
+	| "missing_sprint_rollback_boundary"
+	| "missing_sprint_boundary_assessment"
+	| "sprint_boundary_split_required"
+	| "invalid_sprint_dependency"
+	| "sprint_bundle_too_large"
 	| "invalid_traceability_ref"
 	| "missing_knowledge_delta"
 	| "invalid_knowledge_ref"
@@ -198,6 +207,27 @@ export const DECISION_LOOP_QUALITY_PACK = parseLoopQualityPack({
 				"no_proposed_changes",
 				"no_approved_changes",
 				"duplicate_change_id",
+			],
+		}),
+		decisionPackStandard({
+			id: "sprint_boundary_coherent",
+			layer: "hard_gate",
+			standardType: "scope_control",
+			weight: 16,
+			cost: 16,
+			hardGate: true,
+			description:
+				"Sprint proposals have one accountable goal, canonical Knowledge topics, explicit dependencies, and a coherent rollback boundary.",
+			codes: [
+				"missing_sprint_boundary",
+				"missing_sprint_goal",
+				"missing_sprint_knowledge_scope",
+				"invalid_sprint_knowledge_topic",
+				"missing_sprint_rollback_boundary",
+				"missing_sprint_boundary_assessment",
+				"sprint_boundary_split_required",
+				"invalid_sprint_dependency",
+				"sprint_bundle_too_large",
 			],
 		}),
 		decisionPackStandard({
@@ -628,6 +658,7 @@ export function collectDecisionExitIssues(
 		});
 	}
 	issues.push(...duplicateRowIssues(proposal.changes));
+	issues.push(...sprintBoundaryIssues(proposal));
 	issues.push(
 		...currentStatePacketIssues({
 			approvedChanges,
@@ -1449,6 +1480,83 @@ function currentStatePacketFromRows(
 	};
 }
 
+function sprintBoundaryIssues(proposal: SprintProposal): DecisionExitIssue[] {
+	const boundary = proposal.sprintBoundary;
+	if (!boundary) {
+		return new Set(proposal.changes.map((change) => change.id)).size > 1
+			? [
+					{
+						code: "missing_sprint_boundary",
+						message:
+							"Multi-Change Sprint proposals need an explicit accountable boundary before Decision.",
+					},
+				]
+			: [];
+	}
+	const issues: DecisionExitIssue[] = [];
+	if (!boundary.accountableGoal) {
+		issues.push({
+			code: "missing_sprint_goal",
+			message: "Sprint boundary needs one accountable goal.",
+		});
+	}
+	if (
+		boundary.knowledgeTopics.length === 0 &&
+		!boundary.noKnowledgeImpactReason
+	) {
+		issues.push({
+			code: "missing_sprint_knowledge_scope",
+			message:
+				"Sprint boundary needs Product/System Knowledge topics or an explicit no-impact rationale.",
+		});
+	}
+	for (const topic of boundary.knowledgeTopics) {
+		if (!/^\.codewiki\/kb\/(product|system)\/.+\.md$/.test(topic)) {
+			issues.push({
+				code: "invalid_sprint_knowledge_topic",
+				ref: topic,
+				message: `Sprint Knowledge topic ${topic} must be a canonical Product/System KB Markdown path.`,
+			});
+		}
+	}
+	if (!boundary.rollbackBoundary) {
+		issues.push({
+			code: "missing_sprint_rollback_boundary",
+			message: "Sprint boundary needs a coherent rollback boundary.",
+		});
+	}
+	if (!boundary.assessment.stance || !boundary.assessment.rationale) {
+		issues.push({
+			code: "missing_sprint_boundary_assessment",
+			message:
+				"Sprint boundary needs an agent coherence assessment and rationale.",
+		});
+	} else if (boundary.assessment.stance !== "coherent") {
+		issues.push({
+			code: "sprint_boundary_split_required",
+			message:
+				"Sprint boundary assessment requires splitting or revising the Change bundle before Decision.",
+		});
+	}
+	for (const dependency of boundary.dependencies) {
+		if (!/^(CHG|TRACE)-[A-Za-z0-9._:-]+$/.test(dependency)) {
+			issues.push({
+				code: "invalid_sprint_dependency",
+				ref: dependency,
+				message: `Cross-Sprint dependency ${dependency} must be a Change or Sprint trace id.`,
+			});
+		}
+	}
+	if (proposal.changes.length > 8) {
+		issues.push({
+			code: "sprint_bundle_too_large",
+			message:
+				"Sprint proposal exceeds eight Changes; split it or record a smaller accountable boundary.",
+		});
+	}
+	return issues;
+}
+
 function duplicateRowIssues(changes: DecisionChange[]): DecisionExitIssue[] {
 	const counts = new Map<string, number>();
 	for (const change of changes)
@@ -1855,6 +1963,23 @@ const DECISION_REMEDIATION: Record<DecisionExitIssueCode, string> = {
 	missing_high_risk_evidence:
 		"Attach proof refs for research, prior art, validation, or explicit user guidance.",
 	duplicate_change_id: "Give every proposed change a stable unique id.",
+	missing_sprint_boundary:
+		"Shape selected Changes into one explicit Sprint boundary before Decision.",
+	missing_sprint_goal: "Name one accountable goal for the Sprint.",
+	missing_sprint_knowledge_scope:
+		"Add canonical Product/System KB topics or an explicit no-impact rationale.",
+	invalid_sprint_knowledge_topic:
+		"Replace the topic with a canonical .codewiki/kb/product/** or .codewiki/kb/system/** Markdown path.",
+	missing_sprint_rollback_boundary:
+		"Explain what can be rolled back together without crossing Sprint authority.",
+	missing_sprint_boundary_assessment:
+		"Add an agent coherence stance and rationale for the proposed Sprint boundary.",
+	sprint_boundary_split_required:
+		"Split or revise the selected Changes until the Sprint has one coherent accountable goal.",
+	invalid_sprint_dependency:
+		"Use a canonical CHG-* or TRACE-* identifier for cross-Sprint dependencies.",
+	sprint_bundle_too_large:
+		"Split the Change bundle into smaller accountable Sprints.",
 	invalid_traceability_ref:
 		"Replace weak refs with canonical KB, trace, Git, digest, source, or test refs.",
 	missing_knowledge_delta:

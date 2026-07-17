@@ -7,7 +7,7 @@ export const CODEWIKI_PROMPT_GUIDELINES = [
 	"CodeWiki OS truth: .codewiki/kb/** is design truth; .codewiki/traces/TRACE-*.jsonl is workflow/state truth; generated views and renderers are disposable.",
 	"Use internal wiki_state for trace-backed context, then wiki_decide, wiki_plan, or wiki_implement for semantic loop work; do not shell out to the transitional source CLI.",
 	"There are exactly three semantic loops: decision, planning, and implementation. Runtime is backend/host coordination only, not a fourth loop or normal agent tool.",
-	"User-facing progress is trace-first: /wiki-dashboard opens the local read-only Sprints Queue with Sprint Traces and Trace Detail; legacy grouped /codewiki namespaces are not public UX.",
+	"User-facing progress is pipeline-first: eligible Pi TUI sessions open the Work Pipeline dashboard automatically; /wiki-dashboard reopens or stops it, and legacy grouped /codewiki namespaces are not public UX.",
 ] as const;
 
 export function renderCodewikiPromptInstructions(): string {

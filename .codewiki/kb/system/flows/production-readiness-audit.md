@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Production readiness audit
-description: "Status: package, pinned-baseline, shadow, and reproducible controller-install gates are green; supervised repo-local Pi autoload uses only the reviewed controller."
+description: "Status: external package, Pi install, lifecycle, and failure gates define readiness; the source repository does not load CodeWiki."
 tags:
   - codewiki
   - system
@@ -12,7 +12,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Production readiness audit
 
-Status: package readiness, reviewed pinned-baseline shadow, and reproducible controller-install gates are green. Supervised repo-local Pi autoload uses only the reviewed controller.
+Status: package readiness is evaluated through packed installs in disposable external projects. The source repository does not register, install, or load CodeWiki during stabilization.
 
 ## Ready now
 
@@ -27,21 +27,9 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 - Trace append paths use expected byte/sequence checks in mutation smokes.
 - Production loop quality graphs live in `src/<loop>/loop.ts` as immutable enforcing kernel quality packs and persist graph identity in semantic events and tail checkpoints. Compatibility projections preserve the pre-migration graph ids, versions, nodes, routes, diagnostics, and hashes.
 - Lab candidates use the same strict pack schema with `authority: lab` and `rollout: observe`; graph reports expose pack identity while locked tests prevent candidate-owned evaluator authority.
-- Supervised repo-local self-dogfood is enabled: `.pi/settings.json` loads the
-  verified `.pi/npm/node_modules/codewiki` controller beside pi-lens,
-  `.codewiki/config.json` enables the Pi host, and no extension shim is present.
-- Baseline tooling refuses dirty source, pins reviewed commit/tree/package
-  integrity in host-owned ignored evidence under `.pi/npm/codewiki-baselines/**`,
-  and verifies that pin independently. The tracked
-  `.pi/codewiki-controller.json` pin plus
-  `npm run self-dogfood:controller:install` can reconstruct the exact reviewed
-  tarball from Git history for fresh clones before local installation.
-- Reviewed commit `a04aca67919cb6106e95a2a0873fe17960e228a3`, tree
-  `8bace5cfc7af17cc9c10f45006067279bf28e58c`, and package SHA-256
-  `b13f58bb48715af3ef9bb1c60f67da73c3ee0f8c6072a554b505f145c50ae5dd`
-  passed the full candidate gate and disposable shadow state/config reads plus
-  an accepted-Change Decision preview. Source config and trace digests remained
-  unchanged.
+- `.pi/settings.json` loads pi-lens only. No CodeWiki controller pin, local package registration, project-local CodeWiki skills, Changes Backlog ref, or dogfood trace state is active in this source checkout.
+- Packed candidate artifacts are installed only into disposable external projects with isolated Pi settings. Install, RPC, guarded mutation, lifecycle, failure, dashboard, and cleanup smokes exercise extension behavior without granting candidate code authority over its own source.
+- Historical pinned-controller evidence remains recoverable from Git and the ignored migration backup, but it grants no current activation or release authority.
 - `npm run lab:forge` can reduce hot trace JSONL into sanitized draft case
   material while requiring human labels.
 - Loop exits expose compact `qualityDiagnostics` repair feedback in trace output
@@ -53,12 +41,8 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 
 ## Fixed during this audit
 
-- An earlier audit enabled controlled repo-local dogfood through `..`; the
-  current refactor superseded that operating state and kept repo-local loading
-  disabled through pinned-baseline and shadow validation. Those gates now pass;
-  reproducible controller deployment remains separate.
-- Updated readiness/docs/drift checks to treat package readiness and repo-local
-  self-dogfood activation as separate decisions.
+- Removed repo-local CodeWiki package registration, controller pin, project-local CodeWiki skills, Changes Backlog ref, and dogfood traces after preserving recovery artifacts and migrating accepted intent into the Knowledge Base.
+- Updated readiness, docs, and drift checks so package readiness is proved externally while source-repository self-hosting stays disabled.
 - Made `lab/**` and `.codewiki/config.json` canonical trace refs so audit and
   lab evidence can be cited without false trace-fidelity failures.
 - Added tests for canonical lab/config refs and the dogfood boundary.
@@ -83,9 +67,7 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 
 ## Remaining blockers before production release
 
-- Repo-local use remains supervised: every append requires preview and expected
-  byte/sequence guards; unattended workers, auto-merge, and auto-publish remain
-  disabled.
+- External test use remains supervised: every append requires preview and expected byte/sequence guards; unattended workers, auto-merge, and auto-publish remain disabled.
 - Public npm publish is still blocked: package is private and the registry name
   is unresolved.
 - Objective evidence is visible-only: sealed holdout has zero cases and the
@@ -105,10 +87,7 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 
 ## Risks / follow-up work
 
-- Restart/reload Pi after enabling repo-local dogfood or rebuilding `dist/**`;
-  an already-running Pi session can keep stale registered tool code. If a stale
-  tool surface emits legacy event names, `npm run test:readiness` catches the
-  invalid hot trace and current append helpers reject those records before write.
+- Fully restart Pi in a disposable consuming project after installing a different packed CodeWiki build; an already-running session can keep stale registered modules. The source repository itself must continue loading pi-lens only.
 - Package contents include runtime/backend APIs and the temporary CLI harness in
   `dist/**`. This is acceptable for current smokes, but release review should
   decide whether to narrow `files` before public publish.
@@ -121,7 +100,7 @@ Status: package readiness, reviewed pinned-baseline shadow, and reproducible con
 
 ## Validation evidence
 
-Passed during this audit:
+Current validation set:
 
 ```bash
 npm run typecheck
@@ -137,7 +116,6 @@ npm run test:external-lifecycle
 npm run test:external-failures
 npm run lab:gate
 npm run lab:pipeline -- --gate
-CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-ready
 npm run lab:graph
 npm run lab:objective
 npm run lab:promotion
@@ -149,8 +127,8 @@ git diff --check
 Quality-pack equivalence evidence:
 
 - Production Decision, Planning, and Implementation graph hashes remain byte-for-byte equivalent to their pre-migration identities.
-- Public facade suites, strict kernel-override tests, all lab tests, package/Pi/readiness gates, and typecheck pass before any later controller advancement review.
-- Rollback remains a normal Git revert of the production/lab migration commits followed by the same gates; no source migration may rewrite an already reviewed controller artifact.
+- Public facade suites, strict kernel-override tests, all lab tests, package/Pi/readiness gates, and typecheck must pass before any release review.
+- Rollback remains a normal Git revert of production or lab migration commits followed by the same external package gates; no source migration may silently replace an already reviewed release artifact.
 
 Current lab evidence:
 

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi Extension
-description: The package exposes the Pi extension for external installs and supervised repo-local use through a reviewed, reproducibly installed pinned controller; mutable source is never autoloaded.
+description: CodeWiki is developed as a normal source package and released as a Pi extension only after stable external-install gates pass.
 tags:
   - codewiki
   - system
@@ -47,13 +47,13 @@ codewiki_source_map:
 ---
 # Pi Extension
 
-The CodeWiki package exposes the Pi extension for external package installs through `package.json` `pi.extensions`. Repo-local Pi autoload now uses only the reviewed controller installed at `.pi/npm/node_modules/codewiki`; mutable source is never loaded through `..`. `.pi/settings.json` loads that controller beside pi-lens. No `.pi/extensions/codewiki.ts` shim is allowed.
+The CodeWiki package exposes a future Pi extension for external package installs through `package.json` `pi.extensions`. During stabilization, the CodeWiki source repository does not register, install, or load CodeWiki in project-local Pi settings. Maintainers work with Pi native coding tools and pi-lens; no `.pi/extensions/codewiki.ts` shim, local package path, pinned controller, or mutable-source autoload is allowed.
 
 Target Pi integration lives under `src/pi/**` and exposes terminal-first commands, tools, prompt assets, and TUI views through thin adapter registrations over the core facades. Pi is the primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
-The target CodeWiki OS still needs a small internal model-facing `wiki_*` tool set: `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`. Runtime coordination is host/backend plumbing over core APIs, not a normal agent tool. The user-facing slash surface is direct `/wiki-*` commands: `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. `/wiki-dashboard` is the read-only Sprints Queue browser surface. The older grouped namespace command and former state alias are removed from public UX. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
+The target CodeWiki OS still needs a small internal model-facing `wiki_*` tool set: `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`. Runtime coordination is host/backend plumbing over core APIs, not a normal agent tool. The user-facing slash surface is direct `/wiki-*` commands: `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi TUI session starts and opens the Work Pipeline dashboard automatically once; `/wiki-dashboard` reopens or recovers it, and `/wiki-dashboard --stop` stops its local host. The older grouped namespace command and former state alias are removed from public UX. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
 
-CodeWiki is not published to the npm registry yet. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer. Global/user installs are discouraged for normal use. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
+CodeWiki is not published to the npm registry yet. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
 Mocked extension tests cover the intended package surface: the small `wiki_*` tool set, direct `/wiki-*` slash commands, pure TUI renderers, and a prompt-guidance hook. Prompt guidance is additive system-prompt context only; it must not create workflow truth or replace explicit tool/trace evidence.
 
@@ -61,7 +61,7 @@ Mocked extension tests cover the intended package surface: the small `wiki_*` to
 
 `npm run test:pi-rpc` is the external command smoke. It uses a temp project and temp Pi settings, installs the packed package, starts Pi RPC mode, runs `/wiki-bootstrap` and `/wiki-dashboard --no-open`, and verifies dashboard command rendering without starting a model turn.
 
-The dashboard is owned by the active Pi session. Its command health-checks `/api/state` before returning a URL, removes stale endpoint metadata after failed serving, and distinguishes the pinned runtime captured when package modules loaded from the currently installed pin. Advancing the installed controller while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules. A mismatch returns actionable restart guidance instead of a known-dead or stale URL.
+In a consuming project, the dashboard is owned by the active Pi session. Initial TUI `session_start` starts it and opens one browser tab; reload or session replacement restores the endpoint without opening another tab. Closing a browser tab does not stop workflow or mutate truth. Host shutdown remains a Pi command/lifecycle concern rather than a settings-menu action. `/wiki-dashboard` health-checks `/api/state` before reopening it. Stale endpoint metadata is removed after failed serving. Installing a different package version while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules.
 
 `npm run test:pi-mutation` is the isolated tool mutation smoke. It uses a temp
 project, exercises a Pi-registered `wiki_decide` tool with preview first, rejects
@@ -84,39 +84,13 @@ packs and installs CodeWiki outside this checkout, then verifies missing,
 malformed, blocked, mixed-outcome, worktree-prepare, and worktree-cleanup runtime
 failure paths through installed package artifacts.
 
-`npm run test:readiness` is the repo-local readiness checklist. It verifies
-package metadata is present, Pi is not bundled as a runtime dependency,
-`.codewiki` top-level state has the target shape, repo-local Pi settings load
-only the pinned project-local controller, CLI is absent from product host config,
-and docs do not contain stale public command, CLI, legacy trace-close, or
-state/status command wording.
-`npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/
-audit sequence serially.
-`.pi/codewiki-controller.json` is the tracked controller pin. It records the
-reviewed tag, commit, tree, package byte count and SHA-256, and approval identity.
-`npm run self-dogfood:controller:install` rebuilds that commit in a detached
-temporary worktree, requires an exact package match, and installs only the
-verified artifact under `.pi/npm/node_modules/codewiki`.
+`npm run test:readiness` is the repo-local readiness checklist. It verifies package metadata, Pi dependency boundaries, KB/source layout, external installation expectations, and stale public wording. It must assert that the source repository does not register CodeWiki in `.pi/settings.json` or carry an active controller pin.
 
-`npm run test:self-dogfood-candidate` runs the full CodeWiki audit and loop lab
-gates without granting the candidate authority over itself.
-`npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
-<name>` refuses a dirty checkout, reruns those gates, and writes a host-owned
-ignored manifest beside the packed tarball under
-`.pi/npm/codewiki-baselines/**`. The manifest pins the reviewed
-commit, Git tree content proof, package byte count and SHA-256, reviewer, and
-gate results. With `CODEWIKI_BASELINE_MANIFEST` pointing at that manifest,
-`npm run test:self-dogfood-ready` verifies the Git and package pin, requires a
-clean candidate checkout, reruns candidate gates, and executes the disposable
-shadow smoke. Explicit approval then permits only the pinned controller installer
-and supervised activation path.
+`npm run audit:codewiki` runs the full validation/readiness/package/Pi/mutation/audit sequence serially. Legacy self-dogfood baseline, controller, and shadow utilities remain source-covered release-engineering code only. They are not current readiness gates, do not authorize source-checkout activation, and must not install CodeWiki into this checkout. Any future self-hosting path requires a new explicit product/system decision and external release evidence.
 
 ## Production readiness gates
 
-Supported now: project-local packed/local package installs, supervised `/wiki-*` and model-facing
-`wiki_*` flows in external, controlled test, and this pinned-controller project,
-guarded expected-byte/sequence mutation, and external sandbox
-compatibility. Runtime backend APIs support host coordination but are not exposed
+Supported now: project-local packed/local package installs and supervised `/wiki-*` and model-facing `wiki_*` flows in disposable external test projects, guarded expected-byte/sequence mutation, and external sandbox compatibility. Runtime backend APIs support host coordination but are not exposed
 as a normal agent tool. Gated before production automation: public npm publish,
 unattended runtime worker start, auto-merge, auto-publish, global/user installs
 for normal mutation, and treating worker completion as truth without implementation preview.
@@ -127,60 +101,31 @@ ambiguity, no `.codewiki/runtime` scratch leakage after checks, green
 archive/hydrate validation, and explicit user approval policy for destructive or
 externally visible actions.
 
-## Self-dogfood re-enable gate
+## Self-hosting posture
 
-Repo-local self-dogfood means using CodeWiki `wiki_*` tools inside the CodeWiki
-source checkout itself. This is stricter than using the package in a temporary or
-external project because bad tool behavior could mutate CodeWiki's own workflow
-truth. Self-dogfood is not re-enabled by build success alone.
+Repo-local self-hosting means using CodeWiki `wiki_*` tools inside the CodeWiki source checkout. It is disabled during stabilization because it creates a circular trust and versioning dependency between mutable source and the controller evaluating that source.
 
-Self-dogfood status: supervised pinned-controller autoload is enabled for
-reviewed commit `a04aca67919cb6106e95a2a0873fe17960e228a3`, Git tree
-`8bace5cfc7af17cc9c10f45006067279bf28e58c`, and package SHA-256
-`b13f58bb48715af3ef9bb1c60f67da73c3ee0f8c6072a554b505f145c50ae5dd`.
-The tracked pin reproduced the exact package under stable-baseline governance;
-`.pi/settings.json` loads only that installed controller. The earlier
-`trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
-remains historical evidence, not approval for another controller.
+Normal development uses Pi native coding tools, pi-lens, KB updates, source/tests, and Git. The repository carries no active dogfood traces, Changes Backlog ref, controller pin, CodeWiki package entry, or project-local CodeWiki skills. Removing current dogfood state from the branch tip does not remove recoverability from Git history or the explicit ignored migration backup.
 
-The re-enable gate is:
+Release readiness is proved externally:
 
-1. A reviewed clean commit is packed with
-   `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
-   <name>`. Its host-owned ignored manifest under
-   `.pi/npm/codewiki-baselines/**` pins matching Git tree content proof, package
-   integrity, review identity, and passing candidate gates.
-2. With `CODEWIKI_BASELINE_MANIFEST` pointing at that manifest,
-   `npm run test:self-dogfood-ready` verifies the immutable controller, requires
-   a clean candidate checkout, reruns candidate gates, and executes shadow
-   reads/previews; mutable candidate source cannot grade itself.
-3. `npm run self-dogfood:controller:install` rebuilds the pinned commit in a
-   detached worktree, verifies exact bytes and SHA-256, and installs only that
-   package under `.pi/npm`.
-4. Disposable external dogfood covers successful lifecycle runs, append
-   conflicts, malformed worker output, worktree failures, and cleanup.
-5. The pinned baseline produces acceptable read-only and preview results in
-   shadow mode before any real-repo trace append.
-6. `.codewiki/traces/TRACE-*.jsonl` files validate, and no central trace index or
-   legacy generated root becomes active truth.
-7. Explicit approval enables only supervised use with preview-before-append,
-   expected-byte/sequence guards, no unattended worker start, no auto-merge, and
-   no auto-publish.
+1. Build and pack a reviewed clean commit.
+2. Install the package into disposable projects with isolated Pi settings.
+3. Verify extension loading, prompt injection, tools, commands, dashboard behavior, guarded lifecycle writes, failures, and cleanup there.
+4. Keep the source repository unmodified by those tests.
+5. Publish or distribute the extension only after stable external gates and explicit release approval pass.
 
-Current repo operating guidance permits supervised CodeWiki use through the
-pinned controller while retaining normal Git and test verification. The first
-real-repo use after re-enable must be a read-only `wiki_state` check, followed by
-preview-mode loop calls before any guarded append. Changes to the quality
-evaluator remain governed by the stable baseline while the candidate evaluator
-runs as non-authoritative evidence.
+Self-hosting is not a release requirement. If reconsidered later, it needs a new explicit product/system decision; old controller approvals and historical traces grant no authority.
 
 ## Rebuild rules
 
-- Repo-local CodeWiki dogfooding is supervised and pinned; `.pi/settings.json` loads `.pi/npm/node_modules/codewiki` beside pi-lens. Do not add a `.pi/extensions/codewiki.ts` shim or load mutable source through `..`.
-- Do not run CodeWiki-owned compaction, resume injection, or auto-pickup.
+- Develop CodeWiki with Pi native coding tools and pi-lens; do not load CodeWiki into its own source checkout.
+- Keep `.pi/settings.json` free of CodeWiki package entries and do not add a `.pi/extensions/codewiki.ts` shim or mutable local path.
+- Do not activate project-local `codewiki-*` skills, prompt injection, dashboards, commands, or tools during stabilization.
+- Test the extension through packed installs in disposable external projects.
 - Use Pi native compaction only.
 - Do not rely on `_OLD_VERSION/**`; the archive has been removed after migration audit.
-- Treat `.codewiki/kb/**` as hot design truth and `.codewiki/traces/TRACE-*.jsonl` as future workflow/state truth.
+- Treat `.codewiki/kb/**` as current design truth, source/tests as executable truth, and Git as history. This checkout keeps no active dogfood trace or Changes state.
 
 ## Related docs
 

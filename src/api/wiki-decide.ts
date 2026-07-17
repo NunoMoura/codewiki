@@ -19,6 +19,7 @@ import {
 } from "../decision/proposal-rendering.ts";
 import type {
 	CurrentStatePacket,
+	SprintBoundaryInput,
 	SprintProposal,
 	KnowledgeDelta,
 } from "../decision/types.ts";
@@ -61,6 +62,7 @@ export interface ChangeAcceptanceInput {
 export interface RunWikiDecideInput {
 	traceId: string;
 	changeAcceptance: ChangeAcceptanceInput;
+	sprintBoundary: SprintBoundaryInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
 	requirementIds?: string[];
@@ -87,9 +89,21 @@ export interface RunWikiDecideResult {
 	};
 }
 
+const SPRINT_BOUNDARY_INPUT_KEYS = [
+	"accountableGoal",
+	"knowledgeTopics",
+	"noKnowledgeImpactReason",
+	"dependencies",
+	"rollbackBoundary",
+	"assessment",
+] as const;
+
+const SPRINT_BOUNDARY_ASSESSMENT_INPUT_KEYS = ["stance", "rationale"] as const;
+
 const WIKI_DECIDE_INPUT_KEYS = [
 	"traceId",
 	"changeAcceptance",
+	"sprintBoundary",
 	"knowledgeDelta",
 	"currentStatePacket",
 	"requirementIds",
@@ -121,9 +135,13 @@ export async function runWikiDecide(
 	if (mode === "append") assertAppendPreflightInput(input);
 	const nextSequence = requiredNextSequence(input.nextSequence ?? 1);
 	requiredChangeAcceptance(input.changeAcceptance);
+	requiredSprintBoundary(input.sprintBoundary);
 	const acceptedContext = await acceptedDecisionContext(input, traceId);
 	const acceptedChangeBundle = acceptedContext.prepared.bundle;
-	const proposal = sprintProposalFromAcceptedChanges(acceptedChangeBundle);
+	const proposal = sprintProposalFromAcceptedChanges(
+		acceptedChangeBundle,
+		input.sprintBoundary,
+	);
 	const qualityJudge = await resolveLoopQualityJudgeExecutionOptions({
 		repoRoot: input.repoRoot,
 	});
@@ -287,6 +305,26 @@ function decisionIterationInput(
 		parentId: input.parentId,
 		createdAt: acceptedChangeBundle.acceptedAt,
 	};
+}
+
+function requiredSprintBoundary(
+	value: SprintBoundaryInput | undefined,
+): asserts value is SprintBoundaryInput {
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		throw new Error("wiki_decide requires sprintBoundary input");
+	}
+	assertKnownInputKeys(
+		"wiki_decide.sprintBoundary",
+		value as Record<string, unknown>,
+		SPRINT_BOUNDARY_INPUT_KEYS,
+	);
+	if (value.assessment) {
+		assertKnownInputKeys(
+			"wiki_decide.sprintBoundary.assessment",
+			value.assessment as Record<string, unknown>,
+			SPRINT_BOUNDARY_ASSESSMENT_INPUT_KEYS,
+		);
+	}
 }
 
 function requiredChangeAcceptance(

@@ -15,6 +15,7 @@ import {
 import { resolveCodewikiExtensionIdentity } from "../identity.ts";
 import {
 	buildCodewikiDashboardUrlMessage,
+	closeCodewikiDashboardServer,
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
@@ -70,13 +71,15 @@ async function dispatchWikiCommand(
 interface DashboardCommandOptions {
 	json: boolean;
 	open?: boolean;
+	stop: boolean;
 }
 
 interface DashboardCommandResult {
 	command: "dashboard";
 	json: boolean;
-	url: string;
+	url?: string;
 	opened: boolean;
+	stopped: boolean;
 	rendered: string[];
 }
 
@@ -104,6 +107,18 @@ async function startDashboard(
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
+	if (options.stop) {
+		await closeCodewikiDashboardServer(root);
+		return {
+			command: "dashboard",
+			json: options.json,
+			opened: false,
+			stopped: true,
+			rendered: [
+				"CodeWiki dashboard stopped. Run /wiki-dashboard to reopen it.",
+			],
+		};
+	}
 	const open = options.open ?? (!options.json && ctx.mode === "tui");
 	const dashboard = await startCodewikiDashboardServer({
 		repoRoot: root,
@@ -117,6 +132,7 @@ async function startDashboard(
 		json: options.json,
 		url: dashboard.url,
 		opened: dashboard.opened,
+		stopped: false,
 		rendered: renderDashboardMessage(dashboard.url),
 	};
 }
@@ -239,7 +255,7 @@ async function bootstrapCommand(
 }
 
 function parseDashboardOptions(args: string[]): DashboardCommandOptions {
-	const options: DashboardCommandOptions = { json: false };
+	const options: DashboardCommandOptions = { json: false, stop: false };
 	for (const arg of args) {
 		if (arg === "--json") {
 			options.json = true;
@@ -253,7 +269,16 @@ function parseDashboardOptions(args: string[]): DashboardCommandOptions {
 			options.open = true;
 			continue;
 		}
+		if (arg === "--stop") {
+			options.stop = true;
+			continue;
+		}
 		throw new Error(`Unsupported /wiki-dashboard option: ${arg}`);
+	}
+	if (options.stop && options.open !== undefined) {
+		throw new Error(
+			"/wiki-dashboard --stop cannot be combined with --open or --no-open.",
+		);
 	}
 	return options;
 }

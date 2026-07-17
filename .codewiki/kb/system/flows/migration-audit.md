@@ -66,7 +66,7 @@ The following source is now stable enough to be treated as the active migration 
 These old behaviors should stay out of active source unless a future accepted decision explicitly reintroduces them:
 
 - automatic CodeWiki compaction, context projection, or prompt injection;
-- repo-local CodeWiki dogfooding before package readiness gates pass;
+- repo-local CodeWiki self-hosting during source stabilization; reconsideration requires a new explicit product/system decision;
 - graph files as canonical truth;
 - historical roadmap/artifact/validation/session/telemetry roots as active workflow truth;
 - role-based agency scheduling as a first-class workflow axis;
@@ -82,9 +82,9 @@ These old behaviors should stay out of active source unless a future accepted de
 | Done | Runtime trace-writer boundary | `appendSemanticLoopReport()` lives under `src/runtime/trace-writer.ts`, runs one semantic loop iteration, verifies one target semantic output event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic loops produce appendable reports; runtime owns trace writes. |
 | Done | `wiki_state` core facade | `buildWikiState()` folds active trace records into status, resume, work-plan, work-queue, trace-board, triggers, runtime-board, blockers, conflicts, quality, and next-action projections without reading stored views as truth. Project-backed state adds append handles from hot trace files. Source-map/path ownership is handled by explain/source-map APIs, not `wiki_state`. | Host tools/commands can wrap this facade later. |
 | Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
-| Done | User-facing dashboard/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki-dashboard` and `/wiki-resume` are package-installable through temp-project/package smokes; repo-local CodeWiki dogfooding stays disabled until readiness gates pass. |
+| Done | User-facing dashboard/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki-dashboard` and `/wiki-resume` are package-installable through temp-project/package smokes; the source repository does not self-host during stabilization. |
 | Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
-| Done | Skills refactor | Tools execute the OS, but agents need concise semantic loop playbooks. | Project-local `.agents/skills/codewiki-*` skills are limited to `codewiki-decide`, `codewiki-plan`, and `codewiki-implement`; state/config/archive stay as tools/APIs, and runtime stays backend/host coordination. |
+| Done | Agent guidance refactor | Tools execute the OS, but agents need concise semantic-loop guidance. | Packaged Pi prompt/tool guidance covers Decision, Planning, and Implementation; the source checkout carries no project-local CodeWiki skills, while state/config/archive stay tools/APIs and runtime stays backend/host coordination. |
 | Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
 | Done | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution is dry-run by default, explicit-runner only, and includes optional setup hooks. |
 | Done | Project bootstrap/scaffold generation | New repositories need target `.codewiki` structure without old graph/roadmap/gateway roots. | `src/project/bootstrap.ts` now writes config, KB, traces, views, and source-map scaffold; `/wiki-bootstrap` is the target Pi command, while the CLI remains a temporary harness. |
@@ -109,7 +109,7 @@ CodeWiki should distribute as a harness-agnostic core with thin host adapters:
 codewiki core package -> Pi extension adapter -> future MCP adapter
 ```
 
-Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is package-installable through temp-project smokes, and repo-local CodeWiki dogfooding stays disabled during production-readiness hardening. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
+Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is package-installable through temp-project smokes, and the source checkout does not self-host during stabilization. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
 
 ## Tool-surface direction
 

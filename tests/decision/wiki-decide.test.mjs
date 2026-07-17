@@ -122,12 +122,46 @@ describe("wiki_decide core facade", () => {
 				acceptedBy: "user",
 				acceptedAt: "2026-06-11T00:00:02.000Z",
 			};
+			const sprintBoundary = {
+				accountableGoal: "Freeze one accepted Change into one Sprint.",
+				knowledgeTopics: [".codewiki/kb/system/components/decision-loop.md"],
+				dependencies: [],
+				rollbackBoundary: "Revert Decision contract and trace input together.",
+				assessment: {
+					stance: "coherent",
+					rationale: "One Change serves one trace-backed lifecycle goal.",
+				},
+			};
+			await assert.rejects(
+				() =>
+					runWikiDecide({
+						repoRoot: root,
+						mode: "preview",
+						traceId,
+						nextSequence: 1,
+						changeAcceptance,
+					}),
+				/requires sprintBoundary input/,
+			);
+			await assert.rejects(
+				() =>
+					runWikiDecide({
+						repoRoot: root,
+						mode: "preview",
+						traceId,
+						nextSequence: 1,
+						changeAcceptance,
+						sprintBoundary: { ...sprintBoundary, workItems: [] },
+					}),
+				/unsupported input field workItems/,
+			);
 			const preview = await runWikiDecide({
 				repoRoot: root,
 				mode: "preview",
 				traceId,
 				nextSequence: 1,
 				changeAcceptance,
+				sprintBoundary,
 			});
 			assert.equal(
 				preview.iterationEvent.data.output.acceptedChangeBundle.digest,
@@ -136,6 +170,14 @@ describe("wiki_decide core facade", () => {
 			assert.match(
 				preview.renderedSprintProposal.markdown,
 				new RegExp(preview.changeAcceptance.bundle.digest),
+			);
+			assert.equal(
+				preview.loopResult.output.sprintBoundary.accountableGoal,
+				sprintBoundary.accountableGoal,
+			);
+			assert.match(
+				preview.renderedSprintProposal.markdown,
+				/Knowledge topics:/,
 			);
 			assert.equal(
 				(await store.get(record.change.id)).change.status,
@@ -149,6 +191,7 @@ describe("wiki_decide core facade", () => {
 				traceId,
 				nextSequence: 1,
 				changeAcceptance,
+				sprintBoundary,
 				sprintProposalApproval: {
 					approved: true,
 					renderedProposalDigest: preview.renderedSprintProposal.digest,
@@ -206,5 +249,4 @@ describe("wiki_decide core facade", () => {
 			await rm(root, { recursive: true, force: true });
 		}
 	});
-
 });

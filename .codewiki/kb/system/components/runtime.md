@@ -60,7 +60,7 @@ Runtime is CodeWiki's outer control loop. It is not a semantic loop and it does 
 while active work exists:
   read traces and derived views
   inspect loop outputs and exit conditions
-  invoke the semantic loop named by trace-derived state, or run a mechanical Task Assignment already authorized by Planning
+  invoke the semantic loop named by trace-derived state, or run a mechanical Work Item Assignment already authorized by Planning
   append semantic loop report or runtime coordination event
 ```
 
@@ -74,7 +74,7 @@ Runtime owns:
 - ephemeral leases and lock helpers;
 - scheduling and automation policy;
 - progress budgets and stop conditions;
-- Task Assignment / work-unit claim selection and worker-start handoff;
+- Work Item Assignment / work-unit claim selection and worker-start handoff;
 - lifecycle and retention orchestration;
 - temporary working data under `.codewiki/runtime/tmp/**`;
 - host session refs and Pi-native compaction boundaries.
@@ -89,7 +89,7 @@ CodeWiki has one runtime kernel/coordinator. It may be driven by different host 
 | --- | --- |
 | Main host | Active user-facing CodeWiki session. It supports brainstorming, persists mutable Changes through `wiki_change`, validates exact Change revisions with the user, and invokes `wiki_decide`. It does not need to remain focused on a trace after Decision exit. |
 | Trace host | Independent process or session focused on one trace. It consumes the exited Decision, runs Planning and Implementation, coordinates that trace's workers, asks runtime to append guarded semantic iterations, and closes the trace. |
-| Worker host | Narrow execution worker for one planned Task, usually in an isolated worktree; returns evidence to the trace host instead of appending semantic truth directly. |
+| Worker host | Narrow execution worker for one planned Work Item, usually in an isolated worktree; returns evidence to the trace host instead of appending semantic truth directly. |
 
 The main session is the interaction workspace; there is no separate Ideas Workspace. The Changes Backlog is durable storage for mutable pre-Decision records, not another host role or semantic loop. `wiki_decide` freezes an exact validated Change snapshot and creates the trace-backed Decision. The trace then becomes an independently scheduled unit of work, allowing the main session to continue discussing or validating other Changes.
 
@@ -109,7 +109,7 @@ Every Trace Host and worker invocation must receive an explicit provider, model,
 
 The declarative `runtime.modelRouting` configuration owns candidate identities, quality and latency classes, thinking levels, timeout limits, tool capabilities, pricing snapshots, expected input/output tokens, and the maximum number of escalations. Pricing is copied into resolved policy evidence so later review does not depend on mutable provider catalogs. Escalation is bounded, follows a failed attempt only, never repeats a route, and moves strictly to a higher quality class. Missing routes, tools, usage telemetry, or budget headroom block execution rather than falling back to an implicit Pi default.
 
-`runRuntimeHostOnce()` resolves worker policy before claim append by previewing the exact selected Tasks, resolving one quality-first policy per Task, and rejecting blocked or stale policy identities before the guarded claim write. The handoff and session input carry the policy digest, selected provider/model/thinking, tool allowlist, timeout, pricing snapshot, remaining budgets, and escalation identity. Child Pi processes receive those exact values rather than implicit defaults. Guarded resume requires both the persisted and current policy snapshots to have the same digest.
+`runRuntimeHostOnce()` resolves worker policy before claim append by previewing the exact selected Work Items, resolving one quality-first policy per Work Item, and rejecting blocked or stale policy identities before the guarded claim write. The handoff and session input carry the policy digest, selected provider/model/thinking, tool allowlist, timeout, pricing snapshot, remaining budgets, and escalation identity. Child Pi processes receive those exact values rather than implicit defaults. Guarded resume requires both the persisted and current policy snapshots to have the same digest.
 
 Policy-controlled workers require attached supervision, active monitoring, foreground timeout enforcement, and cumulative usage telemetry. Successful Pi JSON usage is attributed to the selected route and checked against token, monetary, and latency limits. Missing or malformed usage, budget exhaustion, model mismatch, detached execution, monitoring loss, or policy drift fails closed before Implementation evidence can treat the attempt as successful. A retry is eligible only after failure and must move to an untried, strictly higher quality route within the configured escalation count.
 
@@ -117,7 +117,7 @@ Policy-controlled workers require attached supervision, active monitoring, foreg
 
 Agency presets compile into granular capabilities, but immutable ceilings always deny Change acceptance, destructive actions, public actions, source promotion, package publication, controller advancement, and execution without supervision. Dashboard commands can start, resume, or stop only a currently eligible session; they cannot relax these ceilings.
 
-Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Tasks, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
+Host/session roles are internal runtime topology. User-facing UX should show Changes, Traces, Trace Detail, Decisions, Work Items, Assignments, and review/blocker status instead of exposing main host, trace host, or worker host concepts unless a maintainer is reading runtime architecture detail.
 
 ## Runtime sprint proposal
 
@@ -125,7 +125,7 @@ Host/session roles are internal runtime topology. User-facing UX should show Cha
 | --- | --- | --- | --- |
 | CHG-main-host-session-ingress | Any active Pi session in the repository may act as the main user session for Change capture, validation, and Decision ingress. | Accepted | Main host is not a daemon or singleton. Mutable pre-Decision truth lives in the Changes Backlog; accepted execution truth lives in `.codewiki/traces/**`. |
 | CHG-decision-handoff-obligation | Any exact validated Change approved for execution must be captured as a trace-backed `decision.changes_approved` output unless it is explicitly non-executable or knowledge-only. | Accepted | Chat-only acceptance is not workflow truth. `wiki_decide` freezes the approved Change revision and hands the independent trace to runtime. |
-| CHG-trace-host-scope | A trace host owns one independently executable trace and runs Planning plus Implementation for that trace. | Accepted | Main conversation may continue while trace execution proceeds; workers remain subordinate Task attempts inside one authoritative Implementation Loop. |
+| CHG-trace-host-scope | A trace host owns one independently executable trace and runs Planning plus Implementation for that trace. | Accepted | Main conversation may continue while trace execution proceeds; workers remain subordinate Work Item attempts inside one authoritative Implementation Loop. |
 | CHG-planning-triggers | Planning owns recurring schedules, event triggers, hooks, and manual triggers. | Accepted | Decision states the goal; planning creates work units and triggers; implementation enables or consumes those triggers. |
 | CHG-worker-liveness | Worker liveness belongs to implementation/runtime worker coordination. | Accepted | Use claims, leases, terminal release events, and meaningful progress events. Do not append noisy heartbeats as trace truth. |
 | CHG-openclaw-heartbeat-mechanics | Borrow OpenClaw-style heartbeat coalescing, priority, retry, and busy deferral mechanics, not the generic assistant heartbeat prompt. | Accepted | CodeWiki heartbeat handling is deterministic and trace-derived; no `HEARTBEAT_OK` prompt semantics. |
@@ -137,7 +137,7 @@ Host/session roles are internal runtime topology. User-facing UX should show Cha
 
 ## Work-unit claim selection
 
-Runtime work-unit claim selection is a pure projection over the generated `work-queue` view. In product language, it creates Task Assignments. It selects `ready` Planning-owned Tasks up to `maxWorkers`, counts active claims against capacity, and holds work that overlaps path scopes with already claimed or selected work. The generated `runtime-board` view combines Sprints Queue-compatible state, `work-queue`, `triggers`, and optional runtime previews so hosts and future UI surfaces can see pending coordination without creating a new truth root.
+Runtime work-unit claim selection is a pure projection over the generated `work-queue` view. In product language, it creates Work Item Assignments. It selects `ready` Planning-owned Work Items up to `maxWorkers`, counts active claims against capacity, and holds work that overlaps path scopes with already claimed or selected work. The generated `runtime-board` view combines Sprints Queue-compatible state, `work-queue`, `triggers`, and optional runtime previews so hosts and future UI surfaces can see pending coordination without creating a new truth root.
 
 The selection emits claim candidates only:
 
@@ -145,7 +145,7 @@ The selection emits claim candidates only:
 work-queue -> selected[] + held[]
 ```
 
-It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted Task Assignment selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. Runtime claim selection ignores raw Decision items; those must enter Planning first so Planning can own Sprints Queue ordering, conflicts, starvation, deferrals, and route-back policy. The claim append helper groups claim events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
+It does not spawn workers, approve semantic truth, or write by itself. Runtime policy then decides whether selected candidates may become appended claim trace events. Append is blocked when automation is `manual`, agency is `observe`, required expected byte offsets are absent, or a selected claim candidate is not backed by met planning quality standards. Runtime policy also plans worktree refs from `worktreeIsolation`; `auto` isolates parallel claims and dirty working-tree overlap. The work-unit claim helper converts an accepted Work Item Assignment selection into runtime claim trace events with per-trace sequence numbers and optional worktree metadata. Runtime claim selection ignores raw Decision items; those must enter Planning first so Planning can own Sprints Queue ordering, conflicts, starvation, deferrals, and route-back policy. The claim append helper groups claim events by trace, preflights expected byte offsets for every target trace, then appends each per-trace claim batch.
 
 ## Claim events
 
@@ -254,7 +254,7 @@ Temporary working data belongs under:
 
 Runtime temp may hold `output.json`, `exit.json`, worker scratch, logs, and remediation notes while a trace is running. It is never source truth. Anything needed after loop exit must be promoted to trace events/checkpoints, KB docs, source/tests, or Git refs before cleanup.
 
-Hybrid worker observability uses two signal classes. Durable trace records retain claims, releases, meaningful milestones, blockers, failures, completion, and accepted evidence. Ephemeral worker observations use a closed schema containing only trace/Task/worker/attempt identity, an allowlisted activity phase, timestamps, lease freshness, bounded numeric progress, and bounded execution-policy identity, route, tools, limits, and usage telemetry. Dashboard projection may display that operational policy and spend, but observations remain non-authoritative and reject unknown nested fields. Ephemeral observations may disappear after restart, expire to stale, and never satisfy semantic quality.
+Hybrid worker observability uses two signal classes. Durable trace records retain claims, releases, meaningful milestones, blockers, failures, completion, and accepted evidence. Ephemeral worker observations use a closed schema containing only trace/Work Item/worker/attempt identity, an allowlisted activity phase, timestamps, lease freshness, bounded numeric progress, and bounded execution-policy identity, route, tools, limits, and usage telemetry. Dashboard projection may display that operational policy and spend, but observations remain non-authoritative and reject unknown nested fields. Ephemeral observations may disappear after restart, expire to stale, and never satisfy semantic quality.
 
 The Dev Log stores permitted operational diagnostics under `.codewiki/runtime/tmp/<trace-id>/dev-log/`. Entries are private (`0700` directory and `0600` files on POSIX), ordered, size-capped, rotated, and redacted before write. They exclude prompts, reasoning, environment secrets, credentials, arbitrary source contents, and raw unbounded output. Blocked or failed traces retain the log for diagnosis; durable trace-host closure removes it after the closure event appends successfully.
 

@@ -166,20 +166,22 @@ function shadowChange(createdAt) {
 }
 
 async function seedAcceptedChange(packageRoot, shadowRoot, createdAt) {
-	const [{ changeContentDigest }, { GitRefChangeStore }, { createChangeRecord }] =
-		await Promise.all([
-			import(
-				pathToFileURL(join(packageRoot, "dist", "changes", "digest.js")).href
-			),
-			import(
-				pathToFileURL(
-					join(packageRoot, "dist", "changes", "git-ref-store.js"),
-				).href
-			),
-			import(
-				pathToFileURL(join(packageRoot, "dist", "changes", "records.js")).href
-			),
-		]);
+	const [
+		{ changeContentDigest },
+		{ GitRefChangeStore },
+		{ createChangeRecord },
+	] = await Promise.all([
+		import(
+			pathToFileURL(join(packageRoot, "dist", "changes", "digest.js")).href
+		),
+		import(
+			pathToFileURL(join(packageRoot, "dist", "changes", "git-ref-store.js"))
+				.href
+		),
+		import(
+			pathToFileURL(join(packageRoot, "dist", "changes", "records.js")).href
+		),
+	]);
 	run("git", ["init", "-q"], { cwd: shadowRoot });
 	const change = shadowChange(createdAt);
 	change.validation = {
@@ -294,6 +296,18 @@ try {
 		shadowRoot,
 		createdAt,
 	);
+	const sprintBoundary = {
+		accountableGoal:
+			"Prove the reviewed package can run a safe shadow Decision.",
+		knowledgeTopics: [".codewiki/kb/system/components/extension.md"],
+		dependencies: [],
+		rollbackBoundary: "Discard the disposable shadow repository.",
+		assessment: {
+			stance: "coherent",
+			rationale:
+				"One accepted shadow Change serves one package verification goal.",
+		},
+	};
 	const tracePath = join(shadowRoot, ".codewiki", "traces", `${traceId}.jsonl`);
 	mkdirSync(join(shadowRoot, ".codewiki", "traces"), { recursive: true });
 	const traceHead = `${JSON.stringify({
@@ -311,6 +325,7 @@ try {
 					traceId,
 					mode: "preview",
 					changeAcceptance,
+					sprintBoundary,
 				},
 			},
 			undefined,

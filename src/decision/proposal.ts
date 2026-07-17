@@ -9,6 +9,8 @@ import type {
 	DecisionChangeActionFailure,
 	DecisionChangeActionInput,
 	DecisionChangeInput,
+	SprintBoundary,
+	SprintBoundaryInput,
 	SprintProposal,
 	SprintProposalInput,
 } from "./types.ts";
@@ -30,8 +32,28 @@ export function createSprintProposal(
 		summary: text(input.summary) || "Sprint proposal",
 		sourceRefs: stringList(input.sourceRefs),
 		changes,
+		...(input.sprintBoundary
+			? { sprintBoundary: normalizeSprintBoundary(input.sprintBoundary) }
+			: {}),
 		createdAt,
 		updatedAt: input.updatedAt || createdAt,
+	};
+}
+
+export function normalizeSprintBoundary(
+	input: SprintBoundaryInput,
+): SprintBoundary {
+	const noKnowledgeImpactReason = text(input.noKnowledgeImpactReason);
+	return {
+		accountableGoal: text(input.accountableGoal),
+		knowledgeTopics: unique(stringList(input.knowledgeTopics)),
+		...(noKnowledgeImpactReason ? { noKnowledgeImpactReason } : {}),
+		dependencies: unique(stringList(input.dependencies)),
+		rollbackBoundary: text(input.rollbackBoundary),
+		assessment: {
+			stance: text(input.assessment?.stance),
+			rationale: text(input.assessment?.rationale),
+		},
 	};
 }
 

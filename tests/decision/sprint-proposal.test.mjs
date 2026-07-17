@@ -10,6 +10,7 @@ import {
 	applyDecisionChangeActions,
 	createSprintProposal,
 } from "../../src/decision/proposal.ts";
+import { renderSprintProposalMarkdown } from "../../src/decision/proposal-rendering.ts";
 import { formatTraceLine } from "../../src/traces/writer.ts";
 import { parseTraceLine } from "../../src/traces/reader.ts";
 import {
@@ -47,6 +48,37 @@ describe("sprint proposals", () => {
 		assert.equal(proposal.changes[0].workScale, "small");
 		assert.equal(proposal.changes[0].planningDepth, "micro");
 		assert.deepEqual(proposal.changes[0].affectedLayers, ["system", "source"]);
+	});
+
+	it("normalizes and renders an explicit Sprint boundary", () => {
+		const proposal = createSprintProposal({
+			id: "SP-shaped",
+			createdAt: "2026-06-11T00:00:00.000Z",
+			sprintBoundary: {
+				accountableGoal: " Keep one coherent lifecycle. ",
+				knowledgeTopics: [
+					".codewiki/kb/product/overview.md",
+					".codewiki/kb/product/overview.md",
+					".codewiki/kb/system/components/traces.md",
+				],
+				dependencies: ["CHG-next", "CHG-next"],
+				rollbackBoundary: "Revert contract and projection together.",
+				assessment: {
+					stance: "coherent",
+					rationale: "All selected intent serves one lifecycle boundary.",
+				},
+			},
+		});
+
+		assert.deepEqual(proposal.sprintBoundary.knowledgeTopics, [
+			".codewiki/kb/product/overview.md",
+			".codewiki/kb/system/components/traces.md",
+		]);
+		assert.deepEqual(proposal.sprintBoundary.dependencies, ["CHG-next"]);
+		assert.match(
+			renderSprintProposalMarkdown(proposal),
+			/## Sprint Boundary[\s\S]*Accountable goal: Keep one coherent lifecycle\.[\s\S]*Knowledge topics:/,
+		);
 	});
 
 	it("applies change actions atomically", () => {
@@ -165,6 +197,50 @@ describe("policy profile registry", () => {
 });
 
 describe("decision exit and iteration runner", () => {
+	it("blocks unshaped or incoherent multi-Change Sprint boundaries", () => {
+		const changes = ["CHG-one", "CHG-two"].map((id) => ({
+			id,
+			currentState: "Intent is separate.",
+			desiredState: "Intent shares one accountable lifecycle.",
+			rationale: "One user-confirmed boundary should govern it.",
+			...decisionQualityFields(),
+			approval: "approved",
+			sourceRefs: [".codewiki/kb/product/overview.md"],
+		}));
+		const unshaped = evaluateDecisionExit(createSprintProposal({ changes }));
+		assert.equal(
+			unshaped.issues.some((issue) => issue.code === "missing_sprint_boundary"),
+			true,
+		);
+
+		const incoherent = evaluateDecisionExit(
+			createSprintProposal({
+				changes,
+				sprintBoundary: {
+					accountableGoal: "One lifecycle.",
+					knowledgeTopics: ["kb:product/overview.md"],
+					dependencies: ["not-canonical"],
+					rollbackBoundary: "Revert independently.",
+					assessment: {
+						stance: "split_required",
+						rationale: "Goals do not share one boundary.",
+					},
+				},
+			}),
+		);
+		assert.deepEqual(
+			incoherent.issues
+				.map((issue) => issue.code)
+				.filter((code) => code.includes("sprint"))
+				.sort(),
+			[
+				"invalid_sprint_dependency",
+				"invalid_sprint_knowledge_topic",
+				"sprint_boundary_split_required",
+			],
+		);
+	});
+
 	it("blocks approved changes without traceability refs or no-impact rationale", () => {
 		const proposal = createSprintProposal({
 			changes: [
@@ -683,6 +759,7 @@ describe("decision exit and iteration runner", () => {
 			),
 			[
 				"sprint_proposal_ready",
+				"sprint_boundary_coherent",
 				"intention_understood",
 				"user_value_clear",
 				"cost_understood",

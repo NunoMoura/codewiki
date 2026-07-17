@@ -1,6 +1,5 @@
 {
   "packages": [
-    "npm:pi-lens",
-    "./npm/node_modules/codewiki"
+    "npm:pi-lens"
   ]
 }

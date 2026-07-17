@@ -3,6 +3,8 @@ import { describe, it } from "node:test";
 import {
 	buildCodewikiImplementationReview,
 	buildCodewikiWorkerAttempts,
+	isCommittedDashboardTrace,
+	projectSprintBoundary,
 } from "../../src/dashboard/state.ts";
 import { createWorkerObservation } from "../../src/runtime/worker-observation.ts";
 
@@ -20,7 +22,9 @@ function claim(sequence = 1) {
 			claimId: "claim-001",
 			workerId: "worker-001",
 			workUnitId: "WU-workers",
-			planningRefs: ["trace:TRACE-workers:planning:iteration:1#work:WU-workers"],
+			planningRefs: [
+				"trace:TRACE-workers:planning:iteration:1#work:WU-workers",
+			],
 			pathScopes: ["src/dashboard/state.ts"],
 		},
 	};
@@ -31,6 +35,87 @@ const item = {
 	title: "Project worker attempts",
 	status: "claimed",
 };
+
+describe("dashboard lifecycle projection", () => {
+	it("projects the latest declared Sprint Knowledge boundary", () => {
+		const boundary = projectSprintBoundary([
+			{
+				type: "trace_event",
+				id: "decision-1",
+				parentId: null,
+				traceId: "TRACE-topics",
+				sequence: 1,
+				loop: "decision",
+				event: "changes_approved",
+				refs: [".codewiki/kb/product/overview.md"],
+				createdAt: "2026-07-15T00:00:00.000Z",
+				data: {
+					output: {
+						sprintBoundary: {
+							accountableGoal: "Make Sprint Knowledge scope visible.",
+							knowledgeTopics: [
+								".codewiki/kb/product/overview.md",
+								".codewiki/kb/system/components/traces.md",
+							],
+							dependencies: ["CHG-next"],
+							rollbackBoundary: "Revert projection and contract together.",
+						},
+					},
+				},
+			},
+		]);
+		assert.deepEqual(boundary, {
+			accountableGoal: "Make Sprint Knowledge scope visible.",
+			knowledgeTopics: [
+				{
+					ref: ".codewiki/kb/product/overview.md",
+					category: "product",
+					label: "Overview",
+				},
+				{
+					ref: ".codewiki/kb/system/components/traces.md",
+					category: "system",
+					label: "Components / Traces",
+				},
+			],
+			dependencies: ["CHG-next"],
+			rollbackBoundary: "Revert projection and contract together.",
+		});
+	});
+
+	it("labels only successful Git-backed closure as committed", () => {
+		const close = {
+			type: "trace_close",
+			id: "TRACE-committed:archive:close:1",
+			parentId: null,
+			traceId: "TRACE-committed",
+			reason: "Completed and retained.",
+			gitRestoreRef: "abc123",
+			headRef: "TRACE-committed",
+			refs: ["abc123"],
+			createdAt: "2026-07-15T00:00:00.000Z",
+		};
+		assert.equal(
+			isCommittedDashboardTrace({ closed: true, status: "closed_complete" }, [
+				close,
+			]),
+			true,
+		);
+		assert.equal(
+			isCommittedDashboardTrace({ closed: true, status: "closed_incomplete" }, [
+				close,
+			]),
+			false,
+		);
+		assert.equal(
+			isCommittedDashboardTrace(
+				{ closed: true, status: "closed_complete" },
+				[],
+			),
+			false,
+		);
+	});
+});
 
 describe("dashboard worker projection", () => {
 	it("combines durable claims with latest live observation", () => {
@@ -63,7 +148,11 @@ describe("dashboard worker projection", () => {
 				},
 			},
 		});
-		const attempts = buildCodewikiWorkerAttempts([claim()], [item], [observation]);
+		const attempts = buildCodewikiWorkerAttempts(
+			[claim()],
+			[item],
+			[observation],
+		);
 		assert.equal(attempts.length, 1);
 		assert.equal(attempts[0].title, "Project worker attempts");
 		assert.equal(attempts[0].status, "running");
@@ -81,7 +170,11 @@ describe("dashboard worker projection", () => {
 			event: "runtime.work_unit.claim.released",
 			data: { ...claim().data, status: "completed" },
 		};
-		const attempts = buildCodewikiWorkerAttempts([claim(), release], [item], []);
+		const attempts = buildCodewikiWorkerAttempts(
+			[claim(), release],
+			[item],
+			[],
+		);
 		assert.equal(attempts[0].status, "completed");
 		assert.deepEqual(
 			buildCodewikiImplementationReview(attempts, [item], [], false),
@@ -94,7 +187,12 @@ describe("dashboard worker projection", () => {
 			},
 		);
 		assert.equal(
-			buildCodewikiImplementationReview(attempts, [item], ["Path conflict"], false).status,
+			buildCodewikiImplementationReview(
+				attempts,
+				[item],
+				["Path conflict"],
+				false,
+			).status,
 			"blocked",
 		);
 	});

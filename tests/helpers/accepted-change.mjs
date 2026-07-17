@@ -15,31 +15,50 @@ export function acceptedChangeFixture(overrides = {}) {
 		revision: 1,
 		status: "pending",
 		intent: {
-			question: overrides.question || "Should this validated Change become trace work?",
-			currentState: overrides.currentState || "Decision input is mutable before acceptance.",
-			desiredState: overrides.desiredState || "Decision embeds one exact accepted Change revision.",
-			rationale: overrides.rationale || "Independent traces require immutable input.",
-			nonGoals: overrides.nonGoals || ["Do not widen scope beyond this Change."],
+			question:
+				overrides.question || "Should this validated Change become trace work?",
+			currentState:
+				overrides.currentState ||
+				"Decision input is mutable before acceptance.",
+			desiredState:
+				overrides.desiredState ||
+				"Decision embeds one exact accepted Change revision.",
+			rationale:
+				overrides.rationale || "Independent traces require immutable input.",
+			nonGoals: overrides.nonGoals || [
+				"Do not widen scope beyond this Change.",
+			],
 		},
 		classification: {
 			kind: overrides.kind || "introduce",
 			type: overrides.type || "workflow_change",
 			scope: overrides.scope || "system",
-			affectedLayers: overrides.affectedLayers || ["changes", "decision", "traces"],
+			affectedLayers: overrides.affectedLayers || [
+				"changes",
+				"decision",
+				"traces",
+			],
 			targetRefs: overrides.targetRefs || ["src/api/wiki-decide.ts"],
 		},
 		impact: {
-			user: overrides.userImpact || "The main session can continue after acceptance.",
-			maintainer: overrides.maintainerImpact || "Trace input remains replayable.",
+			user:
+				overrides.userImpact ||
+				"The main session can continue after acceptance.",
+			maintainer:
+				overrides.maintainerImpact || "Trace input remains replayable.",
 		},
 		evidence: {
-			sourceRefs: overrides.sourceRefs || ["kb:system/components/decision-loop.md"],
+			sourceRefs: overrides.sourceRefs || [
+				"kb:system/components/decision-loop.md",
+			],
 			proofRefs: overrides.proofRefs || ["tests/helpers/accepted-change.mjs"],
 		},
 		safety: {
 			risk: overrides.risk || "low",
 			safetyBoundary: overrides.safetyBoundary,
-			failureModes: overrides.failureModes || ["A stale revision could be accepted."],
+			failureModes: overrides.failureModes || [
+				"A stale revision could be accepted.",
+			],
 			negativeTestPlan: overrides.negativeTestPlan,
 			rollbackPlan: overrides.rollbackPlan,
 		},
@@ -48,8 +67,11 @@ export function acceptedChangeFixture(overrides = {}) {
 			issues: [],
 			assessments: [],
 			recommendations: [],
-			successSignal: overrides.successSignal || "Trace event contains the accepted bundle digest.",
-			regressionPlan: overrides.regressionPlan || "Run Decision and trace replay tests.",
+			successSignal:
+				overrides.successSignal ||
+				"Trace event contains the accepted bundle digest.",
+			regressionPlan:
+				overrides.regressionPlan || "Run Decision and trace replay tests.",
 		},
 		estimates: {
 			effort: overrides.effort || "low",
@@ -88,6 +110,23 @@ export async function seedChangeAcceptance(repoRoot, options = {}) {
 	return {
 		store,
 		record,
+		sprintBoundary: options.sprintBoundary || {
+			accountableGoal: change.intent.desiredState,
+			knowledgeTopics: options.knowledgeTopics || [
+				".codewiki/kb/system/components/decision-loop.md",
+			],
+			dependencies: options.dependencies || [],
+			rollbackBoundary:
+				options.sprintRollbackBoundary ||
+				change.safety.rollbackPlan ||
+				"Revert the accepted Decision and its scoped implementation together.",
+			assessment: {
+				stance: "coherent",
+				rationale:
+					options.sprintAssessmentRationale ||
+					"One validated Change serves one accountable Sprint goal.",
+			},
+		},
 		changeAcceptance: {
 			expectedHead: seeded.head,
 			selections: [

@@ -44,7 +44,7 @@ The high-signal packet produced by a semantic loop iteration. Loop output contai
 A structured condition that decides whether a loop iteration can exit, must
 continue, must route back, or is blocked. Exit conditions are the loop-local
 trust boundary for output acceptance. User-facing UX should call these
-**Ready Checks** when explaining whether a Sprint Proposal, Sprint Plan, or Task
+**Ready Checks** when explaining whether a Sprint Proposal, Sprint Plan, or Work Item
 can advance.
 
 ## Exit status
@@ -88,11 +88,10 @@ The semantic loop that accepts user intent, requirements, alternatives, risks, a
 
 ## Planning loop
 
-The semantic loop that turns exited Decision output into Tasks, dependencies,
+The semantic loop that turns exited Decision output into Work Items, dependencies,
 path scopes, acceptance criteria, component refs, conflicts, and verification
 strategy. It exits only when implementation and runtime can trust the planning
-output. Low-level trace data may still call these work items or work units for
-compatibility.
+output. Low-level trace data may still call these work units for compatibility.
 
 ## Implementation loop
 
@@ -130,21 +129,29 @@ user-facing terminal rendering.
 | Change | Mutable pre-Decision statement of intent, classification, evidence, safety, and validation state shaped by the user and agent in the main session. | Canonical `Change` record stored in the Changes Backlog. |
 | Changes Backlog | Durable collection of mutable Changes that have not yet become immutable Decision input. It is storage and a projection, not a workspace or semantic loop. | Git-backed Change Store under `refs/codewiki/changes`. |
 | Decision | Binding interpretation of an exact validated Change revision accepted by the user. | Decision loop output containing the frozen Change snapshot and digest. |
-| Sprint Proposal | Exact rendered Decision proposal derived from one or more validated Change revisions for final user approval before append. It does not own mutable Change authoring. | Decision-loop preview over accepted Change input. |
-| Sprint | Approved accountable change journey created when validated Changes pass Decision Ready Checks. | One independently executable trace-backed workflow lifecycle. |
-| Sprint Record | Durable append-only record for a Sprint. | `.codewiki/traces/TRACE-*.jsonl` trace file. |
-| Sprints Queue | User-facing ordered list of active and completed Sprints. | Generated view/projection over traces and work queues. |
-| Sprint Trace | User-facing horizontal lifecycle/progress bar for one Sprint in the Sprints Queue. | Derived trace projection; never a separate truth file. |
-| Trace Detail | Expanded Sprint Trace view with workers, blockers, refs, paths, and current action. | Derived trace projection; never a separate truth file. |
-| Task | Planning-created, parallel-safe, assignable work that covers one or more approved Decisions. | Planning work item / work unit in trace data. |
-| Assignment | Runtime claim of one Planning-approved Task by a worker or session. | Runtime claim trace event. |
+| Sprint Map | User-confirmed grouping of validated Changes into one accountable goal, canonical Product/System Knowledge topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. It is mutable shaping input before Decision, not a fourth semantic loop or truth store. | Sprint-boundary metadata carried into the Decision-loop preview. |
+| Sprint Proposal | Exact rendered Decision proposal derived from one user-confirmed Sprint Map and its validated Change revisions for final user approval before append. It does not own mutable Change authoring. | Decision-loop preview over accepted Change input and Sprint-boundary metadata. |
+| Sprint | One approved accountable lifecycle created when a Sprint Proposal passes Decision Ready Checks. One Sprint always equals one trace; a Sprint never groups multiple traces. | One independently executable trace-backed workflow lifecycle. |
+| Amendment Sprint | Independent Sprint created only after a linked mutable Change is validated and its exact Decision is approved. Dashboard Change actions cannot create it directly. | Trace head with `origin.kind: "amendment"` and `parentTraceId`. |
+| Sprint Record | Durable append-only record for a Sprint. | `.codewiki/traces/TRACE-*.jsonl` trace file in an installed CodeWiki project. |
+| Work Pipeline | User-facing ordered projection spanning proposed Backlog Changes and accepted Sprints from Change through Committed. | Union UI projection over the Change Store and trace/work-queue views; never a shared truth store. |
+| Pipeline Card | Shared user-facing lifecycle card shell backed by either one mutable Change or one Sprint Trace. | Tagged UI projection preserving the backing truth kind and lineage. |
+| Sprints Queue | Trace-backed subset of the Work Pipeline containing accepted Sprints. | Generated view/projection over traces and work queues. |
+| Sprint Trace | Accepted-Sprint Pipeline Card with lifecycle progress and expandable Trace Detail. | Derived trace projection; never a separate truth file. |
+| Trace Detail | Expanded Sprint Trace view with workers, blockers, refs, paths, current action, and collapsed-by-default Ready Check detail. | Derived trace projection; never a separate truth file. |
+| Work Item | Planning-created, parallel-safe, assignable work that covers one or more approved Decisions inside one Sprint. | Planning work item / work unit in trace data. |
+| Assignment | Runtime claim of one Planning-approved Work Item by a worker or session. | Runtime claim trace event. |
 | Ready Checks | User-facing name for loop exit conditions and quality standards that must pass before work advances. | Exit-condition and quality-graph internals. |
 | Needs Review | User-facing status when earlier authority is required before work can proceed. | `route_back` exit status. |
 | Blocked | User-facing status when an external wait, resource, host capability, or policy prevents progress. | `blocked` exit status. |
-| Archived | User-facing status for accepted completed work that has reached durable retention. | Passed implementation plus archive/retention closure state. |
+| Committed | User-facing status for successfully completed work whose terminal trace closure carries Git restore evidence. | `closed_complete` trace projection plus `trace_close.gitRestoreRef`; archive remains the backend retention operation. |
+| Aligned | Relevant Sprint Knowledge topics match the last validated scoped baseline and no grounded contradiction is open. | Generated topic-scoped alignment projection. |
+| Review Needed | Relevant Sprint Knowledge content changed after its baseline and needs semantic review. Digest change alone can establish only this state. | Generated freshness projection. |
+| Misaligned | An explicit grounded finding proves a contradiction and names affected layer, source refs, rationale, and recommended next loop. | Explicit alignment finding plus generated projection. |
+| Unknown | Topic scope, baseline, or evidence is insufficient to establish alignment, including legacy Sprints. | Safe generated fallback. |
 
 Implementation workers may use private scratchpads or checklists inside an
-assigned Task. These are execution aids, not Planning truth, Sprints Queue items,
+assigned Work Item. These are execution aids, not Planning truth, Sprints Queue items,
 or runtime-claimable units.
 
 Host/session terms such as decision host, trace host, worker session, process
@@ -164,7 +171,7 @@ A loop iteration status indicating that external user input, resource availabili
 
 ## Runtime claim
 
-Trace-owned coordination event that grants a worker or session a bounded Task
+Trace-owned coordination event that grants a worker or session a bounded Work Item
 Assignment. Claims prevent unsafe overlap but do not replace trace truth,
 source/tests, or Git proof.
 
@@ -232,16 +239,18 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | gateway | loop-local exit conditions |
 | gate verdict | exit status |
 | validation report | exit condition result |
-| board | Sprints Queue; compatibility flag/name only where already public |
+| board | Work Pipeline or Sprints Queue; compatibility flag/name only where already public |
 | trace board | Sprints Queue |
 | trace queue | Sprints Queue; internal generated view only |
-| card / trace card | Sprint Trace |
+| trace card | Sprint Trace |
 | Sprint Card | Sprint Trace |
+| generic card | Pipeline Card |
 | Sprint Queue | Sprints Queue |
+| Archived (user-facing status) | Committed; archive remains a backend retention term |
 | sprint proposal | Sprint Proposal; internal Decision-loop proposal shape only |
 | proposed change | Decision after approval; change id only for trace refs |
-| work unit / work item | Task; internal Planning trace shape only |
-| sub-task / planner to-do list | Task, or worker-local scratchpad/checklist |
+| task / work unit | Work Item; internal Planning trace shape only |
+| sub-task / planner to-do list | Work Item, or worker-local scratchpad/checklist |
 | route_back | Needs Review; `route_back` only in internals |
 | roadmap | work-plan/work-queue generated views over traces |
 | graph truth | generated views over traces/KB/source/Git |

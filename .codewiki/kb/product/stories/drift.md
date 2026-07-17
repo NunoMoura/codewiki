@@ -21,7 +21,11 @@ As a maintainer, I want CodeWiki to detect contradictions between intent, docs, 
 - Exit conditions judge loop output from grounded refs before downstream loops consume it.
 - Continue, route-back, and blocked iterations remain available as compact trace provenance for follow-up work.
 - `wiki_state` and generated views agree on current next action; users should not see one surface report alignment while another reports unresolved drift.
-- Freshness stays stable across no-op view rebuilds and changes only when canonical knowledge, traces, source/tests, Git proof, or explicit user intent changes.
+- Freshness stays stable across no-op view rebuilds and changes only when relevant canonical Knowledge topics, installed-project traces, source/tests, Git proof, or explicit user intent changes.
+- Sprint alignment has exactly four states: Aligned, Review Needed, Misaligned, and Unknown.
+- A relevant scoped digest change produces Review Needed and never proves Misaligned by itself.
+- Misaligned requires a grounded finding with affected layer, source-of-truth refs, rationale, and recommended next semantic loop.
+- Legacy or insufficiently scoped Sprints report Unknown, and no alignment projection creates an amendment automatically.
 
 ## Related docs
 

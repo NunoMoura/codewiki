@@ -1,7 +1,7 @@
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
 	closeInProcessCodewikiDashboardServer,
-	restoreCodewikiDashboardServer,
+	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
 import {
@@ -26,22 +26,38 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 			);
 		}
 	});
-	pi.on("session_start", async (_event, ctx) => {
+	pi.on("session_start", async (event, ctx) => {
 		const cwd = typeof ctx.cwd === "string" ? ctx.cwd : process.cwd();
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		const identity = resolveCodewikiExtensionIdentity(
 			import.meta.url,
 			projectRoot ?? cwd,
 		);
+		let dashboardLive = false;
 		if (projectRoot) {
-			await restoreCodewikiDashboardServer(projectRoot).catch(() => undefined);
+			dashboardLive = Boolean(
+				await startCodewikiDashboardServer({
+					repoRoot: projectRoot,
+					open: shouldOpenAutomaticDashboard(event, ctx),
+					keepAlive: ctx.mode === "tui",
+					inProcess: true,
+					persistent: false,
+				}).catch(() => undefined),
+			);
 		}
 		clearLegacyCodewikiWidgets(ctx);
 		setCodewikiFooterStatus(
 			ctx,
-			`CodeWiki ${identity.footerLabel} · dashboard: /wiki-dashboard`,
+			`CodeWiki ${identity.footerLabel} · dashboard ${dashboardLive ? "live · /wiki-dashboard reopen" : "unavailable · /wiki-dashboard retry"}`,
 		);
 	});
+}
+
+export function shouldOpenAutomaticDashboard(
+	event: Record<string, unknown>,
+	ctx: CodewikiExtensionContext,
+): boolean {
+	return ctx.mode === "tui" && event.reason === "startup";
 }
 
 async function resolveEventProjectRoot(

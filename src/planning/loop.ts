@@ -167,7 +167,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			cost: 12,
 			hardGate: true,
 			description:
-				"Every Decision ref is covered by a Task or explicit resolution.",
+				"Every Decision ref is covered by a Work Item or explicit resolution.",
 			codes: ["missing_decision_coverage", "unknown_decision_ref"],
 		}),
 		planningPackStandard({
@@ -178,7 +178,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			cost: 12,
 			hardGate: true,
 			description:
-				"Each Task has enough bounded context to be assigned to one implementation worker.",
+				"Each Work Item has enough bounded context to be assigned to one implementation worker.",
 			codes: ["invalid_work_item", "duplicate_work_item_id"],
 		}),
 		planningPackStandard({
@@ -188,7 +188,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			weight: 12,
 			cost: 12,
 			description:
-				"Each Task breaks Decision intent into concrete technical requirements.",
+				"Each Work Item breaks Decision intent into concrete technical requirements.",
 			codes: ["missing_technical_requirements"],
 		}),
 		planningPackStandard({
@@ -199,7 +199,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			cost: 14,
 			hardGate: true,
 			description:
-				"Each Task has stable acceptance criteria and verification refs or commands.",
+				"Each Work Item has stable acceptance criteria and verification refs or commands.",
 			codes: [
 				"invalid_acceptance_criterion",
 				"duplicate_acceptance_criterion_id",
@@ -214,7 +214,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			cost: 8,
 			hardGate: true,
 			description:
-				"Each Task declares standard or micro planning depth; micro-plans stay dependency-free and cover one Decision.",
+				"Each Work Item declares standard or micro planning depth; micro-plans stay dependency-free and cover one Decision.",
 			codes: [
 				"invalid_planning_depth",
 				"invalid_micro_plan_dependency",
@@ -229,7 +229,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			weight: 12,
 			cost: 12,
 			description:
-				"Each Task declares worker profile and agent judgment that it is independent and implementation-ready.",
+				"Each Work Item declares worker profile and agent judgment that it is independent and implementation-ready.",
 			codes: [
 				"missing_worker_profile",
 				"missing_planning_assessment",
@@ -244,7 +244,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			weight: 12,
 			cost: 12,
 			description:
-				"Independent judge verifies each Task is atomic enough for one implementation worker and is not a disguised Sprint.",
+				"Independent judge verifies each Work Item is atomic enough for one implementation worker and is not a disguised Sprint.",
 			codes: ["semantic_work_unit_not_atomic"],
 		}),
 		planningPackStandard({
@@ -291,7 +291,7 @@ export const PLANNING_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			weight: 10,
 			cost: 10,
 			description:
-				"Each Task is neither Sprint-sized nor tiny busywork; the Sprint remains the Decision bundle.",
+				"Each Work Item is neither Sprint-sized nor tiny busywork; the Sprint remains the Decision bundle.",
 			codes: ["missing_right_sizing", "work_unit_not_right_sized"],
 		}),
 		planningPackStandard({

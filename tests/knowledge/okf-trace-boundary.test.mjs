@@ -82,7 +82,13 @@ describe("OKF trace boundary", () => {
 	});
 
 	it("does not parse trace files as OKF concepts", () => {
-		const traceFiles = codeWikiTraceBoundaryEntries(repoBoundaryFiles());
+		const traceFiles = codeWikiTraceBoundaryEntries([
+			...repoBoundaryFiles(),
+			{
+				path: ".codewiki/traces/TRACE-synthetic.jsonl",
+				content: "---\ntype: Concept\n---\n# Trap\n",
+			},
+		]);
 		const okfFiles = codeWikiOkfBundleFiles(
 			traceFiles.map((entry) => ({
 				path: entry.path,
@@ -90,11 +96,8 @@ describe("OKF trace boundary", () => {
 			})),
 		);
 
-		assert.equal(traceFiles.length > 0, true);
-		assert.equal(
-			traceFiles.every((entry) => entry.kind === "trace_jsonl"),
-			true,
-		);
+		assert.equal(traceFiles.length, 1);
+		assert.equal(traceFiles[0].kind, "trace_jsonl");
 		assert.deepEqual(okfFiles, []);
 		assert.equal(validateOkfBundle(okfFiles).conceptCount, 0);
 	});

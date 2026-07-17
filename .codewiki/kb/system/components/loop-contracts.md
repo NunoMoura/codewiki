@@ -44,12 +44,16 @@ Each semantic loop is defined by:
 
 Runtime is the outer control loop. It coordinates traces, scheduling, claims, workers, budgets, retention, and host integration, but it does not own semantic truth. Hosts such as Pi display state, collect user input, and invoke CodeWiki APIs; host UI state is never workflow truth.
 
+Before Decision, the main session shapes mutable validated Changes into a user-confirmed Sprint Map. The map declares one accountable goal, canonical Product/System Knowledge Base topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. This shaping is part of Change intake, not a semantic loop or a new truth store. Decision must reject an absent map for multi-Change bundles, invalid topic or dependency references, oversized bundles, incoherent boundaries, and maps that leak Planning-level Work Items.
+
+The user-facing hierarchy is `Change → Sprint → Work Item → Assignment`. One Sprint equals one trace lifecycle. Planning creates Work Items only after Decision exits; internal work-unit names remain compatible trace data.
+
 ## Loop responsibilities
 
 | Loop | Loop cycle | Loop output | Exit condition focus |
 | --- | --- | --- | --- |
-| Decision | Observe user intent, current KB/source/trace/Git refs, risks, alternatives, work scale, planning depth, route target, and route-back questions. | Accepted decision facts, requirements, KB/diagram propagation, risks, non-goals, assumptions, planning-depth guidance, route metadata, and planning questions. | Intent quality, current-state grounding, KB impact, risk/approval, and safe routing readiness. |
-| Planning | Observe accepted decision output and trace-queue state, then shape executable work. | Work units or micro-plans, acceptance criteria, dependencies, component refs, path scopes, verification strategy, trace-queue ordering/conflict decisions, deferrals, and optional triggers for recurring schedules, events, or hooks. | Decision coverage, acceptance clarity, planning-depth validity, dependency/path/component validity, trace-queue health, trigger validity, and implementation/runtime readiness. |
+| Decision | Observe a user-confirmed Sprint Map, exact Change revisions, current KB/source/trace/Git refs, risks, alternatives, work scale, planning depth, route target, and route-back questions. | Accepted Sprint boundary and decision facts, requirements, KB/diagram propagation, risks, non-goals, assumptions, planning-depth guidance, route metadata, and planning questions. | Sprint coherence, accountable goal, canonical Knowledge topics, dependencies, rollback boundary, intent quality, current-state grounding, KB impact, risk/approval, and safe routing readiness. |
+| Planning | Observe accepted Decision output and trace-queue state, then shape executable work. | Work Items (internal work units) or micro-plans, acceptance criteria, dependencies, component refs, path scopes, verification strategy, trace-queue ordering/conflict decisions, deferrals, and optional triggers for recurring schedules, events, or hooks. | Decision coverage, acceptance clarity, planning-depth validity, dependency/path/component validity, trace-queue health, trigger validity, and implementation/runtime readiness. |
 | Implementation | Observe accepted planning output and change code/docs/tests. | Changed paths, checks, acceptance evidence, worker provenance, aggregate content proof, residual ownership, archive disposition, and publication refs when needed. | Planning coverage, checks, AC evidence, TDD proof, component/path alignment, worker claim correlation, content proof, archive-disposition readiness, and closure readiness. |
 
 ## Implementation review and tool evidence
@@ -171,7 +175,7 @@ CodeWiki owns all kernel standards. The Decision, Planning, and Implementation b
 
 Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing verdicts; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only for CodeWiki-authorized packs. Project policy composition and a Quality Designer remain deferred; this migration does not permit project-owned kernel overrides, custom semantic loops, JavaScript evaluators, shell evaluators, automatic merge, or automatic publication.
 
-Rollback remains source-level and deterministic: revert the production or lab migration commits while retaining the strict schema/composition foundation, then rerun public facade, lab, package, Pi, readiness, and pinned-controller gates. A controller pin advances only after separate review of an exact clean commit/tree/tarball identity; migration success alone grants no activation authority.
+Rollback remains source-level and deterministic: revert the production or lab migration commits while retaining the strict schema/composition foundation, then rerun public facade, lab, package, Pi, readiness, and disposable external-install gates. A release artifact advances only after separate review of an exact clean commit, tree, and tarball identity; migration success alone grants no activation authority.
 
 The runner can optionally use specialized quality judge nodes for
 `agent_self_assessment` and `model_judge` standards. Conceptually there is one
@@ -292,7 +296,7 @@ Hard gates are binary semantic contracts. They are cheap, deterministic or
 human-authority backed, and must not be averaged away or delayed behind model
 judgment.
 
-Decision hard gates cover proposal readiness, understood intent, route safety,
+Decision hard gates cover proposal readiness, coherent Sprint boundaries, accountable goals, canonical Knowledge topics, dependencies, rollback boundaries, understood intent, route safety,
 planning depth, approval authority, current-state grounding, trace evidence,
 risk classification, active trace conflicts, and Change-kind classification.
 

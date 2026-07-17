@@ -184,10 +184,14 @@ function decisionOutput(input: {
 		approvedChangeIds: input.approvedChanges.map((change) => change.id),
 		requirementIds: input.input.requirementIds || [],
 		policyProfiles: policyProfiles(input.approvedChanges),
+		...(input.proposal.sprintBoundary
+			? { sprintBoundary: input.proposal.sprintBoundary }
+			: {}),
 		knowledgeDelta,
 		currentStatePacket,
 		refs: normalizeTraceRefs([
 			...input.proposal.sourceRefs,
+			...(input.proposal.sprintBoundary?.knowledgeTopics || []),
 			...input.approvedChanges.flatMap((change) => change.sourceRefs),
 			...currentStatePacket.refs,
 			...knowledgeDelta.updatedRefs,
@@ -293,6 +297,9 @@ function decisionTraceEvents(input: {
 				approvedChanges: approvedChanges.map(decisionChangeData),
 				approvedChangeIds: output.approvedChangeIds,
 				policyProfiles: output.policyProfiles || [],
+				...(output.sprintBoundary
+					? { sprintBoundary: output.sprintBoundary }
+					: {}),
 				currentStatePacket: output.currentStatePacket,
 				knowledgeDelta: output.knowledgeDelta,
 				qualityGraph: exit.qualityGraph,

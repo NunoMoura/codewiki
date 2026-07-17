@@ -1,11 +1,12 @@
-# CodeWiki Project Boundary
+# CodeWiki Source Repository Boundary
 
-This repository is rebuilding CodeWiki from a clean source scaffold.
+This repository develops CodeWiki as a normal source package. It must not load or dogfood its own Pi extension during stabilization.
 
-- `src/`, `tests/`, `README.md`, and `package.json` are the active package source.
-- `_OLD_VERSION/` is archived previous implementation code used only as a migration reference.
-- `.codewiki/kb/**` is source-of-truth documentation for intended product/system design.
-- Future workflow/state truth is `.codewiki/traces/TRACE-*.jsonl`.
-- Other `.codewiki/**` roots such as roadmap, builds, validation, runtime, session, telemetry, and generated graph files are legacy dogfood state during the rebuild and must not be treated as active workflow truth.
-
-Do not use CodeWiki `wiki_*` tools for this repository while the extension is disabled. Use normal file edits, tests, Git, and Pi native compaction only.
+- `.codewiki/kb/**` is intended product/system design truth.
+- `src/**` and `tests/**` are executable truth.
+- Git is history and checkpoint evidence.
+- Use Pi native coding tools, pi-lens, normal file edits, tests, and Pi native compaction.
+- Do not call CodeWiki `wiki_*` tools or `/wiki-*` commands in this checkout.
+- Do not install CodeWiki under this repository's `.pi/` directory or recreate controller pins, project-local CodeWiki skills, Changes Backlog refs, or dogfood traces.
+- Test the Pi extension only through packed installs in disposable external projects.
+- Generated views, runtime scratch, and other `.codewiki/**` state outside `kb/` are not source truth.

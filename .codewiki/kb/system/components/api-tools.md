@@ -8,23 +8,25 @@ tags:
   - api
   - tools
 timestamp: 2026-06-30T00:00:00Z
-codewiki_component: skills
+codewiki_component: pi-tools
 codewiki_components:
-  - skills
+  - pi-tools
 codewiki_source_patterns:
-  - .agents/skills/**
+  - src/pi/tools/**
 codewiki_test_patterns:
-  - tests/knowledge/skills.test.mjs
+  - tests/runtime/pi-extension.test.mjs
+  - tests/runtime/pi-tool-mutation-smoke.mjs
   - tests/integration/control-center-reconciliation.test.mjs
-codewiki_role: host_guidance
+codewiki_role: host_tool_adapter
 codewiki_source_map:
-  - id: skills
+  - id: pi-tools
     source_patterns:
-      - .agents/skills/**
+      - src/pi/tools/**
     test_patterns:
-      - tests/knowledge/skills.test.mjs
+      - tests/runtime/pi-extension.test.mjs
+      - tests/runtime/pi-tool-mutation-smoke.mjs
       - tests/integration/control-center-reconciliation.test.mjs
-    role: host_guidance
+    role: host_tool_adapter
 ---
 # API Tool Surface
 
@@ -39,7 +41,7 @@ CodeWiki core package
   -> MCP adapter (future optional adapter)
 ```
 
-Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. In this checkout, supervised Pi-tool self-dogfood loads only the reviewed controller installed under `.pi/npm`; mutable candidate source cannot grade itself. Unattended runtime automation remains disabled.
+Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. The CodeWiki source checkout does not install or load CodeWiki itself during stabilization; maintainers use Pi native coding tools and test packed extension artifacts in disposable external projects. Unattended runtime automation remains disabled.
 
 ## Tool parameter style
 
@@ -73,7 +75,7 @@ The normal internal agent surface is small and phase-aligned.
 | Tool | Responsibility | Mutates truth? |
 | --- | --- | --- |
 | `wiki_state` | Read active trace-derived state summaries, Sprints Queue packets, quality, and blockers. Views are output shape, not truth input. | No |
-| `wiki_change` | Query and manage mutable pre-Decision Change records in the Changes Backlog with exact head/revision guards. It cannot accept Changes, create traces or Tasks, launch workers, edit source, publish, or advance controllers. | Yes |
+| `wiki_change` | Query and manage mutable pre-Decision Change records in the Changes Backlog with exact head/revision guards. It cannot accept Changes, create traces or Work Items, launch workers, edit source, publish, or advance controllers. | Yes |
 | `wiki_decide` | Consume exact validated Change revisions and digests, render the binding Decision proposal, and create the trace-backed Decision through the guarded runtime append boundary. It does not author mutable Changes. | Yes |
 | `wiki_plan` | Run planning-loop iterations from exited decision output into work units, dependencies, path scopes, acceptance criteria, triggers, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
 | `wiki_implement` | Run implementation-loop iterations from exited planning output, code/docs/tests evidence, worker results, checks, content proof, and exit conditions; preview or ask the runtime append boundary to append trace state. | Yes |
@@ -82,7 +84,7 @@ The normal internal agent surface is small and phase-aligned.
 
 `wiki_change` also exposes bounded feedback intake for explicit user, runtime, or lab findings. Intake searches pending Changes first, reinforces a deterministic match with evidence, or creates only a pending unvalidated Change. Its closed schema rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized output. It cannot accept, decide, plan, implement, launch, publish, or advance controllers.
 
-Dashboard controls are narrower than the model-facing tools. Changes control permits only draft, revise, validate, and withdraw under capability, same-origin, head/record CAS, idempotency, and receipt checks. Configuration control permits only bounded schema-defined patches below the active authority and quality ceilings, validates the complete resulting config, and persists it atomically. Neither control can grant semantic approval, source-write, publication, controller, or unsupervised authority. Execution-affecting configuration changes require a full Pi exit and restart; `/reload` does not replace cached package modules.
+Dashboard controls are narrower than the model-facing tools. Changes control permits only draft, revise, validate, and withdraw under capability, same-origin, head/record CAS, idempotency, and receipt checks. Resume, Change, and Resolve Blocker may deliver only allowlisted trace-scoped user messages through an attached active-session bridge; delivery is not approval or trace mutation. Configuration renders a grouped form over `DashboardEditableConfig`, compiles only bounded schema-defined patches below active authority and quality ceilings, validates the complete resulting config, and persists it atomically. Raw editable JSON is not browser UX. Neither control can grant semantic approval, source-write, publication, controller, or unsupervised authority. Execution-affecting configuration changes require a full Pi exit and restart; `/reload` does not replace cached package modules.
 
 There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
 
@@ -92,7 +94,7 @@ There is no standalone current tool for split output generation or split exit ev
 | --- | --- | --- | --- |
 | Internal agent | `wiki_state`, `wiki_change`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, `wiki_config` | Change Backlog reads/mutations; trace-derived read model; checked semantic loop preview/append; guarded archive/config mutation. | Runtime mega-tool, split loop output/evaluation tools, or source-map explain inside `wiki_state`. |
 | Host/runtime | Package APIs such as `runWikiRuntime()`, host lifecycle helpers, worker-start helpers, handoff manifest helpers. | Work-unit claim selection, heartbeat-cycle Run starts, lease expiry, worker session transport, release events, append-safe coordination writes. | Semantic approval, Planning-owned work invention, or treating worker output as proof before implementation validation. |
-| User/Pi commands | `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Read-only Sprints Queue dashboard, resume handoff, source/path explanation, effective config, setup readiness. | Grouped namespace commands, state-dump commands, terminal widget stacks, former state aliases, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
+| User/Pi commands | Automatic dashboard startup plus `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Work Pipeline observability, dashboard reopen/stop lifecycle, resume handoff, source/path explanation, effective config, setup readiness. | Grouped namespace commands, state-dump commands, terminal widget stacks, former state aliases, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
 
 The core reduced-tool facade shape now exists for the current tool set:
 
@@ -121,7 +123,7 @@ Supported `view` values stay intentionally small:
 | View | Purpose |
 | --- | --- |
 | `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
-| `board` | Internal compatibility selector for Sprints Queue context: one Sprint Trace per trace, Decision/Task subitems, per-trace plan when selected, runtime projection, next action, and append handles for active traces. |
+| `board` | Internal compatibility selector for Sprints Queue context: one Sprint Trace per trace, Decision/Work Item subitems, per-trace plan when selected, runtime projection, next action, and append handles for active traces. |
 | `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
 | `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
 | `all` | Debug/maintenance payload containing all derived projections. |
@@ -147,7 +149,7 @@ Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` command
 
 | Command | Backend action |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json]` | Start or reuse the local Changes, Traces, and Configuration dashboard. |
+| `/wiki-dashboard [--no-open] [--json] [--stop]` | Reopen/reuse the automatic Work Pipeline dashboard, return its URL without opening, or stop its local host. |
 | `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
 | `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
@@ -167,23 +169,15 @@ wiki_* append -> trace record -> derived view -> renderer
 
 Preview mode is agent-private validation. It can fail fast and guide the agent, but it should not update user-facing progress UI because it is not proof of durable work.
 
-`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. `/wiki-dashboard` owns rich user-facing progress observability as a read-only browser surface. Loop progress, Ready Checks, blockers, workers, host lifecycle events, and completion receipts should render from appended trace records and generated views, not from raw tool payloads.
+`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. The automatically opened dashboard owns rich user-facing progress observability, while `/wiki-dashboard` provides reopen/recovery and host stop. Loop progress, collapsed-by-default Ready Checks, blockers, workers, host lifecycle events, and completion receipts should render from Change/trace-backed projections, not from raw tool payloads.
 
 Renderers are UI-only and must not become hidden state. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
 
 Sprint Traces and the Sprints Queue are projections over trace-derived state. They must not write UI files or create a separate Board state root. Existing `board` and `cards` API/view names are compatibility selectors until a separate API migration is planned.
 
-## Skills
+## Agent guidance
 
-Skills are semantic loop playbooks, not a second tool surface. The system prompt gives the small CodeWiki OS model; skills tell agents how to run the three loops when needed.
-
-Project-local skills under `.agents/skills/codewiki-*` are intentionally limited to:
-
-- `codewiki-decide`: run decision loop cycles, output, and exit conditions;
-- `codewiki-plan`: run planning loop cycles, output, and exit conditions;
-- `codewiki-implement`: run implementation loop cycles, output, and exit conditions.
-
-There is no `codewiki-state`, `codewiki-config`, `codewiki-archive`, or `codewiki-runtime` skill. State, config, and archive are tools/APIs that the agent may call when needed, but they do not need separate playbooks. Runtime is backend/host coordination only and must not become an agent skill or fourth loop.
+Semantic-loop guidance belongs to the packaged Pi prompt and narrow tool descriptions, not a second tool surface or project-local skill directory. The source repository carries no `codewiki-*` skills during stabilization. Decision, Planning, and Implementation remain the only semantic loops; state, config, and archive remain tools/APIs, while Runtime remains backend/host coordination rather than a fourth loop.
 
 Mutation workflows must still require explicit expected byte/sequence checks and must not reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
 

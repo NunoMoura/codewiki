@@ -132,21 +132,25 @@ describe("loop quality judge provider", () => {
 				process.env.CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION =
 					"judge.test.v1";
 				const root = await mkdtemp(join(tmpdir(), "codewiki-judge-provider-"));
-				const { changeAcceptance } = await seedChangeAcceptance(root, {
-					id: "CHG-judge-provider",
-					currentState: "Decision loop judge provider is not configured.",
-					desiredState:
-						"Decision loop judge provider can independently review agent assessment.",
-					rationale:
-						"Independent review reduces false-pass risk without requiring a model by default.",
-					sourceRefs: ["kb:system/components/loop-contracts.md"],
-				});
+				const { changeAcceptance, sprintBoundary } = await seedChangeAcceptance(
+					root,
+					{
+						id: "CHG-judge-provider",
+						currentState: "Decision loop judge provider is not configured.",
+						desiredState:
+							"Decision loop judge provider can independently review agent assessment.",
+						rationale:
+							"Independent review reduces false-pass risk without requiring a model by default.",
+						sourceRefs: ["kb:system/components/loop-contracts.md"],
+					},
+				);
 				const result = await runWikiDecide({
 					repoRoot: root,
 					mode: "preview",
 					traceId: "TRACE-judge-provider",
 					nextSequence: 1,
 					changeAcceptance,
+					sprintBoundary,
 				});
 
 				assert.equal(

@@ -81,7 +81,7 @@ function narrateClaim(context: NarrationContext): ActivityFeedItem {
 	return {
 		...context.base,
 		headline: `${context.title} started`,
-		detail: `${context.workerId || "A worker"} claimed this Task and began scoped work.`,
+		detail: `${context.workerId || "A worker"} claimed this Work Item and began scoped work.`,
 		impact: "Implementation work is now in progress.",
 		nextAction: "Waiting for the worker's next verified milestone.",
 		status: "progress",
@@ -100,7 +100,7 @@ function completedRelease(context: NarrationContext): ActivityFeedItem {
 		...context.base,
 		headline: `${context.title} completed`,
 		detail: `${context.workerId || "The worker"} returned its scoped result and evidence.`,
-		impact: "This Task is ready for aggregate Implementation review.",
+		impact: "This Work Item is ready for aggregate Implementation review.",
 		nextAction: "Collect remaining results and run integration checks.",
 		status: "success",
 	};
@@ -114,13 +114,13 @@ function incompleteRelease(
 	return {
 		...context.base,
 		headline: `${context.title} ${status}`,
-		detail: `${context.workerId || "The worker"} released this Task with status ${status}.`,
+		detail: `${context.workerId || "The worker"} released this Work Item with status ${status}.`,
 		impact: blocked
 			? "Implementation cannot finish until this blocker is resolved."
-			: "This Task needs another execution attempt.",
+			: "This Work Item needs another execution attempt.",
 		nextAction: blocked
 			? "Resolve the reported blocker or route work to its authority owner."
-			: "Review the failure and retry the Task.",
+			: "Review the failure and retry the Work Item.",
 		status: blocked ? "blocked" : "failure",
 	};
 }
@@ -134,7 +134,7 @@ function narrateDecision(context: NarrationContext): ActivityFeedItem {
 			? `${count} approved change${count === 1 ? "" : "s"} can now be planned.`
 			: "Approved intent can now be planned.",
 		impact: "Product and system direction is settled for this iteration.",
-		nextAction: "Planning will turn the approved change into executable Tasks.",
+		nextAction: "Planning will turn the approved change into executable Work Items.",
 		status: "success",
 	};
 }
@@ -145,10 +145,10 @@ function narratePlan(context: NarrationContext): ActivityFeedItem {
 		...context.base,
 		headline: "Implementation plan ready",
 		detail: count
-			? `${count} Task${count === 1 ? " is" : "s are"} ready for dependency-aware execution.`
-			: "Executable Tasks were created.",
+			? `${count} Work Item${count === 1 ? " is" : "s are"} ready for dependency-aware execution.`
+			: "Executable Work Items were created.",
 		impact: "Workers can now claim ready work without overlapping path ownership.",
-		nextAction: "Start ready Tasks and report meaningful worker milestones.",
+		nextAction: "Start ready Work Items and report meaningful worker milestones.",
 		status: "success",
 	};
 }
@@ -159,7 +159,7 @@ function narrateImplementation(context: NarrationContext): ActivityFeedItem {
 		headline: "Implementation evidence accepted",
 		detail: "Changed paths, checks, acceptance evidence, and content proof passed review.",
 		impact: "Verified work can count toward aggregate Implementation completion.",
-		nextAction: "Continue remaining Tasks or close the trace when all work is covered.",
+		nextAction: "Continue remaining Work Items or close the trace when all work is covered.",
 		status: "success",
 	};
 }

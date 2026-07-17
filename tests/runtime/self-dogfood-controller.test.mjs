@@ -1,20 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
 	parseSelfDogfoodControllerPin,
 	SELF_DOGFOOD_CONTROLLER_SCHEMA,
 } from "../../src/project/self-dogfood-controller.ts";
-
-function readTrackedControllerPin() {
-	try {
-		return JSON.parse(readFileSync(".pi/codewiki-controller.json", "utf8"));
-	} catch (error) {
-		throw new Error("Tracked self-dogfood controller pin is not valid JSON.", {
-			cause: error,
-		});
-	}
-}
 
 function controllerPin() {
 	return {
@@ -39,21 +28,15 @@ function controllerPin() {
 	};
 }
 
-describe("self-dogfood controller pin", () => {
-	it("accepts the tracked reviewed controller pin", () => {
-		const pin = parseSelfDogfoodControllerPin(readTrackedControllerPin());
-		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.9");
-		assert.equal(pin.source.commit, "a04aca67919cb6106e95a2a0873fe17960e228a3");
-		assert.equal(pin.source.tree, "8bace5cfc7af17cc9c10f45006067279bf28e58c");
-		assert.equal(pin.package.bytes, 737405);
-		assert.equal(
-			pin.package.sha256,
-			"b13f58bb48715af3ef9bb1c60f67da73c3ee0f8c6072a554b505f145c50ae5dd",
-		);
-		assert.equal(
-			pin.approval.reviewRef,
-			"chat:2026-07-14-controller-v0.3.9-and-final-closure-approved",
-		);
+describe("self-dogfood controller artifact parser", () => {
+	it("accepts a reviewed immutable controller artifact", () => {
+		const pin = parseSelfDogfoodControllerPin(controllerPin());
+		assert.equal(pin.tag, "codewiki-self-dogfood-baseline-v0.3.0");
+		assert.equal(pin.source.commit, "a".repeat(40));
+		assert.equal(pin.source.tree, "b".repeat(40));
+		assert.equal(pin.package.bytes, 673696);
+		assert.equal(pin.package.sha256, "c".repeat(64));
+		assert.equal(pin.approval.reviewRef, "review:baseline-v0.3.0");
 	});
 
 	it("rejects unknown fields and malformed pins", () => {

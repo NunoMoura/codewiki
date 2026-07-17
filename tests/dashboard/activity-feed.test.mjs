@@ -17,7 +17,7 @@ function event(id, eventName, data = {}, sequence = 1) {
 }
 
 describe("Activity Feed narration", () => {
-	it("explains worker execution, impact, and next action with friendly Task titles", () => {
+	it("explains worker execution, impact, and next action with friendly Work Item titles", () => {
 		const feed = buildActivityFeed(
 			[
 				event("claim-1", "runtime.work_unit.claimed", {
@@ -25,12 +25,17 @@ describe("Activity Feed narration", () => {
 					workerId: "worker-001",
 					workUnitId: "WU-feed",
 				}),
-				event("release-1", "runtime.work_unit.claim.released", {
-					claimId: "claim-1",
-					workerId: "worker-001",
-					workUnitId: "WU-feed",
-					status: "completed",
-				}, 2),
+				event(
+					"release-1",
+					"runtime.work_unit.claim.released",
+					{
+						claimId: "claim-1",
+						workerId: "worker-001",
+						workUnitId: "WU-feed",
+						status: "completed",
+					},
+					2,
+				),
 			],
 			new Map([["WU-feed", "Build human Activity Feed"]]),
 		);
@@ -43,8 +48,15 @@ describe("Activity Feed narration", () => {
 
 	it("coalesces repeated semantic updates and omits unknown raw events", () => {
 		const feed = buildActivityFeed([
-			event("decision-1", "changes_approved", { output: { approvedChanges: [{ id: "A" }] } }),
-			event("decision-2", "changes_approved", { output: { approvedChanges: [{ id: "B" }] } }, 2),
+			event("decision-1", "changes_approved", {
+				output: { approvedChanges: [{ id: "A" }] },
+			}),
+			event(
+				"decision-2",
+				"changes_approved",
+				{ output: { approvedChanges: [{ id: "B" }] } },
+				2,
+			),
 			event("raw-3", "internal.unrecognized", { raw: "dry payload" }, 3),
 		]);
 		assert.equal(feed.length, 1);

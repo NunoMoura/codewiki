@@ -16,8 +16,9 @@ export const CODEWIKI_DIRECT_COMMANDS: readonly CodewikiDirectCommandSpec[] = [
 	{
 		name: "wiki-dashboard",
 		subcommand: "dashboard",
-		syntax: "/wiki-dashboard [--no-open] [--json]",
-		description: "open the local read-only Sprints Queue dashboard",
+		syntax: "/wiki-dashboard [--no-open] [--json] [--stop]",
+		description:
+			"reopen, inspect, or stop the automatic Work Pipeline dashboard",
 	},
 	{
 		name: "wiki-resume",

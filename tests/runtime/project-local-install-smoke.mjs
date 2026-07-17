@@ -200,6 +200,16 @@ try {
 		acceptedBy: "project-local-install-smoke",
 		acceptedAt: "2026-06-18T14:00:01.000Z",
 	};
+	const sprintBoundary = {
+		accountableGoal: change.intent.desiredState,
+		knowledgeTopics: [".codewiki/kb/system/components/api-tools.md"],
+		dependencies: [],
+		rollbackBoundary: "Revert installed Decision and implementation together.",
+		assessment: {
+			stance: "coherent",
+			rationale: "One validated Change serves one package lifecycle goal.",
+		},
+	};
 	const preview = assertToolResult(
 		await decideTool.execute(
 			"decide-preview",
@@ -208,6 +218,7 @@ try {
 					traceId,
 					mode: "preview",
 					changeAcceptance,
+					sprintBoundary,
 				},
 			},
 			undefined,
@@ -226,6 +237,7 @@ try {
 					expectedBytes: 0,
 					nextSequence: 1,
 					changeAcceptance,
+					sprintBoundary,
 					sprintProposalApproval: {
 						approved: true,
 						renderedProposalDigest: preview.renderedSprintProposal.digest,

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Implementation Loop
-description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Tasks, or an eligible direct implementation Decision, into verified project changes.
+description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Work Items, or an eligible direct implementation Decision, into verified project changes.
 tags:
   - codewiki
   - system
@@ -45,7 +45,7 @@ codewiki_source_map:
 ---
 # Implementation Loop
 
-The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Tasks, or an eligible direct implementation Decision, into verified project changes.
+The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Work Items, or an eligible direct implementation Decision, into verified project changes.
 
 ## Loop authority
 
@@ -70,9 +70,9 @@ The implementation loop does not own new product decisions, planning scope chang
 One implementation cycle does this work:
 
 ```text
-observe accepted Planning Task output or direct implementation Decision + source/test/Git/runtime refs
+observe accepted Planning Work Item output or direct implementation Decision + source/test/Git/runtime refs
 claim or receive worker work when needed
-change code/docs/tests inside assigned Task scope
+change code/docs/tests inside assigned Work Item scope
 run checks and collect evidence
 aggregate worker outputs and final content proof
 update implementation output
@@ -81,13 +81,13 @@ append implementation.evidence_accepted
 continue, exit, route back, or block
 ```
 
-Implementation should keep noisy logs and scratch under runtime temp or external tool output. Workers may use private scratchpads or checklists inside the assigned Task, but those are execution aids, not Planning truth or runtime-claimable units. The loop output should contain only the evidence required to prove exit conditions.
+Implementation should keep noisy logs and scratch under runtime temp or external tool output. Workers may use private scratchpads or checklists inside the assigned Work Item, but those are execution aids, not Planning truth or runtime-claimable units. The loop output should contain only the evidence required to prove exit conditions.
 
 ## Loop output
 
 Implementation loop output is the high-signal packet needed to close or publish the trace:
 
-- covered Planning Task refs or direct implementation Decision refs;
+- covered Planning Work Item refs or direct implementation Decision refs;
 - changed code/docs/test paths;
 - check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
 - acceptance evidence mapped to planning acceptance criterion ids;
@@ -104,7 +104,7 @@ Implementation loop output is the high-signal packet needed to close or publish 
 - route-back questions for planning or decision when authority is missing;
 - canonical refs proving the output.
 
-Implementation output should not include full logs, private scratch, unbounded diffs, or product Decisions made during coding. If local decomposition shows that the assigned Task is too broad, overlapping, or underspecified, implementation routes back to Planning instead of creating new Sprint Plan truth.
+Implementation output should not include full logs, private scratch, unbounded diffs, or product Decisions made during coding. If local decomposition shows that the assigned Work Item is too broad, overlapping, or underspecified, implementation routes back to Planning instead of creating new Sprint Plan truth.
 
 ## Loop quality standards
 
@@ -165,9 +165,9 @@ work-queue -> runtime claim -> worker session -> worker result -> implementation
 
 Worker-local proof is provenance normalized by the implementation loop: changed paths are deduplicated, validation refs and checks are summarized, proof digests are stable, and overlap/base conflicts block aggregate closure. The implementation loop still needs final aggregate content proof after merging worker outputs.
 
-There is one semantic Implementation Loop per Sprint Trace, not one loop per worker. A worker runs a Task Assignment attempt with local edits, TDD/checks, and evidence. Worker completion contributes candidate evidence. The trace-level Implementation Loop alone decides whether all Planning Tasks are covered, worker claims correlate, overlapping changes are resolved, aggregate acceptance and quality pass, and merged content proof exists.
+There is one semantic Implementation Loop per Sprint Trace, not one loop per worker. A worker runs a Work Item Assignment attempt with local edits, TDD/checks, and evidence. Worker completion contributes candidate evidence. The trace-level Implementation Loop alone decides whether all Planning Work Items are covered, worker claims correlate, overlapping changes are resolved, aggregate acceptance and quality pass, and merged content proof exists.
 
-The dashboard reflects this authority model with two distinct Implementation areas. Worker Attempts show Task-first execution, current bounded activity, freshness, progress, local status, and retries. Integration and Exit Review shows result collection, conflicts, acceptance readiness, quality standards, and the aggregate loop status. Direct implementation remains valid and does not create a fake worker row.
+The dashboard reflects this authority model with two distinct Implementation areas. Worker Attempts show Work Item-first execution, current bounded activity, freshness, progress, local status, and retries. Integration and Exit Review shows result collection, conflicts, acceptance readiness, quality standards, and the aggregate loop status. Direct implementation remains valid and does not create a fake worker row.
 
 ## Repository snapshot and content proof
 

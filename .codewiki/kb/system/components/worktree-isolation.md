@@ -13,7 +13,7 @@ timestamp: 2026-06-30T00:00:00Z
 
 The old worktree-isolation workflow is deprecated during the rebuild. Useful ideas should migrate into `src/runtime/**` and `src/git/**` as trace-owned claims, leases, work-unit claim boundaries, budgets, and content-evidence requirements.
 
-Worktrees are useful for parallel workers, dirty repositories, risky merges, and producing clean per-worker Git proof. They should not be mandatory for every task because that adds setup and merge cost. Target policy is config-driven:
+Worktrees are useful for parallel workers, dirty repositories, risky merges, and producing clean per-worker Git proof. They should not be mandatory for every Work Item because that adds setup and merge cost. Target policy is config-driven:
 
 ```text
 worktreeIsolation: "none" | "worktree" | "auto"

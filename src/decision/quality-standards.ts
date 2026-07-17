@@ -30,6 +30,23 @@ export const BASE_DECISION_QUALITY_STANDARDS: LoopQualityStandardDefinition<Deci
 			],
 		},
 		{
+			id: "sprint_boundary_coherent",
+			weight: 16,
+			description:
+				"Sprint proposals have one accountable goal, canonical Knowledge topics, explicit dependencies, and a coherent rollback boundary.",
+			codes: [
+				"missing_sprint_boundary",
+				"missing_sprint_goal",
+				"missing_sprint_knowledge_scope",
+				"invalid_sprint_knowledge_topic",
+				"missing_sprint_rollback_boundary",
+				"missing_sprint_boundary_assessment",
+				"sprint_boundary_split_required",
+				"invalid_sprint_dependency",
+				"sprint_bundle_too_large",
+			],
+		},
+		{
 			id: "intention_understood",
 			weight: 14,
 			description:

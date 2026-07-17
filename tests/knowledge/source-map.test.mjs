@@ -27,7 +27,6 @@ function activeArtifactPaths() {
 		...collectFiles("tests"),
 		...collectFiles("lab"),
 		...collectFiles(".codewiki/kb"),
-		...collectFiles(".agents/skills"),
 		"README.md",
 		"CHANGELOG.md",
 		"LICENSE",

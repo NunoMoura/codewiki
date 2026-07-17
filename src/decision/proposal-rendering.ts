@@ -29,6 +29,34 @@ export function renderSprintProposalMarkdown(
 			`Accepted Change bundle: \`${escapeMarkdownText(options.acceptedChangeBundleDigest)}\``,
 		);
 	}
+	if (proposal.sprintBoundary) {
+		const boundary = proposal.sprintBoundary;
+		lines.push(
+			"",
+			"## Sprint Boundary",
+			"",
+			`Accountable goal: ${escapeMarkdownText(boundary.accountableGoal || "Not declared")}`,
+			`Rollback boundary: ${escapeMarkdownText(boundary.rollbackBoundary || "Not declared")}`,
+			`Assessment: ${escapeMarkdownText(boundary.assessment.stance || "Not assessed")} — ${escapeMarkdownText(boundary.assessment.rationale || "No rationale")}`,
+		);
+		if (boundary.knowledgeTopics.length) {
+			lines.push("", "Knowledge topics:");
+			for (const topic of boundary.knowledgeTopics) {
+				lines.push(`- ${escapeMarkdownText(topic)}`);
+			}
+		} else if (boundary.noKnowledgeImpactReason) {
+			lines.push(
+				"",
+				`No Knowledge Base impact: ${escapeMarkdownText(boundary.noKnowledgeImpactReason)}`,
+			);
+		}
+		if (boundary.dependencies.length) {
+			lines.push("", "Cross-Sprint dependencies:");
+			for (const dependency of boundary.dependencies) {
+				lines.push(`- ${escapeMarkdownText(dependency)}`);
+			}
+		}
+	}
 	if (options.includeSourceRefs !== false && proposal.sourceRefs.length) {
 		lines.push("", "Source refs:");
 		for (const ref of proposal.sourceRefs) {

@@ -6,23 +6,23 @@ The old implementation archive has been removed after the migration audit. The r
 
 ## Current posture
 
-- Package metadata exposes the Pi extension for external Pi installs through `pi.extensions`.
-- Repo-local Pi settings load pi-lens plus the verified controller installed at `.pi/npm/node_modules/codewiki`. Mutable source is never loaded through `..`, and no `.pi/extensions/codewiki.ts` shim is allowed.
-- Project-local `.agents/skills/codewiki-*` skills are limited to semantic loop playbooks: decide, plan, and implement.
-- `.codewiki/kb/**` remains source-of-truth documentation for intended product/system design.
-- `.codewiki/traces/TRACE-*.jsonl` is the intended workflow/state truth model, following Pi's session JSONL pattern.
-- `.codewiki/views/**` is generated/disposable projection output, not truth.
-- Other `.codewiki` roots from earlier harness runs are archived migration state, not active execution truth during the rebuild.
-- Pi native compaction should handle conversation compression. CodeWiki-owned refresh/compaction windows are disabled with the old extension.
-- Decision, Planning, and Implementation production standards are strict immutable `kernel` quality packs in `enforce` mode. Lab candidates use the same closed schema with `authority: lab` and `rollout: observe`; lab results cannot replace kernel standards or advance the pinned controller.
+- CodeWiki is developed with Pi native coding tools, pi-lens, normal Git review, source, and tests.
+- Package metadata exposes the future Pi extension through `pi.extensions`, but this source repository does not install or load CodeWiki itself during stabilization.
+- Repo-local Pi settings load pi-lens only. No CodeWiki controller pin, project-local CodeWiki skills, prompt injection, dashboard, commands, or `wiki_*` tools are active here.
+- `.codewiki/kb/**` is source-of-truth documentation for intended product/system design.
+- `src/**` and `tests/**` are executable truth; Git is history and checkpoint evidence.
+- This source checkout keeps no active dogfood Changes Backlog or `.codewiki/traces/TRACE-*.jsonl` instance state. Trace behavior is tested in disposable external projects.
+- `.codewiki/views/**` and other generated roots are disposable outputs, not truth.
+- Pi native compaction handles conversation compression.
+- Decision, Planning, and Implementation production standards remain strict package behavior, but candidates cannot grade or operate their own source checkout.
 
 ## Changes Backlog and control center
 
-The Changes Backlog is the canonical mutable pre-Decision store. A Change keeps lifecycle status and validation readiness separate, and every validation card shows Current state, Proposed change, Agent opinion, content revision, record revision, digest, lifecycle status, and validation state from one bounded shared projection. Decision ingress consumes an exact validated Change revision and digest; it never treats the mutable latest record as approval.
+The Changes Backlog is the canonical mutable pre-Decision store. A Change keeps lifecycle status and validation readiness separate, and every validation card shows Current state, Proposed change, Agent opinion, content revision, record revision, digest, lifecycle status, and validation state from one bounded shared projection. Before Decision, exact validated Change revisions are shaped into a user-confirmed Sprint Map with one accountable goal, canonical Product/System Knowledge Base topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. Decision ingress consumes that map and its exact validated Change revisions and digests; it never treats the mutable latest record as approval. One Sprint equals one trace-backed lifecycle. User-facing hierarchy is `Change → Sprint → Work Item → Assignment`; internal trace/work-unit names remain implementation details.
 
 `wiki_change` can draft, revise, validate, withdraw, and query Changes under exact Git-ref head and record-revision guards. Its bounded feedback intake accepts explicit user, runtime, or lab findings, deterministically reinforces a matching pending record, or creates only a pending unvalidated Change. Feedback intake cannot accept a Change, create a Decision or trace, launch work, edit source, publish, or advance a controller.
 
-The local dashboard provides read-only Changes, Traces, and Configuration projections plus narrowly guarded controls. Changes controls are limited to draft, revise, validate, and withdraw. Configuration control accepts only allowlisted, bounded patches that stay within the active automation, agency, model-quality, tool, concurrency, budget, supervision, semantic, publication, and controller ceilings. Every mutation requires the dashboard capability, same-origin request, exact state/config/head/record guards, idempotency, and a bounded receipt. Persisted configuration changes that affect execution require users to fully exit and restart Pi; `/reload` is not sufficient.
+In a consuming project, an eligible Pi TUI session opens the dashboard automatically once. Its Work Pipeline uses one card shell for Backlog Changes and accepted Sprints while preserving separate canonical stores. The compact header contains the centered logo, bounded scoped search, Add Change, and settings. Each Sprint rail contains five equal independent bars—Change orange, Decision yellow, Planning green, Implementation blue, and Committed teal—with grey unfilled space and accessible labels hidden behind hover/focus. Blockers appear only in the action line as `✕ Blocked — reason`. Selected stages open attached stage-colored detail; Overview, Knowledge Base, and Files remain Sprint-level panels. Add Change and Sprint `+` share one primary-action style. Sprint actions are Resume, Change, and Resolve Blocker through a guarded same-session `pi.sendUserMessage()` bridge. Configuration is a grouped bounded form; raw JSON and Close Dashboard are not settings UX. Persisted execution-affecting configuration changes require a full Pi restart.
 
 Worker dispatch resolves a deterministic execution policy before claim append and child-process creation. The selected provider, model, thinking level, allowed tools, timeout, immutable pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
 
@@ -87,12 +87,6 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
-npm run test:self-dogfood-candidate
-npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by <name>
-CODEWIKI_BASELINE_MANIFEST=<path> npm run self-dogfood:baseline:verify
-npm run self-dogfood:controller:install
-CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-shadow
-CODEWIKI_BASELINE_MANIFEST=<path> npm run test:self-dogfood-ready
 npm run lab
 npm run lab:gate
 npm run lab:forge -- --json
@@ -121,28 +115,8 @@ Smoke command roles:
   mixed worker outcomes, and worktree prepare/cleanup failure remediation.
 - `npm run test:readiness`: package, state-shape, install-gate, and stale
   wording checks.
-- `npm run test:self-dogfood-candidate`: runs the full package/Pi audit and lab
-  gates for the current candidate without granting it authority over itself.
-- `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
-  <name>`: refuses a dirty checkout, reruns candidate gates, packs the reviewed
-  commit, and writes a host-owned ignored manifest under `.pi/npm/codewiki-baselines/**`
-  containing the Git tree content proof, package SHA-256, review identity, and
-  gate results.
-- `npm run self-dogfood:baseline:verify`: requires
-  `CODEWIKI_BASELINE_MANIFEST`, verifies the manifest, tarball bytes, Git commit,
-  and tree, and can enforce a clean candidate checkout.
-- `npm run self-dogfood:controller:install`: checks the tracked controller pin,
-  rebuilds the reviewed commit in a detached temporary worktree, requires an
-  exact package byte count and SHA-256 match, and installs that artifact under
-  `.pi/npm/node_modules/codewiki` without loading mutable source.
-- `npm run test:self-dogfood-shadow`: installs the verified package under a
-  disposable project's `.pi/npm`, runs baseline `wiki_state`, read-only
-  `wiki_config`, and `wiki_decide` preview calls, and proves the source config and
-  traces kept the same digest.
-- `npm run test:self-dogfood-ready`: requires a clean candidate plus a verified
-  baseline manifest, reruns candidate gates, and then runs the disposable shadow
-  smoke. Passing plus the verified installer and explicit approval permits only
-  supervised pinned-controller activation.
+- Dormant `self-dogfood:*` scripts remain release-engineering experiments only. They are not normal development commands and must not install CodeWiki into this source checkout.
+- Stable extension candidates are packed and exercised through the Pi install, RPC, mutation, project-local, lifecycle, and failure smokes in disposable external projects.
 - `npm run lab`: scores the Decision, Planning, and Implementation candidate
   exit standards with DEC, PEC, and IEC.
 - `npm run lab:gate`: fails while any lab score exposes false-pass or
@@ -170,11 +144,11 @@ CodeWiki does not provide a sandbox. It writes project-local `.codewiki/**` stat
 and is intended to be compatible with external sandbox, worktree, container, or
 agent-harness isolation.
 
-Repo-local Pi settings load the verified controller beside pi-lens. The reviewed baseline, shadow, and installer gates pass, and `.pi/codewiki-controller.json` lets fresh clones rebuild and verify the exact reviewed tarball with `npm run self-dogfood:controller:install` before starting Pi. Self-dogfood loads only `.pi/npm/node_modules/codewiki`; it never loads mutable source through `..`. Do not add a repo-local `.pi/extensions/codewiki.ts` shim.
+Repo-local Pi settings intentionally load pi-lens only. Do not install CodeWiki, add a controller pin, or add a repo-local `.pi/extensions/codewiki.ts` shim in this source checkout. Consuming projects use reviewed packed artifacts through project-local Pi installation.
 
-Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. `/wiki-dashboard` opens the local read-only Sprints Queue in a browser. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
+Installed package use should be through Pi-owned `/wiki-*` commands and the small model-facing `wiki_*` tool set, not through the transitional CLI or archived tools. Runtime coordination remains backend/host plumbing rather than a normal agent tool. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`; the older grouped namespace command has been deprecated. The Work Pipeline dashboard opens automatically once for an eligible Pi TUI session. `/wiki-dashboard` reopens it, `--no-open` returns its URL, and `--stop` stops its local host. Agents use internal `wiki_state` for trace reads; mutation-capable tools still require explicit expected byte/sequence checks.
 
-Implementation Trace Detail presents one trace-level Implementation Loop with Task Assignment worker attempts beneath it, followed by aggregate Integration and Exit Review. The Activity Feed explains meaningful progress, impact, and next action in plain language. The Dev Log provides bounded, redacted operational diagnostics for active, blocked, or failed work without becoming semantic evidence. Dashboard startup verifies that pipeline state is served; after installing a different pinned runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
+Implementation Trace Detail presents one trace-level Implementation Loop with Work Item Assignment worker attempts beneath it, followed by aggregate Integration and Exit Review. The Activity Feed explains meaningful progress, impact, and next action in plain language. The Dev Log provides bounded, redacted operational diagnostics for active, blocked, or failed work without becoming semantic evidence. Dashboard startup verifies that pipeline state is served; after installing a different pinned runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
 
 ## Trace archive cleanup
 
@@ -331,9 +305,8 @@ Disable project review policy entirely. Explicit `reviewEvidenceReports` passed 
 
 Current supported posture:
 
-- Project-local packed/local package installation; no public npm publish yet.
-- Supervised `/wiki-*` and `wiki_*` use in external, controlled, and this
-  pinned-controller project.
+- Project-local packed/local package installation in disposable external projects; no public npm publish yet.
+- Supervised `/wiki-*` and `wiki_*` use in external controlled tests only; the CodeWiki source checkout does not self-host.
 - Guarded trace mutation with expected byte and sequence checks.
 - Runtime worker output treated as untrusted transport until `wiki_implement`
   validates implementation evidence.
@@ -356,45 +329,10 @@ validation green, explicit user approval policy for destructive or externally
 visible actions, and passing DEC, PEC, and IEC lab gates for core loop exit
 quality. Full app benchmarks are deferred until loop exits are hardened.
 
-### Self-dogfood re-enable gate
+### Source-repository extension policy
 
-Fully using CodeWiki `wiki_*` tools inside this repository is a separate,
-supervised self-dogfood step from public production automation. It is not enabled
-merely because the package can be built.
+The CodeWiki source repository does not install or load CodeWiki during stabilization. This avoids circular authority, stale controller schemas, prompt injection from an older build, and candidate code evaluating its own workflow state.
 
-Self-dogfood status: supervised pinned-controller autoload is enabled for
-reviewed commit `a04aca67919cb6106e95a2a0873fe17960e228a3` and package SHA-256
-`b13f58bb48715af3ef9bb1c60f67da73c3ee0f8c6072a554b505f145c50ae5dd`.
-The controller was rebuilt byte-for-byte from Git history and installed under
-`.pi/npm`; mutable candidate source cannot grade itself. The earlier
-`trace:TRACE-self-dogfood-reenabled-v1#change:CHG-self-dogfood-reenable-approved`
-remains historical evidence, not approval for another controller.
+Development uses Pi native coding tools, pi-lens, KB updates, source/tests, and Git. Extension behavior is tested only through packed installs in disposable external projects. Stable candidates may be released as normal Pi packages after external install, RPC, mutation, lifecycle, failure, dashboard, and package gates pass.
 
-The self-dogfood re-enable gate is:
-
-1. A reviewed clean commit is packed with
-   `npm run self-dogfood:baseline:create -- --review-ref <ref> --approved-by
-   <name>`. Its host-owned ignored manifest under
-   `.pi/npm/codewiki-baselines/**` pins the commit, Git tree content proof,
-   package byte count, SHA-256, reviewer, and passing candidate gates.
-2. With `CODEWIKI_BASELINE_MANIFEST` pointing at that manifest,
-   `npm run test:self-dogfood-ready` verifies the immutable controller, requires
-   a clean candidate checkout, reruns candidate gates, and executes shadow
-   reads/previews. The mutable candidate checkout does not judge itself.
-3. `npm run self-dogfood:controller:install` reconstructs the pinned commit in a
-   detached worktree, verifies exact package bytes and SHA-256, and installs only
-   that artifact under `.pi/npm`.
-4. Disposable external dogfood covers successful lifecycle runs, append
-   conflicts, malformed worker output, worktree failures, and cleanup.
-5. The baseline package produces acceptable read-only and preview results in
-   shadow mode before it may append this repository's trace truth.
-6. No generated/disposable `.codewiki/**` roots outside `config.json`, `kb/`,
-   `traces/`, and `views/` are treated as active truth.
-7. Explicit approval enables only supervised use: preview before append,
-   expected byte/sequence guards, no unattended worker start, no auto-merge, and
-   no auto-publish.
-
-Current repo operating guidance permits supervised CodeWiki use through the
-pinned controller: read state first, preview before every append, preserve
-expected byte/sequence guards, and continue using normal Git/tests for source
-verification. Unattended workers, auto-merge, and auto-publish remain disabled.
+Repo-local self-hosting is not required for release. Reintroducing it would require a new explicit decision; historical pins, traces, and approvals grant no authority.

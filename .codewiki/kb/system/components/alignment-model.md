@@ -13,16 +13,16 @@ timestamp: 2026-06-30T00:00:00Z
 
 Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.
 
-Durable sources:
+Durable product sources:
 
 - KB docs under `.codewiki/kb/**`;
-- JSONL traces under `.codewiki/traces/TRACE-*.jsonl`;
 - source and tests under `src/**` and `tests/**`;
-- Git commits, trees, restore refs, and publication refs.
+- Git commits, trees, restore refs, and publication refs;
+- JSONL traces under `.codewiki/traces/TRACE-*.jsonl` only in projects where the released extension is installed and operating.
 
 Generated views under `.codewiki/views/**` are alignment outputs, not alignment truth.
 
-KB docs carry accepted semantic intent. JSONL traces carry workflow/state/recovery truth. Source, tests, and Git carry implementation truth. During an active trace, it is valid for KB to describe an accepted target state while the trace says planning or implementation remains pending.
+KB docs carry accepted semantic intent. Source, tests, and Git carry implementation truth. Installed CodeWiki projects may additionally use JSONL traces for workflow/state/recovery truth. The CodeWiki source repository does not self-host during stabilization: it keeps no active dogfood traces or Changes Backlog and uses Pi native tools plus normal Git review.
 
 ## Loop alignment
 
@@ -33,6 +33,19 @@ KB docs carry accepted semantic intent. JSONL traces carry workflow/state/recove
 | Implementation | Changed code/docs/tests, checks, acceptance evidence, worker provenance, component/path alignment, and content proof satisfy planned acceptance. |
 
 Exit conditions validate loop alignment and route remediation back to the owning loop. Exit conditions do not form a separate loop. Only outputs from iterations with `exit` are promoted for downstream consumption; continue, route-back, and blocked iterations stay as recovery provenance.
+
+## Sprint Knowledge alignment projection
+
+A Sprint's Knowledge scope is the canonical Product/System topic set accepted with its Decision boundary. Alignment compares only that scope and has four user-facing states:
+
+| State | Meaning |
+| --- | --- |
+| Aligned | Relevant topic content matches the last validated scoped baseline and no grounded contradiction is open. |
+| Review Needed | Relevant topic content changed after the baseline and requires semantic review. A digest change alone can establish only this state. |
+| Misaligned | An explicit grounded finding identifies a contradiction, affected layer, source-of-truth refs, rationale, and recommended next semantic loop. |
+| Unknown | Topic scope, baseline, or grounding is insufficient, including legacy Sprints without required metadata. |
+
+This state is a disposable deterministic projection plus explicit findings. It cannot rewrite traces, create a semantic loop, or automatically create amendment Sprints. Topic filters, internal state views, and Sprint detail must consume the same result.
 
 ## Related docs
 

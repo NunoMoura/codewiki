@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Knowledge
-description: Knowledge is the durable intended truth for product and system design. It is not a log, generated view, task archive, trace archive, or code artifact store.
+description: Knowledge is the durable intended truth for product and system design. It is not a log, generated view, Work Item archive, trace archive, or code artifact store.
 tags:
   - codewiki
   - system
@@ -31,7 +31,7 @@ codewiki_source_map:
 
 ## Responsibility
 
-Knowledge is the durable intended truth for product and system design. It is not a log, generated view, task archive, trace archive, or code artifact store.
+Knowledge is the durable intended truth for product and system design. It is not a log, generated view, Work Item archive, trace archive, or code artifact store.
 
 Hot knowledge lives in:
 
@@ -99,7 +99,7 @@ CodeWiki hot knowledge is an OKF v0.1 markdown/frontmatter bundle under `.codewi
 ## OKF and Sprint workflow boundary
 
 CodeWiki product concepts such as Sprint Proposal, Decision, Sprint,
-Sprint Record, Sprints Queue, Sprint Trace, Trace Detail, Task, Assignment,
+Sprint Record, Sprints Queue, Sprint Trace, Trace Detail, Work Item, Assignment,
 Ready Checks, and Needs Review are defined in `.codewiki/kb/**/*.md` as
 OKF-compatible knowledge.
 
@@ -117,7 +117,8 @@ tests, or runtime coordination require exact technical refs.
 
 - Keep current intended truth in knowledge; do not accumulate old decisions as raw history.
 - Use Git for historical recovery.
-- Use traces for workflow/state truth.
+- In consuming projects with the released extension, use traces for workflow/state truth.
+- In the CodeWiki source repository during stabilization, keep no active dogfood traces or Changes state; use Pi native tools and Git.
 - Use generated views for status, resume, routing, freshness, backlinks, and doc-code mapping.
 - Use code/tests for executable truth.
 - Prefer sparse intentional links over exhaustive wiki-link meshes.

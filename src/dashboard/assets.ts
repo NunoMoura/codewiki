@@ -11,7 +11,7 @@ export const CODEWIKI_DASHBOARD_HTML = String.raw`<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CodeWiki Sprints Queue</title>
+<title>CodeWiki Work Pipeline</title>
 <style>
 :root {
 	color-scheme: dark;
@@ -39,10 +39,15 @@ export const CODEWIKI_DASHBOARD_HTML = String.raw`<!doctype html>
 	--logo-orange: #ef7b36;
 	--logo-yellow: #f3d55b;
 	--logo-green: #8ecb72;
-	--logo-cyan: #62c6c2;
-	--bar-skew: -12deg;
-	--logo-progress-gradient: linear-gradient(90deg, var(--logo-red) 0%, var(--logo-orange) 22%, var(--logo-yellow) 48%, var(--logo-green) 72%, var(--logo-cyan) 100%);
-	--atari-blue: var(--logo-cyan);
+	--logo-blue-dark: #315561;
+	--logo-blue-hover: #397375;
+	--interactive: #4a9293;
+	--interactive-hover: #58aaa7;
+	--progress-inactive: #596161;
+	--progress-active: var(--logo-yellow);
+	--progress-complete: var(--logo-green);
+	--progress-blocked: var(--logo-red);
+	--atari-blue: var(--interactive);
 	--atari-red: var(--logo-red);
 	--atari-orange: var(--logo-orange);
 	--atari-yellow: var(--logo-yellow);
@@ -72,16 +77,19 @@ button { color: inherit; }
 }
 .header {
 	position: relative;
-	overflow: hidden;
+	overflow: visible;
 	border: 1px solid var(--line-strong);
 	border-radius: var(--radius);
 	background:
 		radial-gradient(circle at 14% 0%, rgba(255,247,232,.10), transparent 24%),
 		linear-gradient(180deg, #151412, #050505 72%);
 	box-shadow: inset 0 0 0 1px #000, inset 0 -18px 32px rgba(0,0,0,.55);
-	padding: 12px 14px;
-	display: block;
-	min-height: 124px;
+	padding: 10px 18px;
+	display: grid;
+	grid-template-columns: 112px minmax(0, 1fr);
+	align-items: center;
+	gap: 18px;
+	min-height: 0;
 	max-width: 100%;
 }
 .header::before {
@@ -95,22 +103,21 @@ button { color: inherit; }
 .header > * { position: relative; z-index: 1; }
 .brand {
 	min-width: 0;
-	width: min(12rem, 24vw);
+	width: 100%;
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: center;
-	gap: 8px;
 }
 .brand-copy {
 	min-width: 0;
 	display: grid;
 	justify-items: center;
-	align-content: start;
-	gap: 4px;
+	align-content: center;
+	gap: 3px;
 }
 .codewiki-logo {
 	display: block;
-	width: clamp(88px, 9vw, 124px);
+	width: 112px;
 	max-width: 100%;
 	height: auto;
 	border-radius: 8px;
@@ -133,78 +140,197 @@ button { color: inherit; }
 	color: var(--text);
 }
 .header-dashboard {
-	position: absolute;
-	top: 12px;
-	left: 50%;
-	transform: translateX(-50%);
 	min-width: 0;
-	width: min(640px, calc(100% - 440px));
-	display: grid;
-	grid-template-rows: auto auto;
-	gap: 7px;
-	align-content: start;
-}
-.header-controls {
-	min-width: 0;
-	display: grid;
-	grid-template-columns: repeat(4, minmax(4.8rem, 1fr));
-	gap: 6px;
-}
-.stat {
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	background: #090909;
-	padding: 5px 6px;
-	min-width: 0;
-	min-height: 42px;
-	text-align: center;
-	cursor: pointer;
-	display: grid;
-	gap: 2px;
-	align-content: center;
-}
-.stat:hover, .stat.active { border-color: var(--focus); background: var(--focus-soft); }
-.stat b { display: block; color: var(--text); font-size: 18px; line-height: 1.05; }
-.stat span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
-.search-wrap { min-width: 0; display: block; }
-.search-wrap input {
-	width: 100%;
-	min-width: 0;
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	background: #050505;
-	color: var(--text);
-	padding: 7px 9px;
-	outline: none;
-}
-.search-wrap input:focus { border-color: var(--focus); box-shadow: 0 0 0 1px #555; }
-.queue-shell {
-	max-width: 100%;
-	display: grid;
+	width: min(100%, 900px);
+	justify-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	gap: 8px;
 }
-.view-switch { display: flex; gap: 6px; justify-content: flex-end; }
-.view-switch button, .change-actions button, .changes-toolbar button {
+.search-control {
+	position: relative;
+	min-width: 0;
+	flex: 1 1 620px;
+	max-width: 670px;
+	height: 38px;
+	display: flex;
+	align-items: center;
+	border: 1px solid var(--line);
+	border-radius: 9px;
+	background: #070707;
+}
+.search-control:focus-within { border-color: var(--interactive); box-shadow: 0 0 0 1px color-mix(in srgb, var(--interactive) 35%, transparent); }
+.search-icon { position: relative; flex: 0 0 14px; width: 14px; height: 14px; margin-left: 12px; border: 2px solid var(--muted); border-radius: 50%; }
+.search-icon::after { content: ""; position: absolute; width: 6px; height: 2px; right: -5px; bottom: -3px; border-radius: 2px; background: var(--muted); transform: rotate(45deg); transform-origin: left center; }
+.search-control:focus-within .search-icon { border-color: var(--interactive); }
+.search-control:focus-within .search-icon::after { background: var(--interactive); }
+.pipeline-search {
+	min-width: 0;
+	flex: 1;
+	height: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--text);
+	padding: 0 11px;
+}
+.pipeline-search::placeholder { color: var(--dim); }
+.search-filter {
+	position: relative;
+	align-self: stretch;
+	flex: 0 0 184px;
+	border-left: 1px solid var(--line);
+	border-radius: 0 8px 8px 0;
+	background: var(--panel-2);
+}
+.search-filter > summary {
+	list-style: none;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	padding: 0 10px 0 11px;
+	cursor: pointer;
+	color: var(--muted);
+	white-space: nowrap;
+}
+.search-filter > summary::-webkit-details-marker { display: none; }
+.search-filter > summary::after {
+	content: "";
+	width: 7px;
+	height: 7px;
+	margin-left: auto;
+	border-right: 1px solid currentColor;
+	border-bottom: 1px solid currentColor;
+	transform: translateY(-2px) rotate(45deg);
+	transition: transform .14s ease;
+}
+.search-filter[open] > summary { color: var(--interactive); }
+.search-filter[open] > summary::after { transform: translateY(2px) rotate(225deg); }
+.scope-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.scope-count {
+	flex: 0 0 auto;
+	min-width: 20px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--interactive) 12%, transparent);
+	color: var(--interactive);
+	padding: 1px 6px;
+	font-size: 10px;
+	font-weight: 800;
+	line-height: 1.5;
+	text-align: center;
+}
+.search-filter:not([open]) .scope-menu { display: none; }
+.scope-menu {
+	position: absolute;
+	top: calc(100% + 7px);
+	right: 0;
+	z-index: 60;
+	width: 230px;
+	border: 1px solid var(--line-strong);
+	border-radius: 10px;
+	background: #090909;
+	box-shadow: 0 18px 50px rgba(0,0,0,.78);
+	padding: 6px;
+	display: grid;
+	gap: 2px;
+}
+.scope-group { color: var(--dim); padding: 7px 9px 3px; font-size: 9px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.scope-option {
+	width: 100%;
+	border: 0;
+	border-radius: 7px;
+	background: transparent;
+	color: var(--text);
+	padding: 8px 9px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	cursor: pointer;
+	font: inherit;
+	text-align: left;
+}
+.scope-option:hover, .scope-option:focus-visible { outline: 0; background: var(--focus-soft); }
+.scope-option[aria-selected="true"] { color: var(--interactive); background: color-mix(in srgb, var(--interactive) 9%, #090909); }
+.scope-option .scope-count { background: transparent; color: var(--dim); padding-inline: 0; }
+.scope-option[aria-selected="true"] .scope-count { color: var(--interactive); }
+.add-change, .icon-button, .change-actions button, .dialog-close, .options-action {
 	border: 1px solid var(--line);
 	background: var(--panel-2);
 	color: var(--text);
-	border-radius: var(--radius);
-	padding: 6px 9px;
+	border-radius: 9px;
+	padding: 7px 10px;
 	cursor: pointer;
+	font: inherit;
 }
-.view-switch button.active { border-color: var(--focus); color: var(--focus); }
-.change-list { display: grid; gap: 8px; }
+.add-change {
+	flex: 0 0 auto;
+	height: 38px;
+	border-color: var(--logo-blue-hover);
+	background: var(--logo-blue-dark);
+	color: #fff;
+	font-weight: 900;
+	white-space: nowrap;
+	transition: background .14s ease, border-color .14s ease, transform .14s ease, box-shadow .14s ease;
+}
+.add-change:hover {
+	border-color: var(--interactive-hover);
+	background: var(--logo-blue-hover);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 5px 14px rgba(0,0,0,.28);
+}
+.add-change:active { background: #294a55; transform: translateY(0); box-shadow: none; }
+.add-change:focus-visible { outline: 2px solid var(--interactive); outline-offset: 2px; }
+.icon-button { width: 38px; height: 38px; padding: 0; display: grid; place-items: center; color: var(--muted); font-size: 17px; }
+.icon-button:hover { border-color: var(--interactive-hover); color: var(--interactive-hover); }
+.icon-button:focus-visible { border-color: var(--interactive); color: var(--interactive); }
+.global-options { position: relative; }
+.global-options > summary { list-style: none; }
+.global-options > summary::-webkit-details-marker { display: none; }
+.options-menu {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 6px);
+	z-index: 40;
+	width: 190px;
+	border: 1px solid var(--line-strong);
+	border-radius: 10px;
+	background: #0a0a0a;
+	box-shadow: 0 16px 40px rgba(0,0,0,.65);
+	padding: 6px;
+	display: grid;
+	gap: 4px;
+}
+.options-menu button { border: 0; border-radius: 7px; background: transparent; color: var(--text); padding: 8px 9px; text-align: left; cursor: pointer; font: inherit; }
+.options-menu button:hover { background: var(--focus-soft); }
+.options-menu button.danger { color: var(--check-failed); }
+.queue-shell { max-width: 100%; display: grid; gap: 8px; }
 .change-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; gap: 10px; background: var(--panel); }
 .change-card header { display: flex; gap: 8px; justify-content: space-between; align-items: start; }
 .change-card h3, .change-card h4 { margin: 0; }
 .change-card section { border-left: 2px solid var(--line-strong); padding-left: 9px; display: grid; gap: 4px; }
 .change-card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .change-identity, .change-authority { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
-.change-actions, .changes-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.changes-toolbar { justify-content: space-between; }
-.configuration-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 12px; display: grid; gap: 10px; }
-.configuration-panel pre { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #050505; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px; }
+.change-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.configuration-panel { border: 0; background: transparent; padding: 0; display: grid; gap: 10px; }
+.configuration-panel pre { margin: 0; max-height: 55vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #050505; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px; }
 .configuration-status { color: var(--muted); white-space: pre-wrap; }
+.dashboard-dialog {
+	width: min(720px, calc(100vw - 28px));
+	max-height: calc(100vh - 28px);
+	border: 1px solid var(--line-strong);
+	border-radius: 14px;
+	background: #0b0b0b;
+	color: var(--text);
+	padding: 14px;
+	box-shadow: 0 24px 80px rgba(0,0,0,.78);
+}
+.dashboard-dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(2px); }
+.dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.dialog-title { font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
 [hidden] { display: none !important; }
 .trace-list {
 	max-width: 100%;
@@ -213,144 +339,115 @@ button { color: inherit; }
 }
 .trace {
 	position: relative;
-	overflow: hidden;
+	overflow: visible;
 	max-width: 100%;
 	min-width: 0;
 	border: 1px solid var(--line);
 	border-radius: var(--radius);
 	background: rgba(10,10,10,.96);
-	padding: 14px 12px 12px;
-	cursor: pointer;
-	transition: border-color .14s ease, background .14s ease, transform .14s ease;
+	padding: 12px;
+	transition: border-color .14s ease, background .14s ease, box-shadow .14s ease;
 }
-.trace:hover, .trace.selected { border-color: var(--focus); background: #111; }
+.trace:hover { border-color: color-mix(in srgb, var(--interactive-hover) 55%, var(--line)); background: #101010; }
+.trace.selected { border-color: color-mix(in srgb, var(--interactive) 55%, var(--line)); background: #101010; }
 .trace:focus { outline: none; }
-.trace:focus-visible { outline: 1px solid var(--focus); outline-offset: 2px; }
-.trace-head {
+.trace:focus-visible { outline: 1px solid var(--interactive); outline-offset: 2px; }
+.trace:has(.card-options[open]) { z-index: 30; }
+.trace-head { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 12px; align-items: start; }
+.trace-title-button {
 	min-width: 0;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) max-content;
-	gap: 12px;
-	align-items: start;
-}
-.trace-title, .trace-now { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.trace-title { color: var(--text); font-weight: 750; font-size: 15px; }
-.badge {
-	border: 1px solid var(--line);
-	border-radius: 999px;
-	background: #080808;
-	color: var(--muted);
-	padding: 2px 9px;
+	border: 0;
+	background: transparent;
+	color: var(--text);
+	padding: 0;
+	font: inherit;
 	font-weight: 800;
-	text-transform: uppercase;
-	font-size: 11px;
-}
-.trace-bar-row {
-	min-width: 0;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) max-content;
-	gap: 12px;
-	align-items: center;
-	margin-top: 9px;
-}
-.quality-caption {
-	margin-top: 9px;
-	color: var(--muted);
-	font-size: 12px;
-	font-weight: 800;
-	letter-spacing: .03em;
+	font-size: 15px;
+	text-align: left;
+	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	cursor: pointer;
 }
-.quality-strip {
-	--check-width: 18px;
-	--check-height: 24px;
-	--check-gap: 3px;
+.trace-title-button:hover { color: var(--interactive-hover); }
+.card-options { position: relative; }
+.card-options > summary {
+	list-style: none;
+	width: 30px;
+	height: 28px;
+	border: 1px solid transparent;
+	border-radius: 7px;
+	color: var(--muted);
+	display: grid;
+	place-items: center;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+}
+.card-options > summary::-webkit-details-marker { display: none; }
+.card-options > summary:hover { border-color: var(--interactive-hover); color: var(--interactive-hover); }
+.card-options[open] > summary { border-color: var(--interactive); color: var(--interactive); }
+.card-options-panel {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 5px);
+	z-index: 50;
+	width: min(620px, calc(100vw - 42px));
+	border: 1px solid var(--line-strong);
+	border-radius: 10px;
+	background: #090909;
+	box-shadow: 0 18px 50px rgba(0,0,0,.78);
+	padding: 10px;
+	display: grid;
+	gap: 9px;
+}
+.options-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.options-action:hover { border-color: var(--interactive-hover); }
+.trace-now { margin-top: 5px; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.knowledge-topics { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.knowledge-topic { border: 1px solid color-mix(in srgb, var(--interactive) 48%, var(--line)); border-radius: 999px; background: color-mix(in srgb, var(--interactive) 10%, transparent); color: var(--interactive-hover); padding: 2px 7px; font: inherit; font-size: 10px; cursor: pointer; }
+.knowledge-topic:hover, .knowledge-topic:focus-visible { border-color: var(--interactive-hover); color: var(--text); outline: none; }
+.pipeline-rail { min-width: 0; display: flex; align-items: center; margin-top: 10px; }
+.pipeline-segment {
+	--segment-color: var(--progress-inactive);
+	--segment-progress: 0%;
 	position: relative;
 	min-width: 0;
-	width: fit-content;
-	max-width: calc(100% - 16px);
-	display: flex;
-	align-items: center;
-	gap: var(--check-gap);
-	min-height: 40px;
-	overflow-x: auto;
-	scrollbar-width: none;
-	border: 2px solid var(--bar-ring);
-	border-radius: var(--radius-sm);
-	padding: 7px 10px;
-	margin-left: 7px;
-	transform: skewX(var(--bar-skew));
-	transform-origin: left center;
-	background:
-		linear-gradient(180deg, rgba(255,247,232,.10), transparent 20%),
-		repeating-linear-gradient(90deg, rgba(255,247,232,.025) 0 1px, transparent 1px 12px),
-		#060605;
-	box-shadow:
-		inset 0 0 0 1px #171612,
-		inset 0 0 20px rgba(0,0,0,.82),
-		inset 0 -2px 0 rgba(255,247,232,.05);
-}
-.quality-strip::-webkit-scrollbar { display: none; }
-.check {
-	--check-color: #596161;
-	position: relative;
-	min-width: 0;
-	flex: 0 0 var(--check-width);
-	height: var(--check-height);
-	overflow: hidden;
-	border: 1px solid color-mix(in srgb, var(--check-color) 50%, #000 50%);
-	border-radius: 3px;
-	background-image:
-		radial-gradient(130% 90% at 16% 0%, rgba(255,247,232,.18), transparent 62%),
-		linear-gradient(to top,
-			color-mix(in srgb, var(--check-color) 50%, #020202 50%) 0%,
-			color-mix(in srgb, var(--check-color) 70%, #111 30%) 30%,
-			var(--check-color) 58%,
-			color-mix(in srgb, var(--check-color) 78%, #fff7e8 22%) 84%,
-			color-mix(in srgb, var(--check-color) 66%, #fff7e8 34%) 100%);
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	box-shadow:
-		inset 0 1px 0 rgba(255,247,232,.18),
-		inset 0 -2px 0 rgba(0,0,0,.18),
-		0 0 0 1px rgba(255,255,255,.035),
-		0 0 10px color-mix(in srgb, var(--check-color) 28%, transparent);
-}
-.check::before {
-	content: "";
-	position: absolute;
-	inset: 3px 5px auto 5px;
-	height: 2px;
-	border-radius: 999px;
-	background: rgba(255,255,255,.13);
-	opacity: .26;
-}
-.check::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(90deg, rgba(255,255,255,.035), transparent 38%, rgba(0,0,0,.08));
-	opacity: .18;
-}
-.check.pending { filter: saturate(.34) brightness(.54) contrast(.92); }
-.check.verifying { animation: tick 1.1s steps(2) infinite; }
-.check.passed { filter: saturate(1.08) brightness(1.02); }
-.check.failed { background: linear-gradient(180deg, #ef756d, var(--logo-red) 58%, #7b1e21); border-color: var(--logo-red); outline: 2px solid var(--logo-red); outline-offset: -2px; filter: none; }
-.check.skipped { background: linear-gradient(180deg, #8c9494, #596161); border-color: #8c9494; filter: saturate(.45); }
-.quality-count {
-	color: var(--text);
+	flex: 1 1 0;
 	border: 1px solid var(--line);
-	border-radius: 999px;
-	background: #080808;
-	padding: 4px 8px;
-	text-align: right;
-	font-size: 12px;
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--segment-color) 7%, #070707);
+	color: var(--dim);
+	padding: 6px 5px 8px;
+	display: flex;
+	justify-content: center;
+	gap: 5px;
+	font: inherit;
+	font-size: 10px;
 	font-weight: 800;
+	text-transform: uppercase;
 	white-space: nowrap;
+	overflow: hidden;
+	cursor: pointer;
 }
-.trace-now { margin-top: 7px; color: var(--muted); }
+.pipeline-segment::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: var(--segment-progress);
+	height: 3px;
+	background: var(--segment-color);
+	transition: width .18s ease;
+}
+.pipeline-segment.todo { --segment-color: var(--progress-inactive); cursor: default; }
+.pipeline-segment.active { --segment-color: var(--progress-active); color: var(--progress-active); border-color: color-mix(in srgb, var(--progress-active) 58%, var(--line)); }
+.pipeline-segment.done { --segment-color: var(--progress-complete); color: var(--progress-complete); border-color: color-mix(in srgb, var(--progress-complete) 48%, var(--line)); }
+.pipeline-segment.blocked { --segment-color: var(--progress-blocked); color: var(--progress-blocked); border-color: color-mix(in srgb, var(--progress-blocked) 65%, var(--line)); }
+.pipeline-segment:disabled { opacity: .58; }
+.pipeline-separator { flex: 0 0 15px; color: var(--dim); text-align: center; font-size: 11px; }
+.segment-short { display: none; }
+
 .worker-strip { margin-top: 8px; color: var(--muted); font-size: 12px; }
 .observability-stack { display: grid; gap: 10px; }
 .worker-lanes { display: grid; gap: 8px; }
@@ -406,10 +503,10 @@ button { color: inherit; }
 }
 .detail-tab::before { content: ">"; color: var(--dim); margin-right: 4px; }
 .detail-tab.active {
-	border-color: var(--logo-cyan);
+	border-color: var(--interactive);
 	color: var(--text);
 }
-.detail-tab.active::before { color: var(--logo-cyan); }
+.detail-tab.active::before { color: var(--interactive); }
 .detail-panel { min-width: 0; }
 .execution-control {
 	display: grid;
@@ -425,7 +522,7 @@ button { color: inherit; }
 .execution-control-value { margin-top: 4px; color: var(--text); overflow-wrap: anywhere; }
 .execution-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .execution-button {
-	border: 1px solid var(--logo-cyan);
+	border: 1px solid var(--interactive);
 	border-radius: 5px;
 	background: #0b1717;
 	color: var(--text);
@@ -434,6 +531,7 @@ button { color: inherit; }
 	font-weight: 800;
 	cursor: pointer;
 }
+.execution-button:hover:not(.stop):not(:disabled) { border-color: var(--interactive-hover); background: color-mix(in srgb, var(--interactive) 10%, #0b1717); }
 .execution-button.stop { border-color: var(--danger); background: #1b0d0d; }
 .execution-button:disabled { border-color: var(--line); color: var(--dim); background: #080808; cursor: not-allowed; }
 .execution-note { color: var(--muted); font-size: 12px; line-height: 1.5; }
@@ -472,7 +570,7 @@ button { color: inherit; }
 	background: #0b0b0b;
 	border-bottom: 1px solid var(--line);
 }
-.terminal-heading span:first-child::before { content: "$ "; color: var(--logo-cyan); }
+.terminal-heading span:first-child::before { content: "$ "; color: var(--interactive); }
 .section-state { color: var(--muted); font-size: 11px; }
 .section-body { padding: 10px; display: grid; gap: 10px; }
 .loop-panel { display: grid; gap: 10px; }
@@ -498,7 +596,9 @@ button { color: inherit; }
 	text-transform: uppercase;
 	color: var(--dim);
 }
-.terminal-block-heading span:first-child::before { content: ":: "; color: var(--logo-cyan); }
+.terminal-block-heading span:first-child::before { content: ":: "; color: var(--interactive); }
+details.terminal-block > summary { cursor: pointer; list-style-position: inside; }
+details.terminal-block > .terminal-block-body { margin-top: 7px; }
 .terminal-block-body { display: grid; gap: 7px; min-width: 0; }
 .block-title { display: none; }
 .quality-list { display: grid; gap: 12px; }
@@ -583,21 +683,39 @@ button { color: inherit; }
 	text-align: center;
 }
 .footer-help { color: var(--dim); font-size: 12px; text-align: right; }
-@keyframes tick { 50% { filter: saturate(1.35) brightness(1.18); } }
 @keyframes detail-open { from { opacity: .82; } to { opacity: 1; } }
 @media (max-width: 980px) {
-	.header { display: grid; grid-template-columns: 1fr; min-height: 0; gap: 10px; }
-	.brand { width: 100%; }
-	.header-dashboard { position: relative; top: auto; left: auto; transform: none; width: 100%; justify-self: stretch; }
-	.header-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.header { grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-inline: 12px; }
+	.codewiki-logo { width: 88px; }
+	.search-filter { flex-basis: 164px; }
 	.trace-head { grid-template-columns: minmax(0, 1fr) max-content; }
 }
 @media (max-width: 560px) {
 	#app { padding: 8px; }
-	.header-controls { grid-template-columns: 1fr 1fr; }
-	.trace { padding: 8px; }
+	.header { grid-template-columns: 62px minmax(0, 1fr); gap: 8px; padding: 8px; }
+	.codewiki-logo { width: 62px; }
+	.repo-label { display: none; }
+	.header-dashboard { gap: 6px; }
+	.search-control { height: 36px; }
+	.search-icon { display: none; }
+	.pipeline-search { padding-inline: 9px; }
+	.search-filter { flex-basis: 62px; }
+	.search-filter > summary { gap: 4px; padding-inline: 7px; }
+	.search-filter .scope-label { display: none; }
+	.scope-menu { width: min(220px, calc(100vw - 34px)); }
+	.add-change { height: 36px; padding-inline: 8px; }
+	.icon-button { width: 36px; height: 36px; }
+	.trace { padding: 9px; }
+	.trace-title-button, .trace-now { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+	.trace-title-button { -webkit-line-clamp: 2; }
+	.trace-now { -webkit-line-clamp: 2; line-height: 1.35; }
+	.pipeline-separator { flex-basis: 8px; font-size: 9px; }
+	.pipeline-segment { padding-inline: 2px; gap: 3px; font-size: 9px; }
+	.segment-full { display: none; }
+	.segment-short { display: inline; }
+	.card-options-panel { width: calc(100vw - 34px); }
 	.kv { grid-template-columns: 1fr; gap: 3px; }
-	.quality-strip { margin-left: 5px; max-width: calc(100% - 12px); }
+	.footer-help { text-align: center; font-size: 11px; }
 }
 </style>
 </head>
@@ -609,17 +727,29 @@ button { color: inherit; }
 				<div class="brand-copy"><img class="codewiki-logo" src="${CODEWIKI_LOGO_DATA_URI}" alt="CodeWiki" width="517" height="338" /><div class="repo-label">Repo: <span id="project" class="project">codewiki</span></div></div>
 			</div>
 			<div class="header-dashboard">
-				<div class="view-switch" aria-label="Dashboard section"><button id="view-traces" type="button" class="active">Sprints Queue</button><button id="view-changes" type="button">Changes Backlog</button><button id="view-configuration" type="button">Configuration</button></div>
-				<div class="header-controls" id="summary"></div>
-				<div class="search-wrap"><input id="search" aria-label="Filter traces" placeholder="filter traces…" /></div>
+				<div class="search-control">
+					<span class="search-icon" aria-hidden="true"></span>
+					<input id="search" class="pipeline-search" aria-label="Search pipeline" placeholder="Search all work…" autocomplete="off" />
+					<details id="search-filter" class="search-filter">
+						<summary aria-label="Filter search scope" title="Filter: All"><span id="scope-label" class="scope-label">All work</span><span id="scope-count" class="scope-count">0</span></summary>
+						<div id="scope-menu" class="scope-menu" role="listbox" aria-label="Pipeline scope"></div>
+					</details>
+				</div>
+				<button id="draft-change" class="add-change" type="button">Add Change</button>
+				<details id="dashboard-options" class="global-options">
+					<summary class="icon-button" aria-label="Dashboard settings" title="Dashboard settings">⚙</summary>
+					<div class="options-menu" role="menu"><button id="open-configuration" type="button">Configuration</button><button id="close-dashboard" class="danger" type="button">Close Dashboard</button></div>
+				</details>
 			</div>
 		</header>
 		<main class="queue-shell">
 			<div class="trace-list" id="queue"><div class="load-state">Loading CodeWiki pipeline state…</div></div>
-			<div class="change-list" id="changes" hidden><div class="load-state">Loading Changes Backlog…</div></div>
-			<div class="configuration-panel" id="configuration" hidden><div class="load-state">Loading execution configuration…</div></div>
-			<div class="footer-help">j/k move · enter expand · / search · r refresh · generated <span id="clock">loading…</span> · <span id="status">connecting</span></div>
+			<div class="footer-help">j/k move · enter overview · / search · r refresh · generated <span id="clock">loading…</span> · <span id="status">connecting</span></div>
 		</main>
+		<dialog id="configuration-dialog" class="dashboard-dialog">
+			<div class="dialog-head"><div class="dialog-title">Configuration</div><button id="close-configuration" class="dialog-close" type="button">Close</button></div>
+			<div class="configuration-panel" id="configuration"><div class="load-state">Loading execution configuration…</div></div>
+		</dialog>
 	</div>
 </div>
 <script>
@@ -630,188 +760,298 @@ if (window.location.hash) history.replaceState(null, '', window.location.pathnam
 let state = null;
 let traceHostState = null;
 let loading = false;
+let dashboardStopped = false;
+let eventStream = null;
 let selected = 0;
-let expandedTraceId = null;
+let expandedEntryId = null;
 let query = '';
-let filter = 'active';
-let dashboardView = 'traces';
+let filter = 'all';
 const detailTabs = new Map();
-const LOGO_PALETTE = ['#e85042', '#ef7b36', '#f3d55b', '#8ecb72', '#62c6c2'];
+const PIPELINE_STAGE_ORDER = { implementation: 0, planning: 1, decision: 2, change: 3, committed: 4 };
 const els = {
 	project: document.getElementById('project'),
 	clock: document.getElementById('clock'),
 	status: document.getElementById('status'),
-	summary: document.getElementById('summary'),
 	queue: document.getElementById('queue'),
-	changes: document.getElementById('changes'),
 	configuration: document.getElementById('configuration'),
+	configurationDialog: document.getElementById('configuration-dialog'),
 	search: document.getElementById('search'),
-	viewTraces: document.getElementById('view-traces'),
-	viewChanges: document.getElementById('view-changes'),
-	viewConfiguration: document.getElementById('view-configuration'),
+	searchFilter: document.getElementById('search-filter'),
+	scopeLabel: document.getElementById('scope-label'),
+	scopeCount: document.getElementById('scope-count'),
+	scopeMenu: document.getElementById('scope-menu'),
+	dashboardOptions: document.getElementById('dashboard-options'),
+	openConfiguration: document.getElementById('open-configuration'),
+	closeConfiguration: document.getElementById('close-configuration'),
+	draftChange: document.getElementById('draft-change'),
+	closeDashboard: document.getElementById('close-dashboard'),
 };
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
-function filtered() {
+function isBacklogChange(card) { return card.identity.status === 'pending' || card.identity.status === 'deferred'; }
+function pipelineEntries() {
 	const traces = state?.sprintsQueue || [];
+	const linkedChangeIds = new Set(traces.flatMap(function(trace) { return trace.changeIds || []; }));
+	const changes = (state?.changes?.records || []).filter(function(card) {
+		return isBacklogChange(card) || (card.identity.status === 'accepted' && !linkedChangeIds.has(card.identity.changeId));
+	});
+	const entries = changes.map(function(card, index) {
+		const stage = card.identity.status === 'accepted' ? 'decision' : 'change';
+		return {
+			kind: 'change', id: 'change:' + card.identity.changeId, stage: stage, card: card, sourceIndex: index,
+			blocked: false,
+			searchText: [card.identity.changeId, card.question, card.identity.status, card.identity.validationState, card.sections.currentState.text, card.sections.proposedChange.text].join(' ').toLowerCase(),
+		};
+	}).concat(traces.map(function(trace, index) {
+		const stage = trace.stage || (trace.committed ? 'committed' : trace.loop === 'archived' ? 'committed' : trace.loop);
+		const topicMetadata = trace.sprintBoundary?.knowledgeTopics || [];
+		const topics = topicMetadata.map(function(topic) { return topic.ref; });
+		return {
+			kind: 'trace', id: 'trace:' + trace.traceId, stage: stage, trace: trace, sourceIndex: index,
+			blocked: trace.blockerCount > 0 || trace.loop === 'blocked', topics: topics,
+			searchText: [trace.traceId, trace.title, trace.status, stage, trace.currentAction].concat(trace.pathScopes || [], topics, topicMetadata.map(knowledgeTopicLabel)).join(' ').toLowerCase(),
+		};
+	}));
 	const q = query.trim().toLowerCase();
-	return traces.filter(function(trace) {
-		if (filter === 'active' && !isActiveTrace(trace)) return false;
-		if (filter === 'blocked' && trace.blockerCount === 0) return false;
-		if (filter === 'archived' && trace.closed === false) return false;
-		if (!q) return true;
-		return [trace.traceId, trace.title, trace.status, trace.loop, trace.currentAction].concat(trace.pathScopes || []).join(' ').toLowerCase().includes(q);
+	return entries.filter(function(entry) {
+		const topicFilter = filter.startsWith('topic:');
+		if (topicFilter && (entry.kind !== 'trace' || !entry.topics.includes(filter.slice(6)))) return false;
+		if (!topicFilter && filter === 'backlog' && (entry.kind !== 'change' || !isBacklogChange(entry.card))) return false;
+		if (!topicFilter && filter === 'blocked' && !entry.blocked) return false;
+		if (!topicFilter && filter !== 'all' && filter !== 'backlog' && filter !== 'blocked' && entry.stage !== filter) return false;
+		return !q || entry.searchText.includes(q);
 	}).sort(function(left, right) {
-		return traceSortRank(left) - traceSortRank(right) || String(left.title || '').localeCompare(String(right.title || ''));
+		if (left.blocked !== right.blocked) return left.blocked ? -1 : 1;
+		return (PIPELINE_STAGE_ORDER[left.stage] ?? 9) - (PIPELINE_STAGE_ORDER[right.stage] ?? 9) || left.sourceIndex - right.sourceIndex;
 	});
-}
-function filteredChanges() {
-	const records = state?.changes?.records || [];
-	const q = query.trim().toLowerCase();
-	return records.filter(function(card) {
-		if (filter === 'pending' && card.identity.status !== 'pending') return false;
-		if (filter === 'valid' && card.identity.validationState !== 'valid') return false;
-		if (filter === 'accepted' && card.identity.status !== 'accepted') return false;
-		if (!q) return true;
-		return [card.identity.changeId, card.question, card.sections.currentState.text, card.sections.proposedChange.text].join(' ').toLowerCase().includes(q);
-	});
-}
-function isActiveTrace(trace) { return !trace.closed && trace.loop !== 'waiting'; }
-function traceSortRank(trace) {
-	if (isActiveTrace(trace)) return 0;
-	if (trace.blockerCount > 0 || trace.loop === 'blocked') return 1;
-	if (trace.closed) return 2;
-	return 3;
 }
 function render() {
-	if (!state) return;
-	const traces = filtered();
-	selected = Math.max(0, Math.min(selected, Math.max(0, traces.length - 1)));
-	if (expandedTraceId && !traces.some(function(trace) { return trace.traceId === expandedTraceId; })) expandedTraceId = null;
+	if (!state || dashboardStopped) return;
+	const entries = pipelineEntries();
+	selected = Math.max(0, Math.min(selected, Math.max(0, entries.length - 1)));
+	if (expandedEntryId && !entries.some(function(entry) { return entry.id === expandedEntryId; })) expandedEntryId = null;
 	text(els.project, state.projectName || 'CodeWiki');
 	text(els.clock, state.generatedAt || new Date().toISOString());
 	text(els.status, 'live');
-	els.queue.hidden = dashboardView !== 'traces';
-	els.changes.hidden = dashboardView !== 'changes';
-	els.configuration.hidden = dashboardView !== 'configuration';
-	els.viewTraces.className = dashboardView === 'traces' ? 'active' : '';
-	els.viewChanges.className = dashboardView === 'changes' ? 'active' : '';
-	els.viewConfiguration.className = dashboardView === 'configuration' ? 'active' : '';
-	els.search.hidden = dashboardView === 'configuration';
-	els.search.placeholder = dashboardView === 'traces' ? 'filter traces…' : 'filter changes…';
-	els.search.setAttribute('aria-label', dashboardView === 'traces' ? 'Filter traces' : 'Filter changes');
-	renderSummary();
-	if (dashboardView === 'traces') renderQueue(traces);
-	else if (dashboardView === 'changes') renderChanges(filteredChanges());
-	else renderConfiguration();
+	renderSearchFilter();
+	renderPipeline(entries);
+	if (els.configurationDialog.open) renderConfiguration();
 }
-function renderSummary() {
-	els.summary.innerHTML = '';
-	const changesSummary = state.changes && state.changes.summary;
-	const configuration = state.configuration;
-	const stats = dashboardView === 'configuration' && configuration ? [
-		['restart', configuration.restartRequired ? 1 : 0],
-		['workers', configuration.editable.runtime.maxWorkers],
-		['automation', configuration.editable.runtime.automation],
-		['agency', configuration.editable.runtime.agency],
-	] : dashboardView === 'changes' && changesSummary ? [
-		['pending', changesSummary.pending],
-		['valid', changesSummary.valid],
-		['accepted', changesSummary.accepted],
-		['all', changesSummary.total],
-	] : [
-		['active', state.summary.active],
-		['blocked', state.summary.blocked],
-		['archived', state.summary.archived],
-		['all', state.summary.traces],
-	];
-	stats.forEach(function(entry) {
-		const label = entry[0];
-		const div = document.createElement('button');
-		div.type = 'button';
-		div.className = 'stat' + (filter === label ? ' active' : '');
-		div.onclick = function() { filter = label; selected = 0; render(); };
-		const s = document.createElement('span'); text(s, label);
-		const b = document.createElement('b'); text(b, entry[1]);
-		div.append(s, b); els.summary.append(div);
+function renderSearchFilter() {
+	const topicCounts = new Map();
+	(state.sprintsQueue || []).forEach(function(trace) {
+		(trace.sprintBoundary?.knowledgeTopics || []).forEach(function(topic) {
+			const current = topicCounts.get(topic.ref);
+			topicCounts.set(topic.ref, { topic: topic, count: (current?.count || 0) + 1 });
+		});
+	});
+	const topicScopes = Array.from(topicCounts.values()).sort(function(left, right) {
+		return left.topic.category.localeCompare(right.topic.category) || left.topic.label.localeCompare(right.topic.label);
+	}).map(function(entry) {
+		return { key: 'topic:' + entry.topic.ref, label: entry.topic.label, value: entry.count, group: titleCase(entry.topic.category) };
+	});
+	const scopes = [
+		{ key: 'all', label: 'All work', value: state.summary.pipeline, group: 'Lifecycle' },
+		{ key: 'backlog', label: 'Changes Backlog', value: state.summary.backlog, group: 'Lifecycle' },
+		{ key: 'decision', label: 'Decision', value: state.summary.decision, group: 'Lifecycle' },
+		{ key: 'planning', label: 'Planning', value: state.summary.planning, group: 'Lifecycle' },
+		{ key: 'implementation', label: 'Implementation', value: state.summary.implementation, group: 'Lifecycle' },
+		{ key: 'committed', label: 'Committed', value: state.summary.committed, group: 'Lifecycle' },
+		{ key: 'blocked', label: 'Blocked', value: state.summary.blocked, group: 'Lifecycle' },
+	].concat(topicScopes);
+	const active = scopes.find(function(scope) { return scope.key === filter; }) || scopes[0];
+	text(els.scopeLabel, active.label);
+	text(els.scopeCount, active.value);
+	els.searchFilter.querySelector('summary').title = 'Filter: ' + active.label;
+	els.search.placeholder = 'Search ' + active.label.toLowerCase() + '…';
+	const signature = filter + '|' + scopes.map(function(scope) { return scope.key + ':' + scope.value; }).join('|');
+	if (els.scopeMenu.dataset.signature === signature) return;
+	els.scopeMenu.dataset.signature = signature;
+	els.scopeMenu.innerHTML = '';
+	let previousGroup = '';
+	scopes.forEach(function(scope) {
+		if (scope.group !== previousGroup) {
+			const heading = document.createElement('div'); heading.className = 'scope-group'; heading.setAttribute('role', 'presentation'); text(heading, scope.group); els.scopeMenu.append(heading); previousGroup = scope.group;
+		}
+		const option = document.createElement('button'); option.type = 'button'; option.className = 'scope-option'; option.setAttribute('role', 'option'); option.setAttribute('aria-selected', String(scope.key === filter));
+		const label = document.createElement('span'); text(label, scope.label);
+		const count = document.createElement('span'); count.className = 'scope-count'; text(count, scope.value);
+		option.append(label, count);
+		option.onclick = function() { filter = scope.key; selected = 0; els.searchFilter.open = false; render(); openSearch(); };
+		els.scopeMenu.append(option);
 	});
 }
-function badgeClass(loop) { return String(loop || '').replace(/[^a-z0-9_-]/gi, ''); }
+function knowledgeTopicLabel(topic) {
+	return titleCase(topic.category) + ' · ' + topic.label;
+}
+function badgeClass(value) { return String(value || '').replace(/[^a-z0-9_-]/gi, ''); }
 function isInteractiveDashboardTarget(target) {
 	return target instanceof Element && Boolean(target.closest('button, input, select, textarea, a, summary, [contenteditable="true"]'));
 }
-function toggleTrace(trace, index) {
-	selected = index;
-	expandedTraceId = expandedTraceId === trace.traceId ? null : trace.traceId;
-	render();
-	focusSelectedTrace();
-}
-function focusSelectedTrace() {
+function focusSelectedPipelineCard() {
 	const row = els.queue.querySelector('.trace.selected');
 	if (!row) return;
 	row.focus({ preventScroll: true });
 	row.scrollIntoView({ block: 'nearest' });
 }
-function renderQueue(traces) {
+function preparePipelineCard(row, entry, index) {
+	row.className = 'trace' + (index === selected ? ' selected' : '');
+	row.tabIndex = 0;
+	row.setAttribute('aria-expanded', String(expandedEntryId === entry.id));
+	row.onkeydown = function(event) {
+		if (event.target !== row || (event.key !== 'Enter' && event.key !== ' ')) return;
+		event.preventDefault();
+		openEntryOverview(entry, index);
+	};
+}
+function renderPipeline(entries) {
 	els.queue.innerHTML = '';
-	if (!traces.length) { els.queue.innerHTML = '<div class="empty">No Sprint Traces found.</div>'; return; }
-	traces.forEach(function(trace, index) {
-		const row = document.createElement('article');
-		row.className = 'trace' + (index === selected ? ' selected' : '');
-		row.tabIndex = 0;
-		row.setAttribute('aria-expanded', String(expandedTraceId === trace.traceId));
-		row.onclick = function(event) {
-			if (isInteractiveDashboardTarget(event.target)) return;
-			toggleTrace(trace, index);
-		};
-		row.onkeydown = function(event) {
-			if (event.target !== row || (event.key !== 'Enter' && event.key !== ' ')) return;
-			event.preventDefault();
-			event.stopPropagation();
-			toggleTrace(trace, index);
-		};
-		const head = document.createElement('div'); head.className = 'trace-head';
-		const title = document.createElement('div'); title.className = 'trace-title'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled sprint trace');
-		const badge = document.createElement('span'); badge.className = 'badge ' + badgeClass(trace.loop); text(badge, trace.loop);
-		head.append(title, badge);
-		const caption = document.createElement('div'); caption.className = 'quality-caption'; text(caption, trace.qualityCaption);
-		const barRow = document.createElement('div'); barRow.className = 'trace-bar-row';
-		const primaryChecks = trace.primaryQualityChecks || trace.qualityChecks || [];
-		const primarySummary = trace.primaryQualitySummary || trace.qualitySummary || { total: primaryChecks.length, passed: 0 };
-		const strip = renderQualityStrip(primaryChecks, trace.qualityCaption);
-		const count = document.createElement('div'); count.className = 'quality-count'; text(count, qualityCountText(primarySummary));
-		barRow.append(strip, count);
-		row.append(head, caption, barRow);
-		const workers = document.createElement('div'); workers.className = 'worker-strip'; text(workers, trace.workerCount + ' worker(s) · ' + (trace.items || []).length + ' work item(s)'); row.append(workers);
-		if (expandedTraceId === trace.traceId) row.append(renderDetail(trace));
-		els.queue.append(row);
+	if (!entries.length) { els.queue.innerHTML = '<div class="empty">No matching pipeline work found.</div>'; return; }
+	entries.forEach(function(entry, index) {
+		els.queue.append(entry.kind === 'trace' ? renderTracePipelineCard(entry, index) : renderChangePipelineCard(entry, index));
 	});
 }
-function renderChanges(cards) {
-	els.changes.innerHTML = '';
-	const toolbar = document.createElement('div'); toolbar.className = 'changes-toolbar';
-	const authority = document.createElement('div'); authority.className = 'change-authority'; text(authority, 'Draft, revise, validate, or withdraw only. Acceptance and Decisions remain in the main session.');
-	const draft = changeActionButton('Draft Change', function() { executeChangeCommand('draft'); });
-	toolbar.append(authority, draft); els.changes.append(toolbar);
-	if (!cards.length) { const empty = document.createElement('div'); empty.className = 'empty'; text(empty, 'No matching Changes found.'); els.changes.append(empty); return; }
-	cards.forEach(function(card) {
-		const node = document.createElement('article'); node.className = 'change-card';
-		const header = document.createElement('header');
-		const heading = document.createElement('h3'); text(heading, card.identity.changeId);
-		const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, 'revision ' + card.identity.revision + ' · record ' + card.identity.recordRevision + ' · ' + card.identity.status + ' · ' + card.identity.validationState);
-		header.append(heading, identity); node.append(header);
-		node.append(changeSection('Current state', [card.sections.currentState.text]));
-		node.append(changeSection('Proposed change', [card.sections.proposedChange.text, 'Rationale: ' + card.sections.proposedChange.rationale]));
-		const opinion = [];
-		(card.sections.agentOpinion.assessments || []).forEach(function(item) { opinion.push(item.actor + ' · ' + item.stance + ': ' + item.rationale); });
-		(card.sections.agentOpinion.recommendations || []).forEach(function(item) { opinion.push(item.actor + ' recommends ' + item.value + ': ' + item.rationale); });
-		(card.sections.agentOpinion.concerns || []).forEach(function(item) { opinion.push('Concern: ' + item); });
-		node.append(changeSection('Agent opinion', opinion.length ? opinion : ['No agent assessment recorded.']));
-		const actions = document.createElement('div'); actions.className = 'change-actions';
-		if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
-		if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
-		if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
-		node.append(actions); els.changes.append(node);
+function renderTracePipelineCard(entry, index) {
+	const trace = entry.trace;
+	const row = document.createElement('article');
+	preparePipelineCard(row, entry, index);
+	const head = document.createElement('div'); head.className = 'trace-head';
+	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled Sprint Trace');
+	title.onclick = function() { openEntryOverview(entry, index); };
+	head.append(title, renderTraceOptions(entry, index)); row.append(head);
+	const now = document.createElement('div'); now.className = 'trace-now'; text(now, traceStateText(entry)); row.append(now);
+	if (trace.sprintBoundary?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintBoundary.knowledgeTopics));
+	row.append(renderPipelineRail(trace.segments || [], entry, index));
+	if (expandedEntryId === entry.id) row.append(renderDetail(trace));
+	return row;
+}
+function renderChangePipelineCard(entry, index) {
+	const card = entry.card;
+	const row = document.createElement('article');
+	preparePipelineCard(row, entry, index);
+	const head = document.createElement('div'); head.className = 'trace-head';
+	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, card.question || card.identity.changeId);
+	title.onclick = function() { openEntryOverview(entry, index); };
+	head.append(title, renderChangeOptions(card)); row.append(head);
+	const now = document.createElement('div'); now.className = 'trace-now'; text(now, 'Change — ' + changeCurrentAction(card)); row.append(now);
+	row.append(renderPipelineRail(changePipelineSegments(entry.stage, card), entry, index));
+	if (expandedEntryId === entry.id) row.append(renderChangeDetail(card));
+	return row;
+}
+function renderKnowledgeTopics(topics) {
+	const wrap = document.createElement('div'); wrap.className = 'knowledge-topics'; wrap.setAttribute('aria-label', 'Sprint Knowledge topics');
+	topics.forEach(function(topic) {
+		const button = document.createElement('button'); button.type = 'button'; button.className = 'knowledge-topic'; button.title = topic.ref; text(button, knowledgeTopicLabel(topic));
+		button.onclick = function(event) { event.preventDefault(); event.stopPropagation(); filter = 'topic:' + topic.ref; selected = 0; render(); };
+		wrap.append(button);
 	});
+	return wrap;
+}
+function openEntryOverview(entry, index) {
+	selected = index;
+	expandedEntryId = expandedEntryId === entry.id ? null : entry.id;
+	if (entry.kind === 'trace') detailTabs.set(entry.trace.traceId, preferredDetailTab(entry.trace, entry.trace.loopSections || []));
+	render();
+	focusSelectedPipelineCard();
+}
+function renderTraceOptions(entry, index) {
+	const details = document.createElement('details'); details.className = 'card-options';
+	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Trace options'); summary.title = 'Trace options'; text(summary, '⋮');
+	const panel = document.createElement('div'); panel.className = 'card-options-panel';
+	const actions = document.createElement('div'); actions.className = 'options-actions';
+	const overview = document.createElement('button'); overview.type = 'button'; overview.className = 'options-action'; text(overview, 'Open overview'); overview.onclick = function() { details.open = false; openEntryOverview(entry, index); };
+	const copy = document.createElement('button'); copy.type = 'button'; copy.className = 'options-action'; text(copy, 'Copy trace ID'); copy.onclick = function() { void copyText(entry.trace.traceId); };
+	actions.append(overview, copy);
+	panel.append(actions);
+	details.addEventListener('toggle', function() {
+		if (details.open && !panel.querySelector('.execution-control')) panel.append(renderExecutionControl(entry.trace));
+	});
+	details.append(summary, panel);
+	return details;
+}
+function renderChangeOptions(card) {
+	const details = document.createElement('details'); details.className = 'card-options';
+	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Change options'); summary.title = 'Change options'; text(summary, '⋮');
+	const panel = document.createElement('div'); panel.className = 'card-options-panel';
+	const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, card.identity.changeId + ' · revision ' + card.identity.revision + ' · ' + card.identity.validationState);
+	const actions = document.createElement('div'); actions.className = 'change-actions';
+	if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
+	if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
+	if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
+	panel.append(identity, actions); details.append(summary, panel); return details;
+}
+async function copyText(value) {
+	try { await navigator.clipboard.writeText(value); text(els.status, 'copied'); }
+	catch { window.prompt('Copy value:', value); }
+}
+function traceStateText(entry) {
+	const trace = entry.trace;
+	const facts = [];
+	if (trace.workerCount) facts.push(trace.workerCount + ' ' + pluralLabel(trace.workerCount, 'worker'));
+	const taskCount = (trace.items || []).length;
+	if (taskCount) facts.push(taskCount + ' ' + pluralLabel(taskCount, 'Work Item'));
+	if (trace.blockerCount) facts.push(trace.blockerCount + ' ' + pluralLabel(trace.blockerCount, 'blocker'));
+	return titleCase(entry.stage) + ' — ' + (entry.blocked ? 'Blocked: ' : '') + trace.currentAction + (facts.length ? ' · ' + facts.join(' · ') : '');
+}
+function changeCurrentAction(card) {
+	if (card.identity.status === 'accepted') return 'Decision accepted; waiting for linked Sprint Trace.';
+	if (card.identity.validationState === 'valid') return 'Validated proposal awaiting explicit Decision approval.';
+	if (card.identity.validationState === 'stale') return 'Proposal changed; validate current revision.';
+	if (card.identity.status === 'deferred') return 'Deferred in Changes Backlog.';
+	return 'Refine and validate proposed Change.';
+}
+function changePipelineSegments(stage, card) {
+	const changeProgress = card.identity.validationState === 'valid' ? 0.85 : card.identity.validationState === 'stale' ? 0.4 : 0.2;
+	return [
+		{ phase: 'change', label: 'Change', state: stage === 'change' ? 'active' : 'done', progress: stage === 'change' ? changeProgress : 1 },
+		{ phase: 'decision', label: 'Decision', state: stage === 'decision' ? 'active' : 'todo', progress: stage === 'decision' ? 0.2 : 0 },
+		{ phase: 'planning', label: 'Planning', state: 'todo', progress: 0 },
+		{ phase: 'implementation', label: 'Implementation', state: 'todo', progress: 0 },
+		{ phase: 'committed', label: 'Committed', state: 'todo', progress: 0 },
+	];
+}
+function renderPipelineRail(segments, entry, index) {
+	const rail = document.createElement('div'); rail.className = 'pipeline-rail'; rail.setAttribute('aria-label', 'Pipeline progress');
+	segments.forEach(function(segment, segmentIndex) {
+		if (segmentIndex) { const separator = document.createElement('span'); separator.className = 'pipeline-separator'; separator.setAttribute('aria-hidden', 'true'); text(separator, '>'); rail.append(separator); }
+		const node = document.createElement('button'); node.type = 'button'; node.className = 'pipeline-segment ' + badgeClass(segment.state);
+		const progress = Number.isFinite(segment.progress) ? segment.progress : segment.state === 'done' ? 1 : segment.state === 'todo' ? 0 : 0.2;
+		node.style.setProperty('--segment-progress', Math.round(progress * 100) + '%');
+		node.disabled = segment.state === 'todo';
+		const full = document.createElement('span'); full.className = 'segment-full'; text(full, segment.label);
+		const short = document.createElement('span'); short.className = 'segment-short'; text(short, shortStageLabel(segment.phase));
+		node.append(full, short); node.title = segment.label + ' · ' + segment.state;
+		node.onclick = function(event) { event.stopPropagation(); openPipelineStage(entry, segment.phase, index); };
+		rail.append(node);
+	});
+	return rail;
+}
+function openPipelineStage(entry, phase, index) {
+	selected = index;
+	expandedEntryId = entry.id;
+	if (entry.kind === 'trace') detailTabs.set(entry.trace.traceId, phase);
+	render();
+	focusSelectedPipelineCard();
+}
+function shortStageLabel(phase) {
+	return ({ change: 'Change', decision: 'Decide', planning: 'Plan', implementation: 'Build', committed: 'Done' })[phase] || phase;
+}
+function pluralLabel(count, singular) { return count === 1 ? singular : singular + 's'; }
+function renderChangeDetail(card) {
+	const node = document.createElement('div'); node.className = 'detail change-card';
+	const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, 'revision ' + card.identity.revision + ' · record ' + card.identity.recordRevision + ' · ' + card.identity.status + ' · ' + card.identity.validationState); node.append(identity);
+	node.append(changeSection('Current state', [card.sections.currentState.text]));
+	node.append(changeSection('Proposed change', [card.sections.proposedChange.text, 'Rationale: ' + card.sections.proposedChange.rationale]));
+	const opinion = [];
+	(card.sections.agentOpinion.assessments || []).forEach(function(item) { opinion.push(item.actor + ' · ' + item.stance + ': ' + item.rationale); });
+	(card.sections.agentOpinion.recommendations || []).forEach(function(item) { opinion.push(item.actor + ' recommends ' + item.value + ': ' + item.rationale); });
+	(card.sections.agentOpinion.concerns || []).forEach(function(item) { opinion.push('Concern: ' + item); });
+	node.append(changeSection('Agent opinion', opinion.length ? opinion : ['No agent assessment recorded.']));
+	const actions = document.createElement('div'); actions.className = 'change-actions';
+	if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
+	if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
+	if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
+	node.append(actions);
+	return node;
 }
 function changeSection(titleValue, values) {
 	const sectionNode = document.createElement('section');
@@ -908,44 +1148,6 @@ function shortTime(value) {
 function readableStatus(status) {
 	return String(status || '').replace(/_/g, ' ');
 }
-function renderQualityStrip(checks, label) {
-	const strip = document.createElement('div');
-	strip.className = 'quality-strip';
-	strip.setAttribute('aria-label', label || 'quality checks');
-	checks.forEach(function(check, index) {
-		const el = document.createElement('span');
-		el.className = 'check ' + check.status;
-		el.style.setProperty('--check-color', logoProgressColor(index, checks.length));
-		el.title = check.loop + ' · ' + check.label + ' · ' + check.status + (check.message ? ': ' + check.message : '');
-		strip.append(el);
-	});
-	return strip;
-}
-function qualityCountText(summary) {
-	if (!summary || !summary.total) return '0 checks';
-	return (summary.passed || 0) + '/' + summary.total + ' checks';
-}
-function logoProgressColor(index, total) {
-	if (total <= 1) return LOGO_PALETTE[0];
-	return logoColorAt(index / Math.max(1, total - 1));
-}
-function logoColorAt(ratio) {
-	const clamped = clamp(ratio, 0, 1);
-	const scaled = clamped * (LOGO_PALETTE.length - 1);
-	const left = Math.floor(scaled);
-	const right = Math.min(LOGO_PALETTE.length - 1, left + 1);
-	return mixHex(LOGO_PALETTE[left], LOGO_PALETTE[right], scaled - left);
-}
-function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
-function mixHex(left, right, ratio) {
-	const a = hexToRgb(left);
-	const b = hexToRgb(right);
-	return 'rgb(' + [0, 1, 2].map(function(index) { return Math.round(a[index] + (b[index] - a[index]) * ratio); }).join(', ') + ')';
-}
-function hexToRgb(value) {
-	const hex = value.replace('#', '');
-	return [0, 2, 4].map(function(index) { return parseInt(hex.slice(index, index + 2), 16); });
-}
 function renderDetail(trace) {
 	const detail = document.createElement('section'); detail.className = 'detail';
 	detail.addEventListener('click', function(event) { event.stopPropagation(); });
@@ -976,7 +1178,7 @@ function renderDetail(trace) {
 	return detail;
 }
 function detailTabEntries(trace, sections) {
-	return [{ id: 'execution', label: 'execution', render: function() { return renderExecutionControl(trace); } }].concat(sections.map(function(section) {
+	return [{ id: 'change', label: 'change', render: function() { return renderTraceLineage(trace); } }].concat(sections.map(function(section) {
 		return {
 			id: section.loop,
 			label: section.loop,
@@ -987,9 +1189,33 @@ function detailTabEntries(trace, sections) {
 			},
 		};
 	})).concat([
-		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true); } },
+		{ id: 'committed', label: 'committed', render: function() { return renderCommittedDetail(trace); } },
+		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintBoundary?.knowledgeTopics || []).map(function(topic) { return topic.ref; })); } },
 		{ id: 'files', label: 'Files', render: function() { return renderTouchedFilesSection(trace.touchedFiles || {}, true); } },
 	]);
+}
+function renderTraceLineage(trace) {
+	const body = document.createElement('div'); body.className = 'section-body';
+	const ids = trace.changeIds || [];
+	if (!ids.length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No originating Change ids recorded.'); body.append(empty); }
+	else ids.forEach(function(id) { const line = document.createElement('div'); line.className = 'file-line'; text(line, id); body.append(line); });
+	return renderTerminalSection('originating Changes', body, ids.length + ' Change(s)');
+}
+function renderCommittedDetail(trace) {
+	const body = document.createElement('div'); body.className = 'section-body';
+	[['status', trace.committed ? 'committed' : 'not committed'], ['Git restore evidence', trace.commitRef || 'not available']].forEach(function(entry) {
+		const row = document.createElement('div'); row.className = 'review-row';
+		const label = document.createElement('span'); label.className = 'review-label'; text(label, entry[0]);
+		const value = document.createElement('span'); value.className = 'review-value'; text(value, entry[1]); row.append(label, value); body.append(row);
+	});
+	return renderTerminalSection('commit and retention', body, trace.committed ? 'complete' : 'waiting');
+}
+function renderTerminalSection(label, body, aside) {
+	const node = document.createElement('section'); node.className = 'detail-section';
+	const heading = document.createElement('div'); heading.className = 'terminal-heading';
+	const title = document.createElement('span'); text(title, label);
+	const state = document.createElement('span'); state.className = 'section-state'; text(state, aside);
+	heading.append(title, state); node.append(heading, body); return node;
 }
 function renderExecutionControl(trace) {
 	const box = document.createElement('section'); box.className = 'execution-control';
@@ -1085,7 +1311,7 @@ async function executeTraceHostCommand(action, card) {
 	}
 }
 function preferredDetailTab(trace, sections) {
-	return preferredOpenLoop(sections) || (sections[0] && sections[0].loop) || 'kb';
+	return preferredOpenLoop(sections) || (sections[0] && sections[0].loop) || 'change';
 }
 function preferredOpenLoop(sections) {
 	const active = sections.find(function(section) { return section.state === 'active' || section.state === 'blocked'; });
@@ -1101,7 +1327,7 @@ function renderImplementationPanel(trace, section) {
 		renderTerminalBlock('activity feed', renderNarrativeFeed(trace.activityFeed || []), (trace.activityFeed || []).length + ' meaningful update(s)'),
 		renderTerminalBlock('worker attempts', renderWorkerAttempts(trace.workerAttempts || []), (trace.workerAttempts || []).length + ' attempt(s)'),
 		renderTerminalBlock('integration and exit review', renderImplementationReview(trace.implementationReview || {}), readableStatus((trace.implementationReview || {}).status || 'waiting')),
-		renderTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
+		renderCollapsibleTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
 		renderTerminalBlock('dev log', renderDevLog(trace.devLog || { available: false, entryCount: 0, items: [] }), (trace.devLog || {}).entryCount ? trace.devLog.entryCount + ' action(s)' : 'diagnostics'),
 	);
 	node.append(stack);
@@ -1189,7 +1415,7 @@ function renderLoopBody(section) {
 	const body = document.createElement('div'); body.className = 'section-body';
 	body.append(
 		renderTerminalBlock('feed', renderFeed(section.feed || [], false), feedTitleMeta(section)),
-		renderTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
+		renderCollapsibleTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
 	);
 	return body;
 }
@@ -1208,11 +1434,21 @@ function renderTerminalBlock(label, content, aside) {
 	node.append(heading, body);
 	return node;
 }
+function renderCollapsibleTerminalBlock(label, content, aside) {
+	const node = document.createElement('details'); node.className = 'terminal-block';
+	const heading = document.createElement('summary'); heading.className = 'terminal-block-heading';
+	const title = document.createElement('span'); text(title, label);
+	const state = document.createElement('span'); state.className = 'section-state'; text(state, aside || '');
+	heading.append(title, state);
+	const body = document.createElement('div'); body.className = 'terminal-block-body'; body.append(content);
+	node.append(heading, body);
+	return node;
+}
 function qualitySummaryText(summary) {
-	if (!summary || !summary.total) return '0 checks';
-	if (summary.failed) return summary.failed + ' failed · ' + summary.total + ' total';
-	if (summary.verifying) return summary.verifying + ' verifying · ' + summary.total + ' total';
-	if (summary.pending) return summary.pending + ' pending · ' + summary.total + ' total';
+	if (!summary || !summary.total) return 'not started';
+	if (summary.failed) return summary.failed + ' failed · ' + summary.passed + '/' + summary.total + ' passed';
+	if (summary.verifying) return summary.verifying + ' verifying · ' + summary.passed + '/' + summary.total + ' passed';
+	if (summary.pending) return summary.passed + '/' + summary.total + ' passed · ' + summary.pending + ' remaining';
 	return summary.passed + '/' + summary.total + ' passed';
 }
 const QUALITY_LAYER_ORDER = [
@@ -1473,10 +1709,11 @@ function renderFeed(feed, includeLoop) {
 	});
 	return box;
 }
-function renderKnowledgeSection(files, open) {
-	return renderFileSection('knowledge base changes', [
-		['product', files.kbProduct || []],
-		['system', files.kbSystem || []],
+function renderKnowledgeSection(files, open, topics) {
+	return renderFileSection('knowledge base refs', [
+		['declared Sprint topics', topics || []],
+		['changed product knowledge', files.kbProduct || []],
+		['changed system knowledge', files.kbSystem || []],
 	], open);
 }
 function renderTouchedFilesSection(files, open) {
@@ -1505,7 +1742,7 @@ function renderFileSection(label, groups, open) {
 	node.append(summary, body); return node;
 }
 async function load() {
-	if (loading) return;
+	if (loading || dashboardStopped) return;
 	loading = true;
 	try {
 		const responses = await Promise.all([
@@ -1529,38 +1766,68 @@ async function load() {
 	}
 	finally { loading = false; }
 }
-function setDashboardView(nextView) {
-	dashboardView = nextView;
-	filter = nextView === 'changes' ? 'pending' : 'active';
-	query = '';
-	els.search.value = '';
-	selected = 0;
-	render();
+function openSearch() {
+	els.search.focus();
+	els.search.select();
 }
-els.viewTraces.addEventListener('click', function() { setDashboardView('traces'); });
-els.viewChanges.addEventListener('click', function() { setDashboardView('changes'); });
-els.viewConfiguration.addEventListener('click', function() { setDashboardView('configuration'); });
-els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
-document.addEventListener('keydown', function(event) {
-	if (event.target === els.search) {
-		if (event.key === 'Escape') els.search.blur();
-		return;
+function openConfiguration() {
+	renderConfiguration();
+	if (!els.configurationDialog.open) els.configurationDialog.showModal();
+	els.dashboardOptions.open = false;
+}
+function closeConfiguration() { if (els.configurationDialog.open) els.configurationDialog.close(); }
+async function stopDashboard() {
+	if (!window.confirm('Stop CodeWiki dashboard for this Pi session? Workflow truth is unaffected.')) return;
+	dashboardStopped = true;
+	text(els.status, 'stopping');
+	try {
+		const response = await fetch('/api/shutdown?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+		if (!response.ok) throw new Error('HTTP ' + response.status);
+		eventStream?.close();
+		closeConfiguration();
+		els.queue.innerHTML = '<div class="empty">Dashboard stopped. Run /wiki-dashboard in Pi to reopen it.</div>';
+		text(els.status, 'stopped');
+		setTimeout(function() { window.close(); }, 50);
+	} catch (error) {
+		dashboardStopped = false;
+		text(els.status, 'stop failed');
+		console.error(error);
 	}
+}
+els.openConfiguration.addEventListener('click', openConfiguration);
+els.closeConfiguration.addEventListener('click', closeConfiguration);
+els.draftChange.addEventListener('click', function() { executeChangeCommand('draft'); });
+els.closeDashboard.addEventListener('click', stopDashboard);
+els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
+els.search.addEventListener('keydown', function(event) {
+	if (event.key === 'Enter') { event.preventDefault(); els.search.blur(); }
+	if (event.key === 'Escape') {
+		event.preventDefault();
+		if (query) { query = ''; els.search.value = ''; selected = 0; render(); }
+		else els.search.blur();
+	}
+});
+els.searchFilter.addEventListener('toggle', function() { if (els.searchFilter.open) els.dashboardOptions.open = false; });
+els.searchFilter.addEventListener('keydown', function(event) { if (event.key === 'Escape') { event.preventDefault(); els.searchFilter.open = false; openSearch(); } });
+els.dashboardOptions.addEventListener('toggle', function() { if (els.dashboardOptions.open) els.searchFilter.open = false; });
+els.configurationDialog.addEventListener('click', function(event) { if (event.target === els.configurationDialog) closeConfiguration(); });
+document.addEventListener('click', function(event) { if (!els.searchFilter.contains(event.target)) els.searchFilter.open = false; });
+document.addEventListener('keydown', function(event) {
+	if (event.target === els.search) return;
 	if (isInteractiveDashboardTarget(event.target)) return;
-	if (event.key === '/') { event.preventDefault(); els.search.focus(); return; }
+	if (event.key === '/') { event.preventDefault(); openSearch(); return; }
 	if (event.key === 'r') { event.preventDefault(); load(); return; }
-	if (dashboardView !== 'traces') return;
-	if (event.key === 'j' || event.key === 'ArrowDown') { event.preventDefault(); selected++; render(); focusSelectedTrace(); return; }
-	if (event.key === 'k' || event.key === 'ArrowUp') { event.preventDefault(); selected--; render(); focusSelectedTrace(); return; }
+	if (event.key === 'j' || event.key === 'ArrowDown') { event.preventDefault(); selected++; render(); focusSelectedPipelineCard(); return; }
+	if (event.key === 'k' || event.key === 'ArrowUp') { event.preventDefault(); selected--; render(); focusSelectedPipelineCard(); return; }
 	if (event.key === 'Enter') {
-		const trace = filtered()[selected];
-		if (trace) { event.preventDefault(); toggleTrace(trace, selected); }
+		const entry = pipelineEntries()[selected];
+		if (entry) { event.preventDefault(); openEntryOverview(entry, selected); }
 	}
 });
 try {
-	const events = new EventSource('/api/events?token=' + encodeURIComponent(token));
-	events.onmessage = function(event) { state = JSON.parse(event.data); render(); };
-	events.onerror = function() { text(els.status, 'reconnecting'); load(); };
+	eventStream = new EventSource('/api/events?token=' + encodeURIComponent(token));
+	eventStream.onmessage = function(event) { if (!dashboardStopped) { state = JSON.parse(event.data); render(); } };
+	eventStream.onerror = function() { if (!dashboardStopped) { text(els.status, 'reconnecting'); load(); } };
 } catch { load(); }
 setInterval(load, 1000);
 load();

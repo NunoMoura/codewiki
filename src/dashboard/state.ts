@@ -25,11 +25,13 @@ import type {
 	WorkQueueItem,
 } from "../views/types.ts";
 
-export type CodewikiSprintTracePhase =
+export type CodewikiPipelineStage =
+	| "change"
 	| "decision"
 	| "planning"
 	| "implementation"
-	| "archive";
+	| "committed";
+export type CodewikiSprintTracePhase = CodewikiPipelineStage;
 export type CodewikiSprintTracePhaseState =
 	| "done"
 	| "active"
@@ -44,8 +46,9 @@ export type CodewikiSprintTraceQualityStatus =
 
 export interface CodewikiSprintTraceSegment {
 	phase: CodewikiSprintTracePhase;
-	label: "D" | "P" | "I" | "A";
+	label: "Change" | "Decision" | "Planning" | "Implementation" | "Committed";
 	state: CodewikiSprintTracePhaseState;
+	progress: number;
 }
 
 export interface CodewikiSprintTraceQualityCheck {
@@ -158,6 +161,20 @@ export interface CodewikiSprintTraceLoopSection {
 	report: CodewikiSprintTraceLoopReport;
 }
 
+export interface CodewikiSprintKnowledgeTopic {
+	ref: string;
+	category: "product" | "system";
+	label: string;
+}
+
+export interface CodewikiSprintBoundary {
+	accountableGoal: string;
+	knowledgeTopics: CodewikiSprintKnowledgeTopic[];
+	noKnowledgeImpactReason?: string;
+	dependencies: string[];
+	rollbackBoundary: string;
+}
+
 export interface CodewikiSprintTraceTouchedFiles {
 	kbProduct: string[];
 	kbSystem: string[];
@@ -171,6 +188,9 @@ export interface CodewikiSprintTrace {
 	title: string;
 	status: TraceGoalStatus;
 	closed: boolean;
+	committed: boolean;
+	commitRef?: string;
+	stage: Exclude<CodewikiPipelineStage, "change">;
 	loop: TraceLoop | "archive" | "archived" | "blocked" | "waiting";
 	progress: number;
 	segments: CodewikiSprintTraceSegment[];
@@ -187,6 +207,8 @@ export interface CodewikiSprintTrace {
 	decisionRefs: string[];
 	planningRefs: string[];
 	workUnitRefs: string[];
+	changeIds: string[];
+	sprintBoundary?: CodewikiSprintBoundary;
 	pathScopes: string[];
 	blockers: string[];
 	workers: CodewikiSprintTraceWorker[];
@@ -204,10 +226,13 @@ export interface CodewikiDashboardState {
 	projectName: string;
 	generatedAt?: string;
 	summary: {
-		traces: number;
-		active: number;
+		pipeline: number;
+		backlog: number;
+		decision: number;
+		planning: number;
+		implementation: number;
+		committed: number;
 		blocked: number;
-		archived: number;
 	};
 	next: WikiStateSnapshot["next"];
 	sprintsQueue: CodewikiSprintTrace[];
@@ -241,16 +266,36 @@ export function buildCodewikiDashboardState(
 			context,
 		);
 	});
+	const linkedChangeIds = new Set(
+		sprintsQueue.flatMap((trace) => trace.changeIds),
+	);
+	const backlog =
+		context.changes?.records.filter((card) =>
+			["pending", "deferred"].includes(card.identity.status),
+		).length ?? 0;
+	const acceptedWithoutTrace =
+		context.changes?.records.filter(
+			(card) =>
+				card.identity.status === "accepted" &&
+				!linkedChangeIds.has(card.identity.changeId),
+		).length ?? 0;
 	return {
 		projectRoot,
 		projectName: projectNameFromRoot(projectRoot),
 		generatedAt: snapshot.generatedAt,
 		summary: {
-			traces: sprintsQueue.length,
-			active: sprintsQueue.filter((trace) => isActiveDashboardTrace(trace))
+			pipeline: backlog + acceptedWithoutTrace + sprintsQueue.length,
+			backlog,
+			decision:
+				acceptedWithoutTrace +
+				sprintsQueue.filter((trace) => trace.stage === "decision").length,
+			planning: sprintsQueue.filter((trace) => trace.stage === "planning")
 				.length,
+			implementation: sprintsQueue.filter(
+				(trace) => trace.stage === "implementation",
+			).length,
+			committed: sprintsQueue.filter((trace) => trace.committed).length,
 			blocked: sprintsQueue.filter((trace) => trace.blockerCount > 0).length,
-			archived: sprintsQueue.filter((trace) => trace.closed).length,
 		},
 		next: snapshot.next,
 		sprintsQueue,
@@ -277,6 +322,8 @@ function buildSprintTrace(
 	]);
 	const workers = sprintTraceWorkers(snapshot, card.traceId);
 	const loop = sprintTraceLoop(card, items, blockers);
+	const committed = isCommittedDashboardTrace(card, records);
+	const stage = sprintTraceStage(card, items, committed);
 	const workerAttempts = buildCodewikiWorkerAttempts(
 		records,
 		items,
@@ -293,14 +340,26 @@ function buildSprintTrace(
 		qualityChecks,
 	);
 	const primaryQualitySummary = sprintTraceQualitySummary(primaryQualityChecks);
+	const sprintBoundary = projectSprintBoundary(records);
 	return {
 		traceId: card.traceId,
 		title: card.title || card.traceId,
 		status: card.status,
 		closed: card.closed,
+		committed,
+		...(sprintTraceCommitRef(records)
+			? { commitRef: sprintTraceCommitRef(records) }
+			: {}),
+		stage,
 		loop,
-		progress: sprintTraceProgress(card, items, blockers),
-		segments: sprintTraceSegments(card, items, blockers),
+		progress: sprintTraceProgress(card, items, blockers, committed),
+		segments: sprintTraceSegments(
+			card,
+			items,
+			blockers,
+			committed,
+			loopSections,
+		),
 		qualityChecks,
 		qualitySummary,
 		primaryQualityChecks,
@@ -319,6 +378,8 @@ function buildSprintTrace(
 		decisionRefs: [...card.decisionRefs],
 		planningRefs: unique(items.flatMap((item) => item.planningRefs)),
 		workUnitRefs: workUnitRefs(card, items),
+		changeIds: sprintTraceChangeIds(records),
+		...(sprintBoundary ? { sprintBoundary } : {}),
 		pathScopes: unique([
 			...card.pathScopes,
 			...items.flatMap((item) => item.pathScopes),
@@ -402,13 +463,16 @@ function applyWorkerAttemptRecord(
 		const workUnitId = stringValue(data.workUnitId);
 		const workerId = stringValue(data.workerId);
 		if (!workUnitId || !workerId) return;
-		attempts.set(attemptId, workerAttemptFromClaim(
+		attempts.set(
 			attemptId,
-			workUnitId,
-			workerId,
-			data,
-			itemById.get(workUnitId),
-		));
+			workerAttemptFromClaim(
+				attemptId,
+				workUnitId,
+				workerId,
+				data,
+				itemById.get(workUnitId),
+			),
+		);
 		return;
 	}
 	if (record.event !== "runtime.work_unit.claim.released") return;
@@ -456,7 +520,8 @@ function applyWorkerObservation(
 	attempt.leaseExpiresAt = observation.leaseExpiresAt;
 	attempt.progress = observation.progress;
 	attempt.execution = observation.execution;
-	if (attempt.status === "running" && freshness !== "live") attempt.status = "stale";
+	if (attempt.status === "running" && freshness !== "live")
+		attempt.status = "stale";
 }
 
 function observationIsOlder(
@@ -465,7 +530,7 @@ function observationIsOlder(
 ): boolean {
 	return Boolean(
 		attempt.observedAt &&
-		Date.parse(attempt.observedAt) >= Date.parse(observation.observedAt),
+			Date.parse(attempt.observedAt) >= Date.parse(observation.observedAt),
 	);
 }
 
@@ -1007,7 +1072,7 @@ function sprintTraceActivity(
 	if (record.type === "trace_close") {
 		return {
 			kind: "archive",
-			label: "Trace archived",
+			label: "Committed and retained",
 			detail: record.reason,
 			createdAt: record.createdAt,
 		};
@@ -1125,6 +1190,105 @@ function titleCase(value: string): string {
 		.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+export function isCommittedDashboardTrace(
+	card: Pick<TraceQueueCard, "closed" | "status">,
+	records: TraceRecord[],
+): boolean {
+	return (
+		card.closed &&
+		card.status === "closed_complete" &&
+		Boolean(sprintTraceCommitRef(records))
+	);
+}
+
+function sprintTraceCommitRef(records: TraceRecord[]): string | undefined {
+	const close = records.find((record) => record.type === "trace_close");
+	return close?.type === "trace_close" && close.gitRestoreRef.trim()
+		? close.gitRestoreRef.trim()
+		: undefined;
+}
+
+function sprintTraceStage(
+	card: TraceQueueCard,
+	items: WorkQueueItem[],
+	committed: boolean,
+): Exclude<CodewikiPipelineStage, "change"> {
+	if (committed) return "committed";
+	if (
+		card.nextLoop === "implementation" ||
+		card.nextLoop === "archive" ||
+		items.some((item) =>
+			["waiting", "ready", "claimed", "done"].includes(item.status),
+		)
+	) {
+		return "implementation";
+	}
+	if (card.nextLoop === "planning" || planningDone(card)) return "planning";
+	return "decision";
+}
+
+export function projectSprintBoundary(
+	records: TraceRecord[],
+): CodewikiSprintBoundary | undefined {
+	const events = semanticTraceEvents(records);
+	for (let index = events.length - 1; index >= 0; index -= 1) {
+		const event = events[index];
+		if (event?.loop !== "decision") continue;
+		const output = objectRecord(event.data?.output);
+		const boundary = objectRecord(output?.sprintBoundary);
+		if (!boundary) continue;
+		const noKnowledgeImpactReason = stringValue(
+			boundary.noKnowledgeImpactReason,
+		);
+		return {
+			accountableGoal: stringValue(boundary.accountableGoal) || "",
+			knowledgeTopics: unique(stringValues(boundary.knowledgeTopics)).flatMap(
+				projectSprintKnowledgeTopic,
+			),
+			...(noKnowledgeImpactReason ? { noKnowledgeImpactReason } : {}),
+			dependencies: unique(stringValues(boundary.dependencies)),
+			rollbackBoundary: stringValue(boundary.rollbackBoundary) || "",
+		};
+	}
+	return undefined;
+}
+
+function projectSprintKnowledgeTopic(
+	ref: string,
+): CodewikiSprintKnowledgeTopic[] {
+	const match = /^\.codewiki\/kb\/(product|system)\/(.+)\.md$/.exec(ref);
+	if (!match) return [];
+	const category = match[1] as CodewikiSprintKnowledgeTopic["category"];
+	const label = (match[2] || "")
+		.split("/")
+		.map((part) => titleCase(part.replace(/[-_]/g, " ")))
+		.join(" / ");
+	return [{ ref, category, label }];
+}
+
+function sprintTraceChangeIds(records: TraceRecord[]): string[] {
+	const outputIds = semanticTraceEvents(records)
+		.filter((event) => event.loop === "decision")
+		.flatMap((event) =>
+			approvedChangeObjects(objectRecord(event.data?.output)).map((change) =>
+				stringValue(change.changeId || change.id),
+			),
+		);
+	const refIds = records
+		.flatMap(traceRecordRefs)
+		.flatMap((ref) => [...ref.matchAll(/#change:([^#\s]+)/g)])
+		.map((match) => match[1] || "");
+	return unique([...outputIds, ...refIds].filter(Boolean));
+}
+
+function traceRecordRefs(record: TraceRecord): string[] {
+	if (record.type === "trace_head") return record.origin?.refs ?? [];
+	if (record.type === "trace_event" || record.type === "trace_close") {
+		return record.refs;
+	}
+	return [];
+}
+
 function sprintTraceLoop(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
@@ -1150,8 +1314,12 @@ function sprintTraceAction(
 	if (loop === "decision") return "Review or approve the next decision.";
 	if (loop === "planning") return "Plan approved decisions into work units.";
 	if (loop === "implementation") return "Run or review implementation work.";
-	if (loop === "archive") return "Archive the completed trace.";
-	if (loop === "archived") return "Trace archived.";
+	if (loop === "archive") return "Commit and retain the completed trace.";
+	if (loop === "archived") {
+		return card.status === "closed_complete"
+			? "Committed with Git restore evidence."
+			: "Trace closed without a complete outcome.";
+	}
 	return "Waiting for dependencies.";
 }
 
@@ -1159,8 +1327,9 @@ function sprintTraceProgress(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	blockers: string[],
+	committed: boolean,
 ): number {
-	if (card.closed) return 100;
+	if (committed) return 100;
 	const decision = decisionDone(card)
 		? 1
 		: card.decisionRefs.length > 0
@@ -1172,9 +1341,9 @@ function sprintTraceProgress(
 			? 0.4
 			: 0;
 	const implementation = implementationProgress(card, items);
-	const archive = card.nextLoop === "archive" ? 0.5 : 0;
+	const commit = card.nextLoop === "archive" ? 0.5 : 0;
 	const raw =
-		5 + decision * 25 + planning * 25 + implementation * 35 + archive * 10;
+		10 + decision * 20 + planning * 20 + implementation * 40 + commit * 10;
 	const clamped = Math.max(5, Math.min(95, raw));
 	return roundToOne(blockers.length > 0 ? Math.min(clamped, 90) : clamped);
 }
@@ -1183,29 +1352,52 @@ function sprintTraceSegments(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	blockers: string[],
+	committed: boolean,
+	sections: CodewikiSprintTraceLoopSection[],
 ): CodewikiSprintTraceSegment[] {
+	const decisionState = phaseState(card, blockers, "decision", {
+		complete: decisionDone(card),
+	});
+	const planningState = phaseState(card, blockers, "planning", {
+		complete: planningDone(card),
+	});
+	const implementationState = phaseState(card, blockers, "implementation", {
+		complete: implementationDone(card, items),
+	});
+	const committedState: CodewikiSprintTracePhaseState = committed
+		? "done"
+		: card.closed
+			? "todo"
+			: blockers.length > 0 && card.nextLoop === "archive"
+				? "blocked"
+				: card.nextLoop === "archive"
+					? "active"
+					: "todo";
 	return [
+		segment("change", "Change", "done", 1),
 		segment(
 			"decision",
-			"D",
-			phaseState(card, blockers, "decision", { complete: decisionDone(card) }),
+			"Decision",
+			decisionState,
+			loopSegmentProgress(sections, "decision", decisionState),
 		),
 		segment(
 			"planning",
-			"P",
-			phaseState(card, blockers, "planning", { complete: planningDone(card) }),
+			"Planning",
+			planningState,
+			loopSegmentProgress(sections, "planning", planningState),
 		),
 		segment(
 			"implementation",
-			"I",
-			phaseState(card, blockers, "implementation", {
-				complete: implementationDone(card, items),
-			}),
+			"Implementation",
+			implementationState,
+			loopSegmentProgress(sections, "implementation", implementationState),
 		),
 		segment(
-			"archive",
-			"A",
-			card.closed ? "done" : card.nextLoop === "archive" ? "active" : "todo",
+			"committed",
+			"Committed",
+			committedState,
+			committedState === "done" ? 1 : committedState === "todo" ? 0 : 0.5,
 		),
 	];
 }
@@ -1226,8 +1418,28 @@ function segment(
 	phase: CodewikiSprintTracePhase,
 	label: CodewikiSprintTraceSegment["label"],
 	state: CodewikiSprintTracePhaseState,
+	progress: number,
 ): CodewikiSprintTraceSegment {
-	return { phase, label, state };
+	return {
+		phase,
+		label,
+		state,
+		progress: roundToOne(Math.max(0, Math.min(1, progress))),
+	};
+}
+
+function loopSegmentProgress(
+	sections: CodewikiSprintTraceLoopSection[],
+	loop: TraceLoop,
+	state: CodewikiSprintTracePhaseState,
+): number {
+	if (state === "done") return 1;
+	if (state === "todo") return 0;
+	const summary = sections.find(
+		(section) => section.loop === loop,
+	)?.qualitySummary;
+	if (!summary?.total) return 0.15;
+	return (summary.passed + summary.skipped) / summary.total;
 }
 
 function decisionDone(card: TraceQueueCard): boolean {
@@ -1404,7 +1616,7 @@ function sprintTraceQualityCaption(
 	const verifying = checks.find((check) => check.status === "verifying");
 	if (verifying) return qualityCaption("Checking", verifying);
 	if (card.closed) {
-		return `${summary.passed}/${summary.total} quality checks recorded · trace archived`;
+		return `${summary.passed}/${summary.total} quality checks recorded · trace ${card.status === "closed_complete" ? "committed" : "closed incomplete"}`;
 	}
 	if (loop === "blocked") {
 		return `${summary.passed}/${summary.total} quality checks recorded · needs attention`;

@@ -192,18 +192,21 @@ try {
 	const archiveTool = toolByName(pi, "wiki_archive");
 	const stateTool = toolByName(pi, "wiki_state");
 	const ctx = { cwd: root, ui: { notify() {} } };
-	const { changeAcceptance } = await seedChangeAcceptance(root, {
-		id: "CHG-pi-mutation-smoke",
-		currentState:
-			"Pi tools are mutation-capable but need guarded append smoke coverage.",
-		desiredState:
-			"Pi tool append proves guarded mutation across semantic loops.",
-		rationale:
-			"Dogfooding must prove safe trace writes before broader mutation use.",
-		sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
-		acceptedBy: "pi-tool-mutation-smoke",
-		acceptedAt: "2026-06-17T00:00:01.000Z",
-	});
+	const { changeAcceptance, sprintBoundary } = await seedChangeAcceptance(
+		root,
+		{
+			id: "CHG-pi-mutation-smoke",
+			currentState:
+				"Pi tools are mutation-capable but need guarded append smoke coverage.",
+			desiredState:
+				"Pi tool append proves guarded mutation across semantic loops.",
+			rationale:
+				"Dogfooding must prove safe trace writes before broader mutation use.",
+			sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
+			acceptedBy: "pi-tool-mutation-smoke",
+			acceptedAt: "2026-06-17T00:00:01.000Z",
+		},
+	);
 
 	const preview = assertToolResult(
 		await decideTool.execute(
@@ -214,6 +217,7 @@ try {
 					mode: "preview",
 					nextSequence: 1,
 					changeAcceptance,
+					sprintBoundary,
 				},
 			},
 			undefined,
@@ -254,6 +258,7 @@ try {
 					expectedBytes: await expectedBytes(tracePath),
 					nextSequence: 1,
 					changeAcceptance,
+					sprintBoundary,
 					sprintProposalApproval: {
 						approved: true,
 						renderedProposalDigest: preview.renderedSprintProposal.digest,

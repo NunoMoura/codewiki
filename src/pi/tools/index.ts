@@ -106,8 +106,8 @@ function codewikiTools(): CodewikiToolDefinition[] {
 		facadeTool<RunWikiDecideInput>(
 			"wiki_decide",
 			"CodeWiki Decide",
-			"Preview or append a Decision from exact validated Change selections in the Changes Backlog.",
-			"Use wiki_decide only after the user validates exact Change revisions; never author proposal input inside the Decision tool.",
+			"Preview or append a Decision from exact validated Change selections and a user-confirmed Sprint boundary.",
+			"Use wiki_decide only after the user validates exact Change revisions and confirms the accountable goal, Product/System Knowledge topics or no-impact rationale, dependencies, rollback boundary, and coherence assessment; never author mutable Change input inside the Decision tool.",
 			runWikiDecide,
 		),
 		facadeTool<RunWikiPlanInput>(
@@ -144,7 +144,7 @@ function wikiStateTool(): CodewikiToolDefinition {
 			"Read internal CodeWiki state for the current repository from active trace records.",
 		promptGuidelines: [
 			"Use internal wiki_state before CodeWiki decision, planning, implementation, archive, or coordination-sensitive work to inspect current trace-backed state.",
-			"wiki_state does not write files and is not a user command; users see the read-only /wiki-dashboard Sprints Queue instead.",
+			"wiki_state does not write files and is not a user command; users see the automatically opened Work Pipeline dashboard instead.",
 		],
 		executionMode: "parallel",
 		parameters: Type.Object(
@@ -295,11 +295,11 @@ function wikiChangeTool(): CodewikiToolDefinition {
 		description:
 			"Query or manage mutable pre-Decision Changes in the current project's Changes Backlog.",
 		promptSnippet:
-			"Use the Changes Backlog to capture and refine out-of-scope Changes without widening the active Task.",
+			"Use the Changes Backlog to capture and refine out-of-scope Changes without widening the active Work Item.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
 			"Use operation intake only for bounded user, runtime, or lab feedback; it creates or reinforces pending unvalidated Changes.",
-			"wiki_change cannot accept Changes, create Sprint Traces or Tasks, launch workers, edit source, publish, or advance controllers.",
+			"wiki_change cannot accept Changes, create Sprint Traces or Work Items, launch workers, edit source, publish, or advance controllers.",
 			"Mutations require exact Changes Backlog head and record revision guards; list, get, and validate are read-only.",
 		],
 		executionMode: "sequential",
@@ -327,9 +327,11 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				"input",
 			]);
 			assertOptionalBoolean("wiki_change", args, "allowNonProjectInstall");
-			const input = requiredInput<RunWikiChangeInput & {
-				feedback?: unknown;
-			}>("wiki_change", args.input);
+			const input = requiredInput<
+				RunWikiChangeInput & {
+					feedback?: unknown;
+				}
+			>("wiki_change", args.input);
 			const root = await requireCodewikiRoot(ctx);
 			const operation = String(input.operation || "");
 			const mutates =

@@ -467,6 +467,17 @@ try {
 		acceptedAt: "2026-06-18T09:00:01.000Z",
 	};
 
+	const sprintBoundary = {
+		accountableGoal: change.intent.desiredState,
+		knowledgeTopics: [".codewiki/kb/system/components/runtime.md"],
+		dependencies: [],
+		rollbackBoundary: "Revert external lifecycle changes together.",
+		assessment: {
+			stance: "coherent",
+			rationale: "One validated Change serves one external lifecycle goal.",
+		},
+	};
+
 	const preview = assertToolResult(
 		await executeTool(
 			decideTool,
@@ -475,6 +486,7 @@ try {
 				mode: "preview",
 				allowNonProjectInstall: true,
 				changeAcceptance,
+				sprintBoundary,
 			},
 			ctx,
 			"decide-preview",
@@ -491,6 +503,7 @@ try {
 				expectedBytes: await expectedBytes(tracePath),
 				nextSequence: 1,
 				changeAcceptance,
+				sprintBoundary,
 				sprintProposalApproval: {
 					approved: true,
 					renderedProposalDigest: preview.renderedSprintProposal.digest,

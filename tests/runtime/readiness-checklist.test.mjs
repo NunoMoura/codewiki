@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 import { DECISION_LOOP_QUALITY_PACK } from "../../src/decision/loop.ts";
 import { IMPLEMENTATION_LOOP_QUALITY_PACK } from "../../src/implementation/loop.ts";
@@ -39,11 +38,6 @@ const expectedToolNames = [
 	"wiki_implement",
 	"wiki_archive",
 ];
-const expectedSkillNames = [
-	"codewiki-decide",
-	"codewiki-implement",
-	"codewiki-plan",
-];
 const forbiddenSkillNames = [
 	"codewiki-state",
 	"codewiki-runtime",
@@ -74,6 +68,7 @@ function parseJson(value, label) {
 
 function filesUnder(root) {
 	const files = [];
+	if (!existsSync(root)) return files;
 	for (const entry of readdirSync(root).sort()) {
 		const path = join(root, entry);
 		const stat = statSync(path);
@@ -96,7 +91,7 @@ function knowledgeDriftFiles() {
 }
 
 describe("install readiness checklist", () => {
-	it("exposes packaged Pi extension metadata for supervised pinned-controller dogfood", () => {
+	it("exposes packaged Pi extension metadata for disposable external installs", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
@@ -112,31 +107,6 @@ describe("install readiness checklist", () => {
 			"./package.json",
 		]);
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
-		assert.equal(
-			packageJson.scripts["test:self-dogfood-candidate"],
-			"npm run audit:codewiki && npm run lab:gate && npm run lab:pipeline -- --gate",
-		);
-		assert.equal(
-			packageJson.scripts["test:self-dogfood-ready"],
-			"npm run self-dogfood:baseline:verify -- --require-clean && npm run test:self-dogfood-candidate && npm run test:self-dogfood-shadow",
-		);
-		assert.match(
-			packageJson.scripts["self-dogfood:baseline:create"],
-			/create-self-dogfood-baseline\.mjs/,
-		);
-		assert.match(
-			packageJson.scripts["self-dogfood:baseline:verify"],
-			/verify-self-dogfood-baseline\.mjs/,
-		);
-		assert.match(
-			packageJson.scripts["test:self-dogfood-shadow"],
-			/run-self-dogfood-shadow\.mjs/,
-		);
-		assert.match(
-			packageJson.scripts["self-dogfood:controller:install"],
-			/install-self-dogfood-controller\.mjs/,
-		);
-		assert.equal(existsSync(".pi/codewiki-controller.json"), true);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
 			"node tests/runtime/pi-install-smoke.mjs",
@@ -163,8 +133,8 @@ describe("install readiness checklist", () => {
 		assert.match(toolSource, /not a user command/);
 	});
 
-	it("keeps only semantic loop skills", () => {
-		assert.deepEqual(readdirSync(".agents/skills").sort(), expectedSkillNames);
+	it("keeps the source checkout free of project-local CodeWiki skills", () => {
+		assert.deepEqual(filesUnder(".agents/skills"), []);
 		for (const skill of forbiddenSkillNames) {
 			assert.equal(existsSync(join(".agents/skills", skill)), false, skill);
 		}
@@ -181,7 +151,8 @@ describe("install readiness checklist", () => {
 		assert.doesNotMatch(prompt, /wiki_runtime/);
 		assert.doesNotMatch(prompt, /wiki_config/);
 		assert.doesNotMatch(prompt, /wiki_archive/);
-		assert.match(prompt, /\/wiki-dashboard opens/);
+		assert.match(prompt, /open the Work Pipeline dashboard automatically/);
+		assert.match(prompt, /\/wiki-dashboard reopens or stops/);
 	});
 
 	it("keeps runtime and source-map details out of the agent-facing state surface", () => {
@@ -233,7 +204,7 @@ describe("install readiness checklist", () => {
 		assert.match(labDocumentation, /does not grant production authority/);
 	});
 
-	it("keeps reconciled control-center proof in release gates", () => {
+	it("keeps reconciled control-center behavior in release gates without dogfood state", () => {
 		assert.match(
 			packageJson.scripts["test:smoke"],
 			/tests\/integration\/\*\.test\.mjs/,
@@ -253,20 +224,16 @@ describe("install readiness checklist", () => {
 		]) {
 			assert.equal(existsSync(path), false, path);
 		}
-		const historical = readFileSync(
-			".codewiki/traces/TRACE-ideas-workspace-and-control-center-v1.jsonl",
-		);
-		assert.equal(historical.length >= 115_151, true);
 		assert.equal(
-			createHash("sha256")
-				.update(historical.subarray(0, 115_151))
-				.digest("hex"),
-			"154fc8843c5d75c58c607777edaa1a16834a547c6b324739daf31fce51b878fc",
+			existsSync(
+				".codewiki/traces/TRACE-ideas-workspace-and-control-center-v1.jsonl",
+			),
+			false,
 		);
 		const readme = readFileSync("README.md", "utf8");
 		assert.match(readme, /Changes Backlog and control center/);
 		assert.match(readme, /pending unvalidated Change/);
-		assert.match(readme, /fully exit and restart Pi/i);
+		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 	});
 
 	it("keeps lab code out of the packaged Pi extension", () => {
@@ -379,14 +346,14 @@ describe("install readiness checklist", () => {
 		assert.match(readme, /future registry package name is still TBD/);
 		assert.match(extensionDoc, /future registry package name is still TBD/);
 		assert.match(readme, /Avoid global\/user installs/);
-		assert.match(extensionDoc, /Global\/user installs are discouraged/);
+		assert.match(extensionDoc, /global\/user installs\s+for normal mutation/i);
 		assert.match(readme, /Production readiness and automation gates/);
 		assert.match(extensionDoc, /Production readiness gates/);
 		assert.match(runtimeDoc, /Automation gates/);
 		assert.match(runtimeDoc, /Unattended\s+worker start/i);
 	});
 
-	it("documents and scripts the self-dogfood re-enable gate", () => {
+	it("documents external release gates and source-repository non-self-hosting", () => {
 		const readme = readFileSync("README.md", "utf8");
 		const extensionDoc = readFileSync(
 			".codewiki/kb/system/components/extension.md",
@@ -412,31 +379,15 @@ describe("install readiness checklist", () => {
 		]) {
 			assert.match(audit, new RegExp(escapeRegExp(command)));
 		}
-		for (const content of [readme, extensionDoc, loopContracts]) {
-			assert.match(
-				content,
-				/self-dogfood re-enable gate|pinned-baseline.*installer gates/i,
-			);
-			assert.match(content, /content proof/i);
-			assert.match(content, /expected-byte|expected byte/i);
-			assert.match(content, /sequence/i);
-		}
 		for (const content of [readme, extensionDoc]) {
+			assert.match(content, /disposable external projects/i);
 			assert.match(
 				content,
-				/Self-dogfood status: supervised pinned-controller/i,
+				/does not (?:register, install, or load|install or load|self-host)/i,
 			);
-			assert.match(content, /autoload is enabled/i);
-			assert.match(content, /TRACE-self-dogfood-reenabled-v1/);
-			assert.match(content, /historical evidence/i);
-			assert.match(
-				content,
-				/immutable reviewed package|pinned-baseline|reviewed controller|reviewed commit/i,
-			);
-			assert.match(content, /shadow mode/i);
+			assert.match(content, /new explicit .*decision/i);
+			assert.match(content, /historical .*grant no authority/i);
 		}
-		assert.match(extensionDoc, /wiki_state/);
-		assert.match(extensionDoc, /preview-mode/);
 		assert.match(loopContracts, /fast edit feedback is never enough/);
 		assert.match(loopContracts, /Pi-tool autoload uses only/);
 	});
@@ -489,21 +440,19 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("loads only the reproducibly installed repo-local CodeWiki controller", () => {
+	it("does not load CodeWiki in its source repository", () => {
 		const packages = piSettings.packages || [];
 		assert.equal(Array.isArray(packages), true);
-		assert.equal(packages.includes("npm:pi-lens"), true);
-		assert.equal(packages.includes("./npm/node_modules/codewiki"), true);
-		assert.equal(packages.includes(".."), false);
-		assert.equal(packages.includes("."), false);
-		assert.notEqual(resolve(".pi", "."), process.cwd());
+		assert.deepEqual(packages, ["npm:pi-lens"]);
 		assert.deepEqual(
 			packages.filter((entry) => JSON.stringify(entry).includes("codewiki")),
-			["./npm/node_modules/codewiki"],
+			[],
 		);
 		assert.equal(codewikiConfig.hosts.pi.enabled, true);
+		assert.equal(existsSync(".pi/codewiki-controller.json"), false);
 		assert.equal(existsSync(".pi/extensions/codewiki.ts"), false);
 		assert.equal(existsSync(".pi/extensions"), false);
+		assert.deepEqual(filesUnder(".agents/skills"), []);
 		assert.equal(
 			packageJson.scripts["audit:codewiki"].includes("pi-dogfood"),
 			false,

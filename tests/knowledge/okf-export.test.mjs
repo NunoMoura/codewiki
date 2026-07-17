@@ -52,7 +52,7 @@ describe("OKF export compatibility API", () => {
 			exported.files.some((file) => file.path.endsWith(".jsonl")),
 			false,
 		);
-		assert.equal(exported.excludedTraceFiles.length > 0, true);
+		assert.deepEqual(exported.excludedTraceFiles, []);
 	});
 
 	it("preserves unknown OKF producer fields through consume/export", () => {
