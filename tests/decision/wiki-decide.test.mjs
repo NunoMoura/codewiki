@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -16,7 +16,10 @@ import { traceFilePath } from "../../src/traces/schema.ts";
 
 const run = promisify(execFile);
 
-function acceptedChange(id = "CHG-accepted-wiki-decide") {
+function acceptedChange(
+	id = "CHG-accepted-wiki-decide",
+	parentTraceId,
+) {
 	const change = {
 		schemaVersion: CHANGE_SCHEMA_VERSION,
 		id,
@@ -62,6 +65,9 @@ function acceptedChange(id = "CHG-accepted-wiki-decide") {
 			createdBy: "user",
 			createdAt: "2026-06-11T00:00:01.000Z",
 			updatedAt: "2026-06-11T00:00:01.000Z",
+			...(parentTraceId
+				? { discoveredWhile: { traceId: parentTraceId } }
+				: {}),
 		},
 	};
 	const digest = changeContentDigest(change);
@@ -99,8 +105,28 @@ describe("wiki_decide core facade", () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-decide-change-"));
 		try {
 			await run("git", ["init", "-q"], { cwd: root });
+			await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
+				recursive: true,
+			});
+			await writeFile(
+				join(
+					root,
+					".codewiki",
+					"kb",
+					"system",
+					"components",
+					"decision-loop.md",
+				),
+				"# Decision Loop\n",
+				"utf8",
+			);
 			const store = new GitRefChangeStore({ repoRoot: root });
-			const record = createChangeRecord(acceptedChange());
+			const record = createChangeRecord(
+				acceptedChange(
+					"CHG-accepted-wiki-decide",
+					"TRACE-parent-sprint",
+				),
+			);
 			const seeded = await store.write({
 				expectedHead: null,
 				records: [record],
@@ -175,6 +201,16 @@ describe("wiki_decide core facade", () => {
 				preview.loopResult.output.sprintBoundary.accountableGoal,
 				sprintBoundary.accountableGoal,
 			);
+			assert.deepEqual(
+				preview.loopResult.output.knowledgeAlignmentBaseline.topics.map(
+					(topic) => topic.ref,
+				),
+				sprintBoundary.knowledgeTopics,
+			);
+			assert.match(
+				preview.loopResult.output.knowledgeAlignmentBaseline.topics[0].digest,
+				/^sha256:[a-f0-9]{64}$/,
+			);
 			assert.match(
 				preview.renderedSprintProposal.markdown,
 				/Knowledge topics:/,
@@ -241,6 +277,11 @@ describe("wiki_decide core facade", () => {
 			const result = await runWikiDecide(appendInput);
 			assert.equal(result.changeAcceptance.recoveredAcceptance, true);
 			const trace = await readTrace(join(root, traceFilePath(traceId)));
+			assert.equal(trace.records[0].origin.kind, "amendment");
+			assert.equal(
+				trace.records[0].origin.parentTraceId,
+				"TRACE-parent-sprint",
+			);
 			assert.equal(
 				trace.records[1].data.output.acceptedChangeBundle.digest,
 				preview.changeAcceptance.bundle.digest,

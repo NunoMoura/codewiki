@@ -517,6 +517,16 @@ try {
 		/wiki_decide: completed append run\./,
 	);
 	assert.equal(decided.loopResult.exit.passed, true);
+	assert.deepEqual(
+		decided.loopResult.output.knowledgeAlignmentBaseline.topics.map(
+			(topic) => topic.ref,
+		),
+		sprintBoundary.knowledgeTopics,
+	);
+	assert.match(
+		decided.loopResult.output.knowledgeAlignmentBaseline.topics[0].digest,
+		/^sha256:[a-f0-9]{64}$/,
+	);
 	const decisionRef = approvedDecisionRef(decided);
 
 	const planned = assertToolResult(

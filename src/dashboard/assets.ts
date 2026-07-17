@@ -43,10 +43,12 @@ export const CODEWIKI_DASHBOARD_HTML = String.raw`<!doctype html>
 	--logo-blue-hover: #397375;
 	--interactive: #4a9293;
 	--interactive-hover: #58aaa7;
-	--progress-inactive: #596161;
-	--progress-active: var(--logo-yellow);
-	--progress-complete: var(--logo-green);
-	--progress-blocked: var(--logo-red);
+	--progress-inactive: #353b3b;
+	--stage-change: var(--logo-orange);
+	--stage-decision: var(--logo-yellow);
+	--stage-planning: var(--logo-green);
+	--stage-implementation: #4d88b8;
+	--stage-committed: var(--interactive);
 	--atari-blue: var(--interactive);
 	--atari-red: var(--logo-red);
 	--atari-orange: var(--logo-orange);
@@ -315,9 +317,28 @@ button { color: inherit; }
 .change-card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .change-identity, .change-authority { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .change-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.configuration-panel { border: 0; background: transparent; padding: 0; display: grid; gap: 10px; }
-.configuration-panel pre { margin: 0; max-height: 55vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #050505; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px; }
+.configuration-panel { border: 0; background: transparent; padding: 0; display: grid; gap: 12px; }
 .configuration-status { color: var(--muted); white-space: pre-wrap; }
+.configuration-form { display: grid; gap: 12px; }
+.config-group { margin: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 11px; display: grid; gap: 10px; background: #070707; }
+.config-group > legend { color: var(--interactive-hover); padding: 0 6px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; }
+.config-group-note, .config-hint { color: var(--muted); font-size: 11px; }
+.config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 12px; }
+.config-control { min-width: 0; display: grid; gap: 4px; }
+.config-control > span:first-child { color: var(--text); font-size: 12px; }
+.config-control input, .config-control select { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 7px; background: #050505; color: var(--text); padding: 7px 8px; }
+.config-control input:focus, .config-control select:focus { border-color: var(--interactive); outline: 1px solid color-mix(in srgb, var(--interactive) 45%, transparent); }
+.config-control input:disabled, .config-control select:disabled, .config-choice input:disabled + span { color: var(--dim); opacity: .7; }
+.config-choice { display: flex; align-items: center; gap: 7px; color: var(--text); font-size: 12px; }
+.config-choice input { accent-color: var(--interactive); }
+.config-route { border-left: 2px solid var(--interactive); padding-left: 10px; display: grid; gap: 9px; }
+.config-route-title { color: var(--interactive-hover); font-weight: 800; }
+.config-tools { display: flex; flex-wrap: wrap; gap: 7px 12px; }
+.config-actions { position: sticky; bottom: -14px; display: flex; align-items: center; gap: 9px; padding: 10px 0 0; background: linear-gradient(transparent, #0b0b0b 22%); }
+.config-save { border-color: var(--logo-blue-hover); background: var(--logo-blue-dark); color: #fff; font-weight: 900; }
+.config-save:hover { background: var(--logo-blue-hover); }
+.config-validation { color: var(--muted); font-size: 11px; }
+.config-validation.error { color: var(--check-failed); }
 .dashboard-dialog {
 	width: min(720px, calc(100vw - 28px));
 	max-height: calc(100vh - 28px);
@@ -354,6 +375,7 @@ button { color: inherit; }
 .trace:focus-visible { outline: 1px solid var(--interactive); outline-offset: 2px; }
 .trace:has(.card-options[open]) { z-index: 30; }
 .trace-head { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 12px; align-items: start; }
+.trace-head-actions { display: flex; align-items: center; gap: 4px; }
 .trace-title-button {
 	min-width: 0;
 	border: 0;
@@ -387,6 +409,8 @@ button { color: inherit; }
 .card-options > summary::-webkit-details-marker { display: none; }
 .card-options > summary:hover { border-color: var(--interactive-hover); color: var(--interactive-hover); }
 .card-options[open] > summary { border-color: var(--interactive); color: var(--interactive); }
+.sprint-actions > summary { border-color: var(--logo-blue-hover); background: var(--logo-blue-dark); color: #fff; font-size: 18px; font-weight: 900; }
+.sprint-actions > summary:hover, .sprint-actions[open] > summary { border-color: var(--interactive-hover); background: var(--logo-blue-hover); color: #fff; }
 .card-options-panel {
 	position: absolute;
 	right: 0;
@@ -407,46 +431,69 @@ button { color: inherit; }
 .knowledge-topics { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
 .knowledge-topic { border: 1px solid color-mix(in srgb, var(--interactive) 48%, var(--line)); border-radius: 999px; background: color-mix(in srgb, var(--interactive) 10%, transparent); color: var(--interactive-hover); padding: 2px 7px; font: inherit; font-size: 10px; cursor: pointer; }
 .knowledge-topic:hover, .knowledge-topic:focus-visible { border-color: var(--interactive-hover); color: var(--text); outline: none; }
-.pipeline-rail { min-width: 0; display: flex; align-items: center; margin-top: 10px; }
+.knowledge-alignment { display: inline-flex; align-items: center; width: max-content; margin-top: 6px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px; font-size: 10px; font-weight: 800; }
+.knowledge-alignment.aligned { border-color: var(--check-passed); color: var(--check-passed); }
+.knowledge-alignment.review_needed { border-color: var(--check-verifying); color: var(--check-verifying); }
+.knowledge-alignment.misaligned { border-color: var(--check-failed); color: var(--check-failed); }
+.knowledge-alignment.unknown { color: var(--muted); }
+.pipeline-rail { min-width: 0; display: flex; align-items: center; gap: 6px; margin-top: 10px; }
 .pipeline-segment {
-	--segment-color: var(--progress-inactive);
+	--stage-color: var(--progress-inactive);
 	--segment-progress: 0%;
 	position: relative;
 	min-width: 0;
+	height: 14px;
 	flex: 1 1 0;
-	border: 1px solid var(--line);
-	border-radius: 6px;
-	background: color-mix(in srgb, var(--segment-color) 7%, #070707);
-	color: var(--dim);
-	padding: 6px 5px 8px;
-	display: flex;
-	justify-content: center;
-	gap: 5px;
+	border: 1px solid color-mix(in srgb, var(--stage-color) 45%, var(--line));
+	border-radius: 5px;
+	background: var(--progress-inactive);
+	padding: 0;
 	font: inherit;
-	font-size: 10px;
-	font-weight: 800;
-	text-transform: uppercase;
-	white-space: nowrap;
-	overflow: hidden;
 	cursor: pointer;
+	overflow: visible;
 }
 .pipeline-segment::after {
 	content: "";
 	position: absolute;
-	left: 0;
-	bottom: 0;
+	inset: 0 auto 0 0;
 	width: var(--segment-progress);
-	height: 3px;
-	background: var(--segment-color);
+	border-radius: 4px;
+	background: var(--stage-color);
 	transition: width .18s ease;
 }
-.pipeline-segment.todo { --segment-color: var(--progress-inactive); cursor: default; }
-.pipeline-segment.active { --segment-color: var(--progress-active); color: var(--progress-active); border-color: color-mix(in srgb, var(--progress-active) 58%, var(--line)); }
-.pipeline-segment.done { --segment-color: var(--progress-complete); color: var(--progress-complete); border-color: color-mix(in srgb, var(--progress-complete) 48%, var(--line)); }
-.pipeline-segment.blocked { --segment-color: var(--progress-blocked); color: var(--progress-blocked); border-color: color-mix(in srgb, var(--progress-blocked) 65%, var(--line)); }
-.pipeline-segment:disabled { opacity: .58; }
-.pipeline-separator { flex: 0 0 15px; color: var(--dim); text-align: center; font-size: 11px; }
-.segment-short { display: none; }
+.pipeline-segment.change { --stage-color: var(--stage-change); }
+.pipeline-segment.decision { --stage-color: var(--stage-decision); }
+.pipeline-segment.planning { --stage-color: var(--stage-planning); }
+.pipeline-segment.implementation { --stage-color: var(--stage-implementation); }
+.pipeline-segment.committed { --stage-color: var(--stage-committed); }
+.pipeline-segment[aria-disabled="true"] { cursor: default; }
+.pipeline-segment:focus-visible { outline: 2px solid var(--stage-color); outline-offset: 2px; }
+.segment-label {
+	position: absolute;
+	left: 50%;
+	bottom: calc(100% + 6px);
+	z-index: 80;
+	transform: translateX(-50%) translateY(2px);
+	border: 1px solid var(--stage-color);
+	border-radius: 6px;
+	background: #050505;
+	color: var(--text);
+	padding: 3px 6px;
+	font-size: 10px;
+	font-weight: 800;
+	text-transform: uppercase;
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .12s ease, transform .12s ease;
+}
+.pipeline-segment:hover .segment-label, .pipeline-segment:focus-visible .segment-label { opacity: 1; transform: translateX(-50%) translateY(0); }
+.detail.stage-detail { border-color: color-mix(in srgb, var(--detail-stage-color) 62%, var(--line-strong)); box-shadow: inset 0 0 0 1px #000, inset 3px 0 0 var(--detail-stage-color), inset 0 0 24px rgba(0,0,0,.80); }
+.detail.stage-change { --detail-stage-color: var(--stage-change); }
+.detail.stage-decision { --detail-stage-color: var(--stage-decision); }
+.detail.stage-planning { --detail-stage-color: var(--stage-planning); }
+.detail.stage-implementation { --detail-stage-color: var(--stage-implementation); }
+.detail.stage-committed { --detail-stage-color: var(--stage-committed); }
 
 .worker-strip { margin-top: 8px; color: var(--muted); font-size: 12px; }
 .observability-stack { display: grid; gap: 10px; }
@@ -709,10 +756,9 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 	.trace-title-button, .trace-now { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
 	.trace-title-button { -webkit-line-clamp: 2; }
 	.trace-now { -webkit-line-clamp: 2; line-height: 1.35; }
-	.pipeline-separator { flex-basis: 8px; font-size: 9px; }
-	.pipeline-segment { padding-inline: 2px; gap: 3px; font-size: 9px; }
-	.segment-full { display: none; }
-	.segment-short { display: inline; }
+	.pipeline-rail { gap: 4px; }
+	.pipeline-segment { height: 12px; }
+	.config-grid { grid-template-columns: 1fr; }
 	.card-options-panel { width: calc(100vw - 34px); }
 	.kv { grid-template-columns: 1fr; gap: 3px; }
 	.footer-help { text-align: center; font-size: 11px; }
@@ -736,10 +782,7 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 					</details>
 				</div>
 				<button id="draft-change" class="add-change" type="button">Add Change</button>
-				<details id="dashboard-options" class="global-options">
-					<summary class="icon-button" aria-label="Dashboard settings" title="Dashboard settings">⚙</summary>
-					<div class="options-menu" role="menu"><button id="open-configuration" type="button">Configuration</button><button id="close-dashboard" class="danger" type="button">Close Dashboard</button></div>
-				</details>
+				<button id="open-configuration" class="icon-button" type="button" aria-label="Dashboard settings" title="Dashboard settings">⚙</button>
 			</div>
 		</header>
 		<main class="queue-shell">
@@ -780,11 +823,9 @@ const els = {
 	scopeLabel: document.getElementById('scope-label'),
 	scopeCount: document.getElementById('scope-count'),
 	scopeMenu: document.getElementById('scope-menu'),
-	dashboardOptions: document.getElementById('dashboard-options'),
 	openConfiguration: document.getElementById('open-configuration'),
 	closeConfiguration: document.getElementById('close-configuration'),
 	draftChange: document.getElementById('draft-change'),
-	closeDashboard: document.getElementById('close-dashboard'),
 };
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
 function isBacklogChange(card) { return card.identity.status === 'pending' || card.identity.status === 'deferred'; }
@@ -808,7 +849,7 @@ function pipelineEntries() {
 		return {
 			kind: 'trace', id: 'trace:' + trace.traceId, stage: stage, trace: trace, sourceIndex: index,
 			blocked: trace.blockerCount > 0 || trace.loop === 'blocked', topics: topics,
-			searchText: [trace.traceId, trace.title, trace.status, stage, trace.currentAction].concat(trace.pathScopes || [], topics, topicMetadata.map(knowledgeTopicLabel)).join(' ').toLowerCase(),
+			searchText: [trace.traceId, trace.title, trace.status, stage, trace.currentAction, trace.knowledgeAlignment?.label].concat(trace.pathScopes || [], topics, topicMetadata.map(knowledgeTopicLabel)).join(' ').toLowerCase(),
 		};
 	}));
 	const q = query.trim().toLowerCase();
@@ -917,9 +958,11 @@ function renderTracePipelineCard(entry, index) {
 	const head = document.createElement('div'); head.className = 'trace-head';
 	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled Sprint Trace');
 	title.onclick = function() { openEntryOverview(entry, index); };
-	head.append(title, renderTraceOptions(entry, index)); row.append(head);
+	const headActions = document.createElement('div'); headActions.className = 'trace-head-actions'; headActions.append(renderSprintActions(entry), renderTraceOptions(entry, index));
+	head.append(title, headActions); row.append(head);
 	const now = document.createElement('div'); now.className = 'trace-now'; text(now, traceStateText(entry)); row.append(now);
 	if (trace.sprintBoundary?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintBoundary.knowledgeTopics));
+	row.append(renderKnowledgeAlignment(trace.knowledgeAlignment));
 	row.append(renderPipelineRail(trace.segments || [], entry, index));
 	if (expandedEntryId === entry.id) row.append(renderDetail(trace));
 	return row;
@@ -946,12 +989,55 @@ function renderKnowledgeTopics(topics) {
 	});
 	return wrap;
 }
+function renderKnowledgeAlignment(alignment) {
+	const badge = document.createElement('span'); badge.className = 'knowledge-alignment ' + badgeClass(alignment?.state || 'unknown');
+	badge.title = alignment?.rationale || 'Alignment evidence is unavailable.';
+	text(badge, alignment?.label || 'Unknown'); return badge;
+}
 function openEntryOverview(entry, index) {
 	selected = index;
 	expandedEntryId = expandedEntryId === entry.id ? null : entry.id;
-	if (entry.kind === 'trace') detailTabs.set(entry.trace.traceId, preferredDetailTab(entry.trace, entry.trace.loopSections || []));
+	if (entry.kind === 'trace') detailTabs.set(entry.trace.traceId, 'overview');
 	render();
 	focusSelectedPipelineCard();
+}
+function renderSprintActions(entry) {
+	const details = document.createElement('details'); details.className = 'card-options sprint-actions';
+	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Sprint actions'); summary.title = 'Sprint actions'; text(summary, '+');
+	const panel = document.createElement('div'); panel.className = 'card-options-panel';
+	const actions = document.createElement('div'); actions.className = 'options-actions';
+	const actionState = state && state.sessionActions;
+	[
+		['resume', 'Resume'],
+		['change', 'Change'],
+		['resolve_blocker', 'Resolve Blocker'],
+	].forEach(function(action) {
+		const button = document.createElement('button'); button.type = 'button'; button.className = 'options-action'; text(button, action[1]);
+		button.disabled = !actionState?.available;
+		button.title = actionState?.available ? action[1] + ' in active Pi session' : actionState?.unavailableReason || 'Active Pi session bridge unavailable.';
+		button.onclick = function(event) { event.preventDefault(); details.open = false; void executeSessionAction(action[0], entry.trace.traceId); };
+		actions.append(button);
+	});
+	const note = document.createElement('div'); note.className = 'change-authority';
+	text(note, actionState?.available ? 'Actions send one allowlisted trace-scoped user message to this active Pi session. Delivery is not approval or trace mutation.' : actionState?.unavailableReason || 'Open this dashboard from the active Pi TUI session to use Sprint actions.');
+	panel.append(actions, note); details.append(summary, panel); return details;
+}
+async function executeSessionAction(action, traceId) {
+	const actionState = state && state.sessionActions;
+	if (!actionState?.available) return;
+	const command = { commandId: 'dashboard-session-' + crypto.randomUUID(), traceId: traceId, action: action, expectedStateDigest: actionState.stateDigest };
+	text(els.status, 'delivering Sprint action');
+	try {
+		const response = await fetch('/api/session-actions/commands?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });
+		const result = await response.json();
+		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
+		state.sessionActions = result.state;
+		text(els.status, 'delivered to Pi · ' + result.receipt.receiptId.slice(0, 19));
+		render();
+	} catch (error) {
+		text(els.status, 'Sprint action rejected · ' + (error && error.message ? error.message : String(error)));
+		await load();
+	}
 }
 function renderTraceOptions(entry, index) {
 	const details = document.createElement('details'); details.className = 'card-options';
@@ -989,8 +1075,10 @@ function traceStateText(entry) {
 	if (trace.workerCount) facts.push(trace.workerCount + ' ' + pluralLabel(trace.workerCount, 'worker'));
 	const taskCount = (trace.items || []).length;
 	if (taskCount) facts.push(taskCount + ' ' + pluralLabel(taskCount, 'Work Item'));
-	if (trace.blockerCount) facts.push(trace.blockerCount + ' ' + pluralLabel(trace.blockerCount, 'blocker'));
-	return titleCase(entry.stage) + ' — ' + (entry.blocked ? 'Blocked: ' : '') + trace.currentAction + (facts.length ? ' · ' + facts.join(' · ') : '');
+	const action = entry.blocked
+		? '✕ Blocked — ' + ((trace.blockers || [])[0] || trace.currentAction)
+		: titleCase(entry.stage) + ' — ' + trace.currentAction;
+	return action + (facts.length ? ' · ' + facts.join(' · ') : '');
 }
 function changeCurrentAction(card) {
 	if (card.identity.status === 'accepted') return 'Decision accepted; waiting for linked Sprint Trace.';
@@ -1010,17 +1098,20 @@ function changePipelineSegments(stage, card) {
 	];
 }
 function renderPipelineRail(segments, entry, index) {
-	const rail = document.createElement('div'); rail.className = 'pipeline-rail'; rail.setAttribute('aria-label', 'Pipeline progress');
-	segments.forEach(function(segment, segmentIndex) {
-		if (segmentIndex) { const separator = document.createElement('span'); separator.className = 'pipeline-separator'; separator.setAttribute('aria-hidden', 'true'); text(separator, '>'); rail.append(separator); }
-		const node = document.createElement('button'); node.type = 'button'; node.className = 'pipeline-segment ' + badgeClass(segment.state);
-		const progress = Number.isFinite(segment.progress) ? segment.progress : segment.state === 'done' ? 1 : segment.state === 'todo' ? 0 : 0.2;
-		node.style.setProperty('--segment-progress', Math.round(progress * 100) + '%');
-		node.disabled = segment.state === 'todo';
-		const full = document.createElement('span'); full.className = 'segment-full'; text(full, segment.label);
-		const short = document.createElement('span'); short.className = 'segment-short'; text(short, shortStageLabel(segment.phase));
-		node.append(full, short); node.title = segment.label + ' · ' + segment.state;
-		node.onclick = function(event) { event.stopPropagation(); openPipelineStage(entry, segment.phase, index); };
+	const rail = document.createElement('div'); rail.className = 'pipeline-rail'; rail.setAttribute('aria-label', 'Five-stage Sprint progress');
+	segments.forEach(function(segment) {
+		const node = document.createElement('button'); node.type = 'button'; node.className = 'pipeline-segment ' + badgeClass(segment.phase) + ' ' + badgeClass(segment.state);
+		const progress = Math.max(0, Math.min(1, Number.isFinite(segment.progress) ? segment.progress : segment.state === 'done' ? 1 : 0));
+		const percentage = Math.round(progress * 100);
+		node.style.setProperty('--segment-progress', percentage + '%');
+		node.setAttribute('aria-disabled', String(segment.state === 'todo'));
+		node.setAttribute('aria-label', segment.label + ' · ' + percentage + '% complete · ' + segment.state);
+		const label = document.createElement('span'); label.className = 'segment-label'; label.setAttribute('aria-hidden', 'true'); text(label, segment.label + ' · ' + percentage + '%');
+		node.append(label); node.title = segment.label + ' · ' + percentage + '% complete';
+		node.onclick = function(event) {
+			event.stopPropagation();
+			if (segment.state !== 'todo') openPipelineStage(entry, segment.phase, index);
+		};
 		rail.append(node);
 	});
 	return rail;
@@ -1032,12 +1123,9 @@ function openPipelineStage(entry, phase, index) {
 	render();
 	focusSelectedPipelineCard();
 }
-function shortStageLabel(phase) {
-	return ({ change: 'Change', decision: 'Decide', planning: 'Plan', implementation: 'Build', committed: 'Done' })[phase] || phase;
-}
 function pluralLabel(count, singular) { return count === 1 ? singular : singular + 's'; }
 function renderChangeDetail(card) {
-	const node = document.createElement('div'); node.className = 'detail change-card';
+	const node = document.createElement('div'); node.className = 'detail stage-detail stage-change change-card';
 	const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, 'revision ' + card.identity.revision + ' · record ' + card.identity.recordRevision + ' · ' + card.identity.status + ' · ' + card.identity.validationState); node.append(identity);
 	node.append(changeSection('Current state', [card.sections.currentState.text]));
 	node.append(changeSection('Proposed change', [card.sections.proposedChange.text, 'Rationale: ' + card.sections.proposedChange.rationale]));
@@ -1100,6 +1188,15 @@ async function executeChangeCommand(action, card) {
 		await load();
 	}
 }
+const CONFIG_BUDGET_FIELDS = [
+	['maxSeconds', 'Maximum seconds'],
+	['maxIterations', 'Maximum iterations'],
+	['maxChangedFiles', 'Maximum changed files'],
+	['maxTraceBytes', 'Maximum trace bytes'],
+	['maxTokens', 'Maximum tokens'],
+	['maxCostUsd', 'Maximum cost (USD)'],
+	['maxLatencyMs', 'Maximum latency (ms)'],
+];
 function renderConfiguration() {
 	els.configuration.innerHTML = '';
 	const configuration = state && state.configuration;
@@ -1107,37 +1204,162 @@ function renderConfiguration() {
 	const heading = document.createElement('h3'); text(heading, 'Execution configuration');
 	const status = document.createElement('div'); status.className = 'configuration-status';
 	text(status, 'Source: ' + configuration.sourcePath + '\nDigest: ' + configuration.configDigest + '\nValidation: ' + configuration.validation + '\n' + configuration.restartGuidance);
-	const content = document.createElement('pre'); text(content, JSON.stringify(configuration.editable, null, 2));
-	const apply = changeActionButton('Apply bounded patch', executeConfigCommand);
-	const note = document.createElement('div'); note.className = 'change-authority'; text(note, 'Editable: worker limit, worktree isolation, automation, agency, budgets, model routing, and Pi host enablement. Approval, stop-condition, credential, publication, controller, and semantic authority settings are forbidden.');
-	els.configuration.append(heading, status, content, apply, note);
+	const form = document.createElement('form'); form.className = 'configuration-form'; form.id = 'configuration-form'; form.onsubmit = executeConfigCommand;
+	form.append(renderExecutionConfigGroup(configuration), renderBudgetConfigGroup(configuration), renderModelConfigGroup(configuration), renderHostConfigGroup(configuration));
+	const actions = document.createElement('div'); actions.className = 'config-actions';
+	const save = document.createElement('button'); save.type = 'submit'; save.className = 'options-action config-save'; text(save, 'Save configuration');
+	const validation = document.createElement('span'); validation.id = 'config-validation'; validation.className = 'config-validation'; text(validation, 'Changes stay below active authority ceilings and require a full Pi restart when execution policy changes.');
+	actions.append(save, validation); form.append(actions);
+	const note = document.createElement('div'); note.className = 'change-authority'; text(note, 'Approval, stop-condition, credential, publication, controller, and semantic authority settings are not editable here.');
+	els.configuration.append(heading, status, form, note);
 }
-async function executeConfigCommand() {
+function configGroup(titleValue, noteValue) {
+	const group = document.createElement('fieldset'); group.className = 'config-group';
+	const legend = document.createElement('legend'); text(legend, titleValue); group.append(legend);
+	if (noteValue) { const note = document.createElement('div'); note.className = 'config-group-note'; text(note, noteValue); group.append(note); }
+	return group;
+}
+function configGrid() { const grid = document.createElement('div'); grid.className = 'config-grid'; return grid; }
+function configControl(labelValue, input, hintValue) {
+	const label = document.createElement('label'); label.className = 'config-control';
+	const caption = document.createElement('span'); text(caption, labelValue); label.append(caption, input);
+	if (hintValue) { const hint = document.createElement('span'); hint.className = 'config-hint'; text(hint, hintValue); label.append(hint); }
+	return label;
+}
+function configNumberInput(id, value, minimum, maximum, step) {
+	const input = document.createElement('input'); input.id = id; input.type = 'number'; input.min = String(minimum); input.max = String(maximum); input.step = String(step || 1);
+	if (value !== undefined && value !== null) input.value = String(value);
+	return input;
+}
+function configTextInput(id, value) {
+	const input = document.createElement('input'); input.id = id; input.type = 'text'; input.maxLength = 160; input.value = value || ''; return input;
+}
+function configSelect(id, value, options) {
+	const select = document.createElement('select'); select.id = id;
+	options.forEach(function(optionValue) {
+		const option = document.createElement('option'); option.value = optionValue.value || optionValue; text(option, optionValue.label || titleCase(optionValue.value || optionValue)); option.disabled = Boolean(optionValue.disabled); select.append(option);
+	});
+	select.value = value; return select;
+}
+function renderExecutionConfigGroup(configuration) {
+	const editable = configuration.editable.runtime;
+	const limits = configuration.limits;
+	const group = configGroup('Execution', 'Effective worker, isolation, automation, and agency policy. Choices above the active runtime ceiling are disabled.');
+	const grid = configGrid();
+	grid.append(
+		configControl('Maximum workers', configNumberInput('config-max-workers', editable.maxWorkers, 0, limits.maxWorkers, 1), 'Active maximum: ' + limits.maxWorkers),
+		configControl('Worktree isolation', configSelect('config-worktree-isolation', editable.worktreeIsolation, ['none', 'worktree', 'auto'])),
+		configControl('Automation', configSelect('config-automation', editable.automation, rankedConfigOptions(['manual', 'assist', 'auto'], limits.automationCeiling, false)), 'Ceiling: ' + limits.automationCeiling),
+		configControl('Agency', configSelect('config-agency', editable.agency, rankedConfigOptions(['observe', 'assist', 'delegate', 'auto'], limits.agencyCeiling, false)), 'Ceiling: ' + limits.agencyCeiling),
+	);
+	group.append(grid); return group;
+}
+function renderBudgetConfigGroup(configuration) {
+	const group = configGroup('Budgets', 'Empty optional values remain unchanged. Every value is checked again by the server.');
+	const grid = configGrid();
+	CONFIG_BUDGET_FIELDS.forEach(function(field) {
+		const key = field[0]; const maximum = configuration.limits.budgetMaxima[key]; const step = key === 'maxCostUsd' ? 0.000001 : 1;
+		grid.append(configControl(field[1], configNumberInput('config-budget-' + key, configuration.editable.runtime.budgets[key], 0, maximum, step), 'Maximum: ' + maximum));
+	});
+	group.append(grid); return group;
+}
+function renderModelConfigGroup(configuration) {
+	const routing = configuration.editable.runtime.modelRouting;
+	const limits = configuration.limits;
+	const group = configGroup('Model routing', 'Edit existing bounded routes. Tool choices are limited to authority already present when this Pi runtime started.');
+	const grid = configGrid();
+	grid.append(
+		configControl('Quality floor', configSelect('config-quality-floor', routing.qualityFloor, rankedConfigOptions(['standard', 'high', 'critical'], limits.minimumQualityFloor, true)), 'Minimum: ' + limits.minimumQualityFloor),
+		configControl('Maximum escalations', configNumberInput('config-max-escalations', routing.maxEscalations, 0, limits.modelMaxima.maxEscalations, 1)),
+		configControl('Estimated input tokens', configNumberInput('config-estimated-input', routing.estimatedInputTokens, 0, limits.modelMaxima.maxEstimatedTokens, 1)),
+		configControl('Estimated output tokens', configNumberInput('config-estimated-output', routing.estimatedOutputTokens, 0, limits.modelMaxima.maxEstimatedTokens, 1)),
+	);
+	group.append(grid);
+	(routing.routes || []).forEach(function(route, routeIndex) { group.append(renderModelRoute(route, routeIndex, limits.allowedTools, limits.modelMaxima)); });
+	if (!(routing.routes || []).length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No model routes configured. Route creation remains a file/API operation.'); group.append(empty); }
+	return group;
+}
+function renderModelRoute(route, routeIndex, allowedTools, modelMaxima) {
+	const routeNode = document.createElement('section'); routeNode.className = 'config-route'; routeNode.dataset.routeIndex = String(routeIndex);
+	const titleNode = document.createElement('div'); titleNode.className = 'config-route-title'; text(titleNode, 'Route ' + (routeIndex + 1) + ' · ' + route.id); routeNode.append(titleNode);
+	const grid = configGrid();
+	grid.append(
+		configControl('Route id', configTextInput('config-route-' + routeIndex + '-id', route.id)),
+		configControl('Provider', configTextInput('config-route-' + routeIndex + '-provider', route.provider)),
+		configControl('Model', configTextInput('config-route-' + routeIndex + '-model', route.model)),
+		configControl('Thinking', configSelect('config-route-' + routeIndex + '-thinking', route.thinking, ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'])),
+		configControl('Quality', configSelect('config-route-' + routeIndex + '-quality', route.quality, ['standard', 'high', 'critical'])),
+		configControl('Latency', configSelect('config-route-' + routeIndex + '-latency', route.latency, ['fast', 'balanced', 'slow'])),
+		configControl('Timeout (ms)', configNumberInput('config-route-' + routeIndex + '-timeout', route.timeoutMs, 1, modelMaxima.maxRouteTimeoutMs, 1)),
+		configControl('Input USD / million', configNumberInput('config-route-' + routeIndex + '-price-input', route.pricing.inputUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
+		configControl('Output USD / million', configNumberInput('config-route-' + routeIndex + '-price-output', route.pricing.outputUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
+		configControl('Cache read USD / million', configNumberInput('config-route-' + routeIndex + '-price-cache-read', route.pricing.cacheReadUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
+		configControl('Cache write USD / million', configNumberInput('config-route-' + routeIndex + '-price-cache-write', route.pricing.cacheWriteUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
+	);
+	routeNode.append(grid);
+	const tools = document.createElement('div'); tools.className = 'config-tools';
+	allowedTools.forEach(function(tool, toolIndex) {
+		const label = document.createElement('label'); label.className = 'config-choice';
+		const input = document.createElement('input'); input.type = 'checkbox'; input.id = 'config-route-' + routeIndex + '-tool-' + toolIndex; input.dataset.routeTool = tool; input.checked = (route.allowedTools || []).includes(tool);
+		const caption = document.createElement('span'); text(caption, tool); label.append(input, caption); tools.append(label);
+	});
+	if (!allowedTools.length) { const note = document.createElement('span'); note.className = 'config-hint'; text(note, 'No tool authority is active.'); tools.append(note); }
+	routeNode.append(tools); return routeNode;
+}
+function renderHostConfigGroup(configuration) {
+	const group = configGroup('Pi host', 'Host enablement cannot be raised above the active runtime baseline.');
+	const label = document.createElement('label'); label.className = 'config-choice';
+	const input = document.createElement('input'); input.id = 'config-pi-enabled'; input.type = 'checkbox'; input.checked = configuration.editable.hosts.pi.enabled; input.disabled = !configuration.limits.piHostCanEnable && !input.checked;
+	const caption = document.createElement('span'); text(caption, 'Pi host enabled'); label.append(input, caption); group.append(label); return group;
+}
+function rankedConfigOptions(values, boundary, minimum) {
+	const boundaryIndex = values.indexOf(boundary);
+	return values.map(function(value, index) { return { value: value, disabled: minimum ? index < boundaryIndex : index > boundaryIndex }; });
+}
+function requiredConfigNumber(id) {
+	const input = document.getElementById(id); const value = Number(input.value);
+	if (!input.value || !Number.isFinite(value)) throw new Error('Enter a valid value for ' + id.replace(/^config-/, '').replace(/-/g, ' ') + '.');
+	return value;
+}
+function optionalConfigNumber(id) {
+	const input = document.getElementById(id); if (!input.value) return undefined;
+	const value = Number(input.value); if (!Number.isFinite(value)) throw new Error('Enter a valid value for ' + id.replace(/^config-/, '').replace(/-/g, ' ') + '.'); return value;
+}
+function configurationPatch(configuration) {
+	const budgets = {};
+	CONFIG_BUDGET_FIELDS.forEach(function(field) { const value = optionalConfigNumber('config-budget-' + field[0]); if (value !== undefined) budgets[field[0]] = value; });
+	const routes = (configuration.editable.runtime.modelRouting.routes || []).map(function(_route, routeIndex) {
+		const prefix = 'config-route-' + routeIndex + '-';
+		return {
+			id: document.getElementById(prefix + 'id').value.trim(), provider: document.getElementById(prefix + 'provider').value.trim(), model: document.getElementById(prefix + 'model').value.trim(),
+			thinking: document.getElementById(prefix + 'thinking').value, quality: document.getElementById(prefix + 'quality').value, latency: document.getElementById(prefix + 'latency').value,
+			timeoutMs: requiredConfigNumber(prefix + 'timeout'),
+			pricing: { inputUsdPerMillion: requiredConfigNumber(prefix + 'price-input'), outputUsdPerMillion: requiredConfigNumber(prefix + 'price-output'), cacheReadUsdPerMillion: requiredConfigNumber(prefix + 'price-cache-read'), cacheWriteUsdPerMillion: requiredConfigNumber(prefix + 'price-cache-write') },
+			allowedTools: Array.from(document.querySelectorAll('[id^="' + prefix + 'tool-"]')).filter(function(input) { return input.checked; }).map(function(input) { return input.dataset.routeTool; }),
+		};
+	});
+	return { runtime: { maxWorkers: requiredConfigNumber('config-max-workers'), worktreeIsolation: document.getElementById('config-worktree-isolation').value, automation: document.getElementById('config-automation').value, agency: document.getElementById('config-agency').value, budgets: budgets, modelRouting: { qualityFloor: document.getElementById('config-quality-floor').value, maxEscalations: requiredConfigNumber('config-max-escalations'), estimatedInputTokens: requiredConfigNumber('config-estimated-input'), estimatedOutputTokens: requiredConfigNumber('config-estimated-output'), routes: routes } }, hosts: { pi: { enabled: document.getElementById('config-pi-enabled').checked } } };
+}
+async function executeConfigCommand(event) {
+	if (event) event.preventDefault();
 	const configuration = state && state.configuration;
 	if (!configuration) return;
-	const raw = window.prompt('Paste a bounded execution configuration patch JSON.');
-	if (!raw) return;
+	const validation = document.getElementById('config-validation');
 	let patch;
-	try { patch = JSON.parse(raw); } catch { text(els.status, 'invalid configuration JSON'); return; }
-	const command = {
-		commandId: 'dashboard-config-' + crypto.randomUUID(),
-		expectedStateDigest: configuration.stateDigest,
-		expectedConfigDigest: configuration.configDigest,
-		patch: patch,
-	};
+	try { patch = configurationPatch(configuration); validation.className = 'config-validation'; text(validation, 'Validating and saving…'); }
+	catch (error) { validation.className = 'config-validation error'; text(validation, error.message || String(error)); return; }
+	const command = { commandId: 'dashboard-config-' + crypto.randomUUID(), expectedStateDigest: configuration.stateDigest, expectedConfigDigest: configuration.configDigest, patch: patch };
 	text(els.status, 'configuration command pending');
 	try {
-		const response = await fetch('/api/configuration/commands?token=' + encodeURIComponent(token), {
-			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command),
-		});
+		const response = await fetch('/api/configuration/commands?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });
 		const result = await response.json();
 		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
 		state.configuration = result.state;
 		text(els.status, 'completed · ' + result.receipt.receiptId);
-		render();
+		renderConfiguration();
 	} catch (error) {
+		validation.className = 'config-validation error'; text(validation, error && error.message ? error.message : String(error));
 		text(els.status, 'rejected · ' + (error && error.message ? error.message : String(error)));
-		await load();
 	}
 }
 function shortTime(value) {
@@ -1154,6 +1376,7 @@ function renderDetail(trace) {
 	const sections = trace.loopSections || [];
 	const tabs = detailTabEntries(trace, sections);
 	const activeId = detailTabs.get(trace.traceId) || preferredDetailTab(trace, sections);
+	if (['change', 'decision', 'planning', 'implementation', 'committed'].includes(activeId)) detail.className += ' stage-detail stage-' + activeId;
 	const nav = document.createElement('nav'); nav.className = 'detail-tabs'; nav.setAttribute('aria-label', 'Trace detail sections');
 	tabs.forEach(function(tab) {
 		const button = document.createElement('button');
@@ -1178,7 +1401,10 @@ function renderDetail(trace) {
 	return detail;
 }
 function detailTabEntries(trace, sections) {
-	return [{ id: 'change', label: 'change', render: function() { return renderTraceLineage(trace); } }].concat(sections.map(function(section) {
+	return [
+		{ id: 'overview', label: 'overview', render: function() { return renderTraceOverview(trace); } },
+		{ id: 'change', label: 'change', render: function() { return renderTraceLineage(trace); } },
+	].concat(sections.map(function(section) {
 		return {
 			id: section.loop,
 			label: section.loop,
@@ -1190,9 +1416,29 @@ function detailTabEntries(trace, sections) {
 		};
 	})).concat([
 		{ id: 'committed', label: 'committed', render: function() { return renderCommittedDetail(trace); } },
-		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintBoundary?.knowledgeTopics || []).map(function(topic) { return topic.ref; })); } },
+		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintBoundary?.knowledgeTopics || []).map(function(topic) { return topic.ref; }), trace.knowledgeAlignment); } },
 		{ id: 'files', label: 'Files', render: function() { return renderTouchedFilesSection(trace.touchedFiles || {}, true); } },
 	]);
+}
+function renderTraceOverview(trace) {
+	const body = document.createElement('div'); body.className = 'section-body';
+	[
+		['current action', trace.currentAction || 'No next action recorded.'],
+		['stage', titleCase(trace.stage || trace.loop || 'waiting')],
+		['workers', String(trace.workerCount || 0)],
+		['Work Items', String((trace.items || []).length)],
+		['blockers', String((trace.blockers || []).length)],
+	].forEach(function(entry) {
+		const row = document.createElement('div'); row.className = 'review-row';
+		const label = document.createElement('span'); label.className = 'review-label'; text(label, entry[0]);
+		const value = document.createElement('span'); value.className = 'review-value'; text(value, entry[1]);
+		row.append(label, value); body.append(row);
+	});
+	if ((trace.blockers || []).length) {
+		const blockers = document.createElement('div'); blockers.className = 'feed-feedback'; text(blockers, '✕ Blocked — ' + trace.blockers[0]); body.append(blockers);
+	}
+	const alignment = document.createElement('div'); alignment.className = 'feed-detail'; text(alignment, 'Knowledge alignment: ' + (trace.knowledgeAlignment?.label || 'Unknown') + ' — ' + (trace.knowledgeAlignment?.rationale || 'No evidence.')); body.append(alignment);
+	return renderTerminalSection('Sprint overview', body, trace.committed ? 'committed' : readableStatus(trace.status || 'active'));
 }
 function renderTraceLineage(trace) {
 	const body = document.createElement('div'); body.className = 'section-body';
@@ -1709,12 +1955,20 @@ function renderFeed(feed, includeLoop) {
 	});
 	return box;
 }
-function renderKnowledgeSection(files, open, topics) {
-	return renderFileSection('knowledge base refs', [
+function renderKnowledgeSection(files, open, topics, alignment) {
+	const node = renderFileSection('knowledge base refs', [
 		['declared Sprint topics', topics || []],
 		['changed product knowledge', files.kbProduct || []],
 		['changed system knowledge', files.kbSystem || []],
 	], open);
+	const body = node.querySelector('.section-body');
+	if (body) {
+		const summary = document.createElement('div'); summary.className = 'file-group';
+		const heading = document.createElement('b'); text(heading, 'topic-scoped alignment');
+		const detail = document.createElement('div'); detail.className = 'file-line'; text(detail, (alignment?.label || 'Unknown') + ' — ' + (alignment?.rationale || 'No grounded alignment evidence.'));
+		summary.append(heading, detail); body.prepend(summary);
+	}
+	return node;
 }
 function renderTouchedFilesSection(files, open) {
 	return renderFileSection('touched files', [
@@ -1773,31 +2027,11 @@ function openSearch() {
 function openConfiguration() {
 	renderConfiguration();
 	if (!els.configurationDialog.open) els.configurationDialog.showModal();
-	els.dashboardOptions.open = false;
 }
 function closeConfiguration() { if (els.configurationDialog.open) els.configurationDialog.close(); }
-async function stopDashboard() {
-	if (!window.confirm('Stop CodeWiki dashboard for this Pi session? Workflow truth is unaffected.')) return;
-	dashboardStopped = true;
-	text(els.status, 'stopping');
-	try {
-		const response = await fetch('/api/shutdown?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-		if (!response.ok) throw new Error('HTTP ' + response.status);
-		eventStream?.close();
-		closeConfiguration();
-		els.queue.innerHTML = '<div class="empty">Dashboard stopped. Run /wiki-dashboard in Pi to reopen it.</div>';
-		text(els.status, 'stopped');
-		setTimeout(function() { window.close(); }, 50);
-	} catch (error) {
-		dashboardStopped = false;
-		text(els.status, 'stop failed');
-		console.error(error);
-	}
-}
 els.openConfiguration.addEventListener('click', openConfiguration);
 els.closeConfiguration.addEventListener('click', closeConfiguration);
 els.draftChange.addEventListener('click', function() { executeChangeCommand('draft'); });
-els.closeDashboard.addEventListener('click', stopDashboard);
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
 els.search.addEventListener('keydown', function(event) {
 	if (event.key === 'Enter') { event.preventDefault(); els.search.blur(); }
@@ -1807,9 +2041,7 @@ els.search.addEventListener('keydown', function(event) {
 		else els.search.blur();
 	}
 });
-els.searchFilter.addEventListener('toggle', function() { if (els.searchFilter.open) els.dashboardOptions.open = false; });
 els.searchFilter.addEventListener('keydown', function(event) { if (event.key === 'Escape') { event.preventDefault(); els.searchFilter.open = false; openSearch(); } });
-els.dashboardOptions.addEventListener('toggle', function() { if (els.dashboardOptions.open) els.searchFilter.open = false; });
 els.configurationDialog.addEventListener('click', function(event) { if (event.target === els.configurationDialog) closeConfiguration(); });
 document.addEventListener('click', function(event) { if (!els.searchFilter.contains(event.target)) els.searchFilter.open = false; });
 document.addEventListener('keydown', function(event) {

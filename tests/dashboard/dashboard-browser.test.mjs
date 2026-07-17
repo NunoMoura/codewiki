@@ -30,12 +30,14 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /function renderChangePipelineCard/);
 		assert.match(script, /function renderPipelineRail/);
 		assert.match(script, /function renderKnowledgeTopics/);
+		assert.match(script, /function renderKnowledgeAlignment/);
 		assert.match(script, /function knowledgeTopicLabel/);
+		assert.match(script, /function renderSprintActions/);
+		assert.match(script, /function executeSessionAction/);
 		assert.match(script, /filter\.startsWith\('topic:'\)/);
 		assert.match(script, /className = 'scope-group'/);
 		assert.match(script, /topic\.category\.localeCompare/);
 		assert.match(script, /declared Sprint topics/);
-		assert.match(script, /function shortStageLabel/);
 		assert.match(script, /function traceStateText/);
 		assert.match(script, /function renderTraceOptions/);
 		assert.match(script, /function openPipelineStage/);
@@ -70,18 +72,37 @@ describe("dashboard browser observability", () => {
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Dashboard settings/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Trace options/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /⋮/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /segment-short/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /segment-label/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /--progress-inactive/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /--progress-active/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /--progress-complete/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /--progress-blocked/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /--stage-change/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /--stage-decision/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /--stage-planning/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /--stage-implementation/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /--stage-committed/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /--progress-blocked/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /function renderSearchFilter/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /state\.summary\.backlog/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /state\.summary\.committed/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /function stopDashboard/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Dashboard stopped/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Five-stage Sprint progress/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /aria-disabled/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /✕ Blocked —/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Execution configuration/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Apply bounded patch/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Save configuration/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /CONFIG_BUDGET_FIELDS/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /config-route/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /\['resume', 'Resume'\]/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /\['change', 'Change'\]/);
+		assert.match(
+			CODEWIKI_DASHBOARD_HTML,
+			/\['resolve_blocker', 'Resolve Blocker'\]/,
+		);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /knowledge-alignment\.review_needed/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /knowledge-alignment\.misaligned/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /Close Dashboard/);
+		assert.doesNotMatch(
+			CODEWIKI_DASHBOARD_HTML,
+			/Paste a bounded execution configuration patch JSON/,
+		);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Current state/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Proposed change/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Agent opinion/);

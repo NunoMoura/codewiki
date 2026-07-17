@@ -93,7 +93,7 @@ Change creates or reinforces mutable intent linked to the selected Sprint. It do
 
 ## Knowledge alignment
 
-Each Sprint displays one generated topic-scoped alignment state: Aligned, Review Needed, Misaligned, or Unknown. A relevant Knowledge topic digest change yields Review Needed, never Misaligned by itself. Misaligned requires an explicit grounded contradiction with affected layer, source-of-truth refs, rationale, and recommended next semantic loop. Legacy or insufficiently grounded Sprints report Unknown. Topic filters and Sprint detail must show the same projection.
+Each Sprint displays one generated topic-scoped alignment state: Aligned, Review Needed, Misaligned, or Unknown. Decision append records the scoped topic digest baseline; missing baseline/current evidence yields Unknown. A relevant Knowledge topic digest change yields Review Needed, never Misaligned by itself. Misaligned requires an explicit grounded contradiction with affected layer, source-of-truth refs, rationale, and recommended next semantic loop. Legacy or insufficiently grounded Sprints report Unknown. Topic filters and Sprint detail must show the same projection.
 
 ## Configuration
 

@@ -32,6 +32,10 @@ import {
 	buildProjectWikiState,
 	readProjectTraceFiles,
 } from "../project/state-file.ts";
+import {
+	knowledgeTopicRefsFromRecords,
+	readKnowledgeTopicDigests,
+} from "../knowledge/topic-alignment.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
@@ -42,6 +46,10 @@ import {
 	createDefaultDashboardConfigControl,
 	type DashboardConfigControl,
 } from "./config-control.ts";
+import {
+	createDashboardSessionActionControl,
+	type DashboardSessionActionControl,
+} from "./session-actions.ts";
 import {
 	type DashboardTraceHostControl,
 	DashboardTraceHostControlError,
@@ -65,6 +73,7 @@ export interface CodewikiDashboardServerOptions {
 	traceHostControl?: DashboardTraceHostControl;
 	changeControl?: DashboardChangeControl;
 	configControl?: DashboardConfigControl;
+	sessionActionControl?: DashboardSessionActionControl;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -89,6 +98,7 @@ interface DashboardRuntime {
 	traceHostControl: DashboardTraceHostControl;
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
+	sessionActionControl: DashboardSessionActionControl;
 	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
@@ -431,6 +441,7 @@ async function startInProcessDashboardServer(
 		options.traceHostControl,
 		options.changeControl,
 		options.configControl,
+		options.sessionActionControl,
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -620,6 +631,7 @@ async function createDashboardRuntime(
 	providedTraceHostControl?: DashboardTraceHostControl,
 	providedChangeControl?: DashboardChangeControl,
 	providedConfigControl?: DashboardConfigControl,
+	providedSessionActionControl?: DashboardSessionActionControl,
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -650,6 +662,12 @@ async function createDashboardRuntime(
 	const configControl =
 		providedConfigControl ||
 		(await createDefaultDashboardConfigControl(repoRoot));
+	const sessionActionControl =
+		providedSessionActionControl ||
+		createDashboardSessionActionControl({
+			unavailableReason:
+				"Sprint actions require an active in-process Pi session bridge.",
+		});
 	runtime = {
 		repoRoot,
 		server,
@@ -660,6 +678,7 @@ async function createDashboardRuntime(
 		traceHostControl,
 		changeControl,
 		configControl,
+		sessionActionControl,
 		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -790,6 +809,7 @@ async function routeAuthorizedPost(
 		url.pathname !== "/api/trace-hosts/commands" &&
 		url.pathname !== "/api/changes/commands" &&
 		url.pathname !== "/api/configuration/commands" &&
+		url.pathname !== "/api/session-actions/commands" &&
 		url.pathname !== "/api/shutdown"
 	) {
 		return false;
@@ -808,6 +828,15 @@ async function routeAuthorizedPost(
 	}
 	if (url.pathname === "/api/configuration/commands") {
 		writeJson(response, 200, await runtime.configControl.execute(command));
+		scheduleBroadcast(runtime);
+		return true;
+	}
+	if (url.pathname === "/api/session-actions/commands") {
+		writeJson(
+			response,
+			200,
+			await runtime.sessionActionControl.execute(command),
+		);
 		scheduleBroadcast(runtime);
 		return true;
 	}
@@ -888,8 +917,8 @@ async function readDashboardState(
 	const repoRoot = runtime.repoRoot;
 	const traceFiles = await readProjectTraceFiles(repoRoot);
 	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
-	const devLogByTrace = new Map(
-		await Promise.all(
+	const [devLogEntries, knowledgeTopicDigests] = await Promise.all([
+		Promise.all(
 			snapshot.traceBoard.traces
 				.filter((trace) => !trace.closed)
 				.map(
@@ -897,11 +926,18 @@ async function readDashboardState(
 						[trace.traceId, await readDevLog(repoRoot, trace.traceId)] as const,
 				),
 		),
-	);
+		readKnowledgeTopicDigests(
+			repoRoot,
+			knowledgeTopicRefsFromRecords(traceFiles.records),
+		),
+	]);
+	const devLogByTrace = new Map(devLogEntries);
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
+		knowledgeTopicDigests,
 		changes: await runtime.changeControl.status(),
 		configuration: await runtime.configControl.status(),
+		sessionActions: runtime.sessionActionControl.status(),
 	});
 }
 

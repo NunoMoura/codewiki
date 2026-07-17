@@ -36,7 +36,7 @@ Exit conditions validate loop alignment and route remediation back to the owning
 
 ## Sprint Knowledge alignment projection
 
-A Sprint's Knowledge scope is the canonical Product/System topic set accepted with its Decision boundary. Alignment compares only that scope and has four user-facing states:
+A Sprint's Knowledge scope is the canonical Product/System topic set accepted with its Decision boundary. When Decision appends a newly approved Sprint, its output captures a SHA-256 baseline for every readable declared topic. Dashboard projection compares only those recorded topic digests with current canonical topic content; missing baseline or current evidence fails safely to Unknown. Alignment has four user-facing states:
 
 | State | Meaning |
 | --- | --- |

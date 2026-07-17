@@ -114,11 +114,34 @@ assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"),
 const extension = await import(pathToFileURL(join(packageRoot, "dist", "pi", "extension.js")).href);
 const prompt = await import(pathToFileURL(join(packageRoot, "dist", "pi", "prompt", "index.js")).href);
 const tui = await import(pathToFileURL(join(packageRoot, "dist", "pi", "tui", "index.js")).href);
+const piSessionActions = await import(pathToFileURL(join(packageRoot, "dist", "pi", "dashboard-session-actions.js")).href);
 assert.equal(extension.piExtensionAvailable, true);
 assert.equal(prompt.codewikiPromptHooksAvailable, true);
 assert.equal(tui.codewikiTuiRenderersAvailable, true);
 assert.equal(typeof tui.renderBootstrapCommand, "function");
 assert.equal(typeof extension.default, "function");
+const deliveredUserMessages = [];
+const actionControl = piSessionActions.createPiDashboardSessionActionControl(
+	{
+		registerTool() {},
+		registerCommand() {},
+		sendUserMessage(message, options) {
+			deliveredUserMessages.push({ message, options });
+		},
+	},
+	{ cwd: process.cwd(), isIdle: () => false },
+);
+const actionState = actionControl.status();
+const actionResult = await actionControl.execute({
+	commandId: "packed-session-action",
+	traceId: "TRACE-packed-session-action",
+	action: "change",
+	expectedStateDigest: actionState.stateDigest,
+});
+assert.equal(actionResult.receipt.deliveredAs, "steer");
+assert.equal(deliveredUserMessages.length, 1);
+assert.match(deliveredUserMessages[0].message, /linked mutable Change/);
+assert.deepEqual(deliveredUserMessages[0].options, { deliverAs: "steer" });
 const tools = [];
 const commands = [];
 const events = [];

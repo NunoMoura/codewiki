@@ -30,6 +30,16 @@ describe("dashboard configuration state", () => {
 			assert.equal(state.editable.runtime.automation, "manual");
 			assert.equal(state.editable.runtime.agency, "delegate");
 			assert.equal(state.editable.hosts.pi.enabled, true);
+			assert.equal(state.limits.maxWorkers, 16);
+			assert.equal(state.limits.budgetMaxima.maxCostUsd, 1_000);
+			assert.equal(state.limits.modelMaxima.maxRoutes, 32);
+			assert.equal(state.limits.modelMaxima.maxEscalations, 16);
+			assert.equal(state.limits.modelMaxima.maxEstimatedTokens, 10_000_000);
+			assert.equal(state.limits.automationCeiling, "manual");
+			assert.equal(state.limits.agencyCeiling, "delegate");
+			assert.equal(state.limits.minimumQualityFloor, "standard");
+			assert.equal(state.limits.piHostCanEnable, true);
+			assert.deepEqual(state.limits.allowedTools, []);
 			const serialized = JSON.stringify(state);
 			assert.equal(serialized.includes("approval"), false);
 			assert.equal(serialized.includes("stopConditions"), false);

@@ -78,6 +78,15 @@ describe("dashboard execution configuration control", () => {
 				}),
 				/maxWorkers cannot exceed 16/,
 			);
+			await assert.rejects(
+				control.execute({
+					commandId: "config-command-escalations",
+					expectedStateDigest: initial.stateDigest,
+					expectedConfigDigest: initial.configDigest,
+					patch: { runtime: { modelRouting: { maxEscalations: 17 } } },
+				}),
+				/maxEscalations cannot exceed 16/,
+			);
 			const command = {
 				commandId: "config-command-001",
 				expectedStateDigest: initial.stateDigest,

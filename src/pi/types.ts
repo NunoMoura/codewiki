@@ -47,6 +47,7 @@ export interface CodewikiExtensionContext {
 	cwd: string;
 	mode?: string;
 	ui?: CodewikiExtensionUi;
+	isIdle?(): boolean;
 }
 
 export type CodewikiToolUpdate = (result: Partial<CodewikiToolResult>) => void;
@@ -125,5 +126,9 @@ export interface CodewikiExtensionApi {
 		renderer: CodewikiMessageRenderer,
 	): void;
 	sendMessage?(message: CodewikiCustomMessage): void;
+	sendUserMessage?(
+		content: string,
+		options?: { deliverAs?: "steer" | "followUp" },
+	): void;
 	on?(eventName: string, handler: CodewikiExtensionEventHandler): void;
 }

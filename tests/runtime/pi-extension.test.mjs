@@ -56,6 +56,7 @@ function mockPi(options = {}) {
 	const commands = [];
 	const events = [];
 	const messages = [];
+	const userMessages = [];
 	const messageRenderers = [];
 	const api = {
 		registerTool(tool) {
@@ -74,11 +75,16 @@ function mockPi(options = {}) {
 	if (options.sendMessage) {
 		api.sendMessage = (message) => messages.push(message);
 	}
+	if (options.sendUserMessage) {
+		api.sendUserMessage = (message, sendOptions) =>
+			userMessages.push({ message, options: sendOptions });
+	}
 	return {
 		tools,
 		commands,
 		events,
 		messages,
+		userMessages,
 		messageRenderers,
 		api,
 	};
@@ -853,7 +859,7 @@ describe("Pi extension adapter", () => {
 		try {
 			const notifications = [];
 			const widgets = [];
-			const pi = mockPi();
+			const pi = mockPi({ sendUserMessage: true });
 			codewikiExtension(pi.api);
 			const dashboardCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-dashboard",
@@ -864,6 +870,7 @@ describe("Pi extension adapter", () => {
 			const ctx = {
 				cwd: root,
 				mode: "tui",
+				isIdle: () => false,
 				ui: {
 					width: 80,
 					notify: (message) => notifications.push(message),
@@ -929,7 +936,8 @@ describe("Pi extension adapter", () => {
 			assert.match(html, /state\.summary\.committed/);
 			assert.match(html, /setInterval\(load, 1000\)/);
 			assert.match(html, /eventStream\.onerror/);
-			assert.match(html, /function stopDashboard/);
+			assert.doesNotMatch(html, /function stopDashboard/);
+			assert.doesNotMatch(html, /Close Dashboard/);
 			assert.doesNotMatch(html, /<label for="search">/);
 			assert.doesNotMatch(html, /mission-title/);
 			assert.doesNotMatch(html, /CodeWiki \/ local observability/);
@@ -941,9 +949,12 @@ describe("Pi extension adapter", () => {
 			assert.doesNotMatch(html, /ready-checks/);
 			assert.match(html, /pipeline-rail/);
 			assert.match(html, /--progress-inactive/);
-			assert.match(html, /--progress-active/);
-			assert.match(html, /--progress-complete/);
-			assert.match(html, /--progress-blocked/);
+			assert.match(html, /--stage-change/);
+			assert.match(html, /--stage-decision/);
+			assert.match(html, /--stage-planning/);
+			assert.match(html, /--stage-implementation/);
+			assert.match(html, /--stage-committed/);
+			assert.doesNotMatch(html, /--progress-blocked/);
 			assert.match(html, /card-options/);
 			assert.match(html, /configuration-dialog/);
 			assert.doesNotMatch(html, /class="search-wrap"/);
@@ -1013,6 +1024,29 @@ describe("Pi extension adapter", () => {
 				),
 			);
 			assert.equal(state.sprintsQueue[0].devLog.available, true);
+			assert.equal(state.sessionActions.available, true);
+			const actionUrl = new URL(opened.url);
+			actionUrl.hash = "";
+			actionUrl.pathname = "/api/session-actions/commands";
+			actionUrl.searchParams.set("token", dashboardToken);
+			const actionResponse = await fetch(actionUrl, {
+				method: "POST",
+				headers: {
+					Origin: actionUrl.origin,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					commandId: "pi-dashboard-change-action",
+					traceId: "TRACE-pi",
+					action: "change",
+					expectedStateDigest: state.sessionActions.stateDigest,
+				}),
+			});
+			assert.equal(actionResponse.status, 200);
+			assert.equal((await actionResponse.json()).receipt.deliveredAs, "steer");
+			assert.equal(pi.userMessages.length, 1);
+			assert.match(pi.userMessages[0].message, /linked mutable Change/);
+			assert.deepEqual(pi.userMessages[0].options, { deliverAs: "steer" });
 			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
 			assert.equal(
 				state.sprintsQueue[0].devLog.items[0].action,

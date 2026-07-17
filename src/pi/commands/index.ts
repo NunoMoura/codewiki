@@ -18,6 +18,7 @@ import {
 	closeCodewikiDashboardServer,
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
+import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
@@ -89,7 +90,7 @@ async function dashboardCommand(
 	pi: CodewikiExtensionApi,
 ): Promise<unknown> {
 	const options = parseDashboardOptions(args);
-	const result = await startDashboard(ctx, options);
+	const result = await startDashboard(ctx, options, pi);
 	emitCommandOutput(
 		pi,
 		ctx,
@@ -104,6 +105,7 @@ async function dashboardCommand(
 async function startDashboard(
 	ctx: CodewikiExtensionContext,
 	options: DashboardCommandOptions,
+	pi: CodewikiExtensionApi,
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
@@ -126,6 +128,7 @@ async function startDashboard(
 		keepAlive: ctx.mode === "tui",
 		inProcess: true,
 		persistent: false,
+		sessionActionControl: createPiDashboardSessionActionControl(pi, ctx),
 	});
 	return {
 		command: "dashboard",

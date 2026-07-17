@@ -5,6 +5,7 @@ import {
 	loopExitFromEvaluation,
 	loopProgressFromEvaluation,
 } from "../traces/events.ts";
+import type { KnowledgeAlignmentBaseline } from "../knowledge/topic-alignment.ts";
 import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
 import { normalizeTraceRefs } from "../traces/refs.ts";
 import type {
@@ -40,6 +41,7 @@ export interface DecisionIterationInput {
 	proposalInput?: SprintProposalInput;
 	knowledgeDelta?: KnowledgeDelta;
 	currentStatePacket?: CurrentStatePacket;
+	knowledgeAlignmentBaseline?: KnowledgeAlignmentBaseline;
 	activeTraceGoals?: ActiveTraceGoal[];
 	qualityJudge?: LoopQualityJudgeExecutionOptions;
 	requirementIds?: string[];
@@ -186,6 +188,9 @@ function decisionOutput(input: {
 		policyProfiles: policyProfiles(input.approvedChanges),
 		...(input.proposal.sprintBoundary
 			? { sprintBoundary: input.proposal.sprintBoundary }
+			: {}),
+		...(input.input.knowledgeAlignmentBaseline
+			? { knowledgeAlignmentBaseline: input.input.knowledgeAlignmentBaseline }
 			: {}),
 		knowledgeDelta,
 		currentStatePacket,

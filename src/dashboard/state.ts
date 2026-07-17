@@ -1,5 +1,9 @@
 import { basename } from "node:path";
 import type { WikiStateSnapshot } from "../api/state.ts";
+import {
+	projectKnowledgeAlignment,
+	type KnowledgeAlignmentProjection,
+} from "../knowledge/topic-alignment.ts";
 import type { DevLogEntry } from "../runtime/dev-log.ts";
 import {
 	type WorkerObservation,
@@ -13,6 +17,7 @@ import { qualityIterationsFromTrace } from "../views/quality.ts";
 import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
 import type { DashboardChangesState } from "./changes-state.ts";
 import type { DashboardConfigState } from "./config-state.ts";
+import type { DashboardSessionActionState } from "./session-actions.ts";
 import {
 	projectDevLog,
 	type DashboardDevLogProjection,
@@ -209,6 +214,7 @@ export interface CodewikiSprintTrace {
 	workUnitRefs: string[];
 	changeIds: string[];
 	sprintBoundary?: CodewikiSprintBoundary;
+	knowledgeAlignment: KnowledgeAlignmentProjection;
 	pathScopes: string[];
 	blockers: string[];
 	workers: CodewikiSprintTraceWorker[];
@@ -238,6 +244,7 @@ export interface CodewikiDashboardState {
 	sprintsQueue: CodewikiSprintTrace[];
 	changes?: DashboardChangesState;
 	configuration?: DashboardConfigState;
+	sessionActions?: DashboardSessionActionState;
 }
 
 export interface CodewikiDashboardProjectionContext {
@@ -245,6 +252,8 @@ export interface CodewikiDashboardProjectionContext {
 	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
 	changes?: DashboardChangesState;
 	configuration?: DashboardConfigState;
+	sessionActions?: DashboardSessionActionState;
+	knowledgeTopicDigests?: ReadonlyMap<string, string>;
 }
 
 export function buildCodewikiDashboardState(
@@ -301,6 +310,9 @@ export function buildCodewikiDashboardState(
 		sprintsQueue,
 		...(context.changes ? { changes: context.changes } : {}),
 		...(context.configuration ? { configuration: context.configuration } : {}),
+		...(context.sessionActions
+			? { sessionActions: context.sessionActions }
+			: {}),
 	};
 }
 
@@ -341,6 +353,12 @@ function buildSprintTrace(
 	);
 	const primaryQualitySummary = sprintTraceQualitySummary(primaryQualityChecks);
 	const sprintBoundary = projectSprintBoundary(records);
+	const knowledgeAlignment = projectKnowledgeAlignment({
+		records,
+		topicRefs: sprintBoundary?.knowledgeTopics.map((topic) => topic.ref) || [],
+		noKnowledgeImpactReason: sprintBoundary?.noKnowledgeImpactReason,
+		currentDigests: context.knowledgeTopicDigests,
+	});
 	return {
 		traceId: card.traceId,
 		title: card.title || card.traceId,
@@ -380,6 +398,7 @@ function buildSprintTrace(
 		workUnitRefs: workUnitRefs(card, items),
 		changeIds: sprintTraceChangeIds(records),
 		...(sprintBoundary ? { sprintBoundary } : {}),
+		knowledgeAlignment,
 		pathScopes: unique([
 			...card.pathScopes,
 			...items.flatMap((item) => item.pathScopes),
@@ -1397,7 +1416,7 @@ function sprintTraceSegments(
 			"committed",
 			"Committed",
 			committedState,
-			committedState === "done" ? 1 : committedState === "todo" ? 0 : 0.5,
+			committedState === "done" ? 1 : 0,
 		),
 	];
 }

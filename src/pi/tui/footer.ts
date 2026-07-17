@@ -4,6 +4,7 @@ import {
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
+import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import {
 	resolveCodewikiExtensionIdentity,
 	type CodewikiExtensionIdentity,
@@ -18,7 +19,9 @@ const LEGACY_WIDGET_KEYS = ["codewiki-cards"];
 
 export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 	if (typeof pi.on !== "function") return;
+	let sessionGeneration = 0;
 	pi.on("session_shutdown", async (_event, ctx) => {
+		sessionGeneration += 1;
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		if (projectRoot) {
 			await closeInProcessCodewikiDashboardServer(projectRoot).catch(
@@ -27,6 +30,7 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 		}
 	});
 	pi.on("session_start", async (event, ctx) => {
+		const generation = ++sessionGeneration;
 		const cwd = typeof ctx.cwd === "string" ? ctx.cwd : process.cwd();
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		const identity = resolveCodewikiExtensionIdentity(
@@ -42,6 +46,11 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 					keepAlive: ctx.mode === "tui",
 					inProcess: true,
 					persistent: false,
+					sessionActionControl: createPiDashboardSessionActionControl(
+						pi,
+						ctx,
+						() => generation === sessionGeneration,
+					),
 				}).catch(() => undefined),
 			);
 		}

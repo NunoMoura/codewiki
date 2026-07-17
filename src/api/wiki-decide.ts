@@ -24,6 +24,10 @@ import type {
 	KnowledgeDelta,
 } from "../decision/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import {
+	captureKnowledgeAlignmentBaseline,
+	type KnowledgeAlignmentBaseline,
+} from "../knowledge/topic-alignment.ts";
 import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import {
 	assertKnownInputKeys,
@@ -145,11 +149,19 @@ export async function runWikiDecide(
 	const qualityJudge = await resolveLoopQualityJudgeExecutionOptions({
 		repoRoot: input.repoRoot,
 	});
+	const knowledgeAlignmentBaseline = input.repoRoot
+		? await captureKnowledgeAlignmentBaseline(
+				input.repoRoot,
+				proposal.sprintBoundary?.knowledgeTopics || [],
+				acceptedChangeBundle.acceptedAt,
+			)
+		: undefined;
 	const loopInput = decisionIterationInput(
 		input,
 		qualityJudge,
 		acceptedChangeBundle,
 		proposal,
+		knowledgeAlignmentBaseline,
 	);
 	const previewLoopResult = await runDecisionIterationWithRunner({
 		...loopInput,
@@ -184,6 +196,7 @@ export async function runWikiDecide(
 				traceId,
 				proposal,
 				loopInput.createdAt,
+				acceptedChangeBundle,
 			),
 			run: ({ startSequence }) =>
 				runDecisionIterationWithRunner({ ...loopInput, startSequence }),
@@ -272,18 +285,36 @@ function initialTraceRecords(
 	traceId: string,
 	proposal: SprintProposal,
 	createdAt: string | undefined,
+	acceptedChangeBundle: AcceptedChangeBundle,
 ): TraceRecord[] {
 	if (expectedBytes !== 0) return [];
+	const parentTraceIds = [
+		...new Set(
+			acceptedChangeBundle.changes.flatMap((snapshot) => {
+				const parentTraceId = snapshot.change.provenance.discoveredWhile?.traceId;
+				return parentTraceId ? [parentTraceId] : [];
+			}),
+		),
+	];
+	const parentTraceId =
+		parentTraceIds.length === 1 ? parentTraceIds[0] : undefined;
 	return [
 		createTraceHead({
 			traceId,
 			title: proposal.summary || `CodeWiki Sprint ${traceId}`,
 			createdAt,
-			origin: {
-				kind: "user_intent",
-				sourceRef: proposal.sourceRefs[0],
-				refs: proposal.sourceRefs,
-			},
+			origin: parentTraceId
+				? {
+						kind: "amendment",
+						parentTraceId,
+						sourceRef: proposal.sourceRefs[0],
+						refs: [...new Set([...proposal.sourceRefs, `trace:${parentTraceId}`])],
+					}
+				: {
+						kind: "user_intent",
+						sourceRef: proposal.sourceRefs[0],
+						refs: proposal.sourceRefs,
+					},
 		}),
 	];
 }
@@ -293,6 +324,7 @@ function decisionIterationInput(
 	qualityJudge: DecisionIterationInput["qualityJudge"],
 	acceptedChangeBundle: AcceptedChangeBundle,
 	proposal: SprintProposal,
+	knowledgeAlignmentBaseline?: KnowledgeAlignmentBaseline,
 ): DecisionIterationInput {
 	return {
 		traceId: requiredStringField("wiki_decide", "traceId", input.traceId),
@@ -300,6 +332,7 @@ function decisionIterationInput(
 		proposal,
 		knowledgeDelta: input.knowledgeDelta,
 		currentStatePacket: input.currentStatePacket,
+		knowledgeAlignmentBaseline,
 		qualityJudge,
 		requirementIds: input.requirementIds,
 		parentId: input.parentId,

@@ -10,6 +10,9 @@ import {
 } from "../project/config-file.ts";
 import { DashboardTraceHostControlError } from "./trace-host-control.ts";
 import {
+	DASHBOARD_CONFIG_BUDGET_MAXIMA,
+	DASHBOARD_CONFIG_MAX_WORKERS,
+	DASHBOARD_CONFIG_MODEL_MAXIMA,
 	dashboardConfigDigest,
 	loadDashboardConfigState,
 	type DashboardConfigState,
@@ -257,8 +260,10 @@ function assertAuthorityCeilings(active: WikiConfig, next: WikiConfig): void {
 }
 
 function assertOperationalBounds(config: WikiConfig): void {
-	if (config.runtime.maxWorkers > 16) {
-		throw badRequest("Dashboard configuration maxWorkers cannot exceed 16.");
+	if (config.runtime.maxWorkers > DASHBOARD_CONFIG_MAX_WORKERS) {
+		throw badRequest(
+			`Dashboard configuration maxWorkers cannot exceed ${DASHBOARD_CONFIG_MAX_WORKERS}.`,
+		);
 	}
 	if (
 		config.runtime.maxWorkers > 1 &&
@@ -268,22 +273,48 @@ function assertOperationalBounds(config: WikiConfig): void {
 			"Dashboard configuration requires worktree isolation for concurrent workers.",
 		);
 	}
-	const maxima: Partial<
-		Record<keyof WikiConfig["runtime"]["budgets"], number>
-	> = {
-		maxSeconds: 86_400,
-		maxIterations: 100,
-		maxChangedFiles: 10_000,
-		maxTraceBytes: 1_000_000_000,
-		maxTokens: 10_000_000,
-		maxCostUsd: 1_000,
-		maxLatencyMs: 86_400_000,
-	};
-	for (const [key, maximum] of Object.entries(maxima)) {
+	for (const [key, maximum] of Object.entries(DASHBOARD_CONFIG_BUDGET_MAXIMA)) {
 		const value =
 			config.runtime.budgets[key as keyof typeof config.runtime.budgets];
 		if (typeof value === "number" && maximum !== undefined && value > maximum) {
 			throw badRequest(`Dashboard configuration ${key} exceeds ${maximum}.`);
+		}
+	}
+	const routing = config.runtime.modelRouting;
+	if (routing.routes.length > DASHBOARD_CONFIG_MODEL_MAXIMA.maxRoutes) {
+		throw badRequest(
+			`Dashboard configuration routes cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxRoutes}.`,
+		);
+	}
+	if (
+		routing.maxEscalations > DASHBOARD_CONFIG_MODEL_MAXIMA.maxEscalations
+	) {
+		throw badRequest(
+			`Dashboard configuration maxEscalations cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxEscalations}.`,
+		);
+	}
+	for (const [key, value] of Object.entries({
+		estimatedInputTokens: routing.estimatedInputTokens,
+		estimatedOutputTokens: routing.estimatedOutputTokens,
+	})) {
+		if (value > DASHBOARD_CONFIG_MODEL_MAXIMA.maxEstimatedTokens) {
+			throw badRequest(
+				`Dashboard configuration ${key} cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxEstimatedTokens}.`,
+			);
+		}
+	}
+	for (const route of routing.routes) {
+		if (route.timeoutMs > DASHBOARD_CONFIG_MODEL_MAXIMA.maxRouteTimeoutMs) {
+			throw badRequest(
+				`Dashboard configuration route timeout cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxRouteTimeoutMs}.`,
+			);
+		}
+		for (const price of Object.values(route.pricing)) {
+			if (price > DASHBOARD_CONFIG_MODEL_MAXIMA.maxPricingUsdPerMillion) {
+				throw badRequest(
+					`Dashboard configuration route pricing cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxPricingUsdPerMillion}.`,
+				);
+			}
 		}
 	}
 }

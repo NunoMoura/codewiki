@@ -26,6 +26,36 @@ export interface DashboardEditableConfig {
 	};
 }
 
+export const DASHBOARD_CONFIG_MAX_WORKERS = 16;
+export const DASHBOARD_CONFIG_BUDGET_MAXIMA = {
+	maxSeconds: 86_400,
+	maxIterations: 100,
+	maxChangedFiles: 10_000,
+	maxTraceBytes: 1_000_000_000,
+	maxTokens: 10_000_000,
+	maxCostUsd: 1_000,
+	maxLatencyMs: 86_400_000,
+} as const satisfies Partial<Record<keyof WikiRuntimeBudgetConfig, number>>;
+
+export const DASHBOARD_CONFIG_MODEL_MAXIMA = {
+	maxRoutes: 32,
+	maxEscalations: 16,
+	maxEstimatedTokens: 10_000_000,
+	maxRouteTimeoutMs: 86_400_000,
+	maxPricingUsdPerMillion: 1_000_000,
+} as const;
+
+export interface DashboardConfigLimits {
+	maxWorkers: number;
+	budgetMaxima: typeof DASHBOARD_CONFIG_BUDGET_MAXIMA;
+	modelMaxima: typeof DASHBOARD_CONFIG_MODEL_MAXIMA;
+	automationCeiling: WikiConfigAutomationMode;
+	agencyCeiling: WikiConfigAgencyLevel;
+	minimumQualityFloor: WikiModelRoutingConfig["qualityFloor"];
+	piHostCanEnable: boolean;
+	allowedTools: string[];
+}
+
 export interface DashboardConfigState {
 	generatedAt: string;
 	sourcePath: string;
@@ -37,6 +67,7 @@ export interface DashboardConfigState {
 	restartReasons: string[];
 	restartGuidance: string;
 	editable: DashboardEditableConfig;
+	limits: DashboardConfigLimits;
 }
 
 export async function loadDashboardConfigState(
@@ -44,8 +75,9 @@ export async function loadDashboardConfigState(
 	activeConfig?: WikiConfig,
 ): Promise<DashboardConfigState> {
 	const config = await loadWikiConfigFile(repoRoot);
+	const active = activeConfig || config;
 	const configDigest = dashboardConfigDigest(config);
-	const activeConfigDigest = dashboardConfigDigest(activeConfig || config);
+	const activeConfigDigest = dashboardConfigDigest(active);
 	const restartRequired = configDigest !== activeConfigDigest;
 	return {
 		generatedAt: new Date().toISOString(),
@@ -66,6 +98,22 @@ export async function loadDashboardConfigState(
 			? "Fully exit and restart Pi; /reload is not sufficient. Running sessions keep their immutable start policy."
 			: "No restart required.",
 		editable: editableConfig(config),
+		limits: {
+			maxWorkers: DASHBOARD_CONFIG_MAX_WORKERS,
+			budgetMaxima: { ...DASHBOARD_CONFIG_BUDGET_MAXIMA },
+			modelMaxima: { ...DASHBOARD_CONFIG_MODEL_MAXIMA },
+			automationCeiling: active.runtime.automation,
+			agencyCeiling: active.runtime.agency,
+			minimumQualityFloor: active.runtime.modelRouting.qualityFloor,
+			piHostCanEnable: active.hosts.pi.enabled,
+			allowedTools: [
+				...new Set(
+					active.runtime.modelRouting.routes.flatMap(
+						(route) => route.allowedTools,
+					),
+				),
+			].sort((left, right) => left.localeCompare(right)),
+		},
 	};
 }
 

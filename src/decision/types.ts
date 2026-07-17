@@ -1,6 +1,7 @@
 import type { AcceptedChangeBundle } from "../changes/accepted-bundle.ts";
 import type { ChangeScope } from "../changes/types.ts";
 import type { ContentProof } from "../git/content-proof.ts";
+import type { KnowledgeAlignmentBaseline } from "../knowledge/topic-alignment.ts";
 import type {
 	AcceptanceCriterion,
 	AcceptanceCriterionInput,
@@ -317,6 +318,7 @@ export interface DecisionOutput {
 	requirementIds: string[];
 	policyProfiles?: ApprovedChangePolicyProfile[];
 	sprintBoundary?: SprintBoundary;
+	knowledgeAlignmentBaseline?: KnowledgeAlignmentBaseline;
 	knowledgeDelta: KnowledgeDelta;
 	currentStatePacket: CurrentStatePacket;
 	refs: string[];
