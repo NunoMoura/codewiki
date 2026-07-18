@@ -14,7 +14,7 @@ export interface SelfDogfoodBaselineManifest {
 		contentProof: string;
 	};
 	package: {
-		name: "codewiki";
+		name: "@nunomoura/codewiki";
 		version: string;
 		file: string;
 		bytes: number;
@@ -92,7 +92,11 @@ export function parseSelfDogfoodBaselineManifest(
 		"bytes",
 		"sha256",
 	]);
-	assertEqual(packageValue.name, "codewiki", "baseline.package.name");
+	assertEqual(
+		packageValue.name,
+		"@nunomoura/codewiki",
+		"baseline.package.name",
+	);
 	const version = matchingString(
 		packageValue.version,
 		VERSION_PATTERN,
@@ -143,7 +147,7 @@ export function parseSelfDogfoodBaselineManifest(
 			contentProof: `git-tree:${tree}`,
 		},
 		package: {
-			name: "codewiki",
+			name: "@nunomoura/codewiki",
 			version,
 			file,
 			bytes,

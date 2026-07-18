@@ -51,7 +51,7 @@ export function assertDashboardRuntimeCurrent(
 
 function installedProjectRoot(moduleUrl: string): string | undefined {
 	const modulePath = fileURLToPath(moduleUrl);
-	const marker = `${join(".pi", "npm", "node_modules", "codewiki")}`;
+	const marker = `${join(".pi", "npm", "node_modules", "@nunomoura", "codewiki")}`;
 	const index = modulePath.lastIndexOf(marker);
 	if (index < 0) return undefined;
 	return resolve(modulePath.slice(0, index));

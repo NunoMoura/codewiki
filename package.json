@@ -1,5 +1,5 @@
 {
-	"name": "codewiki",
+	"name": "@nunomoura/codewiki",
 	"version": "0.3.0",
 	"description": "Pi-native CodeWiki tools, Work Pipeline dashboard, and trace-backed workflow backend.",
 	"keywords": [

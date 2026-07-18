@@ -39,10 +39,15 @@ try {
 
 	const pack = run("npm", ["pack", "--pack-destination", packRoot]);
 	const tarball = pack.stdout.trim().split(/\r?\n/).at(-1);
-	assert.match(tarball, /^codewiki-.*\.tgz$/);
+	assert.match(tarball, /^nunomoura-codewiki-.*\.tgz$/);
 
 	run("npm", ["install", "--prefix", installRoot, join(packRoot, tarball)]);
-	const packageRoot = join(installRoot, "node_modules", "codewiki");
+	const packageRoot = join(
+		installRoot,
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+	);
 	const manifest = packageJson(join(packageRoot, "package.json"));
 	assert.equal(manifest.bin, undefined);
 	assert.deepEqual(Object.keys(manifest.exports).sort(), [

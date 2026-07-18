@@ -78,14 +78,19 @@ try {
 
 	const pack = run("npm", ["pack", "--pack-destination", packRoot]);
 	const tarball = pack.stdout.trim().split(/\r?\n/).at(-1);
-	assert.match(tarball, /^codewiki-.*\.tgz$/);
+	assert.match(tarball, /^nunomoura-codewiki-.*\.tgz$/);
 	run("npm", [
 		"install",
 		"--prefix",
 		projectPiNpmRoot,
 		join(packRoot, tarball),
 	]);
-	const packageRoot = join(projectPiNpmRoot, "node_modules", "codewiki");
+	const packageRoot = join(
+		projectPiNpmRoot,
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+	);
 	assert.equal(
 		existsSync(join(packageRoot, "dist", "pi", "extension.js")),
 		true,

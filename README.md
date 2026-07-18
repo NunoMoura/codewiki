@@ -64,7 +64,7 @@ CodeWiki source remains TypeScript-first during the rebuild. Npm packages are bu
 CodeWiki exports and validates `.codewiki/kb/**/*.md` as Open Knowledge Format v0.1. Trace files remain outside OKF: `.codewiki/traces/TRACE-*.jsonl` is workflow truth and is filtered before OKF parsing.
 
 ```ts
-import { runWikiOkf } from "codewiki";
+import { runWikiOkf } from "@nunomoura/codewiki";
 
 const validation = runWikiOkf({ action: "validate", files });
 const exported = runWikiOkf({ action: "export", files });
@@ -105,7 +105,7 @@ Smoke command roles:
   previews first, rejects unguarded append, appends with expected bytes/sequence,
   and verifies internal state through `wiki_state`.
 - `npm run test:project-local-install`: installs the packed package under a
-  fresh project's `.pi/npm/node_modules/codewiki` path and verifies bootstrap,
+  fresh project's `.pi/npm/node_modules/@nunomoura/codewiki` path and verifies bootstrap,
   config write, and guarded decision append without controlled-test overrides.
 - `npm run test:external-lifecycle`: packs and installs CodeWiki into a fresh
   external project, runs `/wiki-bootstrap`, guarded lifecycle appends, runtime
@@ -136,7 +136,7 @@ Smoke command roles:
 
 ## Pi usage
 
-CodeWiki is not published to the npm registry yet. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer.
+CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, but package metadata keeps `"private": true` so npm refuses publication during stabilization. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented.
 
 Avoid global/user installs for normal mutation workflows. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi package installation by default and point users back to a project-local packed/local package install until a registry package exists.
 

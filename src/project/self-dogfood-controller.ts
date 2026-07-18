@@ -9,7 +9,7 @@ export interface SelfDogfoodControllerPin {
 		tree: string;
 	};
 	package: {
-		name: "codewiki";
+		name: "@nunomoura/codewiki";
 		version: string;
 		file: string;
 		bytes: number;
@@ -70,7 +70,11 @@ export function parseSelfDogfoodControllerPin(
 		"bytes",
 		"sha256",
 	]);
-	assertEqual(packageValue.name, "codewiki", "controller.package.name");
+	assertEqual(
+		packageValue.name,
+		"@nunomoura/codewiki",
+		"controller.package.name",
+	);
 	const version = matchingString(
 		packageValue.version,
 		VERSION_PATTERN,
@@ -78,7 +82,7 @@ export function parseSelfDogfoodControllerPin(
 	);
 	const file = matchingString(
 		packageValue.file,
-		/^codewiki-[0-9A-Za-z.+-]+\.tgz$/,
+		/^nunomoura-codewiki-[0-9A-Za-z.+-]+\.tgz$/,
 		"controller.package.file",
 	);
 	const bytes = positiveInteger(packageValue.bytes, "controller.package.bytes");
@@ -112,7 +116,7 @@ export function parseSelfDogfoodControllerPin(
 		tag,
 		source: { commit, tree },
 		package: {
-			name: "codewiki",
+			name: "@nunomoura/codewiki",
 			version,
 			file,
 			bytes,

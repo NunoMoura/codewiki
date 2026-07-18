@@ -22,7 +22,7 @@ const root = mkdtempSync(join(tmpdir(), "codewiki-package-smoke-"));
 try {
 	const pack = run("npm", ["pack", "--pack-destination", root]);
 	const tarball = pack.stdout.trim().split(/\r?\n/).at(-1);
-	assert.match(tarball, /^codewiki-.*\.tgz$/);
+	assert.match(tarball, /^nunomoura-codewiki-.*\.tgz$/);
 	const installRoot = join(root, "install");
 	run("npm", ["install", "--prefix", installRoot, join(root, tarball)]);
 	assert.equal(
@@ -48,7 +48,7 @@ import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	buildWikiState,
 	runWikiConfig,
-} from "codewiki";
+} from "@nunomoura/codewiki";
 
 function filesUnder(root) {
 	const files = [];
@@ -60,9 +60,9 @@ function filesUnder(root) {
 	return files;
 }
 
-const packageRoot = join(process.cwd(), "node_modules", "codewiki");
+const packageRoot = join(process.cwd(), "node_modules", "@nunomoura", "codewiki");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
-assert.equal(packageJson.name, "codewiki");
+assert.equal(packageJson.name, "@nunomoura/codewiki");
 assert.equal(packageJson.private, true);
 assert.equal(packageJson.bin, undefined);
 assert.equal(packageJson.publishConfig, undefined);

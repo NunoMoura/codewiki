@@ -21,9 +21,9 @@ function baselineManifest(packageBytes = Buffer.from("baseline package")) {
 			contentProof: `git-tree:${tree}`,
 		},
 		package: {
-			name: "codewiki",
+			name: "@nunomoura/codewiki",
 			version: "0.3.0",
-			file: "codewiki-0.3.0.tgz",
+			file: "nunomoura-codewiki-0.3.0.tgz",
 			bytes: packageBytes.length,
 			sha256: createHash("sha256").update(packageBytes).digest("hex"),
 		},

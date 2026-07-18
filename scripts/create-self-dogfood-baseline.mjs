@@ -103,7 +103,7 @@ const manifest = parseSelfDogfoodBaselineManifest({
 		contentProof: `git-tree:${tree}`,
 	},
 	package: {
-		name: "codewiki",
+		name: "@nunomoura/codewiki",
 		version,
 		file: filename,
 		bytes: statSync(packagePath).size,

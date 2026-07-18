@@ -53,7 +53,7 @@ Target Pi integration lives under `src/pi/**` and exposes terminal-first command
 
 The target CodeWiki OS still needs a small internal model-facing `wiki_*` tool set: `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`. Runtime coordination is host/backend plumbing over core APIs, not a normal agent tool. The user-facing slash surface is direct `/wiki-*` commands: `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi TUI session starts and opens the Work Pipeline dashboard automatically once; `/wiki-dashboard` reopens or recovers it, and `/wiki-dashboard --stop` stops its local host. The older grouped namespace command and former state alias are removed from public UX. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
 
-CodeWiki is not published to the npm registry yet. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. The future registry package name is still TBD because the unscoped `codewiki` npm name is already owned by another maintainer. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
+CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, while package metadata keeps `"private": true` so npm refuses publication during stabilization. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
 Mocked extension tests cover the intended package surface: the small `wiki_*` tool set, direct `/wiki-*` slash commands, pure TUI renderers, and a prompt-guidance hook. Prompt guidance is additive system-prompt context only; it must not create workflow truth or replace explicit tool/trace evidence.
 
@@ -69,7 +69,7 @@ unguarded append, appends only with expected byte and sequence checks, and
 verifies internal `wiki_state` reflects the appended decision.
 
 `npm run test:project-local-install` is the project-local package smoke. It
-installs the packed package under a fresh project's `.pi/npm/node_modules/codewiki`
+installs the packed package under a fresh project's `.pi/npm/node_modules/@nunomoura/codewiki`
 path and verifies bootstrap, config write, and guarded decision append without
 controlled-test overrides.
 

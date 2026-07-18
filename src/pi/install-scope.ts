@@ -79,7 +79,9 @@ function isSourceCheckoutPath(modulePath: string): boolean {
 }
 
 function isNodeModulesPackagePath(modulePath: string): boolean {
-	return modulePath.includes(`${sep}node_modules${sep}codewiki${sep}`);
+	return modulePath.includes(
+		`${sep}node_modules${sep}@nunomoura${sep}codewiki${sep}`,
+	);
 }
 
 function withTrailingSeparator(path: string): string {

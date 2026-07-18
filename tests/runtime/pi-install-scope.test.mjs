@@ -20,7 +20,10 @@ describe("Pi project-local install guard", () => {
 	it("allows package code loaded from the current project's .pi tree", () => {
 		const projectRoot = "/repo/app";
 		const moduleUrl = fileUrl(
-			join(projectRoot, ".pi/npm/node_modules/codewiki/dist/pi/extension.js"),
+			join(
+				projectRoot,
+				".pi/npm/node_modules/@nunomoura/codewiki/dist/pi/extension.js",
+			),
 		);
 
 		assert.equal(isProjectLocalCodewikiInstall(moduleUrl, projectRoot), true);
@@ -51,7 +54,7 @@ describe("Pi project-local install guard", () => {
 	it("rejects non-project package installs for mutation", () => {
 		const projectRoot = "/repo/app";
 		const moduleUrl = fileUrl(
-			"/home/user/.pi/agent/npm/node_modules/codewiki/dist/pi/extension.js",
+			"/home/user/.pi/agent/npm/node_modules/@nunomoura/codewiki/dist/pi/extension.js",
 		);
 
 		assert.equal(isProjectLocalCodewikiInstall(moduleUrl, projectRoot), false);
@@ -77,7 +80,7 @@ describe("Pi project-local install guard", () => {
 	it("allows explicit non-project install overrides and strips them before core calls", () => {
 		const projectRoot = "/repo/app";
 		const moduleUrl = fileUrl(
-			"/tmp/package/node_modules/codewiki/dist/pi/extension.js",
+			"/tmp/package/node_modules/@nunomoura/codewiki/dist/pi/extension.js",
 		);
 		const input = {
 			mode: "append",

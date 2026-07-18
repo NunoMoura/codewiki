@@ -108,7 +108,12 @@ try {
 		],
 		{ inherit: true },
 	);
-	const installedPackagePath = join(npmRoot, "node_modules", "codewiki");
+	const installedPackagePath = join(
+		npmRoot,
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+	);
 	const installedPackage = JSON.parse(
 		readFileSync(join(installedPackagePath, "package.json"), "utf8"),
 	);

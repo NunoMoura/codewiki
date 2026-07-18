@@ -98,6 +98,7 @@ describe("install readiness checklist", () => {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+		assert.equal(packageJson.name, "@nunomoura/codewiki");
 		assert.equal(packageJson.private, true);
 		assert.equal(packageJson.publishConfig, undefined);
 		assert.equal(packageJson.bin, undefined);
@@ -343,8 +344,10 @@ describe("install readiness checklist", () => {
 		);
 		assert.match(readme, /not published to the npm registry yet/);
 		assert.match(extensionDoc, /not published to the npm registry yet/);
-		assert.match(readme, /future registry package name is still TBD/);
-		assert.match(extensionDoc, /future registry package name is still TBD/);
+		assert.match(readme, /@nunomoura\/codewiki/);
+		assert.match(extensionDoc, /@nunomoura\/codewiki/);
+		assert.match(readme, /"private": true/);
+		assert.match(extensionDoc, /"private": true/);
 		assert.match(readme, /Avoid global\/user installs/);
 		assert.match(extensionDoc, /global\/user installs\s+for normal mutation/i);
 		assert.match(readme, /Production readiness and automation gates/);

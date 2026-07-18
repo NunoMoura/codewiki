@@ -22,15 +22,35 @@ describe("dashboard runtime health", () => {
 	it("detects when Pi still has a replaced pinned runtime loaded", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-health-"));
 		try {
-			await mkdir(join(root, ".pi", "npm", "node_modules", "codewiki", "dist", "dashboard"), {
-				recursive: true,
-			});
+			await mkdir(
+				join(
+					root,
+					".pi",
+					"npm",
+					"node_modules",
+					"@nunomoura",
+					"codewiki",
+					"dist",
+					"dashboard",
+				),
+				{ recursive: true },
+			);
 			await writeFile(
 				join(root, ".pi", "codewiki-controller.json"),
 				pin("a".repeat(40), "1".repeat(64)),
 			);
 			const moduleUrl = pathToFileURL(
-				join(root, ".pi", "npm", "node_modules", "codewiki", "dist", "dashboard", "server.js"),
+				join(
+					root,
+					".pi",
+					"npm",
+					"node_modules",
+					"@nunomoura",
+					"codewiki",
+					"dist",
+					"dashboard",
+					"server.js",
+				),
 			).href;
 			const loaded = captureDashboardRuntimeIdentity(moduleUrl);
 			assert.deepEqual(loaded, {

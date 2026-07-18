@@ -255,7 +255,12 @@ try {
 		],
 		{ cwd: shadowRoot },
 	);
-	const packageRoot = join(piNpmRoot, "node_modules", "codewiki");
+	const packageRoot = join(
+		piNpmRoot,
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+	);
 	const packageJson = JSON.parse(
 		readFileSync(join(packageRoot, "package.json"), "utf8"),
 	);

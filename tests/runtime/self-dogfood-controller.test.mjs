@@ -14,9 +14,9 @@ function controllerPin() {
 			tree: "b".repeat(40),
 		},
 		package: {
-			name: "codewiki",
+			name: "@nunomoura/codewiki",
 			version: "0.3.0",
-			file: "codewiki-0.3.0.tgz",
+			file: "nunomoura-codewiki-0.3.0.tgz",
 			bytes: 673696,
 			sha256: "c".repeat(64),
 		},
