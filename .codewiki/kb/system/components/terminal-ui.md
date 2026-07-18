@@ -64,7 +64,7 @@ Security boundaries:
 - bind only to loopback;
 - include a random token in API URLs;
 - keep reads public only within the tokenized same-origin session;
-- route any Change validation, configuration, or runtime-session command through guarded core APIs with exact same-origin capability checks, optimistic revision/digest or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction;
+- route any Change validation, configuration, or runtime-session command through guarded core APIs with exact same-origin capability checks, optimistic revision/digest or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction. Mutation requests must carry an exact `Origin`; when the dashboard's `no-referrer` response policy causes Chromium to omit `Origin`, the server accepts only the browser fallback pair of exact loopback `Host` and `Sec-Fetch-Site: same-origin`. Missing, foreign, or contradictory authority metadata fails closed;
 - do not enable CORS;
 - never grant dashboard shell, direct source-write, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority;
 - keep final Decision approval explicit and bound to the exact rendered proposal.

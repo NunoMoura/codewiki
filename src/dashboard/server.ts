@@ -857,13 +857,22 @@ function assertSameOriginMutation(
 	runtime: DashboardRuntime,
 	request: IncomingMessage,
 ): void {
-	if (request.headers.origin !== runtime.origin) {
+	const requestOrigin = request.headers.origin;
+	const fetchSite = request.headers["sec-fetch-site"];
+	const hostOrigin = request.headers.host
+		? `http://${request.headers.host}`
+		: undefined;
+	const exactOrigin = requestOrigin === runtime.origin;
+	const browserSameOriginFallback =
+		requestOrigin === undefined &&
+		fetchSite === "same-origin" &&
+		hostOrigin === runtime.origin;
+	if (!exactOrigin && !browserSameOriginFallback) {
 		throw new DashboardTraceHostControlError(
 			"Dashboard mutation requires exact same-origin authority.",
 			403,
 		);
 	}
-	const fetchSite = request.headers["sec-fetch-site"];
 	if (fetchSite && fetchSite !== "same-origin") {
 		throw new DashboardTraceHostControlError(
 			"Dashboard mutation rejected cross-site request metadata.",

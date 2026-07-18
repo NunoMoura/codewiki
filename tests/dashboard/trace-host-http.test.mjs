@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { request } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -44,8 +45,19 @@ async function json(response) {
 	return { status: response.status, body: await response.json() };
 }
 
+function requestStatus(url, headers, body) {
+	return new Promise((resolve, reject) => {
+		const outgoing = request(url, { method: "POST", headers }, (response) => {
+			response.resume();
+			response.once("end", () => resolve(response.statusCode));
+		});
+		outgoing.once("error", reject);
+		outgoing.end(body);
+	});
+}
+
 describe("dashboard trace host HTTP control", () => {
-	it("requires token, exact origin, JSON, and bounded command bodies", async () => {
+	it("requires token, same-origin browser authority, JSON, and bounded command bodies", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-control-"));
 		const fake = fakeControl();
 		let handle;
@@ -96,6 +108,17 @@ describe("dashboard trace host HTTP control", () => {
 			);
 			assert.equal(wrongOrigin.status, 403);
 
+			const wrongHostFallback = await requestStatus(
+				commandUrl,
+				{
+					Host: "127.0.0.1:1",
+					"Content-Type": "application/json",
+					"Sec-Fetch-Site": "same-origin",
+				},
+				JSON.stringify(command),
+			);
+			assert.equal(wrongHostFallback, 403);
+
 			const crossSite = await json(
 				await fetch(commandUrl, {
 					method: "POST",
@@ -108,6 +131,26 @@ describe("dashboard trace host HTTP control", () => {
 				}),
 			);
 			assert.equal(crossSite.status, 403);
+
+			const browserCommand = {
+				...command,
+				commandId: "command-http-browser-001",
+			};
+			const browserSameOrigin = await json(
+				await fetch(commandUrl, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Sec-Fetch-Site": "same-origin",
+					},
+					body: JSON.stringify(browserCommand),
+				}),
+			);
+			assert.equal(browserSameOrigin.status, 200);
+			assert.equal(
+				browserSameOrigin.body.receipt.commandId,
+				"command-http-browser-001",
+			);
 
 			const wrongType = await json(
 				await fetch(commandUrl, {
@@ -166,7 +209,7 @@ describe("dashboard trace host HTTP control", () => {
 			);
 			assert.equal(accepted.status, 200);
 			assert.equal(accepted.body.receipt.commandId, "command-http-001");
-			assert.deepEqual(fake.commands, [command]);
+			assert.deepEqual(fake.commands, [browserCommand, command]);
 
 			const shutdownUrl = `${handle.origin}/api/shutdown?token=${encodeURIComponent(handle.token)}`;
 			assert.equal((await fetch(shutdownUrl, { method: "POST" })).status, 403);
