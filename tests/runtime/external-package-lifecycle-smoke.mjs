@@ -124,12 +124,9 @@ function implementationQuality(overrides = {}) {
 	};
 }
 
-function planningInput(workStateDigest, expectedBytesByChangeId) {
+function planningInput() {
 	return {
 		mode: "append",
-		expectedWorkStateDigest: workStateDigest,
-		expectedChangeIds: ["CHG-external-package-lifecycle"],
-		expectedBytesByChangeId,
 		actor: "agent:external-package-lifecycle-smoke",
 		rationale: "Plan exact approved external lifecycle Change.",
 		createdAt: "2026-06-18T09:00:02.000Z",
@@ -407,19 +404,7 @@ try {
 		"traces",
 		`${traceId}.jsonl`,
 	);
-	const beforeDecision = await stateTool.execute(
-		"before-decision",
-		{},
-		undefined,
-		undefined,
-		ctx,
-	);
 	const decisionInput = {
-		changeId: change.id,
-		expectedRevision: change.revision,
-		expectedChangeDigest: change.validation.validatedDigest,
-		expectedWorkStateDigest:
-			beforeDecision.details.result.workState.snapshotDigest,
 		disposition: "approve",
 		rationale: "Approve exact external lifecycle Change.",
 		authority: {
@@ -437,8 +422,8 @@ try {
 			ctx,
 			"decide-preview",
 		),
-		/wiki_decide: completed preview run\./,
-	);
+		/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	const decided = assertToolResult(
 		await executeTool(
 			decideTool,
@@ -446,37 +431,23 @@ try {
 				...decisionInput,
 				mode: "append",
 				allowNonProjectInstall: true,
-				expectedBytes: await expectedBytes(tracePath),
 			},
 			ctx,
 			"decide",
 		),
-		/wiki_decide: completed append run\./,
-	);
+		/wiki_decide: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(preview.report.exit.status, "exit");
 	assert.equal(decided.report.exit.status, "exit");
-	const beforePlanning = await stateTool.execute(
-		"before-planning",
-		{},
-		undefined,
-		undefined,
-		ctx,
-	);
 	const planned = assertToolResult(
 		await executeTool(
 			planTool,
-			{
-				...planningInput(
-					beforePlanning.details.result.workState.snapshotDigest,
-					{ [change.id]: await expectedBytes(tracePath) },
-				),
-				allowNonProjectInstall: true,
-			},
+			{ ...planningInput(), allowNonProjectInstall: true },
 			ctx,
 			"plan",
 		),
-		/wiki_plan: completed append run\./,
-	);
+		/wiki_plan: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(planned.report.exit.status, "exit");
 	const planningEvents = Object.values(planned.events);
 	const planningRef = planningWorkRef(planningEvents);
@@ -521,15 +492,9 @@ try {
 			nextSequenceByTrace: { [traceId]: 4 },
 			expectedBytesByTrace: { [traceId]: await expectedBytes(tracePath) },
 		},
-		implementationInputs: [
-			{
-				repoRoot: projectRoot,
-				traceId,
-				planningEvents,
-				nextSequence: 5,
-				createdAt: "2026-06-18T09:00:04.000Z",
-			},
-		],
+		implementation: {
+			createdAt: "2026-06-18T09:00:04.000Z",
+		},
 		supervision: { attached: true, monitoring: true },
 		sessionFactory: createPiProcessSessionFactory({
 			cwd: projectRoot,

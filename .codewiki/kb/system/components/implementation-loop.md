@@ -93,7 +93,9 @@ Implementation input includes:
 - prior implementation output refs;
 - trigger and route-back context.
 
-Core facades load canonical Planning events, source ownership, existing paths, policy, trace tails, and Git state. Callers submit worker results or explicit evidence they own, not replacement repository facts.
+`runWikiImplement()` accepts a WorkState freshness guard plus normalized worker results or explicit evidence keyed by Work Item. Runtime selects the Sprint and Work Items, resolves each owning Change, verifies Assignment correlation, loads canonical Planning events, source ownership, existing paths, policy, trace tails, and Git state, and derives sequence, parent, and byte guards. Caller-supplied `traceId`, Planning events, Change IDs, Planning refs, Assignment identity, source map, sequence, parent, and expected bytes are rejected as replacement repository facts.
+
+One bounded invocation writes evidence for one owning Change. Portfolio work is grouped by canonical Work Item ownership, then runtime refreshes WorkState and repeats for remaining Change groups.
 
 ## Loop cycle
 

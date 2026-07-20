@@ -3,9 +3,6 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
-import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
-import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
 import { readDevLog } from "../../src/runtime/dev-log.ts";
@@ -15,14 +12,14 @@ import {
 	runRuntimeHostOnce as runRuntimeHostOnceCore,
 	watchRuntimeHostWorkerSessions,
 } from "../../src/runtime/host-runner.ts";
-import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
+import {
+	seedRuntimeImplementation,
+	seedRuntimeImplementationPortfolio,
+} from "../helpers/runtime-implementation.mjs";
 
 const TEST_WORKER_MODEL_ROUTING = {
 	qualityFloor: "high",
@@ -171,15 +168,26 @@ async function runtimeFixture() {
 		join(root, "tests", "feature.test.mjs"),
 		"assert.ok(true);\n",
 	);
-	const traceId = "TRACE-host-once";
-	const planningEvents = planningEventsForHostOnce(traceId);
-	const planningRef = planningWorkRef(planningEvents);
+	const seeded = await seedRuntimeImplementation(root, {
+		suffix: "host-once",
+		workItemId: "WU-host-once",
+		pathScopes: ["src/feature.ts"],
+		verification: ["node --test tests/feature.test.mjs"],
+	});
 	const queue = buildWorkQueueView({
-		records: planningEvents,
+		records: seeded.records,
 		generatedAt: "2026-06-15T00:00:00.000Z",
 	});
-	const headAppend = await seedTraceHead(root, traceId);
-	return { root, traceId, planningEvents, planningRef, queue, headAppend };
+	return {
+		root,
+		traceId: seeded.traceId,
+		planningEvents: seeded.planningEvents,
+		planningRef: seeded.planningRef,
+		queue,
+		nextSequence: seeded.nextSequence,
+		initialRecordCount: seeded.records.length,
+		headAppend: { nextBytes: seeded.expectedBytes },
+	};
 }
 
 async function multiTraceRuntimeFixture() {
@@ -202,117 +210,38 @@ async function multiTraceRuntimeFixture() {
 		join(root, "tests", "feature-b.test.mjs"),
 		"assert.ok(true);\n",
 	);
-	const firstTraceId = "TRACE-host-multi-a";
-	const secondTraceId = "TRACE-host-multi-b";
-	const firstPlanningEvents = planningEventsForHostOnce(firstTraceId, {
-		workUnitId: "WU-host-a",
-		sourcePath: "src/feature-a.ts",
-		testPath: "tests/feature-a.test.mjs",
-	});
-	const secondPlanningEvents = planningEventsForHostOnce(secondTraceId, {
-		workUnitId: "WU-host-b",
-		sourcePath: "src/feature-b.ts",
-		testPath: "tests/feature-b.test.mjs",
-	});
-	const firstPlanningRef = planningWorkRef(firstPlanningEvents, "WU-host-a");
-	const secondPlanningRef = planningWorkRef(secondPlanningEvents, "WU-host-b");
+	const [first, second] = await seedRuntimeImplementationPortfolio(root, [
+		{
+			changeId: "CHG-host-multi-a",
+			workItemId: "WU-host-a",
+			pathScopes: ["src/feature-a.ts"],
+			verification: ["node --test tests/feature-a.test.mjs"],
+		},
+		{
+			changeId: "CHG-host-multi-b",
+			workItemId: "WU-host-b",
+			pathScopes: ["src/feature-b.ts"],
+			verification: ["node --test tests/feature-b.test.mjs"],
+		},
+	]);
 	const queue = buildWorkQueueView({
-		records: [...firstPlanningEvents, ...secondPlanningEvents],
+		records: [...first.records, ...second.records],
 		generatedAt: "2026-06-15T00:00:00.000Z",
 	});
-	const firstHeadAppend = await seedTraceHead(root, firstTraceId);
-	const secondHeadAppend = await seedTraceHead(root, secondTraceId);
 	return {
 		root,
-		firstTraceId,
-		secondTraceId,
-		firstPlanningEvents,
-		secondPlanningEvents,
-		firstPlanningRef,
-		secondPlanningRef,
+		firstTraceId: first.traceId,
+		secondTraceId: second.traceId,
+		firstPlanningEvents: first.planningEvents,
+		secondPlanningEvents: second.planningEvents,
+		firstPlanningRef: first.planningRef,
+		secondPlanningRef: second.planningRef,
 		queue,
-		firstHeadAppend,
-		secondHeadAppend,
+		firstNextSequence: first.nextSequence,
+		secondNextSequence: second.nextSequence,
+		firstHeadAppend: { nextBytes: first.expectedBytes },
+		secondHeadAppend: { nextBytes: second.expectedBytes },
 	};
-}
-
-async function seedTraceHead(root, traceId) {
-	return await appendTraceRecord(
-		root,
-		createTraceHead({
-			traceId,
-			title: "Host runner trace",
-			createdAt: "2026-06-15T00:00:00.000Z",
-		}),
-		0,
-	);
-}
-
-function planningEventsForHostOnce(traceId, options = {}) {
-	const workUnitId = options.workUnitId || "WU-host-once";
-	const sourcePath = options.sourcePath || "src/feature.ts";
-	const testPath = options.testPath || "tests/feature.test.mjs";
-	const changeInput = canonicalChangeInput({
-		id: `${traceId}-DT`,
-		createdAt: "2026-06-15T00:00:01.000Z",
-		updatedAt: "2026-06-15T00:00:01.000Z",
-		changes: [
-			{
-				id: "CHG-host-once",
-				currentState: "Runtime handoff is preview-only.",
-				desiredState: "Host can run one bounded worker cycle.",
-				rationale: "Adapter-owned orchestration needs trace claim safety.",
-				...decisionQualityFields(),
-				approval: "approved",
-				sourceRefs: ["kb:system/components/runtime.md"],
-			},
-		],
-	});
-	const decision = runDecisionIteration({
-		traceId,
-		changeInput,
-		createdAt: "2026-06-15T00:00:01.000Z",
-	});
-	const changeRef = approvedDecisionRef(decision.traceEvents);
-	return runPlanningIteration({
-		traceId,
-		decisionEvents: decision.traceEvents,
-		startSequence: 5,
-		createdAt: "2026-06-15T00:00:02.000Z",
-		workItemInputs: [
-			{
-				id: workUnitId,
-				title: "Run host once",
-				changeRefs: [changeRef],
-				outcome: "Host one-shot starts worker and previews release readiness.",
-				...planningQualityFields(),
-				acceptance: [
-					"Release check reports ready after implementation preview passes.",
-				],
-				componentRefs: ["runtime"],
-				pathScopes: [sourcePath],
-				verification: [testPath],
-			},
-		],
-	}).traceEvents;
-}
-
-function approvedDecisionRef(events) {
-	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.changeRecord?.change;
-	assert.ok(iteration);
-	assert.ok(change);
-	return `change:${change.id}`;
-}
-
-function planningWorkRef(events, workUnitId = "WU-host-once") {
-	const iteration = events.find((event) => event.loop === "planning");
-	const item = iteration?.data?.output?.workItems?.find(
-		(candidate) => candidate.id === workUnitId,
-	);
-	assert.ok(iteration);
-	assert.ok(item);
-	return `trace:${iteration.id}#work:${item.id}`;
 }
 
 function changeInput(planningRef, overrides = {}) {
@@ -327,13 +256,13 @@ function changeInput(planningRef, overrides = {}) {
 				command: "node --test tests/feature.test.mjs",
 				status: "pass",
 				phase: "green",
-				criterionId: "AC-001",
+				criterionId: "AC-WU-host-once-1",
 				outputRef: "tests/feature.test.mjs",
 			},
 		],
 		acceptanceEvidenceItems: [
 			{
-				criterionId: "AC-001",
+				criterionId: "AC-WU-host-once-1",
 				summary: "Feature test passes.",
 				evidenceRefs: ["tests/feature.test.mjs"],
 			},
@@ -764,12 +693,11 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: withWorkerExecutionConfig(),
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: sessionFactory([]),
 			};
 			await assert.rejects(
@@ -789,7 +717,7 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(
 				(await readTrace(join(fixture.root, traceFilePath(fixture.traceId))))
 					.records.length,
-				1,
+				fixture.initialRecordCount,
 			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
@@ -825,12 +753,11 @@ describe("runtime host one-shot execution", () => {
 						},
 					},
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: sessionFactory(created),
 				workerExecutionContexts: {
 					"WU-host-once": {
@@ -878,20 +805,14 @@ describe("runtime host one-shot execution", () => {
 					},
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-						createdAt: "2026-06-15T00:00:03.000Z",
-					},
-				],
+				implementation: {
+					createdAt: "2026-06-15T00:00:03.000Z",
+				},
 				sessionFactory: sessionFactory(created),
 				completionCollector({ workers }) {
 					assert.equal(workers.length, 1);
@@ -954,7 +875,10 @@ describe("runtime host one-shot execution", () => {
 				result.releaseBatch.events[0].event,
 				"runtime.work_unit.claim.released",
 			);
-			assert.equal(result.releaseBatch.events[0].sequence, 2);
+			assert.equal(
+				result.releaseBatch.events[0].sequence,
+				fixture.nextSequence + 1,
+			);
 			assert.equal(
 				result.releaseBatch.events[0].data.reason,
 				"worker_completed",
@@ -996,20 +920,14 @@ describe("runtime host one-shot execution", () => {
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-						createdAt: "2026-06-15T00:00:03.000Z",
-					},
-				],
+				implementation: {
+					createdAt: "2026-06-15T00:00:03.000Z",
+				},
 				sessionFactory: createPiProcessSessionFactory({
 					cwd: fixture.root,
 					command: process.execPath,
@@ -1036,7 +954,7 @@ describe("runtime host one-shot execution", () => {
 				result.workers[0].outputFile.startsWith(
 					join(
 						fixture.root,
-						".codewiki/runtime/tmp/TRACE-host-once/runtime/pi-workers",
+						`.codewiki/runtime/tmp/${fixture.traceId}/runtime/pi-workers`,
 					),
 				),
 				true,
@@ -1066,12 +984,11 @@ describe("runtime host one-shot execution", () => {
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: sessionFactory([]),
 				appendReleases: true,
 				releaseCreatedAt: "2026-06-15T00:00:04.000Z",
@@ -1112,12 +1029,11 @@ describe("runtime host one-shot execution", () => {
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: createPiProcessSessionFactory({
 					cwd: fixture.root,
 					command: process.execPath,
@@ -1169,12 +1085,11 @@ describe("runtime host one-shot execution", () => {
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: createPiProcessSessionFactory({
 					cwd: fixture.root,
 					command: process.execPath,
@@ -1211,23 +1126,17 @@ describe("runtime host one-shot execution", () => {
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
 					nextSequenceByTrace: {
-						[fixture.firstTraceId]: 1,
-						[fixture.secondTraceId]: 1,
+						[fixture.firstTraceId]: fixture.firstNextSequence,
+						[fixture.secondTraceId]: fixture.secondNextSequence,
 					},
 					expectedBytesByTrace: {
 						[fixture.firstTraceId]: fixture.firstHeadAppend.nextBytes,
 						[fixture.secondTraceId]: fixture.secondHeadAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.firstTraceId,
-						planningEvents: fixture.firstPlanningEvents,
-						nextSequence: 2,
-						createdAt: "2026-06-15T00:00:04.000Z",
-					},
-				],
+				implementation: {
+					createdAt: "2026-06-15T00:00:04.000Z",
+				},
 				sessionFactory: outputFileSessionFactory(fixture.root, (input) =>
 					input.workUnitId === "WU-host-a"
 						? fencedWorkerReport({
@@ -1246,13 +1155,13 @@ describe("runtime host one-shot execution", () => {
 												command: "node --test tests/feature-a.test.mjs",
 												status: "pass",
 												phase: "green",
-												criterionId: "AC-001",
+												criterionId: "AC-WU-host-a-1",
 												outputRef: "tests/feature-a.test.mjs",
 											},
 										],
 										acceptanceEvidenceItems: [
 											{
-												criterionId: "AC-001",
+												criterionId: "AC-WU-host-a-1",
 												summary: "Feature A test passes.",
 												evidenceRefs: ["tests/feature-a.test.mjs"],
 											},
@@ -1298,23 +1207,17 @@ describe("runtime host one-shot execution", () => {
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
 					nextSequenceByTrace: {
-						[fixture.firstTraceId]: 1,
-						[fixture.secondTraceId]: 1,
+						[fixture.firstTraceId]: fixture.firstNextSequence,
+						[fixture.secondTraceId]: fixture.secondNextSequence,
 					},
 					expectedBytesByTrace: {
 						[fixture.firstTraceId]: fixture.firstHeadAppend.nextBytes,
 						[fixture.secondTraceId]: fixture.secondHeadAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.firstTraceId,
-						planningEvents: fixture.firstPlanningEvents,
-						nextSequence: 2,
-						createdAt: "2026-06-15T00:00:04.000Z",
-					},
-				],
+				implementation: {
+					createdAt: "2026-06-15T00:00:04.000Z",
+				},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					assert.deepEqual(
@@ -1340,13 +1243,13 @@ describe("runtime host one-shot execution", () => {
 												command: "node --test tests/feature-a.test.mjs",
 												status: "pass",
 												phase: "green",
-												criterionId: "AC-001",
+												criterionId: "AC-WU-host-a-1",
 												outputRef: "tests/feature-a.test.mjs",
 											},
 										],
 										acceptanceEvidenceItems: [
 											{
-												criterionId: "AC-001",
+												criterionId: "AC-WU-host-a-1",
 												summary: "Feature A test passes.",
 												evidenceRefs: ["tests/feature-a.test.mjs"],
 											},
@@ -1367,50 +1270,18 @@ describe("runtime host one-shot execution", () => {
 				releaseCreatedAt: "2026-06-15T00:00:05.000Z",
 				releaseIdPrefix: "mixed-release",
 			});
-			const firstTrace = await readTrace(
-				join(fixture.root, traceFilePath(fixture.firstTraceId)),
-			);
-			const secondTrace = await readTrace(
-				join(fixture.root, traceFilePath(fixture.secondTraceId)),
-			);
-			const firstEvents = firstTrace.records.filter(
-				(record) => record.type === "trace_event",
-			);
-			const secondEvents = secondTrace.records.filter(
-				(record) => record.type === "trace_event",
-			);
-			const queue = buildWorkQueueView({
-				records: [
-					...fixture.firstPlanningEvents,
-					...fixture.secondPlanningEvents,
-					...firstEvents,
-					...secondEvents,
-				],
-				generatedAt: "2026-06-15T00:00:06.000Z",
-			});
 
 			assert.equal(result.releaseCheck.reason, "worker_failed");
 			assert.equal(result.implementationAppends.length, 1);
 			assert.equal(result.releaseAppend.events.length, 2);
-			assert.deepEqual(
-				firstEvents.map((event) => event.event),
-				[
-					"runtime.work_unit.claimed",
-					"evidence_accepted",
-					"runtime.work_unit.claim.released",
-				],
-			);
-			assert.deepEqual(
-				secondEvents.map((event) => event.event),
-				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
-			);
+			assert.deepEqual(result.implementationAppends[0].selection, {
+				sprintId: "SPR-runtime-portfolio",
+				changeId: "CHG-host-multi-a",
+				workItemIds: ["WU-host-a"],
+			});
 			assert.equal(
-				queue.items.find((item) => item.id === "WU-host-a")?.status,
-				"done",
-			);
-			assert.equal(
-				queue.items.find((item) => item.id === "WU-host-b")?.status,
-				"ready",
+				result.implementationAppends[0].iterationEvent.event,
+				"evidence_accepted",
 			);
 		} finally {
 			await rm(fixture.root, { recursive: true, force: true });
@@ -1426,12 +1297,11 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: {
 					async create() {
 						throw new Error("session factory down");
@@ -1487,12 +1357,11 @@ describe("runtime host one-shot execution", () => {
 					createdAt: "2026-06-15T00:00:03.000Z",
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: {
 					async create() {
 						throw new Error("session factory down");
@@ -1518,14 +1387,23 @@ describe("runtime host one-shot execution", () => {
 
 			assert.equal(result.releaseCheck.status, "blocked");
 			assert.equal(result.releaseCheck.reason, "worker_start_failed");
-			assert.equal(result.failedStartReleaseBatch.events[0].sequence, 2);
+			assert.equal(
+				result.failedStartReleaseBatch.events[0].sequence,
+				fixture.nextSequence + 1,
+			);
 			assert.equal(result.releaseAppend.events.length, 1);
 			assert.equal(
 				result.releaseAppend.events[0].data.reason,
 				"worker_start_failed",
 			);
 			assert.deepEqual(
-				events.map((event) => event.event),
+				events
+					.map((event) => event.event)
+					.filter(
+						(event) =>
+							event.startsWith("runtime.work_unit.") ||
+							event.startsWith("evidence_"),
+					),
 				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 			assert.equal(
@@ -1553,12 +1431,11 @@ describe("runtime host one-shot execution", () => {
 						},
 					},
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: sessionFactory(created),
 				completionCollector() {
 					assert.fail(
@@ -1603,7 +1480,7 @@ describe("runtime host one-shot execution", () => {
 						},
 					},
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
@@ -1615,14 +1492,7 @@ describe("runtime host one-shot execution", () => {
 						? { stderr: `setup failed: ${command}`, exitCode: 2 }
 						: { exitCode: 0 };
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector() {
 					return [];
@@ -1657,19 +1527,12 @@ describe("runtime host one-shot execution", () => {
 					},
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory(created),
 				completionCollector({ workers }) {
 					return [completedWorkerOutput(fixture, workers[0])];
@@ -1724,19 +1587,12 @@ describe("runtime host one-shot execution", () => {
 					},
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory(created, events),
 				completionCollector({ workers }) {
 					events.push("worker.collect_completion");
@@ -1788,19 +1644,12 @@ describe("runtime host one-shot execution", () => {
 					},
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [completedWorkerOutput(fixture, workers[0])];
@@ -1834,7 +1683,13 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.remediation.reason, "worktree_cleanup_failed");
 			assert.match(result.remediation.blockers[0], /cleanup refused/);
 			assert.deepEqual(
-				events.map((event) => event.event),
+				events
+					.map((event) => event.event)
+					.filter(
+						(event) =>
+							event.startsWith("runtime.work_unit.") ||
+							event.startsWith("evidence_"),
+					),
 				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 		} finally {
@@ -1851,12 +1706,11 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [],
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [completedWorkerOutput(fixture, workers[0])];
@@ -1876,7 +1730,7 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.remediation.route, "user");
 			assert.equal(
 				result.remediation.suggestedActions.some((action) =>
-					action.includes("Provide implementationInputs"),
+					action.includes("Attach runtime Implementation handling"),
 				),
 				true,
 			);
@@ -1895,19 +1749,12 @@ describe("runtime host one-shot execution", () => {
 					createdAt: "2026-06-15T00:00:03.000Z",
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 2,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [
@@ -1943,7 +1790,13 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.releaseBatch.events[0].data.reason, "worker_blocked");
 			assert.equal(result.releaseAppend.events.length, 1);
 			assert.deepEqual(
-				events.map((event) => event.event),
+				events
+					.map((event) => event.event)
+					.filter(
+						(event) =>
+							event.startsWith("runtime.work_unit.") ||
+							event.startsWith("evidence_"),
+					),
 				["runtime.work_unit.claimed", "runtime.work_unit.claim.released"],
 			);
 			assert.equal(
@@ -1964,19 +1817,12 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [terminalWorkerOutput(workers[0], "failed", "Tests crashed.")];
@@ -2002,19 +1848,12 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [
@@ -2054,20 +1893,14 @@ describe("runtime host one-shot execution", () => {
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
 					workerIdPrefix: "host-worker",
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 2,
-						createdAt: "2026-06-15T00:00:03.000Z",
-					},
-				],
+				implementation: {
+					createdAt: "2026-06-15T00:00:03.000Z",
+				},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [
@@ -2102,10 +1935,19 @@ describe("runtime host one-shot execution", () => {
 			assert.equal(result.releaseCheck.status, "ready");
 			assert.equal(result.implementationAppends.length, 1);
 			assert.equal(result.implementationAppends[0].append.records.length, 2);
-			assert.equal(result.releaseBatch.events[0].sequence, 3);
+			assert.equal(
+				result.releaseBatch.events[0].sequence,
+				fixture.nextSequence + 2,
+			);
 			assert.equal(result.releaseAppend.events.length, 1);
 			assert.deepEqual(
-				events.map((event) => event.event),
+				events
+					.map((event) => event.event)
+					.filter(
+						(event) =>
+							event.startsWith("runtime.work_unit.") ||
+							event.startsWith("evidence_"),
+					),
 				[
 					"runtime.work_unit.claimed",
 					"evidence_accepted",
@@ -2130,19 +1972,12 @@ describe("runtime host one-shot execution", () => {
 					repoRoot: fixture.root,
 					config: { runtime: { automation: "assist", maxWorkers: 1 } },
 					queue: fixture.queue,
-					nextSequenceByTrace: { [fixture.traceId]: 1 },
+					nextSequenceByTrace: { [fixture.traceId]: fixture.nextSequence },
 					expectedBytesByTrace: {
 						[fixture.traceId]: fixture.headAppend.nextBytes,
 					},
 				},
-				implementationInputs: [
-					{
-						repoRoot: fixture.root,
-						traceId: fixture.traceId,
-						planningEvents: fixture.planningEvents,
-						nextSequence: 9,
-					},
-				],
+				implementation: {},
 				sessionFactory: sessionFactory([]),
 				completionCollector({ workers }) {
 					return [
@@ -2185,7 +2020,6 @@ describe("runtime host one-shot execution", () => {
 						config: { runtime: { automation: "assist" } },
 						queue: queue(),
 					},
-					implementationInputs: [],
 					sessionFactory: sessionFactory([]),
 					completionCollector: () => [],
 				}),

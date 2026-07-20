@@ -1,3 +1,4 @@
+import { changeTraceId } from "../changes/change-trace.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
 import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
@@ -43,29 +44,56 @@ import {
 	type ImplementationWorkerResultInput,
 } from "../implementation/workers.ts";
 import { loadWikiConfigFile } from "../project/config-file.ts";
+import { readProjectSourceMap } from "../project/explain.ts";
 import type { WikiQualityReviewConfig } from "../project/config.ts";
 import {
 	collectProjectSnapshot,
 	type ProjectSnapshot,
 } from "../project/snapshot.ts";
+import { RuntimeReactor, type RuntimeObservation } from "../runtime/reactor.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
 	type AppendSemanticLoopReportResult,
 } from "../runtime/trace-writer.ts";
-import type { TraceEvent } from "../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import type {
+	WorkState,
+	WorkStateAssignment,
+	WorkStateWorkItem,
+} from "../work-state/types.ts";
 
 export type WikiImplementMode = "preview" | "append";
 
+type RuntimeOwnedImplementationField =
+	| "id"
+	| "planningRefs"
+	| "planning_refs"
+	| "workerId"
+	| "worker_id"
+	| "workUnitId"
+	| "work_unit_id"
+	| "claimId"
+	| "claim_id"
+	| "sessionId"
+	| "session_id"
+	| "sessionFile"
+	| "session_file";
+
+/** Evidence supplied by a worker or semantic adapter; runtime owns all routing facts. */
+export type ImplementationEvidenceSubmission = Omit<
+	ImplementationChangeInput,
+	RuntimeOwnedImplementationField
+> & {
+	workItemId: string;
+	assignmentId?: string;
+};
+
 export interface RunWikiImplementInput {
 	repoRoot: string;
-	traceId: string;
-	planningEvents: TraceEvent[];
-	changes?: ImplementationChange[];
-	changeInputs?: ImplementationChangeInput[];
+	expectedWorkStateDigest: string;
+	evidence?: ImplementationEvidenceSubmission[];
 	workerResults?: ImplementationWorkerResultInput[];
-	workerClaims?: ImplementationWorkerClaim[];
-	claimEvents?: TraceEvent[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
 	archiveDisposition?: ImplementationArchiveDisposition;
 	archiveDispositionInput?: ImplementationArchiveDispositionInput;
@@ -74,21 +102,30 @@ export interface RunWikiImplementInput {
 	includeCachedReviewEvidence?: boolean;
 	autoReviewEvidence?: boolean;
 	reviewTimeoutMs?: number;
-	expectedWorkerBaseSha?: string;
-	componentMap?: SourceMapContract;
 	requireTddEvidence?: boolean;
-	parentId?: string | null;
 	createdAt?: string;
 	mode?: WikiImplementMode;
-	expectedBytes?: number;
-	nextSequence?: number;
-	expectedTraceId?: string;
 	snapshotRoots?: string[];
 	snapshotExclude?: string[];
 	proofPaths?: string[];
 	changedPaths?: string[];
 	evidencePaths?: string[];
 	aggregateContentProof?: ContentProof;
+}
+
+interface PreparedWikiImplementInput
+	extends Omit<RunWikiImplementInput, "expectedWorkStateDigest" | "evidence"> {
+	traceId: string;
+	planningEvents: TraceEvent[];
+	changeInputs: ImplementationChangeInput[];
+	workerClaims?: ImplementationWorkerClaim[];
+	claimEvents: TraceEvent[];
+	expectedWorkerBaseSha?: string;
+	componentMap?: SourceMapContract;
+	parentId: string | null;
+	expectedBytes: number;
+	nextSequence: number;
+	expectedTraceId: string;
 }
 
 export interface WikiImplementReviewEvidenceResult {
@@ -109,6 +146,11 @@ export interface WikiImplementReviewEvidenceResult {
 export interface RunWikiImplementResult {
 	mode: WikiImplementMode;
 	traceId: string;
+	selection: {
+		sprintId: string;
+		changeId: string;
+		workItemIds: string[];
+	};
 	proofPaths: string[];
 	snapshot: ProjectSnapshot;
 	aggregateContentProof?: ContentProof;
@@ -134,13 +176,9 @@ interface PreparedWikiImplementReviewEvidence {
 
 const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"repoRoot",
-	"traceId",
-	"planningEvents",
-	"changes",
-	"changeInputs",
+	"expectedWorkStateDigest",
+	"evidence",
 	"workerResults",
-	"workerClaims",
-	"claimEvents",
 	"reviewEvidenceReports",
 	"archiveDisposition",
 	"archiveDispositionInput",
@@ -149,15 +187,9 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"includeCachedReviewEvidence",
 	"autoReviewEvidence",
 	"reviewTimeoutMs",
-	"expectedWorkerBaseSha",
-	"componentMap",
 	"requireTddEvidence",
-	"parentId",
 	"createdAt",
 	"mode",
-	"expectedBytes",
-	"nextSequence",
-	"expectedTraceId",
 	"snapshotRoots",
 	"snapshotExclude",
 	"proofPaths",
@@ -166,8 +198,26 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"aggregateContentProof",
 ] as const;
 
+interface PreparedWikiImplementResult
+	extends Omit<RunWikiImplementResult, "selection"> {}
+
 export async function runWikiImplement(
 	input: RunWikiImplementInput,
+): Promise<RunWikiImplementResult> {
+	return await runWikiImplementFromObservation(input);
+}
+
+/** Runtime-only entry using the exact observation that selected this iteration. */
+export async function runRuntimeSelectedWikiImplement(
+	input: RunWikiImplementInput,
+	observation: RuntimeObservation,
+): Promise<RunWikiImplementResult> {
+	return await runWikiImplementFromObservation(input, observation);
+}
+
+async function runWikiImplementFromObservation(
+	input: RunWikiImplementInput,
+	observation?: RuntimeObservation,
 ): Promise<RunWikiImplementResult> {
 	assertKnownInputKeys(
 		"wiki_implement",
@@ -175,30 +225,22 @@ export async function runWikiImplement(
 		WIKI_IMPLEMENT_INPUT_KEYS,
 	);
 	requiredStringField("wiki_implement", "repoRoot", input.repoRoot);
-	const traceId = requiredStringField(
+	requiredStringField(
 		"wiki_implement",
-		"traceId",
-		input.traceId,
+		"expectedWorkStateDigest",
+		input.expectedWorkStateDigest,
 	);
-	if (!Array.isArray(input.planningEvents)) {
-		throw createCodewikiApiError({
-			operation: "wiki_implement",
-			code: "invalid_input",
-			field: "planningEvents",
-			message: "wiki_implement requires runtime-selected planningEvents.",
-		});
-	}
+	const context = await runtimeImplementationContext(input, observation);
+	const result = await runPreparedWikiImplement(context.input);
+	return { ...result, selection: context.selection };
+}
+
+async function runPreparedWikiImplement(
+	input: PreparedWikiImplementInput,
+): Promise<PreparedWikiImplementResult> {
+	const traceId = input.traceId;
 	const mode = input.mode || "preview";
-	const nextSequence = input.nextSequence ?? 1;
-	if (!Number.isInteger(nextSequence) || nextSequence < 1) {
-		throw createCodewikiApiError({
-			operation: "wiki_implement",
-			code: "invalid_input",
-			field: "nextSequence",
-			message: "wiki_implement requires nextSequence >= 1.",
-			data: { value: nextSequence },
-		});
-	}
+	const nextSequence = input.nextSequence;
 	const config = await loadWikiConfigFile(input.repoRoot);
 	const snapshot = await collectProjectSnapshot({
 		root: input.repoRoot,
@@ -285,8 +327,341 @@ export async function runWikiImplement(
 	};
 }
 
-async function reviewEvidenceReportsForRun(
+async function runtimeImplementationContext(
 	input: RunWikiImplementInput,
+	selectedObservation?: RuntimeObservation,
+): Promise<{
+	input: PreparedWikiImplementInput;
+	selection: RunWikiImplementResult["selection"];
+}> {
+	const observation =
+		selectedObservation ||
+		(await new RuntimeReactor(input.repoRoot).observe({
+			kind: "manual_resume",
+		}));
+	if (observation.workState.snapshotDigest !== input.expectedWorkStateDigest) {
+		throw new Error(
+			`Implementation WorkState changed: expected ${input.expectedWorkStateDigest}, actual ${observation.workState.snapshotDigest}.`,
+		);
+	}
+	const selection = observation.reaction.selection;
+	if (selection?.loop !== "implementation") {
+		throw new Error(
+			"Runtime did not select Implementation for current WorkState.",
+		);
+	}
+	const sources = implementationEvidenceSources(input);
+	if (sources.length === 0) {
+		throw new Error(
+			"Implementation requires worker results or explicit evidence for runtime-selected Work Items.",
+		);
+	}
+	const selectedIds = new Set(selection.workItemIds);
+	const selectedItems = sources.map((source) => {
+		const workItemId = evidenceWorkItemId(source);
+		if (!selectedIds.has(workItemId)) {
+			throw new Error(
+				`Implementation evidence targets ${workItemId}, but runtime selected ${selection.workItemIds.join(", ")}.`,
+			);
+		}
+		return requiredWorkItem(observation.workState, workItemId);
+	});
+	const changeIds = uniqueStrings(
+		selectedItems.map((item) => requiredOwningChangeId(item)),
+	);
+	if (changeIds.length !== 1) {
+		throw new Error(
+			`One Implementation invocation may append evidence for only one owning Change: ${changeIds.join(", ")}.`,
+		);
+	}
+	const changeId = changeIds[0];
+	const traceId = changeTraceId(changeId);
+	const workItemIds = uniqueStrings(selectedItems.map((item) => item.id));
+	const traceRecords = observation.records.filter(
+		(record) => record.traceId === traceId,
+	);
+	const planningEvents = selectedPlanningEvents(traceRecords, workItemIds);
+	if (planningEvents.length === 0) {
+		throw new Error(
+			`Runtime found no Planning event for selected Work Items in ${traceId}.`,
+		);
+	}
+	const assignments = selectedAssignments(observation.workState, workItemIds);
+	const claimEvents = selectedClaimEvents(traceRecords, workItemIds);
+	const expectedBytes = observation.expectedBytesByTrace[traceId];
+	if (!Number.isInteger(expectedBytes) || expectedBytes < 0) {
+		throw new Error(`Runtime has no append handle for ${traceId}.`);
+	}
+	const parent = traceRecords.at(-1);
+	return {
+		selection: {
+			sprintId: selection.sprintId,
+			changeId,
+			workItemIds,
+		},
+		input: {
+			...input,
+			traceId,
+			planningEvents,
+			changeInputs: sources.map((source) =>
+				runtimeOwnedChangeInput(
+					source,
+					requiredWorkItem(observation.workState, evidenceWorkItemId(source)),
+					assignments,
+					planningEvents,
+				),
+			),
+			claimEvents,
+			componentMap: await readProjectSourceMap(input.repoRoot),
+			parentId:
+				parent && parent.type !== "trace_head" ? parent.id || null : null,
+			expectedBytes,
+			nextSequence: nextTraceSequence(traceRecords),
+			expectedTraceId: traceId,
+		},
+	};
+}
+
+function implementationEvidenceSources(
+	input: RunWikiImplementInput,
+): ImplementationChangeInput[] {
+	if (input.evidence !== undefined && !Array.isArray(input.evidence)) {
+		throw new Error("Implementation evidence must be an array.");
+	}
+	const explicit = (input.evidence || []).map((entry) => {
+		assertEvidenceDoesNotClaimRuntimeAuthority(entry);
+		const { workItemId, assignmentId, ...evidence } = entry;
+		return {
+			...evidence,
+			id: `submitted:${workItemId}`,
+			workUnitId: workItemId,
+			...(assignmentId ? { claimId: assignmentId } : {}),
+		} as ImplementationChangeInput;
+	});
+	const workerAggregation = aggregateImplementationWorkerResults(
+		input.workerResults,
+	);
+	const worker = [
+		...workerAggregation.changeInputs,
+		...(input.workerResults || []).flatMap((result) =>
+			workerAggregation.changeInputs.some(
+				(change) => evidenceWorkItemId(change) === result.workUnitId,
+			)
+				? []
+				: [
+						{
+							id: `worker:${result.workerId}:${result.workUnitId}`,
+							workUnitId: result.workUnitId,
+							workerId: result.workerId,
+							...(result.claimId ? { claimId: result.claimId } : {}),
+						} satisfies ImplementationChangeInput,
+					],
+		),
+	];
+	const explicitWorkItems = new Set(explicit.map(evidenceWorkItemId));
+	return [
+		...explicit,
+		...worker.filter(
+			(entry) => !explicitWorkItems.has(evidenceWorkItemId(entry)),
+		),
+	];
+}
+
+function assertEvidenceDoesNotClaimRuntimeAuthority(
+	entry: ImplementationEvidenceSubmission,
+): void {
+	const forbidden = [
+		"id",
+		"planningRefs",
+		"planning_refs",
+		"workerId",
+		"worker_id",
+		"workUnitId",
+		"work_unit_id",
+		"claimId",
+		"claim_id",
+		"sessionId",
+		"session_id",
+		"sessionFile",
+		"session_file",
+	].filter((key) => key in (entry as unknown as Record<string, unknown>));
+	if (forbidden.length > 0) {
+		throw new Error(
+			`Implementation evidence cannot supply runtime-owned fields: ${forbidden.join(", ")}.`,
+		);
+	}
+}
+
+function evidenceWorkItemId(input: ImplementationChangeInput): string {
+	const value = input.workUnitId || input.work_unit_id;
+	if (!value) throw new Error("Implementation evidence requires workItemId.");
+	return value;
+}
+
+function requiredWorkItem(
+	workState: WorkState,
+	workItemId: string,
+): WorkStateWorkItem {
+	const item = workState.workItems.find(
+		(candidate) => candidate.id === workItemId,
+	);
+	if (!item)
+		throw new Error(`Runtime-selected Work Item ${workItemId} was not found.`);
+	return item;
+}
+
+function requiredOwningChangeId(item: WorkStateWorkItem): string {
+	if (!item.owningChangeId) {
+		throw new Error(`Work Item ${item.id} has no owning Change.`);
+	}
+	return item.owningChangeId;
+}
+
+function selectedAssignments(
+	workState: WorkState,
+	workItemIds: string[],
+): WorkStateAssignment[] {
+	const selected = new Set(workItemIds);
+	return workState.assignments.filter((assignment) =>
+		selected.has(assignment.workItemId),
+	);
+}
+
+function selectedClaimEvents(
+	records: TraceRecord[],
+	workItemIds: string[],
+): TraceEvent[] {
+	const selected = new Set(workItemIds);
+	return records.filter(
+		(record): record is TraceEvent =>
+			record.type === "trace_event" &&
+			record.event.startsWith("runtime.work_unit.") &&
+			selected.has(text(record.data?.workUnitId)),
+	);
+}
+
+function selectedPlanningEvents(
+	records: TraceRecord[],
+	workItemIds: string[],
+): TraceEvent[] {
+	const selected = new Set(workItemIds);
+	return records.flatMap((record) => {
+		if (record.type !== "trace_event" || record.loop !== "planning") return [];
+		const output = objectRecord(record.data?.output);
+		const workItems = objectList(output.workItems).filter((item) =>
+			selected.has(text(item.id)),
+		);
+		if (workItems.length === 0) return [];
+		return [
+			{
+				...record,
+				data: {
+					...record.data,
+					output: { ...output, workItems },
+				},
+			},
+		];
+	});
+}
+
+function runtimeOwnedChangeInput(
+	source: ImplementationChangeInput,
+	item: WorkStateWorkItem,
+	assignments: WorkStateAssignment[],
+	planningEvents: TraceEvent[],
+): ImplementationChangeInput {
+	const assignment = assignmentForEvidence(source, item.id, assignments);
+	const planningEvent = planningEvents.find((event) =>
+		objectList(objectRecord(event.data?.output).workItems).some(
+			(candidate) => text(candidate.id) === item.id,
+		),
+	);
+	if (!planningEvent) {
+		throw new Error(`Planning event for Work Item ${item.id} was not found.`);
+	}
+	const evidence = { ...source } as Record<string, unknown>;
+	for (const key of RUNTIME_OWNED_CHANGE_INPUT_KEYS) delete evidence[key];
+	return {
+		...(evidence as unknown as ImplementationChangeInput),
+		id: `implementation:${item.id}:${assignment?.id || "unassigned"}`,
+		planningRefs: [`trace:${planningEvent.id}#work:${item.id}`],
+		workUnitId: item.id,
+		...(assignment?.id ? { claimId: assignment.id } : {}),
+		...(assignment?.workerId ? { workerId: assignment.workerId } : {}),
+	};
+}
+
+const RUNTIME_OWNED_CHANGE_INPUT_KEYS = [
+	"id",
+	"planningRefs",
+	"planning_refs",
+	"workerId",
+	"worker_id",
+	"workUnitId",
+	"work_unit_id",
+	"claimId",
+	"claim_id",
+	"sessionId",
+	"session_id",
+	"sessionFile",
+	"session_file",
+] as const;
+
+function assignmentForEvidence(
+	source: ImplementationChangeInput,
+	workItemId: string,
+	assignments: WorkStateAssignment[],
+): WorkStateAssignment | undefined {
+	const assignmentId = text(source.claimId || source.claim_id);
+	if (assignmentId) {
+		const exact = assignments.find(
+			(candidate) =>
+				candidate.id === assignmentId && candidate.workItemId === workItemId,
+		);
+		if (!exact) {
+			throw new Error(
+				`Assignment ${assignmentId} does not belong to Work Item ${workItemId}.`,
+			);
+		}
+		return exact;
+	}
+	return assignments
+		.filter((candidate) => candidate.workItemId === workItemId)
+		.sort((left, right) => right.id.localeCompare(left.id))[0];
+}
+
+function nextTraceSequence(records: TraceRecord[]): number {
+	return (
+		Math.max(
+			0,
+			...records.flatMap((record) =>
+				record.type === "trace_event" ? [record.sequence] : [],
+			),
+		) + 1
+	);
+}
+
+function objectRecord(value: unknown): Record<string, unknown> {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function objectList(value: unknown): Record<string, unknown>[] {
+	return Array.isArray(value)
+		? value.filter(
+				(entry): entry is Record<string, unknown> =>
+					Boolean(entry) && typeof entry === "object" && !Array.isArray(entry),
+			)
+		: [];
+}
+
+function text(value: unknown): string {
+	return typeof value === "string" ? value : "";
+}
+
+async function reviewEvidenceReportsForRun(
+	input: PreparedWikiImplementInput,
 	changes: ImplementationChange[],
 	reviewConfig: WikiQualityReviewConfig,
 ): Promise<PreparedWikiImplementReviewEvidence> {
@@ -433,7 +808,7 @@ function wikiImplementReviewEvidenceResult(
 }
 
 function shouldAutoReviewEvidence(
-	input: RunWikiImplementInput,
+	input: PreparedWikiImplementInput,
 	reviewConfig: WikiQualityReviewConfig,
 ): boolean {
 	if (input.autoReviewEvidence !== undefined) return input.autoReviewEvidence;
@@ -441,7 +816,7 @@ function shouldAutoReviewEvidence(
 }
 
 function shouldIncludeCachedReviewEvidence(
-	input: RunWikiImplementInput,
+	input: PreparedWikiImplementInput,
 	reviewConfig: WikiQualityReviewConfig | undefined,
 ): boolean {
 	if (input.includeCachedReviewEvidence !== undefined) {
@@ -523,7 +898,7 @@ function requiredPackMessage(
 }
 
 function implementationIterationInput(
-	input: RunWikiImplementInput,
+	input: PreparedWikiImplementInput,
 	prepared: {
 		changes: ImplementationChange[];
 		existingPaths: string[];
@@ -562,13 +937,9 @@ function implementationIterationInput(
 }
 
 function implementationChangesForRun(
-	input: RunWikiImplementInput,
+	input: PreparedWikiImplementInput,
 ): ImplementationChange[] {
-	if (input.changes) return input.changes;
-	return normalizeImplementationChanges([
-		...(input.changeInputs || []),
-		...aggregateImplementationWorkerResults(input.workerResults).changeInputs,
-	] as ImplementationChangeInput[]);
+	return normalizeImplementationChanges(input.changeInputs);
 }
 
 function changesWithLocalProof(
@@ -576,10 +947,9 @@ function changesWithLocalProof(
 	proof?: ContentProof,
 ): ImplementationChange[] {
 	if (!proof) return changes;
-	return changes.map((change) => {
-		if (change.contentProof || change.workerId || change.claimId) return change;
-		return { ...change, contentProof: proof };
-	});
+	return changes.map((change) =>
+		change.contentProof ? change : { ...change, contentProof: proof },
+	);
 }
 
 function requiredExpectedBytes(value: number | undefined): number {

@@ -11,7 +11,6 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
-import { changeContentDigest } from "../../src/changes/digest.ts";
 import codewikiExtension from "../../src/pi/extension.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
@@ -81,6 +80,11 @@ function changeInput(planningRef) {
 		],
 		...implementationQualityFields(),
 	};
+}
+
+function implementationEvidence() {
+	const { id: _id, planningRefs: _planningRefs, ...evidence } = changeInput("");
+	return { workItemId: "WU-pi-mutation-smoke", ...evidence };
 }
 
 async function writeFixtureFiles(root) {
@@ -156,13 +160,7 @@ try {
 	const archiveTool = toolByName(pi, "wiki_archive");
 	const stateTool = toolByName(pi, "wiki_state");
 	const ctx = { cwd: root, ui: { notify() {} } };
-	const decisionState = await buildProjectWorkState({ repoRoot: root });
 	const decisionInput = {
-		repoRoot: root,
-		changeId: record.change.id,
-		expectedRevision: record.change.revision,
-		expectedChangeDigest: changeContentDigest(record.change),
-		expectedWorkStateDigest: decisionState.snapshotDigest,
 		disposition: "approve",
 		rationale: "Approve exact Pi mutation Change.",
 		authority: {
@@ -180,21 +178,10 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_decide: completed preview run\./,
-	);
+		/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(preview.append, undefined);
 	assert.equal(await readFile(tracePath, "utf8"), initialText);
-	await assert.rejects(
-		() =>
-			decideTool.execute(
-				"tool-call-mutation-unguarded",
-				{ input: { ...decisionInput, mode: "append" } },
-				undefined,
-				undefined,
-				ctx,
-			),
-		/wiki_decide append mode requires expectedBytes >= 0\./,
-	);
 	const decided = assertToolResult(
 		await decideTool.execute(
 			"tool-call-mutation-append-decision",
@@ -202,29 +189,21 @@ try {
 				input: {
 					...decisionInput,
 					mode: "append",
-					expectedBytes: await expectedBytes(tracePath),
 				},
 			},
 			undefined,
 			undefined,
 			ctx,
 		),
-		/wiki_decide: completed append run\./,
-	);
+		/wiki_decide: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(decided.append.records.length, 1);
-	const planningState = await buildProjectWorkState({ repoRoot: root });
 	const planned = assertToolResult(
 		await planTool.execute(
 			"tool-call-mutation-append-plan",
 			{
 				input: {
-					repoRoot: root,
 					mode: "append",
-					expectedWorkStateDigest: planningState.snapshotDigest,
-					expectedChangeIds: [record.change.id],
-					expectedBytesByChangeId: {
-						[record.change.id]: await expectedBytes(tracePath),
-					},
 					actor: "agent:planner",
 					rationale: "Plan exact approved Pi mutation Change.",
 					createdAt: "2026-06-17T00:00:02.000Z",
@@ -262,8 +241,8 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_plan: completed append run\./,
-	);
+		/wiki_plan: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(planned.report.exit.status, "exit");
 	const planningEvents = Object.values(planned.events);
 	const afterPlan = await readTrace(tracePath);
@@ -357,23 +336,17 @@ try {
 			"tool-call-mutation-append-implement",
 			{
 				input: {
-					traceId,
 					mode: "append",
-					expectedBytes: await expectedBytes(tracePath),
-					nextSequence: runtime.batch.nextSequenceByTrace[traceId],
 					createdAt: "2026-06-17T00:00:04.000Z",
-					planningEvents,
-					claimEvents: runtime.append.events,
-					parentId: claimEvent.id,
-					changeInputs: [changeInput(planningRef)],
+					evidence: [implementationEvidence()],
 				},
 			},
 			undefined,
 			undefined,
 			ctx,
 		),
-		/wiki_implement: completed append run\./,
-	);
+		/wiki_implement: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(implemented.loopResult.readyForClosure, true);
 	assert.equal(
 		implemented.aggregateContentProof?.workingTreeDigest?.startsWith("sha256:"),

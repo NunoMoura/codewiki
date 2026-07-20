@@ -52,7 +52,7 @@ src/
   utils/
 ```
 
-The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their supervised event-driven outer loop. Each semantic loop owns typed inputs, typed outputs, quality standards, and exit conditions. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared current project state; `views` render bounded projections such as Change Journey, Sprints, work plan/queue, runtime, blockers, and conflicts. Runtime owns triggers, Assignment claims, workers, integration, budgets, policy, guarded appends, and temporary data. `error-handling` owns shared errors and recovery hints.
+The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their supervised event-driven outer loop. Each semantic loop owns typed inputs, typed outputs, quality standards, and exit conditions. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared current project state; `views` render bounded projections such as Change Journey, Sprints, work plan/queue, runtime, blockers, and conflicts. `runRuntimeSemanticExecutor()` invokes only runtime-selected work, injects canonical entity context and append authority, retries CAS races under budget, stops on route-back, and repeats committed progress to quiescence. Semantic adapters submit judgment or evidence only. Runtime also owns triggers, Assignment claims, workers, integration, policy, guarded appends, and temporary data. `error-handling` owns shared errors and recovery hints.
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<change-trace>/<loop>/`. It remains non-authoritative and is cleaned only after durable trace/KB/source/Git or recovery refs exist.
 
@@ -147,8 +147,9 @@ Smoke command roles:
 - `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki-bootstrap` and
   `/wiki-dashboard --no-open` dashboard command rendering without a model turn.
 - `npm run test:pi-mutation`: isolated Pi extension tool mutation smoke;
-  previews first, rejects unguarded append, appends with expected bytes/sequence,
-  and verifies internal state through `wiki_state`.
+  previews first, submits semantic candidates without repository authority,
+  verifies runtime-owned byte/sequence guards, and reads resulting state through
+  `wiki_state`.
 - `npm run test:project-local-install`: installs the packed package under a
   fresh project's `.pi/npm/node_modules/@nunomoura/codewiki` path and verifies bootstrap,
   config write, and guarded decision append without controlled-test overrides.
@@ -191,7 +192,7 @@ agent-harness isolation.
 
 Repo-local Pi settings intentionally load pi-lens only. Do not install CodeWiki, add a controller pin, or add a repo-local `.pi/extensions/codewiki.ts` shim in this source checkout. Consuming projects use reviewed packed artifacts through project-local Pi installation.
 
-Installed package use should be through Pi-owned `/wiki-*` commands and runtime-routed capabilities, not the transitional CLI. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active; runtime derives WorkState and activates at most one registered Decision, Planning, or Implementation host adapter. Unrelated loop schemas and archive lifecycle stay out of model context. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. Dashboard opens automatically once for an eligible Pi TUI session; `/wiki-dashboard` reopens it, `--no-open` returns URL, and `--stop` stops local host.
+Installed package use should be through Pi-owned `/wiki-*` commands and runtime-routed capabilities, not the transitional CLI. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active; runtime derives WorkState and activates at most one registered Decision, Planning, or Implementation candidate adapter. Adapter input contains semantic judgment or evidence, while runtime invokes the loop and owns exact Change/Sprint/Work Item/Assignment context, freshness, sequence, parents, source ownership, and trace bytes. Unrelated loop schemas and archive lifecycle stay out of model context. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. Dashboard opens automatically once for an eligible Pi TUI session; `/wiki-dashboard` reopens it, `--no-open` returns URL, and `--stop` stops local host.
 
 Change Trace Detail follows one Change journey. Planning-created Sprints and Work Items, Assignment attempts, aggregate Integration and Exit Review, evidence, and outcome disposition remain attached to that identity. Activity Feed explains progress, impact, and next action. Dev Log stays bounded, redacted, operational, and non-authoritative. After installing a different packed runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
 

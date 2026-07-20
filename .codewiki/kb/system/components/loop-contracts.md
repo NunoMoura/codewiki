@@ -57,7 +57,7 @@ Work Item 1 -> * Assignment attempt
 
 A Sprint is a Planning-created execution group and generated view, not a trace. One Change may span several Sprints, and one Sprint may coordinate several Changes. Each Work Item has exactly one owning Change and may contribute explicitly to others.
 
-WorkState is the shared disposable projection over Change Traces, KB, source ownership, source/tests/Git, configuration, and bounded runtime observations. It is not a truth store. Runtime and all loop facades derive bounded inputs from the same WorkState semantics rather than asking callers to marshal repository truth.
+WorkState is the shared disposable projection over Change Traces, KB, source ownership, source/tests/Git, configuration, and bounded runtime observations. It is not a truth store. `RuntimeReactor` selects eligible semantic work and `runRuntimeSemanticExecutor()` invokes exactly that owner. Runtime and all loop facades derive bounded inputs from the same WorkState semantics rather than asking callers to marshal repository truth. Candidate adapters may return semantic judgment or evidence only; runtime owns exact entity identity, freshness, append validation, CAS reruns, budgets, route-back stops, and repeat-to-quiescence.
 
 ## Loop responsibilities
 

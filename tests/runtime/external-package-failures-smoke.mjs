@@ -316,6 +316,12 @@ async function installPackage(root) {
 				pathToFileURL(join(packageRoot, "dist/runtime/host-runner.js")).href
 			)
 		).runRuntimeHostOnce,
+		runRuntimeSemanticExecutor: (
+			await import(
+				pathToFileURL(join(packageRoot, "dist/runtime/semantic-executor.js"))
+					.href
+			)
+		).runRuntimeSemanticExecutor,
 	};
 }
 
@@ -355,7 +361,13 @@ async function newProject(root, installed, name) {
 	const ctx = { cwd: projectRoot, ui: { notify() {} } };
 	await commands.bootstrap.handler("--allow-non-project-install --json", ctx);
 	run("git", ["init", "-q"], { cwd: projectRoot });
-	return { projectRoot, ctx, commands, tools };
+	return {
+		projectRoot,
+		ctx,
+		commands,
+		tools,
+		runRuntimeSemanticExecutor: installed.runRuntimeSemanticExecutor,
+	};
 }
 
 function writeExternalFeature(projectRoot, suffix) {
@@ -434,19 +446,7 @@ async function createReadyTrace(
 		),
 		/wiki_change: completed create operation\./,
 	);
-	const beforeDecision = await project.tools.state.execute(
-		`${traceId}-before-decision`,
-		{},
-		undefined,
-		undefined,
-		project.ctx,
-	);
 	const decisionInput = {
-		changeId,
-		expectedRevision: change.revision,
-		expectedChangeDigest: change.validation.validatedDigest,
-		expectedWorkStateDigest:
-			beforeDecision.details.result.workState.snapshotDigest,
 		disposition: "approve",
 		rationale: "Approve exact failure-handling Change.",
 		authority: {
@@ -456,52 +456,35 @@ async function createReadyTrace(
 		},
 		occurredAt: "2026-06-18T11:00:01.000Z",
 	};
-	assertToolResult(
-		await executeTool(
-			project.tools.decide,
-			{ ...decisionInput, mode: "preview", allowNonProjectInstall: true },
-			project.ctx,
-			`${traceId}-decide-preview`,
-		),
-		/wiki_decide: completed preview run\./,
-	);
-	assertToolResult(
-		await executeTool(
-			project.tools.decide,
-			{
-				...decisionInput,
-				mode: "append",
-				allowNonProjectInstall: true,
-				expectedBytes: await expectedBytes(tracePath),
-			},
-			project.ctx,
-			`${traceId}-decide`,
-		),
-		/wiki_decide: completed append run\./,
-	);
-	const beforePlanning = await project.tools.state.execute(
-		`${traceId}-before-planning`,
-		{},
-		undefined,
-		undefined,
-		project.ctx,
-	);
+	const trigger = {
+		kind: "manual_resume",
+		refs: [changeId, `change:${changeId}`],
+	};
+	await project.runRuntimeSemanticExecutor({
+		repoRoot: project.projectRoot,
+		trigger,
+		mode: "preview",
+		maxIterations: 1,
+		adapters: { decision: () => decisionInput },
+	});
+	await project.runRuntimeSemanticExecutor({
+		repoRoot: project.projectRoot,
+		trigger,
+		mode: "append",
+		maxIterations: 1,
+		adapters: { decision: () => decisionInput },
+	});
 	const sprintId = `SPR-${suffix}`;
 	const pathScope = options.pathScope ?? "src/**";
 	const verification =
 		options.verification ?? "tests/external-feature.test.mjs";
-	const planned = assertToolResult(
-		await executeTool(
-			project.tools.plan,
-			{
-				mode: "append",
-				allowNonProjectInstall: true,
-				expectedWorkStateDigest:
-					beforePlanning.details.result.workState.snapshotDigest,
-				expectedChangeIds: [changeId],
-				expectedBytesByChangeId: {
-					[changeId]: await expectedBytes(tracePath),
-				},
+	const plannedExecution = await project.runRuntimeSemanticExecutor({
+		repoRoot: project.projectRoot,
+		trigger,
+		mode: "append",
+		maxIterations: 1,
+		adapters: {
+			planning: () => ({
 				actor: "agent:external-package-failures-smoke",
 				rationale: "Plan exact approved failure-handling Change.",
 				createdAt: "2026-06-18T11:00:02.000Z",
@@ -533,12 +516,10 @@ async function createReadyTrace(
 						dependsOn: [],
 					},
 				],
-			},
-			project.ctx,
-			`${traceId}-plan`,
-		),
-		/wiki_plan: completed append run\./,
-	);
+			}),
+		},
+	});
+	const planned = plannedExecution.outcomes[0].result;
 	const planningEvents = Object.values(planned.events);
 	return {
 		traceId,
@@ -606,7 +587,6 @@ async function runMissingOutput(installed, root) {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
 		},
-		implementationInputs: [],
 		sessionFactory: noOutputSessionFactory(created),
 		appendReleases: true,
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",
@@ -643,7 +623,6 @@ async function runMalformedOutput(installed, root) {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
 		},
-		implementationInputs: [],
 		sessionFactory: installed.createPiProcessSessionFactory({
 			cwd: project.projectRoot,
 			command: process.execPath,
@@ -702,7 +681,6 @@ async function runBlockedOutput(installed, root) {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
 		},
-		implementationInputs: [],
 		sessionFactory: installed.createPiProcessSessionFactory({
 			cwd: project.projectRoot,
 			command: process.execPath,
@@ -762,15 +740,9 @@ async function runMixedOutputs(installed, root) {
 				[second.traceId]: await expectedBytes(second.tracePath),
 			},
 		},
-		implementationInputs: [
-			{
-				repoRoot: project.projectRoot,
-				traceId: first.traceId,
-				planningEvents: first.planningEvents,
-				nextSequence: 5,
-				createdAt: "2026-06-18T11:00:04.000Z",
-			},
-		],
+		implementation: {
+			createdAt: "2026-06-18T11:00:04.000Z",
+		},
 		sessionFactory: outputFileSessionFactory(project.projectRoot, (input) =>
 			input.workUnitId === first.workUnitId
 				? workerReportForCompletion(
@@ -841,7 +813,6 @@ async function runWorktreePrepareFailure(installed, root) {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
 		},
-		implementationInputs: [],
 		sessionFactory: failingSessionFactory("worker should not start"),
 		worktreeCommandMode: "execute",
 		worktreeRunner(_command, context) {
@@ -882,15 +853,9 @@ async function runWorktreeCleanupFailure(installed, root) {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
 		},
-		implementationInputs: [
-			{
-				repoRoot: project.projectRoot,
-				traceId: ready.traceId,
-				planningEvents: ready.planningEvents,
-				nextSequence: 5,
-				createdAt: "2026-06-18T11:00:04.000Z",
-			},
-		],
+		implementation: {
+			createdAt: "2026-06-18T11:00:04.000Z",
+		},
 		sessionFactory: outputFileSessionFactory(project.projectRoot, () =>
 			workerReportForCompletion(ready.planningRef, "Cleanup worker finished."),
 		),

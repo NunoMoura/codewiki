@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import { describe, it } from "node:test";
 import { runCodewikiCli } from "../../src/cli/index.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
+import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 
 const cliPath = resolve("src/cli/index.ts");
@@ -205,6 +206,10 @@ describe("CLI adapter", () => {
 	it("runs write facade commands from JSON input", async () => {
 		const root = await fixture();
 		try {
+			const implementation = await seedRuntimeImplementation(root, {
+				suffix: "cli-command",
+				workItemId: "WU-cli-command",
+			});
 			const traceHead = createTraceHead({
 				traceId: "TRACE-cli-command",
 				title: "CLI command fixture",
@@ -213,8 +218,8 @@ describe("CLI adapter", () => {
 			const commandInputs = {
 				implement: {
 					repoRoot: root,
-					traceId: "TRACE-cli-command",
-					planningEvents: [],
+					expectedWorkStateDigest: implementation.expectedWorkStateDigest,
+					evidence: [{ workItemId: "WU-cli-command" }],
 				},
 				runtime: {
 					queue: {

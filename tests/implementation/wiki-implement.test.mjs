@@ -5,38 +5,16 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
 import { collectPiWorkerResults } from "../../src/pi/worker-results.ts";
-import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
-import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
-import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/work-unit-claims.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
+import { buildProjectWorkState } from "../../src/work-state/project.ts";
+import { seedRuntimeImplementation as seedRuntimeImplementationProject } from "../helpers/runtime-implementation.mjs";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
-
-function approvedDecisionRef(events) {
-	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.changeRecord?.change;
-	assert.ok(iteration);
-	assert.ok(change);
-	return `change:${change.id}`;
-}
-
-function planningWorkRef(events, workUnitId = "WU-implement") {
-	const iteration = events.find((event) => event.loop === "planning");
-	const item = iteration?.data?.output?.workItems?.find(
-		(candidate) => candidate.id === workUnitId,
-	);
-	assert.ok(iteration);
-	assert.ok(item);
-	return `trace:${iteration.id}#work:${item.id}`;
-}
 
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-implement-"));
@@ -54,48 +32,9 @@ async function fixture() {
 	return root;
 }
 
-function planningEvents(traceId) {
-	const changeInput = canonicalChangeInput({
-		id: `${traceId}-DT`,
-		createdAt: "2026-06-11T00:00:01.000Z",
-		updatedAt: "2026-06-11T00:00:01.000Z",
-		changes: [
-			{
-				id: "CHG-implement",
-				currentState: "Implementation callers wire proof manually.",
-				desiredState: "wiki_implement prepares proof and appends safely.",
-				rationale: "Avoid partial or weak implementation trace writes.",
-				...decisionQualityFields(),
-				approval: "approved",
-				sourceRefs: ["kb:system/components/implementation-loop.md"],
-			},
-		],
-	});
-	const decision = runDecisionIteration({
-		traceId,
-		changeInput,
-		createdAt: "2026-06-11T00:00:01.000Z",
-	});
-	const changeRef = approvedDecisionRef(decision.traceEvents);
-	return runPlanningIteration({
-		traceId,
-		decisionEvents: decision.traceEvents,
-		startSequence: 5,
-		createdAt: "2026-06-11T00:00:02.000Z",
-		workItemInputs: [
-			{
-				id: "WU-implement",
-				title: "Run wiki_implement",
-				changeRefs: [changeRef],
-				outcome: "Implementation facade runs and appends safely.",
-				...planningQualityFields(),
-				acceptance: ["wiki_implement appends implementation iteration."],
-				componentRefs: ["api"],
-				pathScopes: ["src/feature.ts"],
-				verification: ["tests/feature.test.mjs"],
-			},
-		],
-	}).traceEvents;
+async function seedRuntimeImplementation(root, suffix) {
+	const seeded = await seedRuntimeImplementationProject(root, { suffix });
+	return { ...seeded, events: seeded.planningEvents };
 }
 
 function changeInput(planningRef) {
@@ -110,13 +49,13 @@ function changeInput(planningRef) {
 				command: "node --test tests/feature.test.mjs",
 				status: "pass",
 				phase: "green",
-				criterionId: "AC-001",
+				criterionId: "AC-WU-implement-1",
 				outputRef: "tests/feature.test.mjs",
 			},
 		],
 		acceptanceEvidenceItems: [
 			{
-				criterionId: "AC-001",
+				criterionId: "AC-WU-implement-1",
 				summary: "Feature test passes.",
 				evidenceRefs: ["tests/feature.test.mjs"],
 			},
@@ -125,34 +64,39 @@ function changeInput(planningRef) {
 	};
 }
 
+function evidenceInput(overrides = {}) {
+	const { id: _id, planningRefs: _planningRefs, ...evidence } = changeInput("");
+	return { workItemId: "WU-implement", ...evidence, ...overrides };
+}
+
 describe("wiki_implement core facade", () => {
 	it("rejects malformed implementation facade input", async () => {
 		await assert.rejects(
 			() =>
 				runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad", work: [] }),
-			/wiki_implement received unsupported input field work/,
+			/wiki_implement received unsupported input field traceId/,
 		);
 		await assert.rejects(
-			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad" }),
-			/requires runtime-selected planningEvents/,
+			() => runWikiImplement({ repoRoot: "/tmp" }),
+			/requires expectedWorkStateDigest/,
 		);
 	});
 
 	it("routes implementation uncertainty back to decision", async () => {
 		const root = await fixture();
 		try {
-			const traceId = "TRACE-wiki-implement-route-back";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
-			const change = changeInput(planningRef);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-route-back",
+			);
+			const { expectedWorkStateDigest } = prepared;
+			const change = evidenceInput();
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [
+				evidence: [
 					{
 						...change,
 						implementationAssessment: {
@@ -184,17 +128,17 @@ describe("wiki_implement core facade", () => {
 	it("previews implementation with snapshot and automatic content proof", async () => {
 		const root = await fixture();
 		try {
-			const traceId = "TRACE-wiki-implement-preview";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-preview",
+			);
+			const { expectedWorkStateDigest } = prepared;
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [changeInput(planningRef)],
+				evidence: [evidenceInput()],
 			});
 
 			assert.equal(result.mode, "preview");
@@ -232,17 +176,17 @@ describe("wiki_implement core facade", () => {
 					},
 				}),
 			);
-			const traceId = "TRACE-wiki-implement-auto-review";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-auto-review",
+			);
+			const { expectedWorkStateDigest } = prepared;
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [changeInput(planningRef)],
+				evidence: [evidenceInput()],
 			});
 
 			assert.equal(result.iterationEvent.event, "evidence_rejected");
@@ -307,17 +251,17 @@ describe("wiki_implement core facade", () => {
 					},
 				}),
 			);
-			const traceId = "TRACE-wiki-implement-auto-review-disabled";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-auto-review-disabled",
+			);
+			const { expectedWorkStateDigest } = prepared;
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [changeInput(planningRef)],
+				evidence: [evidenceInput()],
 			});
 
 			assert.equal(result.iterationEvent.event, "evidence_accepted");
@@ -350,17 +294,17 @@ describe("wiki_implement core facade", () => {
 				}),
 			);
 			await writeFile(join(root, "package.json"), '{"name":"fixture"}\n');
-			const traceId = "TRACE-wiki-implement-required-review-pack";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-required-review-pack",
+			);
+			const { expectedWorkStateDigest } = prepared;
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [changeInput(planningRef)],
+				evidence: [evidenceInput()],
 			});
 
 			assert.equal(result.iterationEvent.event, "evidence_rejected");
@@ -385,14 +329,23 @@ describe("wiki_implement core facade", () => {
 	it("previews implementation from normalized Pi worker completion", async () => {
 		const root = await fixture();
 		try {
-			const traceId = "TRACE-wiki-implement-worker";
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-worker",
+			);
+			const {
+				traceId,
+				planningRef,
+				expectedBytes,
+				nextSequence,
+				parentId,
+				events,
+			} = prepared;
 			const claim = createRuntimeClaimEvent({
 				traceId,
-				id: `${traceId}:runtime:claim:WU-implement:8`,
-				parentId: planningRef,
-				sequence: 8,
+				id: `${traceId}:runtime:claim:WU-implement:${nextSequence}`,
+				parentId,
+				sequence: nextSequence,
 				createdAt: "2026-06-11T00:00:02.500Z",
 				claimId: "claim-WU-implement-001",
 				workerId: "pi-worker-001",
@@ -400,6 +353,10 @@ describe("wiki_implement core facade", () => {
 				planningRefs: [planningRef],
 				pathScopes: ["src/feature.ts"],
 			});
+			await appendTraceRecord(root, claim, expectedBytes);
+			const expectedWorkStateDigest = (
+				await buildProjectWorkState({ repoRoot: root })
+			).snapshotDigest;
 			const workerResults = collectPiWorkerResults([
 				{
 					workerStart: {
@@ -424,12 +381,9 @@ describe("wiki_implement core facade", () => {
 			]);
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "preview",
-				traceId,
-				planningEvents: events,
-				claimEvents: [claim],
 				workerResults,
-				nextSequence: 9,
 				createdAt: "2026-06-11T00:00:03.000Z",
 			});
 
@@ -467,27 +421,20 @@ describe("wiki_implement core facade", () => {
 		}
 	});
 
-	it("appends implementation iteration atomically in append mode", async () => {
+	it("appends implementation iteration with runtime-owned CAS authority", async () => {
 		const root = await fixture();
 		try {
-			const traceId = "TRACE-wiki-implement-append";
-			const head = createTraceHead({
-				traceId,
-				title: "Append wiki_implement result",
-				createdAt: "2026-06-11T00:00:00.000Z",
-			});
-			const first = await appendTraceRecord(root, head, 0);
-			const events = planningEvents(traceId);
-			const planningRef = planningWorkRef(events);
+			const prepared = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-append",
+			);
+			const { traceId, expectedWorkStateDigest } = prepared;
 			const result = await runWikiImplement({
 				repoRoot: root,
+				expectedWorkStateDigest,
 				mode: "append",
-				expectedBytes: first.nextBytes,
-				traceId,
-				planningEvents: events,
-				nextSequence: 1,
 				createdAt: "2026-06-11T00:00:03.000Z",
-				changeInputs: [changeInput(planningRef)],
+				evidence: [evidenceInput()],
 			});
 			const readBack = await readTrace(join(root, traceFilePath(traceId)));
 			const state = replayTrace(readBack.records);
@@ -502,12 +449,11 @@ describe("wiki_implement core facade", () => {
 				() =>
 					runWikiImplement({
 						repoRoot: root,
+						expectedWorkStateDigest,
 						mode: "append",
-						traceId,
-						planningEvents: events,
-						changeInputs: [changeInput(planningRef)],
+						evidence: [evidenceInput()],
 					}),
-				/expectedBytes/,
+				/Implementation WorkState changed/,
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });

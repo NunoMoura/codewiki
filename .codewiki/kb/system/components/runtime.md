@@ -15,6 +15,7 @@ codewiki_source_patterns:
   - src/runtime/**
 codewiki_test_patterns:
   - tests/runtime/**
+  - tests/helpers/runtime-implementation.mjs
 codewiki_trace_events:
   - runtime.work_item.claimed
   - runtime.work_item.claim.released
@@ -40,6 +41,7 @@ codewiki_source_map:
       - src/runtime/**
     test_patterns:
       - tests/runtime/**
+      - tests/helpers/runtime-implementation.mjs
     trace_events:
       - runtime.work_item.claimed
       - runtime.work_item.claim.released
@@ -155,7 +157,9 @@ no eligible transition -> quiescent
 
 Selection is deterministic under the same WorkState, trigger, and policy. Runtime first prefers eligible Changes named by the triggering refs, then older unchanged work, then stable Change identity. This avoids fixed loop-priority starvation while keeping event-local reactions responsive. Planning expands from one selected Change through explicit Change links and overlapping target refs under a bounded horizon. Model judgment may rank semantically valid candidates only where policy permits; it cannot repair missing authority.
 
-`RuntimeReactor` owns this selection and reuses one incremental `WorkStateSession`. Agents and adapters do not choose which semantic loop runs. A semantic host receives only the runtime-selected Change or Planning horizon identifiers, exact revisions and digests, WorkState digest, and scoped evidence needed for that iteration.
+`RuntimeReactor` owns this selection and reuses one incremental `WorkStateSession`. Agents and adapters do not choose which semantic loop runs. `runRuntimeSemanticExecutor()` invokes only the selected adapter, injects exact Change, Planning horizon, Sprint, Work Item, Assignment, WorkState, and append authority, then repeats after committed truth changes until quiescence or a bounded stop. Semantic adapters return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, or source ownership as replacement facts.
+
+Each execution has explicit iteration, wall-clock, and CAS-retry budgets. A compare-and-swap race invalidates the incremental observation and reruns the same runtime-selected semantic work against fresh entity state. Preview performs one bounded iteration without repetition. A route-back result is appended as semantic evidence and stops forward repetition so the target owner or user can respond.
 
 ## Global Planning
 

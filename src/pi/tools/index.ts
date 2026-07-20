@@ -2,20 +2,21 @@ import { Type } from "typebox";
 import {
 	runWikiArchive,
 	runWikiConfig,
-	runWikiDecide,
-	runWikiImplement,
 	runWikiChange,
-	runWikiPlan,
 	type RunWikiArchiveInput,
 	type RunWikiConfigInput,
-	type RunWikiDecideInput,
-	type RunWikiImplementInput,
 	type RunWikiChangeInput,
 	type RunWikiChangeResult,
-	type RunWikiPlanInput,
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
 import { runtimeReactorFor } from "../../runtime/project-reactors.ts";
+import {
+	runRuntimeSemanticExecutor,
+	type RuntimeDecisionCandidate,
+	type RuntimeImplementationCandidate,
+	type RuntimePlanningCandidate,
+	type RuntimeSemanticMode,
+} from "../../runtime/semantic-executor.ts";
 import type { RuntimeReaction } from "../../runtime/reactor.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
@@ -107,26 +108,20 @@ function codewikiTools(): CodewikiToolDefinition[] {
 		wikiStateTool(),
 		wikiConfigTool(),
 		wikiChangeTool(),
-		facadeTool<RunWikiDecideInput>(
+		runtimeSemanticTool(
+			"decision",
 			"wiki_decide",
-			"CodeWiki Decide",
-			"Preview or append a Decision from exact validated Change selections and a user-confirmed Sprint boundary.",
-			"Use wiki_decide only after the user validates exact Change revisions and confirms the accountable goal, Product/System Knowledge topics or no-impact rationale, dependencies, rollback boundary, and coherence assessment; never author mutable Change input inside the Decision tool.",
-			runWikiDecide,
+			"Submit Decision judgment for the exact Change selected by runtime; runtime injects identity, revision, digest, WorkState, and append authority.",
 		),
-		facadeTool<RunWikiPlanInput>(
+		runtimeSemanticTool(
+			"planning",
 			"wiki_plan",
-			"CodeWiki Plan",
-			"Preview or append a CodeWiki planning iteration using the core facade.",
-			"Run the CodeWiki planning loop facade for executable work items.",
-			runWikiPlan,
+			"Submit a Planning candidate for the approved Change horizon selected by runtime; runtime injects participants, freshness, and multi-trace append authority.",
 		),
-		facadeTool<RunWikiImplementInput>(
+		runtimeSemanticTool(
+			"implementation",
 			"wiki_implement",
-			"CodeWiki Implement",
-			"Preview or append a CodeWiki implementation iteration using the core facade.",
-			"Run the CodeWiki implementation loop facade for source evidence and planned or direct-decision verification coverage.",
-			runWikiImplement,
+			"Submit evidence for runtime-selected Work Items; runtime derives Sprint, owning Change, Planning, Assignment, source-map, sequence, and append authority.",
 		),
 		facadeTool<RunWikiArchiveInput>(
 			"wiki_archive",
@@ -429,6 +424,85 @@ function wikiChangeModelPayload(result: RunWikiChangeResult): unknown {
 	};
 }
 
+type RuntimeSemanticToolLoop = "decision" | "planning" | "implementation";
+
+type RuntimeSemanticToolCandidate =
+	| RuntimeDecisionCandidate
+	| RuntimePlanningCandidate
+	| RuntimeImplementationCandidate;
+
+function runtimeSemanticTool(
+	loop: RuntimeSemanticToolLoop,
+	name: string,
+	description: string,
+): CodewikiToolDefinition {
+	return {
+		name,
+		label: `CodeWiki ${loop[0].toUpperCase()}${loop.slice(1)}`,
+		description,
+		promptSnippet: `Submit only ${loop} semantic judgment or evidence. Runtime owns loop selection and repository authority.`,
+		promptGuidelines: [
+			`Use ${name} only when runtimeReaction selects ${loop}.`,
+			"Do not copy trace ids, revisions, digests, byte offsets, Planning events, Assignments, or source ownership into semantic input.",
+		],
+		executionMode: "sequential",
+		parameters: inputSchema(description),
+		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+			const args = paramsObject(name, params, ["input"]);
+			const submitted = requiredInput<Record<string, unknown>>(
+				name,
+				args.input,
+			);
+			const root = await requireCodewikiRoot(ctx);
+			const mode = semanticToolMode(submitted.mode);
+			const prepared = stripNonProjectInstallOverride(submitted);
+			if (mode === "append") {
+				assertProjectLocalMutationAllowed({
+					toolName: name,
+					ctx,
+					projectRoot: root,
+					moduleUrl: import.meta.url,
+					input: submitted,
+				});
+			}
+			const { mode: _mode, ...candidate } = prepared;
+			const semanticCandidate = candidate as RuntimeSemanticToolCandidate;
+			const adapters =
+				loop === "decision"
+					? {
+							decision: () => semanticCandidate as RuntimeDecisionCandidate,
+						}
+					: loop === "planning"
+						? {
+								planning: () => semanticCandidate as RuntimePlanningCandidate,
+							}
+						: {
+								implementation: () =>
+									semanticCandidate as RuntimeImplementationCandidate,
+							};
+			const result = await runRuntimeSemanticExecutor({
+				repoRoot: root,
+				trigger: { kind: "manual_resume" },
+				mode,
+				maxIterations: 1,
+				reactor: runtimeReactorFor(root),
+				adapters,
+			});
+			return toolResult(
+				`${name}: runtime ${result.status} after ${result.iterations} iteration(s).`,
+				result,
+				mode === "append" ? undefined : notifyInstallWarning(ctx, root),
+			);
+		},
+	};
+}
+
+function semanticToolMode(value: unknown): RuntimeSemanticMode {
+	if (value === undefined) return "preview";
+	if (value === "preview" || value === "append") return value;
+	throw new Error("Semantic tool input.mode must be preview or append.");
+}
+
 function facadeTool<T extends object>(
 	name: string,
 	label: string,
@@ -598,31 +672,7 @@ function assertAppendContract(
 			`${toolName} append mode requires a discovered CodeWiki project root.`,
 		);
 	}
-	if (toolName === "wiki_plan") {
-		assertExpectedBytesByChangeId(input.expectedBytesByChangeId);
-		return;
-	}
 	assertIntegerField(toolName, input, "expectedBytes", 0);
-	if (toolName === "wiki_implement") {
-		assertIntegerField(toolName, input, "nextSequence", 1);
-	}
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function assertExpectedBytesByChangeId(value: unknown): void {
-	if (!isRecord(value) || Object.keys(value).length === 0) {
-		throw new Error("wiki_plan append mode requires expectedBytesByChangeId.");
-	}
-	for (const bytes of Object.values(value)) {
-		if (!Number.isSafeInteger(bytes) || (bytes as number) < 0) {
-			throw new Error(
-				"wiki_plan append mode requires non-negative expected bytes for every Change.",
-			);
-		}
-	}
 }
 
 function assertIntegerField(

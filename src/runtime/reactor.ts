@@ -203,7 +203,7 @@ function implementationSprint(
 		workState.workItems.map((item) => [item.id, item]),
 	);
 	return workState.sprints
-		.filter((sprint) => sprint.complete && sprint.blockers.length === 0)
+		.filter((sprint) => !sprint.complete && sprint.blockers.length === 0)
 		.filter((sprint) => sprint.participatingChangeIds.includes(changeId))
 		.filter((sprint) =>
 			sprint.workItemIds.some((id) => {

@@ -2,7 +2,14 @@ export * from "./state.ts";
 export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";
 export * from "./wiki-decide.ts";
-export * from "./wiki-implement.ts";
+export { runWikiImplement } from "./wiki-implement.ts";
+export type {
+	ImplementationEvidenceSubmission,
+	RunWikiImplementInput,
+	RunWikiImplementResult,
+	WikiImplementMode,
+	WikiImplementReviewEvidenceResult,
+} from "./wiki-implement.ts";
 export { runWikiChange } from "./wiki-change.ts";
 export type {
 	RunWikiChangeInput,
@@ -11,7 +18,13 @@ export type {
 	WikiChangeOperation,
 } from "./wiki-change.ts";
 export * from "./wiki-okf.ts";
-export * from "./wiki-plan.ts";
+export { runWikiPlan } from "./wiki-plan.ts";
+export type {
+	PlanningEpochReport,
+	RunWikiPlanInput,
+	RunWikiPlanResult,
+	WikiPlanMode,
+} from "./wiki-plan.ts";
 export * from "./wiki-runtime.ts";
 export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
 export type { SourceLayout } from "../index.ts";
@@ -74,6 +87,7 @@ export type {
 } from "../git/worktrees.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
+export * from "../runtime/semantic-executor.ts";
 export type {
 	CreateRuntimeHandoffManifestOptions,
 	RuntimeHandoffAction,

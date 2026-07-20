@@ -156,7 +156,7 @@ describe("runtime reactor", () => {
 		);
 	});
 
-	it("selects one complete Sprint with ready implementation work", () => {
+	it("selects one incomplete Sprint with ready implementation work", () => {
 		const reaction = selectRuntimeReaction(
 			state({
 				changes: [change("CHG-implementation", "implementation")],
@@ -170,7 +170,7 @@ describe("runtime reactor", () => {
 						rollbackBoundary: "Revert Sprint work as one boundary.",
 						dependencyIds: [],
 						integrationRefs: [],
-						complete: true,
+						complete: false,
 						blockers: [],
 					},
 				],

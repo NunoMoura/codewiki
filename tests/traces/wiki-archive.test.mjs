@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiArchive } from "../../src/api/wiki-archive.ts";
-import { runWikiImplement } from "../../src/api/wiki-implement.ts";
+import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { runDecisionIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
 import { runPlanningIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
 import { appendTraceRecords } from "../../src/traces/append.ts";
@@ -80,12 +80,15 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const planningEvent = planning.loopResult.traceEvents[0];
 	const workItem = planningEvent.data.output.workItems[0];
 	const planningRef = `trace:${planningEvent.id}#work:${workItem.id}`;
-	const implementation = await runWikiImplement({
-		repoRoot: ".",
+	const implementation = runImplementationIteration({
 		traceId,
 		planningEvents: planning.loopResult.traceEvents,
-		nextSequence: 3,
+		startSequence: 3,
 		createdAt: "2026-06-11T00:00:03.000Z",
+		existingPaths: [
+			"src/traces/retention.ts",
+			"tests/traces/wiki-archive.test.mjs",
+		],
 		changeInputs: [
 			{
 				id: "CHG-archive",
@@ -120,7 +123,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 		head,
 		...decision.loopResult.traceRecords,
 		...planning.loopResult.traceRecords,
-		...implementation.loopResult.traceRecords,
+		...implementation.traceRecords,
 	];
 }
 

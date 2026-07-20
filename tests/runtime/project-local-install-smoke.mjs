@@ -208,19 +208,7 @@ try {
 		"traces",
 		`${traceId}.jsonl`,
 	);
-	const beforeDecision = await stateTool.execute(
-		"pre-decision-state",
-		{},
-		undefined,
-		undefined,
-		ctx,
-	);
 	const decisionInput = {
-		changeId: change.id,
-		expectedRevision: change.revision,
-		expectedChangeDigest: change.validation.validatedDigest,
-		expectedWorkStateDigest:
-			beforeDecision.details.result.workState.snapshotDigest,
 		disposition: "approve",
 		rationale: "Approve exact project-local install Change.",
 		authority: {
@@ -240,8 +228,8 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_decide: completed preview run\./,
-	);
+		/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	const decided = assertToolResult(
 		await decideTool.execute(
 			"decide-append",
@@ -249,15 +237,14 @@ try {
 				input: {
 					...decisionInput,
 					mode: "append",
-					expectedBytes: (await stat(tracePath)).size,
 				},
 			},
 			undefined,
 			undefined,
 			ctx,
 		),
-		/wiki_decide: completed append run\./,
-	);
+		/wiki_decide: runtime budget_exhausted after 1 iteration\(s\)\./,
+	).outcomes[0].result;
 	assert.equal(preview.report.exit.status, "exit");
 	assert.equal(decided.report.exit.status, "exit");
 	assert.equal(decided.event.data.exit.status, "exit");

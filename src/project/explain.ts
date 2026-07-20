@@ -68,7 +68,7 @@ interface BuildProjectExplainInput {
 	target?: string;
 }
 
-async function readProjectSourceMap(
+export async function readProjectSourceMap(
 	repoRoot: string,
 ): Promise<SourceMapContract | undefined> {
 	const bundleFiles = await readKnowledgeBundleFiles(repoRoot);
@@ -77,7 +77,7 @@ async function readProjectSourceMap(
 	return ownership.components.length > 0 ? ownership : undefined;
 }
 
-async function readKnowledgeBundleFiles(
+export async function readKnowledgeBundleFiles(
 	repoRoot: string,
 ): Promise<OkfBundleFile[]> {
 	const kbRoot = join(repoRoot, ".codewiki", "kb");

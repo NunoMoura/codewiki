@@ -86,7 +86,7 @@ describe("fresh scaffold", () => {
 		);
 	});
 
-	it("keeps the package API surface facade-only", () => {
+	it("keeps the package API surface facade and runtime-only", () => {
 		assert.deepEqual(Object.keys(publicApi).sort(), [
 			"CODEWIKI_EXTENSION_AVAILABLE",
 			"DEFAULT_WIKI_CONFIG",
@@ -94,6 +94,7 @@ describe("fresh scaffold", () => {
 			"buildWikiState",
 			"buildWorkState",
 			"resolveWikiConfig",
+			"runRuntimeSemanticExecutor",
 			"runWikiArchive",
 			"runWikiChange",
 			"runWikiConfig",

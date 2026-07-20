@@ -35,10 +35,8 @@ import {
 } from "../../src/pi/tui/index.ts";
 import { shouldOpenAutomaticDashboard } from "../../src/pi/tui/footer.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
-import { changeContentDigest } from "../../src/changes/digest.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
-import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 
 function toolByName(pi, name) {
@@ -462,42 +460,36 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("requires expected byte checks for append-capable Pi tools", async () => {
+	it("keeps append CAS authority inside runtime-owned semantic tools", async () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
 			codewikiExtension(pi.api);
-
-			await assert.rejects(
-				() =>
-					toolByName(pi, "wiki_decide").execute(
-						"tool-call-decide-append",
-						{
-							input: {
-								traceId: "TRACE-pi",
-								mode: "append",
-								nextSequence: 1,
-							},
+			await seedChangeAcceptance(root, { id: "CHG-pi-runtime-append" });
+			const result = await toolByName(pi, "wiki_decide").execute(
+				"tool-call-decide-append",
+				{
+					input: {
+						mode: "append",
+						disposition: "approve",
+						rationale: "Approve runtime-selected exact Change.",
+						authority: {
+							kind: "user",
+							actor: "user",
+							ref: "approval:user:runtime-append",
 						},
-						undefined,
-						undefined,
-						{ cwd: root },
-					),
-				/wiki_decide append mode requires expectedBytes >= 0\./,
+						occurredAt: "2026-06-17T00:00:01.000Z",
+					},
+				},
+				undefined,
+				undefined,
+				{ cwd: root },
 			);
-			await assert.rejects(
-				() =>
-					toolByName(pi, "wiki_plan").execute(
-						"tool-call-plan-append",
-						{
-							input: { mode: "append" },
-						},
-						undefined,
-						undefined,
-						{ cwd: root },
-					),
-				/wiki_plan append mode requires expectedBytesByChangeId\./,
+			const execution = assertToolResult(
+				result,
+				/wiki_decide: runtime budget_exhausted after 1 iteration/,
 			);
+			assert.equal(execution.outcomes[0].result.append.records.length, 1);
 			await assert.rejects(
 				() =>
 					toolByName(pi, "wiki_archive").execute(
@@ -528,18 +520,11 @@ describe("Pi extension adapter", () => {
 				traceFilePath(changeTraceId(record.change.id)),
 			);
 			const before = await readFile(changeTracePath, "utf8");
-			const workState = await buildProjectWorkState({ repoRoot: root });
 			const decidedResult = await toolByName(pi, "wiki_decide").execute(
 				"tool-call-decide-preview",
 				{
 					input: {
-						repoRoot: root,
 						mode: "preview",
-						changeId: record.change.id,
-						expectedRevision: record.change.revision,
-						expectedChangeDigest: changeContentDigest(record.change),
-						expectedWorkStateDigest: workState.snapshotDigest,
-						expectedBytes: (await stat(changeTracePath)).size,
 						disposition: "approve",
 						rationale: "Approve exact Pi preview Change.",
 						authority: {
@@ -554,10 +539,11 @@ describe("Pi extension adapter", () => {
 				undefined,
 				ctx,
 			);
-			const decided = assertToolResult(
+			const execution = assertToolResult(
 				decidedResult,
-				/wiki_decide: completed preview run\./,
+				/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
 			);
+			const decided = execution.outcomes[0].result;
 			assert.equal(decided.report.exit.status, "exit");
 			assert.equal(decided.report.approval.changeId, undefined);
 			assert.equal(decided.event.event, "change_approved");

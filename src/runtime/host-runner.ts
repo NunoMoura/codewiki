@@ -34,6 +34,7 @@ import {
 } from "../pi/worker-results.ts";
 import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 import { resolveWikiConfig } from "../project/config.ts";
+import { buildProjectWorkState } from "../work-state/project.ts";
 import type { TraceEvent } from "../traces/types.ts";
 import {
 	resolveExecutionPolicy,
@@ -82,7 +83,7 @@ type RuntimeHostCompletionCollector = (input: {
 
 type RuntimeHostImplementationInput = Omit<
 	RunWikiImplementInput,
-	"mode" | "workerResults" | "claimEvents"
+	"repoRoot" | "expectedWorkStateDigest" | "mode" | "workerResults"
 >;
 
 type RuntimeHostWorktreeCommandMode = "skip" | "dry-run" | "execute";
@@ -127,7 +128,7 @@ type WorkerExecutionContextOverrides = Partial<
 
 interface RunRuntimeHostOnceInput {
 	runtime: RunWikiRuntimeInput;
-	implementationInputs: RuntimeHostImplementationInput[];
+	implementation?: RuntimeHostImplementationInput;
 	sessionFactory: PiWorkerSessionFactory;
 	completionCollector?: RuntimeHostCompletionCollector;
 	gitStatus?: GitStatusSnapshotInput | GitStatusSnapshot | false;
@@ -140,7 +141,6 @@ interface RunRuntimeHostOnceInput {
 	worktreeCleanupMode?: RuntimeHostWorktreeCommandMode;
 	appendImplementation?: boolean;
 	appendReleases?: boolean;
-	implementationExpectedBytesByTrace?: Record<string, number>;
 	releaseExpectedBytesByTrace?: Record<string, number>;
 	releaseCreatedAt?: string;
 	releaseIdPrefix?: string;
@@ -862,84 +862,96 @@ async function resolveGitStatus(
 
 async function implementationPreviewsForHostOnce(
 	input: RunRuntimeHostOnceInput,
-	claimEvents: TraceEvent[],
+	_claimEvents: TraceEvent[],
 	completions: PiWorkerCompletionInput[],
 	workerResults: ImplementationWorkerResultInput[],
 ): Promise<RunWikiImplementResult[]> {
-	return await Promise.all(
-		input.implementationInputs.map((implementationInput) =>
-			runWikiImplement({
-				...implementationInput,
-				mode: "preview",
-				claimEvents: claimEvents.filter(
-					(event) => event.traceId === implementationInput.traceId,
-				),
-				workerResults: workerResultsForTrace(
-					implementationInput.traceId,
-					completions,
-					workerResults,
-				),
-			}),
-		),
+	return await runHostImplementationReports(
+		input,
+		"preview",
+		completions,
+		workerResults,
 	);
 }
 
 async function implementationAppendsForHostOnce(
 	input: RunRuntimeHostOnceInput,
-	runtime: RunWikiRuntimeResult,
-	claimEvents: TraceEvent[],
+	_runtime: RunWikiRuntimeResult,
+	_claimEvents: TraceEvent[],
 	completions: PiWorkerCompletionInput[],
 	workerResults: ImplementationWorkerResultInput[],
 ): Promise<RunWikiImplementResult[]> {
-	return await Promise.all(
-		input.implementationInputs.map((implementationInput) => {
-			if (!Number.isInteger(implementationInput.nextSequence)) {
-				throw new Error(
-					`implementation append requires nextSequence for ${implementationInput.traceId}.`,
-				);
-			}
-			return runWikiImplement({
-				...implementationInput,
-				mode: "append",
-				expectedBytes: implementationExpectedBytes(
-					input,
-					runtime,
-					implementationInput.traceId,
-				),
-				claimEvents: claimEvents.filter(
-					(event) => event.traceId === implementationInput.traceId,
-				),
-				workerResults: workerResultsForTrace(
-					implementationInput.traceId,
-					completions,
-					workerResults,
-				),
-			});
-		}),
+	return await runHostImplementationReports(
+		input,
+		"append",
+		completions,
+		workerResults,
 	);
 }
 
-function implementationExpectedBytes(
+async function runHostImplementationReports(
 	input: RunRuntimeHostOnceInput,
-	runtime: RunWikiRuntimeResult,
-	traceId: string,
-): number {
-	const explicit = input.implementationExpectedBytesByTrace?.[traceId];
-	if (isNonNegativeInteger(explicit)) return explicit;
-	const inferred = runtime.append?.nextBytesByTrace[traceId];
-	if (isNonNegativeInteger(inferred)) return inferred;
-	throw new Error(
-		`implementation append requires expected bytes for ${traceId}.`,
-	);
+	mode: "preview" | "append",
+	_completions: PiWorkerCompletionInput[],
+	workerResults: ImplementationWorkerResultInput[],
+): Promise<RunWikiImplementResult[]> {
+	if (!input.implementation) return [];
+	const repoRoot = requiredRepoRoot(input.runtime.repoRoot, "implementation");
+	const initialWorkState = await buildProjectWorkState({ repoRoot });
+	const resultsByChange = new Map<string, ImplementationWorkerResultInput[]>();
+	for (const result of workerResults.filter(hasImplementationEvidence)) {
+		const item = initialWorkState.workItems.find(
+			(candidate) => candidate.id === result.workUnitId,
+		);
+		if (!item?.owningChangeId) continue;
+		resultsByChange.set(item.owningChangeId, [
+			...(resultsByChange.get(item.owningChangeId) || []),
+			result,
+		]);
+	}
+	const explicitEvidence = input.implementation.evidence || [];
+	const evidenceByChange = new Map<
+		string,
+		typeof input.implementation.evidence
+	>();
+	for (const evidence of explicitEvidence) {
+		const item = initialWorkState.workItems.find(
+			(candidate) => candidate.id === evidence.workItemId,
+		);
+		if (!item?.owningChangeId) continue;
+		evidenceByChange.set(item.owningChangeId, [
+			...(evidenceByChange.get(item.owningChangeId) || []),
+			evidence,
+		]);
+	}
+	const changeIds = [
+		...new Set([...resultsByChange.keys(), ...evidenceByChange.keys()]),
+	];
+	const reports: RunWikiImplementResult[] = [];
+	for (const changeId of changeIds) {
+		const workState = await buildProjectWorkState({ repoRoot });
+		reports.push(
+			await runWikiImplement({
+				...input.implementation,
+				evidence: evidenceByChange.get(changeId),
+				repoRoot,
+				expectedWorkStateDigest: workState.snapshotDigest,
+				mode,
+				workerResults: resultsByChange.get(changeId) || [],
+			}),
+		);
+	}
+	return reports;
 }
 
-function workerResultsForTrace(
-	traceId: string,
-	completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
-): ImplementationWorkerResultInput[] {
-	return workerResults.filter(
-		(_result, index) => completions[index]?.workerStart.traceId === traceId,
+function hasImplementationEvidence(
+	result: ImplementationWorkerResultInput,
+): boolean {
+	return (
+		result.status === "blocked" ||
+		[result.changeInputs, result.change_inputs, result.changes].some(
+			(value) => Array.isArray(value) && value.length > 0,
+		)
 	);
 }
 
@@ -1214,8 +1226,8 @@ function missingImplementationPreviewRemediation(
 		blockers: [...releaseCheck.blockers],
 		refs: [],
 		suggestedActions: [
-			"Provide implementationInputs for each claimed trace before completing workers.",
-			"Rerun the host action so worker evidence is checked by wiki_implement before claims release.",
+			"Attach runtime Implementation handling before completing workers.",
+			"Rerun the host action so worker evidence is correlated with runtime-selected Work Items before claims release.",
 		],
 	};
 }
@@ -1672,10 +1684,6 @@ function text(value: unknown): string | undefined {
 function requiredRepoRoot(value: string | undefined, action: string): string {
 	if (!value) throw new Error(`${action} requires repoRoot.`);
 	return value;
-}
-
-function isNonNegativeInteger(value: number | undefined): value is number {
-	return typeof value === "number" && Number.isInteger(value) && value >= 0;
 }
 
 function isGitStatusSnapshot(

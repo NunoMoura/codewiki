@@ -103,6 +103,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Moved semantic-loop invocation behind `runRuntimeSemanticExecutor()`. Runtime now selects one eligible owner, injects canonical entity and append authority, enforces iteration/wall-clock/CAS budgets, reruns stale observations, stops on route-back, and repeats committed progress to quiescence. Pi semantic tools now submit judgment or evidence candidates instead of calling loop facades with caller-marshalled repository facts.
+- Removed caller-marshalled Implementation authority. `runWikiImplement()` now resolves runtime-selected Sprint, Work Items, owning Change, Planning events, Assignments, source ownership, trace parent, sequence, and byte guards from canonical project state; host runners group worker evidence by canonical Work Item ownership.
 - Reframed CodeWiki as one supervised event-driven runtime outer loop around exactly three quality-governed semantic loops. Change is now the accountable intent carrier; Decision is approval of an exact Change revision rather than a separate entity; Planning owns Sprint creation across the relevant approved-Change portfolio; one Change may span several Sprints and one Sprint may coordinate several Changes; Sprint and Backlog state are views rather than separate truth roots.
 - Cut Change APIs, feedback intake, dashboard Change reads, and Decision acceptance over to JSONL Change Traces, then removed the hidden Git-ref constants, readers, migration adapters, fixtures, and compatibility tests in a clean pre-release cut.
 - Selected `@nunomoura/codewiki` as the eventual npm identity while retaining `"private": true` so npm publication remains blocked during stabilization.

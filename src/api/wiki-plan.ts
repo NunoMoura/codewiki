@@ -88,6 +88,21 @@ const INPUT_KEYS = [
 export async function runWikiPlan(
 	input: RunWikiPlanInput,
 ): Promise<RunWikiPlanResult> {
+	return await runWikiPlanForSelectedChanges(input);
+}
+
+/** Runtime-only entry: selection was already derived from the triggering WorkState. */
+export async function runRuntimeSelectedWikiPlan(
+	input: RunWikiPlanInput,
+	selectedChangeIds: string[],
+): Promise<RunWikiPlanResult> {
+	return await runWikiPlanForSelectedChanges(input, selectedChangeIds);
+}
+
+async function runWikiPlanForSelectedChanges(
+	input: RunWikiPlanInput,
+	runtimeSelectedChangeIds?: string[],
+): Promise<RunWikiPlanResult> {
 	assertInput(input);
 	const repoRoot = requiredText(input.repoRoot, "repoRoot");
 	const mode = input.mode || "preview";
@@ -98,13 +113,9 @@ export async function runWikiPlan(
 			`Planning WorkState changed: expected ${input.expectedWorkStateDigest}, actual ${workState.snapshotDigest}.`,
 		);
 	}
-	const reaction = selectRuntimeReaction(workState, { kind: "manual_resume" });
-	if (reaction.selection?.loop !== "planning") {
-		throw new Error("Runtime did not select Planning for current WorkState.");
-	}
-	const selectedChangeIds = reaction.selection.planningHorizon
-		.map((entry) => entry.changeId)
-		.sort(compareText);
+	const selectedChangeIds = runtimeSelectedChangeIds
+		? [...runtimeSelectedChangeIds].sort(compareText)
+		: selectedPlanningChangeIds(workState);
 	if (
 		!sameStrings(
 			selectedChangeIds,
@@ -387,6 +398,16 @@ function normalizedWorkItems(
 		"Work Item ids",
 	);
 	return items.sort((left, right) => left.id.localeCompare(right.id));
+}
+
+function selectedPlanningChangeIds(workState: WorkState): string[] {
+	const reaction = selectRuntimeReaction(workState, { kind: "manual_resume" });
+	if (reaction.selection?.loop !== "planning") {
+		throw new Error("Runtime did not select Planning for current WorkState.");
+	}
+	return reaction.selection.planningHorizon
+		.map((entry) => entry.changeId)
+		.sort(compareText);
 }
 
 function assertInput(input: RunWikiPlanInput): void {

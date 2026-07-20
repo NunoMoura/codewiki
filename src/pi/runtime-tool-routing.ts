@@ -22,8 +22,9 @@ const REACTION_TOOL_NAMES = new Set([
 ]);
 
 /**
- * Keep semantic-loop tools registered for their hosts while exposing only the
- * one selected by runtime. The agent never receives all loop choices at once.
+ * Keep semantic candidate adapters registered while exposing only the one
+ * selected by runtime. Adapter execution returns judgment or evidence to the
+ * runtime executor; the agent never invokes loop facades or sees all choices.
  */
 export function registerRuntimeToolRouting(pi: CodewikiExtensionApi): void {
 	if (
